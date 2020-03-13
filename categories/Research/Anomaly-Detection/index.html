@@ -1,0 +1,1308 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="generator" content="Hexo 4.2.0"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>分类: Anomaly Detection - Hanzawa の 部屋</title><meta property="og:type" content="blog"><meta property="og:title" content="Hanzawa の 部屋"><meta property="og:url" content="http://qfxiao.me/"><meta property="og:site_name" content="Hanzawa の 部屋"><meta property="og:locale" content="zh_CN"><meta property="article:author" content="Hanzawa"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="http://qfxiao.me/img/og_image.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://qfxiao.me"},"headline":"Hanzawa の 部屋","image":["http://qfxiao.me/img/og_image.png"],"author":{"@type":"Person","name":"Hanzawa"},"description":null}</script><link rel="icon" href="/images/favicon.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/logo.svg" alt="Hanzawa の 部屋" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><div class="card-content"><nav class="breadcrumb" aria-label="breadcrumbs"><ul><li><a href="/categories">分类</a></li><li><a href="/categories/Research/">Research</a></li><li class="is-active"><a href="#" aria-current="page">Anomaly Detection</a></li></ul></nav></div></div><div class="card"><div class="card-image"><a class="image is-7by3" href="/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/"><img class="thumbnail" src="http://qfxiao.me/img/image-20200109102830713.png" alt="Transfer Anomaly Detection by Inferring Latent Domain Representations"></a></div><article class="card-content article" role="article"><div class="article-meta size-small is-uppercase level is-mobile"><div class="level-left"><time class="level-item" dateTime="2020-02-27T12:02:18.000Z" title="2020-02-27T12:02:18.000Z">2020-02-27</time><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></span><span class="level-item">12 分钟 读完 (大约 1731 个字)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/">Transfer Anomaly Detection by Inferring Latent Domain Representations</a></h1><div class="content"><h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>作者提出了一种利用迁移学习提升target domain异常检测性能的算法。文中指出现有的基于迁移学习的异常检测算法需要对每个 target domain 进行单独训练，这样做会带来很大的计算开销。本文通过<em>latent domain vectors</em>来实现无需重新训练的异常检测。<em>latent domain vectors</em>是domain的一种隐含表示，通过该domain中的正常样本得到。在本文中，<em>anomaly score function</em>通过Auto-encoder得到。</p>
+<h1 id="Proposed-Method"><a href="#Proposed-Method" class="headerlink" title="Proposed Method"></a>Proposed Method</h1><h2 id="Task"><a href="#Task" class="headerlink" title="Task"></a>Task</h2><p>令$\mathbf{X}<em>d^+:={\mathbf{x}^+</em>{dn}}^{N^+<em>d}</em>{n=1}$为第$d$个domain的异常样本集，$\mathbf{x}_{dn}^+\in\mathbb{R}^M$为其中第$n$个样本的$M$维特征向量，$N^+_d$为第$d$个domain异常样本的数量。</p>
+<p>类似的，令$\mathbf{X}<em>d^-:={\mathbf{x}^-</em>{dn}}^{N^-<em>d}</em>{n=1}$为第$d$个domain的正常样本集。我们假设对于每个domain都有$N^+_d\ll N^-_d$，且特征向量维度都为$M$。</p>
+<p>假设在 source domain $D_S$都有正常样本和异常样本，记为${\mathbf{X}^+<em>d\cup\mathbf{X}_d^-}^{D_S}</em>{d=1}$，在 target domain $D_T$只有正常样本${\mathbf{X}<em>d^-}^{D_S+D_T}</em>{d=D_S+1}$。我们的目标是得到一个对于 target domain 合适的 domain-specific 的异常打分函数。</p>
+<img src="http://qfxiao.me/img/image-20200109102606099.png" style="zoom:67%;" />
+
+<h2 id="Domain-specific-Anomaly-Score-Function"><a href="#Domain-specific-Anomaly-Score-Function" class="headerlink" title="Domain-specific Anomaly Score Function"></a>Domain-specific Anomaly Score Function</h2><p>我们基于Auto-encoder定义异常打分函数。对于每个domain，我们假设存在一个$K$维的隐变量$\mathbf{z}<em>d\in\mathbb{R}^K$。对于第$d$个 domain，异常打分函数定义如下：<br>$$<br>s_\theta(\mathbf{x}</em>{dn}|\mathbf{z}<em>d):=\parallel\mathbf{x}</em>{dn}-G_{\theta_G}(F_{\theta_F}(\mathbf{x}_{dn},\mathbf{z}_d))\parallel^2<br>$$<br>其中参数$\theta:=(\theta_G,\theta_F)$在所有 domain 之间共享。</p>
+<h2 id="Models-for-Latent-Domain-Vectors"><a href="#Models-for-Latent-Domain-Vectors" class="headerlink" title="Models for Latent Domain Vectors"></a>Models for Latent Domain Vectors</h2><p>隐变量$\mathbf{z}_d$是无法观测到的，只能通过数据来估计。首先$\mathbf{z}_d$在$\mathbf{X}_d^-$条件下的条件分布假设为高斯分布：</p>
+<p>$$<br>q_\theta(\mathbf{z}<em>d|\mathbf{X}_d^-):=\mathcal{N}(\mathbf{z}_d|\mu_\phi(\mathbf{X}_d^-),\text{diag}(\sigma_\phi^2(\mathbf{X}_d^-)))<br>$$<br>其中均值$\mu_\phi(\mathbf{X}_d^-)\in\mathbb{R}^K$和方差$\sigma^2_\phi(\mathbf{X}_d^-)\in\mathbb{R}^K</em>+$由神经网络建模，且在所有 domain 之间共享。在$\mathbf{X}_d^-$给定的时候，我们便能够推断出该 domain 对应的隐变量，</p>
+<p>$q_\phi$的输入为正常样本的集合，故神经网络需要满足<em>permutation invariant</em>。$\tau(\mathbf{X}<em>d^-)=\rho(\sum</em>{n=1}^{N_d^-}\eta(\mathbf{x}_{dn}^-))$，其中$\tau(\mathbf{X}_d^-)$表示$\mu_\phi(\mathbf{X_d^-})$或$\ln\sigma_\phi^2(\mathbf{X}_d^-)$，$\rho$和$\eta$为神经网络，</p>
+<h2 id="Objective-Function"><a href="#Objective-Function" class="headerlink" title="Objective Function"></a>Objective Function</h2><p>目标函数由anomaly score函数和隐变量组成。第$d$个domain在对应的隐变量$\mathbf{z}_d$条件下的目标函数为：</p>
+<p>$$<br>L_d(\theta|\mathbf{z}<em>d):=\frac{1}{N_d^-}\sum\limits</em>{n=1}^{N_d^-}s_\theta(\mathbf{x}<em>{dn}^-|\mathbf{z}_d)-\frac{\lambda}{N_d^-N_d^+}\sum\limits</em>{n,m=1}^{N_d^-,N_d^+}f(s_\theta(\mathbf{x}<em>{dm}^+|\mathbf{z}_d)-s_\theta(\mathbf{x}</em>{dn}^-|\mathbf{z}_d))<br>$$</p>
+<p>其中$\lambda\geq 0$为超参数，$f$为sigmoid函数。公式的第一项表示第$d$个domain正常样本对应的<em>anomaly score</em>。第二项为可微分的AUC。异常样本的<em>anomaly score</em>应当大于正常样本，所以对任何$\mathbf x_{dm}^+\in\mathbf X_d^+, \mathbf x_{dn}^-\in\mathbf X_d^-$有$s_\theta(\mathbf x_{dm}^+|\mathbf z_d)&gt;s_\theta(\mathbf x_{dn}^-|\mathbf z_d)$。第二项$\frac{\lambda}{N_d^-N_d^+}\sum\limits_{n,m=1}^{N_d^-,N_d^+}f(s_\theta(\mathbf{x}<em>{dm}^+|\mathbf{z}_d)-s_\theta(\mathbf{x}</em>{dn}^-|\mathbf{z}<em>d))$的取值范围是$[0,1]$，当所有的$s_\theta(\mathbf{x}</em>{dm}^+|\mathbf{z}<em>d)\gg s_\theta(\mathbf{x}</em>{dm}^-|\mathbf{z}<em>d)$时该项为1，当所有的$s_\theta(\mathbf{x}</em>{dm}^+|\mathbf{z}<em>d)\ll s_\theta(\mathbf{x}</em>{dm}^-|\mathbf{z}<em>d)$时该项为0，所以最小化该项的相反数相当于鼓励$s_\theta(\mathbf{x}</em>{dm}^+|\mathbf{z}<em>d)\gg s_\theta(\mathbf{x}</em>{dm}^-|\mathbf{z}_d)$。</p>
+<p>因为隐变量$\mathbf z_d$包含不确定性，我们应该在目标函数里考虑这一点：<br>$$<br>\mathcal{L}<em>d(\theta,\phi):=\mathbb{E}</em>{q_\phi(\mathbf{z}_d|\mathbf{X}_d^-)}\left[L_d(\theta|\mathbf{z}_d)\right]+\beta D_\text{KL}(q_\phi(\mathbf{z}_d|\mathbf{X}_d^-)\parallel p(\mathbf{z_d}))<br>$$</p>
+<p>第一项是$L_d(\theta|\mathbf z_d)$关于$q_\phi(\mathbf z_d|\mathbf X_d^-)$的期望，第二项是$q_\phi(\mathbf z_d|\mathbf X_d^-)$和$p(\mathbf z_d):=\mathcal{N}(\boldsymbol 0,\boldsymbol I)$的KL散度。第一项可以用<em>monte carlo</em>估计$\mathbb{E}<em>{q_\phi(\mathbf{z}_d|\mathbf{X}_d^-)}\left[L_d(\theta|\mathbf{z}_d)\right]\approx\frac{1}{L}\sum</em>{\ell=1}^L L_d(\theta|\mathbf z_d^{(\ell)})$，除此之外还需要用到<em>reparametrization trick</em>。</p>
+<p>对于第$d$个target domain，因为没有异常样本（假设），所以$L_d(\theta|\mathbf{z}<em>d):=\frac{1}{N_d^-}\sum\limits</em>{n=1}^{N_d^-}s_\theta(\mathbf{x}<em>{dn}^-|\mathbf{z}_d)$，有：<br>$$<br>\mathcal{L}_d(\theta,\phi):=\mathbb{E}</em>{q_\phi(\mathbf{z}<em>d|\mathbf{X}_d^-)}\left[\frac{1}{N_d^-}\sum\limits</em>{n=1}^{N_d^-}s_\theta(\mathbf{x}_{dn}^-|\mathbf{z}_d)\right]+\beta D_\text{KL}(q_\phi(\mathbf{z}_d|\mathbf{X}_d^-)\parallel p(\mathbf{z}_d))<br>$$</p>
+<p>所以总的损失函数为各domain对应的损失函数之和$\mathcal{L}(\theta,\phi):=\sum_{d=1}^{D_S+D_T}\alpha_d\mathcal{L}_d(\theta,\phi)$。</p>
+<h2 id="Inference"><a href="#Inference" class="headerlink" title="Inference"></a>Inference</h2><p>训练好之后，domain-specific的<em>anomaly score</em>可以由下式计算出：</p>
+<p>$$<br>s(\mathbf{x}<em>{d^\prime}):=\int s</em>{\theta_<em>}(\mathbf{x_{d^\prime}}|\mathbf{z}<em>{d^\prime})q</em>{\phi_</em>}(\mathbf{z}<em>{d^\prime}|\mathbf{X}</em>{d^\prime}^-)\mathrm{d}\mathbf{z}<em>{d^\prime}\approx\frac{1}{L}\sum\limits</em>{\ell=1}^L s_{\theta_*}(\mathbf{x}<em>{d^\prime}|\mathbf{z}</em>{d^\prime}^{(\ell)})<br>$$</p>
+<h1 id="Experiments"><a href="#Experiments" class="headerlink" title="Experiments"></a>Experiments</h1><h2 id="Data"><a href="#Data" class="headerlink" title="Data"></a>Data</h2><p>实验包含五个数据集，第一个是合成数据集。如下图(a)所示，围绕$(0,0)$有$8$个圈，每个圈包含了一个内圈作为异常样本，第$7$个圈被选为target domain，其余的为source domain。第二个是MNIST-r，是加入旋转的MNIST，包含6个domain，其中数字“4”被选为异常样本，其余为正常。第三个为Anuran Calls，包含5个domain。第四个是Landmine，主要用在多任务学习中。第五个是IoT，网络流量数据，包含8个domain。</p>
+<img src="http://qfxiao.me/img/image-20200109102643644.png" style="zoom:50%;" />
+
+<h2 id="Comparison-Methods"><a href="#Comparison-Methods" class="headerlink" title="Comparison Methods"></a>Comparison Methods</h2><p>对比的baseline包括NN（普通多层神经网络），NNAUC（加入可微分AUC作为损失函数），AE（普通Autoencoer），AEAUC（加入可微分AUC的AE），OSVM（单类支持向量机），CCSA，TOSVM和OTL。</p>
+<h2 id="Results"><a href="#Results" class="headerlink" title="Results"></a>Results</h2><p>4个真实数据集的结果如下：</p>
+<img src="http://qfxiao.me/img/image-20200109102713247.png" style="zoom:50%;" />
+
+<img src="http://qfxiao.me/img/image-20200109102730126.png" style="zoom:50%;" />
+
+<img src="http://qfxiao.me/img/image-20200109102742222.png" style="zoom:50%;" />
+
+<img src="http://qfxiao.me/img/image-20200109102753827.png" style="zoom:50%;" />
+
+<p>表5为考虑隐变量不确定性的ablation study。将原来的公式$\mathcal{L}<em>d(\theta,\phi):=\mathbb{E}</em>{q_\phi(\mathbf{z}_d|\mathbf{X}_d^-)}\left[L_d(\theta|\mathbf{z}_d)\right]+\beta D_\text{KL}(q_\phi(\mathbf{z}_d|\mathbf{X}_d^-)\parallel p(\mathbf{z_d}))$中$q_\phi(\mathbf z_d|\mathbf X_d^-)$用迪利克雷分布$q_\phi(\mathbf z_d|\mathbf X_d^-)=\delta(\mathbf z_d-\mu_\phi(\mathbf X_d^-))$代替并且去掉KL散度。</p>
+<img src="http://qfxiao.me/img/image-20200109102804386.png" style="zoom: 50%;" />
+
+<p>表6展示了不同异常比例对效果的影响。</p>
+</div></article></div><div class="card"><div class="card-image"><a class="image is-7by3" href="/2020/02/24/Deep-Anomaly-Detection-with-Deviation-Networks/"><img class="thumbnail" src="http://qfxiao.me/img/image-20200113104953902.png" alt="Deep Anomaly Detection with Deviation Networks"></a></div><article class="card-content article" role="article"><div class="article-meta size-small is-uppercase level is-mobile"><div class="level-left"><time class="level-item" dateTime="2020-02-24T02:45:08.000Z" title="2020-02-24T02:45:08.000Z">2020-02-24</time><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></span><span class="level-item">15 分钟 读完 (大约 2216 个字)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2020/02/24/Deep-Anomaly-Detection-with-Deviation-Networks/">Deep Anomaly Detection with Deviation Networks</a></h1><div class="content"><h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>本文关注<code>Deep Anomaly Detection</code>，也就是用深度学习的方法来进行异常检测。文中提到现有的<code>Deep Anomaly Detection</code>存在两个弊端：一个是采用深度学习方法来进行特征学习，然后通过下游任务得到<code>Anomaly Score</code>，相比文中End-to-End的<code>Anomaly Score</code>学习，存在优化不充分的风险；另一个是现有的方法主要是无监督学习，无法利用已知的信息（如少量标签）。为此，本文提出了一种端到端的异常检测框架，来解决上述问题。</p>
+<p>本文的主要贡献如下：</p>
+<ul>
+<li>提出了一种端到端的异常检测框架，直接学习<code>Anomaly Score</code>并且可以利用已知信息；</li>
+<li>基于提出的框架，文中提出了一种实例方法 (DevNet)。</li>
+</ul>
+<img src="http://qfxiao.me/img/image-20200113104938784.png" style="zoom:67%;" />
+
+<h1 id="Proposed-Model"><a href="#Proposed-Model" class="headerlink" title="Proposed Model"></a>Proposed Model</h1><h2 id="End-To-End-Anomaly-Score-Learning"><a href="#End-To-End-Anomaly-Score-Learning" class="headerlink" title="End-To-End Anomaly Score Learning"></a>End-To-End Anomaly Score Learning</h2><h3 id="Problem-Statement"><a href="#Problem-Statement" class="headerlink" title="Problem Statement"></a>Problem Statement</h3><p>为了区别于传统的两阶段异常检测（先学习特征表示，然后在学到的特征上定义一个<code>anomaly measure</code>来得到<code>anomaly score</code>），作者对端到端的异常检测问题重新进行形式化。</p>
+<p>给定$N+K$个样本$\mathcal{X}={\boldsymbol x_1,\boldsymbol x_2,\cdots,\boldsymbol x_N,\boldsymbol x_{N+1},\cdots,\boldsymbol x_{N+K}}$，其中$\boldsymbol x_i\in\mathbb{R}^D$，无标签样本集$\mathcal{U}={\boldsymbol x_1,\boldsymbol x_2,\cdots,\boldsymbol x_N}$，有标签样本集$\mathcal{K}={\boldsymbol x_{N+1},\cdots,\boldsymbol x_{N+K}}$，且$K\ll N$。异常检测的目标是学习一个<code>anomaly scoring function</code>$\phi:\mathcal{X}\mapsto\mathbb{R}$使得$\phi(\boldsymbol x_i)&gt;\phi(\boldsymbol x_j)$，其中$\boldsymbol x_i$为异常样本，$\boldsymbol x_j$为正常样本。</p>
+<h3 id="The-Proposed-Framework"><a href="#The-Proposed-Framework" class="headerlink" title="The Proposed Framework"></a>The Proposed Framework</h3><p>为了解决这个问题，文中提出了一种通用异常检测框架，模型框架如下图所示：</p>
+<p>模型框架如下图所示：</p>
+<img src="http://qfxiao.me/img/image-20200113104953902.png" style="zoom:50%;" />
+
+<p>主要包含三个部分：</p>
+<ol>
+<li><em>anomaly scoring network</em>. 图中左边的部分，一个函数$\phi$，输入样本$\mathbf{x}$，输出<code>anomaly score</code></li>
+<li><em>reference score generator</em>. 图中右边的部分。只有一个<em>anomaly scoring network</em>并不能进行训练，需要训练的目标。为此加入<em>reference score generator</em>，输入为随机选择的$l$个正常样本，输出<code>reference score</code>（这$l$个正常样本<code>anomaly score</code>的均值，记为$\mu_\mathcal{R}$）</li>
+<li><em>deviation loss</em>. $\phi(\mathbf{x})$，$\mu_\mathcal{R}$及对应的标准差$\sigma_\mathcal{R}$作为<code>deviation loss</code>函数的输入。因为$\mu_\mathcal{R}$和$\sigma_\mathcal{R}$对应正常样本集的均值和方差，那么异常样本的<code>anomaly score</code>应该和$\mu_\mathcal{R}$差别比较大，而正常样本则应该接近$\mu_\mathcal{R}$。</li>
+</ol>
+<h2 id="Deviation-Networks"><a href="#Deviation-Networks" class="headerlink" title="Deviation Networks"></a>Deviation Networks</h2><p>下面是上述三个部件的具体实现。</p>
+<h3 id="End-To-End-Anomaly-Scoring-Network"><a href="#End-To-End-Anomaly-Scoring-Network" class="headerlink" title="End-To-End Anomaly Scoring Network"></a>End-To-End Anomaly Scoring Network</h3><p>记$\mathcal{Q}\in\mathbb{R}^M$为中间表示空间，<code>anomaly scoring network</code>$\phi(\cdot;\Theta):\mathcal{X}\mapsto\mathbb{R}$可以定义为数据表示学习$\psi(\cdot;\Theta_t):\mathcal{X}\mapsto\mathcal{Q}$和异常分数学习$\eta(\cdot;\Theta_s):\mathcal{Q}\mapsto\mathbb{R}$两阶段的组合，其中$\Theta={\Theta_t,\Theta_s}$。</p>
+<p>$\psi(\cdot;\Theta_t)$可以用一个$H$层神经网络来实现：<br>$$<br>\mathrm{q}=\psi(\mathbf{x};\Theta_t)<br>$$<br>其中$\mathbf{x}\in\mathcal{X}$，$\mathrm{q}\in\mathcal{Q}$。</p>
+<p>$\eta(\cdot;\Theta_s)$可以用一个单层的神经网络来实现：<br>$$<br>\eta(\mathrm q;\Theta_s)=\sum\limits_{i=1}^M w_i^oq_i+w_{M+1}^o<br>$$<br>其中$\mathrm q\in\mathcal Q$，$\Theta_s={\mathbf{w}^o}$。</p>
+<p>所以有：<br>$$<br>\phi(\mathbf{x};\Theta)=\eta(\psi(\mathbf{x};\Theta_t);\Theta_s)<br>$$</p>
+<h3 id="Gaussian-Prior-based-Reference-Scores"><a href="#Gaussian-Prior-based-Reference-Scores" class="headerlink" title="Gaussian Prior-based Reference Scores"></a>Gaussian Prior-based Reference Scores</h3><p>有两种方法来获得$\mu_\mathcal{R}$，一种是data-driven，一种是prior-driven。如果是data-driven的话则采用另一个神经网络，文中表示为了更好的解释性和计算效率，所以采用的是prior-driven。<br>$$<br>\begin{align}<br>r_1,r_2,\cdots,r_l\sim \mathcal{N}(\mu,\sigma^2),\<br>\mu_\mathcal{R}=\frac{1}{l}\sum\limits_{i=1}^l r_i<br>\end{align}<br>$$<br>在文中，采用的prior是标准高斯分布。</p>
+<h2 id="Z-Score-Based-Deviation-Loss"><a href="#Z-Score-Based-Deviation-Loss" class="headerlink" title="Z-Score Based Deviation Loss"></a>Z-Score Based Deviation Loss</h2><p><em>anomaly scoring network</em>的优化目标可以定义为Z-Score的方式：<br>$$<br>dev(\boldsymbol x)=\frac{\phi(\boldsymbol x;\Theta)-\mu_{\mathcal{R}}}{\sigma_{\mathcal{R}}}<br>$$<br>$dev(\boldsymbol x)$可以看作是样本偏离标准的程度，而我们肯定希望异常样本偏离标准越大，正常样本越接近标准。文中采用的损失函数是<code>Contrastive Loss</code>：<br>$$<br>L(\phi(\boldsymbol x;\Theta),\mu_\mathcal{R},\sigma_\mathcal{R})=(1-y)|dev(\boldsymbol x)| + y \max(0, a - dev(\boldsymbol x))<br>$$<br><code>Contrastive Loss</code>的直观解释可以看下图：</p>
+<img src="http://qfxiao.me/img/contrastive_2020_2_24.png" style="zoom:50%;" />
+
+<p>对于负例（正常），优化过程将他们尽量向原点靠近，对于正例（异常），优化过程将他们拉向边界。</p>
+<h2 id="The-DevNet-Algorithm"><a href="#The-DevNet-Algorithm" class="headerlink" title="The DevNet Algorithm"></a>The DevNet Algorithm</h2><p><code>DevNet</code>的算法流程图如下：</p>
+<p><img src="http://qfxiao.me/img/image-20200113105040134.png" alt=""></p>
+<h2 id="Interpretability-of-Anomaly-Scores"><a href="#Interpretability-of-Anomaly-Scores" class="headerlink" title="Interpretability of Anomaly Scores"></a>Interpretability of Anomaly Scores</h2><p>因为<em>reference score generator</em>选择的是确定的高斯分布，于是可以用概率论给出一些解释性。作者给出了一个结论，</p>
+<blockquote>
+<p><strong>PROPOSITION</strong>： 设$\boldsymbol x\in\mathcal{X}$，$z_p$为$\mathcal{N}(\mu,\sigma^2)$的分位数，那么$\phi(\boldsymbol x)$在区间$\mu\pm z_p\sigma$的概率为$2(1-p)$。</p>
+</blockquote>
+<p>例如，假设$p=0.95$，那么$z_{0.95}=1.96$，表示异常分数高于1.96的样本将以0.95的置信度为异常。</p>
+<h1 id="Experiment"><a href="#Experiment" class="headerlink" title="Experiment"></a>Experiment</h1><p>实验用到了9个数据集，4个Baseline (REPEN，DSVDD，FSNET，iForest)，以及ROC和PR曲线两种评测标准。</p>
+<h2 id="Effectiveness-in-Real-world-Data-Sets"><a href="#Effectiveness-in-Real-world-Data-Sets" class="headerlink" title="Effectiveness in Real-world Data Sets"></a>Effectiveness in Real-world Data Sets</h2><h3 id="Experiment-Settings"><a href="#Experiment-Settings" class="headerlink" title="Experiment Settings"></a>Experiment Settings</h3><p>这一个实验主要是为了验证算法在真实场景下的效果，即大量无标签数据和极少量标签数据。训练集包含两部分，一部分是无标签数据$\mathcal{U}$,包含$2%$的异常样本，另一部分是有标签数据$\mathcal{K}$，由随机采样$0.005%-1%$的训练数据和$0.08%-6%$的异常样本组成。</p>
+<h3 id="Findings"><a href="#Findings" class="headerlink" title="Findings"></a>Findings</h3><p>实验结果如下表所示：</p>
+<p><img src="http://qfxiao.me/img/image-20200113110000432.png" alt=""></p>
+<p>从结果上看来，本文提出的方法在所有数据集上都比Baseline好，说明<code>DevNet</code>端到端直接优化<code>Anomaly Score</code>的方式是有效的。</p>
+<h2 id="Data-Efficiency"><a href="#Data-Efficiency" class="headerlink" title="Data Efficiency"></a>Data Efficiency</h2><h3 id="Experiment-Settings-1"><a href="#Experiment-Settings-1" class="headerlink" title="Experiment Settings"></a>Experiment Settings</h3><p>这一个实验主要是为了探究基于深度的异常检测方法的<em>data efficiency</em>。和上一个实验一样，无标签数据集包含$2%$的异常，而有标签的异常数量从$5$到$120$不等。本实验试图回答以下两个问题：</p>
+<ul>
+<li><code>DevNet</code>的<em>data efficiency</em>如何？</li>
+<li>基于深度的方法在多大程度上能够利用标签信息？</li>
+</ul>
+<h3 id="Findings-1"><a href="#Findings-1" class="headerlink" title="Findings"></a>Findings</h3><p>在几个基于深度的Baseline中，<code>DevNet</code>的效果是最好的，同时在有标签异常非常有限的情况下，<code>DevNet</code>也能很好的利用标签信息，达到更好的效果。</p>
+<p><img src="http://qfxiao.me/img/image-20200113110017195.png" alt=""></p>
+<h2 id="Robustness-w-r-t-Anomaly-Contamination"><a href="#Robustness-w-r-t-Anomaly-Contamination" class="headerlink" title="Robustness w.r.t. Anomaly Contamination"></a>Robustness w.r.t. Anomaly Contamination</h2><h3 id="Experiment-Settings-2"><a href="#Experiment-Settings-2" class="headerlink" title="Experiment Settings"></a>Experiment Settings</h3><p>在第一个实验中，无标签数据集$\mathcal{U}$包含的是固定的异常比例$2%$，而在这个实验中，作者测试了从$0%$到$20%$之间不同异常比例来测试算法的鲁棒性（即使$\mathcal{U}$中包含异常，由于没有标签，在训练的时候仍然假设都为正常来进行训练）。本实验试图回答以下问题：</p>
+<ul>
+<li>基于深度的异常检测方法的鲁棒性如何？</li>
+<li>当训练集中异常污染的比例较高的时候基于深度的方法能否打败无监督的方法？</li>
+</ul>
+<h3 id="Findings-2"><a href="#Findings-2" class="headerlink" title="Findings"></a>Findings</h3><p>下图为实验结果：</p>
+<p><img src="http://qfxiao.me/img/image-20200113110035878.png" alt=""></p>
+<p>从结果上来看，<code>DevNet</code>比其他基于深度的方法鲁棒性更好，同时在高异常污染的情况下仍然比纯无监督方法效果要好。</p>
+<h2 id="Ablation-Study"><a href="#Ablation-Study" class="headerlink" title="Ablation Study"></a>Ablation Study</h2><p>本实验设置了<code>DevNet</code>的三个变体（默认的<code>DevNet-Def</code>为单层隐层加上一个输出层）来进行消融实验，分别是：</p>
+<ul>
+<li><code>DevNet-Rep</code>，去掉了<em>anomaly scoring network</em>网络的输出层，对应<em>end-to-end learning of anomaly scores</em>和<em>deviation loss</em>；</li>
+<li><code>DevNet-Linear</code>，去掉了网络中的非线性层，对应<em>learning of non-linear features</em>；</li>
+<li><code>DevNet-3HL</code>，隐层数量为3层。</li>
+</ul>
+<p>对比结果如下：</p>
+<p><img src="http://qfxiao.me/img/image-20200113110048598.png" alt=""></p>
+<p>通过实验可以发现，<code>DevNet-Rep</code>说明了<em>end-to-end learning of anomaly scores</em>和<em>deviation loss</em>的有效性，而<code>DevNet-Linear</code>说明了<em>learning of non-linear features</em>的重要性。<code>DevNet-3HL</code>说明了加深网络并不总能带来性能的提升。</p>
+<h2 id="Scalability-Test"><a href="#Scalability-Test" class="headerlink" title="Scalability Test"></a>Scalability Test</h2><p>这一个实验使用合成的数据来测试算法对大规模数据的处理能力，分别从<em>Data Size</em>和<em>Data Dimensionality</em>两方面来测试。结果如下：</p>
+<p><img src="http://qfxiao.me/img/image-20200113110113423.png" alt=""></p>
+<p>可以看出，<code>DevNet</code>对<em>Data Size</em>并不敏感，同时，面对高维数据，<code>DevNet</code>也没有表现出劣势。</p>
+</div></article></div><div class="card"><div class="card-image"><a class="image is-7by3" href="/2020/01/09/Complementary-Set-Variational-Autoencoder-for-Supervised-Anomaly-Detection/"><img class="thumbnail" src="http://qfxiao.me/img/image-20200109102204802.png" alt="Complementary Set Variational Autoencoder for Supervised Anomaly Detection"></a></div><article class="card-content article" role="article"><div class="article-meta size-small is-uppercase level is-mobile"><div class="level-left"><time class="level-item" dateTime="2020-01-09T02:15:03.000Z" title="2020-01-09T02:15:03.000Z">2020-01-09</time><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></span><span class="level-item">10 分钟 读完 (大约 1470 个字)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2020/01/09/Complementary-Set-Variational-Autoencoder-for-Supervised-Anomaly-Detection/">Complementary Set Variational Autoencoder for Supervised Anomaly Detection</a></h1><div class="content"><h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>对于异常检测问题，异常的模式是多种多样的。有监督模型能够较好地处理训练集中出现过的模式，无监督模型能够处理训练集中未出现过的模式，但对于训练集中出现过的异常模型并没有学习。本文提出了一种既能学习训练集中出现过的异常模式，同时能处理未出现过的异常模式的方法。</p>
+<h1 id="Proposed-Model"><a href="#Proposed-Model" class="headerlink" title="Proposed Model"></a>Proposed Model</h1><h2 id="Conventional-VAE"><a href="#Conventional-VAE" class="headerlink" title="Conventional VAE"></a>Conventional VAE</h2><p>首先回顾一下原始的VAE。</p>
+<p>原始VAE中的损失函数为：<br>$$<br>\mathcal{L}(\boldsymbol{\theta},\boldsymbol{\phi};\boldsymbol{x})=\mathbb{E}<em>{q(\boldsymbol{z}|\boldsymbol{x};\boldsymbol{\phi})}[\log p(\boldsymbol{x}|\boldsymbol{z};\boldsymbol{\theta})]-\text{KL}[q(\boldsymbol{z}|\boldsymbol{x};\boldsymbol{\phi}\parallel p(\boldsymbol{z}))]<br>$$<br>原文中作者证明了$\mathcal{L}(\boldsymbol{\theta},\boldsymbol{\phi};\boldsymbol{x})\leq\log p(\boldsymbol{x};\boldsymbol{\theta})$，所以$\mathcal{L}(\boldsymbol{\theta},\boldsymbol{\phi};\boldsymbol{x})$可以看作是数据分布$p(\boldsymbol{x})$对数似然的一个下界。$\mathcal{L}(\boldsymbol{\theta},\boldsymbol{\phi};\boldsymbol{x})$又被称为证据下界 (ELBO)。$\mathbb{E}</em>{q(\boldsymbol{z}|\boldsymbol{x};\boldsymbol{\phi})}[\log p(\boldsymbol{x}|\boldsymbol{z};\boldsymbol{\theta})]$中的期望一般用蒙特卡洛来进行估计：<br>$$<br>\begin{align}<br>\mathcal{L}(\boldsymbol{\theta},\boldsymbol{\phi};\boldsymbol{x})\simeq&amp; \frac{1}{L}\sum\limits_l\log p(\boldsymbol{x}|\boldsymbol{z}^{(l)};\boldsymbol{\theta})-\text{KL}[q(\boldsymbol{z}|\boldsymbol{x};\boldsymbol{\phi})\parallel p(\boldsymbol{z})],\<br>\boldsymbol{z}^{(l)}&amp;\sim q(\boldsymbol{z}|\boldsymbol{x};\boldsymbol{\phi}), \space l\in{1,2,\cdots,L}<br>\end{align}<br>$$<br>对于隐变量$\boldsymbol{z}$，一般假设先验服从标准高斯分布，后验服从均值为$\mu$，方差为$\sigma^2$的高斯分布，故KL散度能直接写出解析式：<br>$$<br>\mathcal{L}(\boldsymbol{\theta},\boldsymbol{\phi};\boldsymbol{x})\simeq \frac{1}{L}\sum\limits_l\log p(\boldsymbol{x}|\boldsymbol{z}^{(l)};\boldsymbol{\theta})-C(-\frac{1}{2}-\log\sigma+\frac{1}{2}\sigma^2+\frac{1}{2}\mu^2)<br>$$<br>使用VAE来做异常检测通常是在正常数据上进行训练，在检测阶段，如果是异常样本，那么VAE不能很好地重构它，这样会导致较大的重构误差。</p>
+<h2 id="Prior-Distribution-for-Anomalies"><a href="#Prior-Distribution-for-Anomalies" class="headerlink" title="Prior Distribution for Anomalies"></a>Prior Distribution for Anomalies</h2><p><img src="http://qfxiao.me/img/image-20200109102204802.png" alt=""></p>
+<p>在原始VAE异常检测中，无论输入样本$\boldsymbol{x}$是否异常，VAE都会使对应编码的后验$p(\boldsymbol{z}|\boldsymbol{x})$服从高斯分布，且施加标准高斯分布的约束。在本文中，作者对异常和正常样本对应的隐变量的先验分布做了不同假设。首先，正常先验依然是标准高斯分布，记为$p_n(\boldsymbol{z})$。而对于异常先验，作者认为异常即为“不正常”，和正常是补集的关系。作者在文中定义异常先验分布$p_a(\boldsymbol{z})$为：<br>$$<br>p_a(\boldsymbol{z})=\frac{1}{Y^\prime}(\max\limits_{\boldsymbol{z}^\prime}p_n(\boldsymbol{z}^\prime)-p_n(\boldsymbol{z}))<br>$$</p>
+<p>其中$Y^\prime$为使$p_a(\boldsymbol{z})$成为一个概率分布的调节因子。实际上，$Y^\prime$往往会成为无限大，因为$p(\boldsymbol z)$在整个定义域上都有定义。为了解决这个问题，作者加入了$p_w(\boldsymbol z)$，一个在每个维度都足够宽的辅助分布：</p>
+<p>$$<br>p_a(\boldsymbol z)=\frac{1}{Y}p_w(\boldsymbol z)\left(\max\limits_{\boldsymbol z^\prime}p_n(\boldsymbol z^\prime)-p_n(\boldsymbol z)\right)<br>$$</p>
+<p>其中$Y$为有限的常数。在文中$p_n(\boldsymbol z)$和$p_w(\boldsymbol z)$都为高斯分布，那么$p_a(\boldsymbol z)$的具体形式为：</p>
+<p>$$<br>p_a(\boldsymbol z)=\frac{1}{Y}\mathcal{N}(\boldsymbol z;\boldsymbol 0,\boldsymbol s^2){\max\limits_{\boldsymbol z^\prime}\mathcal N(\boldsymbol z^\prime;\boldsymbol 0,\boldsymbol 1)-\mathcal N(\boldsymbol z;\boldsymbol 0,\boldsymbol 1)}<br>$$</p>
+<p>其中：</p>
+<p>$$<br>\max\limits_{\boldsymbol z^\prime}\mathcal N(\boldsymbol z^\prime;\boldsymbol 0,\boldsymbol 1)=\frac{1}{\sqrt{2\pi}}<br>$$</p>
+<p>$$<br>Y=\int_{-\infty}^{\infty}p_a(\boldsymbol z)\mathrm{d}\boldsymbol z=\frac{1}{\sqrt{2\pi}}\left{1-\frac{1}{\boldsymbol s^2+1}\right}<br>$$</p>
+<p>$\boldsymbol s^2$为超参数，控制分布的宽度。用文中的先验替换VAE原始的KL散度，可写为：</p>
+<p>$$<br>\text{KL}\left[q(\boldsymbol z|\boldsymbol x;\phi)\parallel p_a(\boldsymbol z)\right]=\int_{-\infty}^\infty\mathcal{N}(\boldsymbol z;\boldsymbol \mu,\boldsymbol \sigma^2)\log\frac{\mathcal N(\boldsymbol z;\boldsymbol\mu,\boldsymbol\sigma^2)}{\frac{1}{Y}\mathcal N(\boldsymbol z;\boldsymbol 0,\boldsymbol s^2)\left{\frac{1}{2\pi}-\mathcal N(\boldsymbol z;\boldsymbol0,\boldsymbol 1)\right}}\mathrm{d}\boldsymbol z<br>$$</p>
+<p>展开后：</p>
+<p>$$<br>\begin{align}<br>\text{KL}\left[q(\boldsymbol z|\boldsymbol x;\phi)\parallel p_a(\boldsymbol z)\right]&amp;=<br>\int_{-\infty}^\infty\mathcal{N}(\boldsymbol z;\boldsymbol \mu,\boldsymbol \sigma^2)\log\mathcal{N}(\boldsymbol z;\boldsymbol\mu,\boldsymbol\sigma^2)\mathrm{d}\boldsymbol z\<br>&amp;+\log Y\<br>&amp;-\int_{-\infty}^\infty\mathcal{N}(\boldsymbol z;\boldsymbol \mu,\boldsymbol \sigma^2)\log\mathcal{N}(\boldsymbol z;\boldsymbol 0,\boldsymbol s^2)\mathrm{d}\boldsymbol z\<br>&amp;-\int_{-\infty}^\infty\mathcal{N}(\boldsymbol z;\boldsymbol \mu,\boldsymbol \sigma^2)\log\left{\frac{1}{\sqrt{2\pi}}-\mathcal{N}(\boldsymbol z;\boldsymbol 0, \boldsymbol 1)\right}\mathrm{d}\boldsymbol z<br>\end{align}<br>$$</p>
+<p>使用泰勒展开，$\log (x+\frac{1}{2\pi})\simeq-\log 2\pi+2\pi x$，KL散度可以用下式估计：</p>
+<p>$$<br>\begin{align}<br>\text{KL}\left[q(\boldsymbol z|\boldsymbol x;\phi)\parallel p_a(\boldsymbol z)\right]&amp;\simeq\sqrt{\frac{2\pi}{\boldsymbol\sigma^2+1}}\exp\left(\frac{-\boldsymbol\mu^2}{2(\boldsymbol\sigma^2+1)}\right)\<br>&amp;+\frac{\boldsymbol\mu^2+\boldsymbol\sigma^2}{2\boldsymbol s^2}-\log\boldsymbol\sigma+\log\boldsymbol s+\log\left(\sqrt{\boldsymbol s^2+1}-1\right)\<br>&amp;-\frac{\log(\boldsymbol s^2+1)}{2}+\frac{\log(2\pi)-1}{2}<br>\end{align}<br>$$</p>
+<p>下图为一维时$p_n(\boldsymbol z)$和$p_a(\boldsymbol z)$的示例：</p>
+<p><img src="http://qfxiao.me/img/image-20200109102255322.png" alt=""></p>
+<h3 id="Implementation-of-proposed-method"><a href="#Implementation-of-proposed-method" class="headerlink" title="Implementation of proposed method"></a>Implementation of proposed method</h3><p>文中使用编码器输出的分布$\mathcal{N}(\boldsymbol z;\boldsymbol \mu, \boldsymbol \sigma^2)$与标准正态分布之间的KL散度来作为异常分数。在每一轮的训练过程中，加入一轮使用Anomaly Prior的训练。</p>
+<p><img src="http://qfxiao.me/img/image-20200109102309048.png" alt=""></p>
+<h1 id="Experiments"><a href="#Experiments" class="headerlink" title="Experiments"></a>Experiments</h1><h2 id="MNIST"><a href="#MNIST" class="headerlink" title="MNIST"></a>MNIST</h2><p>作者设计了两个Task：</p>
+<ol>
+<li>Task 1. $N$ vs. $\bar{N}$. 将手写数字中的一个作为已知异常，其他作为正常，并加入均匀分布作为未知的异常。</li>
+<li>Task 2. 手写数字被分为3组：已知异常，正常，未知异常。</li>
+</ol>
+<p>细节如下表所示：</p>
+<p><img src="http://qfxiao.me/img/image-20200109102402499.png" alt=""></p>
+<p>在实现上，使用Adam优化器，<code>batch_size</code>为100，<code>epochs</code>为200。<code>Encoder</code>和<code>Decoder</code>都由三层感知机组成，超参数$s^2$设置为400。评测标准使用AUC (area under the receiver characteristic curve)。</p>
+<p>下表为实验结果：</p>
+<p><img src="http://qfxiao.me/img/image-20200109102343271.png" alt=""></p>
+</div></article></div><div class="card"><div class="card-image"><a class="image is-7by3" href="/2020/01/08/Time-Series-Anomaly-Detection-Paper-List/"><img class="thumbnail" src="http://qfxiao.me/img/1571569717718.png" alt="Time Series Anomaly Detection Paper List"></a></div><article class="card-content article" role="article"><div class="article-meta size-small is-uppercase level is-mobile"><div class="level-left"><time class="level-item" dateTime="2020-01-08T02:27:58.000Z" title="2020-01-08T02:27:58.000Z">2020-01-08</time><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></span><span class="level-item">19 分钟 读完 (大约 2792 个字)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2020/01/08/Time-Series-Anomaly-Detection-Paper-List/">Time Series Anomaly Detection Paper List</a></h1><div class="content"><h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>时间序列异常检测在很多领域例如运维、金融、交通都扮演者重要的角色，其定义如下：</p>
+<blockquote>
+<p>给定时间序列$X={\mathbf{x}_1,\mathbf{x}_2,\cdots,\mathbf{x}_n}\in\mathbb{R}^{m\times n}$，异常检测的任务是输出异常标签$y={y_1,y_2,\cdots,y_n}\in\mathbb{R}^n$，其中$y_t=1$代表$\mathbf{x}_t$为异常，$y_t=0$代表$\mathbf{x}_t$正常</p>
+</blockquote>
+<p>本文罗列了一些时间序列异常检测领域值得读的一些文章，Model一章主要按时间序列、通用和图的异常检测分类，Related主要是一些非异常检测、但是能够解决异常检测研究中的一些问题的文章。</p>
+<p><img src="http://qfxiao.me/img/1571569717718.png" alt=""></p>
+<h1 id="Model"><a href="#Model" class="headerlink" title="Model"></a>Model</h1><h2 id="Time-Series"><a href="#Time-Series" class="headerlink" title="Time Series"></a>Time Series</h2><h3 id="Statistical"><a href="#Statistical" class="headerlink" title="Statistical"></a>Statistical</h3><p>主要包括偏向统计方法的模型：</p>
+<table>
+<thead>
+<tr>
+<th><strong>Title</strong></th>
+<th><strong>Conf/Journal</strong></th>
+<th><strong>Description</strong></th>
+<th><strong>Links</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Temporal Anomaly Detection: Calibrating the Surprise</td>
+<td></td>
+<td></td>
+<td><a href="https://arxiv.org/pdf/1705.10085">📃Paper</a></td>
+</tr>
+<tr>
+<td>Non-Parametric Outliers Detection in Multiple Time Series A Case Study: Power Grid Data Analysis</td>
+<td></td>
+<td></td>
+<td><a href="https://aaai.org/ocs/index.php/AAAI/AAAI18/paper/view/16315">📃Paper</a></td>
+</tr>
+<tr>
+<td>Anomaly Detection in Streams with Extreme Value Theory</td>
+<td>KDD17</td>
+<td>提出了以Extreme Value Theory为基础的时序异常检测和参数选择方法</td>
+<td><a href="https://www.kdd.org/kdd2017/papers/view/anomaly-detection-in-streams-with-extreme-value-theory">📃Paper</a></td>
+</tr>
+<tr>
+<td>Semi-Markov Switching Vector Autoregressive Model-Based Anomaly Detection in Aviation Systems</td>
+<td></td>
+<td></td>
+<td><a href="https://www.kdd.org/kdd2016/subtopic/view/semi-markov-switching-vector-autoregressive-model-based-anomaly-detection-i">📃Paper</a></td>
+</tr>
+<tr>
+<td>Stochastic Online Anomaly Analysis for Streaming Time Series</td>
+<td></td>
+<td></td>
+<td><a href="https://www.ijcai.org/proceedings/2017/445">📃Paper</a></td>
+</tr>
+<tr>
+<td>Unsupervised Real-time Anomaly Detection for Streaming Data</td>
+<td></td>
+<td></td>
+<td><a href="https://www.sciencedirect.com/science/article/pii/S0925231217309864">📃Paper</a></td>
+</tr>
+<tr>
+<td>Automatic Anomaly Detection in the Cloud Via Statistical Learning</td>
+<td></td>
+<td></td>
+<td><a href="https://arxiv.org/abs/1704.07706">📃Paper</a></td>
+</tr>
+</tbody></table>
+<h3 id="Classic-Machine-Learning"><a href="#Classic-Machine-Learning" class="headerlink" title="Classic Machine Learning"></a>Classic Machine Learning</h3><table>
+<thead>
+<tr>
+<th><strong>Title</strong></th>
+<th><strong>Conf/Journal</strong></th>
+<th><strong>Description</strong></th>
+<th><strong>Links</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Semi-supervised Anomaly Detection with an Application to Water Analytics</td>
+<td></td>
+<td></td>
+<td><a href="https://people.cs.kuleuven.be/~vincent.vercruyssen/publications/2018/ICDM_conference_manuscript.pdf">📃Paper</a></td>
+</tr>
+<tr>
+<td>DILOF: Effective and Memory Efficient Local Outlier Detection in Data Streams</td>
+<td></td>
+<td></td>
+<td><a href="https://www.kdd.org/kdd2018/accepted-papers/view/dsilof-effective-and-memory-efficient-local-outlier-detection-in-data-strea">📃Paper</a></td>
+</tr>
+<tr>
+<td>Robust Random Cut Forest Based Anomaly Detection On Streams</td>
+<td>ICML16</td>
+<td>孤立森林的改进版本来做时序异常检测</td>
+<td><a href="http://proceedings.mlr.press/v48/guha16.pdf">📃Paper</a> <a href="https://github.com/kLabUM/rrcf">📥Code</a></td>
+</tr>
+<tr>
+<td>Anomaly Detection for an E-commerce Pricing System</td>
+<td></td>
+<td></td>
+<td><a href="https://arxiv.org/pdf/1902.09566">📃Paper</a></td>
+</tr>
+<tr>
+<td>An Adaptive Approach for Anomaly Detector Selection and Fine-Tuning in Time Series</td>
+<td></td>
+<td></td>
+<td><a href="https://arxiv.org/pdf/1907.07843">📃Paper</a></td>
+</tr>
+<tr>
+<td>Opprentice: Towards Practical and Automatic Anomaly Detection Through Machine Learning</td>
+<td>IMC15</td>
+<td>以随机森林为基础的时序异常检测</td>
+<td><a href="http://netman.cs.tsinghua.edu.cn/wp-content/uploads/2015/11/liu_imc15_Opprentice.pdf">📃Paper</a></td>
+</tr>
+<tr>
+<td>Variational Inference for On-line Anomaly Detection in High-Dimensional Time Series</td>
+<td></td>
+<td></td>
+<td><a href="https://arxiv.org/pdf/1602.07109">📃Paper</a></td>
+</tr>
+<tr>
+<td>A Self-Learning and Online Algorithm for Time SeriesAnomaly Detection, with Application in CPU Manufacturing</td>
+<td></td>
+<td></td>
+<td><a href="https://dl.acm.org/citation.cfm?id=2983344">📃Paper</a></td>
+</tr>
+</tbody></table>
+<h3 id="VAE"><a href="#VAE" class="headerlink" title="VAE"></a>VAE</h3><table>
+<thead>
+<tr>
+<th><strong>Title</strong></th>
+<th><strong>Conf/Journal</strong></th>
+<th><strong>Description</strong></th>
+<th><strong>Links</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Unsupervised Anomaly Detection via Variational Auto-Encoder for Seasonal KPIs in Web Applications</td>
+<td>WWW18</td>
+<td>普通VAE</td>
+<td><a href="https://arxiv.org/pdf/1802.03903">📃Paper</a> <a href="https://github.com/haowen-xu/donut">📥Code</a> <a href="http://qfxiao.me/2019/09/22/Unsupervised-Anomaly-Detection-via-Variational-Auto-Encoder-for-Seasonal-KPIs-in-Web-Applications/">✍Blog</a></td>
+</tr>
+<tr>
+<td>Robust and Unsupervised KPI Anomaly Detection Based on Conditional Variational Autoencoder</td>
+<td>IPCCC18</td>
+<td>条件VAE</td>
+<td><a href="https://ieeexplore.ieee.org/document/8710885">📃Paper</a> <a href="https://github.com/yantijin/Buzz">📥Code</a></td>
+</tr>
+<tr>
+<td>Unsupervised Anomaly Detection for Intricate KPIs via Adversarial Training of VAE</td>
+<td>INFOCOM19</td>
+<td>VAE加对抗训练</td>
+<td><a href="https://ieeexplore.ieee.org/abstract/document/8737430/">📃Paper</a></td>
+</tr>
+<tr>
+<td>Multidimensional Time Series Anomaly Detection: A GRU-based Gaussian Mixture Variational Autoencoder Approach</td>
+<td></td>
+<td></td>
+<td><a href="http://proceedings.mlr.press/v95/guo18a/guo18a.pdf">📃Paper</a></td>
+</tr>
+<tr>
+<td>Robust Anomaly Detection for Multivariate Time Series through Stochastic Recurrent Neural Network</td>
+<td>KDD19</td>
+<td>多变量基于VAE和RNN的时序异常检测</td>
+<td><a href="https://www.kdd.org/kdd2019/accepted-papers/view/robust-anomaly-detection-for-multivariate-time-series-through-stochastic-re">📃Paper</a> <a href="https://github.com/smallcowbaby/OmniAnomaly">📥Code</a></td>
+</tr>
+<tr>
+<td>A Multimodal Anomaly Detector for Robot-Assisted Feeding Using an LSTM-based Variational Autoencoder</td>
+<td></td>
+<td></td>
+<td><a href="http://ieeexplore.ieee.org/document/8279425/">📃Paper</a></td>
+</tr>
+</tbody></table>
+<h3 id="RNN"><a href="#RNN" class="headerlink" title="RNN"></a>RNN</h3><table>
+<thead>
+<tr>
+<th><strong>Title</strong></th>
+<th><strong>Conf/Journal</strong></th>
+<th><strong>Description</strong></th>
+<th><strong>Links</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Detecting Spacecraft Anomalies Using LSTMs and Nonparametric Dynamic Thresholding</td>
+<td></td>
+<td></td>
+<td><a href="https://arxiv.org/pdf/1802.04431">📃Paper</a></td>
+</tr>
+<tr>
+<td>BINet: Multivariate Business Process Anomaly Detection Using Deep Learning</td>
+<td></td>
+<td></td>
+<td><a href="https://link.springer.com/chapter/10.1007/978-3-319-98648-7_16">📃Paper</a></td>
+</tr>
+<tr>
+<td>Outlier Detection for Time Series with Recurrent Autoencoder Ensembles</td>
+<td></td>
+<td></td>
+<td><a href="https://www.ijcai.org/proceedings/2019/0378.pdf">📃Paper</a></td>
+</tr>
+<tr>
+<td>LSTM-based Encoder-Decoder for Multi-sensor Anomaly Detection</td>
+<td></td>
+<td></td>
+<td><a href="https://arxiv.org/pdf/1607.00148">📃Paper</a></td>
+</tr>
+<tr>
+<td>Detecting Anomalies in Space using Multivariate Convolutional LSTM with Mixtures of Probabilistic PCA</td>
+<td>KDD19</td>
+<td></td>
+<td><a href="https://dl.acm.org/doi/10.1145/3292500.3330776">📃Paper</a></td>
+</tr>
+</tbody></table>
+<h3 id="GAN"><a href="#GAN" class="headerlink" title="GAN"></a>GAN</h3><table>
+<thead>
+<tr>
+<th><strong>Title</strong></th>
+<th><strong>Conf/Journal</strong></th>
+<th><strong>Description</strong></th>
+<th><strong>Links</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Anomaly Detection with Generative Adversarial Networks for Multivariate Time Series</td>
+<td></td>
+<td></td>
+<td><a href="https://arxiv.org/pdf/1809.04758">📃Paper</a> <a href="http://larryshaw0079.coding.me/blog/2019/09/22/Anomaly-Detection-with-Generative-Adversarial-Networks-for-Multivariate-Time-Series/">📥Blog</a></td>
+</tr>
+<tr>
+<td>MAD-GAN: Multivariate Anomaly Detection for Time Series Data with Generative Adversarial Networks</td>
+<td>ICANN19</td>
+<td>普通GAN做时序异常检测，没有编码结构</td>
+<td><a href="https://arxiv.org/pdf/1901.04997">📃Paper</a> <a href="https://github.com/LiDan456/MAD-GANs">📥Code</a></td>
+</tr>
+<tr>
+<td>BeatGAN: Anomalous Rhythm Detection using Adversarially Generated Time Series</td>
+<td>IJCAI19</td>
+<td>ECG异常检测，没有隐变量约束</td>
+<td><a href="https://www.ijcai.org/proceedings/2019/616">📃Paper</a></td>
+</tr>
+</tbody></table>
+<h3 id="Miscellaneous"><a href="#Miscellaneous" class="headerlink" title="Miscellaneous"></a>Miscellaneous</h3><table>
+<thead>
+<tr>
+<th><strong>Title</strong></th>
+<th><strong>Conf/Journal</strong></th>
+<th><strong>Description</strong></th>
+<th><strong>Links</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A Deep Neural Network for Unsupervised Anomaly Detection and Diagnosis in Multivariate Time Series Data</td>
+<td></td>
+<td></td>
+<td><a href="https://arxiv.org/pdf/1811.08055">📃Paper</a></td>
+</tr>
+<tr>
+<td>ALSR: An Adaptive Label Screening and Relearning Approach for Interval-Oriented Anomaly Detection</td>
+<td>Expert Systems With Applications</td>
+<td>有监督KPI异常检测，使用两阶段训练来提升性能</td>
+<td><a href="https://www.sciencedirect.com/science/article/pii/S0957417419304282">📃Paper</a> <a href="http://larryshaw0079.coding.me/blog/2019/09/22/ALSR-An-adaptive-label-screening-and-relearning-approach-for-interval-oriented-anomaly-detection/">✍Blog</a></td>
+</tr>
+<tr>
+<td>Time-Series Anomaly Detection Service at Microsoft</td>
+<td>KDD19</td>
+<td>将视觉异常检测中的谱残差应用到了时序异常检测</td>
+<td><a href="https://arxiv.org/pdf/1906.03821">📃Paper</a> <a href="https://github.com/microsoft/anomalydetector">📥Code</a> <a href="http://larryshaw0079.coding.me/blog/2019/09/22/Time-Series-Anomaly-Detection-Service-at-Microsoft/">✍Blog</a></td>
+</tr>
+<tr>
+<td>Outlier Detection for Multidimensional Time Series using Deep Neural Networks</td>
+<td></td>
+<td></td>
+<td><a href="https://ieeexplore.ieee.org/document/8411269">📃Paper</a></td>
+</tr>
+</tbody></table>
+<h2 id="General"><a href="#General" class="headerlink" title="General"></a>General</h2><h3 id="Survey"><a href="#Survey" class="headerlink" title="Survey"></a>Survey</h3><ul>
+<li><em>Deep Learning for Anomaly Detection: A Survey</em> <a href="https://arxiv.org/abs/1901.03407">[Paper]</a></li>
+</ul>
+<h3 id="Classic-Machine-Learning-1"><a href="#Classic-Machine-Learning-1" class="headerlink" title="Classic Machine Learning"></a>Classic Machine Learning</h3><table>
+<thead>
+<tr>
+<th><strong>Title</strong></th>
+<th><strong>Conf/Journal</strong></th>
+<th><strong>Description</strong></th>
+<th><strong>Links</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>LOF: Identifying Density-Based Local Outliers</td>
+<td></td>
+<td></td>
+<td><a href="https://dl.acm.org/citation.cfm?id=335388">📃Paper</a></td>
+</tr>
+<tr>
+<td>Isolation Forest</td>
+<td></td>
+<td></td>
+<td><a href="https://cs.nju.edu.cn/zhouzh/zhouzh.files/publication/icdm08b.pdf">📃Paper</a></td>
+</tr>
+<tr>
+<td>Extended Isolation Forest</td>
+<td></td>
+<td></td>
+<td><a href="https://arxiv.org/pdf/1811.02141">📃Paper</a></td>
+</tr>
+<tr>
+<td>Hidden Markov Anomaly Detection</td>
+<td></td>
+<td></td>
+<td><a href="http://proceedings.mlr.press/v37/goernitz15.pdf">📃Paper</a></td>
+</tr>
+<tr>
+<td>Linear-Time Outlier Detection via Sensitivity</td>
+<td></td>
+<td></td>
+<td><a href="https://arxiv.org/pdf/1605.00519">📃Paper</a></td>
+</tr>
+<tr>
+<td>Reverse Nearest Neighbors in Unsupervised Distance-Based Outlier Detection</td>
+<td></td>
+<td></td>
+<td><a href="http://ieeexplore.ieee.org/document/6948273">📃Paper</a></td>
+</tr>
+<tr>
+<td>Theoretical Foundations and Algorithms for Outlier Ensembles</td>
+<td></td>
+<td></td>
+<td><a href="https://www.kdd.org/exploration_files/Article4.pdf">📃Paper</a></td>
+</tr>
+<tr>
+<td>R1SVM: A Randomised Nonlinear Approach to Large-Scale Anomaly Detection</td>
+<td></td>
+<td></td>
+<td><a href="https://www.aaai.org/ocs/index.php/AAAI/AAAI15/paper/view/9343">📃Paper</a></td>
+</tr>
+<tr>
+<td>Random Gradient Descent Tree: A Combinatorial Approach for SVM with Outliers</td>
+<td></td>
+<td></td>
+<td><a href="https://www.aaai.org/ocs/index.php/AAAI/AAAI15/paper/view/9477">📃Paper</a></td>
+</tr>
+<tr>
+<td>Sparse Gaussian Markov Random Field Mixtures for Anomaly Detection</td>
+<td></td>
+<td></td>
+<td><a href="https://ieeexplore.ieee.org/document/7837932/">📃Paper</a></td>
+</tr>
+<tr>
+<td>Sequential Ensemble Learning for Outlier Detection: A Bias-Variance Perspective</td>
+<td></td>
+<td></td>
+<td><a href="https://arxiv.org/pdf/1609.05528">📃Paper</a></td>
+</tr>
+<tr>
+<td>Sparse Modeling-Based Sequential Ensemble Learning for Effective Outlier Detection in High-Dimensional Numeric Data</td>
+<td></td>
+<td></td>
+<td><a href="https://aaai.org/ocs/index.php/AAAI/AAAI18/paper/view/16648">📃Paper</a></td>
+</tr>
+<tr>
+<td>Contextual Spatial Outlier Detection with Metric Learning</td>
+<td></td>
+<td></td>
+<td><a href="https://www.kdd.org/kdd2017/papers/view/contextual-spatial-outlier-detection-with-metric-learning">📃Paper</a></td>
+</tr>
+<tr>
+<td>Human-Assisted Online Anomaly Detection with Normal Outlier Retraining</td>
+<td></td>
+<td></td>
+<td><a href="https://www.andrew.cmu.edu/user/lakoglu/odd/accepted_papers/ODD_v50_paper_11.pdf">📃Paper</a></td>
+</tr>
+<tr>
+<td>Efficient Anomaly Detection via Matrix Sketching</td>
+<td></td>
+<td></td>
+<td><a href="https://papers.nips.cc/paper/8030-efficient-anomaly-detection-via-matrix-sketching.pdf">📃Paper</a></td>
+</tr>
+<tr>
+<td>Dual-Regularized Multi-View Outlier Detection</td>
+<td></td>
+<td></td>
+<td><a href="https://www.ijcai.org/Proceedings/15/Papers/572.pdf">📃Paper</a></td>
+</tr>
+<tr>
+<td>Deep Anomaly Detection Using Geometric Transformations</td>
+<td></td>
+<td></td>
+<td><a href="https://papers.nips.cc/paper/8183-deep-anomaly-detection-using-geometric-transformations.pdf">📃Paper</a></td>
+</tr>
+<tr>
+<td>Multi-view Anomaly Detection via Robust Probabilistic Latent Variable Models</td>
+<td></td>
+<td></td>
+<td><a href="https://papers.nips.cc/paper/6456-multi-view-anomaly-detection-via-robust-probabilistic-latent-variable-models.pdf">📃Paper</a></td>
+</tr>
+<tr>
+<td>Partial Multi-View Outlier Detection Based on Collective Learning</td>
+<td></td>
+<td></td>
+<td><a href="https://aaai.org/ocs/index.php/AAAI/AAAI18/paper/view/17166">📃Paper</a></td>
+</tr>
+<tr>
+<td>Multi-View Anomaly Detection: Neighborhood in Locality Matters</td>
+<td></td>
+<td></td>
+<td><a href="https://www.aaai.org/ojs/index.php/AAAI/article/view/4418">📃Paper</a></td>
+</tr>
+<tr>
+<td>Latent Discriminant Subspace Representations for Multi-View Outlier Detection</td>
+<td></td>
+<td></td>
+<td><a href="https://aaai.org/ocs/index.php/AAAI/AAAI18/paper/view/17401">📃Paper</a></td>
+</tr>
+<tr>
+<td>Anomaly Detection with Partially Observed Anomalies</td>
+<td></td>
+<td></td>
+<td><a href="https://dl.acm.org/citation.cfm?id=3184558.3186580">📃Paper</a></td>
+</tr>
+<tr>
+<td>One-Class Active Learning for Outlier Detection with Multiple Subspaces</td>
+<td></td>
+<td></td>
+<td><a href="https://dl.acm.org/citation.cfm?id=3357873">📃Paper</a></td>
+</tr>
+<tr>
+<td>Statistical Analysis of Nearest Neighbor Methods for Anomaly Detection</td>
+<td>NIPS19</td>
+<td></td>
+<td><a href="http://papers.nips.cc/paper/9274-statistical-analysis-of-nearest-neighbor-methods-for-anomaly-detection">📃Paper</a></td>
+</tr>
+<tr>
+<td>SNIPER: Few-shot Learning for Anomaly Detection to Minimize False-negative Rate with Ensured True-positive Rate</td>
+<td>ICASSP19</td>
+<td></td>
+<td><a href="https://ieeexplore.ieee.org/document/8683667">📃Paper</a></td>
+</tr>
+</tbody></table>
+<h3 id="AE-VAE"><a href="#AE-VAE" class="headerlink" title="AE/VAE"></a>AE/VAE</h3><table>
+<thead>
+<tr>
+<th><strong>Title</strong></th>
+<th><strong>Conf/Journal</strong></th>
+<th><strong>Description</strong></th>
+<th><strong>Links</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Estimation of Dimensions Contributing to Detected Anomalies with Variational Autoencoders</td>
+<td></td>
+<td></td>
+<td><a href="https://arxiv.org/pdf/1811.04576">📃Paper</a></td>
+</tr>
+<tr>
+<td>Anomaly Detection with Robust Deep Autoencoders</td>
+<td></td>
+<td></td>
+<td><a href="https://www.kdd.org/kdd2017/papers/view/anomaly-detection-with-robust-deep-auto-encoders">📃Paper</a></td>
+</tr>
+<tr>
+<td>Complementary Set Variational Autoencoder for Supervised Anomaly Detection</td>
+<td></td>
+<td></td>
+<td><a href="https://ieeexplore.ieee.org/document/8462181">📃Paper</a></td>
+</tr>
+<tr>
+<td>A Two-class Hyper-spherical Autoencoder for Supervised Anomaly Detection</td>
+<td></td>
+<td></td>
+<td><a href="https://ieeexplore.ieee.org/document/8683790">📃Paper</a></td>
+</tr>
+</tbody></table>
+<h3 id="GAN-1"><a href="#GAN-1" class="headerlink" title="GAN"></a>GAN</h3><table>
+<thead>
+<tr>
+<th><strong>Title</strong></th>
+<th><strong>Conf/Journal</strong></th>
+<th><strong>Description</strong></th>
+<th><strong>Links</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Adversarially Learned Anomaly Detection</td>
+<td></td>
+<td></td>
+<td><a href="https://arxiv.org/pdf/1812.02288">📃Paper</a></td>
+</tr>
+<tr>
+<td>AMAD: Adversarial Multiscale Anomaly Detection on High-Dimensional and Time-Evolving Categorical Data</td>
+<td></td>
+<td></td>
+<td><a href="https://arxiv.org/pdf/1907.06582">📃Paper</a></td>
+</tr>
+<tr>
+<td>Adversarially Learned One-Class Classifier for Novelty Detection</td>
+<td></td>
+<td></td>
+<td><a href="http://openaccess.thecvf.com/content_cvpr_2018/papers/Sabokrou_Adversarially_Learned_One-Class_CVPR_2018_paper.pdf">📃Paper</a> <a href="https://github.com/khalooei/ALOCC-CVPR2018">📥Code</a></td>
+</tr>
+<tr>
+<td>Generative Probabilistic Novelty Detection with Adversarial Autoencoders</td>
+<td></td>
+<td></td>
+<td><a href="https://papers.nips.cc/paper/7915-generative-probabilistic-novelty-detection-with-adversarial-autoencoders.pdf">📃Paper</a> <a href="https://github.com/podgorskiy/GPND">📥Code</a></td>
+</tr>
+<tr>
+<td>OCGAN: One-class Novelty Detection Using GANs with Constrained Latent Representations</td>
+<td></td>
+<td></td>
+<td><a href="https://arxiv.org/pdf/1903.08550">📃Paper</a></td>
+</tr>
+<tr>
+<td>Fence GAN: Towards Better Anomaly Detection</td>
+<td>Arxiv</td>
+<td></td>
+<td><a href="https://arxiv.org/abs/1904.01209">📃Paper</a></td>
+</tr>
+<tr>
+<td>Anomaly Detection via Minimum Likelihood Generative Adversarial Networks</td>
+<td>Arxiv</td>
+<td></td>
+<td><a href="https://arxiv.org/abs/1808.00200">📃Paper</a></td>
+</tr>
+<tr>
+<td>DOPING: Generative Data Augmentation for Unsupervised Anomaly Detection with GAN</td>
+<td>ICDM18</td>
+<td></td>
+<td><a href="https://ieeexplore.ieee.org/document/8594955">📃Paper</a></td>
+</tr>
+<tr>
+<td>Learning Competitive and Discriminative Reconstructions for Anomaly Detection</td>
+<td>AAAI19</td>
+<td></td>
+<td><a href="https://www.aaai.org/ojs/index.php/AAAI/article/view/4451">📃Paper</a></td>
+</tr>
+</tbody></table>
+<h3 id="Miscellaneous-1"><a href="#Miscellaneous-1" class="headerlink" title="Miscellaneous"></a>Miscellaneous</h3><table>
+<thead>
+<tr>
+<th><strong>Title</strong></th>
+<th><strong>Conf/Journal</strong></th>
+<th><strong>Description</strong></th>
+<th><strong>Links</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Deep Structured Energy Based Models for Anomaly Detection</td>
+<td></td>
+<td></td>
+<td><a href="https://arxiv.org/pdf/1605.07717">📃Paper</a></td>
+</tr>
+<tr>
+<td>Anomaly Detection using One-Class Neural Networks</td>
+<td></td>
+<td></td>
+<td><a href="https://arxiv.org/pdf/1802.06360">📃Paper</a> <a href="https://github.com/raghavchalapathy/oc-nn">📥Code</a></td>
+</tr>
+<tr>
+<td>High-dimensional and large-scale anomaly detection using a linear one-class SVM with deep learning</td>
+<td></td>
+<td></td>
+<td><a href="https://www.sciencedirect.com/science/article/pii/S0031320316300267">📃Paper</a></td>
+</tr>
+<tr>
+<td>Deep Autoencoding Gaussian Mixture Model for Unsupervised Anomaly Detection</td>
+<td></td>
+<td></td>
+<td><a href="https://openreview.net/pdf?id=BJJLHbb0-">📃Paper</a></td>
+</tr>
+<tr>
+<td>Deep Anomaly Detection with Outlier Exposure</td>
+<td></td>
+<td></td>
+<td><a href="https://openreview.net/forum?id=HyxCxhRcY7">📃Paper</a></td>
+</tr>
+<tr>
+<td>Are Generative Deep Models for Novelty Detection Truly Better?</td>
+<td>KDD18 Workshop</td>
+<td></td>
+<td><a href="https://arxiv.org/abs/1807.05027">📃Paper</a></td>
+</tr>
+<tr>
+<td>Probabilistic-Mismatch Anomaly Detection: Do one’s Medications Match with the Diagnoses?</td>
+<td>ICDM16</td>
+<td></td>
+<td><a href="https://ieeexplore.ieee.org/document/7837890">📃Paper</a></td>
+</tr>
+<tr>
+<td>Deep Anomaly Detection with Deviation Networks</td>
+<td>KDD19</td>
+<td></td>
+<td><a href="https://dl.acm.org/doi/10.1145/3292500.3330871">📃Paper</a></td>
+</tr>
+<tr>
+<td>Weakly-supervised Deep Anomaly Detection with Pairwise Relation Learning</td>
+<td>AAAI20</td>
+<td></td>
+<td><a href="https://arxiv.org/abs/1910.13601">📃Paper</a></td>
+</tr>
+<tr>
+<td>Transfer Anomaly Detection by Inferring Latent Domain Representations</td>
+<td>NIPS19</td>
+<td></td>
+<td><a href="http://papers.nips.cc/paper/8517-transfer-anomaly-detection-by-inferring-latent-domain-representations">📃Paper</a></td>
+</tr>
+<tr>
+<td>Multi-view Anomaly Detection via Robust Probabilistic Latent Variable Models</td>
+<td>NIPS16</td>
+<td></td>
+<td><a href="http://papers.nips.cc/paper/6456-multi-view-anomaly-detection-via-robust-probabilistic-latent-variable-models">📃Paper</a></td>
+</tr>
+<tr>
+<td>Continual Learning for Anomaly Detection with Variational Autoencoder</td>
+<td>ICASSP19</td>
+<td></td>
+<td><a href="https://ieeexplore.ieee.org/document/8682702">📃Paper</a></td>
+</tr>
+<tr>
+<td>AdaFlow: Domain-adaptive Density Estimator with Application to Anomaly Detection and Unpaired Cross-domain Translation</td>
+<td>ICASSP19</td>
+<td></td>
+<td><a href="https://ieeexplore.ieee.org/document/8683072">📃Paper</a></td>
+</tr>
+</tbody></table>
+<h2 id="Graph"><a href="#Graph" class="headerlink" title="Graph"></a>Graph</h2><ul>
+<li><em>AddGraph: Anomaly Detection in Dynamic Graph Using Attention-based Temporal GCN</em> <a href="https://www.ijcai.org/proceedings/2019/614">[Paper]</a></li>
+<li><em>Outlier Detection in Graph Streams</em> <a href="https://ieeexplore.ieee.org/document/5767885">[Paper]</a></li>
+<li><em>NetWalk: A Flexible Deep Embedding Approach for Anomaly Detection in Dynamic Networks</em> <a href="https://www.kdd.org/kdd2018/accepted-papers/view/netwalk-a-flexible-deep-embedding-approach-for-anomaly-detection-in-dynamic">[Paper]</a></li>
+<li><em>Anomaly Detection in Dynamic Networks using Multi-view Time-Series Hypersphere Learning</em> <a href="https://dl.acm.org/citation.cfm?id=3132964">[Paper]</a></li>
+</ul>
+<h1 id="Related"><a href="#Related" class="headerlink" title="Related"></a>Related</h1><p>这一部分主要是一些非异常检测文章，但是可以用来解决异常检测中的问题的相关文章。</p>
+<h2 id="Infrastructure"><a href="#Infrastructure" class="headerlink" title="Infrastructure"></a>Infrastructure</h2><h3 id="GAN-2"><a href="#GAN-2" class="headerlink" title="GAN"></a>GAN</h3><ul>
+<li><em>Generative Adversarial Networks</em> <a href="https://arxiv.org/abs/1406.2661">[Paper]</a></li>
+</ul>
+<h4 id="VAE-amp-GAN-Combination"><a href="#VAE-amp-GAN-Combination" class="headerlink" title="VAE &amp; GAN Combination"></a>VAE &amp; GAN Combination</h4><ul>
+<li><em>Variational Approaches for Auto-Encoding Generative Adversarial Networks</em> <a href="https://arxiv.org/abs/1706.04987">[Paper]</a></li>
+<li><em>Adversarial Variational Bayes: Unifying Variational Autoencoders and Generative Adversarial Networks</em> <a href="https://arxiv.org/abs/1701.04722">[Paper]</a></li>
+<li><em>On Unifying Deep Generative Models</em> <a href="https://arxiv.org/abs/1706.00550">[Paper]</a></li>
+</ul>
+<h4 id="Bidirectional-GANs"><a href="#Bidirectional-GANs" class="headerlink" title="Bidirectional GANs"></a>Bidirectional GANs</h4><ul>
+<li><em>Adversarial Feature Learning</em> [[Paper]](Adversarial Feature Learning)</li>
+<li><em>Adversarially Learned Inference</em> <a href="https://arxiv.org/abs/1606.00704">[Paper]</a></li>
+<li><em>It Takes (Only) Two: Adversarial Generator-Encoder Networks</em> <a href="https://arxiv.org/abs/1704.02304">[Paper]</a></li>
+</ul>
+<h3 id="VAE-1"><a href="#VAE-1" class="headerlink" title="VAE"></a>VAE</h3><ul>
+<li><em>Auto-Encoding Variational Bayes</em> <a href="https://arxiv.org/abs/1312.6114">[Paper]</a></li>
+</ul>
+<h2 id="Class-Imbalance"><a href="#Class-Imbalance" class="headerlink" title="Class Imbalance"></a>Class Imbalance</h2><ul>
+<li><em>Focal Loss for Dense Object Detection</em> <a href="https://arxiv.org/abs/1708.02002">[Paper]</a></li>
+<li><em>Gradient Harmonized Single-stage Detector</em> <a href="https://arxiv.org/abs/1811.05181">[Paper]</a></li>
+</ul>
+<h2 id="Stochastic-Temporal-Modeling"><a href="#Stochastic-Temporal-Modeling" class="headerlink" title="Stochastic Temporal Modeling"></a>Stochastic Temporal Modeling</h2><ul>
+<li><em>Sequential Neural Models with Stochastic Layers</em> <a href="https://arxiv.org/abs/1605.07571">[Paper]</a></li>
+<li><em>A Recurrent Latent Variable Model for Sequential Data</em> <a href="https://papers.nips.cc/paper/5653-a-recurrent-latent-variable-model-for-sequential-data">[Paper]</a></li>
+<li><em>Deep State Space Models for Time Series Forecasting</em> <a href="https://papers.nips.cc/paper/8004-deep-state-space-models-for-time-series-forecasting">[Paper]</a></li>
+<li><em>Bayesian Recurrent Neural Networks</em> <a href="https://arxiv.org/abs/1704.02798">[Paper]</a></li>
+</ul>
+<h2 id="Detection-without-Closed-form-Likelihood"><a href="#Detection-without-Closed-form-Likelihood" class="headerlink" title="Detection without Closed-form Likelihood"></a>Detection without Closed-form Likelihood</h2><h3 id="Reconstruction"><a href="#Reconstruction" class="headerlink" title="Reconstruction"></a>Reconstruction</h3><ul>
+<li><em>Adversarially Learned One-Class Classifier for Novelty Detection</em> <a href="https://arxiv.org/abs/1802.09088">[Paper]</a></li>
+<li><em>Generative Adversarial Network Based Novelty Detection Using Minimized Reconstruction Error</em> <a href="https://link.springer.com/article/10.1631/FITEE.1700786">[Paper]</a></li>
+<li><em>Learning Discriminative Reconstructions for Unsupervised Outlier Removal</em> <a href="https://ieeexplore.ieee.org/document/7410534">[Paper]</a></li>
+</ul>
+<h3 id="Discriminator"><a href="#Discriminator" class="headerlink" title="Discriminator"></a>Discriminator</h3><ul>
+<li><em>A Lipschitz-constrained Anomaly Discriminator Framework</em> <a href="https://arxiv.org/abs/1905.10710">[Paper]</a></li>
+</ul>
+<h3 id="Out-of-distribution"><a href="#Out-of-distribution" class="headerlink" title="Out-of-distribution"></a>Out-of-distribution</h3><ul>
+<li><em>Enhancing The Reliability of Out-of-distribution Image Detection in Neural Networks</em> <a href="https://arxiv.org/abs/1706.02690">[Paper]</a></li>
+<li><em>Learning Confidence for Out-of-Distribution Detection in Neural Networks</em> <a href="https://arxiv.org/abs/1802.04865">[Paper]</a></li>
+<li><em>A Baseline for Detecting Misclassified and Out-of-Distribution Examples in Neural Networks</em> <a href="https://arxiv.org/abs/1610.02136">[Paper]</a></li>
+<li><em>A Simple Unified Framework for Detecting Out-of-Distribution Samples and Adversarial Attacks</em> <a href="https://arxiv.org/abs/1807.03888">[Paper]</a></li>
+</ul>
+<h2 id="GANs-for-Incomplete-Data"><a href="#GANs-for-Incomplete-Data" class="headerlink" title="GANs for Incomplete Data"></a>GANs for Incomplete Data</h2><ul>
+<li><em>AmbientGAN: Generative Models From Lossy Measurements</em> <a href="https://openreview.net/forum?id=Hy7fDog0b">[Paper]</a></li>
+<li><em>MisGAN: Learning from Incomplete Data with Generative Adversarial Networks</em> <a href="https://openreview.net/forum?id=S1lDV3RcKm">[Paper]</a></li>
+</ul>
+<h1 id="Dataset"><a href="#Dataset" class="headerlink" title="Dataset"></a>Dataset</h1><p>详见<a href="http://qfxiao.me/2020/02/03/Datasets-for-Time-Series-Anomaly-Detection/。">http://qfxiao.me/2020/02/03/Datasets-for-Time-Series-Anomaly-Detection/。</a></p>
+</div></article></div><div class="card"><div class="card-image"><a class="image is-7by3" href="/2020/01/06/Unsupervised-Anomaly-Detection-for-Intricate-KPIs-via-Adversarial-Training-of-VAE/"><img class="thumbnail" src="http://qfxiao.me/img/image-20200106141915707.png" alt="Unsupervised Anomaly Detection for Intricate KPIs via Adversarial Training of VAE"></a></div><article class="card-content article" role="article"><div class="article-meta size-small is-uppercase level is-mobile"><div class="level-left"><time class="level-item" dateTime="2020-01-06T05:09:32.000Z" title="2020-01-06T05:09:32.000Z">2020-01-06</time><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></span><span class="level-item">18 分钟 读完 (大约 2770 个字)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2020/01/06/Unsupervised-Anomaly-Detection-for-Intricate-KPIs-via-Adversarial-Training-of-VAE/">Unsupervised Anomaly Detection for Intricate KPIs via Adversarial Training of VAE</a></h1><div class="content"><h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p><a href="https://ieeexplore.ieee.org/abstract/document/8737430/">论文📃</a></p>
+<p><a href="https://github.com/yantijin/Buzz">代码📥</a></p>
+<p>本文介绍了一种利用对抗训练来进行时间序列异常检测的方法<em>Buzz</em>。作者认为在现实中复杂的KPI数据大量存在，这种数据通常带有非高斯分布的噪声，同时数据分布复杂，导致一般的生成式模型无法对数据进行很好的建模，所以作者提出了基于对抗训练的模型。在文中，作者的创新点主要有三个：</p>
+<ol>
+<li>为了处理复杂数据，将数据空间分为多个子空间，在每个子空间上进行距离的度量；</li>
+<li>采用<em>Wasserstein</em>距离度量模型建模的分布和真实分布之间的距离；</li>
+<li>建立了基于对抗训练的<em>Buzz</em>的损失函数和VAE之间的关系。</li>
+</ol>
+<p><img src="http://qfxiao.me/img/image-20200106141915707.png" alt=""></p>
+<h1 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h1><h2 id="Anomaly-Detection"><a href="#Anomaly-Detection" class="headerlink" title="Anomaly Detection"></a>Anomaly Detection</h2><p>对于任意时间$t$，给定历史观察值$x_{t-T+1},\cdots,x_t$，确定异常是否发生(记为$y_t=1$)。通常来收异常检测算法给出的是发生异常的可能性，如$p(y_t=1|x_{t-T+1},\cdots,x_t)$。</p>
+<h2 id="VAE"><a href="#VAE" class="headerlink" title="VAE"></a>VAE</h2><table>
+<thead>
+<tr>
+<th><strong>Model</strong></th>
+<th><strong>Latent</strong></th>
+<th><strong>Data</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong><em>Auto-encoder (AE)</em></strong></td>
+<td><code>None</code></td>
+<td><code>L1Loss</code></td>
+</tr>
+<tr>
+<td><strong><em>Variational Auto-encoder (VAE)</em></strong></td>
+<td><code>KL Divergence</code></td>
+<td><code>Log Likelihood</code></td>
+</tr>
+<tr>
+<td><strong><em>Adversarial Auto-encoder (AAE)</em></strong></td>
+<td><code>Discriminator</code></td>
+<td><code>L1Loss</code></td>
+</tr>
+<tr>
+<td><strong><em>Wasserstein Auto-encoder (WAE)</em></strong></td>
+<td><code>MaxMeanDiscrepancy</code> or <code>Discriminator</code></td>
+<td><code>L1Loss</code></td>
+</tr>
+<tr>
+<td><strong><em>AlphaGAN</em></strong></td>
+<td><code>Discriminator</code></td>
+<td><code>Discriminator</code>+<code>L1Loss</code></td>
+</tr>
+</tbody></table>
+<h2 id="GAN-and-WGAN-GP"><a href="#GAN-and-WGAN-GP" class="headerlink" title="GAN and WGAN-GP"></a>GAN and WGAN-GP</h2><p>原始GAN等价于优化：<br>$$<br>\mathbb{E}<em>{x\sim P_r}\log{\frac{P_r(x)}{\frac{1}{2}\left[P_r(x)+P_g(x)\right]}}+\mathbb{E}</em>{x\sim P_g}\log{\frac{P_g(x)}{\frac{1}{2}\left[P_r(x)+P_g(x)\right]}}<br>$$<br>根据KL散度和JS散度的定义：<br>$$<br>\text{KL}(P_1\parallel P_2)=\mathbb{E}_{x\sim P_1}\log{\frac{P_1}{P_2}}<br>$$</p>
+<p>$$<br>\text{JS}(P_1\parallel P_2)=\frac{1}{2}\text{KL}(P_1\parallel \frac{P_1+P_2}{2})+\frac{1}{2}\text{KL}(P_2\parallel \frac{P_1+P_2}{2})<br>$$</p>
+<p>可重写为：<br>$$<br>2\text{JS}(P_r\parallel P_g)-2\log 2<br>$$<br>当$P_r$与$P_g$的支撑集（support）是高维空间中的低维流形（manifold）时，$P_r$与$P_g$重叠部分测度（measure）为0的概率为1。</p>
+<ul>
+<li>支撑集（support）其实就是函数的非零部分子集，比如<code>ReLU</code>函数的支撑集就是[公式]，一个概率分布的支撑集就是所有概率密度非零部分的集合。</li>
+<li>流形（manifold）是高维空间中曲线、曲面概念的拓广，我们可以在低维上直观理解这个概念，比如我们说三维空间中的一个曲面是一个二维流形，因为它的本质维度（intrinsic dimension）只有2，一个点在这个二维流形上移动只有两个方向的自由度。同理，三维空间或者二维空间中的一条曲线都是一个一维流形。</li>
+<li>测度（measure）是高维空间中长度、面积、体积概念的拓广，可以理解为“超体积”。</li>
+</ul>
+<p><em>Wasserstein</em>距离定义如下：<br>$$<br>W(P_r,P_g)=\inf\limits_{\gamma\sim\prod(P_r,P_g)}\mathbb{E}<em>{(x,y)\sim \gamma}\left[\parallel x-y\parallel\right]<br>$$<br>下确界$\inf$没法直接求解，不过根据相关定理其等价于：<br>$$<br>W(P_r,P_g)=\frac{1}{K}\sup\limits</em>{\parallel f\parallel_L\leq K}\mathbb{E}<em>{x\sim P_r}[f(x)]-\mathbb{E}</em>{x\sim P_g}[f(x)]<br>$$<br><em>Lipschitz</em>连续是指存在一个常数$K\geq 0$使得定义域内任意两个元素$x_1$和$x_2$都满足：<br>$$<br>|f(x_1)-f(x_2)|\leq K|x_1-x_2|<br>$$<br>WAN的损失函数：<br>$$<br>\mathcal{L}=\mathop{\mathbb{E}}\limits_{\mathbf{x}\sim\mathbb{P}<em>g}\left[D({\mathbf{x}})\right]-\mathop{\mathbb{E}}\limits</em>{\mathbf{x}\sim\mathbb{P}<em>r}\left[D(\mathbf{x})\right]<br>$$<br>WGAN-GP的损失函数为：<br>$$<br>\mathcal{L}=\mathop{\mathbb{E}}\limits</em>{\tilde{\mathbf{x}}\sim\mathbb{P}<em>g}\left[D(\tilde{\mathbf{x}})\right]-\mathop{\mathbb{E}}\limits</em>{\mathbf{x}\sim\mathbb{P}<em>r}\left[D(\mathbf{x})\right] + \lambda\mathop{\mathbb{E}}\limits</em>{\hat{\mathbf{x}}\sim\mathbb{P}<em>{\hat{\mathbf{x}}}}\left[(\parallel\nabla</em>{\hat{\mathbf{x}}}D(\hat{\mathbf{x}})\parallel_2-1)^2\right]<br>$$</p>
+<h1 id="Proposed-Method"><a href="#Proposed-Method" class="headerlink" title="Proposed Method"></a>Proposed Method</h1><p>下图为<em>Buzz</em>的总体流程：</p>
+<p><img src="http://qfxiao.me/img/image-20200106141958376.png" alt=""></p>
+<p>数据会首先进行一些预处理，之后进行训练。在检测阶段会根据异常分数来判定异常。</p>
+<h2 id="Motivation"><a href="#Motivation" class="headerlink" title="Motivation"></a>Motivation</h2><p>在文中，最关键的两个创新点分别是<em>Wasserstein</em>距离和对数据分布进行分区的方法。</p>
+<ul>
+<li><p>在使用距离度量方面， 因为<em>Wasserstein</em>在WGAN中取得了很好的效果，是一种鲁棒的距离度量，所以作者在文中采用了<em>Wasserstein</em>距离来衡量生成的分布和真实的分布之间的距离，并由此引入了对抗训练；</p>
+</li>
+<li><p>在分区方法方面，作者认为原始数据过于复杂，所以将数据空间$\mathcal{X}$进行划分，然后在每个子空间上使用<em>Wasserstein</em>度量距离，而总体的距离由每个分区的距离的期望求得。</p>
+</li>
+</ul>
+<p>作者还发现，当划分地越来越细时，总体距离接近于特定形式的VAE的重构误差项。</p>
+<p><img src="http://qfxiao.me/img/image-20200106142008894.png" alt=""></p>
+<h2 id="Network-Structure"><a href="#Network-Structure" class="headerlink" title="Network Structure"></a>Network Structure</h2><p>下图为模型的网络结构：</p>
+<p><img src="http://qfxiao.me/img/image-20200106142018827.png" alt=""></p>
+<h2 id="Training"><a href="#Training" class="headerlink" title="Training"></a>Training</h2><h3 id="Objective-Function"><a href="#Objective-Function" class="headerlink" title="Objective Function"></a>Objective Function</h3><p>先定义一些符号：</p>
+<ul>
+<li>$b$和$s$分别为Batch的大小和邻居的大小，数据集按$s$进行切分，然后随机打乱，每个Batch包含$b$个$s$，之后$s/=2,b*=2$；</li>
+<li>$\mathcal{W}={w_1,w_2,\cdots,w_b}$为一个Batch，且满足每个$w_i$是$s$的倍数；</li>
+<li>$w\in\mathcal{W}$的邻域集(neighborhood set)为一个时间上的partition，记为${w,w+1,\cdots,w+s-1}$</li>
+<li>$\mathbf{x}^{(w)},\mathbf{x}^{(w+1)},\cdots,\mathbf{x}^{(w+s-1)}$为在空间$\mathcal{X}$上的一个partition，记为$S_w$，其中$\mathbf{x}^{(w)}$表示以$w$为结尾的时间窗口。</li>
+</ul>
+<p><em>Buzz</em>的损失函数和WGAN-GP类似，但做了一些改进，由下面四部分组成，下面分别解释。</p>
+<p>第一个是每一个partition的$\mathbf{z}$后验的KL散度：<br>$$<br>\mathcal{K} = \frac{1}{bs}\sum\limits_{w\in\mathcal{W}}\sum\limits_{i=1}^{s-1}\text{KL}\left[q_\phi(\mathbf{z}|\mathbf{x})\parallel\mathcal{N}(\mathbf{0},\mathbf{1})\right]<br>$$</p>
+<p>第二个在训练时是一个常数：<br>$$<br>Z(\lambda) = \frac{\Gamma(W)}{\Gamma(\frac{W}{2})}2\pi^{\frac{W}{2}}\lambda^{-W}<br>$$</p>
+<p>其中$\Gamma$是<em>Gamma</em>函数。</p>
+<p>第三个是<em>Wasserstein</em>距离：<br>$$<br>\mathcal{T}(F,w)=\frac{1}{bs}\sum\limits_{i=1}^{s-1}\mathbb{E}_{q_\phi(\mathbf{z}|\mathbf{x}^{w+i})}\left[F(\mathbf{x}^{(w+i)})-F(G(\mathbf{z}))\right]<br>$$</p>
+<p>第四个是<em>Gradient Penalty</em>：</p>
+<p>$$<br>\mathcal{R}(F,w)=\frac{1}{bs}\sum\limits_{i=1}^{s-1}\mathbb{E}<em>{q_\phi(\mathbf{z}|\mathbf{x}^{(w+i)})}\left[\mathbb{E}</em>{\varepsilon\sim[0,1]}(\parallel\nabla_{\hat{\mathbf{x}}}(\hat{\mathbf{x}})\parallel-\mathbf{1})^2\right]<br>$$</p>
+<p>其中$\hat{\mathbf{x}}=\varepsilon \mathbf{x}^{w+i}+(1-\varepsilon)G(\mathbf{z})$为生成数据与真实数据的插值。</p>
+<blockquote>
+<p>原始的WGAN-GP的损失函数为：<br>$$<br>L=\mathop{\mathbb{E}}\limits_{\tilde{\mathbf{x}}\sim\mathbb{P}<em>g}\left[D(\tilde{\mathbf{x}})\right]-\mathop{\mathbb{E}}\limits</em>{\mathbf{x}\sim\mathbb{P}<em>r}\left[D(\mathbf{x})\right] + \lambda\mathop{\mathbb{E}}\limits</em>{\hat{\mathbf{x}}\sim\mathbb{P}<em>{\hat{\mathbf{x}}}}\left[(\parallel\nabla</em>{\hat{\mathbf{x}}}D(\hat{\mathbf{x}})\parallel_2-1)^2\right]<br>$$<br>其中$\mathbb{P}<em>g$为生成器的分布，$\mathbb{P}_r$为真实分布，$\mathbb{P}</em>{\hat{\mathbf{x}}}$为真实数据和生成数据插值得到的分布。</p>
+</blockquote>
+<p>$$<br>\hat{\mathcal{L}}<em>{Buzz}=-\lambda\sup\limits_F\left[\sum\limits</em>{w\in\mathcal{W}}(\left|\mathcal{T}(F,w)\right|-\eta\mathcal{R}(F,w))\right]-\mathcal{K}-\log Z(\lambda)<br>$$</p>
+<h3 id="Training-Procedure"><a href="#Training-Procedure" class="headerlink" title="Training Procedure"></a>Training Procedure</h3><p><em>Buzz</em>的训练过程与WGAN-GP类似，</p>
+<h2 id="Detection"><a href="#Detection" class="headerlink" title="Detection"></a>Detection</h2><p>文中假设解码器的输出服从如下分布：</p>
+<p>$$<br>p_\theta(\mathbf{x}|\mathbf{z})=\frac{1}{Z(\lambda)}\exp{-\lambda\parallel\mathbf{x}-G(\mathbf{z})\parallel}<br>$$</p>
+<p>作者定义异常分数为：<br>$$<br>\mathcal{S}=\log p_\theta(\mathbf{x})-\log p_\theta(\bar{\mathbf{x}})<br>$$<br>其中$\bar{\mathbf{x}}$为经过MCMC填充后的样本。</p>
+<p>异常分数也可以展开为：<br>$$<br>\log\frac{1}{L}\sum\limits_{l=1}^L\left[\frac{p_\theta(\mathbf{x}|\mathbf{z^{(l)}})p_\theta(\mathbf{z}^{(l)})}{q_\phi(\mathbf{z}^{(l)}|\bar{\mathbf{x}})}\right]-\log\frac{1}{L}\sum\limits_{l=1}^L\left[\frac{p_\theta(\bar{\mathbf{x}}|\mathbf{z}^{(l)})p_\theta(\mathbf{z}^{(l)})}{q_\phi(\mathbf{z}^{(l)}|\bar{\mathbf{x}})}\right]<br>$$</p>
+<p>最终算法流程图为：</p>
+<p><img src="http://qfxiao.me/img/image-20200106142053342.png" alt=""></p>
+<h2 id="Theoretical-Analysis"><a href="#Theoretical-Analysis" class="headerlink" title="Theoretical Analysis"></a>Theoretical Analysis</h2><p>在理论分析中，作者主要是想建立$\mathcal{L}<em>{Buzz}$和VAE的损失函数$\mathcal{L}</em>{vae}$之间的联系，损失函数$\mathcal{\hat{L}}_{Buzz}$为：</p>
+<p>$$<br>\hat{\mathcal{L}}<em>{Buzz}=-\lambda\sup\limits_F\left[\sum\limits</em>{w\in\mathcal{W}}(\left|\mathcal{T}(F,w)\right|-\eta\mathcal{R}(F,w))\right]-\mathcal{K}-\log Z(\lambda)<br>$$</p>
+<p>为了便于分析，去掉<em>Gradient Penalty</em>的部分，公式可简化为：</p>
+<p>$$<br>\mathcal{L}<em>{Buzz}=-\lambda\mathbb{E}</em>{p(w)}W^1\left[P(\mathbf{x}|w)\parallel P(\mathbf{y}|w)\right]-\mathcal{K}-\log Z(\lambda)<br>$$</p>
+<p>实际上$Z(\lambda)=\mathfrak{S}_W\Gamma(W)\lambda^{-W}$，其中$\mathfrak{S}_W$为$W$维单位球的表面积。</p>
+<blockquote>
+<p>$n$维空间单位球表面积公式：<br>$$<br>\omega_n=\frac{2\pi^{\frac{n}{2}}}{\Gamma(\frac{n}{2})}<br>$$</p>
+</blockquote>
+<p>而$W^1\left[P(\mathbf{x}|w)\parallel P(\mathbf{y}|w)\right]$为<em>Wasserstein</em>距离：<br>$$<br>W^1\left[P(\mathbf{x}|w)\parallel P(\mathbf{y}|w)\right]=\sup\limits_{Lip(f)\leq 1}\left{\int_\mathcal{X}f(\mathbf{x})p(\mathbf{x}|w)\mathrm{d}\mathbf{x}-\int_\mathcal{X}f(\mathbf{y})p(\mathbf{y}|w)\mathrm{d}\mathbf{y}\right}<br>$$</p>
+<h3 id="Lemma-1"><a href="#Lemma-1" class="headerlink" title="Lemma 1"></a>Lemma 1</h3><p>通过设定具体形式的后验分布，VAE的损失函数可以写为：</p>
+<blockquote>
+<p>设$\mathbf{x}$的后验分布$p(\mathbf{x}|\mathbf{z})=\frac{1}{Z(\lambda)}\exp{-\lambda\parallel\mathbf{x}-G(\mathbf{z})\parallel}$，那么VAE的损失函数为：<br>$$<br>\mathcal{L}<em>{vae}=\lambda\mathbb{E}</em>{p(w)}\left[\mathbb{E}<em>{p(\mathbf{x}|w)}\mathbb{E}</em>{p_G(\mathbf{y}|\mathbf{x})}-\parallel\mathbf{x}-\mathbf{y}\parallel\right]-\mathcal{K}-\log{Z(\lambda)}<br>$$</p>
+</blockquote>
+<p>后验分布实际上是一个Laplace分布：</p>
+<blockquote>
+<p><strong>Laplace Distribution</strong>:<br>$$<br>f(x|\theta,\lambda)=\frac{1}{2\lambda}\exp{\left(-\frac{|x-\theta|}{\lambda}\right)}<br>$$</p>
+</blockquote>
+<p>可以直接把后验分布带入VAE的损失函数就得到了。</p>
+<h3 id="Lemma-2"><a href="#Lemma-2" class="headerlink" title="Lemma 2"></a>Lemma 2</h3><p>$S_w$定义为数据空间$\mathcal{X}$的一个partition，而$S={(\mathbf{x}_1,\mathbf{x}_2)|\exist w, \mathbf{x}_1\in S_w,\mathbf{x}_2\in S_w}$。</p>
+<blockquote>
+<p>当$G,\phi,\lambda$固定时，$S\downarrow$有$\mathcal{L}_{Buzz}\downarrow$</p>
+</blockquote>
+<h3 id="Lemma-3"><a href="#Lemma-3" class="headerlink" title="Lemma 3"></a>Lemma 3</h3><blockquote>
+<p>$\max\mathcal{L}<em>{Buzz}\geq\max{\mathcal{L}</em>{vae}}$，同时，当$S\downarrow\text{diag}{\mathcal{X}}$时$\max\mathcal{L}<em>{Buzz}\downarrow\max\mathcal{L}</em>{vae}$</p>
+</blockquote>
+<p><img src="http://qfxiao.me/img/image-20200106183833975.png" alt=""></p>
+<h3 id="Lemma-4"><a href="#Lemma-4" class="headerlink" title="Lemma 4"></a>Lemma 4</h3><blockquote>
+<p>令$p^\prime_G(\mathbf{y}|\mathbf{x})$表示$\mathbb{E}<em>{q</em>{\phi^\prime}}\left[p_G(\mathbf{y}|\mathbf{z})\right]$。如果$(G,\phi,\lambda)$是一个解，那么存在$(G,\phi^\prime,\lambda)$使得：<br>$$<br>\mathbb{E}<em>{p(\mathbf{x}|w)}\mathbb{E}</em>{p_G^\prime(\mathbf{y}|\mathbf{x})}\parallel\mathbf{x}-\mathbf{y}\parallel=W^1\left[P(\mathbf{x}|w)\parallel P_G(\mathbf{y}|w)\right]<br>$$<br>此时$\mathcal{L}<em>{Buzz}-\mathcal{L}</em>{vae}^\prime=\mathcal{K}^\prime-\mathcal{K}$，其中$\mathcal{L}^\prime,\mathcal{K}^\prime$分别为$(G,\phi^\prime,\lambda)$时的$\mathcal{L}$和$\mathcal{K}$。</p>
+</blockquote>
+<p>$$<br>\mathcal{L}^\dagger_{Buzz}=\mathbb{E}<em>{p(\mathbf{x})}\left[\mathbb{E}</em>{q_{\phi^\prime}(\mathbf{z}|\mathbf{x})}\log_{p_\theta}(\mathbf{x}|\mathbf{z})\right]-\min\limits_{\bar{\phi}\sim\phi^\prime}\bar{\mathcal{K}}<br>$$</p>
+<h3 id="Lemma-5"><a href="#Lemma-5" class="headerlink" title="Lemma 5"></a>Lemma 5</h3><p>这里主要是想证明</p>
+<blockquote>
+<p>对于固定的$w$，令：<br>$$<br>\mathcal{F}={f|Lip(f)\leq 1}, \space \mathcal{F}^<em>=\left{f|<em>{S_w}\bigg|Lip(f|</em>{S_w})\leq 1\right}<br>$$<br>有$\sup_{f\in\mathcal{F}}\mathcal{T}(f)=\sup_{f|_{S_w}\in\mathcal{F}^</em>}\mathcal{T}^*\left(f|_{S_w}\right)$。</p>
+</blockquote>
+<h3 id="Theorem-6"><a href="#Theorem-6" class="headerlink" title="Theorem 6"></a>Theorem 6</h3><blockquote>
+<p>$\mathcal{L}<em>{Buzz}$的对偶形式为：<br>$$<br>\mathcal{L}</em>{Buzz}=-\lambda\sup\limits_{Lip(F;S)\leq 1}\mathbb{E}_{p(w)}\mathcal{T}^*(F)-\mathcal{K}-\log Z(\lambda)<br>$$</p>
+</blockquote>
+<p>近似的$\mathcal{L}<em>{Buzz}$的对偶形式为：<br>$$<br>\bar{\mathcal{L}}</em>{Buzz}=-\lambda\sup\limits_{Lip(F;S)\leq 1}\mathbb{E}_{p(w)}\mathcal{T}(F)-\mathcal{K}-\log Z(\lambda)<br>$$</p>
+<h1 id="Experiment"><a href="#Experiment" class="headerlink" title="Experiment"></a>Experiment</h1><p><img src="http://qfxiao.me/img/image-20200106142131500.png" alt=""></p>
+<p><img src="http://qfxiao.me/img/image-20200106142155978.png" alt=""></p>
+<p><img src="http://qfxiao.me/img/image-20200106142212110.png" alt=""></p>
+</div></article></div><div class="card"><div class="card-image"><a class="image is-7by3" href="/2019/10/29/Anomaly-Detection-in-Streams-with-Extreme-Value-Theory/"><img class="thumbnail" src="http://qfxiao.me/img/image-20191029114054583.png" alt="Anomaly Detection in Streams with Extreme Value Theory"></a></div><article class="card-content article" role="article"><div class="article-meta size-small is-uppercase level is-mobile"><div class="level-left"><time class="level-item" dateTime="2019-10-29T03:36:22.000Z" title="2019-10-29T03:36:22.000Z">2019-10-29</time><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></span><span class="level-item">18 分钟 读完 (大约 2650 个字)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2019/10/29/Anomaly-Detection-in-Streams-with-Extreme-Value-Theory/">Anomaly Detection in Streams with Extreme Value Theory</a></h1><div class="content"><h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>本文基于<strong>Extreme Value Theory</strong>提出了一种不需要手动设置阈值也不需要对数据分布作任何假设的时间序列异常检测方法。除此之外，本方法可以用在通用的自动阈值选择的场合中。</p>
+<p><a href="https://www.kdd.org/kdd2017/papers/view/anomaly-detection-in-streams-with-extreme-value-theory">原文</a></p>
+<h1 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h1><p>在很多情况下我们需要进行阈值的选择。阈值的选择可以通过实验的方法或者对数据分布进行假设的方法来得到，不过这样做通常不准确。借助<strong>Extreme Value Theory</strong>我们可以在不需要对原始数据的分布作很强的假设的情况下，推断我们想要的极端事件的分布（在异常检测中就是异常值）。</p>
+<p>下面给出一些数学符号，$X$为随机变量，$F$为累积分布函数，即$F(x)=\mathbb{P}(X\leq x)$。记$F$的“末尾”分布$\bar{F}(x)=1-F(x)=\mathbb{P}(X&gt;x)$。对于一个随机变量$X$和给定的概率$q$，记$z_q$为在$1-q$水平的分位数，即$z_q$为满足$\mathbb{P}(X\leq z_q)\geq 1-q$最小的值。</p>
+<h2 id="Extreme-Value-Distributions"><a href="#Extreme-Value-Distributions" class="headerlink" title="Extreme Value Distributions"></a>Extreme Value Distributions</h2><p><strong>Extreme Value Theory</strong>主要是为了找出极端事件发生的规律，有学者证明，在很弱的条件下，所有极端事件都服从一个特定的分布，而不管原始分布如何。具体形式如下：</p>
+<p>$$<br>G_\gamma:x\mapsto \exp(-(1+\gamma x)^{-\frac{1}{\gamma}}), \space\space\space\space\space\gamma\in\mathbb{R}, \space\space\space\space\space 1+\gamma x&gt;0<br>$$</p>
+<p>其中$\gamma$称为<strong>Extreme Value Index</strong>，由原始分布决定。</p>
+<p>更严谨的说法是Fisher-Tippett-Gnedenko定理（极值理论第一定理）：</p>
+<blockquote>
+<p>*<em>THEOREM: *</em>(Fisher-Tippett-Gnedenko). 令$X_1,X_2,\cdots,X_n,\cdots$为独立同分布的随机变量序列，$M_n=\max {X_1,\cdots,X_n}$。如果实数对序列$(a_n,b_n)$存在且满足$a_n&gt;0$和$\lim\limits_{n\rightarrow \infty}P\left(\frac{M_n-b_n}{a_n}\leq x\right)=F(x)$，其中$F$为非退化分布函数，那么$F$属于Gumbel、Fréchet或Weibull分布族（或总称Generalized Extreme Value Distribution）中的一种。</p>
+</blockquote>
+<p>这是一个反直觉的结论，但是想到当事件发生变得极端时，即$\mathbb{P}(X&gt;x)\rightarrow 0$，$\bar{F}(x)=\mathbb{P}(X&gt;x)$分布的形状其实并没有很多种选择。Table 1展示了几种不同分布对应的$\gamma$：</p>
+<p><img src="http://qfxiao.me/img/image-20191029162343219.png" alt=""></p>
+<p>Figure 1展示了几种不同$\gamma$情况下的“末尾”分布：</p>
+<p><img src="http://qfxiao.me/img/image-20191029113903386.png" alt=""></p>
+<h2 id="Power-of-EVT"><a href="#Power-of-EVT" class="headerlink" title="Power of EVT"></a>Power of EVT</h2><p>根据<strong>Extreme Value Theory</strong>，我们可以在原始分布未知的情况下计算极端事件的概率。但是$\bar{G}_\gamma$分布中参数$\gamma$是未知的，我们需要一种高效的方法来进行估计。<strong>The Peaks-Over-Threshold</strong> (POT) 方法是本文介绍的一种方法。</p>
+<p><img src="http://qfxiao.me/img/image-20191029162456947.png" alt=""></p>
+<h2 id="Peaks-Over-Threshold-Approach"><a href="#Peaks-Over-Threshold-Approach" class="headerlink" title="Peaks-Over-Threshold Approach"></a>Peaks-Over-Threshold Approach</h2><p>POT方法依赖于Pickands-Balkema-De Haan定理（极值理论第二定理），维基百科版：</p>
+<blockquote>
+<p>考虑一个未知分布$F$和随机变量$X$，我们的目标是估计$X$在超过确定阈值$u$下的条件分布$F_u$，定义为：<br>$$<br>F_u(y)=P(X-u\leq y|X&gt;u)=\frac{F(u+y)-F(u)}{1-F(u)}<br>$$<br>其中$0\leq y\leq x_F-u$，$x_F$为$F$的右端点。$F_u$描述了超过特征阈值$u$的分布，称为<strong>Conditional Excess Distribution Function</strong>。</p>
+<p>*<em>STATEMENT: *</em>(Pickands-Balkema-De Haan). 设$(X_1,X_2,\cdots)$为独立同分布随机变量序列，$F_u$为相应的Conditional Excess Distribution Function。对于一大类的$F$和很大的$u$，$F_u$能够很好的被Generalized Pareto Distribution所拟合：<br>$$<br>F_u(y)\rightarrow G_{k,\sigma}(y),\space\space \text{as } u\rightarrow \infty<br>$$<br>其中：<br>$$<br>G_{k,\sigma}(y)=<br>\begin{cases}<br>1-(1+ky/\sigma)^{-1/k}, &amp;\text{if }k\neq 0\<br>1-e^{-y/\sigma}, &amp;\text{if }k=0<br>\end{cases}<br>$$<br>当$k\geq 0$时$\sigma&gt;0, y\geq 0$，$k&lt;0$时$0\leq y\leq -\sigma/k$。</p>
+</blockquote>
+<p>论文中给出的定理如下：</p>
+<blockquote>
+<p>*<em>THEOREM: *</em>(Pickands-Balkema-De Haan). 累积概率密度函数$F\in\mathcal{D}<em>\gamma$当且仅当函数$\sigma$存在时，对所有$x\in\mathbb{R}$在$1+\gamma x&gt;0$的条件下有：<br>$$<br>\frac{\bar{F}(t+\sigma(t)x)}{\bar{F}(t)}\mathop{\rightarrow}\limits</em>{t\rightarrow\tau}(1+\gamma x)^{-\frac{1}{\gamma}}<br>$$</p>
+</blockquote>
+<p>上式可以写成如下形式：<br>$$<br>\bar{F}<em>t(x)=\mathbb{P}(X-t&gt;x|X&gt;t)\mathop{\sim}\limits</em>{t\rightarrow\tau}\left(1+\frac{\gamma x}{\sigma(t)}\right)^{-\frac{1}{\gamma}}<br>$$<br>该式表明$X$超过阈值$t$的概率（写为$X-t$）服从<strong>Generalized Pareto Distribution</strong> (GPD)，参数为$\gamma$和$\sigma$。POT主要是拟合GPD而不是EVT分布。</p>
+<p>如果我们要估计参数$\hat{\gamma}$和$\hat{\sigma}$，分位数可以通过下式计算得到：<br>$$<br>z_q\simeq t+\frac{\hat{\sigma}}{\hat{\gamma}}\left(\left(\frac{qn}{N_t}\right)^{-\hat{\gamma}}-1\right)<br>$$</p>
+<p>其中$t$是一个“很高”的阈值，$q$是给定的概率值，$n$是所有观测样本的数量，$N_t$是peaks的数量，即$X_i&gt;t$的数量。为了进行高效的参数估计，文中使用了极大似然估计。</p>
+<h2 id="Maximum-Likelihood-Estimation"><a href="#Maximum-Likelihood-Estimation" class="headerlink" title="Maximum Likelihood Estimation"></a>Maximum Likelihood Estimation</h2><p>设$X_1,\cdots,X_n$为独立同分布的随机变量，概率密度函数记为$f_\theta$，$\theta$为分布中的参数，那么似然函数可以写为：</p>
+<p>$$<br>\mathcal{L}(X_1,\cdots,X_n;\theta)=\prod\limits_{i=1}^n f_\theta(X_i)<br>$$</p>
+<p>在极大似然估计中，我们需要找到合适的参数使得似然函数最大化。在我们的问题中，似然函数如下：<br>$$<br>\log\mathcal{L}(\gamma,\sigma)=-N_t\log\sigma-\left(1+\frac{1}{\gamma}\right)\sum\limits_{i=1}^{N_t}\log\left(1+\frac{\gamma}{\sigma}Y_i\right)<br>$$<br>其中$Y_i&gt;0$表示$X_i$超过阈值$t$的部分。</p>
+<p>文中使用了<strong>Grimshaw’s Trick</strong>来将含两个参数的优化问题转换为只含一个参数的优化问题。记$\ell(\gamma,\sigma)=\log\mathcal{L}(\gamma,\sigma)$，对于所有极值来说有$\nabla \ell(\gamma, \sigma)=0$。Grimshaw’s Trick表明对于满足$\nabla \ell(\gamma, \sigma)=0$的一对$(\gamma^<em>,\sigma^</em>)$，$x^<em>=\frac{\gamma^</em>}{\sigma^<em>}$为等式$u(X)v(X)=1$的解，其中：<br>$$<br>\begin{align}<br>u(x)&amp;=\frac{1}{N_t}\sum\limits_{i=1}^{N_t}\frac{1}{1+xY_i}\<br>v(x)&amp;=1+\frac{1}{N_t}\sum\limits_{i=1}^{N_t}\log(1+xY_i)<br>\end{align}<br>$$<br>在找到满足该等式的解$x^</em>$后，我们可以得到$\gamma^<em>=v(x^</em>)-1$和$\sigma^<em>=\gamma^</em>/x^*$，于是问题就变成了如何寻找方程的所有根。</p>
+<p>因为$\log$的存在，所以有$1+xY_i&gt;0$。而$Y_i$是正数，所以$x^*$的范围一定在$\left(-\frac{1}{Y^M},+\infty\right)$，其中$Y^M=\max Y_i$。</p>
+<p>Grimshaw（作者参考的一篇<a href="https://www.tandfonline.com/doi/abs/10.1080/00401706.1993.10485040">论文</a>）还给出了一个上界：<br>$$<br>x^*_{\text{max}}=2\frac{\bar{Y}-Y^m}{(Y^m)^2}<br>$$<br>其中$Y^m=\min Y_i$，$\bar{Y}$为$Y_i$的均值。详细的优化方法会在下文讨论。</p>
+<p>背景部分到此结束，接下来的部分就是作者提出的新方法。</p>
+<h1 id="Methodology"><a href="#Methodology" class="headerlink" title="Methodology"></a>Methodology</h1><p>Extreme Value Theory给出了在对原始分布未知的情况下估计使得$\mathbb{P}(X&gt;z_q)&lt;q$的$z_q$的方法。</p>
+<p>本文据此提出了时间序列流的异常检测方法。首先根据已知的观测值$X_1,\cdots,X_n$得到阈值$z_q$，然后根据数据的特性运用两种不同方法来更新$z_q$。对于平稳时间序列，使用SPOT；对于非平稳时间序列，使用DSPOT。</p>
+<h2 id="Initialization-Step"><a href="#Initialization-Step" class="headerlink" title="Initialization Step"></a>Initialization Step</h2><p>在进行异常检测之前，需要根据已有的观测数据进行$z_q$的估计。给定$n$个观测值$X_1,\cdots,X_n$和一个固定的概率值$q$，我们的目标是估计阈值$z_q$使得$\mathbb{P}(X&gt;z_q)&lt;q$。其主要流程是首先设定一个较大的阈值$t$，然后通过拟合GPD分布来计算$z_q$。过程如下图所示：</p>
+<p><img src="http://qfxiao.me/img/image-20191029114030518.png" alt=""></p>
+<p>算法流程如下所示：</p>
+<p><img src="http://qfxiao.me/img/image-20191029114001461.png" alt=""></p>
+<p>$Y_t$代表大于$t$的观测值的集合，GPD分布的拟合使用了前文提到的Grimshaw’s Trick。</p>
+<h2 id="Finding-Anomalies-in-a-Stream"><a href="#Finding-Anomalies-in-a-Stream" class="headerlink" title="Finding Anomalies in a Stream"></a>Finding Anomalies in a Stream</h2><p>通过Initialization Step使用POT算法得到的$z_q$，我们定义其为”Normality Bound”，用于后面的检测。在后面的步骤中，我们会根据新得到的观测值来更新$z_q$。</p>
+<h3 id="Stationary-Case"><a href="#Stationary-Case" class="headerlink" title="Stationary Case"></a>Stationary Case</h3><p>我们首先来讨论时间序列没有时间依赖性的情况（$X_1,\cdots,X_n$之间独立同分布）。通过POT算法对所有观测值得到$z_q$之后，Streaming POT (SPOT) 算法会检查$X_n$之后的值（数据流场景，$X_1,\cdots,X_n$是历史数据，还会有新的数据进来），如果大于$z_q$，则将$X_i$加入异常点集合中；如果大于$t$但小于$z_q$，则将$X_i$加入观测值集合中，更新$z_q$；其他情况我们$X_i$是正常情况。算法流程图如下：</p>
+<p><img src="http://qfxiao.me/img/image-20191029114020571.png" alt=""></p>
+<h3 id="Drifting-Case"><a href="#Drifting-Case" class="headerlink" title="Drifting Case"></a>Drifting Case</h3><p>SPOT算法只适用于平稳分布的情况，但在现实生活中这样的假设过强了。于是作者提出了能处理时间依赖性的Streaming POT with Drift (DSPOT) 算法。</p>
+<p><img src="http://qfxiao.me/img/image-20191029114054583.png" alt=""></p>
+<p>在DSPOT中，我们不使用$X_i$的绝对值，而是用相对值$X^\prime_i=X_i-M_i$，其中$M_i$是$i$时刻的局部特征，如Figure 4所示。最简单的实现是使用局部均值，即$M_i=(1/d)\cdot\sum\limits_{k=1}^d X_{i-k}^<em>$，$X_{i-1}^</em>,\cdots,X_{i-d}^*$是长度为$d$的窗口。我们假设$X^\prime_i$服从平稳分布的假设。</p>
+<p>算法流程图如下所示：</p>
+<p><img src="http://qfxiao.me/img/image-20191029114113201.png" alt=""></p>
+<h2 id="Numerical-Optimization"><a href="#Numerical-Optimization" class="headerlink" title="Numerical Optimization"></a>Numerical Optimization</h2><p>现在剩下的问题就是优化了，前文已经提到对GPD的拟合已经被优化成一个参数的优化问题，下面将会详细讨论优化算法。</p>
+<h3 id="Reduction-of-the-Optimal-Parameters-Search"><a href="#Reduction-of-the-Optimal-Parameters-Search" class="headerlink" title="Reduction of the Optimal Parameters Search"></a>Reduction of the Optimal Parameters Search</h3><p>前文已经得到了一个初步的$x^<em>$的Bound，即$x^</em>&gt;-\frac{1}{Y^M}$和$x^*\leq 2\frac{\bar{Y}-Y^m}{(Y^m)^2}$，下面将给出一个更严格的Bound。</p>
+<blockquote>
+<p><em><em>PROPOSITION: *</em>如果$x^</em>$是$u(x)v(x)=1$的解，那么：<br>$$<br>x^<em>\leq 0 \text{ or } x^</em>\geq 2\frac{\bar{Y}-Y^m}{\bar{Y}Y^m}<br>$$</p>
+</blockquote>
+<p>证明见论文原文。</p>
+<p>这样$x^<em>$的范围就进一步缩小了，于是有$u(x)v(X)=1$的解$x^</em>$在以下范围之内：<br>$$<br>\left(-\frac{1}{Y^M},0\right]\text{ and }\left[2\frac{\bar{Y}-Y^m}{\bar{Y}Y^m},2\frac{\bar{Y}-Y^m}{(Y^m)^2}\right]<br>$$</p>
+<h3 id="How-Can-We-Maximize-the-Likelihood-Function"><a href="#How-Can-We-Maximize-the-Likelihood-Function" class="headerlink" title="How Can We Maximize the Likelihood Function?"></a>How Can We Maximize the Likelihood Function?</h3><p>接下来是优化的具体实现问题。文中首先设定了一个很小的值$\epsilon&gt;0\space(\sim 10^{-8})$，然后在下面的范围内寻找函数$w:x\mapsto u(x)v(x)-1$的根：<br>$$<br>\left[-\frac{1}{Y^M}+\epsilon,-\epsilon\right]\text{ and }\left[2\frac{\bar{Y}-Y^m}{\bar{Y}Y^m},2\frac{\bar{Y}-Y^m}{(Y^m)^2}\right]<br>$$<br>作者没有使用现有的寻找函数根的算法，而是转换为如下优化问题：<br>$$<br>\min\limits_{x_1,\cdots,x_k\in I}\sum\limits_{i=1}^k w(x_k)^2<br>$$<br>其中$I$就是$x^*$的Bound。该问题是一个很典型的优化问题，可以被很多成熟的算法所解决。</p>
+<h3 id="Initial-Threshold"><a href="#Initial-Threshold" class="headerlink" title="Initial Threshold"></a>Initial Threshold</h3><p>在算法的Initialization Step，需要事先设定一个阈值$t$，如果设定的太大，那么$Y_t$的数量就会很少。作者给出的建议是保证$t&lt;z_q$，即$t$对应的概率值应该小于$1-q$。</p>
+<h1 id="Experiments"><a href="#Experiments" class="headerlink" title="Experiments"></a>Experiments</h1><p>在实验部分，作者在合成数据和真实数据上试验了SPOT算法和DSPOT算法的有效性。</p>
+<h2 id="D-SPOT-Reliability"><a href="#D-SPOT-Reliability" class="headerlink" title="(D)SPOT Reliability"></a>(D)SPOT Reliability</h2><p>作者首先在合成数据上验证SPOT的有效性。具体做法是使用高斯分布生成数据（高斯分布的分位数能够直接计算），然后将SPOT得出的$z_q$和理论值进行对比。误差定义如下：<br>$$<br>\text{error rate}=\left|\frac{z^{\text{SPOT}}-z^{\text{th}}}{z^{\text{th}}}\right|<br>$$<br>下图是采用不同数量观测值的结果：</p>
+<p><img src="http://qfxiao.me/img/image-20191029114230661.png" alt=""></p>
+<h2 id="Finding-Anomalies-with-SPOT"><a href="#Finding-Anomalies-with-SPOT" class="headerlink" title="Finding Anomalies with SPOT"></a>Finding Anomalies with SPOT</h2><p>在这一节作者在真实数据集上进行了实验以验证SPOT算法的有效性，结果如下图：</p>
+<p><img src="http://qfxiao.me/img/image-20191029114255259.png" alt=""></p>
+<p>在文中作者说算法的True Positive达到了$86%$，False Positive小于$4%$。</p>
+<p><img src="http://qfxiao.me/img/image-20191029114316348.png" alt=""></p>
+<h2 id="Finding-Anomalies-with-DSPOT"><a href="#Finding-Anomalies-with-DSPOT" class="headerlink" title="Finding Anomalies with DSPOT"></a>Finding Anomalies with DSPOT</h2><p>在这一节作者使用DSPOT在真实数据集上进行了实验。窗口大小$d=450$，预设的风险概率值$q=10^{-3}$。结果如下图所示：</p>
+<p><img src="http://qfxiao.me/img/image-20191029114340936.png" alt=""></p>
+<p>在图中可以看出在$8000$ Minutes之后上界显著提高，作者分析了原因，认为是因为超过阈值$t$的点$Y_t$的存储是全局的，在前$8000$ Minutes算法存储了很多较高的$Y_t$值，而在$8000$ Minutes之后，真实数据的趋势开始下降，但算法仍是根据全局的$Y_t$来进行$z_q$的计算（这一段没有特别明白）。作者给出的修正方法是只保存固定数量的Peaks。</p>
+<p>下图是作者在股票数据上得到的实验结果：</p>
+<p><img src="http://qfxiao.me/img/image-20191029114356004.png" alt=""></p>
+<h2 id="Performances"><a href="#Performances" class="headerlink" title="Performances"></a>Performances</h2><p>作者还验证了算法的时间效率。</p>
+<p><img src="http://qfxiao.me/img/image-20191029114419226.png" alt=""></p>
+<p>表中T代表的是每个Iteration的时间，M代表的是Peaks的比例，”bi-“前缀代表的是同时计算上界和下界。</p>
+</div></article></div><div class="card"><div class="card-image"><a class="image is-7by3" href="/2019/10/18/Robust-Anomaly-Detection-for-Multivariate-Time-Series-through-Stochastic-Recurrent-Neural-Network/"><img class="thumbnail" src="http://qfxiao.me/img/1571411043958.png" alt="Robust Anomaly Detection for Multivariate Time Series through Stochastic Recurrent Neural Network"></a></div><article class="card-content article" role="article"><div class="article-meta size-small is-uppercase level is-mobile"><div class="level-left"><time class="level-item" dateTime="2019-10-18T15:00:57.000Z" title="2019-10-18T15:00:57.000Z">2019-10-18</time><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></span><span class="level-item">25 分钟 读完 (大约 3813 个字)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2019/10/18/Robust-Anomaly-Detection-for-Multivariate-Time-Series-through-Stochastic-Recurrent-Neural-Network/">Robust Anomaly Detection for Multivariate Time Series through Stochastic Recurrent Neural Network</a></h1><div class="content"><h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><p>本文提出了<em>OmniAnomaly</em>：一种针对多变量时间序列的随机循环神经网络异常检测算法。该模型运用了一系列技术来捕捉多变量时间序列的正常模式，并在检测阶段基于重构误差来检测异常，同时本文还提供了一定的理论解释。</p>
+<p><a href="https://www.kdd.org/kdd2019/accepted-papers/view/robust-anomaly-detection-for-multivariate-time-series-through-stochastic-re">原文</a></p>
+<h1 id="Contribution"><a href="#Contribution" class="headerlink" title="Contribution"></a>Contribution</h1><ol>
+<li>提出了<em>OmniAnomaly</em>，一种基于随机循环神经网络的多变量时间序列异常检测算法；</li>
+<li>提出了针对多变量时间序列异常检测的解释方法；</li>
+<li>通过实验证明了<em>OmniAnomaly</em>中所用的关键技术的有效性，包括GRU，planar NF, stochastic variable connection和adjusted Peaks-Over-Threshold method；</li>
+<li>通过大量的实验我们证明了<em>OmniAnomaly</em>的有效性；</li>
+<li>发布了代码和数据集。</li>
+</ol>
+<h1 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h1><h2 id="Linear-Gaussian-State-Space-Model"><a href="#Linear-Gaussian-State-Space-Model" class="headerlink" title="Linear Gaussian State Space Model"></a>Linear Gaussian State Space Model</h2><p>状态空间模型（State Space Model, SSM）的概念来自于控制理论，在这里我们主要讨论其在时间序列中的应用。其大概思想是我们认为时间序列在时刻$t$的观测值$z_t$是一个隐含状态$\boldsymbol{l}<em>t$的条件分布$p(z_t|\boldsymbol{l}_t)$，而这个隐含状态$\boldsymbol{l}_t$刻画了时间序列的内在规律，同时隐含状态会随着时间更新，即服从条件分布$p(\boldsymbol{l}_t|\boldsymbol{l}</em>{t-1})$。</p>
+<p>在线性状态空间模型（Linear State Space Model）中我们以如下的方式刻画隐含状态的更新：<br>$$<br>\boldsymbol{l}<em>t=\boldsymbol{F}_t\boldsymbol{l}</em>{t-1}+\boldsymbol{g}_t\varepsilon_t, \space\space\space\varepsilon_t\sim\mathcal{N}(0,1)<br>$$<br>$\boldsymbol{F}_t$为确定的状态转移矩阵，而$\boldsymbol{g}_t\varepsilon_t$则表示了状态转移的随机性。</p>
+<p>观测值$z_t$从隐含状态$\boldsymbol{l}<em>t$计算而来：<br>$$<br>\begin{align}<br>z_t&amp;=y_t+\sigma_t\epsilon_t,\<br>y_t&amp;=\boldsymbol{a}_t^\top\boldsymbol{l}</em>{t-1}+b_t,\<br>\epsilon_t&amp;\sim\mathcal{N}(0,1)<br>\end{align}<br>$$<br>其中$\boldsymbol{a}_t\in\mathbb{R}^L,\sigma_t\in \mathbb{R},b_t\in\mathbb{R}$都是额外的参数。初始状态$\boldsymbol{l}_0$则从一个独立的高斯分布得来，即$\boldsymbol{l}_0\sim N(\boldsymbol\mu_0,\text{diag}(\boldsymbol{\sigma}_0^2))$。</p>
+<p>令参数集合$\Theta_t=(\boldsymbol{\mu}<em>0,\boldsymbol{\Sigma}_0,\boldsymbol{F}_t,\boldsymbol{g}_t,\boldsymbol{a}_t,b_t,\sigma_t),\forall t&gt;0$，一般来说参数集合不会随着时间变化，即每个时刻$t$共享同样的参数$\Theta_t=\Theta,\forall t&gt;0$。对参数的估计可以采用极大似然估计：<br>$$<br>\begin{align}<br>\Theta^*</em>{1:T}&amp;=\arg\max_{\Theta_{1:T}}p(z_{1:T}|\Theta_{1:T}),\<br>\end{align}<br>$$<br>其中：<br>$$<br>\begin{align}<br>p(z_{1:T}|\Theta_{1:T})&amp;=p(z_1|\Theta_1)\prod\limits_{t=2}^T p(z_t|z_{1:t-1},\Theta_{1:t})\<br>&amp;=\int p(\boldsymbol{l}<em>0)\left[\prod\limits</em>{t=1}^T p(z_t|\boldsymbol{l}<em>t)p(\boldsymbol{l}_t|\boldsymbol{l}</em>{t-1})\right]\mathrm{d}\boldsymbol{l}_{0:T}<br>\end{align}<br>$$</p>
+<h2 id="Planar-Normalizing-Flow"><a href="#Planar-Normalizing-Flow" class="headerlink" title="Planar Normalizing Flow"></a>Planar Normalizing Flow</h2><h3 id="Normalizing-Flows"><a href="#Normalizing-Flows" class="headerlink" title="Normalizing Flows"></a>Normalizing Flows</h3><p>VAE采用一个变分分布$q_\phi(z|x)$来近似真实的后验分布$p(z|x)$，并推导出$\log p_\theta(x)$的下界（称为ELBO）来作为优化目标函数：<br>$$<br>\begin{align}<br>\log p_\theta(x)&amp;=\log \int p_\theta(x|z)p(z)\mathrm{d}z\<br>&amp;=\log\int\frac{q_\phi(z|x)}{q_\phi(z|x)}p_\theta(x|z)p(z)\mathrm{d}z\<br>&amp;\geq-D_{KL}[q_\phi(z|x)\parallel p(z)]+\mathbb{E}<em>q[\log p_\theta(x|z)]<br>\end{align}<br>$$<br>$\log p_\theta(x)$与ELBO取等的条件是$D</em>{KL}[q_\phi(z|x)\parallel p(z)]$，表明变分分布完全匹配了真实的后验分布。但在实际应用中，真实的后验分布可能会非常复杂，而我们的变分分布通常是一个确定的较为简单的分布，如高斯分布。这样变分分布可能很难对真实后验分布得到一个很好的拟合。</p>
+<p>一个解决方案是使用标准化流（Normalizing Flows）。标准化流是从一个相对简单的分布出发，执行一系列可逆的映射，将原始简单的分布转化为一个复杂的分布。</p>
+<p>首先考虑一个光滑的、可逆的映射$f:\mathbb{R}^d\mapsto \mathbb{R}^d$，记$g=f^{-1}$，那么$g\circ f(\mathbf{z})=\mathbf{z}$。令$\mathbf{z}^\prime=f(\mathbf{z})$，那么$\mathbf{z}^\prime$的分布为：<br>$$<br>q(\mathbf{z}^\prime)=q(\mathbf{z})\left|\text{det}\frac{\partial f^{-1}}{\partial \mathbf{z}^\prime}\right|=q(z)\left|\text{det}\frac{\partial f}{\partial \mathbf{z}}\right|^{-1}<br>$$<br>式中$q(\mathbf{z}^\prime)=q(z)\left|\text{det}\frac{\partial f}{\partial \mathbf{z}}\right|^{-1}$说明了$\mathbf{z}^\prime$的分布等于$\mathbf{z}$的分布乘上$f$的Jacobian矩阵的行列式的倒数。那么对于映射多次的情况：<br>$$<br>\mathbf{z}<em>K=f_K\circ\cdots\circ f_2\circ f_1(\mathbf{z}_0)<br>$$<br>$\mathbf{z}_K$的分布可以通过链式计算得到：<br>$$<br>\ln q_K(\mathbf{z}_K)=\ln q_0(\mathbf{z}_0)-\sum\limits</em>{k=1}^K\ln\left|\text{det}\frac{\partial f_k}{\partial \mathbf{z}_{k-1}}\right|<br>$$</p>
+<h3 id="Planar-Flows"><a href="#Planar-Flows" class="headerlink" title="Planar Flows"></a>Planar Flows</h3><p>考虑一个变换族：<br>$$<br>f(\mathbf{z})=\mathbf{z}+\mathbf{u}h(\mathbf{w}^\top\mathbf{z}+b)<br>$$<br>其中$\lambda={\mathbf{w}\in \mathbb{R}^d,\mathbf{u}\in\mathbb{R}^d,b\in\mathbb{R}}$为参数集合，$h(\cdot)$为元素级的非线性函数（如各种激活函数）。令$\psi(\mathbf{z})=h^\prime(\mathbf{w}^\top\mathbf{z}+b)\mathbf{w}$，则$f$的Jacobian矩阵行列式绝对值等于：<br>$$<br>\left|\text{det}\frac{\partial f}{\partial \mathbf{z}}\right|=\left|\text{det}(\mathbf{I}+\mathbf{u}\psi(\mathbf{z})^\top)\right|=\left|1+\mathbf{u}^\top\psi(\mathbf{z})\right|<br>$$<br>但是$f$并不保证总是可逆的，如$h(x)=\tanh(x)$时，$f$可逆的条件是$\mathbf{w}^\top \mathbf{u}\geq-1$。</p>
+<p>下面讨论如何保证可逆的条件。考虑将$\mathbf{z}$分解为$\mathbf{z}=\mathbf{z}_\bot+\mathbf{z}_\parallel$，其中$\mathbf{z}_\bot$与$\mathbf{w}$正交，$\mathbf{z}_\parallel$与$\mathbf{w}$平行，那么：<br>$$<br>f(z)=\mathbf{z}_\bot+\mathbf{z}_\parallel+\mathbf{u}h(\mathbf{w}^\top \mathbf{z}_\parallel +b)<br>$$<br>实际上得到$\mathbf{z}_\parallel$之后可以很容易的得到$\mathbf{z}_\bot$，令$\mathbf{y}=f(\mathbf{z})$，有：<br>$$<br>\mathbf{z}_\bot=\mathbf{y}-\mathbf{z}_\parallel-\mathbf{u}h(\mathbf{w}^\top\mathbf{z}_\parallel+b)<br>$$<br>而$\mathbf{z}_\parallel$与$\mathbf{w}$平行，易知$\mathbf{z}_\parallel=\alpha\frac{\mathbf{w}}{\parallel\mathbf{w}\parallel^2}$，其中$\alpha\in\mathbb{R}$。</p>
+<p>对式(16)两边同时乘以$\mathbf{w}^\top$可得：<br>$$<br>\mathbf{w}^\top f(\mathbf{z})=\alpha+\mathbf{w}^\top\mathbf{u} h(\alpha+b)<br>$$<br>当$\alpha+\mathbf{w}^\top\mathbf{u} h(\alpha+b)$对于$\alpha$是非递减函数的时候，$f$是可逆的。因为$\alpha+\mathbf{w}^\top\mathbf{u} h(\alpha+b)$是非递减函数时有$1+\mathbf{w}^\top\mathbf{u}h^\prime(\alpha+b)\geq 0\equiv \mathbf{w}^\top \mathbf{u}\geq -\frac{1}{h^\prime(\alpha + b)}$，而$0\leq h^\prime(\alpha + b) \leq 1$（$\tanh$函数的性质），所以总是有$\mathbf{w}^\top \mathbf{u}\geq-1$。</p>
+<p>对于任意一个$\mathbf{u}$，我们可以通过特定的方式构造一个$\hat{\mathbf{u}}$使得$\mathbf{w}^\top\hat{\mathbf{u}}&gt;-1$，即令$\hat{\mathbf{u}}(\mathbf{w},\mathbf{u})=\mathbf{u}+[m(\mathbf{w}^\top\mathbf{u})-(\mathbf{w}^\top\mathbf{u})]\frac{\mathbf{w}}{\parallel\mathbf{w}\parallel^2}$，其中$m(x)=-1+\log(1+e^x)$。</p>
+<p><img src="http://qfxiao.me/img/image-20191031162515819.png" alt=""></p>
+<h1 id="Methodology"><a href="#Methodology" class="headerlink" title="Methodology"></a>Methodology</h1><h2 id="Problem-Statement"><a href="#Problem-Statement" class="headerlink" title="Problem Statement"></a>Problem Statement</h2><p>本文针对的是多变量时间序列$x={x_1,x_2,\cdots,x_N}\in R^{M\times N}$，$N$为时间长度，其中某一时刻的观测值$x_t\in R^M$为一个$M$维的向量。作者使用$x_{t-T:t}\in R^{M\times(T+1)}$来表示$t-T$到$t$之间的时间序列。</p>
+<p><img src="http://qfxiao.me/img/image-20191024112404542.png" alt=""></p>
+<h2 id="Overall-Structure"><a href="#Overall-Structure" class="headerlink" title="Overall Structure"></a>Overall Structure</h2><p>算法的总体框架如下图所示：</p>
+<p><img src="http://qfxiao.me/img/1571411043958.png" alt=""></p>
+<p>预处理模块主要是对数据进行标准化以及窗口切分。训练模块则根据输入的数据对正常模式进行捕捉，输出异常分数。在线检测模块则会定期执行。</p>
+<h2 id="Network-Architecture"><a href="#Network-Architecture" class="headerlink" title="Network Architecture"></a>Network Architecture</h2><p>模型的总体结构如下图所示：</p>
+<p><img src="http://qfxiao.me/img/1571411093161.png" alt=""></p>
+<p>在qnet中，首先GRU被用来建模样本的时间依赖关系，之后VAE将样本$\mathbf{x}$映射到隐空间$\mathbf{z}$。文中使用了Linear Gaussian State Space Model来建模隐变量之间的时间依赖关系。除此之外，作者还使用了Planar Normalizing Flow来将隐变量映射到复杂的非高斯分布。在pnet中，隐变量$\mathbf{z}<em>{t-T:t}$被用来重建$\mathbf{x}</em>{t-T:t}$，直观上来说，对样本的好的隐变量表示可以带来更好的重构效果。</p>
+<p>从细节上来说，在时间$t$，qnet的输入为$\mathbf{x}<em>t$和$\mathbf{e}</em>{t-1}$，两者经过GRU Cell之后会产生$t$时间的$\mathbf{e_t}$。$\mathbf{e}<em>t$是GRU捕捉时间依赖性的关键，可以认为它包含了$\mathbf{x}</em>{1:t}$的信息。之后$\mathbf{e}<em>t$会和$\mathbf{z}</em>{t-1}$进行拼接，进入标准的VAE变分网络结构，通过网络输出的参数$\mu_{z_t},\sigma_{z_t}$采样得到隐变量$\mathbf{z}_t^0$，此时隐变量可以说捕捉了时间依赖性。</p>
+<p>网络中涉及到的公式如下所示：</p>
+<p>$$<br>\begin{align}<br>e_t&amp;=(1-c_t^e)\circ\text{tanh}(w^ex_t+u^e(r_t^e\circ e_{t-1})+b^e)+c_t^e\circ e_{t-1}\<br>\mu_{z_t}&amp;=w^{\mu_z}h^\phi([z_{t-1},e_t])+b^{\mu_z}\<br>\sigma_{z_t}&amp;=\text{softplus}(w^{\sigma_z}h^\phi([z_{t-1},e_t])+b^{\sigma_z})+\epsilon^{\sigma_z}<br>\end{align}<br>$$</p>
+<p>其中$r_t^e=\text{sigmoid}(\mathbf{w}^{r^e}\mathbf{x}<em>t+\mathbf{u}^{r^e}\mathbf{e}</em>{t-1}+b^{r^e})$是GRU中的重置门，$c_t^e=\text{sigmoid}(\mathbf{w}^{c^e}\mathbf{x}<em>t+\mathbf{u}^{c^e}\mathbf{e}</em>{t-1}+b^{c^e})$是GRU中的更新门。</p>
+<p>此时$\mathbf{z}_t^0$服从高斯分布，为了拟合复杂的后验分布，我们使用Planar Normalizing Flow来对$\mathbf{z}_t^0$进行变换，最后得到经$K$次变换后的随机变量$\mathbf{z}_t^K$。</p>
+<p>在时间$t$，pnet试图通过$\mathbf{z}<em>t^K$来重构$\mathbf{x}_t$。首先$\mathbf{z}$空间中的变量会根据Linear Gaussian State Space Model来进行“连接“，公式为$\mathbf{z}_t=\mathbf{O}_\theta(\mathbf{T}_\theta\mathbf{z}</em>{t-1}+\mathbf{v}<em>t)+\boldsymbol{\epsilon}_t$，其中$\mathbf{O}_\theta$和$\mathbf{T}_\theta$为状态转移矩阵，$\mathbf{v}_t$和$\boldsymbol{\epsilon}_t$为随机噪声。之后$\mathbf{z}_t$和$\mathbf{d}</em>{t-1}$会作为GRU的输入，产生$\mathbf{d}<em>t$。之后$\mathbf{d}_t$会经过标准VAE中的生成网络，通过网络输出的高斯分布参数$\mu</em>{x_t},\sigma_{x_t}$采样得到重构后的样本$\mathbf{x}^\prime_t$。pnet中涉及到的公式如下所示：<br>$$<br>\begin{align}<br>d_t&amp;=(1-c_t^d)\circ\text{tanh}(w^dz_t+u^d(r_t^d\circ d_{t-1})+b^d)+c_t^d\circ d_{t-1}\<br>\mu_{x_t}&amp;=w^{\mu_x}h^\theta(d_t)+b^{\mu_x}\<br>\sigma_{x_t}&amp;=\text{softplus}(w^{\sigma_x}h^\theta(d_t)+b^{\sigma_x})+\epsilon^{\sigma_x}<br>\end{align}<br>$$</p>
+<p>其中$r_t^d=\text{sigmoid}(\mathbf{w}^{r^d}\mathbf{x}<em>t+\mathbf{u}^{r^d}\mathbf{d}</em>{t-1}+b^{r^d})$是GRU中的重置门，$c_t^d=\text{sigmoid}(\mathbf{w}^{c^d}\mathbf{x}<em>t+\mathbf{u}^{c^d}\mathbf{d}</em>{t-1}+b^{c^d})$是GRU中的更新门。</p>
+<h2 id="Offline-Model-Training"><a href="#Offline-Model-Training" class="headerlink" title="Offline Model Training"></a>Offline Model Training</h2><p>和传统VAE类似，模型的训练可以通过优化ELBO来完成。记长度为$T+1$的输入序列为$\mathbf{x}<em>{t-T:t}$，隐空间变量采样次数为$L$，第$l$个隐空间变量为$\mathbf{l}^{(l)}</em>{t-T:t}$，损失函数可以写成如下形式：</p>
+<p>$$<br>\tilde{\mathcal{L}}(\mathbf{x}<em>{t-T:t})\approx\frac{1}{L}\sum</em>{t=1}^L[\log(p_\theta(\mathbf{x}<em>{t-T:t}|\mathbf{z}</em>{t-T:t}^{(l)}))+\log(p_\theta(\mathbf{z}<em>{t-T:t}^{(l)}))-\log(q_\phi(\mathbf{z}</em>{t-T:t}^|\mathbf{x}_{t-T:t}))]<br>$$</p>
+<p>第一项$\log(p_\theta(\mathbf{x}<em>{t-T:t}|\mathbf{z}</em>{t-T:t}^{(l)}))$可以看作是重构误差；第二项$\log(p_\theta(\mathbf{z}<em>{t-T:t}))=\sum</em>{i=t-T}^t \log(p_\theta(\mathbf{z}<em>i|\mathbf{z}</em>{i-1}))$通过Linear Gaussian State Space Model计算；第三项$-\log(q_\phi(\mathbf{z}<em>{t-T:t}|\mathbf{x}</em>{t-T:t}))=-\sum_{i=t-T}^t\log(q_\phi(\mathbf{z}<em>i|\mathbf{z}</em>{i-1},\mathbf{x}_{t-T:i}))$为隐变量$\mathbf{z}$后验分布的估计，同时$\mathbf{z}_i$是经Planar Normalizing Flow转换过的。</p>
+<h2 id="Online-Detection"><a href="#Online-Detection" class="headerlink" title="Online Detection"></a>Online Detection</h2><p>在训练好模型之后，就可以进行异常检测了。在时间$t$，我们通过根据长度为$T+1$的序列$\mathbf{x}<em>{t-T:t}$来重构$\mathbf{x}_t$，并根据重构概率$\log(p_\theta(\mathbf{x}_t|\mathbf{z}</em>{t-T:t}))$来判定异常。定义$\mathbf{x}<em>t$对应的异常分数$S_t=\log(p_\theta(\mathbf{x}_t|\mathbf{z}</em>{t-T:t}))$，高异常分数代表样本$\mathbf{x}_t$能够以大概率重构（因为模型是用正常样本训练，可以认为模型建模的是正常样本的分布，重构概率高就代表符合正常分布）。给定阈值之后便可根据异常分数来进行异常的判定。</p>
+<h2 id="Automatic-Threshold-Selection"><a href="#Automatic-Threshold-Selection" class="headerlink" title="Automatic Threshold Selection"></a>Automatic Threshold Selection</h2><p>在异常检测阶段，需要根据设定的阈值和每个样本的异常分数来判断该样本是否为异常，所以阈值的选择十分重要。文中用到了一种根据<strong>Extreme Value Theory</strong>自动选择阈值的算法。对于一个分布，其中的极端事件往往位于分布的末尾，而Extreme Value Theory第一定理给出不管原始分布如何，这些极端事件的分布服从一个带参的分布族。因此，可以在对数据分布未知的情况下估计极端事件的分布。</p>
+<p>除了Extreme Value Theory第一定理之外，Extreme Value Theory第二定理给出随机变量大于特定阈值$t$的分布可以用Generalized Pareto Distribution来描述。作者使用了基于Extreme Value Theory第二定理的Peaks-Over-Threshold算法来进行阈值的选择。因为Extreme Value Theory第二定理给出随机变量大于特定阈值$t$的分布，而在本文的场景中我们需要刻画的异常点的分布应该是小于一个给定阈值的分布，所以需要修改一下公式。</p>
+<p>对于给定的数据，模型会给出对应的异常分数序列${S_1,S_2,\cdots,S_{N^\prime}}$，给定预先设定的阈值$th$，$S_i$极端部分（即小于$th$的部分）的分布符合Generalized Pareto Distribution，公式如下：<br>$$<br>\bar{F}(s)=P(th-S&gt;s|S&lt;th)\sim(1+\frac{\gamma s}{\beta})^{-\frac{1}{\gamma}}<br>$$</p>
+<p>其中$\gamma$和$\beta$为分布的形状参数，本文使用极大似然估计来对参数进行估计。设参数的估计值分别为$\hat{\gamma}$和$\hat{\beta}$，最终的阈值$th_F$由拟合得到的分布的分位数确定：</p>
+<p>$$<br>th_F\simeq th-\frac{\hat{\beta}}{\hat{\gamma}}((\frac{qN^\prime}{N^\prime_{th}})^{-\hat{\gamma}}-1)<br>$$</p>
+<p>其中$q$为期望$S&lt;th$的概率，$N^\prime$为观测值的数量，$N^\prime_{th}$为$S_i&lt;th$的个数。</p>
+<h2 id="Anomaly-Interpretation"><a href="#Anomaly-Interpretation" class="headerlink" title="Anomaly Interpretation"></a>Anomaly Interpretation</h2><p>$$<br>\log(p_\theta(\mathbf{x}<em>t|\mathbf{z}</em>{t-T:t}))=\sum_{i=1}^M\log(p_\theta(x_t^i|\mathbf{z}_{t-T:t}))<br>$$</p>
+<h1 id="Experiments"><a href="#Experiments" class="headerlink" title="Experiments"></a>Experiments</h1><h2 id="Datasets-and-Metrics"><a href="#Datasets-and-Metrics" class="headerlink" title="Datasets and Metrics"></a>Datasets and Metrics</h2><h2 id="Overall-Performance"><a href="#Overall-Performance" class="headerlink" title="Overall Performance"></a>Overall Performance</h2><p><img src="http://qfxiao.me/img/1571411131954.png" alt=""></p>
+<p><img src="http://qfxiao.me/img/1571411148667.png" alt=""></p>
+<h2 id="Effects-of-Major-Techniques"><a href="#Effects-of-Major-Techniques" class="headerlink" title="Effects of Major Techniques"></a>Effects of Major Techniques</h2><p><img src="http://qfxiao.me/img/1571411161522.png" alt=""></p>
+<p><img src="http://qfxiao.me/img/1571411178434.png" alt=""></p>
+<h2 id="Visualization-on-Z-Space-Representations"><a href="#Visualization-on-Z-Space-Representations" class="headerlink" title="Visualization on Z-Space Representations"></a>Visualization on Z-Space Representations</h2><p><img src="http://qfxiao.me/img/1571411190279.png" alt=""></p>
+<p><img src="http://qfxiao.me/img/1571411212926.png" alt=""></p>
+<p><img src="http://qfxiao.me/img/1571411223173.png" alt=""></p>
+</div></article></div><div class="card"><div class="card-image"><a class="image is-7by3" href="/2019/09/22/Anomaly-Detection-with-Generative-Adversarial-Networks-for-Multivariate-Time-Series/"><img class="thumbnail" src="http://qfxiao.me/img/1565783729478.png" alt="Anomaly Detection with Generative Adversarial Networks for Multivariate Time Series"></a></div><article class="card-content article" role="article"><div class="article-meta size-small is-uppercase level is-mobile"><div class="level-left"><time class="level-item" dateTime="2019-09-22T14:32:18.000Z" title="2019-09-22T14:32:18.000Z">2019-09-22</time><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></span><span class="level-item">10 分钟 读完 (大约 1568 个字)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2019/09/22/Anomaly-Detection-with-Generative-Adversarial-Networks-for-Multivariate-Time-Series/">Anomaly Detection with Generative Adversarial Networks for Multivariate Time Series</a></h1><div class="content"><h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>这篇文章提出了一个基于GAN的时间序列异常检测模型。</p>
+<p><a href="https://arxiv.org/abs/1809.04758">原文</a></p>
+<h2 id="Contribution"><a href="#Contribution" class="headerlink" title="Contribution"></a>Contribution</h2><ol>
+<li>提出了基于GAN的时间序列无监督异常检测模型</li>
+<li>我们使用基于LSTM的GAN来对多变量时间序列进行建模</li>
+<li>结合使用了Residual Loss和Discrimination Loss来进行异常的判断</li>
+</ol>
+<h2 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h2><h3 id="Generative-Adversarial-Networks"><a href="#Generative-Adversarial-Networks" class="headerlink" title="Generative Adversarial Networks"></a>Generative Adversarial Networks</h3><h4 id="GANs-In-a-Nutshell-an-extremely-simple-explanation"><a href="#GANs-In-a-Nutshell-an-extremely-simple-explanation" class="headerlink" title="GANs In a Nutshell, an extremely simple explanation"></a>GANs In a Nutshell, an extremely simple explanation</h4><ul>
+<li>我们想要从一个复杂的、高维的数据分布$p_r(x)$上采样得到我们想要的数据点，然而$p_r(x)$无法直接求得</li>
+<li>代替方法：从一个简单的、已知的分布$p_z(z)$上采样，然后学习一个Transformation $G(z): z\rightarrow x$来将$z$映射到$x$</li>
+</ul>
+<p><img src="http://qfxiao.me/img/1565836885697.png" alt=""></p>
+<h4 id="Training-Two-player-Game"><a href="#Training-Two-player-Game" class="headerlink" title="Training: Two-player Game"></a>Training: Two-player Game</h4><ul>
+<li>*<em>Generator Network: *</em> 从随机分布$p_z(z)$采样$z$，通过映射生成样本$x$，这个生成的样本要尽量“真实”。怎么“真实”？优化生成器参数$\theta_G$最大化判别器对生成样本的评分即可</li>
+<li>*<em>Discriminator Network: *</em>接受一个样本$x$，判断其是生成的样本还是真实的样本。在训练阶段，我们是知道一个样本$x$到底是生成的还是真实的，所以优化判别器参数$\theta_D$最小化判别器对生成样本的评分，最大化对真实样本的评分（即最大化分辨真实样本的能力）</li>
+</ul>
+<p><img src="http://qfxiao.me/img/1565836982707.png" alt=""></p>
+<p>形式化的来讲，优化函数如下：</p>
+<p>$$\min\limits_{\theta_G}\max\limits_{\theta_D}V(G,D)=\mathbb{E}<em>{x\sim p</em>{data}(x)\log(\underbrace{D_{\theta{D}}(x)}<em>{判别器对真实样本的评分})}+\mathbb{E}</em>{z\sim p_z(z)}\log(1-\underbrace{D_{\theta_d}(G_{\theta_G}(z))}_{判别器对生成样本的评分})$$</p>
+<p>训练过程如下：</p>
+<p><img src="http://qfxiao.me/img/1565837745003.png" alt=""></p>
+<h3 id="Long-Short-Time-Memory-Networks"><a href="#Long-Short-Time-Memory-Networks" class="headerlink" title="Long Short Time Memory Networks"></a>Long Short Time Memory Networks</h3><h4 id="Vanilla-Recurrent-Neural-Networks"><a href="#Vanilla-Recurrent-Neural-Networks" class="headerlink" title="Vanilla Recurrent Neural Networks"></a>Vanilla Recurrent Neural Networks</h4><p>普通的神经网络：</p>
+<p><img src="http://images0.cnblogs.com/blog2015/680781/201508/021735264703915.png" alt=""></p>
+<p>概括的来讲，可以涵盖为一个公式$\hat{\mathbf{y}}=f(\mathbf{x})$。对于一个样本$\mathbf{x}$，通过多层神经网络映射，输出$\mathbf{y}$。</p>
+<p>对于RNN，我们处理的是序列数据，也就是说所有样本之间并不是相互独立的。对于一个序列中的一个样本$x_t\in{x_1,x_2,\cdots,x_n}$，将其输入到神经网络的时候，为了建模$x_t$之前的子序列对$x_t$的影响关系，需要将这个子序列的信息也输入到神经网络中，怎么做呢？为每一个样本点保存一个State。即定义$h_t=g(\hat{y_t})=g(f(x_t))$，对于当前样本点，$\hat{y_t}=f(x_t,h_{t-1})$。也就是说神经网络的输入不仅包含了当前样本点的特征，也包含了上一个样本点的“状态”(上一个样本点的“状态”又隐含了上上个样本点的“状态”…)，就像是为网络加上了短期记忆。</p>
+<p><img src="https://adventuresinmachinelearning.com/wp-content/uploads/2017/09/Recurrent-neural-network.png" alt=""></p>
+<p><img src="http://qfxiao.me/img/1565838639451.png" alt=""></p>
+<p><img src="http://qfxiao.me/img/1565838658532.png" alt=""></p>
+<h4 id="Gradient-Flow-of-Vanilla-RNN"><a href="#Gradient-Flow-of-Vanilla-RNN" class="headerlink" title="Gradient Flow of Vanilla RNN"></a>Gradient Flow of Vanilla RNN</h4><p>下面来进行一些形式化的定义，假设在时刻$t$网络输入特征为$x_t$，输出隐含状态为$h_{t}$，其不仅和当前输入$x_t$有关，还和上一个隐含状态$h_{t-1}$有关：</p>
+<ul>
+<li>当前时刻总的净输入$z_t=Uh_{t-1}+Wx_t+b$</li>
+<li>当前时刻输出隐含状态$h_t=f(z_t)$</li>
+<li>当前时刻输出$\hat{y}_t=Vh_t$</li>
+</ul>
+<p>RNN的梯度更新公式(推导过程比较复杂)：</p>
+<p>$$\frac{\partial{\mathcal{L}}}{\partial U}=\sum\limits_{t=1}^T\sum\limits_{k=1}^t \delta_{t,k}\mathbf{h}_{k-1}^T$$</p>
+<p>$$\frac{\partial{\mathcal{L}}}{\partial{W}}=\sum\limits_{t=1}^T\sum\limits_{k=1}^t \delta_{t,k}x_k^T$$</p>
+<p>$$\frac{\partial\mathcal{L}}{\partial{b}}=\sum\limits_{t=1}^T\sum\limits_{k=1}^t\delta_{t,k}$$</p>
+<p>其中$\delta_{t,k}=\frac{\partial{\mathcal{L}}}{\partial{z_k}}=\text{diag}(f^\prime(z_k))U^T\delta_{t,k+1}$定义为第$t$时刻的损失对第$k$时刻隐藏神经层的净输入$z_k$的导数，且$z_k=Uh_{k-1}+Wx_k+b,1\leq k&lt;t$。</p>
+<p>RNN的梯度流向如下图红箭头所示：</p>
+<p><img src="http://qfxiao.me/img/1565838776226.png" alt=""></p>
+<p>RNN会遇到梯度消失和梯度爆炸的问题。根据前面的公式，$\delta_{t,k}$实际上是递归定义的，展开得到：</p>
+<p>$$\delta_{t,k}=\prod\limits_{\tau=k}^{t-1}(\text{diag}(f^\prime(z_\tau))U^T)\delta_{t,t}$$</p>
+<p>如果定义$\gamma\cong\parallel\text{diag}(f^\prime(z_\tau))U^T\parallel$，那么$\delta_{t,k}\cong\gamma^{t-k}\delta_{t,t}$。在$t-k$很大时，$\gamma&lt;1$会导致梯度消失，$\gamma&gt;1$时会导致梯度爆炸。</p>
+<p><img src="http://qfxiao.me/img/1565839064829.png" alt=""></p>
+<p><img src="http://qfxiao.me/img/1565839083693.png" alt=""></p>
+<h4 id="Long-Short-Time-Memory"><a href="#Long-Short-Time-Memory" class="headerlink" title="Long Short Time Memory"></a>Long Short Time Memory</h4><p>LSTM是一种解决RNN梯度消失问题的改进版本：</p>
+<p><img src="http://qfxiao.me/img/1565839135232.png" alt=""></p>
+<p>在LSTM中，维护了两个State，$c_t$和$h_t$。其中$c_t$由遗忘门$f$与上一个$c_{t-1}$相乘(代表继承上一个Cell的信息并加以一定程度的遗忘)，加上输出门$i$与Gate Gate $g$相乘(Gate Gate代表当前的候选状态，输出门$i$控制当前候选状态有多少信息需要保存)。最后，输出门$o$控制当前时刻的Cell State $c_t$有多少信息需要输出给外部状态$h_t$。</p>
+<p>三个门的计算方式为： </p>
+<p>$$i_t=\sigma(W_ix_t+U_ih_{t-1}+b_i)$$</p>
+<p>$$f_t=\sigma(W_fx_t+U_fh_{t-1}+b_f)$$</p>
+<p>$$o_t=\sigma(W_ox_t+U_oh_{t-1}+b_o)$$</p>
+<p><img src="http://qfxiao.me/img/1565839263008.png" alt=""></p>
+<p><img src="http://qfxiao.me/img/1565839279246.png" alt=""></p>
+<h2 id="Methodology"><a href="#Methodology" class="headerlink" title="Methodology"></a>Methodology</h2><p>总体框架图如Fig 1所示：</p>
+<p><img src="http://qfxiao.me/img/1565783729478.png" alt=""></p>
+<h3 id="GAN-with-LSTM-RNN"><a href="#GAN-with-LSTM-RNN" class="headerlink" title="GAN with LSTM-RNN"></a>GAN with LSTM-RNN</h3><p>网络结构上生成器和判别器都是LSTM，优化函数和普通GAN一样：</p>
+<p>$$\min\limits_G\max\limits_D V(D,G)=\mathbb{E}<em>{x\sim p</em>{data}(x)}[\log D(x)]+\mathbb{E}_{z\sim p_z(z)}[\log (1-D(G(z)))]$$</p>
+<h3 id="GAN-based-Anomaly-Score"><a href="#GAN-based-Anomaly-Score" class="headerlink" title="GAN-based Anomaly Score"></a>GAN-based Anomaly Score</h3><p>在测试阶段，需要使用梯度优化寻找一个使得$G_{rnn}(z)$最接近$X^{test}$的$z^k$：</p>
+<p>$$\min\limits_{Z^k}Error(X^{test},G_{rnn}(Z^k))=1-Similarity(X^{test},G_{rnn}(Z^k))$$</p>
+<p>本文定义了两种Anomaly Score，一种是Residual Loss：</p>
+<p>$$Res(X^{test}<em>t)=\sum\limits</em>{i=1}^n|x^{test,i}<em>t-G</em>{rnn}(Z^{k,i}_t)|$$</p>
+<p>一种是Discrimination Loss，即判别器的输出$D_{rnn}(x_t^{test})$。</p>
+<p>总的Anomaly Score：</p>
+<p>$$S^{test}<em>t=\lambda Res(X^{test}_t)+(1-\lambda)D</em>{rnn}(x^{test}_t)$$</p>
+<h3 id="Anomaly-Detection-Framework"><a href="#Anomaly-Detection-Framework" class="headerlink" title="Anomaly Detection Framework"></a>Anomaly Detection Framework</h3><p>模型的算法流程如下：</p>
+<p><img src="http://qfxiao.me/img/1565784946781.png" alt=""></p>
+<p>由于本文是多变量时间序列预测，而且时间序列的长度有可能比较长，作者使用了滑动窗口和PCA来进行预处理。</p>
+<h2 id="Experiments"><a href="#Experiments" class="headerlink" title="Experiments"></a>Experiments</h2><p><img src="http://qfxiao.me/img/1565847175265.png" alt=""></p>
+</div></article></div><div class="card"><div class="card-image"><a class="image is-7by3" href="/2019/09/22/ALSR-An-adaptive-label-screening-and-relearning-approach-for-interval-oriented-anomaly-detection/"><img class="thumbnail" src="http://qfxiao.me/img/1567780227803.png" alt="ALSR: An Adaptive Label Screening and Relearning Approach for Interval-Oriented Anomaly Detection"></a></div><article class="card-content article" role="article"><div class="article-meta size-small is-uppercase level is-mobile"><div class="level-left"><time class="level-item" dateTime="2019-09-22T14:29:18.000Z" title="2019-09-22T14:29:18.000Z">2019-09-22</time><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></span><span class="level-item">9 分钟 读完 (大约 1312 个字)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2019/09/22/ALSR-An-adaptive-label-screening-and-relearning-approach-for-interval-oriented-anomaly-detection/">ALSR: An Adaptive Label Screening and Relearning Approach for Interval-Oriented Anomaly Detection</a></h1><div class="content"><h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>本文针对面向区间的KPI异常检测提出了Label Screening方法和Relearning Algorithm.</p>
+<p><a href="https://www.sciencedirect.com/science/article/pii/S0957417419304282">原文</a></p>
+<h2 id="Contribution"><a href="#Contribution" class="headerlink" title="Contribution"></a>Contribution</h2><ol>
+<li>提出了一种Label Screening方法来对区间内不同重要性进行过滤</li>
+<li>提出了一种Relearning Algorithm来对FP和TP进行Relearning，在不减少Recall的条件下增大Precision</li>
+</ol>
+<h2 id="Methodology"><a href="#Methodology" class="headerlink" title="Methodology"></a>Methodology</h2><h3 id="Overall-Structure"><a href="#Overall-Structure" class="headerlink" title="Overall Structure"></a>Overall Structure</h3><p>算法的整体框架如下：</p>
+<p><img src="http://qfxiao.me/img/image-20191025152359346.png" alt=""></p>
+<h3 id="Label-Screening-Model"><a href="#Label-Screening-Model" class="headerlink" title="Label Screening Model"></a>Label Screening Model</h3><p>预训练的结果被分为$TP_{po},FP_{po},TN_{po},FN_{po}$四类，$TP_{po}$和$FN_{po}$可以被细分如下：<br>$$<br>\begin{align}TP_{po}&amp;=TP_{po,withinT}+TP_{po,afterT}\&amp;=TP_{po,withinT}+TP_{po,afterT,tpl}+TP_{po,after,fnl}\end{align}<br>$$</p>
+<p>$$<br>\begin{align}FN_{po}&amp;=FN_{po,withinT}+FN_{po,afterT}\&amp;=FN_{po,withinT,tpl}+FN_{po,,withinT,fnl}+FN_{po,afterT,tpl}+FN_{po,afterT,fnl}\end{align}<br>$$</p>
+<p>其中下标${}<em>{withinT}$代表在异常片段第一个点$T$距离内的所有点，下标${}</em>{afterT}$代表$T$距离之后。下标${}<em>{tpl}$和${}</em>{fnl}$分别代表在异常片段中，包含和不包含$TP_{po,withinT}$的点。</p>
+<p>以TP为例，Point-based的TP包含了在T范围之内的（即在Interval-based的标准中也会被认为是TP的点）和T范围之外的点（即在Interval-based的标准中不认为是TP的点）。而在T范围之外的点又可以细分为该异常片段是否包含$TP_{po,withinT}$的点（即该点在Interval-based的标准中不会被判定为TP，但该异常片段有其点会被判定为TP）。</p>
+<p>类似的，$TP_{io}$和$FN_{io}$可以被分解为：<br>$$<br>\begin{align}TP_{io}&amp;=TP_{po,withinT}+TP_{po,afterT,tpl}+FN_{po,withinT,tpl}+FN_{po,afterT,tpl}\&amp;=TP_{po}+FN_{po,withinT,tpl}+FN_{po,afterT,tpl}-TP_{po,afterT,fnl}\end{align}<br>$$</p>
+<p>$$<br>\begin{align}FN_{io}&amp;=FN_{po,withinT,fnl}+FN_{po,afterT,fnl}+TP_{po,afterT,fnl}\&amp;=FN_{po}+TP_{po,afterT,fnl}-FN_{po,withinT,tpl}-FN_{po,afterT,tpl}\end{align}<br>$$</p>
+<p>文中对该部分的分析可以分为以下几点：</p>
+<ol>
+<li>在Interval-oriented的标准中，$FN_{po,tpl}$的点仍会被认为是$TP_{io}$，而$TP_{po,afterT}$（不带${}<em>{tpl}$）不会被认为是$TP</em>{io}$，所以最终$TP_{io}$由所有$TP_{po}$加上那些会被认为是$TP_{io}$的$FN_{po,tpl}$再去掉不带${}<em>{tpl}$的$TP</em>{po,afterT}$组成，即公式(6)</li>
+<li>同时，根据公式(6)，如果$TP_{po}$变为$FN_{po,tpl}$，也不会对最终结果造成影响。但是根据公式(5)和公式(7)，$TP_{po,withinT}$变成$FN_{po,withinT,fnl}$会减小$TP_{io}$同时增大$FN_{io}$</li>
+<li>文章指出，虽然$FN_{po,withinT,tpl}$和$FN_{po,afterT,tpl}$最后都会被认为是$TP_{io}$，但作者假设$FN_{po,withinT,tpl}$更难检测，所以应该保留，而$FN_{po,afterT,tpl}$应该削减</li>
+<li>Label Screening方法去除了$FN_{po,afterT}$的点</li>
+<li>Screened之后的训练集被用来训练DNN主模型，但Label Screening的预测结果也会被保留，和DNN主模型的结果进行组合</li>
+</ol>
+<p>算法流程如下：</p>
+<p><img src="http://qfxiao.me/img/1567780638004.png" alt=""></p>
+<h3 id="Relearning-Algorithm"><a href="#Relearning-Algorithm" class="headerlink" title="Relearning Algorithm"></a>Relearning Algorithm</h3><p>Relearning Model的输入是DNN主模型预测出来的异常，其中包括TP和FP。Relearning Model采用的是随机森林，其输入的样本通过采样得到：<br>$$<br>\begin{align}<br>\text{relearning}\space&amp;\text{training set}=\&amp; shuffle{4C\ast\text{randomof}(TP_{po})\&amp;+C\cdot\text{randomof}(FP_{po})+C\cdot\text{randomof}(TN_{po})}<br>\end{align}<br>$$<br>其中$C$为常数。TN和FP都看作是负例(正常样本)，TP看作是正例。</p>
+<p><img src="http://qfxiao.me/img/1567868588559.png" alt=""></p>
+<h3 id="Detection"><a href="#Detection" class="headerlink" title="Detection"></a>Detection</h3><p>对于一个滑动窗口$x_t={x_{t-w+1},\cdots,x_t}$，异常检测算法的目标是输出检测结果$y_t\in{0,1}$来表示时间$t$是否发生异常。实际上算法输出的是$p_{y_t}\in[0,1]$概率值来表示在时间$t$发生异常的概率。文中三个模型会得到三个输出：$y_{t,ls},y_{t,main},y_{t,re}$。最终结果为：<br>$$<br>y_t=y_{t,ls}\space&amp;\space y_{t,main}\space&amp; \space y_{t,re}<br>$$<br>在绘制PR曲线时，采用的公式为：<br>$$<br>\begin{align}<br>p_{y_t}(th)=&amp;(1-sig(p_{y_t,ls},th))\cdot(p_{y_t,ls})\<br>&amp;+sig(p_{y_t,ls},th)\cdot(1-sig(p_{y_t,main},th))\cdot p_{y_t,main}\<br>&amp;+sig(p_{y_t,ls},th)\cdot sig(p_{y_t,main},th)\cdot p_{y_t,re}\<br>\end{align}<br>$$</p>
+<p>$$<br>y_t(th)=sig(p_{y_t}(th),th)<br>$$</p>
+<p>算法流程如下：</p>
+<p><img src="http://qfxiao.me/img/1567933937509.png" alt=""></p>
+<h2 id="Experiments"><a href="#Experiments" class="headerlink" title="Experiments"></a>Experiments</h2><h3 id="Datasets"><a href="#Datasets" class="headerlink" title="Datasets"></a>Datasets</h3><p>清华AIOps数据集，选取了25条KPI。</p>
+<h3 id="Preprocessing"><a href="#Preprocessing" class="headerlink" title="Preprocessing"></a>Preprocessing</h3><ol>
+<li><strong>Missing Data.</strong> 去除。</li>
+<li><strong>Standardization.</strong> Minmax Standardization，Feature Extraction使用的是Standardization后的数据。</li>
+<li><strong>Feature Extraction.</strong> 使用了12种特征。</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Group</th>
+<th>Feature Name</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Values</td>
+<td>The original values standardized</td>
+</tr>
+<tr>
+<td>Statistical Features</td>
+<td>Mean,  Standard Deviation, Range, Difference…</td>
+</tr>
+<tr>
+<td>Fitting Features</td>
+<td>EWMA, AR</td>
+</tr>
+<tr>
+<td>Wavelet Features</td>
+<td>Db2 wavelet decomposition</td>
+</tr>
+</tbody></table>
+<h2 id="Results"><a href="#Results" class="headerlink" title="Results"></a>Results</h2><h3 id="AUCPR"><a href="#AUCPR" class="headerlink" title="AUCPR"></a>AUCPR</h3><p><img src="http://qfxiao.me/img/1567780198147.png" alt=""></p>
+<p><img src="http://qfxiao.me/img/1567780227803.png" alt=""></p>
+<h3 id="F1"><a href="#F1" class="headerlink" title="F1"></a>F1</h3><p><img src="http://qfxiao.me/img/1567780241121.png" alt=""></p>
+<h2 id="Remark"><a href="#Remark" class="headerlink" title="Remark"></a>Remark</h2><ol>
+<li>这篇文章的Label Screening方法实际上是在处理样本分类难易度的问题，将异常区间内容易的样本去除了</li>
+<li>对于时间序列的异常检测问题，我们的目标一般是Point-based的异常标签，一个时间点的特征是有限的。如果用窗口的方式，以${x_{t-w+1},\cdots,x_t}$作为时间$t$的输入（当然每个$x_t$可以有多个Channel），然后把预测结果作为时间$t$的输出</li>
+</ol>
+</div></article></div><div class="card"><div class="card-image"><a class="image is-7by3" href="/2019/09/22/Unsupervised-Anomaly-Detection-via-Variational-Auto-Encoder-for-Seasonal-KPIs-in-Web-Applications/"><img class="thumbnail" src="http://qfxiao.me/img/1571719738542.png" alt="Unsupervised Anomaly Detection via Variational Auto-Encoder for Seasonal KPIs in Web Applications"></a></div><article class="card-content article" role="article"><div class="article-meta size-small is-uppercase level is-mobile"><div class="level-left"><time class="level-item" dateTime="2019-09-22T12:35:18.000Z" title="2019-09-22T12:35:18.000Z">2019-09-22</time><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></span><span class="level-item">25 分钟 读完 (大约 3820 个字)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2019/09/22/Unsupervised-Anomaly-Detection-via-Variational-Auto-Encoder-for-Seasonal-KPIs-in-Web-Applications/">Unsupervised Anomaly Detection via Variational Auto-Encoder for Seasonal KPIs in Web Applications</a></h1><div class="content"><h2 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h2><p>本文提出了Donut，一个基于VAE的无监督时间序列异常检测系统。</p>
+<p><a href="https://dl.acm.org/citation.cfm?id=3185996">原文</a></p>
+<p><img src="http://qfxiao.me/img/1571719484833.png" alt=""></p>
+<h2 id="Contribution"><a href="#Contribution" class="headerlink" title="Contribution"></a>Contribution</h2><ol>
+<li>Donut中使用到了三个技巧，包括改进后的ELBO、缺失数据注入和MCMC插值；</li>
+<li>提出基于VAE的异常检测训练既需要正常样本也需要异常样本；</li>
+<li>对Donut提出了在z-空间中基于KDE的理论解释。</li>
+</ol>
+<h2 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h2><h3 id="Anomaly-Detection"><a href="#Anomaly-Detection" class="headerlink" title="Anomaly Detection"></a>Anomaly Detection</h3><p>对于任意时间$t$，给定历史观察值$x_{t-T+1},\cdots,x_t$，确定异常是否发生(记为$y_t=1$)。通常来收异常检测算法给出的是发生异常的可能性，如$p(y_t=1|x_{t-T+1},\cdots,x_t)$。</p>
+<h2 id="Methodology"><a href="#Methodology" class="headerlink" title="Methodology"></a>Methodology</h2><h3 id="Problem-Statement"><a href="#Problem-Statement" class="headerlink" title="Problem Statement"></a>Problem Statement</h3><p>本文的目的是<strong>基于深度生成网络开发具有理论解释性的无监督异常检测算法，并且在有标签的情况下能利用标签信息提升性能</strong>。本文基于VAE来构建模型。</p>
+<p><img src="http://qfxiao.me/img/1565532060281.png" alt=""></p>
+<h3 id="Network-Structure"><a href="#Network-Structure" class="headerlink" title="Network Structure"></a>Network Structure</h3><p>算法的总体框架如下图所示：</p>
+<p><img src="http://qfxiao.me/img/1565532453958.png" alt=""></p>
+<p>一共包含了预处理、训练和检测三个部分。</p>
+<p>下图为模型的概率图模型：</p>
+<p><img src="http://qfxiao.me/img/1565532474201.png" alt=""></p>
+<p>图中双实线的框为本文模型有别于传统VAE的地方，其余地方和VAE一样。先验概率$p_\theta(z)$选为标准正态分布$\mathcal{N}(0,I)$，后验概率$x$和$z$都是对角化高斯分布，即$p_\theta(x|z)=\mathcal{N}(\mu_x,\sigma_x^2 I),q_\phi(z|x)=\mathcal{N}(\mu_z,\sigma_z^2 I)$。如Figure 4所示，推断网络和生成网络中分别都有隐含层$f_\phi(x)$和$f_\theta(z)$对网络的输入进行特征抽取。高斯分布的参数即从这些抽取出来的特征上得到。均值通过线性层得到：$\mu_x=W^T_{\mu_x}f_\theta(z)+b_{\mu_x}, \mu_z=W^T_{\mu_z}f_\theta(x)+b_{\mu_z}$。标准差通过Soft Plus层加一个高斯噪声得到：$\sigma_x=\text{SoftPlus}[W^T_{\sigma_x}f_\theta(z)+b_{\sigma_x}]+\varepsilon，\sigma_x=\text{SoftPlus}[W^T_{\sigma_z}f_\theta(x)+b_{\sigma_z}]+\varepsilon$。</p>
+<p>文中提到因为KPI的局部方差非常小，所以采用直接建模$\sigma_x,\sigma_z$的方式而不是采用对数。除此之外，为了理论上的解释性，文中的神经网络只使用了全连接层。</p>
+<h3 id="Training"><a href="#Training" class="headerlink" title="Training"></a>Training</h3><p>训练可以直接采用经典的SGVB来优化ELBO：<br>$$<br>\begin{align}<br>\log p_\theta(x)&amp;\geq\log p_\theta(x)-\text{KL}[q_\phi(z|x)\parallel p_\theta(z|x)]\<br>&amp;=\mathcal{L}\<br>&amp;=\mathbb{E}<em>{q_\phi(z|x)}[\log p_\theta(x)+\log p_\theta(z|x)-\log q_\phi(z|x)]\<br>&amp;=\mathbb{E}</em>{q_\phi(z|x)}[\log p_\theta(x,z)-\log q_\phi(z|x)]\<br>&amp;=\mathbb{E}<em>{q_\phi(z|x)}[\log p_\theta(x|z)+\log p_\theta(z)-\log q_\phi(z|x)]<br>\end{align}<br>$$<br>但是在实际的训练过程中，训练数据需要保证都是正常样本，但实际上训练样本有可能会包含异常或者是缺失值。一种做法是用缺失值填充的算法来填充这些异常值和缺失值，但作者认为使用缺失值填充算法并不能很好的还原数据的正常模式，从而保证算法的有效性。在文中作者采用了修改ELBO的方法，并将其称之为<strong>Modified ELBO (M-ELBO)</strong>，公式如下：<br>$$<br>\tilde{\mathcal{L}}=\mathbb{E}</em>{q_\phi(z|x)}[\sum\limits_{w=1}^W{\alpha_w\log p_\theta(x_w|z)+\beta\log p_\theta(z)-\log q_\phi(z|x)}]<br>$$<br>其中$\alpha_w$为指示标记，$\alpha_w=1$代表不是异常也不是缺失。$\beta$定义为$\beta=\frac{\sum_{w=1}^W\alpha_w}{W}$。</p>
+<p>在<strong>M-ELBO</strong>中，异常或缺失值对应的$\log p_\theta(x_w|z)$的贡献会被排除，同时$\log p_\theta(z)$在乘以$\beta$后会相应缩小。作者没有修改$\log q_\phi(z|x)$这一项的原因有二：一是$q_\phi(z|x)$仅仅是从$x$到$z$的映射，并不需要考虑“正常模式”；二是$\mathbb{E}_{q_\phi(z|x)}[-\log q_\phi(z|x)]$就是$q_\phi(z|x)$的熵，而这个在后面的理论分析中有特别的含义。</p>
+<p>除此之外还有一种解决方法就是把所有包含异常值和缺失值的窗口去除，这种方法的性能在实验中会进行讨论。</p>
+<p>在文中作者还使用了一种<strong>Missing Data Injection</strong>技术，即在每个Epoch随机的按照一个预设比例$\lambda$将正常的数据设为缺失。作者认为这样有助于性能的提升。</p>
+<h3 id="Detection"><a href="#Detection" class="headerlink" title="Detection"></a>Detection</h3><p>在检测阶段，对于一个输入样本，我们需要模型输出其异常的概率。因为我们建模了$p_\theta(x|z)$，一种方法是采样计算$p_\theta(x)=\mathbb{E}<em>{p_\theta(z)}[p_\theta(x|z)]$，但这种方法计算代价十分昂贵。其他的一些方案有计算$\mathbb{E}</em>{q_\phi(z|x)}[p_\theta(x|z)]$或$\mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x|z)]$，其中后者被称为”<strong>Reconstruction Probability</strong>“，作者便采用了这种方案。</p>
+<p>同时，作者认为输入的检测样本的缺失值会对结果造成较大偏差，于是使用了一种<strong>MCMC-based Missing Data Imputation</strong>的方法来对检测样本的缺失值进行填充。具体做法是将测试样本分为已观测和缺失两部分$x=(x_o,x_m)$，然后使用训练好的VAE进行重构得到$(x^\prime_o,x^\prime_m)$，然后用$x^\prime_m$替换$x_m$，这样不断循环如下图所示：</p>
+<p><img src="http://qfxiao.me/img/1571719553095.png" alt=""></p>
+<p>作者使用了$L$个样本来计算<strong>Reconstruction Probability</strong>，虽然得到的输出是针对整个窗口每个点的，但作者只使用最后一个点。</p>
+<h2 id="Experiments"><a href="#Experiments" class="headerlink" title="Experiments"></a>Experiments</h2><h3 id="Datasets"><a href="#Datasets" class="headerlink" title="Datasets"></a>Datasets</h3><p>作者选择了三条KPI作为测试数据，分别记为$\mathcal{A}$，$\mathcal{B}$，$\mathcal{C}$，其基本数据如下表所示：</p>
+<p><img src="http://qfxiao.me/img/1571719583781.png" alt=""></p>
+<h3 id="Metrics"><a href="#Metrics" class="headerlink" title="Metrics"></a>Metrics</h3><p>因为异常检测类别的极不均衡性，传统的性能指标并不太合适（异常样本极少，且异常一般呈连续的片段）。作者认为在实际应用场景中运维人员需要尽量早的获知异常的发生，于是提出了新的评测机制。</p>
+<p><img src="http://qfxiao.me/img/1571719605541.png" alt=""></p>
+<p>如上图所示，第一行为真实的标签，第二行为预测的异常概率，第三行为预测的标签。第一行中异常片段被加粗表示，对于每一个异常片段的第一个位置${y}<em>{t^\prime}$，如果预测的标签中存在$\hat{y}</em>{t}$满足$t^\prime&lt;t$且$|t-t^\prime|$小于等于预设的阈值$T$，那么$y_{t^\prime}$对应的整段异常都被认为正确检测，否则整段异常都认为没有被正确检测。然后在此基础上计算F1-score，AUC等指标作为评测手段。</p>
+<h2 id="Results"><a href="#Results" class="headerlink" title="Results"></a>Results</h2><h3 id="Overall-Performance"><a href="#Overall-Performance" class="headerlink" title="Overall Performance"></a>Overall Performance</h3><p>下图展示了不同方法在不同数据集上的表现：</p>
+<p><img src="http://qfxiao.me/img/1571719653801.png" alt=""></p>
+<h3 id="Effects-of-Donut-Techniques"><a href="#Effects-of-Donut-Techniques" class="headerlink" title="Effects of Donut Techniques"></a>Effects of Donut Techniques</h3><p>为了探究Donut中所做的各种改进的实际作用，作者做了大量对比实验，结果如下图所示：</p>
+<p><img src="http://qfxiao.me/img/1571719667067.png" alt=""></p>
+<ul>
+<li><strong>M-ELBO</strong> 从图中可以看出<strong>M-ELBO</strong>对性能提升最大。作者在文中提到一开始并没期望<strong>M-ELBO</strong>能带来性能的提升，只是希望它能够Work。这表明在VAE的训练中，只使用正常样本是不够的，也需要加入非正常的信息；</li>
+<li><strong>Missing Data Injection</strong> 该技巧的主要作用是增强<strong>M-ELBO</strong>的效果。从结果上来看作用并不是十分的显著，只是在一些情况下获得了少量的提升；</li>
+<li><strong>MCMC Imputation</strong> 作者认为虽然该技巧只在一部分情况下显著提升了性能，但总体来说值得使用。</li>
+</ul>
+<h3 id="Impact-of-K"><a href="#Impact-of-K" class="headerlink" title="Impact of K"></a>Impact of K</h3><p>该部分作者探究了隐变量$z$的维度$K$对性能的影响，结果如下图：</p>
+<p><img src="http://qfxiao.me/img/1571719682591.png" alt=""></p>
+<p>从图上来看，对数据集$\mathcal{A}$，$\mathcal{B}$，$\mathcal{C}$最佳的$K$分别是$5$，$4$和$3$，但是设定较大的$K$并不会对性能有严重的损害。作者还发现对于较为平滑的KPI需要较大的$K$。</p>
+<h2 id="Analysis"><a href="#Analysis" class="headerlink" title="Analysis"></a>Analysis</h2><h3 id="KDE-Interpretation"><a href="#KDE-Interpretation" class="headerlink" title="KDE Interpretation"></a>KDE Interpretation</h3><p>在这一节作者对<strong>Reconstruction Probability</strong>的意义进行了深入的探讨。首先作者对$q_\phi(z|x)$进行了可视化，在图中作者将时间维度用颜色来表示。如Figure 11(a) 所示，$z$几乎是按照$x$对应的时间呈一个连续的流形分布，作者将这种现象称为<strong>Time Gradient</strong>。即使Donut没有显式的用到时间信息，不过因为实验用到的数据基本是平滑的，所以说相邻的$x$会比较相似，因此经过映射后的$z$也会比较相似。作者据此提出Donut的一个优势便是对于没有见过的后验分布$q_\phi(z|x)$，只要其位于训练过的两个后验之间，也会产生合理的分布。</p>
+<p><img src="http://qfxiao.me/img/1571719693393.png" alt=""></p>
+<p>对于异常的样本$x$，假设其对应的正常模式为$\tilde{x}$，作者认为$q_\phi(z|x)$会在某种程度上对正常的$q_\phi(z|\tilde{x})$进行近似。因为模型是用正常样本进行训练的，隐变量$z$的维度通常来说小于样本$x$，这就导致$z$只会保留一部分主要的信息。对于异常样本，其异常模式在编码时就被丢掉了。作者还指出如果$x$包含的异常太多，那么模型将难以对$x$进行还原。</p>
+<p><img src="http://qfxiao.me/img/1571719738542.png" alt=""></p>
+<p>基于上述讨论，作者对使用$\mathbb{E}<em>{q_\phi(z|x)}[\log p_\theta(x|z)]$作为<strong>Reconstruction Probability</strong>的意义进行了阐释。设输入样本为$x$，如果其包含异常，假设其对应的正常样本为$\tilde{x}$，那么$q_\phi(z|x)$部分地和$q_\phi(z|\tilde{x})$相似。如果$x$和$\tilde{x}$相似程度高，那么$\log p_\theta(x|z)$就会很大（其中$z\sim q_\phi(z|\tilde{x})$）。$\log p_\theta(x|z)$类似于一个密度估计器，代表$x$在多大程度上与$\tilde{x}$接近，$\mathbb{E}</em>{q_\phi(z|x)}[\log p_\theta(x|z)]$相当于对每一个$z$对应的$\log p_\theta(x|z)$乘以一个权重$q_\phi(z|x)$然后相加。于是作者提出了<strong>Reconstruction Probability</strong>的<strong>KDE Interpretation</strong>:在Donut模型中，<strong>Reconstruction Probability</strong> $\mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x|z)]$可以看作是以$q_\phi(z|x)$为权重，$\log p_\theta(x|z)$为核的核密度估计 (Kernel Density Estimation)。</p>
+<p>三维可视化如下图所示：</p>
+<p><img src="http://qfxiao.me/img/1571736459981.png" alt=""></p>
+<p>作者还对直接计算$p_\theta(x)=\mathbb{E}_{p_\theta(z)}[p_\theta(x|z)]$进行了质疑，因为这种方法直接求$x$的先验，仅仅考虑了$x$的总体模式，而忽略了$x$的个体模式。</p>
+<h3 id="Find-Good-Posteriors-for-Abnormal-x"><a href="#Find-Good-Posteriors-for-Abnormal-x" class="headerlink" title="Find Good Posteriors for Abnormal $x$"></a>Find Good Posteriors for Abnormal $x$</h3><p>通过上面的讨论我们知道了Donut通过找到$x$的正常后验来估计$x$在多大程度上与$\tilde{x}$相似，在这一节作者讨论了文中使用的不同技巧对找到$x$的后验的作用。对于<strong>Missing Data Injection</strong>作者认为该技巧增强了<strong>M-ELBO</strong>的效果。对于<strong>MCMC Imputation</strong>，作者认为该技巧主要是在检测阶段通过不断迭代提供了更好的后验，如下图所示：</p>
+<p><img src="http://qfxiao.me/img/1571736476085.png" alt=""></p>
+<p>作者认为，虽然对于包含大量异常的样本，Donut不能很好的还原，但在运维场景中，只要对大段异常的开始阶段进行准确预测即可。</p>
+<h3 id="Causes-of-Time-Gradient"><a href="#Causes-of-Time-Gradient" class="headerlink" title="Causes of Time Gradient"></a>Causes of Time Gradient</h3><p>在这一节作者讨论了<strong>Time Gradient</strong>出现的原因。首先假设$x$都是正常点，这时$x$的ELBO为：<br>$$<br>\begin{align}<br>\mathcal{L}(x)&amp;=\mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x|z)+\log p_\theta(z)-\log q_\phi(z|x)]\<br>&amp;=\mathbb{E}[\log p_\theta(x|z)]+\mathbb{E}[\log p_\theta(z)]+\text{H}[z|x]<br>\end{align}<br>$$<br>第一项表明在$z\sim q_\phi(z|x)$下尽可能重构$x$。第二项表明$q_\phi(z|x)$尽量与$z$的先验$\mathcal{N}(0,I)$接近。第三项为$q_\phi(z|x)$的熵，表明$q_\phi(z|x)$应尽量分散。然而第二项又限制了这种分散的区域，如 Figure 11(c) 所示。同时考虑这三项的话，第一项使得$z$不能自由地分散，对于不相似的$x$其对应的$z$也是不相似的，因为要最大化$x$的重构概率。然而对于相似的$x$来说，其对应的$q_\phi(z|x)$会出现很多重复的部分。当达到平衡时，<strong>Time Gradient</strong>就出现了。</p>
+<p><img src="http://qfxiao.me/img/1571719784233.png" alt=""></p>
+<p>在训练过程中，当$x$越不相似，$q_\phi(z|x)$就会相距越远，如上图所示。然而在一开始，参数经过随机初始化，$q_\phi(z|x)$都是随机散乱的，如 Figure 11(b) 所示。随着训练的进行，$q_\phi(z|x)$将会不断优化。由于KPI数据往往是光滑的，那么在时间上相距越远的样本就会越不相似，对应的$q_\phi(z|x)$也会相距更远。这也说明了，训练结束后，时间上相距越远的，$q_\phi(z|x)$也会相距越远，反之亦然。同时这也表明学习率的设置对本模型的稳定性有至关重要的作用。</p>
+<h3 id="Sub-Optimal-Equilibrium"><a href="#Sub-Optimal-Equilibrium" class="headerlink" title="Sub-Optimal Equilibrium"></a>Sub-Optimal Equilibrium</h3><p>上面我们讨论了随着训练进行$q_\phi(z|x)$的演变，作者提出在训练过程中可能会遇到模型收敛到次优的情况，如下图所示：</p>
+<p><img src="http://qfxiao.me/img/1571719796266.png" alt=""></p>
+<p>第一行展示的是收敛到最优的情况，第二行展示的是收敛到次优的情况。从第二行的第一个图（Step 100）来看，紫色的点开始穿过绿色的点，随着训练的进行，紫色的点开始将绿色的点推开。到Step 5000的时候，绿色的点已经被分成了两半。下图展示了对应的训练误差和验证误差：</p>
+<p><img src="http://qfxiao.me/img/1571719807778.png" alt=""></p>
+<p>这样的现象会导致在两半绿色区域之间的测试样本会被识别为紫色，从而降低性能。作者提出在$K$较大的时候这种现象不容易发生，但这时训练的收敛又会成为一个问题。</p>
+</div></article></div><nav class="pagination is-centered mt-4" role="navigation" aria-label="pagination"><div class="pagination-previous is-invisible is-hidden-mobile"><a href="/categories/Research/Anomaly-Detection/page/0/">上一页</a></div><div class="pagination-next"><a href="/categories/Research/Anomaly-Detection/page/2/">下一页</a></div><ul class="pagination-list is-hidden-mobile"><li><a class="pagination-link is-current" href="/categories/Research/Anomaly-Detection/">1</a></li><li><a class="pagination-link" href="/categories/Research/Anomaly-Detection/page/2/">2</a></li></ul></nav></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1"><div class="card widget"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="" src="/img/avatar.png" alt="Your name"></figure><p class="title is-size-4 is-block line-height-inherit">Your name</p><p class="is-size-6 is-block">Your title</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>Your location</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">文章</p><a href="/archives"><p class="title">17</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">分类</p><a href="/categories"><p class="title">9</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">标签</p><a href="/tags"><p class="title">12</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/ppoffice" target="_blank" rel="noopener">关注我</a></div><div class="level is-mobile"><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Github" href="https://github.com/ppoffice"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Facebook" href="https://facebook.com"><i class="fab fa-facebook"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Twitter" href="https://twitter.com"><i class="fab fa-twitter"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Dribbble" href="https://dribbble.com"><i class="fab fa-dribbble"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="RSS" href="/"><i class="fas fa-rss"></i></a></div></div></div><!--!--><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">链接</h3><ul class="menu-list"><li><a class="level is-mobile is-mobile" href="https://hexo.io" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Hexo</span></span><span class="level-right"><span class="level-item tag">hexo.io</span></span></a></li><li><a class="level is-mobile is-mobile" href="https://bulma.io" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Bulma</span></span><span class="level-right"><span class="level-item tag">bulma.io</span></span></a></li></ul></div></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">分类</h3><ul class="menu-list"><li><a class="level is-mobile is-marginless" href="/categories/Research/"><span class="level-start"><span class="level-item">Research</span></span><span class="level-end"><span class="level-item tag">16</span></span></a><ul class="mr-0"><li><a class="level is-mobile is-marginless" href="/categories/Research/Anomaly-Detection/"><span class="level-start"><span class="level-item">Anomaly Detection</span></span><span class="level-end"><span class="level-item tag">11</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Research/GAN/"><span class="level-start"><span class="level-item">GAN</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Research/Misc/"><span class="level-start"><span class="level-item">Misc</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Research/RNN/"><span class="level-start"><span class="level-item">RNN</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Research/Time-Series-Imputation/"><span class="level-start"><span class="level-item">Time Series Imputation</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Research/Tutorial/"><span class="level-start"><span class="level-item">Tutorial</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></li><li><a class="level is-mobile is-marginless" href="/categories/Technical-Notes/"><span class="level-start"><span class="level-item">Technical Notes</span></span><span class="level-end"><span class="level-item tag">1</span></span></a><ul class="mr-0"><li><a class="level is-mobile is-marginless" href="/categories/Technical-Notes/Misc/"><span class="level-start"><span class="level-item">Misc</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></li></ul></div></div></div><div class="card widget"><div class="card-content"><h3 class="menu-label">最新文章</h3><article class="media"><a class="media-left" href="/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/"><p class="image is-64x64"><img class="thumbnail" src="http://qfxiao.me/img/image-20200301230011495.png" alt="Discovering Physical Concepts with Neural Networks"></p></a><div class="media-content size-small"><p><time dateTime="2020-03-01T14:55:02.000Z">2020-03-01</time></p><p class="title is-6"><a class="link-muted" href="/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/">Discovering Physical Concepts with Neural Networks</a></p><p class="is-uppercase"><a class="link-muted" href="/categories/Research/">Research</a> / <a class="link-muted" href="/categories/Research/Misc/">Misc</a></p></div></article><article class="media"><a class="media-left" href="/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/"><p class="image is-64x64"><img class="thumbnail" src="http://qfxiao.me/img/image-20200109102830713.png" alt="Transfer Anomaly Detection by Inferring Latent Domain Representations"></p></a><div class="media-content size-small"><p><time dateTime="2020-02-27T12:02:18.000Z">2020-02-27</time></p><p class="title is-6"><a class="link-muted" href="/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/">Transfer Anomaly Detection by Inferring Latent Domain Representations</a></p><p class="is-uppercase"><a class="link-muted" href="/categories/Research/">Research</a> / <a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></p></div></article><article class="media"><a class="media-left" href="/2020/02/24/Deep-Anomaly-Detection-with-Deviation-Networks/"><p class="image is-64x64"><img class="thumbnail" src="http://qfxiao.me/img/image-20200113104953902.png" alt="Deep Anomaly Detection with Deviation Networks"></p></a><div class="media-content size-small"><p><time dateTime="2020-02-24T02:45:08.000Z">2020-02-24</time></p><p class="title is-6"><a class="link-muted" href="/2020/02/24/Deep-Anomaly-Detection-with-Deviation-Networks/">Deep Anomaly Detection with Deviation Networks</a></p><p class="is-uppercase"><a class="link-muted" href="/categories/Research/">Research</a> / <a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></p></div></article><article class="media"><a class="media-left" href="/2020/01/31/Geant4-%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/"><p class="image is-64x64"><img class="thumbnail" src="http://qfxiao.me/img/image-20200131113557592.png" alt="Geant4 安装教程与调试环境配置"></p></a><div class="media-content size-small"><p><time dateTime="2020-01-31T03:25:59.000Z">2020-01-31</time></p><p class="title is-6"><a class="link-muted" href="/2020/01/31/Geant4-%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/">Geant4 安装教程与调试环境配置</a></p><p class="is-uppercase"><a class="link-muted" href="/categories/Technical-Notes/">Technical Notes</a> / <a class="link-muted" href="/categories/Technical-Notes/Misc/">Misc</a></p></div></article><article class="media"><a class="media-left" href="/2020/01/09/Complementary-Set-Variational-Autoencoder-for-Supervised-Anomaly-Detection/"><p class="image is-64x64"><img class="thumbnail" src="http://qfxiao.me/img/image-20200109102204802.png" alt="Complementary Set Variational Autoencoder for Supervised Anomaly Detection"></p></a><div class="media-content size-small"><p><time dateTime="2020-01-09T02:15:03.000Z">2020-01-09</time></p><p class="title is-6"><a class="link-muted" href="/2020/01/09/Complementary-Set-Variational-Autoencoder-for-Supervised-Anomaly-Detection/">Complementary Set Variational Autoencoder for Supervised Anomaly Detection</a></p><p class="is-uppercase"><a class="link-muted" href="/categories/Research/">Research</a> / <a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></p></div></article></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">归档</h3><ul class="menu-list"><li><a class="level is-mobile is-marginless" href="/archives/2020/03/"><span class="level-start"><span class="level-item">三月 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/archives/2020/02/"><span class="level-start"><span class="level-item">二月 2020</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile is-marginless" href="/archives/2020/01/"><span class="level-start"><span class="level-item">一月 2020</span></span><span class="level-end"><span class="level-item tag">4</span></span></a></li><li><a class="level is-mobile is-marginless" href="/archives/2019/11/"><span class="level-start"><span class="level-item">十一月 2019</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/archives/2019/10/"><span class="level-start"><span class="level-item">十月 2019</span></span><span class="level-end"><span class="level-item tag">5</span></span></a></li><li><a class="level is-mobile is-marginless" href="/archives/2019/09/"><span class="level-start"><span class="level-item">九月 2019</span></span><span class="level-end"><span class="level-item tag">4</span></span></a></li></ul></div></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">标签</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/Anomaly-Detection/"><span class="tag">Anomaly Detection</span><span class="tag is-grey-lightest">9</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Deep-Learning/"><span class="tag">Deep Learning</span><span class="tag is-grey-lightest">13</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Flow-based-Model/"><span class="tag">Flow-based Model</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/GAN/"><span class="tag">GAN</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Machine-Learning/"><span class="tag">Machine Learning</span><span class="tag is-grey-lightest">7</span></a></div><div class="control"><a class="tags has-addons" href="/tags/RNN/"><span class="tag">RNN</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Spectral/"><span class="tag">Spectral</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Statistics/"><span class="tag">Statistics</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Time-Series/"><span class="tag">Time Series</span><span class="tag is-grey-lightest">10</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Transfer-Learning/"><span class="tag">Transfer Learning</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/VAE/"><span class="tag">VAE</span><span class="tag is-grey-lightest">6</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Variational-Inference/"><span class="tag">Variational Inference</span><span class="tag is-grey-lightest">2</span></a></div></div></div></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">订阅更新</h3><form action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open(&#039;https://feedburner.google.com/fb/a/mailverify?uri=&#039;,&#039;popupwindow&#039;,&#039;scrollbars=yes,width=550,height=520&#039;);return true"><input type="hidden" value="" name="uri"><input type="hidden" name="loc" value="en_US"><div class="field has-addons"><div class="control has-icons-left is-expanded"><input class="input" name="email" type="email" placeholder="Email"><span class="icon is-small is-left"><i class="fas fa-envelope"></i></span></div><div class="control"><input class="button is-primary" type="submit" value="订阅"></div></div></form></div></div></div><div class="card widget"><div class="card-content"><div class="notification is-danger">You need to set <code>client_id</code> and <code>slot_id</code> to show this AD unit. Please set it in <code>_config.yml</code>.</div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/logo.svg" alt="Hanzawa の 部屋" height="28"></a><p class="size-small"><span>&copy; 2020 Hanzawa</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script>moment.locale("zh-CN");</script><script>var IcarusThemeSettings = {
+            site: {
+                url: 'http://qfxiao.me',
+                external_link: {"enable":true,"exclude":[]}
+            },
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script src="/js/animation.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script><script>window.addEventListener("load", function () {
+            MathJax.Hub.Config({
+                'HTML-CSS': {
+                    matchFontHeight: false
+                },
+                SVG: {
+                    matchFontHeight: false
+                },
+                CommonHTML: {
+                    matchFontHeight: false
+                },
+                tex2jax: {
+                    inlineMath: [
+                        ['$','$'],
+                        ['\\(','\\)']
+                    ]
+                }
+            });
+        });</script><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
+        });</script></body></html>

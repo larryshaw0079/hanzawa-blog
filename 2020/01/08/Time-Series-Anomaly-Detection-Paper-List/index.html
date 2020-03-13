@@ -1,0 +1,718 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="generator" content="Hexo 4.2.0"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>Time Series Anomaly Detection Paper List - Hanzawa の 部屋</title><meta description="Introduction时间序列异常检测在很多领域例如运维、金融、交通都扮演者重要的角色，其定义如下：  给定时间序列$X&amp;#x3D;{\mathbf{x}_1,\mathbf{x}_2,\cdots,\mathbf{x}_n}\in\mathbb{R}^{m\times n}$，异常检测的任务是输出异常标签$y&amp;#x3D;{y_1,y_2,\cdots,y_n}\in\mathbb{R}^n$，其中$y_t&amp;#x3D;1$代"><meta property="og:type" content="blog"><meta property="og:title" content="Time Series Anomaly Detection Paper List"><meta property="og:url" content="http://qfxiao.me/"><meta property="og:site_name" content="Hanzawa の 部屋"><meta property="og:description" content="Introduction时间序列异常检测在很多领域例如运维、金融、交通都扮演者重要的角色，其定义如下：  给定时间序列$X&amp;#x3D;{\mathbf{x}_1,\mathbf{x}_2,\cdots,\mathbf{x}_n}\in\mathbb{R}^{m\times n}$，异常检测的任务是输出异常标签$y&amp;#x3D;{y_1,y_2,\cdots,y_n}\in\mathbb{R}^n$，其中$y_t&amp;#x3D;1$代"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="http://qfxiao.me/img/1571569717718.png"><meta property="article:published_time" content="2020-01-08T02:27:58.000Z"><meta property="article:modified_time" content="2020-02-03T08:19:29.580Z"><meta property="article:author" content="Hanzawa"><meta property="article:tag" content="Time Series"><meta property="article:tag" content="Deep Learning"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="http://qfxiao.me/img/1571569717718.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://qfxiao.me/2020/01/08/Time-Series-Anomaly-Detection-Paper-List/"},"headline":"Hanzawa の 部屋","image":["http://qfxiao.me/img/1571569717718.png"],"datePublished":"2020-01-08T02:27:58.000Z","dateModified":"2020-02-03T08:19:29.580Z","author":{"@type":"Person","name":"Hanzawa"},"description":"Introduction时间序列异常检测在很多领域例如运维、金融、交通都扮演者重要的角色，其定义如下：  给定时间序列$X&#x3D;{\\mathbf{x}_1,\\mathbf{x}_2,\\cdots,\\mathbf{x}_n}\\in\\mathbb{R}^{m\\times n}$，异常检测的任务是输出异常标签$y&#x3D;{y_1,y_2,\\cdots,y_n}\\in\\mathbb{R}^n$，其中$y_t&#x3D;1$代"}</script><link rel="icon" href="/images/favicon.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/logo.svg" alt="Hanzawa の 部屋" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><div class="card-image"><span class="image is-7by3"><img class="thumbnail" src="http://qfxiao.me/img/1571569717718.png" alt="Time Series Anomaly Detection Paper List"></span></div><article class="card-content article" role="article"><div class="article-meta size-small is-uppercase level is-mobile"><div class="level-left"><time class="level-item" dateTime="2020-01-08T02:27:58.000Z" title="2020-01-08T02:27:58.000Z">2020-01-08</time><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></span><span class="level-item">19 分钟 读完 (大约 2792 个字)</span></div></div><h1 class="title is-3 is-size-4-mobile">Time Series Anomaly Detection Paper List</h1><div class="content"><h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>时间序列异常检测在很多领域例如运维、金融、交通都扮演者重要的角色，其定义如下：</p>
+<blockquote>
+<p>给定时间序列$X={\mathbf{x}_1,\mathbf{x}_2,\cdots,\mathbf{x}_n}\in\mathbb{R}^{m\times n}$，异常检测的任务是输出异常标签$y={y_1,y_2,\cdots,y_n}\in\mathbb{R}^n$，其中$y_t=1$代表$\mathbf{x}_t$为异常，$y_t=0$代表$\mathbf{x}_t$正常</p>
+</blockquote>
+<p>本文罗列了一些时间序列异常检测领域值得读的一些文章，Model一章主要按时间序列、通用和图的异常检测分类，Related主要是一些非异常检测、但是能够解决异常检测研究中的一些问题的文章。</p>
+<p><img src="http://qfxiao.me/img/1571569717718.png" alt=""></p>
+<h1 id="Model"><a href="#Model" class="headerlink" title="Model"></a>Model</h1><h2 id="Time-Series"><a href="#Time-Series" class="headerlink" title="Time Series"></a>Time Series</h2><h3 id="Statistical"><a href="#Statistical" class="headerlink" title="Statistical"></a>Statistical</h3><p>主要包括偏向统计方法的模型：</p>
+<table>
+<thead>
+<tr>
+<th><strong>Title</strong></th>
+<th><strong>Conf/Journal</strong></th>
+<th><strong>Description</strong></th>
+<th><strong>Links</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Temporal Anomaly Detection: Calibrating the Surprise</td>
+<td></td>
+<td></td>
+<td><a href="https://arxiv.org/pdf/1705.10085">📃Paper</a></td>
+</tr>
+<tr>
+<td>Non-Parametric Outliers Detection in Multiple Time Series A Case Study: Power Grid Data Analysis</td>
+<td></td>
+<td></td>
+<td><a href="https://aaai.org/ocs/index.php/AAAI/AAAI18/paper/view/16315">📃Paper</a></td>
+</tr>
+<tr>
+<td>Anomaly Detection in Streams with Extreme Value Theory</td>
+<td>KDD17</td>
+<td>提出了以Extreme Value Theory为基础的时序异常检测和参数选择方法</td>
+<td><a href="https://www.kdd.org/kdd2017/papers/view/anomaly-detection-in-streams-with-extreme-value-theory">📃Paper</a></td>
+</tr>
+<tr>
+<td>Semi-Markov Switching Vector Autoregressive Model-Based Anomaly Detection in Aviation Systems</td>
+<td></td>
+<td></td>
+<td><a href="https://www.kdd.org/kdd2016/subtopic/view/semi-markov-switching-vector-autoregressive-model-based-anomaly-detection-i">📃Paper</a></td>
+</tr>
+<tr>
+<td>Stochastic Online Anomaly Analysis for Streaming Time Series</td>
+<td></td>
+<td></td>
+<td><a href="https://www.ijcai.org/proceedings/2017/445">📃Paper</a></td>
+</tr>
+<tr>
+<td>Unsupervised Real-time Anomaly Detection for Streaming Data</td>
+<td></td>
+<td></td>
+<td><a href="https://www.sciencedirect.com/science/article/pii/S0925231217309864">📃Paper</a></td>
+</tr>
+<tr>
+<td>Automatic Anomaly Detection in the Cloud Via Statistical Learning</td>
+<td></td>
+<td></td>
+<td><a href="https://arxiv.org/abs/1704.07706">📃Paper</a></td>
+</tr>
+</tbody></table>
+<h3 id="Classic-Machine-Learning"><a href="#Classic-Machine-Learning" class="headerlink" title="Classic Machine Learning"></a>Classic Machine Learning</h3><table>
+<thead>
+<tr>
+<th><strong>Title</strong></th>
+<th><strong>Conf/Journal</strong></th>
+<th><strong>Description</strong></th>
+<th><strong>Links</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Semi-supervised Anomaly Detection with an Application to Water Analytics</td>
+<td></td>
+<td></td>
+<td><a href="https://people.cs.kuleuven.be/~vincent.vercruyssen/publications/2018/ICDM_conference_manuscript.pdf">📃Paper</a></td>
+</tr>
+<tr>
+<td>DILOF: Effective and Memory Efficient Local Outlier Detection in Data Streams</td>
+<td></td>
+<td></td>
+<td><a href="https://www.kdd.org/kdd2018/accepted-papers/view/dsilof-effective-and-memory-efficient-local-outlier-detection-in-data-strea">📃Paper</a></td>
+</tr>
+<tr>
+<td>Robust Random Cut Forest Based Anomaly Detection On Streams</td>
+<td>ICML16</td>
+<td>孤立森林的改进版本来做时序异常检测</td>
+<td><a href="http://proceedings.mlr.press/v48/guha16.pdf">📃Paper</a> <a href="https://github.com/kLabUM/rrcf">📥Code</a></td>
+</tr>
+<tr>
+<td>Anomaly Detection for an E-commerce Pricing System</td>
+<td></td>
+<td></td>
+<td><a href="https://arxiv.org/pdf/1902.09566">📃Paper</a></td>
+</tr>
+<tr>
+<td>An Adaptive Approach for Anomaly Detector Selection and Fine-Tuning in Time Series</td>
+<td></td>
+<td></td>
+<td><a href="https://arxiv.org/pdf/1907.07843">📃Paper</a></td>
+</tr>
+<tr>
+<td>Opprentice: Towards Practical and Automatic Anomaly Detection Through Machine Learning</td>
+<td>IMC15</td>
+<td>以随机森林为基础的时序异常检测</td>
+<td><a href="http://netman.cs.tsinghua.edu.cn/wp-content/uploads/2015/11/liu_imc15_Opprentice.pdf">📃Paper</a></td>
+</tr>
+<tr>
+<td>Variational Inference for On-line Anomaly Detection in High-Dimensional Time Series</td>
+<td></td>
+<td></td>
+<td><a href="https://arxiv.org/pdf/1602.07109">📃Paper</a></td>
+</tr>
+<tr>
+<td>A Self-Learning and Online Algorithm for Time SeriesAnomaly Detection, with Application in CPU Manufacturing</td>
+<td></td>
+<td></td>
+<td><a href="https://dl.acm.org/citation.cfm?id=2983344">📃Paper</a></td>
+</tr>
+</tbody></table>
+<h3 id="VAE"><a href="#VAE" class="headerlink" title="VAE"></a>VAE</h3><table>
+<thead>
+<tr>
+<th><strong>Title</strong></th>
+<th><strong>Conf/Journal</strong></th>
+<th><strong>Description</strong></th>
+<th><strong>Links</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Unsupervised Anomaly Detection via Variational Auto-Encoder for Seasonal KPIs in Web Applications</td>
+<td>WWW18</td>
+<td>普通VAE</td>
+<td><a href="https://arxiv.org/pdf/1802.03903">📃Paper</a> <a href="https://github.com/haowen-xu/donut">📥Code</a> <a href="http://qfxiao.me/2019/09/22/Unsupervised-Anomaly-Detection-via-Variational-Auto-Encoder-for-Seasonal-KPIs-in-Web-Applications/">✍Blog</a></td>
+</tr>
+<tr>
+<td>Robust and Unsupervised KPI Anomaly Detection Based on Conditional Variational Autoencoder</td>
+<td>IPCCC18</td>
+<td>条件VAE</td>
+<td><a href="https://ieeexplore.ieee.org/document/8710885">📃Paper</a> <a href="https://github.com/yantijin/Buzz">📥Code</a></td>
+</tr>
+<tr>
+<td>Unsupervised Anomaly Detection for Intricate KPIs via Adversarial Training of VAE</td>
+<td>INFOCOM19</td>
+<td>VAE加对抗训练</td>
+<td><a href="https://ieeexplore.ieee.org/abstract/document/8737430/">📃Paper</a></td>
+</tr>
+<tr>
+<td>Multidimensional Time Series Anomaly Detection: A GRU-based Gaussian Mixture Variational Autoencoder Approach</td>
+<td></td>
+<td></td>
+<td><a href="http://proceedings.mlr.press/v95/guo18a/guo18a.pdf">📃Paper</a></td>
+</tr>
+<tr>
+<td>Robust Anomaly Detection for Multivariate Time Series through Stochastic Recurrent Neural Network</td>
+<td>KDD19</td>
+<td>多变量基于VAE和RNN的时序异常检测</td>
+<td><a href="https://www.kdd.org/kdd2019/accepted-papers/view/robust-anomaly-detection-for-multivariate-time-series-through-stochastic-re">📃Paper</a> <a href="https://github.com/smallcowbaby/OmniAnomaly">📥Code</a></td>
+</tr>
+<tr>
+<td>A Multimodal Anomaly Detector for Robot-Assisted Feeding Using an LSTM-based Variational Autoencoder</td>
+<td></td>
+<td></td>
+<td><a href="http://ieeexplore.ieee.org/document/8279425/">📃Paper</a></td>
+</tr>
+</tbody></table>
+<h3 id="RNN"><a href="#RNN" class="headerlink" title="RNN"></a>RNN</h3><table>
+<thead>
+<tr>
+<th><strong>Title</strong></th>
+<th><strong>Conf/Journal</strong></th>
+<th><strong>Description</strong></th>
+<th><strong>Links</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Detecting Spacecraft Anomalies Using LSTMs and Nonparametric Dynamic Thresholding</td>
+<td></td>
+<td></td>
+<td><a href="https://arxiv.org/pdf/1802.04431">📃Paper</a></td>
+</tr>
+<tr>
+<td>BINet: Multivariate Business Process Anomaly Detection Using Deep Learning</td>
+<td></td>
+<td></td>
+<td><a href="https://link.springer.com/chapter/10.1007/978-3-319-98648-7_16">📃Paper</a></td>
+</tr>
+<tr>
+<td>Outlier Detection for Time Series with Recurrent Autoencoder Ensembles</td>
+<td></td>
+<td></td>
+<td><a href="https://www.ijcai.org/proceedings/2019/0378.pdf">📃Paper</a></td>
+</tr>
+<tr>
+<td>LSTM-based Encoder-Decoder for Multi-sensor Anomaly Detection</td>
+<td></td>
+<td></td>
+<td><a href="https://arxiv.org/pdf/1607.00148">📃Paper</a></td>
+</tr>
+<tr>
+<td>Detecting Anomalies in Space using Multivariate Convolutional LSTM with Mixtures of Probabilistic PCA</td>
+<td>KDD19</td>
+<td></td>
+<td><a href="https://dl.acm.org/doi/10.1145/3292500.3330776">📃Paper</a></td>
+</tr>
+</tbody></table>
+<h3 id="GAN"><a href="#GAN" class="headerlink" title="GAN"></a>GAN</h3><table>
+<thead>
+<tr>
+<th><strong>Title</strong></th>
+<th><strong>Conf/Journal</strong></th>
+<th><strong>Description</strong></th>
+<th><strong>Links</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Anomaly Detection with Generative Adversarial Networks for Multivariate Time Series</td>
+<td></td>
+<td></td>
+<td><a href="https://arxiv.org/pdf/1809.04758">📃Paper</a> <a href="http://larryshaw0079.coding.me/blog/2019/09/22/Anomaly-Detection-with-Generative-Adversarial-Networks-for-Multivariate-Time-Series/">📥Blog</a></td>
+</tr>
+<tr>
+<td>MAD-GAN: Multivariate Anomaly Detection for Time Series Data with Generative Adversarial Networks</td>
+<td>ICANN19</td>
+<td>普通GAN做时序异常检测，没有编码结构</td>
+<td><a href="https://arxiv.org/pdf/1901.04997">📃Paper</a> <a href="https://github.com/LiDan456/MAD-GANs">📥Code</a></td>
+</tr>
+<tr>
+<td>BeatGAN: Anomalous Rhythm Detection using Adversarially Generated Time Series</td>
+<td>IJCAI19</td>
+<td>ECG异常检测，没有隐变量约束</td>
+<td><a href="https://www.ijcai.org/proceedings/2019/616">📃Paper</a></td>
+</tr>
+</tbody></table>
+<h3 id="Miscellaneous"><a href="#Miscellaneous" class="headerlink" title="Miscellaneous"></a>Miscellaneous</h3><table>
+<thead>
+<tr>
+<th><strong>Title</strong></th>
+<th><strong>Conf/Journal</strong></th>
+<th><strong>Description</strong></th>
+<th><strong>Links</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A Deep Neural Network for Unsupervised Anomaly Detection and Diagnosis in Multivariate Time Series Data</td>
+<td></td>
+<td></td>
+<td><a href="https://arxiv.org/pdf/1811.08055">📃Paper</a></td>
+</tr>
+<tr>
+<td>ALSR: An Adaptive Label Screening and Relearning Approach for Interval-Oriented Anomaly Detection</td>
+<td>Expert Systems With Applications</td>
+<td>有监督KPI异常检测，使用两阶段训练来提升性能</td>
+<td><a href="https://www.sciencedirect.com/science/article/pii/S0957417419304282">📃Paper</a> <a href="http://larryshaw0079.coding.me/blog/2019/09/22/ALSR-An-adaptive-label-screening-and-relearning-approach-for-interval-oriented-anomaly-detection/">✍Blog</a></td>
+</tr>
+<tr>
+<td>Time-Series Anomaly Detection Service at Microsoft</td>
+<td>KDD19</td>
+<td>将视觉异常检测中的谱残差应用到了时序异常检测</td>
+<td><a href="https://arxiv.org/pdf/1906.03821">📃Paper</a> <a href="https://github.com/microsoft/anomalydetector">📥Code</a> <a href="http://larryshaw0079.coding.me/blog/2019/09/22/Time-Series-Anomaly-Detection-Service-at-Microsoft/">✍Blog</a></td>
+</tr>
+<tr>
+<td>Outlier Detection for Multidimensional Time Series using Deep Neural Networks</td>
+<td></td>
+<td></td>
+<td><a href="https://ieeexplore.ieee.org/document/8411269">📃Paper</a></td>
+</tr>
+</tbody></table>
+<h2 id="General"><a href="#General" class="headerlink" title="General"></a>General</h2><h3 id="Survey"><a href="#Survey" class="headerlink" title="Survey"></a>Survey</h3><ul>
+<li><em>Deep Learning for Anomaly Detection: A Survey</em> <a href="https://arxiv.org/abs/1901.03407">[Paper]</a></li>
+</ul>
+<h3 id="Classic-Machine-Learning-1"><a href="#Classic-Machine-Learning-1" class="headerlink" title="Classic Machine Learning"></a>Classic Machine Learning</h3><table>
+<thead>
+<tr>
+<th><strong>Title</strong></th>
+<th><strong>Conf/Journal</strong></th>
+<th><strong>Description</strong></th>
+<th><strong>Links</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>LOF: Identifying Density-Based Local Outliers</td>
+<td></td>
+<td></td>
+<td><a href="https://dl.acm.org/citation.cfm?id=335388">📃Paper</a></td>
+</tr>
+<tr>
+<td>Isolation Forest</td>
+<td></td>
+<td></td>
+<td><a href="https://cs.nju.edu.cn/zhouzh/zhouzh.files/publication/icdm08b.pdf">📃Paper</a></td>
+</tr>
+<tr>
+<td>Extended Isolation Forest</td>
+<td></td>
+<td></td>
+<td><a href="https://arxiv.org/pdf/1811.02141">📃Paper</a></td>
+</tr>
+<tr>
+<td>Hidden Markov Anomaly Detection</td>
+<td></td>
+<td></td>
+<td><a href="http://proceedings.mlr.press/v37/goernitz15.pdf">📃Paper</a></td>
+</tr>
+<tr>
+<td>Linear-Time Outlier Detection via Sensitivity</td>
+<td></td>
+<td></td>
+<td><a href="https://arxiv.org/pdf/1605.00519">📃Paper</a></td>
+</tr>
+<tr>
+<td>Reverse Nearest Neighbors in Unsupervised Distance-Based Outlier Detection</td>
+<td></td>
+<td></td>
+<td><a href="http://ieeexplore.ieee.org/document/6948273">📃Paper</a></td>
+</tr>
+<tr>
+<td>Theoretical Foundations and Algorithms for Outlier Ensembles</td>
+<td></td>
+<td></td>
+<td><a href="https://www.kdd.org/exploration_files/Article4.pdf">📃Paper</a></td>
+</tr>
+<tr>
+<td>R1SVM: A Randomised Nonlinear Approach to Large-Scale Anomaly Detection</td>
+<td></td>
+<td></td>
+<td><a href="https://www.aaai.org/ocs/index.php/AAAI/AAAI15/paper/view/9343">📃Paper</a></td>
+</tr>
+<tr>
+<td>Random Gradient Descent Tree: A Combinatorial Approach for SVM with Outliers</td>
+<td></td>
+<td></td>
+<td><a href="https://www.aaai.org/ocs/index.php/AAAI/AAAI15/paper/view/9477">📃Paper</a></td>
+</tr>
+<tr>
+<td>Sparse Gaussian Markov Random Field Mixtures for Anomaly Detection</td>
+<td></td>
+<td></td>
+<td><a href="https://ieeexplore.ieee.org/document/7837932/">📃Paper</a></td>
+</tr>
+<tr>
+<td>Sequential Ensemble Learning for Outlier Detection: A Bias-Variance Perspective</td>
+<td></td>
+<td></td>
+<td><a href="https://arxiv.org/pdf/1609.05528">📃Paper</a></td>
+</tr>
+<tr>
+<td>Sparse Modeling-Based Sequential Ensemble Learning for Effective Outlier Detection in High-Dimensional Numeric Data</td>
+<td></td>
+<td></td>
+<td><a href="https://aaai.org/ocs/index.php/AAAI/AAAI18/paper/view/16648">📃Paper</a></td>
+</tr>
+<tr>
+<td>Contextual Spatial Outlier Detection with Metric Learning</td>
+<td></td>
+<td></td>
+<td><a href="https://www.kdd.org/kdd2017/papers/view/contextual-spatial-outlier-detection-with-metric-learning">📃Paper</a></td>
+</tr>
+<tr>
+<td>Human-Assisted Online Anomaly Detection with Normal Outlier Retraining</td>
+<td></td>
+<td></td>
+<td><a href="https://www.andrew.cmu.edu/user/lakoglu/odd/accepted_papers/ODD_v50_paper_11.pdf">📃Paper</a></td>
+</tr>
+<tr>
+<td>Efficient Anomaly Detection via Matrix Sketching</td>
+<td></td>
+<td></td>
+<td><a href="https://papers.nips.cc/paper/8030-efficient-anomaly-detection-via-matrix-sketching.pdf">📃Paper</a></td>
+</tr>
+<tr>
+<td>Dual-Regularized Multi-View Outlier Detection</td>
+<td></td>
+<td></td>
+<td><a href="https://www.ijcai.org/Proceedings/15/Papers/572.pdf">📃Paper</a></td>
+</tr>
+<tr>
+<td>Deep Anomaly Detection Using Geometric Transformations</td>
+<td></td>
+<td></td>
+<td><a href="https://papers.nips.cc/paper/8183-deep-anomaly-detection-using-geometric-transformations.pdf">📃Paper</a></td>
+</tr>
+<tr>
+<td>Multi-view Anomaly Detection via Robust Probabilistic Latent Variable Models</td>
+<td></td>
+<td></td>
+<td><a href="https://papers.nips.cc/paper/6456-multi-view-anomaly-detection-via-robust-probabilistic-latent-variable-models.pdf">📃Paper</a></td>
+</tr>
+<tr>
+<td>Partial Multi-View Outlier Detection Based on Collective Learning</td>
+<td></td>
+<td></td>
+<td><a href="https://aaai.org/ocs/index.php/AAAI/AAAI18/paper/view/17166">📃Paper</a></td>
+</tr>
+<tr>
+<td>Multi-View Anomaly Detection: Neighborhood in Locality Matters</td>
+<td></td>
+<td></td>
+<td><a href="https://www.aaai.org/ojs/index.php/AAAI/article/view/4418">📃Paper</a></td>
+</tr>
+<tr>
+<td>Latent Discriminant Subspace Representations for Multi-View Outlier Detection</td>
+<td></td>
+<td></td>
+<td><a href="https://aaai.org/ocs/index.php/AAAI/AAAI18/paper/view/17401">📃Paper</a></td>
+</tr>
+<tr>
+<td>Anomaly Detection with Partially Observed Anomalies</td>
+<td></td>
+<td></td>
+<td><a href="https://dl.acm.org/citation.cfm?id=3184558.3186580">📃Paper</a></td>
+</tr>
+<tr>
+<td>One-Class Active Learning for Outlier Detection with Multiple Subspaces</td>
+<td></td>
+<td></td>
+<td><a href="https://dl.acm.org/citation.cfm?id=3357873">📃Paper</a></td>
+</tr>
+<tr>
+<td>Statistical Analysis of Nearest Neighbor Methods for Anomaly Detection</td>
+<td>NIPS19</td>
+<td></td>
+<td><a href="http://papers.nips.cc/paper/9274-statistical-analysis-of-nearest-neighbor-methods-for-anomaly-detection">📃Paper</a></td>
+</tr>
+<tr>
+<td>SNIPER: Few-shot Learning for Anomaly Detection to Minimize False-negative Rate with Ensured True-positive Rate</td>
+<td>ICASSP19</td>
+<td></td>
+<td><a href="https://ieeexplore.ieee.org/document/8683667">📃Paper</a></td>
+</tr>
+</tbody></table>
+<h3 id="AE-VAE"><a href="#AE-VAE" class="headerlink" title="AE/VAE"></a>AE/VAE</h3><table>
+<thead>
+<tr>
+<th><strong>Title</strong></th>
+<th><strong>Conf/Journal</strong></th>
+<th><strong>Description</strong></th>
+<th><strong>Links</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Estimation of Dimensions Contributing to Detected Anomalies with Variational Autoencoders</td>
+<td></td>
+<td></td>
+<td><a href="https://arxiv.org/pdf/1811.04576">📃Paper</a></td>
+</tr>
+<tr>
+<td>Anomaly Detection with Robust Deep Autoencoders</td>
+<td></td>
+<td></td>
+<td><a href="https://www.kdd.org/kdd2017/papers/view/anomaly-detection-with-robust-deep-auto-encoders">📃Paper</a></td>
+</tr>
+<tr>
+<td>Complementary Set Variational Autoencoder for Supervised Anomaly Detection</td>
+<td></td>
+<td></td>
+<td><a href="https://ieeexplore.ieee.org/document/8462181">📃Paper</a></td>
+</tr>
+<tr>
+<td>A Two-class Hyper-spherical Autoencoder for Supervised Anomaly Detection</td>
+<td></td>
+<td></td>
+<td><a href="https://ieeexplore.ieee.org/document/8683790">📃Paper</a></td>
+</tr>
+</tbody></table>
+<h3 id="GAN-1"><a href="#GAN-1" class="headerlink" title="GAN"></a>GAN</h3><table>
+<thead>
+<tr>
+<th><strong>Title</strong></th>
+<th><strong>Conf/Journal</strong></th>
+<th><strong>Description</strong></th>
+<th><strong>Links</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Adversarially Learned Anomaly Detection</td>
+<td></td>
+<td></td>
+<td><a href="https://arxiv.org/pdf/1812.02288">📃Paper</a></td>
+</tr>
+<tr>
+<td>AMAD: Adversarial Multiscale Anomaly Detection on High-Dimensional and Time-Evolving Categorical Data</td>
+<td></td>
+<td></td>
+<td><a href="https://arxiv.org/pdf/1907.06582">📃Paper</a></td>
+</tr>
+<tr>
+<td>Adversarially Learned One-Class Classifier for Novelty Detection</td>
+<td></td>
+<td></td>
+<td><a href="http://openaccess.thecvf.com/content_cvpr_2018/papers/Sabokrou_Adversarially_Learned_One-Class_CVPR_2018_paper.pdf">📃Paper</a> <a href="https://github.com/khalooei/ALOCC-CVPR2018">📥Code</a></td>
+</tr>
+<tr>
+<td>Generative Probabilistic Novelty Detection with Adversarial Autoencoders</td>
+<td></td>
+<td></td>
+<td><a href="https://papers.nips.cc/paper/7915-generative-probabilistic-novelty-detection-with-adversarial-autoencoders.pdf">📃Paper</a> <a href="https://github.com/podgorskiy/GPND">📥Code</a></td>
+</tr>
+<tr>
+<td>OCGAN: One-class Novelty Detection Using GANs with Constrained Latent Representations</td>
+<td></td>
+<td></td>
+<td><a href="https://arxiv.org/pdf/1903.08550">📃Paper</a></td>
+</tr>
+<tr>
+<td>Fence GAN: Towards Better Anomaly Detection</td>
+<td>Arxiv</td>
+<td></td>
+<td><a href="https://arxiv.org/abs/1904.01209">📃Paper</a></td>
+</tr>
+<tr>
+<td>Anomaly Detection via Minimum Likelihood Generative Adversarial Networks</td>
+<td>Arxiv</td>
+<td></td>
+<td><a href="https://arxiv.org/abs/1808.00200">📃Paper</a></td>
+</tr>
+<tr>
+<td>DOPING: Generative Data Augmentation for Unsupervised Anomaly Detection with GAN</td>
+<td>ICDM18</td>
+<td></td>
+<td><a href="https://ieeexplore.ieee.org/document/8594955">📃Paper</a></td>
+</tr>
+<tr>
+<td>Learning Competitive and Discriminative Reconstructions for Anomaly Detection</td>
+<td>AAAI19</td>
+<td></td>
+<td><a href="https://www.aaai.org/ojs/index.php/AAAI/article/view/4451">📃Paper</a></td>
+</tr>
+</tbody></table>
+<h3 id="Miscellaneous-1"><a href="#Miscellaneous-1" class="headerlink" title="Miscellaneous"></a>Miscellaneous</h3><table>
+<thead>
+<tr>
+<th><strong>Title</strong></th>
+<th><strong>Conf/Journal</strong></th>
+<th><strong>Description</strong></th>
+<th><strong>Links</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Deep Structured Energy Based Models for Anomaly Detection</td>
+<td></td>
+<td></td>
+<td><a href="https://arxiv.org/pdf/1605.07717">📃Paper</a></td>
+</tr>
+<tr>
+<td>Anomaly Detection using One-Class Neural Networks</td>
+<td></td>
+<td></td>
+<td><a href="https://arxiv.org/pdf/1802.06360">📃Paper</a> <a href="https://github.com/raghavchalapathy/oc-nn">📥Code</a></td>
+</tr>
+<tr>
+<td>High-dimensional and large-scale anomaly detection using a linear one-class SVM with deep learning</td>
+<td></td>
+<td></td>
+<td><a href="https://www.sciencedirect.com/science/article/pii/S0031320316300267">📃Paper</a></td>
+</tr>
+<tr>
+<td>Deep Autoencoding Gaussian Mixture Model for Unsupervised Anomaly Detection</td>
+<td></td>
+<td></td>
+<td><a href="https://openreview.net/pdf?id=BJJLHbb0-">📃Paper</a></td>
+</tr>
+<tr>
+<td>Deep Anomaly Detection with Outlier Exposure</td>
+<td></td>
+<td></td>
+<td><a href="https://openreview.net/forum?id=HyxCxhRcY7">📃Paper</a></td>
+</tr>
+<tr>
+<td>Are Generative Deep Models for Novelty Detection Truly Better?</td>
+<td>KDD18 Workshop</td>
+<td></td>
+<td><a href="https://arxiv.org/abs/1807.05027">📃Paper</a></td>
+</tr>
+<tr>
+<td>Probabilistic-Mismatch Anomaly Detection: Do one’s Medications Match with the Diagnoses?</td>
+<td>ICDM16</td>
+<td></td>
+<td><a href="https://ieeexplore.ieee.org/document/7837890">📃Paper</a></td>
+</tr>
+<tr>
+<td>Deep Anomaly Detection with Deviation Networks</td>
+<td>KDD19</td>
+<td></td>
+<td><a href="https://dl.acm.org/doi/10.1145/3292500.3330871">📃Paper</a></td>
+</tr>
+<tr>
+<td>Weakly-supervised Deep Anomaly Detection with Pairwise Relation Learning</td>
+<td>AAAI20</td>
+<td></td>
+<td><a href="https://arxiv.org/abs/1910.13601">📃Paper</a></td>
+</tr>
+<tr>
+<td>Transfer Anomaly Detection by Inferring Latent Domain Representations</td>
+<td>NIPS19</td>
+<td></td>
+<td><a href="http://papers.nips.cc/paper/8517-transfer-anomaly-detection-by-inferring-latent-domain-representations">📃Paper</a></td>
+</tr>
+<tr>
+<td>Multi-view Anomaly Detection via Robust Probabilistic Latent Variable Models</td>
+<td>NIPS16</td>
+<td></td>
+<td><a href="http://papers.nips.cc/paper/6456-multi-view-anomaly-detection-via-robust-probabilistic-latent-variable-models">📃Paper</a></td>
+</tr>
+<tr>
+<td>Continual Learning for Anomaly Detection with Variational Autoencoder</td>
+<td>ICASSP19</td>
+<td></td>
+<td><a href="https://ieeexplore.ieee.org/document/8682702">📃Paper</a></td>
+</tr>
+<tr>
+<td>AdaFlow: Domain-adaptive Density Estimator with Application to Anomaly Detection and Unpaired Cross-domain Translation</td>
+<td>ICASSP19</td>
+<td></td>
+<td><a href="https://ieeexplore.ieee.org/document/8683072">📃Paper</a></td>
+</tr>
+</tbody></table>
+<h2 id="Graph"><a href="#Graph" class="headerlink" title="Graph"></a>Graph</h2><ul>
+<li><em>AddGraph: Anomaly Detection in Dynamic Graph Using Attention-based Temporal GCN</em> <a href="https://www.ijcai.org/proceedings/2019/614">[Paper]</a></li>
+<li><em>Outlier Detection in Graph Streams</em> <a href="https://ieeexplore.ieee.org/document/5767885">[Paper]</a></li>
+<li><em>NetWalk: A Flexible Deep Embedding Approach for Anomaly Detection in Dynamic Networks</em> <a href="https://www.kdd.org/kdd2018/accepted-papers/view/netwalk-a-flexible-deep-embedding-approach-for-anomaly-detection-in-dynamic">[Paper]</a></li>
+<li><em>Anomaly Detection in Dynamic Networks using Multi-view Time-Series Hypersphere Learning</em> <a href="https://dl.acm.org/citation.cfm?id=3132964">[Paper]</a></li>
+</ul>
+<h1 id="Related"><a href="#Related" class="headerlink" title="Related"></a>Related</h1><p>这一部分主要是一些非异常检测文章，但是可以用来解决异常检测中的问题的相关文章。</p>
+<h2 id="Infrastructure"><a href="#Infrastructure" class="headerlink" title="Infrastructure"></a>Infrastructure</h2><h3 id="GAN-2"><a href="#GAN-2" class="headerlink" title="GAN"></a>GAN</h3><ul>
+<li><em>Generative Adversarial Networks</em> <a href="https://arxiv.org/abs/1406.2661">[Paper]</a></li>
+</ul>
+<h4 id="VAE-amp-GAN-Combination"><a href="#VAE-amp-GAN-Combination" class="headerlink" title="VAE &amp; GAN Combination"></a>VAE &amp; GAN Combination</h4><ul>
+<li><em>Variational Approaches for Auto-Encoding Generative Adversarial Networks</em> <a href="https://arxiv.org/abs/1706.04987">[Paper]</a></li>
+<li><em>Adversarial Variational Bayes: Unifying Variational Autoencoders and Generative Adversarial Networks</em> <a href="https://arxiv.org/abs/1701.04722">[Paper]</a></li>
+<li><em>On Unifying Deep Generative Models</em> <a href="https://arxiv.org/abs/1706.00550">[Paper]</a></li>
+</ul>
+<h4 id="Bidirectional-GANs"><a href="#Bidirectional-GANs" class="headerlink" title="Bidirectional GANs"></a>Bidirectional GANs</h4><ul>
+<li><em>Adversarial Feature Learning</em> [[Paper]](Adversarial Feature Learning)</li>
+<li><em>Adversarially Learned Inference</em> <a href="https://arxiv.org/abs/1606.00704">[Paper]</a></li>
+<li><em>It Takes (Only) Two: Adversarial Generator-Encoder Networks</em> <a href="https://arxiv.org/abs/1704.02304">[Paper]</a></li>
+</ul>
+<h3 id="VAE-1"><a href="#VAE-1" class="headerlink" title="VAE"></a>VAE</h3><ul>
+<li><em>Auto-Encoding Variational Bayes</em> <a href="https://arxiv.org/abs/1312.6114">[Paper]</a></li>
+</ul>
+<h2 id="Class-Imbalance"><a href="#Class-Imbalance" class="headerlink" title="Class Imbalance"></a>Class Imbalance</h2><ul>
+<li><em>Focal Loss for Dense Object Detection</em> <a href="https://arxiv.org/abs/1708.02002">[Paper]</a></li>
+<li><em>Gradient Harmonized Single-stage Detector</em> <a href="https://arxiv.org/abs/1811.05181">[Paper]</a></li>
+</ul>
+<h2 id="Stochastic-Temporal-Modeling"><a href="#Stochastic-Temporal-Modeling" class="headerlink" title="Stochastic Temporal Modeling"></a>Stochastic Temporal Modeling</h2><ul>
+<li><em>Sequential Neural Models with Stochastic Layers</em> <a href="https://arxiv.org/abs/1605.07571">[Paper]</a></li>
+<li><em>A Recurrent Latent Variable Model for Sequential Data</em> <a href="https://papers.nips.cc/paper/5653-a-recurrent-latent-variable-model-for-sequential-data">[Paper]</a></li>
+<li><em>Deep State Space Models for Time Series Forecasting</em> <a href="https://papers.nips.cc/paper/8004-deep-state-space-models-for-time-series-forecasting">[Paper]</a></li>
+<li><em>Bayesian Recurrent Neural Networks</em> <a href="https://arxiv.org/abs/1704.02798">[Paper]</a></li>
+</ul>
+<h2 id="Detection-without-Closed-form-Likelihood"><a href="#Detection-without-Closed-form-Likelihood" class="headerlink" title="Detection without Closed-form Likelihood"></a>Detection without Closed-form Likelihood</h2><h3 id="Reconstruction"><a href="#Reconstruction" class="headerlink" title="Reconstruction"></a>Reconstruction</h3><ul>
+<li><em>Adversarially Learned One-Class Classifier for Novelty Detection</em> <a href="https://arxiv.org/abs/1802.09088">[Paper]</a></li>
+<li><em>Generative Adversarial Network Based Novelty Detection Using Minimized Reconstruction Error</em> <a href="https://link.springer.com/article/10.1631/FITEE.1700786">[Paper]</a></li>
+<li><em>Learning Discriminative Reconstructions for Unsupervised Outlier Removal</em> <a href="https://ieeexplore.ieee.org/document/7410534">[Paper]</a></li>
+</ul>
+<h3 id="Discriminator"><a href="#Discriminator" class="headerlink" title="Discriminator"></a>Discriminator</h3><ul>
+<li><em>A Lipschitz-constrained Anomaly Discriminator Framework</em> <a href="https://arxiv.org/abs/1905.10710">[Paper]</a></li>
+</ul>
+<h3 id="Out-of-distribution"><a href="#Out-of-distribution" class="headerlink" title="Out-of-distribution"></a>Out-of-distribution</h3><ul>
+<li><em>Enhancing The Reliability of Out-of-distribution Image Detection in Neural Networks</em> <a href="https://arxiv.org/abs/1706.02690">[Paper]</a></li>
+<li><em>Learning Confidence for Out-of-Distribution Detection in Neural Networks</em> <a href="https://arxiv.org/abs/1802.04865">[Paper]</a></li>
+<li><em>A Baseline for Detecting Misclassified and Out-of-Distribution Examples in Neural Networks</em> <a href="https://arxiv.org/abs/1610.02136">[Paper]</a></li>
+<li><em>A Simple Unified Framework for Detecting Out-of-Distribution Samples and Adversarial Attacks</em> <a href="https://arxiv.org/abs/1807.03888">[Paper]</a></li>
+</ul>
+<h2 id="GANs-for-Incomplete-Data"><a href="#GANs-for-Incomplete-Data" class="headerlink" title="GANs for Incomplete Data"></a>GANs for Incomplete Data</h2><ul>
+<li><em>AmbientGAN: Generative Models From Lossy Measurements</em> <a href="https://openreview.net/forum?id=Hy7fDog0b">[Paper]</a></li>
+<li><em>MisGAN: Learning from Incomplete Data with Generative Adversarial Networks</em> <a href="https://openreview.net/forum?id=S1lDV3RcKm">[Paper]</a></li>
+</ul>
+<h1 id="Dataset"><a href="#Dataset" class="headerlink" title="Dataset"></a>Dataset</h1><p>详见<a href="http://qfxiao.me/2020/02/03/Datasets-for-Time-Series-Anomaly-Detection/。">http://qfxiao.me/2020/02/03/Datasets-for-Time-Series-Anomaly-Detection/。</a></p>
+</div><div class="article-tags size-small is-uppercase mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/Time-Series/">Time Series</a><a class="link-muted mr-2" rel="tag" href="/tags/Deep-Learning/">Deep Learning</a></div><div class="notification is-danger">You need to set <code>install_url</code> to use ShareThis. Please set it in <code>_config.yml</code>.</div></article></div><div class="card"><div class="card-content"><h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3><div class="buttons is-centered"><a class="button is-info donate"><span class="icon is-small"><i class="fab fa-alipay"></i></span><span>支付宝</span><span class="qrcode"><img src="http://qfxiao.me/misc/alipay.jpg" alt="支付宝"></span></a><a class="button donate" href="https://www.buymeacoffee.com/larryshaw0079" style="background-color:rgba(255,128,62,.87);border-color:transparent;color:white;" target="_blank" rel="noopener"><span class="icon is-small"><i class="fas fa-coffee"></i></span><span>送我杯咖啡</span></a><a class="button is-warning donate" onclick="document.getElementById(&#039;paypal-donate-form&#039;).submit()"><span class="icon is-small"><i class="fab fa-paypal"></i></span><span>Paypal</span></a><form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" rel="noopener" id="paypal-donate-form"><input type="hidden" name="cmd" value="_donations"><input type="hidden" name="business" value="larryshaw0079@live.com"><input type="hidden" name="currency_code" value="USD"></form><a class="button is-success donate"><span class="icon is-small"><i class="fab fa-weixin"></i></span><span>微信</span><span class="qrcode"><img src="http://qfxiao.me/misc/wechat.png" alt="微信"></span></a></div></div></div><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2020/01/09/Complementary-Set-Variational-Autoencoder-for-Supervised-Anomaly-Detection/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">Complementary Set Variational Autoencoder for Supervised Anomaly Detection</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2020/01/06/Unsupervised-Anomaly-Detection-for-Intricate-KPIs-via-Adversarial-Training-of-VAE/"><span class="level-item">Unsupervised Anomaly Detection for Intricate KPIs via Adversarial Training of VAE</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content"><h3 class="title is-5">评论</h3><div id="disqus_thread"><noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></div><script>var disqus_config = function () {
+            this.page.url = 'http://qfxiao.me/2020/01/08/Time-Series-Anomaly-Detection-Paper-List/';
+            this.page.identifier = '2020/01/08/Time-Series-Anomaly-Detection-Paper-List/';
+        };
+        (function() {
+            var d = document, s = d.createElement('script');  
+            s.src = '//' + 'http-larryshaw0079-coding-me-blog' + '.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1"><div class="card widget"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="" src="/img/avatar.png" alt="Your name"></figure><p class="title is-size-4 is-block line-height-inherit">Your name</p><p class="is-size-6 is-block">Your title</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>Your location</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">文章</p><a href="/archives"><p class="title">17</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">分类</p><a href="/categories"><p class="title">9</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">标签</p><a href="/tags"><p class="title">12</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/ppoffice" target="_blank" rel="noopener">关注我</a></div><div class="level is-mobile"><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Github" href="https://github.com/ppoffice"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Facebook" href="https://facebook.com"><i class="fab fa-facebook"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Twitter" href="https://twitter.com"><i class="fab fa-twitter"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Dribbble" href="https://dribbble.com"><i class="fab fa-dribbble"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="RSS" href="/"><i class="fas fa-rss"></i></a></div></div></div><div class="card widget" id="toc"><div class="card-content"><div class="menu"><h3 class="menu-label">目录</h3><ul class="menu-list"><li><a class="is-flex" href="#Introduction"><span class="mr-2">1</span><span>Introduction</span></a></li><li><a class="is-flex" href="#Model"><span class="mr-2">2</span><span>Model</span></a><ul class="menu-list"><li><a class="is-flex" href="#Time-Series"><span class="mr-2">2.1</span><span>Time Series</span></a><ul class="menu-list"><li><a class="is-flex" href="#Statistical"><span class="mr-2">2.1.1</span><span>Statistical</span></a></li><li><a class="is-flex" href="#Classic-Machine-Learning"><span class="mr-2">2.1.2</span><span>Classic Machine Learning</span></a></li><li><a class="is-flex" href="#VAE"><span class="mr-2">2.1.3</span><span>VAE</span></a></li><li><a class="is-flex" href="#RNN"><span class="mr-2">2.1.4</span><span>RNN</span></a></li><li><a class="is-flex" href="#GAN"><span class="mr-2">2.1.5</span><span>GAN</span></a></li><li><a class="is-flex" href="#Miscellaneous"><span class="mr-2">2.1.6</span><span>Miscellaneous</span></a></li></ul></li><li><a class="is-flex" href="#General"><span class="mr-2">2.2</span><span>General</span></a><ul class="menu-list"><li><a class="is-flex" href="#Survey"><span class="mr-2">2.2.1</span><span>Survey</span></a></li><li><a class="is-flex" href="#Classic-Machine-Learning-1"><span class="mr-2">2.2.2</span><span>Classic Machine Learning</span></a></li><li><a class="is-flex" href="#AE-VAE"><span class="mr-2">2.2.3</span><span>AE&amp;#x2F;VAE</span></a></li><li><a class="is-flex" href="#GAN-1"><span class="mr-2">2.2.4</span><span>GAN</span></a></li><li><a class="is-flex" href="#Miscellaneous-1"><span class="mr-2">2.2.5</span><span>Miscellaneous</span></a></li></ul></li><li><a class="is-flex" href="#Graph"><span class="mr-2">2.3</span><span>Graph</span></a></li></ul></li><li><a class="is-flex" href="#Related"><span class="mr-2">3</span><span>Related</span></a><ul class="menu-list"><li><a class="is-flex" href="#Infrastructure"><span class="mr-2">3.1</span><span>Infrastructure</span></a><ul class="menu-list"><li><a class="is-flex" href="#Bidirectional-GANs"><span class="mr-2">3.1.1</span><span>Bidirectional GANs</span></a></li><li><a class="is-flex" href="#VAE-1"><span class="mr-2">3.1.2</span><span>VAE</span></a></li></ul></li><li><a class="is-flex" href="#Class-Imbalance"><span class="mr-2">3.2</span><span>Class Imbalance</span></a></li><li><a class="is-flex" href="#Stochastic-Temporal-Modeling"><span class="mr-2">3.3</span><span>Stochastic Temporal Modeling</span></a></li><li><a class="is-flex" href="#Detection-without-Closed-form-Likelihood"><span class="mr-2">3.4</span><span>Detection without Closed-form Likelihood</span></a><ul class="menu-list"><li><a class="is-flex" href="#Reconstruction"><span class="mr-2">3.4.1</span><span>Reconstruction</span></a></li><li><a class="is-flex" href="#Discriminator"><span class="mr-2">3.4.2</span><span>Discriminator</span></a></li><li><a class="is-flex" href="#Out-of-distribution"><span class="mr-2">3.4.3</span><span>Out-of-distribution</span></a></li></ul></li><li><a class="is-flex" href="#GANs-for-Incomplete-Data"><span class="mr-2">3.5</span><span>GANs for Incomplete Data</span></a></li></ul></li><li><a class="is-flex" href="#Dataset"><span class="mr-2">4</span><span>Dataset</span></a></li></ul></div></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">链接</h3><ul class="menu-list"><li><a class="level is-mobile is-mobile" href="https://hexo.io" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Hexo</span></span><span class="level-right"><span class="level-item tag">hexo.io</span></span></a></li><li><a class="level is-mobile is-mobile" href="https://bulma.io" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Bulma</span></span><span class="level-right"><span class="level-item tag">bulma.io</span></span></a></li></ul></div></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">分类</h3><ul class="menu-list"><li><a class="level is-mobile is-marginless" href="/categories/Research/"><span class="level-start"><span class="level-item">Research</span></span><span class="level-end"><span class="level-item tag">16</span></span></a><ul class="mr-0"><li><a class="level is-mobile is-marginless" href="/categories/Research/Anomaly-Detection/"><span class="level-start"><span class="level-item">Anomaly Detection</span></span><span class="level-end"><span class="level-item tag">11</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Research/GAN/"><span class="level-start"><span class="level-item">GAN</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Research/Misc/"><span class="level-start"><span class="level-item">Misc</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Research/RNN/"><span class="level-start"><span class="level-item">RNN</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Research/Time-Series-Imputation/"><span class="level-start"><span class="level-item">Time Series Imputation</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Research/Tutorial/"><span class="level-start"><span class="level-item">Tutorial</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></li><li><a class="level is-mobile is-marginless" href="/categories/Technical-Notes/"><span class="level-start"><span class="level-item">Technical Notes</span></span><span class="level-end"><span class="level-item tag">1</span></span></a><ul class="mr-0"><li><a class="level is-mobile is-marginless" href="/categories/Technical-Notes/Misc/"><span class="level-start"><span class="level-item">Misc</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></li></ul></div></div></div><div class="card widget"><div class="card-content"><h3 class="menu-label">最新文章</h3><article class="media"><a class="media-left" href="/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/"><p class="image is-64x64"><img class="thumbnail" src="http://qfxiao.me/img/image-20200301230011495.png" alt="Discovering Physical Concepts with Neural Networks"></p></a><div class="media-content size-small"><p><time dateTime="2020-03-01T14:55:02.000Z">2020-03-01</time></p><p class="title is-6"><a class="link-muted" href="/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/">Discovering Physical Concepts with Neural Networks</a></p><p class="is-uppercase"><a class="link-muted" href="/categories/Research/">Research</a> / <a class="link-muted" href="/categories/Research/Misc/">Misc</a></p></div></article><article class="media"><a class="media-left" href="/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/"><p class="image is-64x64"><img class="thumbnail" src="http://qfxiao.me/img/image-20200109102830713.png" alt="Transfer Anomaly Detection by Inferring Latent Domain Representations"></p></a><div class="media-content size-small"><p><time dateTime="2020-02-27T12:02:18.000Z">2020-02-27</time></p><p class="title is-6"><a class="link-muted" href="/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/">Transfer Anomaly Detection by Inferring Latent Domain Representations</a></p><p class="is-uppercase"><a class="link-muted" href="/categories/Research/">Research</a> / <a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></p></div></article><article class="media"><a class="media-left" href="/2020/02/24/Deep-Anomaly-Detection-with-Deviation-Networks/"><p class="image is-64x64"><img class="thumbnail" src="http://qfxiao.me/img/image-20200113104953902.png" alt="Deep Anomaly Detection with Deviation Networks"></p></a><div class="media-content size-small"><p><time dateTime="2020-02-24T02:45:08.000Z">2020-02-24</time></p><p class="title is-6"><a class="link-muted" href="/2020/02/24/Deep-Anomaly-Detection-with-Deviation-Networks/">Deep Anomaly Detection with Deviation Networks</a></p><p class="is-uppercase"><a class="link-muted" href="/categories/Research/">Research</a> / <a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></p></div></article><article class="media"><a class="media-left" href="/2020/01/31/Geant4-%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/"><p class="image is-64x64"><img class="thumbnail" src="http://qfxiao.me/img/image-20200131113557592.png" alt="Geant4 安装教程与调试环境配置"></p></a><div class="media-content size-small"><p><time dateTime="2020-01-31T03:25:59.000Z">2020-01-31</time></p><p class="title is-6"><a class="link-muted" href="/2020/01/31/Geant4-%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/">Geant4 安装教程与调试环境配置</a></p><p class="is-uppercase"><a class="link-muted" href="/categories/Technical-Notes/">Technical Notes</a> / <a class="link-muted" href="/categories/Technical-Notes/Misc/">Misc</a></p></div></article><article class="media"><a class="media-left" href="/2020/01/09/Complementary-Set-Variational-Autoencoder-for-Supervised-Anomaly-Detection/"><p class="image is-64x64"><img class="thumbnail" src="http://qfxiao.me/img/image-20200109102204802.png" alt="Complementary Set Variational Autoencoder for Supervised Anomaly Detection"></p></a><div class="media-content size-small"><p><time dateTime="2020-01-09T02:15:03.000Z">2020-01-09</time></p><p class="title is-6"><a class="link-muted" href="/2020/01/09/Complementary-Set-Variational-Autoencoder-for-Supervised-Anomaly-Detection/">Complementary Set Variational Autoencoder for Supervised Anomaly Detection</a></p><p class="is-uppercase"><a class="link-muted" href="/categories/Research/">Research</a> / <a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></p></div></article></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">归档</h3><ul class="menu-list"><li><a class="level is-mobile is-marginless" href="/archives/2020/03/"><span class="level-start"><span class="level-item">三月 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/archives/2020/02/"><span class="level-start"><span class="level-item">二月 2020</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile is-marginless" href="/archives/2020/01/"><span class="level-start"><span class="level-item">一月 2020</span></span><span class="level-end"><span class="level-item tag">4</span></span></a></li><li><a class="level is-mobile is-marginless" href="/archives/2019/11/"><span class="level-start"><span class="level-item">十一月 2019</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/archives/2019/10/"><span class="level-start"><span class="level-item">十月 2019</span></span><span class="level-end"><span class="level-item tag">5</span></span></a></li><li><a class="level is-mobile is-marginless" href="/archives/2019/09/"><span class="level-start"><span class="level-item">九月 2019</span></span><span class="level-end"><span class="level-item tag">4</span></span></a></li></ul></div></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">标签</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/Anomaly-Detection/"><span class="tag">Anomaly Detection</span><span class="tag is-grey-lightest">9</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Deep-Learning/"><span class="tag">Deep Learning</span><span class="tag is-grey-lightest">13</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Flow-based-Model/"><span class="tag">Flow-based Model</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/GAN/"><span class="tag">GAN</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Machine-Learning/"><span class="tag">Machine Learning</span><span class="tag is-grey-lightest">7</span></a></div><div class="control"><a class="tags has-addons" href="/tags/RNN/"><span class="tag">RNN</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Spectral/"><span class="tag">Spectral</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Statistics/"><span class="tag">Statistics</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Time-Series/"><span class="tag">Time Series</span><span class="tag is-grey-lightest">10</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Transfer-Learning/"><span class="tag">Transfer Learning</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/VAE/"><span class="tag">VAE</span><span class="tag is-grey-lightest">6</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Variational-Inference/"><span class="tag">Variational Inference</span><span class="tag is-grey-lightest">2</span></a></div></div></div></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">订阅更新</h3><form action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open(&#039;https://feedburner.google.com/fb/a/mailverify?uri=&#039;,&#039;popupwindow&#039;,&#039;scrollbars=yes,width=550,height=520&#039;);return true"><input type="hidden" value="" name="uri"><input type="hidden" name="loc" value="en_US"><div class="field has-addons"><div class="control has-icons-left is-expanded"><input class="input" name="email" type="email" placeholder="Email"><span class="icon is-small is-left"><i class="fas fa-envelope"></i></span></div><div class="control"><input class="button is-primary" type="submit" value="订阅"></div></div></form></div></div></div><div class="card widget"><div class="card-content"><div class="notification is-danger">You need to set <code>client_id</code> and <code>slot_id</code> to show this AD unit. Please set it in <code>_config.yml</code>.</div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/logo.svg" alt="Hanzawa の 部屋" height="28"></a><p class="size-small"><span>&copy; 2020 Hanzawa</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script>moment.locale("zh-CN");</script><script>var IcarusThemeSettings = {
+            site: {
+                url: 'http://qfxiao.me',
+                external_link: {"enable":true,"exclude":[]}
+            },
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script src="/js/animation.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script><script>window.addEventListener("load", function () {
+            MathJax.Hub.Config({
+                'HTML-CSS': {
+                    matchFontHeight: false
+                },
+                SVG: {
+                    matchFontHeight: false
+                },
+                CommonHTML: {
+                    matchFontHeight: false
+                },
+                tex2jax: {
+                    inlineMath: [
+                        ['$','$'],
+                        ['\\(','\\)']
+                    ]
+                }
+            });
+        });</script><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
+        });</script></body></html>
