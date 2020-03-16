@@ -1,773 +1,1810 @@
-<!doctype html>
-<html lang="zh"><head><meta charset="utf-8"><meta name="generator" content="Hexo 4.2.0"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>标签: VAE - Hanzawa の 部屋</title><meta property="og:type" content="blog"><meta property="og:title" content="Hanzawa の 部屋"><meta property="og:url" content="http://qfxiao.me/"><meta property="og:site_name" content="Hanzawa の 部屋"><meta property="og:locale" content="zh_CN"><meta property="article:author" content="Hanzawa"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="http://qfxiao.me/img/og_image.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://qfxiao.me"},"headline":"Hanzawa の 部屋","image":["http://qfxiao.me/img/og_image.png"],"author":{"@type":"Person","name":"Hanzawa"},"description":null}</script><link rel="icon" href="/images/favicon.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/logo.svg" alt="Hanzawa の 部屋" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><div class="card-content"><nav class="breadcrumb" aria-label="breadcrumbs"><ul><li><a href="/tags">标签</a></li><li class="is-active"><a href="#" aria-current="page">VAE</a></li></ul></nav></div></div><div class="card"><div class="card-image"><a class="image is-7by3" href="/2020/01/09/Complementary-Set-Variational-Autoencoder-for-Supervised-Anomaly-Detection/"><img class="thumbnail" src="http://qfxiao.me/img/image-20200109102204802.png" alt="Complementary Set Variational Autoencoder for Supervised Anomaly Detection"></a></div><article class="card-content article" role="article"><div class="article-meta size-small is-uppercase level is-mobile"><div class="level-left"><time class="level-item" dateTime="2020-01-09T02:15:03.000Z" title="2020-01-09T02:15:03.000Z">2020-01-09</time><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></span><span class="level-item">10 分钟 读完 (大约 1470 个字)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2020/01/09/Complementary-Set-Variational-Autoencoder-for-Supervised-Anomaly-Detection/">Complementary Set Variational Autoencoder for Supervised Anomaly Detection</a></h1><div class="content"><h1 id="introduction">Introduction</h1>
+<!DOCTYPE html>
+<html  lang="zh">
+<head>
+    <meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.0" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>标签: VAE - Hanzawa の 部屋</title>
+
+
+    <meta property="og:type" content="website">
+<meta property="og:title" content="Hanzawa の 部屋">
+<meta property="og:url" content="http://qfxiao.me/tags/VAE/index.html">
+<meta property="og:site_name" content="Hanzawa の 部屋">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://qfxiao.me/images/og_image.png">
+<meta property="article:author" content="Hanzawa">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://qfxiao.me/images/og_image.png">
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.png">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.svg" alt="Hanzawa の 部屋" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">Home</a>
+                
+                <a class="navbar-item"
+                href="/archives">Archives</a>
+                
+                <a class="navbar-item"
+                href="/categories">Categories</a>
+                
+                <a class="navbar-item"
+                href="/tags">Tags</a>
+                
+                <a class="navbar-item"
+                href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
+    <div class="card-content">
+        <nav class="breadcrumb" aria-label="breadcrumbs">
+        <ul>
+            <li><a href="/tags">标签</a></li>
+            <li class="is-active"><a href="#" aria-current="page">VAE</a></li>
+        </ul>
+        </nav>
+    </div>
+</div>
+
+    <div class="card">
+    
+    <div class="card-image">
+        <a href="/2020/01/09/Complementary-Set-Variational-Autoencoder-for-Supervised-Anomaly-Detection/" class="image is-7by1">
+            <img class="thumbnail" src="http://qfxiao.me/img/image-20200109102204802.png" alt="Complementary Set Variational Autoencoder for Supervised Anomaly Detection">
+        </a>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-01-09T02:15:03.000Z">2020-01-09</time>
+                
+                    <i class="fas fa-calendar-check">&nbsp</i>
+                    <time class="level-item has-text-grey" datetime="2020-02-03T08:16:51.548Z">2020-02-03</time>
+                
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Research/">Research</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    10 分钟 读完 (大约 1470 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2020/01/09/Complementary-Set-Variational-Autoencoder-for-Supervised-Anomaly-Detection/">Complementary Set Variational Autoencoder for Supervised Anomaly Detection</a>
+            
+        </h1>
+        <div class="content">
+            
+                
+                
+                
+                    
+                    
+                        
+                    
+                
+                    
+                    
+                        
+                    
+                
+                    
+                    
+                        
+                    
+                
+                    
+                    
+                        
+                    
+                
+                    
+                    
+                
+                
+            
+            <h1 id="introduction">Introduction</h1>
 <p>对于异常检测问题，异常的模式是多种多样的。有监督模型能够较好地处理训练集中出现过的模式，无监督模型能够处理训练集中未出现过的模式，但对于训练集中出现过的异常模型并没有学习。本文提出了一种既能学习训练集中出现过的异常模式，同时能处理未出现过的异常模式的方法。</p>
 <h1 id="proposed-model">Proposed Model</h1>
 <h2 id="conventional-vae">Conventional VAE</h2>
 <p>首先回顾一下原始的VAE。</p>
-<p>原始VAE中的损失函数为： <span class="math display">\[
-\mathcal{L}(\boldsymbol{\theta},\boldsymbol{\phi};\boldsymbol{x})=\mathbb{E}_{q(\boldsymbol{z}|\boldsymbol{x};\boldsymbol{\phi})}[\log p(\boldsymbol{x}|\boldsymbol{z};\boldsymbol{\theta})]-\text{KL}[q(\boldsymbol{z}|\boldsymbol{x};\boldsymbol{\phi}\parallel p(\boldsymbol{z}))]
-\]</span> 原文中作者证明了<span class="math inline">\(\mathcal{L}(\boldsymbol{\theta},\boldsymbol{\phi};\boldsymbol{x})\leq\log p(\boldsymbol{x};\boldsymbol{\theta})\)</span>，所以<span class="math inline">\(\mathcal{L}(\boldsymbol{\theta},\boldsymbol{\phi};\boldsymbol{x})\)</span>可以看作是数据分布<span class="math inline">\(p(\boldsymbol{x})\)</span>对数似然的一个下界。<span class="math inline">\(\mathcal{L}(\boldsymbol{\theta},\boldsymbol{\phi};\boldsymbol{x})\)</span>又被称为证据下界 (ELBO)。<span class="math inline">\(\mathbb{E}_{q(\boldsymbol{z}|\boldsymbol{x};\boldsymbol{\phi})}[\log p(\boldsymbol{x}|\boldsymbol{z};\boldsymbol{\theta})]\)</span>中的期望一般用蒙特卡洛来进行估计： <span class="math display">\[
-\begin{align}
-\mathcal{L}(\boldsymbol{\theta},\boldsymbol{\phi};\boldsymbol{x})\simeq&amp; \frac{1}{L}\sum\limits_l\log p(\boldsymbol{x}|\boldsymbol{z}^{(l)};\boldsymbol{\theta})-\text{KL}[q(\boldsymbol{z}|\boldsymbol{x};\boldsymbol{\phi})\parallel p(\boldsymbol{z})],\\
-\boldsymbol{z}^{(l)}&amp;\sim q(\boldsymbol{z}|\boldsymbol{x};\boldsymbol{\phi}), \space l\in\{1,2,\cdots,L\}
-\end{align}
-\]</span> 对于隐变量<span class="math inline">\(\boldsymbol{z}\)</span>，一般假设先验服从标准高斯分布，后验服从均值为<span class="math inline">\(\mu\)</span>，方差为<span class="math inline">\(\sigma^2\)</span>的高斯分布，故KL散度能直接写出解析式： <span class="math display">\[
-\mathcal{L}(\boldsymbol{\theta},\boldsymbol{\phi};\boldsymbol{x})\simeq \frac{1}{L}\sum\limits_l\log p(\boldsymbol{x}|\boldsymbol{z}^{(l)};\boldsymbol{\theta})-C(-\frac{1}{2}-\log\sigma+\frac{1}{2}\sigma^2+\frac{1}{2}\mu^2)
-\]</span> 使用VAE来做异常检测通常是在正常数据上进行训练，在检测阶段，如果是异常样本，那么VAE不能很好地重构它，这样会导致较大的重构误差。</p>
-<h2 id="prior-distribution-for-anomalies">Prior Distribution for Anomalies</h2>
-<p><img src="http://qfxiao.me/img/image-20200109102204802.png" /></p>
-<p>在原始VAE异常检测中，无论输入样本<span class="math inline">\(\boldsymbol{x}\)</span>是否异常，VAE都会使对应编码的后验<span class="math inline">\(p(\boldsymbol{z}|\boldsymbol{x})\)</span>服从高斯分布，且施加标准高斯分布的约束。在本文中，作者对异常和正常样本对应的隐变量的先验分布做了不同假设。首先，正常先验依然是标准高斯分布，记为<span class="math inline">\(p_n(\boldsymbol{z})\)</span>。而对于异常先验，作者认为异常即为“不正常”，和正常是补集的关系。作者在文中定义异常先验分布<span class="math inline">\(p_a(\boldsymbol{z})\)</span>为： <span class="math display">\[
-p_a(\boldsymbol{z})=\frac{1}{Y^\prime}(\max\limits_{\boldsymbol{z}^\prime}p_n(\boldsymbol{z}^\prime)-p_n(\boldsymbol{z}))
-\]</span></p>
-<p>其中<span class="math inline">\(Y^\prime\)</span>为使<span class="math inline">\(p_a(\boldsymbol{z})\)</span>成为一个概率分布的调节因子。实际上，<span class="math inline">\(Y^\prime\)</span>往往会成为无限大，因为<span class="math inline">\(p(\boldsymbol z)\)</span>在整个定义域上都有定义。为了解决这个问题，作者加入了<span class="math inline">\(p_w(\boldsymbol z)\)</span>，一个在每个维度都足够宽的辅助分布：</p>
-<p><span class="math display">\[
-p_a(\boldsymbol z)=\frac{1}{Y}p_w(\boldsymbol z)\left(\max\limits_{\boldsymbol z^\prime}p_n(\boldsymbol z^\prime)-p_n(\boldsymbol z)\right)
-\]</span></p>
-<p>其中<span class="math inline">\(Y\)</span>为有限的常数。在文中<span class="math inline">\(p_n(\boldsymbol z)\)</span>和<span class="math inline">\(p_w(\boldsymbol z)\)</span>都为高斯分布，那么<span class="math inline">\(p_a(\boldsymbol z)\)</span>的具体形式为：</p>
-<p><span class="math display">\[
-p_a(\boldsymbol z)=\frac{1}{Y}\mathcal{N}(\boldsymbol z;\boldsymbol 0,\boldsymbol s^2)\{\max\limits_{\boldsymbol z^\prime}\mathcal N(\boldsymbol z^\prime;\boldsymbol 0,\boldsymbol 1)-\mathcal N(\boldsymbol z;\boldsymbol 0,\boldsymbol 1)\}
-\]</span></p>
-<p>其中：</p>
-<p><span class="math display">\[
-\max\limits_{\boldsymbol z^\prime}\mathcal N(\boldsymbol z^\prime;\boldsymbol 0,\boldsymbol 1)=\frac{1}{\sqrt{2\pi}}
-\]</span></p>
-<p><span class="math display">\[
-Y=\int_{-\infty}^{\infty}p_a(\boldsymbol z)\mathrm{d}\boldsymbol z=\frac{1}{\sqrt{2\pi}}\left\{1-\frac{1}{\boldsymbol s^2+1}\right\}
-\]</span></p>
-<p><span class="math inline">\(\boldsymbol s^2\)</span>为超参数，控制分布的宽度。用文中的先验替换VAE原始的KL散度，可写为：</p>
-<p><span class="math display">\[
-\text{KL}\left[q(\boldsymbol z|\boldsymbol x;\phi)\parallel p_a(\boldsymbol z)\right]=\int_{-\infty}^\infty\mathcal{N}(\boldsymbol z;\boldsymbol \mu,\boldsymbol \sigma^2)\log\frac{\mathcal N(\boldsymbol z;\boldsymbol\mu,\boldsymbol\sigma^2)}{\frac{1}{Y}\mathcal N(\boldsymbol z;\boldsymbol 0,\boldsymbol s^2)\left\{\frac{1}{2\pi}-\mathcal N(\boldsymbol z;\boldsymbol0,\boldsymbol 1)\right\}}\mathrm{d}\boldsymbol z
-\]</span></p>
-<p>展开后：</p>
-<p><span class="math display">\[
-\begin{align}
-\text{KL}\left[q(\boldsymbol z|\boldsymbol x;\phi)\parallel p_a(\boldsymbol z)\right]&amp;=
-\int_{-\infty}^\infty\mathcal{N}(\boldsymbol z;\boldsymbol \mu,\boldsymbol \sigma^2)\log\mathcal{N}(\boldsymbol z;\boldsymbol\mu,\boldsymbol\sigma^2)\mathrm{d}\boldsymbol z\\
-&amp;+\log Y\\
-&amp;-\int_{-\infty}^\infty\mathcal{N}(\boldsymbol z;\boldsymbol \mu,\boldsymbol \sigma^2)\log\mathcal{N}(\boldsymbol z;\boldsymbol 0,\boldsymbol s^2)\mathrm{d}\boldsymbol z\\
-&amp;-\int_{-\infty}^\infty\mathcal{N}(\boldsymbol z;\boldsymbol \mu,\boldsymbol \sigma^2)\log\left\{\frac{1}{\sqrt{2\pi}}-\mathcal{N}(\boldsymbol z;\boldsymbol 0, \boldsymbol 1)\right\}\mathrm{d}\boldsymbol z
-\end{align}
-\]</span></p>
-<p>使用泰勒展开，<span class="math inline">\(\log (x+\frac{1}{2\pi})\simeq-\log 2\pi+2\pi x\)</span>，KL散度可以用下式估计：</p>
-<p><span class="math display">\[
-\begin{align}
-\text{KL}\left[q(\boldsymbol z|\boldsymbol x;\phi)\parallel p_a(\boldsymbol z)\right]&amp;\simeq\sqrt{\frac{2\pi}{\boldsymbol\sigma^2+1}}\exp\left(\frac{-\boldsymbol\mu^2}{2(\boldsymbol\sigma^2+1)}\right)\\
-&amp;+\frac{\boldsymbol\mu^2+\boldsymbol\sigma^2}{2\boldsymbol s^2}-\log\boldsymbol\sigma+\log\boldsymbol s+\log\left(\sqrt{\boldsymbol s^2+1}-1\right)\\
-&amp;-\frac{\log(\boldsymbol s^2+1)}{2}+\frac{\log(2\pi)-1}{2}
-\end{align}
-\]</span></p>
-<p>下图为一维时<span class="math inline">\(p_n(\boldsymbol z)\)</span>和<span class="math inline">\(p_a(\boldsymbol z)\)</span>的示例：</p>
-<p><img src="http://qfxiao.me/img/image-20200109102255322.png" /></p>
-<h3 id="implementation-of-proposed-method">Implementation of proposed method</h3>
-<p>文中使用编码器输出的分布<span class="math inline">\(\mathcal{N}(\boldsymbol z;\boldsymbol \mu, \boldsymbol \sigma^2)\)</span>与标准正态分布之间的KL散度来作为异常分数。在每一轮的训练过程中，加入一轮使用Anomaly Prior的训练。</p>
-<p><img src="http://qfxiao.me/img/image-20200109102309048.png" /></p>
-<h1 id="experiments">Experiments</h1>
-<h2 id="mnist">MNIST</h2>
-<p>作者设计了两个Task：</p>
-<ol type="1">
-<li>Task 1. <span class="math inline">\(N\)</span> vs. <span class="math inline">\(\bar{N}\)</span>. 将手写数字中的一个作为已知异常，其他作为正常，并加入均匀分布作为未知的异常。</li>
-<li>Task 2. 手写数字被分为3组：已知异常，正常，未知异常。</li>
-</ol>
-<p>细节如下表所示：</p>
-<p><img src="http://qfxiao.me/img/image-20200109102402499.png" /></p>
-<p>在实现上，使用Adam优化器，<code>batch_size</code>为100，<code>epochs</code>为200。<code>Encoder</code>和<code>Decoder</code>都由三层感知机组成，超参数<span class="math inline">\(s^2\)</span>设置为400。评测标准使用AUC (area under the receiver characteristic curve)。</p>
-<p>下表为实验结果：</p>
-<p><img src="http://qfxiao.me/img/image-20200109102343271.png" /></p>
-</div></article></div><div class="card"><div class="card-image"><a class="image is-7by3" href="/2020/01/06/Unsupervised-Anomaly-Detection-for-Intricate-KPIs-via-Adversarial-Training-of-VAE/"><img class="thumbnail" src="http://qfxiao.me/img/image-20200106141915707.png" alt="Unsupervised Anomaly Detection for Intricate KPIs via Adversarial Training of VAE"></a></div><article class="card-content article" role="article"><div class="article-meta size-small is-uppercase level is-mobile"><div class="level-left"><time class="level-item" dateTime="2020-01-06T05:09:32.000Z" title="2020-01-06T05:09:32.000Z">2020-01-06</time><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></span><span class="level-item">18 分钟 读完 (大约 2770 个字)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2020/01/06/Unsupervised-Anomaly-Detection-for-Intricate-KPIs-via-Adversarial-Training-of-VAE/">Unsupervised Anomaly Detection for Intricate KPIs via Adversarial Training of VAE</a></h1><div class="content"><h1 id="introduction">Introduction</h1>
-<p><a href="https://ieeexplore.ieee.org/abstract/document/8737430/">论文📃</a></p>
-<p><a href="https://github.com/yantijin/Buzz">代码📥</a></p>
+            <!-- 
+                
+                    <h1 id="introduction">Introduction</h1>
+<p>对于异常检测问题，异常的模式是多种多样的。有监督模型能够较好地处理训练集中出现过的模式，无监督模型能够处理训练集中未出现过的模式，但对于训练集中出现过的异常模型并没有学习。本文提出了一种既能学习训练集中出现过的异常模式，同时能处理未出现过的异常模式的方法。</p>
+<h1 id="proposed-model">Proposed Model</h1>
+<h2 id="conventional-vae">Conventional VAE</h2>
+<p>首先回顾一下原始的VAE。</p>
+                
+             -->
+        </div>
+        
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2020/01/09/Complementary-Set-Variational-Autoencoder-for-Supervised-Anomaly-Detection/#more">阅读更多</a>
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-image">
+        <a href="/2020/01/06/Unsupervised-Anomaly-Detection-for-Intricate-KPIs-via-Adversarial-Training-of-VAE/" class="image is-7by1">
+            <img class="thumbnail" src="http://qfxiao.me/img/image-20200106141915707.png" alt="Unsupervised Anomaly Detection for Intricate KPIs via Adversarial Training of VAE">
+        </a>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-01-06T05:09:32.000Z">2020-01-06</time>
+                
+                    <i class="fas fa-calendar-check">&nbsp</i>
+                    <time class="level-item has-text-grey" datetime="2020-02-03T08:20:24.862Z">2020-02-03</time>
+                
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Research/">Research</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    18 分钟 读完 (大约 2770 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2020/01/06/Unsupervised-Anomaly-Detection-for-Intricate-KPIs-via-Adversarial-Training-of-VAE/">Unsupervised Anomaly Detection for Intricate KPIs via Adversarial Training of VAE</a>
+            
+        </h1>
+        <div class="content">
+            
+                
+                
+                
+                    
+                    
+                        
+                    
+                
+                    
+                    
+                        
+                    
+                
+                    
+                    
+                        
+                    
+                
+                    
+                    
+                        
+                    
+                
+                    
+                    
+                
+                
+            
+            <h1 id="introduction">Introduction</h1>
+<p><a href="https://ieeexplore.ieee.org/abstract/document/8737430/" target="_blank" rel="noopener">论文📃</a></p>
+<p><a href="https://github.com/yantijin/Buzz" target="_blank" rel="noopener">代码📥</a></p>
 <p>本文介绍了一种利用对抗训练来进行时间序列异常检测的方法<em>Buzz</em>。作者认为在现实中复杂的KPI数据大量存在，这种数据通常带有非高斯分布的噪声，同时数据分布复杂，导致一般的生成式模型无法对数据进行很好的建模，所以作者提出了基于对抗训练的模型。在文中，作者的创新点主要有三个：</p>
 <ol type="1">
-<li>为了处理复杂数据，将数据空间分为多个子空间，在每个子空间上进行距离的度量；</li>
-<li>采用<em>Wasserstein</em>距离度量模型建模的分布和真实分布之间的距离；</li>
-<li>建立了基于对抗训练的<em>Buzz</em>的损失函数和VAE之间的关系。</li>
-</ol>
-<p><img src="http://qfxiao.me/img/image-20200106141915707.png" /></p>
-<h1 id="background">Background</h1>
-<h2 id="anomaly-detection">Anomaly Detection</h2>
-<p>对于任意时间<span class="math inline">\(t\)</span>，给定历史观察值<span class="math inline">\(x_{t-T+1},\cdots,x_t\)</span>，确定异常是否发生(记为<span class="math inline">\(y_t=1\)</span>)。通常来收异常检测算法给出的是发生异常的可能性，如<span class="math inline">\(p(y_t=1|x_{t-T+1},\cdots,x_t)\)</span>。</p>
-<h2 id="vae">VAE</h2>
-<table>
-<thead>
-<tr class="header">
-<th><strong>Model</strong></th>
-<th><strong>Latent</strong></th>
-<th><strong>Data</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong><em>Auto-encoder (AE)</em></strong></td>
-<td><code>None</code></td>
-<td><code>L1Loss</code></td>
-</tr>
-<tr class="even">
-<td><strong><em>Variational Auto-encoder (VAE)</em></strong></td>
-<td><code>KL Divergence</code></td>
-<td><code>Log Likelihood</code></td>
-</tr>
-<tr class="odd">
-<td><strong><em>Adversarial Auto-encoder (AAE)</em></strong></td>
-<td><code>Discriminator</code></td>
-<td><code>L1Loss</code></td>
-</tr>
-<tr class="even">
-<td><strong><em>Wasserstein Auto-encoder (WAE)</em></strong></td>
-<td><code>MaxMeanDiscrepancy</code> or <code>Discriminator</code></td>
-<td><code>L1Loss</code></td>
-</tr>
-<tr class="odd">
-<td><strong><em>AlphaGAN</em></strong></td>
-<td><code>Discriminator</code></td>
-<td><code>Discriminator</code>+<code>L1Loss</code></td>
-</tr>
-</tbody>
-</table>
-<h2 id="gan-and-wgan-gp">GAN and WGAN-GP</h2>
-<p>原始GAN等价于优化： <span class="math display">\[
-\mathbb{E}_{x\sim P_r}\log{\frac{P_r(x)}{\frac{1}{2}\left[P_r(x)+P_g(x)\right]}}+\mathbb{E}_{x\sim P_g}\log{\frac{P_g(x)}{\frac{1}{2}\left[P_r(x)+P_g(x)\right]}}
-\]</span> 根据KL散度和JS散度的定义： <span class="math display">\[
-\text{KL}(P_1\parallel P_2)=\mathbb{E}_{x\sim P_1}\log{\frac{P_1}{P_2}}
-\]</span></p>
-<p><span class="math display">\[
-\text{JS}(P_1\parallel P_2)=\frac{1}{2}\text{KL}(P_1\parallel \frac{P_1+P_2}{2})+\frac{1}{2}\text{KL}(P_2\parallel \frac{P_1+P_2}{2})
-\]</span></p>
-<p>可重写为： <span class="math display">\[
-2\text{JS}(P_r\parallel P_g)-2\log 2
-\]</span> 当<span class="math inline">\(P_r\)</span>与<span class="math inline">\(P_g\)</span>的支撑集（support）是高维空间中的低维流形（manifold）时，<span class="math inline">\(P_r\)</span>与<span class="math inline">\(P_g\)</span>重叠部分测度（measure）为0的概率为1。</p>
-<ul>
-<li>支撑集（support）其实就是函数的非零部分子集，比如<code>ReLU</code>函数的支撑集就是[公式]，一个概率分布的支撑集就是所有概率密度非零部分的集合。</li>
-<li>流形（manifold）是高维空间中曲线、曲面概念的拓广，我们可以在低维上直观理解这个概念，比如我们说三维空间中的一个曲面是一个二维流形，因为它的本质维度（intrinsic dimension）只有2，一个点在这个二维流形上移动只有两个方向的自由度。同理，三维空间或者二维空间中的一条曲线都是一个一维流形。</li>
-<li>测度（measure）是高维空间中长度、面积、体积概念的拓广，可以理解为“超体积”。</li>
-</ul>
-<p><em>Wasserstein</em>距离定义如下： <span class="math display">\[
-W(P_r,P_g)=\inf\limits_{\gamma\sim\prod(P_r,P_g)}\mathbb{E}_{(x,y)\sim \gamma}\left[\parallel x-y\parallel\right]
-\]</span> 下确界<span class="math inline">\(\inf\)</span>没法直接求解，不过根据相关定理其等价于： <span class="math display">\[
-W(P_r,P_g)=\frac{1}{K}\sup\limits_{\parallel f\parallel_L\leq K}\mathbb{E}_{x\sim P_r}[f(x)]-\mathbb{E}_{x\sim P_g}[f(x)]
-\]</span> <em>Lipschitz</em>连续是指存在一个常数<span class="math inline">\(K\geq 0\)</span>使得定义域内任意两个元素<span class="math inline">\(x_1\)</span>和<span class="math inline">\(x_2\)</span>都满足： <span class="math display">\[
-|f(x_1)-f(x_2)|\leq K|x_1-x_2|
-\]</span> WAN的损失函数： <span class="math display">\[
-\mathcal{L}=\mathop{\mathbb{E}}\limits_{\mathbf{x}\sim\mathbb{P}_g}\left[D({\mathbf{x}})\right]-\mathop{\mathbb{E}}\limits_{\mathbf{x}\sim\mathbb{P}_r}\left[D(\mathbf{x})\right]
-\]</span> WGAN-GP的损失函数为： <span class="math display">\[
-\mathcal{L}=\mathop{\mathbb{E}}\limits_{\tilde{\mathbf{x}}\sim\mathbb{P}_g}\left[D(\tilde{\mathbf{x}})\right]-\mathop{\mathbb{E}}\limits_{\mathbf{x}\sim\mathbb{P}_r}\left[D(\mathbf{x})\right] + \lambda\mathop{\mathbb{E}}\limits_{\hat{\mathbf{x}}\sim\mathbb{P}_{\hat{\mathbf{x}}}}\left[(\parallel\nabla_{\hat{\mathbf{x}}}D(\hat{\mathbf{x}})\parallel_2-1)^2\right]
-\]</span></p>
-<h1 id="proposed-method">Proposed Method</h1>
-<p>下图为<em>Buzz</em>的总体流程：</p>
-<p><img src="http://qfxiao.me/img/image-20200106141958376.png" /></p>
-<p>数据会首先进行一些预处理，之后进行训练。在检测阶段会根据异常分数来判定异常。</p>
-<h2 id="motivation">Motivation</h2>
-<p>在文中，最关键的两个创新点分别是<em>Wasserstein</em>距离和对数据分布进行分区的方法。</p>
-<ul>
-<li><p>在使用距离度量方面， 因为<em>Wasserstein</em>在WGAN中取得了很好的效果，是一种鲁棒的距离度量，所以作者在文中采用了<em>Wasserstein</em>距离来衡量生成的分布和真实的分布之间的距离，并由此引入了对抗训练；</p></li>
-<li><p>在分区方法方面，作者认为原始数据过于复杂，所以将数据空间<span class="math inline">\(\mathcal{X}\)</span>进行划分，然后在每个子空间上使用<em>Wasserstein</em>度量距离，而总体的距离由每个分区的距离的期望求得。</p></li>
-</ul>
-<p>作者还发现，当划分地越来越细时，总体距离接近于特定形式的VAE的重构误差项。</p>
-<p><img src="http://qfxiao.me/img/image-20200106142008894.png" /></p>
-<h2 id="network-structure">Network Structure</h2>
-<p>下图为模型的网络结构：</p>
-<p><img src="http://qfxiao.me/img/image-20200106142018827.png" /></p>
-<h2 id="training">Training</h2>
-<h3 id="objective-function">Objective Function</h3>
-<p>先定义一些符号：</p>
-<ul>
-<li><span class="math inline">\(b\)</span>和<span class="math inline">\(s\)</span>分别为Batch的大小和邻居的大小，数据集按<span class="math inline">\(s\)</span>进行切分，然后随机打乱，每个Batch包含<span class="math inline">\(b\)</span>个<span class="math inline">\(s\)</span>，之后<span class="math inline">\(s/=2,b*=2\)</span>；</li>
-<li><span class="math inline">\(\mathcal{W}=\{w_1,w_2,\cdots,w_b\}\)</span>为一个Batch，且满足每个<span class="math inline">\(w_i\)</span>是<span class="math inline">\(s\)</span>的倍数；</li>
-<li><span class="math inline">\(w\in\mathcal{W}\)</span>的邻域集(neighborhood set)为一个时间上的partition，记为<span class="math inline">\(\{w,w+1,\cdots,w+s-1\}\)</span></li>
-<li><span class="math inline">\(\mathbf{x}^{(w)},\mathbf{x}^{(w+1)},\cdots,\mathbf{x}^{(w+s-1)}\)</span>为在空间<span class="math inline">\(\mathcal{X}\)</span>上的一个partition，记为<span class="math inline">\(S_w\)</span>，其中<span class="math inline">\(\mathbf{x}^{(w)}\)</span>表示以<span class="math inline">\(w\)</span>为结尾的时间窗口。</li>
-</ul>
-<p><em>Buzz</em>的损失函数和WGAN-GP类似，但做了一些改进，由下面四部分组成，下面分别解释。</p>
-<p>第一个是每一个partition的<span class="math inline">\(\mathbf{z}\)</span>后验的KL散度： <span class="math display">\[
-\mathcal{K} = \frac{1}{bs}\sum\limits_{w\in\mathcal{W}}\sum\limits_{i=1}^{s-1}\text{KL}\left[q_\phi(\mathbf{z}|\mathbf{x})\parallel\mathcal{N}(\mathbf{0},\mathbf{1})\right]
-\]</span></p>
-<p>第二个在训练时是一个常数： <span class="math display">\[
-Z(\lambda) = \frac{\Gamma(W)}{\Gamma(\frac{W}{2})}2\pi^{\frac{W}{2}}\lambda^{-W}
-\]</span></p>
-<p>其中<span class="math inline">\(\Gamma\)</span>是<em>Gamma</em>函数。</p>
-<p>第三个是<em>Wasserstein</em>距离： <span class="math display">\[
-\mathcal{T}(F,w)=\frac{1}{bs}\sum\limits_{i=1}^{s-1}\mathbb{E}_{q_\phi(\mathbf{z}|\mathbf{x}^{w+i})}\left[F(\mathbf{x}^{(w+i)})-F(G(\mathbf{z}))\right]
-\]</span></p>
-<p>第四个是<em>Gradient Penalty</em>：</p>
-<p><span class="math display">\[
-\mathcal{R}(F,w)=\frac{1}{bs}\sum\limits_{i=1}^{s-1}\mathbb{E}_{q_\phi(\mathbf{z}|\mathbf{x}^{(w+i)})}\left[\mathbb{E}_{\varepsilon\sim[0,1]}(\parallel\nabla_{\hat{\mathbf{x}}}(\hat{\mathbf{x}})\parallel-\mathbf{1})^2\right]
-\]</span></p>
-<p>其中<span class="math inline">\(\hat{\mathbf{x}}=\varepsilon \mathbf{x}^{w+i}+(1-\varepsilon)G(\mathbf{z})\)</span>为生成数据与真实数据的插值。</p>
-<blockquote>
-<p>原始的WGAN-GP的损失函数为： <span class="math display">\[
-L=\mathop{\mathbb{E}}\limits_{\tilde{\mathbf{x}}\sim\mathbb{P}_g}\left[D(\tilde{\mathbf{x}})\right]-\mathop{\mathbb{E}}\limits_{\mathbf{x}\sim\mathbb{P}_r}\left[D(\mathbf{x})\right] + \lambda\mathop{\mathbb{E}}\limits_{\hat{\mathbf{x}}\sim\mathbb{P}_{\hat{\mathbf{x}}}}\left[(\parallel\nabla_{\hat{\mathbf{x}}}D(\hat{\mathbf{x}})\parallel_2-1)^2\right]
-\]</span> 其中<span class="math inline">\(\mathbb{P}_g\)</span>为生成器的分布，<span class="math inline">\(\mathbb{P}_r\)</span>为真实分布，<span class="math inline">\(\mathbb{P}_{\hat{\mathbf{x}}}\)</span>为真实数据和生成数据插值得到的分布。</p>
-</blockquote>
-<p><span class="math display">\[
-\hat{\mathcal{L}}_{Buzz}=-\lambda\sup\limits_F\left[\sum\limits_{w\in\mathcal{W}}(\left|\mathcal{T}(F,w)\right|-\eta\mathcal{R}(F,w))\right]-\mathcal{K}-\log Z(\lambda)
-\]</span></p>
-<h3 id="training-procedure">Training Procedure</h3>
-<p><em>Buzz</em>的训练过程与WGAN-GP类似，</p>
-<h2 id="detection">Detection</h2>
-<p>文中假设解码器的输出服从如下分布：</p>
-<p><span class="math display">\[
-p_\theta(\mathbf{x}|\mathbf{z})=\frac{1}{Z(\lambda)}\exp\{-\lambda\parallel\mathbf{x}-G(\mathbf{z})\parallel\}
-\]</span></p>
-<p>作者定义异常分数为： <span class="math display">\[
-\mathcal{S}=\log p_\theta(\mathbf{x})-\log p_\theta(\bar{\mathbf{x}})
-\]</span> 其中<span class="math inline">\(\bar{\mathbf{x}}\)</span>为经过MCMC填充后的样本。</p>
-<p>异常分数也可以展开为： <span class="math display">\[
-\log\frac{1}{L}\sum\limits_{l=1}^L\left[\frac{p_\theta(\mathbf{x}|\mathbf{z^{(l)}})p_\theta(\mathbf{z}^{(l)})}{q_\phi(\mathbf{z}^{(l)}|\bar{\mathbf{x}})}\right]-\log\frac{1}{L}\sum\limits_{l=1}^L\left[\frac{p_\theta(\bar{\mathbf{x}}|\mathbf{z}^{(l)})p_\theta(\mathbf{z}^{(l)})}{q_\phi(\mathbf{z}^{(l)}|\bar{\mathbf{x}})}\right]
-\]</span></p>
-<p>最终算法流程图为：</p>
-<p><img src="http://qfxiao.me/img/image-20200106142053342.png" /></p>
-<h2 id="theoretical-analysis">Theoretical Analysis</h2>
-<p>在理论分析中，作者主要是想建立<span class="math inline">\(\mathcal{L}_{Buzz}\)</span>和VAE的损失函数<span class="math inline">\(\mathcal{L}_{vae}\)</span>之间的联系，损失函数<span class="math inline">\(\mathcal{\hat{L}}_{Buzz}\)</span>为：</p>
-<p><span class="math display">\[
-\hat{\mathcal{L}}_{Buzz}=-\lambda\sup\limits_F\left[\sum\limits_{w\in\mathcal{W}}(\left|\mathcal{T}(F,w)\right|-\eta\mathcal{R}(F,w))\right]-\mathcal{K}-\log Z(\lambda)
-\]</span></p>
-<p>为了便于分析，去掉<em>Gradient Penalty</em>的部分，公式可简化为：</p>
-<p><span class="math display">\[
-\mathcal{L}_{Buzz}=-\lambda\mathbb{E}_{p(w)}W^1\left[P(\mathbf{x}|w)\parallel P(\mathbf{y}|w)\right]-\mathcal{K}-\log Z(\lambda)
-\]</span></p>
-<p>实际上<span class="math inline">\(Z(\lambda)=\mathfrak{S}_W\Gamma(W)\lambda^{-W}\)</span>，其中<span class="math inline">\(\mathfrak{S}_W\)</span>为<span class="math inline">\(W\)</span>维单位球的表面积。</p>
-<blockquote>
-<p><span class="math inline">\(n\)</span>维空间单位球表面积公式： <span class="math display">\[
-\omega_n=\frac{2\pi^{\frac{n}{2}}}{\Gamma(\frac{n}{2})}
-\]</span></p>
-</blockquote>
-<p>而<span class="math inline">\(W^1\left[P(\mathbf{x}|w)\parallel P(\mathbf{y}|w)\right]\)</span>为<em>Wasserstein</em>距离： <span class="math display">\[
-W^1\left[P(\mathbf{x}|w)\parallel P(\mathbf{y}|w)\right]=\sup\limits_{Lip(f)\leq 1}\left\{\int_\mathcal{X}f(\mathbf{x})p(\mathbf{x}|w)\mathrm{d}\mathbf{x}-\int_\mathcal{X}f(\mathbf{y})p(\mathbf{y}|w)\mathrm{d}\mathbf{y}\right\}
-\]</span></p>
-<h3 id="lemma-1">Lemma 1</h3>
-<p>通过设定具体形式的后验分布，VAE的损失函数可以写为：</p>
-<blockquote>
-<p>设<span class="math inline">\(\mathbf{x}\)</span>的后验分布<span class="math inline">\(p(\mathbf{x}|\mathbf{z})=\frac{1}{Z(\lambda)}\exp\{-\lambda\parallel\mathbf{x}-G(\mathbf{z})\parallel\}\)</span>，那么VAE的损失函数为： <span class="math display">\[
-\mathcal{L}_{vae}=\lambda\mathbb{E}_{p(w)}\left[\mathbb{E}_{p(\mathbf{x}|w)}\mathbb{E}_{p_G(\mathbf{y}|\mathbf{x})}-\parallel\mathbf{x}-\mathbf{y}\parallel\right]-\mathcal{K}-\log{Z(\lambda)}
-\]</span></p>
-</blockquote>
-<p>后验分布实际上是一个Laplace分布：</p>
-<blockquote>
-<p><strong>Laplace Distribution</strong>: <span class="math display">\[
-f(x|\theta,\lambda)=\frac{1}{2\lambda}\exp{\left(-\frac{|x-\theta|}{\lambda}\right)}
-\]</span></p>
-</blockquote>
-<p>可以直接把后验分布带入VAE的损失函数就得到了。</p>
-<h3 id="lemma-2">Lemma 2</h3>
-<p><span class="math inline">\(S_w\)</span>定义为数据空间<span class="math inline">\(\mathcal{X}\)</span>的一个partition，而<span class="math inline">\(S=\{(\mathbf{x}_1,\mathbf{x}_2)|\exist w, \mathbf{x}_1\in S_w,\mathbf{x}_2\in S_w\}\)</span>。</p>
-<blockquote>
-<p>当<span class="math inline">\(G,\phi,\lambda\)</span>固定时，<span class="math inline">\(S\downarrow\)</span>有<span class="math inline">\(\mathcal{L}_{Buzz}\downarrow\)</span></p>
-</blockquote>
-<h3 id="lemma-3">Lemma 3</h3>
-<blockquote>
-<p><span class="math inline">\(\max\mathcal{L}_{Buzz}\geq\max{\mathcal{L}_{vae}}\)</span>，同时，当<span class="math inline">\(S\downarrow\text{diag}{\mathcal{X}}\)</span>时<span class="math inline">\(\max\mathcal{L}_{Buzz}\downarrow\max\mathcal{L}_{vae}\)</span></p>
-</blockquote>
-<p><img src="http://qfxiao.me/img/image-20200106183833975.png" /></p>
-<h3 id="lemma-4">Lemma 4</h3>
-<blockquote>
-<p>令<span class="math inline">\(p^\prime_G(\mathbf{y}|\mathbf{x})\)</span>表示<span class="math inline">\(\mathbb{E}_{q_{\phi^\prime}}\left[p_G(\mathbf{y}|\mathbf{z})\right]\)</span>。如果<span class="math inline">\((G,\phi,\lambda)\)</span>是一个解，那么存在<span class="math inline">\((G,\phi^\prime,\lambda)\)</span>使得： <span class="math display">\[
-\mathbb{E}_{p(\mathbf{x}|w)}\mathbb{E}_{p_G^\prime(\mathbf{y}|\mathbf{x})}\parallel\mathbf{x}-\mathbf{y}\parallel=W^1\left[P(\mathbf{x}|w)\parallel P_G(\mathbf{y}|w)\right]
-\]</span> 此时<span class="math inline">\(\mathcal{L}_{Buzz}-\mathcal{L}_{vae}^\prime=\mathcal{K}^\prime-\mathcal{K}\)</span>，其中<span class="math inline">\(\mathcal{L}^\prime,\mathcal{K}^\prime\)</span>分别为<span class="math inline">\((G,\phi^\prime,\lambda)\)</span>时的<span class="math inline">\(\mathcal{L}\)</span>和<span class="math inline">\(\mathcal{K}\)</span>。</p>
-</blockquote>
-<p><span class="math display">\[
-\mathcal{L}^\dagger_{Buzz}=\mathbb{E}_{p(\mathbf{x})}\left[\mathbb{E}_{q_{\phi^\prime}(\mathbf{z}|\mathbf{x})}\log_{p_\theta}(\mathbf{x}|\mathbf{z})\right]-\min\limits_{\bar{\phi}\sim\phi^\prime}\bar{\mathcal{K}}
-\]</span></p>
-<h3 id="lemma-5">Lemma 5</h3>
-<p>这里主要是想证明</p>
-<blockquote>
-<p>对于固定的<span class="math inline">\(w\)</span>，令： <span class="math display">\[
-\mathcal{F}=\{f|Lip(f)\leq 1\}, \space \mathcal{F}^*=\left\{f|_{S_w}\bigg|Lip(f|_{S_w})\leq 1\right\}
-\]</span> 有<span class="math inline">\(\sup_{f\in\mathcal{F}}\mathcal{T}(f)=\sup_{f|_{S_w}\in\mathcal{F}^*}\mathcal{T}^*\left(f|_{S_w}\right)\)</span>。</p>
-</blockquote>
-<h3 id="theorem-6">Theorem 6</h3>
-<blockquote>
-<p><span class="math inline">\(\mathcal{L}_{Buzz}\)</span>的对偶形式为： <span class="math display">\[
-\mathcal{L}_{Buzz}=-\lambda\sup\limits_{Lip(F;S)\leq 1}\mathbb{E}_{p(w)}\mathcal{T}^*(F)-\mathcal{K}-\log Z(\lambda)
-\]</span></p>
-</blockquote>
-<p>近似的<span class="math inline">\(\mathcal{L}_{Buzz}\)</span>的对偶形式为： <span class="math display">\[
-\bar{\mathcal{L}}_{Buzz}=-\lambda\sup\limits_{Lip(F;S)\leq 1}\mathbb{E}_{p(w)}\mathcal{T}(F)-\mathcal{K}-\log Z(\lambda)
-\]</span></p>
-<h1 id="experiment">Experiment</h1>
-<p><img src="http://qfxiao.me/img/image-20200106142131500.png" /></p>
-<p><img src="http://qfxiao.me/img/image-20200106142155978.png" /></p>
-<p><img src="http://qfxiao.me/img/image-20200106142212110.png" /></p>
-</div></article></div><div class="card"><div class="card-image"><a class="image is-7by3" href="/2019/11/02/Variational-Approaches-for-Auto-Encoding-Generative-Adversarial-Networks/"><img class="thumbnail" src="http://qfxiao.me/img/image-20191102233101258.png" alt="Variational Approaches for Auto-Encoding Generative Adversarial Networks"></a></div><article class="card-content article" role="article"><div class="article-meta size-small is-uppercase level is-mobile"><div class="level-left"><time class="level-item" dateTime="2019-11-02T15:28:53.000Z" title="2019-11-02T15:28:53.000Z">2019-11-02</time><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/GAN/">GAN</a></span><span class="level-item">18 分钟 读完 (大约 2774 个字)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2019/11/02/Variational-Approaches-for-Auto-Encoding-Generative-Adversarial-Networks/">Variational Approaches for Auto-Encoding Generative Adversarial Networks</a></h1><div class="content"><h1 id="abstract">Abstract</h1>
+            <!-- 
+                
+                    <h1 id="introduction">Introduction</h1>
+<p><a href="https://ieeexplore.ieee.org/abstract/document/8737430/" target="_blank" rel="noopener">论文📃</a></p>
+<p><a href="https://github.com/yantijin/Buzz" target="_blank" rel="noopener">代码📥</a></p>
+<p>本文介绍了一种利用对抗训练来进行时间序列异常检测的方法<em>Buzz</em>。作者认为在现实中复杂的KPI数据大量存在，这种数据通常带有非高斯分布的噪声，同时数据分布复杂，导致一般的生成式模型无法对数据进行很好的建模，所以作者提出了基于对抗训练的模型。在文中，作者的创新点主要有三个：</p>
+<ol type="1">
+                
+             -->
+        </div>
+        
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2020/01/06/Unsupervised-Anomaly-Detection-for-Intricate-KPIs-via-Adversarial-Training-of-VAE/#more">阅读更多</a>
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-image">
+        <a href="/2019/11/02/Variational-Approaches-for-Auto-Encoding-Generative-Adversarial-Networks/" class="image is-7by1">
+            <img class="thumbnail" src="http://qfxiao.me/img/image-20191102233101258.png" alt="Variational Approaches for Auto-Encoding Generative Adversarial Networks">
+        </a>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2019-11-02T15:28:53.000Z">2019-11-02</time>
+                
+                    <i class="fas fa-calendar-check">&nbsp</i>
+                    <time class="level-item has-text-grey" datetime="2020-02-03T08:20:48.802Z">2020-02-03</time>
+                
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Research/">Research</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Research/GAN/">GAN</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    18 分钟 读完 (大约 2774 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2019/11/02/Variational-Approaches-for-Auto-Encoding-Generative-Adversarial-Networks/">Variational Approaches for Auto-Encoding Generative Adversarial Networks</a>
+            
+        </h1>
+        <div class="content">
+            
+                
+                
+                
+                    
+                    
+                        
+                    
+                
+                    
+                    
+                        
+                    
+                
+                    
+                    
+                        
+                    
+                
+                    
+                    
+                        
+                    
+                
+                    
+                    
+                
+                
+            
+            <h1 id="abstract">Abstract</h1>
 <p>本文揭示了对抗生成网络（Generative Adversarial Networks, GAN）和变分自编码器（Variational Auto-encoders, VAE）之间的联系，并据此提出了一种将两者结合的新模型。文中主要是将不可解的似然函数和未知的后验分布用一个非确定的分布（Immplicit Distribution）替代，并加入判别器来使得该分布逼近真实的分布。通过这个方法，作者将VAE中的损失函数进行了替换，变成了GAN中的“生成-判别”模式。</p>
-<p><a href="https://arxiv.org/abs/1706.04987">原文</a></p>
+<p><a href="https://arxiv.org/abs/1706.04987" target="_blank" rel="noopener">原文</a></p>
 <h1 id="contribution">Contribution</h1>
 <p>本文有如下贡献：</p>
-<ul>
-<li>本文提出变分推断（Variational Inference）也能通过对非确定分布的估计应用在GAN中；</li>
-<li>基于似然的模型（Likelihood-based Models）和非似然模型（Likelihood-free Models）能够通过对抗学习结合起来；</li>
-<li>作者根据文中提出的新观点修改了VAE的损失函数，将其称之为Auto-encoding GAN (<span class="math inline">\(\alpha\)</span>-GAN)，并提出了对应的实用的改进；</li>
-<li>本文与众多State-of-Art模型进行了对比</li>
-</ul>
-<h1 id="methodology">Methodology</h1>
-<h2 id="overcoming-intractability-in-generative-models">Overcoming Intractability in Generative Models</h2>
-<h3 id="latent-variable-models">Latent Variable Models</h3>
-<p>隐变量模型通过隐变量的形式描述了数据的产生过程。最简单的形式是假设隐变量<span class="math inline">\(\mathbf{z}\)</span>服从一个先验分布<span class="math inline">\(\mathbf{z}\sim p(\mathbf{z})\)</span>，而数据<span class="math inline">\(\mathbf{x}\)</span>从条件分布<span class="math inline">\(p(\mathbf{x}|\mathbf{z})\)</span>抽样产生。通常来说描述<span class="math inline">\(p(\mathbf{x}|\mathbf{z})\)</span>的模型称为生成器<span class="math inline">\(\mathcal{G}_\theta(\mathbf{z})\)</span>，带有可优化的参数<span class="math inline">\(\theta\)</span>，而<span class="math inline">\(\mathbf{z}\)</span>通常假设为正态分布<span class="math inline">\(\mathbf{z}\sim\mathcal{N}(\mathbf{0},\mathbf{I})\)</span>。</p>
-<p>文中区分了两种隐变量模型，一种是<em>Implicit Latent Variable Models</em>，一种是<em>Prescribed Latent Variable Models</em>。文中的描述不太清楚，个人认为两者的区别是前者图模型中的<span class="math inline">\(\mathbf{x}\)</span>不是一个随机变量，在优化的时候需要用一个刻画生成的<span class="math inline">\(\mathbf{x}\)</span>和真实的<span class="math inline">\(\mathbf{x}\)</span>的差别的函数<span class="math inline">\(\delta(\mathbf{x}-\mathcal{G}_\theta(\mathbf{z}))\)</span>，而后者图模型中<span class="math inline">\(\mathbf{x}\)</span>是一个随机变量，这样可以写出似然函数用极大似然估计。</p>
-<p>无论是GAN还是VAE都需要通过边缘分布<span class="math inline">\(p_\theta(\mathbf{x})\)</span>来刻画建模的好坏，比如说根据<span class="math inline">\(p_\theta(\mathbf{x})\)</span>与真实分布<span class="math inline">\(p^*_\theta(\mathbf{x})\)</span>之间的KL散度<span class="math inline">\(\text{KL}\left[p_\theta(\mathbf{x})\parallel p_\theta^*(\mathbf{x})\right]\)</span>。但通常情况下<span class="math inline">\(p_\theta(\mathbf{x})\)</span>都是不可解的，而GAN和VAE通过不同的途径解决了这个问题。</p>
-<h3 id="generative-adversarial-networks">Generative Adversarial Networks</h3>
-<p>GAN没有直接计算<span class="math inline">\(p_\theta(\mathbf{x})\)</span>，而是使用了一个判别器来判别样本是从<span class="math inline">\(p_\theta(\mathbf{x})\)</span>还是<span class="math inline">\(p_\theta^*(\mathbf{x})\)</span>采样得到的，如果判别器无法进行区分，那我们认为此时<span class="math inline">\(p_\theta(\mathbf{x})\approx p_\theta^*(\mathbf{x})\)</span>。</p>
-<p>令随机变量<span class="math inline">\(y\in\{0,1\}\)</span>，<span class="math inline">\(y=1\)</span>表示样本<span class="math inline">\(\mathbf{x}\)</span>来自真实分布，<span class="math inline">\(y=0\)</span>表示样本<span class="math inline">\(\mathbf{x}\)</span>来自生成分布，而判别器的输出为<span class="math inline">\(\mathbf{x}\)</span>来自真实分布的概率<span class="math inline">\(\mathcal{D}_\phi(\mathbf{x})=p(y=1|\mathbf{x})\)</span>。GAN通过对来自真实分布和生成分布的样本求二元交叉熵来作为判别器损失函数： <span class="math display">\[
-\textbf{Discriminator Loss: }\mathbb{E}_{p^*(\mathbf{x})}[-\log\mathcal{D}_\phi(\mathbf{x})]+\mathbb{E}_{p_\theta(\mathbf{x})}[-\log(1-\mathcal{D}_\phi(\mathbf{x}))]
-\]</span></p>
-<p>生成器将最大化判别器对生成样本判定为真的概率作为损失函数，同时还有一个等价的但在实践中表现更好的替代版本：</p>
-<p><span class="math display">\[
-\textbf{Generator Loss: }\mathbb{E}_{p_\theta(\mathbf{x})}[\log(1-\mathcal{D}_\phi(\mathbf{x}))];\textbf{ Alternative Loss: }\mathbf{E}_{p_\theta(\mathbf{x})}[-\log\mathcal{D}_\phi(\mathbf{x})]
-\]</span></p>
-<h3 id="the-density-ratio-trick">The Density Ratio Trick</h3>
-<p>令<span class="math inline">\(p^*(\mathbf{x})=p(\mathbf{x}|y=1)\)</span>，<span class="math inline">\(p_\theta(\mathbf{x})=p(\mathbf{x}|y=0)\)</span>。定义<em>Density Ratio</em> <span class="math inline">\(r_\phi(\mathbf{x})\)</span>为真实分布和生成分布之间的比例：</p>
-<p><span class="math display">\[
-r_\phi(\mathbf{x})=\frac{p^*(\mathbf{x})}{p_\theta(\mathbf{x})}=\frac{p(\mathbf{x}|y=1)}{p(\mathbf{x}|y=0)}=\frac{p(y=1|\mathbf{x})}{p(y=0|\mathbf{x})}=\frac{\mathcal{D}_\phi(\mathbf{x})}{1-\mathcal{D}_\phi(\mathbf{x})}
-\]</span></p>
-<p>上式表明了<em>Density Ratio</em>的计算可以仅通过从两个分布上采样得到的样本加上一个二分类器<span class="math inline">\(\mathcal{D}_\phi(\mathbf{x})\)</span>实现（假设<span class="math inline">\(p(y=0)=p(y=1)\)</span>）。更深入的说，对于不可解的分布<span class="math inline">\(p_\theta^*(\mathbf{x})\)</span>，我们可以通过计算<em>Density Ratio</em>来了解我们近似的分布<span class="math inline">\(p_\theta(\mathbf{x})\)</span>和真实的<span class="math inline">\(p_\theta^*(\mathbf{x})\)</span>之间的相对性。而且我们只需要能够在两个分布上进行采样，并且训练一个判别器即可。因为判别器是一个普通的分类器，所以大量的主流分类器都可以使用。</p>
-<h3 id="variational-inference">Variational Inference</h3>
-<p>现在来看VAE，另一种解决不可解分布的方法是近似。<em>Variational Inference</em>通过引入一个变分分布<span class="math inline">\(q_\eta(\mathbf{z}|\mathbf{x})\)</span>推出了不可解的<span class="math inline">\(\mathbf{x}\)</span>的对数似然的下界（常被称为证据下界ELBO）：</p>
-<p><span class="math display">\[
-\log p_\theta(\mathbf{x})=\log\int p_\theta(\mathbb{x}|\mathbb{z})p(\mathbf{z})\text{d}\mathbf{z}\geq \mathbb{E}_{q_\eta(\mathbf{z}|\mathbf{x})}\left[\log p_\theta(\mathbf{x}|\mathbf{z})\right]-\text{KL}\left[q_\eta(\mathbf{z}|\mathbf{x})\parallel p(\mathbf{z})\right]=\mathcal{F}(\boldsymbol{\theta}, \boldsymbol{\eta})
-\]</span></p>
-<p>VAE是<em>Variational Inference</em>的一种实现，变分分布通过一个神经网络进行建模，并且建立起了完整的可优化的模型。</p>
-<h3 id="synthetic-likelihood">Synthetic Likelihood</h3>
-<p>当似然函数未知（GAN中没有显式的似然函数，而VAE中有）的时候，<em>Variational Inference</em>便无法直接使用。对于没有显式的似然函数的情况，以VAE的ELBO的第一项为例，假设<span class="math inline">\(p_\theta(\mathbf{x}|\mathbf{z})\)</span>分布的具体形式未知，我们只有从<span class="math inline">\(p_\theta(\mathbf{x}|\mathbf{z})\)</span>采样得到的样本，如何计算<span class="math inline">\(\mathbb{E}_{q_\eta(\mathbf{z}|\mathbf{x})}[\log p_\theta(\mathbf{x}|\mathbf{z})]\)</span>呢？一个方法是乘以<span class="math inline">\(p_\theta^*(\mathbf{x})\)</span>再除以<span class="math inline">\(p_\theta^*(\mathbf{x})\)</span>：</p>
-<p><span class="math display">\[
-\mathbb{E}_{q_\eta(\mathbf{z}|\mathbf{x})}[\log p_\theta(\mathbf{x}|\mathbf{z})]=\mathbb{E}_{q_\eta(\mathbf{z}|\mathbf{x})}\left[\log\frac{p_\theta(\mathbf{x}|\mathbf{z})}{p^*(\mathbf{x})}\right]+\mathbb{E}_{q_\eta(\mathbf{z}|\mathbf{x})}[\log p^*(\mathbf{x})]
-\]</span></p>
-<p>公式(5)中的第一项包括了合成似然<span class="math inline">\(R(\theta)=\frac{p_\theta(\mathbf{x}|\mathbf{z})}{p^*(\mathbf{x})}\)</span>，优化<span class="math inline">\(R(\theta)\)</span>相当于优化<span class="math inline">\(\log p_\theta(\mathbf{x}|\mathbf{z})\)</span>。第二项与生成网络的参数<span class="math inline">\(\theta\)</span>无关，所以在优化的时候可以忽略。</p>
-<h2 id="a-fusion-of-variational-and-adversarial-learning">A Fusion of Variational and Adversarial Learning</h2>
-<p>GAN和VAE分别从不同的角度解决了生成模型的推断问题，我们下面从VAE出发，考虑将两者结合起来。</p>
-<h3 id="implicit-variational-distributions">Implicit Variational Distributions</h3>
-<p>变分推断<strong>Variational Inference</strong>的主要任务就是确定<span class="math inline">\(q_\eta(\mathbf{z}|\mathbf{x})\)</span>，通常的做法如<strong>Mean-field Variational Inference</strong>会假设一个简单的分布，如高斯分布。在本文中不对<span class="math inline">\(q_\eta(\mathbf{z}|\mathbf{x})\)</span>的形式作假设，仅假设其为一个隐含的分布。运用上文提到的<em>Density Ratio Trick</em>，我们可以将VAE损失函数中的第二项改写为：</p>
-<p><span class="math display">\[
--\text{KL}[q_\eta(\mathbf{z}|\mathbf{x})\parallel p(\mathbf{z})]=\mathbb{E}_{q_\eta(\mathbf{z}|\mathbf{x})}\left[\log\frac{p(\mathbf{z})}{q_\eta(\mathbf{z}|\mathbf{x})}\right]\approx\mathbb{E}_{q_\eta(\mathbf{z}|\mathbf{x})}\left[\log\frac{\mathcal{C}_\boldsymbol{\omega}(\mathbf{z})}{1-\mathcal{C}_\boldsymbol{\omega}(\mathbf{z})}\right]
-\]</span></p>
-<p>文中引入了一个隐变量分类器（Latent Classifier）<span class="math inline">\(\mathcal{C}_{\boldsymbol{\omega}}(\mathbf{z})\)</span>，用来判别<span class="math inline">\(\mathbf{z}\)</span>是从编码网络还是从标准高斯分布中采样得到的（猜测这样做的好处是不用再对<span class="math inline">\(\mathbf{z}\)</span>的后验做高斯分布的假设了，也不需要在变分网络输出形成的高斯分布上采样得到<span class="math inline">\(\mathbf{z}\)</span>了，这样重参数技巧也省了）。具体实现上，期望可以用蒙特卡洛方法（采样多次取均值）进行计算。</p>
-<h3 id="likelihood-choice">Likelihood Choice</h3>
-<p>对于VAE损失函数第一项，对应生成网络，我们可以选择对<span class="math inline">\(p(\mathbf{x}|\mathbf{z})\)</span>分布的具体形式做假设， 这样对应<em>Likelihood-based</em>的情况。文中选择的是<em>Zero-mean Laplace Distribution</em> <span class="math inline">\(p_\theta(\mathbf{x}|\mathbf{z})\propto\exp(-\lambda\parallel\mathbf{x}-\mathcal{G}_\theta(\mathbf{z})\parallel_1)\)</span>（不就是<span class="math inline">\(L_1\)</span> Loss吗？？？）。</p>
-<p>对于<em>Likelihood-free</em>的情况，可以继续使用上面提到的<em>Density Ratio Trick</em>，这时需要加一个一个判别器。</p>
-<p><span class="math display">\[
-\mathbb{E}_{q_\eta(\mathbf{z}|\mathbf{x})}\left[-\lambda\parallel\mathbf{x}-\mathcal{G}_\theta(\mathbf{z})\parallel_1\right]\space\space\text{  or  }\space\space\mathbb{E}_{q_\eta(\mathbf{z}|\mathbf{x})}\left[\log\frac{\mathcal{D}_\phi(\mathcal{G}_\theta(\mathbf{z}))}{1-\mathcal{D}_\phi(\mathcal{G}_\theta(\mathbf{z}))}\right]
-\]</span></p>
-<p>对于两种选择，前者对应VAE，好处是不会出现模式崩溃的情况，后者对应GAN，容易出现模式崩溃的情况，但是可以使用对抗学习的方式（这是优点？？？），本文选择两种都用（我全都要.jpg）。</p>
-<h3 id="hybrid-loss-functions">Hybrid Loss Functions</h3>
-<p>将前面的讨论结合起来，最后的损失函数就是：</p>
-<p><span class="math display">\[
-\mathcal{L}(\boldsymbol{\theta},\boldsymbol{\eta})=\mathbb{E}_{q_\eta(\mathbf{z}|\mathbf{x})}\left[-\lambda\parallel\mathbf{x}-\mathcal{G}_\theta(\mathbf{z})\parallel_1+\log\frac{\mathcal{D}_\phi(\mathcal{G}_\theta(\mathbf{z}))}{1-\mathcal{D}_\phi(\mathcal{G}_\theta(\mathbf{z}))}+\log\frac{\mathcal{C}_\boldsymbol{\omega}(\mathbf{z})}{1-\mathcal{C}_\boldsymbol{\omega}(\mathbf{z})}\right]
-\]</span></p>
-<p>最后模型包含四个网络：生成网络<span class="math inline">\(p_\theta(\mathbf{x}|\mathbf{z})\)</span>、推断网络<span class="math inline">\(q_\eta(\mathbf{z}|\mathbf{x})\)</span>以及两个判别器<span class="math inline">\(\mathcal{C}_{\boldsymbol{\omega}}\)</span>和<span class="math inline">\(\mathcal{D}_\phi\)</span>，作者将其命名为<span class="math inline">\(\alpha\)</span>-GAN。</p>
-<p>算法流程如下：</p>
-<p><img src="http://qfxiao.me/img/image-20191106220923748.png" /></p>
-<h3 id="improved-techniques">Improved Techniques</h3>
-<p>作者为了改进模型的稳定性和效率，将生成器的Loss中的<span class="math inline">\(-\log(1-\mathcal{D}_\phi)\)</span>修改为了<span class="math inline">\(\log\mathcal{D}_\phi-\log(1-\mathcal{D}_\phi)\)</span>，并声称这样能提供非饱和（Non-saturating）的梯度：</p>
-<p><span class="math display">\[
-\textbf{Generator Loss: } \mathbb{E}_{q_\eta(\mathbf{z}|\mathbf{x})}\left[\lambda\parallel\mathbf{x}-\mathcal{G}_\theta(\mathbf{z})\parallel_1-\log\mathcal{D}_\phi(\mathcal{G}_\theta(\mathbf{z}))+\log(1-\mathcal{D}_\phi(\mathcal{G}_\theta(\mathbf{z})))\right]
-\]</span></p>
-<p>作者认为在生成器损失函数中加入<span class="math inline">\(\lambda\parallel\mathbf{x}-\mathcal{G}_\theta(\mathbf{z})\parallel_1\)</span>能够在一定程度防止模式崩溃。</p>
-<p>除此之外，作者发现将真实样本（原文是The Samples）作为生成的样本输入到判别器中能够提升性能。作者给出的解释是根据Jensen不等式：<span class="math inline">\(\log p_\theta(\mathbf{x})=\log\int p_\theta(\mathbf{x}|\mathbf{z})p(\mathbf{z})\text{d}\mathbf{z}\geq \mathbb{E}_{p(\mathbf{z})}[\log p_\theta(\mathbf{x}|\mathbf{z})]\)</span>，</p>
-<p>[TODO]</p>
-<h2 id="related-work">Related Work</h2>
-<p>[TODO]</p>
-<p><img src="http://qfxiao.me/img/image-20191102233101258.png" /></p>
-<p><img src="http://qfxiao.me/img/image-20191102233151987.png" /></p>
-<h1 id="experiments">Experiments</h1>
-<p>[TODO]</p>
-<h2 id="metrics">Metrics</h2>
-<p>本文使用了几种不同的评测生成模型的方法：</p>
-<ul>
-<li><strong>Inception Score: </strong></li>
-<li><strong>Multi-scale Structural Similarity (MS-SSIM): </strong></li>
-<li><strong>Independent Wasserstein Critic: </strong></li>
-</ul>
-<h2 id="results-on-colormnist">Results on ColorMNIST</h2>
-<p><img src="http://qfxiao.me/img/image-20191102233220700.png" /></p>
-<p><img src="http://qfxiao.me/img/image-20191102233244847.png" /></p>
-<h2 id="results-on-celeba">Results on CelebA</h2>
-<p><img src="http://qfxiao.me/img/image-20191102233303345.png" /></p>
-<h2 id="results-on-cifar-10">Results on CIFAR-10</h2>
-<p><img src="http://qfxiao.me/img/image-20191102233338213.png" /></p>
-<p><img src="http://qfxiao.me/img/image-20191102233350494.png" /></p>
-</div></article></div><div class="card"><div class="card-image"><a class="image is-7by3" href="/2019/10/22/An-Introduction-to-Variational-Autoencoders/"><img class="thumbnail" src="http://qfxiao.me/img/autoencoder23849248011.png" alt="An Introduction to Variational Autoencoders"></a></div><article class="card-content article" role="article"><div class="article-meta size-small is-uppercase level is-mobile"><div class="level-left"><time class="level-item" dateTime="2019-10-22T07:14:26.000Z" title="2019-10-22T07:14:26.000Z">2019-10-22</time><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Tutorial/">Tutorial</a></span><span class="level-item">22 分钟 读完 (大约 3277 个字)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2019/10/22/An-Introduction-to-Variational-Autoencoders/">An Introduction to Variational Autoencoders</a></h1><div class="content"><h1 id="deep-generative-models">Deep Generative Models</h1>
+            <!-- 
+                
+                    <h1 id="abstract">Abstract</h1>
+<p>本文揭示了对抗生成网络（Generative Adversarial Networks, GAN）和变分自编码器（Variational Auto-encoders, VAE）之间的联系，并据此提出了一种将两者结合的新模型。文中主要是将不可解的似然函数和未知的后验分布用一个非确定的分布（Immplicit Distribution）替代，并加入判别器来使得该分布逼近真实的分布。通过这个方法，作者将VAE中的损失函数进行了替换，变成了GAN中的“生成-判别”模式。</p>
+<p><a href="https://arxiv.org/abs/1706.04987" target="_blank" rel="noopener">原文</a></p>
+<h1 id="contribution">Contribution</h1>
+<p>本文有如下贡献：</p>
+                
+             -->
+        </div>
+        
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2019/11/02/Variational-Approaches-for-Auto-Encoding-Generative-Adversarial-Networks/#more">阅读更多</a>
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-image">
+        <a href="/2019/10/22/An-Introduction-to-Variational-Autoencoders/" class="image is-7by1">
+            <img class="thumbnail" src="http://qfxiao.me/img/autoencoder23849248011.png" alt="An Introduction to Variational Autoencoders">
+        </a>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2019-10-22T07:14:26.000Z">2019-10-22</time>
+                
+                    <i class="fas fa-calendar-check">&nbsp</i>
+                    <time class="level-item has-text-grey" datetime="2020-02-03T08:15:57.144Z">2020-02-03</time>
+                
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Research/">Research</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Research/Tutorial/">Tutorial</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    22 分钟 读完 (大约 3277 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2019/10/22/An-Introduction-to-Variational-Autoencoders/">An Introduction to Variational Autoencoders</a>
+            
+        </h1>
+        <div class="content">
+            
+                
+                
+                
+                    
+                    
+                        
+                    
+                
+                    
+                    
+                        
+                    
+                
+                    
+                    
+                        
+                    
+                
+                    
+                    
+                        
+                    
+                
+                    
+                    
+                
+                
+            
+            <h1 id="deep-generative-models">Deep Generative Models</h1>
 <p>生成模型是指一系列用于随机生成可观测数据的模型。假设在一个高维空间<span class="math inline">\(\mathcal{X}\)</span>中，存在一个随机向量<span class="math inline">\(\mathbf{X}\)</span>服从一个未知的分布<span class="math inline">\(p_r(x),x\in \mathcal{X}\)</span>。生成模型就是根据一些可观测的样本<span class="math inline">\(x^{(1)},x^{(2)},\cdots,x^{(N)}\)</span>来学习一个参数化的模型<span class="math inline">\(p_\theta(x)\)</span>来近似未知分布<span class="math inline">\(p_r(x)\)</span>。</p>
 <p>生成模型主要用于密度估计和样本生成。</p>
-<hr />
+<hr>
 <p>密度估计即给定一组数据<span class="math inline">\(\mathcal{D}=\{x^{(i)}\},1\leq i\leq N\)</span>，假设他们都是从相同的概率密度函数<span class="math inline">\(p_r(x)\)</span>独立产生的。密度估计就是根据数据集<span class="math inline">\(\mathcal{D}\)</span>来估计其概率密度函数<span class="math inline">\(p_r(x)\)</span>。</p>
-<p>如果将生成模型用于监督学习，那么就是输出标签的条件概率分布<span class="math inline">\(p(y|x)\)</span>，根据贝叶斯公式：</p>
-<p><span class="math display">\[p(y|x)=\frac{p(x,y)}{\sum_y p(x,y)}\]</span></p>
-<p>问题就变为了联合概率<span class="math inline">\(p(x,y)\)</span>的密度估计问题。</p>
-<hr />
-<p>样本生成即根据给定的概率分布<span class="math inline">\(p_\theta(x)\)</span>生成一些服从这个分布的样本，即采样。在含隐变量的生成模型中，生成<span class="math inline">\(x\)</span>的过程一般包含两步：</p>
-<ol type="1">
-<li>根据隐变量的分布<span class="math inline">\(p_\theta(z)\)</span>采样得到<span class="math inline">\(z\)</span>；</li>
-<li>根据条件分布<span class="math inline">\(p_\theta(x|z;\theta)\)</span>进行采样得到<span class="math inline">\(x\)</span>。</li>
-</ol>
-<p>所以在生成模型中的重点是估计条件分布<span class="math inline">\(p(x|z;\theta)\)</span>。</p>
-<h1 id="parameter-estimation-for-hidden-variable-with-em-algorithm">Parameter Estimation for Hidden Variable with EM Algorithm</h1>
-<p>如果图模型中存在隐变量，就需要使用EM算法进行参数估计。</p>
-<p>在一个包含隐变量的图模型中，令<span class="math inline">\(\mathbf{X}\)</span>为可观测变量集合，<span class="math inline">\(\mathbf{Z}\)</span>为隐变量集合，则一个样本<span class="math inline">\(x\)</span>的边际似然函数为：</p>
-<p><span class="math display">\[p(x;\theta)=\sum_z p(x,z;\theta)\]</span></p>
-<p>给定包含<span class="math inline">\(N\)</span>个训练样本的训练集<span class="math inline">\(\mathcal{D}=\{x^{(n)}\},1\leq i\leq N\)</span>，则训练集的对数边际似然为：</p>
-<p><span class="math display">\[\begin{align}\mathcal{L}(\mathcal{D};\theta)&amp;=\frac{1}{N}\sum_{n=1}^N \log p(x^{(n)};\theta)\\&amp;=\frac{1}{N}\sum_{n=1}^N \log \sum_z p(x^{(n)},z;\theta)\end{align}\]</span></p>
-<hr />
-<p>这时，只要最大化整个训练集的对数边际似然<span class="math inline">\(\mathcal{L}(\mathcal{D};\theta)\)</span>，即可估计出最优的参数<span class="math inline">\(\theta^*\)</span>。不过在计算梯度的时候，需要在对数函数内部进行求和或积分计算。为了更好的计算<span class="math inline">\(\log p(x;\theta)\)</span>，我们引入一个额外的变分函数<span class="math inline">\(q(z)\)</span>，<span class="math inline">\(q(z)\)</span>为定义在隐变量<span class="math inline">\(z\)</span>上的分布。样本<span class="math inline">\(x\)</span>的对数边际似然函数为：</p>
-<p><span class="math display">\[\begin{align}\log p(x;\theta)&amp;=\log \sum_z q(z)\frac{p(x,z;\theta)}{q(z)}\\&amp;\geq\sum_z q(z)\log \frac{p(x,z;\theta)}{q(z)}\\&amp;\triangleq ELBO(q,x;\theta)\end{align}\]</span></p>
-<p>其中<span class="math inline">\(ELBO(q,x;\theta)\)</span>为对数边际似然函数<span class="math inline">\(\log p(x;\theta)\)</span>的下界，称为证据下界。公式中使用了Jensen不等式(即对于凹函数<span class="math inline">\(g\)</span>，有<span class="math inline">\(g(\mathbb{E}[x])\geq\mathbb{E}[g(X)]\)</span>)。在这里，<span class="math inline">\(\frac{p(x,z;\theta)}{q(z)}\)</span>可视为<span class="math inline">\(q(z)\)</span>的函数，记为<span class="math inline">\(f(q(z))\)</span>，那么<span class="math inline">\(f(q(z))\)</span>的期望即<span class="math inline">\(\mathbb{E}[f(q(z))]=\sum_z q(z)f(q(z))=\sum_z q(z)\frac{p(x,z;\theta)}{q(z)}\)</span>。而根据Jensen不等式，有<span class="math inline">\(g(\mathbb{E}[f(q(z))])\geq\mathbb{E}[g(f(q(z)))]\Leftrightarrow g(\sum_z q(z)\frac{p(x,z;\theta)}{q(z)})\geq \sum_z q(z)g(\frac{p(x,z;\theta)}{q(z)})\)</span>，在这里<span class="math inline">\(g\)</span>就是对数函数。</p>
-<hr />
-<p>根据Jensen不等式取等的条件：<span class="math inline">\(\frac{p(x,z;\theta)}{q(z)}=c\)</span>，<span class="math inline">\(c\)</span>为常数，有：</p>
-<p><span class="math display">\[\begin{align}\sum_z p(x,z;\theta)&amp;=c\sum_z q(z)\\\Leftrightarrow\sum_z p(x,z;\theta)&amp;=c\cdot1\end{align}\]</span></p>
-<p>因此：</p>
-<p><span class="math display">\[\begin{align}q(z)&amp;=\frac{p(x,z;\theta)}{\sum_z p(x,z;\theta)}\\&amp;=\frac{p(x,z;\theta)}{p(x;\theta)}\\&amp;=p(z|x;\theta)\end{align}\]</span></p>
-<p>所以，当且仅当<span class="math inline">\(q(z)=p(z|x;\theta)\)</span>时，<span class="math inline">\(\log p(x;\theta)=ELBO(q,x;\theta)\)</span>。</p>
-<hr />
-<p>于是最大化对数边际似然函数<span class="math inline">\(\log p(x;\theta)\)</span>的过程可以分解为两个步骤：</p>
-<ol type="1">
-<li>先找到近似分布<span class="math inline">\(q(z)\)</span>使得<span class="math inline">\(\log p(x;\theta)=ELBO(q,x;\theta)\)</span>；</li>
-<li>再寻找参数<span class="math inline">\(\theta\)</span>最大化<span class="math inline">\(ELBO(q,x;\theta)\)</span>。</li>
-</ol>
-<p>这就是期望最大化(Expectation-Maximum,EM)算法。</p>
-<hr />
-<p>EM算法通过迭代的方法，不断重复直到收敛到某个局部最优解。在第<span class="math inline">\(t\)</span>步更新时，E步和M步分别为：</p>
-<ol type="1">
-<li><p>E步：固定参数<span class="math inline">\(\theta_t\)</span>，找到一个分布使<span class="math inline">\(ELBO(q,x;\theta_t)\)</span>最大，即等于<span class="math inline">\(\log p(x;\theta_t)\)</span>：<span class="math inline">\(q_{t+1}(z)=\text{arg}_q \max ELBO(q,x;\theta_t)\)</span>；</p></li>
-<li><p>M步：固定<span class="math inline">\(q_{t+1}(z)\)</span>，找到一组参数使得证据下界最大，即：<span class="math inline">\(\theta_{t+1}=\text{arg}_\theta\max ELBO(q_{t+1},x;\theta)\)</span>。</p></li>
-</ol>
-<hr />
-<p>对数边际似然也可以通过信息论的视角来进行分解：</p>
-<p><span class="math display">\[\begin{align}\log p(x;\theta)&amp;=\sum_z q(z)\log p(x;\theta)\\&amp;=\sum_z q(z)(\log p(x,z;\theta)-\log p(z|x;\theta))\\&amp;=\sum_z q(z)\log\frac{p(x,z;\theta)}{q(z)}-\sum_z q(z)\log\frac{p(z|x;\theta)}{q(z)}\\&amp;=ELBO(q,x;\theta)+D_{KL}(q(z)\parallel p(z|x;\theta))\end{align}\]</span></p>
-<p>其中<span class="math inline">\(D_{KL}(q(z)\parallel p(z|x;\theta))\)</span></p>
-<h1 id="generative-model-with-hidden-variable">Generative Model with Hidden Variable</h1>
-<p>假设一个生成模型包含不可观测的隐变量，其中可观测变量<span class="math inline">\(x\)</span>为一个高维空间中的随机向量，而不可观测的隐变量<span class="math inline">\(z\)</span>为一个相对低维空间中的随机向量。</p>
-<p>这个生成模型的联合概率密度函数可以表达为：</p>
-<p><span class="math display">\[p(x,z;\theta)=p(x|z;\theta)p(z;\theta)\]</span></p>
-<p>其中<span class="math inline">\(p(z;\theta)\)</span>为隐变量<span class="math inline">\(z\)</span>的先验概率分布；<span class="math inline">\(p(x|z;\theta)\)</span>为已知<span class="math inline">\(z\)</span>条件下<span class="math inline">\(x\)</span>的概率分布。通常情况下，我们可以假设<span class="math inline">\(p(z;\theta)\)</span>和<span class="math inline">\(p(x|z;\theta)\)</span>服从某种带参的分布族，其形式已知，而参数可以通过最大似然来进行估计。</p>
-<p>给定一个样本<span class="math inline">\(x\)</span>，其对数边际似然<span class="math inline">\(\log p(x;\theta)\)</span>可以分解为：</p>
-<p><span class="math display">\[\log p(x;\theta)=ELBO(q,x;\theta,\phi)+D_{KL}(q(z;\phi)\parallel p(z|x;\theta))\]</span></p>
-<p>其中<span class="math inline">\(q(z;\phi)\)</span>为额外引入的变分密度函数，<span class="math inline">\(ELBO(q,x;\theta,\phi)\)</span>为证据下界：</p>
-<p><span class="math display">\[ELBO(q,x;\theta,\phi)=\mathbb{E}_{z\sim q(z;\phi)}[\log{\frac{p(x,z;\theta)}{q(z;\phi)}}]\]</span></p>
-<p>最大化<span class="math inline">\(\log p(x;\theta)\)</span>可以用EM算法来求解：</p>
-<ul>
-<li><strong>E-step:</strong> 寻找一个密度函数<span class="math inline">\(q(z;\phi)\)</span>使其等于或接近于后验密度函数<span class="math inline">\(p(z|x;\theta)\)</span>;</li>
-<li><strong>M-step:</strong> 保持<span class="math inline">\(q(z;\phi)\)</span>固定，寻找<span class="math inline">\(\theta\)</span>来最大化<span class="math inline">\(ELBO(q,x;\theta,\phi)\)</span>。</li>
-</ul>
-<p>在EM算法的每次迭代中，理论上最优的<span class="math inline">\(q(z;\phi)\)</span>为隐变量的后验概率密度函数<span class="math inline">\(p(z|x;\theta)\)</span>：</p>
-<p><span class="math display">\[p(z|x;\theta)=\frac{p(x|z;\theta)p(z;\theta)}{\int_z p(x|z;\theta)p(z;\theta)\text{d}z}\]</span></p>
-<p>后验密度函数<span class="math inline">\(p(z|x;\theta)\)</span>的计算是一个统计推断的问题，在一般情况下<span class="math inline">\(p(x|z;\theta)\)</span>也比较难以计算。</p>
-<h1 id="variational-autoencoder">Variational Autoencoder</h1>
-<p>变分自编码器(Variational Autoencoder, VAE)的主要思想是利用神经网络来分别建模两个复杂的条件概率密度函数：</p>
-<ol type="1">
-<li>用神经网络来产生变分分布<span class="math inline">\(q(z;\phi)\)</span>，称为推断网络。推断网络的输入为<span class="math inline">\(x\)</span>，输出为变分分布<span class="math inline">\(q(z|x;\phi)\)</span>；</li>
-<li>用神经网络来产生概率分布<span class="math inline">\(p(x|z;\theta)\)</span>，称为生成网络。生成网络的输入为<span class="math inline">\(z\)</span>，输出为概率分布<span class="math inline">\(p(x|z;\theta)\)</span>。</li>
-</ol>
-<p><img src="http://qfxiao.me/img/autoencoder23849248011.png" /></p>
-<p>VAE的图模型如下图所示：</p>
-<p><img src="http://qfxiao.me/img/1565532060281.png" /></p>
-<h2 id="variational-network">Variational Network</h2>
-<p>假设<span class="math inline">\(q(z|x;\phi)\)</span>是服从对角化协方差的高斯分布：</p>
-<p><span class="math display">\[q(z|x;\phi)=\mathcal{N}(z;\mu_I,\sigma^2_I I)\]</span></p>
-<p>其中<span class="math inline">\(\mu_I\)</span>和<span class="math inline">\(\sigma_I^2\)</span>是高斯分布的均值和方差，可以通过推断网络<span class="math inline">\(f_I(x;\phi)\)</span>来预测：</p>
-<p><span class="math display">\[
-\left[\begin{matrix}\mu_I\\\sigma_I\end{matrix}\right]=f_I(x;\phi)
-\]</span> 推断网络<span class="math inline">\(f_I(x;\phi)\)</span>可以是一般的全连接网络或卷积网络，比如一个两层的神经网络：</p>
-<p><span class="math display">\[\begin{align}h&amp;=\sigma(W^{(1)}x+b^{(1)})\\\mu_I&amp;=W^{(2)}h+b^{(2)}\\\sigma_I&amp;=\text{softplus}(W^{(3)}h+b^{(3)})\end{align}\]</span></p>
-<p>其中所有网络参数<span class="math inline">\(\{W^{(1)},W^{(2)},W^{(3)},b^{(1)},b^{(2)},b^{(3)}\}\)</span>即对应了变分参数<span class="math inline">\(\phi\)</span>。</p>
-<hr />
-<p>推断网络的目标是使得<span class="math inline">\(q(z|x;\phi)\)</span>来尽可能接近真实的后验<span class="math inline">\(p(z|x;\theta)\)</span>，需要找到变分参数<span class="math inline">\(\phi^*\)</span>来最小化两个分布的KL散度：</p>
-<p><span class="math display">\[\phi^*=\text{arg}_\phi\min{D_{KL}(q(z|x;\phi)\parallel p(z|x;\theta))}\]</span></p>
-<p>由于<span class="math inline">\(p(z|x;\theta)\)</span>未知，故KL散度无法直接计算，不过由于<span class="math inline">\(D_{KL}(q(z|x;\phi)\parallel p(z|x;\theta))=\log p(x;\theta)-ELBO(q,x;\theta,\phi)\)</span>，所以可以直接最大化证据下界，有：</p>
-<p><span class="math display">\[\phi^*=\text{arg}_\phi\max{ELBO(q,x;\theta,\phi)}\]</span></p>
-<h2 id="generative-network">Generative Network</h2>
-<p>生成模型的联合分布可以分解为两部分：隐变量<span class="math inline">\(z\)</span>的先验分布<span class="math inline">\(p(z;\theta)\)</span>和条件概率分布<span class="math inline">\(p(x|z;\theta)\)</span>。为简单起见，一般假设隐变量<span class="math inline">\(z\)</span>的先验分布为标准正态分布<span class="math inline">\(\mathcal{N}(z|0,I)\)</span>，隐变量每一维之间都是独立的。条件概率分布<span class="math inline">\(p(x|z;\theta)\)</span>可以通过生成网络来建模，我们同样用参数化的分布族来表示条件概率分布<span class="math inline">\(p(x|z;\theta)\)</span>，这些分布族的函数可以用生成网络计算得到。根据变量<span class="math inline">\(x\)</span>的类型不同，可以假设<span class="math inline">\(p(x|z;\theta)\)</span>服从不同的分布族。如果<span class="math inline">\(x\in\{0,1\}^d\)</span>是<span class="math inline">\(d\)</span>维的二值向量，可以假设<span class="math inline">\(\log p(x|z;\theta)\)</span>服从多变量的伯努利分布，即：</p>
-<p><span class="math display">\[\begin{align}p(x|z;\theta)&amp;=\prod\limits_{i=1}^d p(x_i|z;\theta)\\&amp;=\prod\limits_{i=1}^d \gamma_i^{x_i}(1-\gamma_i)^{(1-x_i)}\end{align}\]</span></p>
-<p>如果<span class="math inline">\(x\in\mathbb{R}^d\)</span>是<span class="math inline">\(d\)</span>维的连续向量，可以假设<span class="math inline">\(p(x|z;\theta)\)</span>服从对角化协方差的高斯分布，即：</p>
-<p><span class="math display">\[p(x|z;\theta)=\mathcal{N}(x;\mu_G,\sigma_G^2 I)\]</span></p>
-<hr />
-<p>生成网络的目标是找到一组<span class="math inline">\(\theta^*\)</span>最大化证据下界<span class="math inline">\(ELBO(q,x;\theta,\phi)\)</span>：</p>
-<p><span class="math display">\[\theta^*=\text{arg}_\theta\max ELBO(q,x;\theta,\phi)\]</span></p>
-<h2 id="model-combination">Model Combination</h2>
-<p>推断网络和生成网络的目标都是最大化证据下界因此总的目标函数为：</p>
-<p><span class="math display">\[\begin{align}\max_{\theta,\phi}ELBO(q,x;\theta,\phi)&amp;=\max_{\theta,\phi}\mathbb{E}_{z\sim q(z;\phi)}[\log\frac{p(x|z;\theta)p(z;\theta)}{q(z;\theta)}]\\&amp;=\max_{\theta,\phi}\mathbb{E}_{z\sim q(z|x;\phi)}[\log p(x|z;\theta)]-D_{KL}(q(z|x;\phi)\parallel p(z;\theta))\end{align}\]</span></p>
-<p>其中先验分布<span class="math inline">\(p(z;\theta)=\mathcal{N}(z|0,I)\)</span>。</p>
-<p>公式中<span class="math inline">\(\mathbb{E}_{z\sim q(z|x;\phi)}[\log p(x|z;\theta)]\)</span>一般通过采样的方式进行计算，最后取平均值。</p>
-<h2 id="model-training">Model Training</h2>
-<p>给定数据集<span class="math inline">\(\mathcal{D}\)</span>，包含<span class="math inline">\(N\)</span>个从未知数据分布中抽取的独立同分布样本<span class="math inline">\(x^{(1)},x^{(2)},\cdots,x^{(N)}\)</span>。变分自编码器的目标函数为：</p>
-<p><span class="math display">\[\mathcal{J}(\phi,\theta|\mathcal{D})=\sum\limits_{n=1}^N(\frac{1}{M}\sum\limits_{m=1}^M\log p(x^{(n)}|z^{(n,m)};\theta)-D_{KL}(q(z|x^{(n)};\phi)\parallel\mathcal{N}(z;0,I)))\]</span></p>
-<p>如果采用随机梯度下降法，每次从数据集中采一个样本<span class="math inline">\(x\)</span>，然后根据<span class="math inline">\(q(z|x;\phi)\)</span>采一个隐变量<span class="math inline">\(z\)</span>，则目标函数变为：</p>
-<p><span class="math display">\[\mathcal{J}(\phi,\theta|x)=\log p(x|z;\theta)-D_{KL}(q(z|x;\phi)\parallel\mathcal{N}(z;0,I))\]</span></p>
-<p>假设<span class="math inline">\(q(z|x;\phi)\)</span>是正态分布，KL散度可直接算出：</p>
-<p><span class="math display">\[D_{KL}(\mathcal{N}(\mu_1,\Sigma_1)\parallel\mathcal(\mu_2,\Sigma_2))\\=\frac{1}{2}(\text{tr}(\sigma_I^2 I)+\mu_I^T\mu_I-d-\log(|\sigma_I^2 I|))\]</span></p>
-<hr />
-<p>再参数化是将一个参数为<span class="math inline">\(u\)</span>的函数<span class="math inline">\(f(u)\)</span>，通过一个函数<span class="math inline">\(u=g(v)\)</span>，转换为参数为<span class="math inline">\(v\)</span>的函数<span class="math inline">\(\hat{f}(v)=f(g(v))\)</span>。在变分自编码器中，一个问题是如何求随机变量<span class="math inline">\(z\)</span>关于<span class="math inline">\(\phi\)</span>的导数。但由于是采样的方式，无法直接刻画<span class="math inline">\(z\)</span>和<span class="math inline">\(\phi\)</span>之间的函数关系，因此也无法计算导数。</p>
-<p>如果<span class="math inline">\(z\sim q(z|x;\phi)\)</span>的随机性独立于参数<span class="math inline">\(\phi\)</span>，我们可以通过再参数化的方法来计算导数。假设<span class="math inline">\(q(z|x;\phi)\)</span>为正态分布<span class="math inline">\(\mathcal{N}(\mu_I,\sigma^2_I I)\)</span>，其中<span class="math inline">\(\mu_I\)</span>和<span class="math inline">\(\sigma_I\)</span>是推断网络<span class="math inline">\(f_I(x;\phi)\)</span>的输出。我们可以通过下面的方式采样<span class="math inline">\(z\)</span>：</p>
-<p><span class="math display">\[z=\mu_I+\sigma_I\odot \varepsilon\]</span></p>
-<p>其中<span class="math inline">\(\varepsilon\sim\mathcal{N}(0,I)\)</span>。这样<span class="math inline">\(z\)</span>和<span class="math inline">\(\mu_I,\sigma_I\)</span>的关系从采样关系变为函数关系。</p>
-<hr />
-<p>如果进一步假设<span class="math inline">\(p(x|z;\theta)\)</span>服从高斯分布<span class="math inline">\(\mathcal{N}(x|\mu_G,I)\)</span>，其中<span class="math inline">\(\mu_G=f_G(z;\theta)\)</span>是生成网络的输出，则目标函数可以简化为：</p>
-<p><span class="math display">\[\mathcal{J}(\phi,\theta|x)=-\parallel x-\mu_G\parallel^2+D_{KL}(\mathcal{N}(\mu_I,\sigma_I)\parallel\mathcal{N}(0,I))\]</span></p>
-<p>其中第一项可以近似看作是输入<span class="math inline">\(x\)</span>的重构正确性，第二项可以看作是正则化项。</p>
-</div></article></div><div class="card"><div class="card-image"><a class="image is-7by3" href="/2019/10/18/Robust-Anomaly-Detection-for-Multivariate-Time-Series-through-Stochastic-Recurrent-Neural-Network/"><img class="thumbnail" src="http://qfxiao.me/img/1571411043958.png" alt="Robust Anomaly Detection for Multivariate Time Series through Stochastic Recurrent Neural Network"></a></div><article class="card-content article" role="article"><div class="article-meta size-small is-uppercase level is-mobile"><div class="level-left"><time class="level-item" dateTime="2019-10-18T15:00:57.000Z" title="2019-10-18T15:00:57.000Z">2019-10-18</time><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></span><span class="level-item">25 分钟 读完 (大约 3813 个字)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2019/10/18/Robust-Anomaly-Detection-for-Multivariate-Time-Series-through-Stochastic-Recurrent-Neural-Network/">Robust Anomaly Detection for Multivariate Time Series through Stochastic Recurrent Neural Network</a></h1><div class="content"><h1 id="abstract">Abstract</h1>
+            <!-- 
+                
+                    <h1 id="deep-generative-models">Deep Generative Models</h1>
+<p>生成模型是指一系列用于随机生成可观测数据的模型。假设在一个高维空间<span class="math inline">\(\mathcal{X}\)</span>中，存在一个随机向量<span class="math inline">\(\mathbf{X}\)</span>服从一个未知的分布<span class="math inline">\(p_r(x),x\in \mathcal{X}\)</span>。生成模型就是根据一些可观测的样本<span class="math inline">\(x^{(1)},x^{(2)},\cdots,x^{(N)}\)</span>来学习一个参数化的模型<span class="math inline">\(p_\theta(x)\)</span>来近似未知分布<span class="math inline">\(p_r(x)\)</span>。</p>
+<p>生成模型主要用于密度估计和样本生成。</p>
+<hr>
+<p>密度估计即给定一组数据<span class="math inline">\(\mathcal{D}=\{x^{(i)}\},1\leq i\leq N\)</span>，假设他们都是从相同的概率密度函数<span class="math inline">\(p_r(x)\)</span>独立产生的。密度估计就是根据数据集<span class="math inline">\(\mathcal{D}\)</span>来估计其概率密度函数<span class="math inline">\(p_r(x)\)</span>。</p>
+                
+             -->
+        </div>
+        
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2019/10/22/An-Introduction-to-Variational-Autoencoders/#more">阅读更多</a>
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-image">
+        <a href="/2019/10/18/Robust-Anomaly-Detection-for-Multivariate-Time-Series-through-Stochastic-Recurrent-Neural-Network/" class="image is-7by1">
+            <img class="thumbnail" src="http://qfxiao.me/img/1571411043958.png" alt="Robust Anomaly Detection for Multivariate Time Series through Stochastic Recurrent Neural Network">
+        </a>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2019-10-18T15:00:57.000Z">2019-10-18</time>
+                
+                    <i class="fas fa-calendar-check">&nbsp</i>
+                    <time class="level-item has-text-grey" datetime="2020-02-03T08:19:16.509Z">2020-02-03</time>
+                
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Research/">Research</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    25 分钟 读完 (大约 3813 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2019/10/18/Robust-Anomaly-Detection-for-Multivariate-Time-Series-through-Stochastic-Recurrent-Neural-Network/">Robust Anomaly Detection for Multivariate Time Series through Stochastic Recurrent Neural Network</a>
+            
+        </h1>
+        <div class="content">
+            
+                
+                
+                
+                    
+                    
+                        
+                    
+                
+                    
+                    
+                        
+                    
+                
+                    
+                    
+                        
+                    
+                
+                    
+                    
+                        
+                    
+                
+                    
+                    
+                
+                
+            
+            <h1 id="abstract">Abstract</h1>
 <p>本文提出了<em>OmniAnomaly</em>：一种针对多变量时间序列的随机循环神经网络异常检测算法。该模型运用了一系列技术来捕捉多变量时间序列的正常模式，并在检测阶段基于重构误差来检测异常，同时本文还提供了一定的理论解释。</p>
-<p><a href="https://www.kdd.org/kdd2019/accepted-papers/view/robust-anomaly-detection-for-multivariate-time-series-through-stochastic-re">原文</a></p>
+<p><a href="https://www.kdd.org/kdd2019/accepted-papers/view/robust-anomaly-detection-for-multivariate-time-series-through-stochastic-re" target="_blank" rel="noopener">原文</a></p>
 <h1 id="contribution">Contribution</h1>
 <ol type="1">
-<li>提出了<em>OmniAnomaly</em>，一种基于随机循环神经网络的多变量时间序列异常检测算法；</li>
-<li>提出了针对多变量时间序列异常检测的解释方法；</li>
-<li>通过实验证明了<em>OmniAnomaly</em>中所用的关键技术的有效性，包括GRU，planar NF, stochastic variable connection和adjusted Peaks-Over-Threshold method；</li>
-<li>通过大量的实验我们证明了<em>OmniAnomaly</em>的有效性；</li>
-<li>发布了代码和数据集。</li>
-</ol>
-<h1 id="background">Background</h1>
-<h2 id="linear-gaussian-state-space-model">Linear Gaussian State Space Model</h2>
-<p>状态空间模型（State Space Model, SSM）的概念来自于控制理论，在这里我们主要讨论其在时间序列中的应用。其大概思想是我们认为时间序列在时刻<span class="math inline">\(t\)</span>的观测值<span class="math inline">\(z_t\)</span>是一个隐含状态<span class="math inline">\(\boldsymbol{l}_t\)</span>的条件分布<span class="math inline">\(p(z_t|\boldsymbol{l}_t)\)</span>，而这个隐含状态<span class="math inline">\(\boldsymbol{l}_t\)</span>刻画了时间序列的内在规律，同时隐含状态会随着时间更新，即服从条件分布<span class="math inline">\(p(\boldsymbol{l}_t|\boldsymbol{l}_{t-1})\)</span>。</p>
-<p>在线性状态空间模型（Linear State Space Model）中我们以如下的方式刻画隐含状态的更新： <span class="math display">\[
-\boldsymbol{l}_t=\boldsymbol{F}_t\boldsymbol{l}_{t-1}+\boldsymbol{g}_t\varepsilon_t, \space\space\space\varepsilon_t\sim\mathcal{N}(0,1)
-\]</span> <span class="math inline">\(\boldsymbol{F}_t\)</span>为确定的状态转移矩阵，而<span class="math inline">\(\boldsymbol{g}_t\varepsilon_t\)</span>则表示了状态转移的随机性。</p>
-<p>观测值<span class="math inline">\(z_t\)</span>从隐含状态<span class="math inline">\(\boldsymbol{l}_t\)</span>计算而来： <span class="math display">\[
-\begin{align}
-z_t&amp;=y_t+\sigma_t\epsilon_t,\\
-y_t&amp;=\boldsymbol{a}_t^\top\boldsymbol{l}_{t-1}+b_t,\\
-\epsilon_t&amp;\sim\mathcal{N}(0,1)
-\end{align}
-\]</span> 其中<span class="math inline">\(\boldsymbol{a}_t\in\mathbb{R}^L,\sigma_t\in \mathbb{R},b_t\in\mathbb{R}\)</span>都是额外的参数。初始状态<span class="math inline">\(\boldsymbol{l}_0\)</span>则从一个独立的高斯分布得来，即<span class="math inline">\(\boldsymbol{l}_0\sim N(\boldsymbol\mu_0,\text{diag}(\boldsymbol{\sigma}_0^2))\)</span>。</p>
-<p>令参数集合<span class="math inline">\(\Theta_t=(\boldsymbol{\mu}_0,\boldsymbol{\Sigma}_0,\boldsymbol{F}_t,\boldsymbol{g}_t,\boldsymbol{a}_t,b_t,\sigma_t),\forall t&gt;0\)</span>，一般来说参数集合不会随着时间变化，即每个时刻<span class="math inline">\(t\)</span>共享同样的参数<span class="math inline">\(\Theta_t=\Theta,\forall t&gt;0\)</span>。对参数的估计可以采用极大似然估计： <span class="math display">\[
-\begin{align}
-\Theta^*_{1:T}&amp;=\arg\max_{\Theta_{1:T}}p(z_{1:T}|\Theta_{1:T}),\\
-\end{align}
-\]</span> 其中： <span class="math display">\[
-\begin{align}
-p(z_{1:T}|\Theta_{1:T})&amp;=p(z_1|\Theta_1)\prod\limits_{t=2}^T p(z_t|z_{1:t-1},\Theta_{1:t})\\
-&amp;=\int p(\boldsymbol{l}_0)\left[\prod\limits_{t=1}^T p(z_t|\boldsymbol{l}_t)p(\boldsymbol{l}_t|\boldsymbol{l}_{t-1})\right]\mathrm{d}\boldsymbol{l}_{0:T}
-\end{align}
-\]</span></p>
-<h2 id="planar-normalizing-flow">Planar Normalizing Flow</h2>
-<h3 id="normalizing-flows">Normalizing Flows</h3>
-<p>VAE采用一个变分分布<span class="math inline">\(q_\phi(z|x)\)</span>来近似真实的后验分布<span class="math inline">\(p(z|x)\)</span>，并推导出<span class="math inline">\(\log p_\theta(x)\)</span>的下界（称为ELBO）来作为优化目标函数： <span class="math display">\[
-\begin{align}
-\log p_\theta(x)&amp;=\log \int p_\theta(x|z)p(z)\mathrm{d}z\\
-&amp;=\log\int\frac{q_\phi(z|x)}{q_\phi(z|x)}p_\theta(x|z)p(z)\mathrm{d}z\\
-&amp;\geq-D_{KL}[q_\phi(z|x)\parallel p(z)]+\mathbb{E}_q[\log p_\theta(x|z)]
-\end{align}
-\]</span> <span class="math inline">\(\log p_\theta(x)\)</span>与ELBO取等的条件是<span class="math inline">\(D_{KL}[q_\phi(z|x)\parallel p(z)]\)</span>，表明变分分布完全匹配了真实的后验分布。但在实际应用中，真实的后验分布可能会非常复杂，而我们的变分分布通常是一个确定的较为简单的分布，如高斯分布。这样变分分布可能很难对真实后验分布得到一个很好的拟合。</p>
-<p>一个解决方案是使用标准化流（Normalizing Flows）。标准化流是从一个相对简单的分布出发，执行一系列可逆的映射，将原始简单的分布转化为一个复杂的分布。</p>
-<p>首先考虑一个光滑的、可逆的映射<span class="math inline">\(f:\mathbb{R}^d\mapsto \mathbb{R}^d\)</span>，记<span class="math inline">\(g=f^{-1}\)</span>，那么<span class="math inline">\(g\circ f(\mathbf{z})=\mathbf{z}\)</span>。令<span class="math inline">\(\mathbf{z}^\prime=f(\mathbf{z})\)</span>，那么<span class="math inline">\(\mathbf{z}^\prime\)</span>的分布为： <span class="math display">\[
-q(\mathbf{z}^\prime)=q(\mathbf{z})\left|\text{det}\frac{\partial f^{-1}}{\partial \mathbf{z}^\prime}\right|=q(z)\left|\text{det}\frac{\partial f}{\partial \mathbf{z}}\right|^{-1}
-\]</span> 式中<span class="math inline">\(q(\mathbf{z}^\prime)=q(z)\left|\text{det}\frac{\partial f}{\partial \mathbf{z}}\right|^{-1}\)</span>说明了<span class="math inline">\(\mathbf{z}^\prime\)</span>的分布等于<span class="math inline">\(\mathbf{z}\)</span>的分布乘上<span class="math inline">\(f\)</span>的Jacobian矩阵的行列式的倒数。那么对于映射多次的情况： <span class="math display">\[
-\mathbf{z}_K=f_K\circ\cdots\circ f_2\circ f_1(\mathbf{z}_0)
-\]</span> <span class="math inline">\(\mathbf{z}_K\)</span>的分布可以通过链式计算得到： <span class="math display">\[
-\ln q_K(\mathbf{z}_K)=\ln q_0(\mathbf{z}_0)-\sum\limits_{k=1}^K\ln\left|\text{det}\frac{\partial f_k}{\partial \mathbf{z}_{k-1}}\right|
-\]</span></p>
-<h3 id="planar-flows">Planar Flows</h3>
-<p>考虑一个变换族： <span class="math display">\[
-f(\mathbf{z})=\mathbf{z}+\mathbf{u}h(\mathbf{w}^\top\mathbf{z}+b)
-\]</span> 其中<span class="math inline">\(\lambda=\{\mathbf{w}\in \mathbb{R}^d,\mathbf{u}\in\mathbb{R}^d,b\in\mathbb{R}\}\)</span>为参数集合，<span class="math inline">\(h(\cdot)\)</span>为元素级的非线性函数（如各种激活函数）。令<span class="math inline">\(\psi(\mathbf{z})=h^\prime(\mathbf{w}^\top\mathbf{z}+b)\mathbf{w}\)</span>，则<span class="math inline">\(f\)</span>的Jacobian矩阵行列式绝对值等于： <span class="math display">\[
-\left|\text{det}\frac{\partial f}{\partial \mathbf{z}}\right|=\left|\text{det}(\mathbf{I}+\mathbf{u}\psi(\mathbf{z})^\top)\right|=\left|1+\mathbf{u}^\top\psi(\mathbf{z})\right|
-\]</span> 但是<span class="math inline">\(f\)</span>并不保证总是可逆的，如<span class="math inline">\(h(x)=\tanh(x)\)</span>时，<span class="math inline">\(f\)</span>可逆的条件是<span class="math inline">\(\mathbf{w}^\top \mathbf{u}\geq-1\)</span>。</p>
-<p>下面讨论如何保证可逆的条件。考虑将<span class="math inline">\(\mathbf{z}\)</span>分解为<span class="math inline">\(\mathbf{z}=\mathbf{z}_\bot+\mathbf{z}_\parallel\)</span>，其中<span class="math inline">\(\mathbf{z}_\bot\)</span>与<span class="math inline">\(\mathbf{w}\)</span>正交，<span class="math inline">\(\mathbf{z}_\parallel\)</span>与<span class="math inline">\(\mathbf{w}\)</span>平行，那么： <span class="math display">\[
-f(z)=\mathbf{z}_\bot+\mathbf{z}_\parallel+\mathbf{u}h(\mathbf{w}^\top \mathbf{z}_\parallel +b)
-\]</span> 实际上得到<span class="math inline">\(\mathbf{z}_\parallel\)</span>之后可以很容易的得到<span class="math inline">\(\mathbf{z}_\bot\)</span>，令<span class="math inline">\(\mathbf{y}=f(\mathbf{z})\)</span>，有： <span class="math display">\[
-\mathbf{z}_\bot=\mathbf{y}-\mathbf{z}_\parallel-\mathbf{u}h(\mathbf{w}^\top\mathbf{z}_\parallel+b)
-\]</span> 而<span class="math inline">\(\mathbf{z}_\parallel\)</span>与<span class="math inline">\(\mathbf{w}\)</span>平行，易知<span class="math inline">\(\mathbf{z}_\parallel=\alpha\frac{\mathbf{w}}{\parallel\mathbf{w}\parallel^2}\)</span>，其中<span class="math inline">\(\alpha\in\mathbb{R}\)</span>。</p>
-<p>对式(16)两边同时乘以<span class="math inline">\(\mathbf{w}^\top\)</span>可得： <span class="math display">\[
-\mathbf{w}^\top f(\mathbf{z})=\alpha+\mathbf{w}^\top\mathbf{u} h(\alpha+b)
-\]</span> 当<span class="math inline">\(\alpha+\mathbf{w}^\top\mathbf{u} h(\alpha+b)\)</span>对于<span class="math inline">\(\alpha\)</span>是非递减函数的时候，<span class="math inline">\(f\)</span>是可逆的。因为<span class="math inline">\(\alpha+\mathbf{w}^\top\mathbf{u} h(\alpha+b)\)</span>是非递减函数时有<span class="math inline">\(1+\mathbf{w}^\top\mathbf{u}h^\prime(\alpha+b)\geq 0\equiv \mathbf{w}^\top \mathbf{u}\geq -\frac{1}{h^\prime(\alpha + b)}\)</span>，而<span class="math inline">\(0\leq h^\prime(\alpha + b) \leq 1\)</span>（<span class="math inline">\(\tanh\)</span>函数的性质），所以总是有<span class="math inline">\(\mathbf{w}^\top \mathbf{u}\geq-1\)</span>。</p>
-<p>对于任意一个<span class="math inline">\(\mathbf{u}\)</span>，我们可以通过特定的方式构造一个<span class="math inline">\(\hat{\mathbf{u}}\)</span>使得<span class="math inline">\(\mathbf{w}^\top\hat{\mathbf{u}}&gt;-1\)</span>，即令<span class="math inline">\(\hat{\mathbf{u}}(\mathbf{w},\mathbf{u})=\mathbf{u}+[m(\mathbf{w}^\top\mathbf{u})-(\mathbf{w}^\top\mathbf{u})]\frac{\mathbf{w}}{\parallel\mathbf{w}\parallel^2}\)</span>，其中<span class="math inline">\(m(x)=-1+\log(1+e^x)\)</span>。</p>
-<p><img src="http://qfxiao.me/img/image-20191031162515819.png" /></p>
-<h1 id="methodology">Methodology</h1>
-<h2 id="problem-statement">Problem Statement</h2>
-<p>本文针对的是多变量时间序列<span class="math inline">\(x=\{x_1,x_2,\cdots,x_N\}\in R^{M\times N}\)</span>，<span class="math inline">\(N\)</span>为时间长度，其中某一时刻的观测值<span class="math inline">\(x_t\in R^M\)</span>为一个<span class="math inline">\(M\)</span>维的向量。作者使用<span class="math inline">\(x_{t-T:t}\in R^{M\times(T+1)}\)</span>来表示<span class="math inline">\(t-T\)</span>到<span class="math inline">\(t\)</span>之间的时间序列。</p>
-<p><img src="http://qfxiao.me/img/image-20191024112404542.png" /></p>
-<h2 id="overall-structure">Overall Structure</h2>
-<p>算法的总体框架如下图所示：</p>
-<p><img src="http://qfxiao.me/img/1571411043958.png" /></p>
-<p>预处理模块主要是对数据进行标准化以及窗口切分。训练模块则根据输入的数据对正常模式进行捕捉，输出异常分数。在线检测模块则会定期执行。</p>
-<h2 id="network-architecture">Network Architecture</h2>
-<p>模型的总体结构如下图所示：</p>
-<p><img src="http://qfxiao.me/img/1571411093161.png" /></p>
-<p>在qnet中，首先GRU被用来建模样本的时间依赖关系，之后VAE将样本<span class="math inline">\(\mathbf{x}\)</span>映射到隐空间<span class="math inline">\(\mathbf{z}\)</span>。文中使用了Linear Gaussian State Space Model来建模隐变量之间的时间依赖关系。除此之外，作者还使用了Planar Normalizing Flow来将隐变量映射到复杂的非高斯分布。在pnet中，隐变量<span class="math inline">\(\mathbf{z}_{t-T:t}\)</span>被用来重建<span class="math inline">\(\mathbf{x}_{t-T:t}\)</span>，直观上来说，对样本的好的隐变量表示可以带来更好的重构效果。</p>
-<p>从细节上来说，在时间<span class="math inline">\(t\)</span>，qnet的输入为<span class="math inline">\(\mathbf{x}_t\)</span>和<span class="math inline">\(\mathbf{e}_{t-1}\)</span>，两者经过GRU Cell之后会产生<span class="math inline">\(t\)</span>时间的<span class="math inline">\(\mathbf{e_t}\)</span>。<span class="math inline">\(\mathbf{e}_t\)</span>是GRU捕捉时间依赖性的关键，可以认为它包含了<span class="math inline">\(\mathbf{x}_{1:t}\)</span>的信息。之后<span class="math inline">\(\mathbf{e}_t\)</span>会和<span class="math inline">\(\mathbf{z}_{t-1}\)</span>进行拼接，进入标准的VAE变分网络结构，通过网络输出的参数<span class="math inline">\(\mu_{z_t},\sigma_{z_t}\)</span>采样得到隐变量<span class="math inline">\(\mathbf{z}_t^0\)</span>，此时隐变量可以说捕捉了时间依赖性。</p>
-<p>网络中涉及到的公式如下所示：</p>
-<p><span class="math display">\[
-\begin{align}
-e_t&amp;=(1-c_t^e)\circ\text{tanh}(w^ex_t+u^e(r_t^e\circ e_{t-1})+b^e)+c_t^e\circ e_{t-1}\\
-\mu_{z_t}&amp;=w^{\mu_z}h^\phi([z_{t-1},e_t])+b^{\mu_z}\\
-\sigma_{z_t}&amp;=\text{softplus}(w^{\sigma_z}h^\phi([z_{t-1},e_t])+b^{\sigma_z})+\epsilon^{\sigma_z}
-\end{align}
-\]</span></p>
-<p>其中<span class="math inline">\(r_t^e=\text{sigmoid}(\mathbf{w}^{r^e}\mathbf{x}_t+\mathbf{u}^{r^e}\mathbf{e}_{t-1}+b^{r^e})\)</span>是GRU中的重置门，<span class="math inline">\(c_t^e=\text{sigmoid}(\mathbf{w}^{c^e}\mathbf{x}_t+\mathbf{u}^{c^e}\mathbf{e}_{t-1}+b^{c^e})\)</span>是GRU中的更新门。</p>
-<p>此时<span class="math inline">\(\mathbf{z}_t^0\)</span>服从高斯分布，为了拟合复杂的后验分布，我们使用Planar Normalizing Flow来对<span class="math inline">\(\mathbf{z}_t^0\)</span>进行变换，最后得到经<span class="math inline">\(K\)</span>次变换后的随机变量<span class="math inline">\(\mathbf{z}_t^K\)</span>。</p>
-<p>在时间<span class="math inline">\(t\)</span>，pnet试图通过<span class="math inline">\(\mathbf{z}_t^K\)</span>来重构<span class="math inline">\(\mathbf{x}_t\)</span>。首先<span class="math inline">\(\mathbf{z}\)</span>空间中的变量会根据Linear Gaussian State Space Model来进行“连接“，公式为<span class="math inline">\(\mathbf{z}_t=\mathbf{O}_\theta(\mathbf{T}_\theta\mathbf{z}_{t-1}+\mathbf{v}_t)+\boldsymbol{\epsilon}_t\)</span>，其中<span class="math inline">\(\mathbf{O}_\theta\)</span>和<span class="math inline">\(\mathbf{T}_\theta\)</span>为状态转移矩阵，<span class="math inline">\(\mathbf{v}_t\)</span>和<span class="math inline">\(\boldsymbol{\epsilon}_t\)</span>为随机噪声。之后<span class="math inline">\(\mathbf{z}_t\)</span>和<span class="math inline">\(\mathbf{d}_{t-1}\)</span>会作为GRU的输入，产生<span class="math inline">\(\mathbf{d}_t\)</span>。之后<span class="math inline">\(\mathbf{d}_t\)</span>会经过标准VAE中的生成网络，通过网络输出的高斯分布参数<span class="math inline">\(\mu_{x_t},\sigma_{x_t}\)</span>采样得到重构后的样本<span class="math inline">\(\mathbf{x}^\prime_t\)</span>。pnet中涉及到的公式如下所示： <span class="math display">\[
-\begin{align}
-d_t&amp;=(1-c_t^d)\circ\text{tanh}(w^dz_t+u^d(r_t^d\circ d_{t-1})+b^d)+c_t^d\circ d_{t-1}\\
-\mu_{x_t}&amp;=w^{\mu_x}h^\theta(d_t)+b^{\mu_x}\\
-\sigma_{x_t}&amp;=\text{softplus}(w^{\sigma_x}h^\theta(d_t)+b^{\sigma_x})+\epsilon^{\sigma_x}
-\end{align}
-\]</span></p>
-<p>其中<span class="math inline">\(r_t^d=\text{sigmoid}(\mathbf{w}^{r^d}\mathbf{x}_t+\mathbf{u}^{r^d}\mathbf{d}_{t-1}+b^{r^d})\)</span>是GRU中的重置门，<span class="math inline">\(c_t^d=\text{sigmoid}(\mathbf{w}^{c^d}\mathbf{x}_t+\mathbf{u}^{c^d}\mathbf{d}_{t-1}+b^{c^d})\)</span>是GRU中的更新门。</p>
-<h2 id="offline-model-training">Offline Model Training</h2>
-<p>和传统VAE类似，模型的训练可以通过优化ELBO来完成。记长度为<span class="math inline">\(T+1\)</span>的输入序列为<span class="math inline">\(\mathbf{x}_{t-T:t}\)</span>，隐空间变量采样次数为<span class="math inline">\(L\)</span>，第<span class="math inline">\(l\)</span>个隐空间变量为<span class="math inline">\(\mathbf{l}^{(l)}_{t-T:t}\)</span>，损失函数可以写成如下形式：</p>
-<p><span class="math display">\[
-\tilde{\mathcal{L}}(\mathbf{x}_{t-T:t})\approx\frac{1}{L}\sum_{t=1}^L[\log(p_\theta(\mathbf{x}_{t-T:t}|\mathbf{z}_{t-T:t}^{(l)}))+\log(p_\theta(\mathbf{z}_{t-T:t}^{(l)}))-\log(q_\phi(\mathbf{z}_{t-T:t}^|\mathbf{x}_{t-T:t}))]
-\]</span></p>
-<p>第一项<span class="math inline">\(\log(p_\theta(\mathbf{x}_{t-T:t}|\mathbf{z}_{t-T:t}^{(l)}))\)</span>可以看作是重构误差；第二项<span class="math inline">\(\log(p_\theta(\mathbf{z}_{t-T:t}))=\sum_{i=t-T}^t \log(p_\theta(\mathbf{z}_i|\mathbf{z}_{i-1}))\)</span>通过Linear Gaussian State Space Model计算；第三项<span class="math inline">\(-\log(q_\phi(\mathbf{z}_{t-T:t}|\mathbf{x}_{t-T:t}))=-\sum_{i=t-T}^t\log(q_\phi(\mathbf{z}_i|\mathbf{z}_{i-1},\mathbf{x}_{t-T:i}))\)</span>为隐变量<span class="math inline">\(\mathbf{z}\)</span>后验分布的估计，同时<span class="math inline">\(\mathbf{z}_i\)</span>是经Planar Normalizing Flow转换过的。</p>
-<h2 id="online-detection">Online Detection</h2>
-<p>在训练好模型之后，就可以进行异常检测了。在时间<span class="math inline">\(t\)</span>，我们通过根据长度为<span class="math inline">\(T+1\)</span>的序列<span class="math inline">\(\mathbf{x}_{t-T:t}\)</span>来重构<span class="math inline">\(\mathbf{x}_t\)</span>，并根据重构概率<span class="math inline">\(\log(p_\theta(\mathbf{x}_t|\mathbf{z}_{t-T:t}))\)</span>来判定异常。定义<span class="math inline">\(\mathbf{x}_t\)</span>对应的异常分数<span class="math inline">\(S_t=\log(p_\theta(\mathbf{x}_t|\mathbf{z}_{t-T:t}))\)</span>，高异常分数代表样本<span class="math inline">\(\mathbf{x}_t\)</span>能够以大概率重构（因为模型是用正常样本训练，可以认为模型建模的是正常样本的分布，重构概率高就代表符合正常分布）。给定阈值之后便可根据异常分数来进行异常的判定。</p>
-<h2 id="automatic-threshold-selection">Automatic Threshold Selection</h2>
-<p>在异常检测阶段，需要根据设定的阈值和每个样本的异常分数来判断该样本是否为异常，所以阈值的选择十分重要。文中用到了一种根据<strong>Extreme Value Theory</strong>自动选择阈值的算法。对于一个分布，其中的极端事件往往位于分布的末尾，而Extreme Value Theory第一定理给出不管原始分布如何，这些极端事件的分布服从一个带参的分布族。因此，可以在对数据分布未知的情况下估计极端事件的分布。</p>
-<p>除了Extreme Value Theory第一定理之外，Extreme Value Theory第二定理给出随机变量大于特定阈值<span class="math inline">\(t\)</span>的分布可以用Generalized Pareto Distribution来描述。作者使用了基于Extreme Value Theory第二定理的Peaks-Over-Threshold算法来进行阈值的选择。因为Extreme Value Theory第二定理给出随机变量大于特定阈值<span class="math inline">\(t\)</span>的分布，而在本文的场景中我们需要刻画的异常点的分布应该是小于一个给定阈值的分布，所以需要修改一下公式。</p>
-<p>对于给定的数据，模型会给出对应的异常分数序列<span class="math inline">\(\{S_1,S_2,\cdots,S_{N^\prime}\}\)</span>，给定预先设定的阈值<span class="math inline">\(th\)</span>，<span class="math inline">\(S_i\)</span>极端部分（即小于<span class="math inline">\(th\)</span>的部分）的分布符合Generalized Pareto Distribution，公式如下： <span class="math display">\[
-\bar{F}(s)=P(th-S&gt;s|S&lt;th)\sim(1+\frac{\gamma s}{\beta})^{-\frac{1}{\gamma}}
-\]</span></p>
-<p>其中<span class="math inline">\(\gamma\)</span>和<span class="math inline">\(\beta\)</span>为分布的形状参数，本文使用极大似然估计来对参数进行估计。设参数的估计值分别为<span class="math inline">\(\hat{\gamma}\)</span>和<span class="math inline">\(\hat{\beta}\)</span>，最终的阈值<span class="math inline">\(th_F\)</span>由拟合得到的分布的分位数确定：</p>
-<p><span class="math display">\[
-th_F\simeq th-\frac{\hat{\beta}}{\hat{\gamma}}((\frac{qN^\prime}{N^\prime_{th}})^{-\hat{\gamma}}-1)
-\]</span></p>
-<p>其中<span class="math inline">\(q\)</span>为期望<span class="math inline">\(S&lt;th\)</span>的概率，<span class="math inline">\(N^\prime\)</span>为观测值的数量，<span class="math inline">\(N^\prime_{th}\)</span>为<span class="math inline">\(S_i&lt;th\)</span>的个数。</p>
-<h2 id="anomaly-interpretation">Anomaly Interpretation</h2>
-<p><span class="math display">\[
-\log(p_\theta(\mathbf{x}_t|\mathbf{z}_{t-T:t}))=\sum_{i=1}^M\log(p_\theta(x_t^i|\mathbf{z}_{t-T:t}))
-\]</span></p>
-<h1 id="experiments">Experiments</h1>
-<h2 id="datasets-and-metrics">Datasets and Metrics</h2>
-<h2 id="overall-performance">Overall Performance</h2>
-<p><img src="http://qfxiao.me/img/1571411131954.png" /></p>
-<p><img src="http://qfxiao.me/img/1571411148667.png" /></p>
-<h2 id="effects-of-major-techniques">Effects of Major Techniques</h2>
-<p><img src="http://qfxiao.me/img/1571411161522.png" /></p>
-<p><img src="http://qfxiao.me/img/1571411178434.png" /></p>
-<h2 id="visualization-on-z-space-representations">Visualization on Z-Space Representations</h2>
-<p><img src="http://qfxiao.me/img/1571411190279.png" /></p>
-<p><img src="http://qfxiao.me/img/1571411212926.png" /></p>
-<p><img src="http://qfxiao.me/img/1571411223173.png" /></p>
-</div></article></div><div class="card"><div class="card-image"><a class="image is-7by3" href="/2019/09/22/Unsupervised-Anomaly-Detection-via-Variational-Auto-Encoder-for-Seasonal-KPIs-in-Web-Applications/"><img class="thumbnail" src="http://qfxiao.me/img/1571719738542.png" alt="Unsupervised Anomaly Detection via Variational Auto-Encoder for Seasonal KPIs in Web Applications"></a></div><article class="card-content article" role="article"><div class="article-meta size-small is-uppercase level is-mobile"><div class="level-left"><time class="level-item" dateTime="2019-09-22T12:35:18.000Z" title="2019-09-22T12:35:18.000Z">2019-09-22</time><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></span><span class="level-item">25 分钟 读完 (大约 3820 个字)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2019/09/22/Unsupervised-Anomaly-Detection-via-Variational-Auto-Encoder-for-Seasonal-KPIs-in-Web-Applications/">Unsupervised Anomaly Detection via Variational Auto-Encoder for Seasonal KPIs in Web Applications</a></h1><div class="content"><h2 id="abstract">Abstract</h2>
-<p>本文提出了Donut，一个基于VAE的无监督时间序列异常检测系统。</p>
-<p><a href="https://dl.acm.org/citation.cfm?id=3185996">原文</a></p>
-<p><img src="http://qfxiao.me/img/1571719484833.png" /></p>
-<h2 id="contribution">Contribution</h2>
+            <!-- 
+                
+                    <h1 id="abstract">Abstract</h1>
+<p>本文提出了<em>OmniAnomaly</em>：一种针对多变量时间序列的随机循环神经网络异常检测算法。该模型运用了一系列技术来捕捉多变量时间序列的正常模式，并在检测阶段基于重构误差来检测异常，同时本文还提供了一定的理论解释。</p>
+<p><a href="https://www.kdd.org/kdd2019/accepted-papers/view/robust-anomaly-detection-for-multivariate-time-series-through-stochastic-re" target="_blank" rel="noopener">原文</a></p>
+<h1 id="contribution">Contribution</h1>
 <ol type="1">
-<li>Donut中使用到了三个技巧，包括改进后的ELBO、缺失数据注入和MCMC插值；</li>
-<li>提出基于VAE的异常检测训练既需要正常样本也需要异常样本；</li>
-<li>对Donut提出了在z-空间中基于KDE的理论解释。</li>
-</ol>
-<h2 id="background">Background</h2>
-<h3 id="anomaly-detection">Anomaly Detection</h3>
-<p>对于任意时间<span class="math inline">\(t\)</span>，给定历史观察值<span class="math inline">\(x_{t-T+1},\cdots,x_t\)</span>，确定异常是否发生(记为<span class="math inline">\(y_t=1\)</span>)。通常来收异常检测算法给出的是发生异常的可能性，如<span class="math inline">\(p(y_t=1|x_{t-T+1},\cdots,x_t)\)</span>。</p>
-<h2 id="methodology">Methodology</h2>
-<h3 id="problem-statement">Problem Statement</h3>
-<p>本文的目的是<strong>基于深度生成网络开发具有理论解释性的无监督异常检测算法，并且在有标签的情况下能利用标签信息提升性能</strong>。本文基于VAE来构建模型。</p>
-<p><img src="http://qfxiao.me/img/1565532060281.png" /></p>
-<h3 id="network-structure">Network Structure</h3>
-<p>算法的总体框架如下图所示：</p>
-<p><img src="http://qfxiao.me/img/1565532453958.png" /></p>
-<p>一共包含了预处理、训练和检测三个部分。</p>
-<p>下图为模型的概率图模型：</p>
-<p><img src="http://qfxiao.me/img/1565532474201.png" /></p>
-<p>图中双实线的框为本文模型有别于传统VAE的地方，其余地方和VAE一样。先验概率<span class="math inline">\(p_\theta(z)\)</span>选为标准正态分布<span class="math inline">\(\mathcal{N}(0,I)\)</span>，后验概率<span class="math inline">\(x\)</span>和<span class="math inline">\(z\)</span>都是对角化高斯分布，即<span class="math inline">\(p_\theta(x|z)=\mathcal{N}(\mu_x,\sigma_x^2 I),q_\phi(z|x)=\mathcal{N}(\mu_z,\sigma_z^2 I)\)</span>。如Figure 4所示，推断网络和生成网络中分别都有隐含层<span class="math inline">\(f_\phi(x)\)</span>和<span class="math inline">\(f_\theta(z)\)</span>对网络的输入进行特征抽取。高斯分布的参数即从这些抽取出来的特征上得到。均值通过线性层得到：<span class="math inline">\(\mu_x=W^T_{\mu_x}f_\theta(z)+b_{\mu_x}, \mu_z=W^T_{\mu_z}f_\theta(x)+b_{\mu_z}\)</span>。标准差通过Soft Plus层加一个高斯噪声得到：<span class="math inline">\(\sigma_x=\text{SoftPlus}[W^T_{\sigma_x}f_\theta(z)+b_{\sigma_x}]+\varepsilon，\sigma_x=\text{SoftPlus}[W^T_{\sigma_z}f_\theta(x)+b_{\sigma_z}]+\varepsilon\)</span>。</p>
-<p>文中提到因为KPI的局部方差非常小，所以采用直接建模<span class="math inline">\(\sigma_x,\sigma_z\)</span>的方式而不是采用对数。除此之外，为了理论上的解释性，文中的神经网络只使用了全连接层。</p>
-<h3 id="training">Training</h3>
-<p>训练可以直接采用经典的SGVB来优化ELBO： <span class="math display">\[
-\begin{align}
-\log p_\theta(x)&amp;\geq\log p_\theta(x)-\text{KL}[q_\phi(z|x)\parallel p_\theta(z|x)]\\
-&amp;=\mathcal{L}\\
-&amp;=\mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x)+\log p_\theta(z|x)-\log q_\phi(z|x)]\\
-&amp;=\mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x,z)-\log q_\phi(z|x)]\\
-&amp;=\mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x|z)+\log p_\theta(z)-\log q_\phi(z|x)]
-\end{align}
-\]</span> 但是在实际的训练过程中，训练数据需要保证都是正常样本，但实际上训练样本有可能会包含异常或者是缺失值。一种做法是用缺失值填充的算法来填充这些异常值和缺失值，但作者认为使用缺失值填充算法并不能很好的还原数据的正常模式，从而保证算法的有效性。在文中作者采用了修改ELBO的方法，并将其称之为<strong>Modified ELBO (M-ELBO)</strong>，公式如下： <span class="math display">\[
-\tilde{\mathcal{L}}=\mathbb{E}_{q_\phi(z|x)}[\sum\limits_{w=1}^W{\alpha_w\log p_\theta(x_w|z)+\beta\log p_\theta(z)-\log q_\phi(z|x)}]
-\]</span> 其中<span class="math inline">\(\alpha_w\)</span>为指示标记，<span class="math inline">\(\alpha_w=1\)</span>代表不是异常也不是缺失。<span class="math inline">\(\beta\)</span>定义为<span class="math inline">\(\beta=\frac{\sum_{w=1}^W\alpha_w}{W}\)</span>。</p>
-<p>在<strong>M-ELBO</strong>中，异常或缺失值对应的<span class="math inline">\(\log p_\theta(x_w|z)\)</span>的贡献会被排除，同时<span class="math inline">\(\log p_\theta(z)\)</span>在乘以<span class="math inline">\(\beta\)</span>后会相应缩小。作者没有修改<span class="math inline">\(\log q_\phi(z|x)\)</span>这一项的原因有二：一是<span class="math inline">\(q_\phi(z|x)\)</span>仅仅是从<span class="math inline">\(x\)</span>到<span class="math inline">\(z\)</span>的映射，并不需要考虑“正常模式”；二是<span class="math inline">\(\mathbb{E}_{q_\phi(z|x)}[-\log q_\phi(z|x)]\)</span>就是<span class="math inline">\(q_\phi(z|x)\)</span>的熵，而这个在后面的理论分析中有特别的含义。</p>
-<p>除此之外还有一种解决方法就是把所有包含异常值和缺失值的窗口去除，这种方法的性能在实验中会进行讨论。</p>
-<p>在文中作者还使用了一种<strong>Missing Data Injection</strong>技术，即在每个Epoch随机的按照一个预设比例<span class="math inline">\(\lambda\)</span>将正常的数据设为缺失。作者认为这样有助于性能的提升。</p>
-<h3 id="detection">Detection</h3>
-<p>在检测阶段，对于一个输入样本，我们需要模型输出其异常的概率。因为我们建模了<span class="math inline">\(p_\theta(x|z)\)</span>，一种方法是采样计算<span class="math inline">\(p_\theta(x)=\mathbb{E}_{p_\theta(z)}[p_\theta(x|z)]\)</span>，但这种方法计算代价十分昂贵。其他的一些方案有计算<span class="math inline">\(\mathbb{E}_{q_\phi(z|x)}[p_\theta(x|z)]\)</span>或<span class="math inline">\(\mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x|z)]\)</span>，其中后者被称为&quot;<strong>Reconstruction Probability</strong>&quot;，作者便采用了这种方案。</p>
-<p>同时，作者认为输入的检测样本的缺失值会对结果造成较大偏差，于是使用了一种<strong>MCMC-based Missing Data Imputation</strong>的方法来对检测样本的缺失值进行填充。具体做法是将测试样本分为已观测和缺失两部分<span class="math inline">\(x=(x_o,x_m)\)</span>，然后使用训练好的VAE进行重构得到<span class="math inline">\((x^\prime_o,x^\prime_m)\)</span>，然后用<span class="math inline">\(x^\prime_m\)</span>替换<span class="math inline">\(x_m\)</span>，这样不断循环如下图所示：</p>
-<p><img src="http://qfxiao.me/img/1571719553095.png" /></p>
-<p>作者使用了<span class="math inline">\(L\)</span>个样本来计算<strong>Reconstruction Probability</strong>，虽然得到的输出是针对整个窗口每个点的，但作者只使用最后一个点。</p>
-<h2 id="experiments">Experiments</h2>
-<h3 id="datasets">Datasets</h3>
-<p>作者选择了三条KPI作为测试数据，分别记为<span class="math inline">\(\mathcal{A}\)</span>，<span class="math inline">\(\mathcal{B}\)</span>，<span class="math inline">\(\mathcal{C}\)</span>，其基本数据如下表所示：</p>
-<p><img src="http://qfxiao.me/img/1571719583781.png" /></p>
-<h3 id="metrics">Metrics</h3>
-<p>因为异常检测类别的极不均衡性，传统的性能指标并不太合适（异常样本极少，且异常一般呈连续的片段）。作者认为在实际应用场景中运维人员需要尽量早的获知异常的发生，于是提出了新的评测机制。</p>
-<p><img src="http://qfxiao.me/img/1571719605541.png" /></p>
-<p>如上图所示，第一行为真实的标签，第二行为预测的异常概率，第三行为预测的标签。第一行中异常片段被加粗表示，对于每一个异常片段的第一个位置<span class="math inline">\({y}_{t^\prime}\)</span>，如果预测的标签中存在<span class="math inline">\(\hat{y}_{t}\)</span>满足<span class="math inline">\(t^\prime&lt;t\)</span>且<span class="math inline">\(|t-t^\prime|\)</span>小于等于预设的阈值<span class="math inline">\(T\)</span>，那么<span class="math inline">\(y_{t^\prime}\)</span>对应的整段异常都被认为正确检测，否则整段异常都认为没有被正确检测。然后在此基础上计算F1-score，AUC等指标作为评测手段。</p>
-<h2 id="results">Results</h2>
-<h3 id="overall-performance">Overall Performance</h3>
-<p>下图展示了不同方法在不同数据集上的表现：</p>
-<p><img src="http://qfxiao.me/img/1571719653801.png" /></p>
-<h3 id="effects-of-donut-techniques">Effects of Donut Techniques</h3>
-<p>为了探究Donut中所做的各种改进的实际作用，作者做了大量对比实验，结果如下图所示：</p>
-<p><img src="http://qfxiao.me/img/1571719667067.png" /></p>
-<ul>
-<li><strong>M-ELBO</strong> 从图中可以看出<strong>M-ELBO</strong>对性能提升最大。作者在文中提到一开始并没期望<strong>M-ELBO</strong>能带来性能的提升，只是希望它能够Work。这表明在VAE的训练中，只使用正常样本是不够的，也需要加入非正常的信息；</li>
-<li><strong>Missing Data Injection</strong> 该技巧的主要作用是增强<strong>M-ELBO</strong>的效果。从结果上来看作用并不是十分的显著，只是在一些情况下获得了少量的提升；</li>
-<li><strong>MCMC Imputation</strong> 作者认为虽然该技巧只在一部分情况下显著提升了性能，但总体来说值得使用。</li>
-</ul>
-<h3 id="impact-of-k">Impact of K</h3>
-<p>该部分作者探究了隐变量<span class="math inline">\(z\)</span>的维度<span class="math inline">\(K\)</span>对性能的影响，结果如下图：</p>
-<p><img src="http://qfxiao.me/img/1571719682591.png" /></p>
-<p>从图上来看，对数据集<span class="math inline">\(\mathcal{A}\)</span>，<span class="math inline">\(\mathcal{B}\)</span>，<span class="math inline">\(\mathcal{C}\)</span>最佳的<span class="math inline">\(K\)</span>分别是<span class="math inline">\(5\)</span>，<span class="math inline">\(4\)</span>和<span class="math inline">\(3\)</span>，但是设定较大的<span class="math inline">\(K\)</span>并不会对性能有严重的损害。作者还发现对于较为平滑的KPI需要较大的<span class="math inline">\(K\)</span>。</p>
-<h2 id="analysis">Analysis</h2>
-<h3 id="kde-interpretation">KDE Interpretation</h3>
-<p>在这一节作者对<strong>Reconstruction Probability</strong>的意义进行了深入的探讨。首先作者对<span class="math inline">\(q_\phi(z|x)\)</span>进行了可视化，在图中作者将时间维度用颜色来表示。如Figure 11(a) 所示，<span class="math inline">\(z\)</span>几乎是按照<span class="math inline">\(x\)</span>对应的时间呈一个连续的流形分布，作者将这种现象称为<strong>Time Gradient</strong>。即使Donut没有显式的用到时间信息，不过因为实验用到的数据基本是平滑的，所以说相邻的<span class="math inline">\(x\)</span>会比较相似，因此经过映射后的<span class="math inline">\(z\)</span>也会比较相似。作者据此提出Donut的一个优势便是对于没有见过的后验分布<span class="math inline">\(q_\phi(z|x)\)</span>，只要其位于训练过的两个后验之间，也会产生合理的分布。</p>
-<p><img src="http://qfxiao.me/img/1571719693393.png" /></p>
-<p>对于异常的样本<span class="math inline">\(x\)</span>，假设其对应的正常模式为<span class="math inline">\(\tilde{x}\)</span>，作者认为<span class="math inline">\(q_\phi(z|x)\)</span>会在某种程度上对正常的<span class="math inline">\(q_\phi(z|\tilde{x})\)</span>进行近似。因为模型是用正常样本进行训练的，隐变量<span class="math inline">\(z\)</span>的维度通常来说小于样本<span class="math inline">\(x\)</span>，这就导致<span class="math inline">\(z\)</span>只会保留一部分主要的信息。对于异常样本，其异常模式在编码时就被丢掉了。作者还指出如果<span class="math inline">\(x\)</span>包含的异常太多，那么模型将难以对<span class="math inline">\(x\)</span>进行还原。</p>
-<p><img src="http://qfxiao.me/img/1571719738542.png" /></p>
-<p>基于上述讨论，作者对使用<span class="math inline">\(\mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x|z)]\)</span>作为<strong>Reconstruction Probability</strong>的意义进行了阐释。设输入样本为<span class="math inline">\(x\)</span>，如果其包含异常，假设其对应的正常样本为<span class="math inline">\(\tilde{x}\)</span>，那么<span class="math inline">\(q_\phi(z|x)\)</span>部分地和<span class="math inline">\(q_\phi(z|\tilde{x})\)</span>相似。如果<span class="math inline">\(x\)</span>和<span class="math inline">\(\tilde{x}\)</span>相似程度高，那么<span class="math inline">\(\log p_\theta(x|z)\)</span>就会很大（其中<span class="math inline">\(z\sim q_\phi(z|\tilde{x})\)</span>）。<span class="math inline">\(\log p_\theta(x|z)\)</span>类似于一个密度估计器，代表<span class="math inline">\(x\)</span>在多大程度上与<span class="math inline">\(\tilde{x}\)</span>接近，<span class="math inline">\(\mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x|z)]\)</span>相当于对每一个<span class="math inline">\(z\)</span>对应的<span class="math inline">\(\log p_\theta(x|z)\)</span>乘以一个权重<span class="math inline">\(q_\phi(z|x)\)</span>然后相加。于是作者提出了<strong>Reconstruction Probability</strong>的<strong>KDE Interpretation</strong>:在Donut模型中，<strong>Reconstruction Probability</strong> <span class="math inline">\(\mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x|z)]\)</span>可以看作是以<span class="math inline">\(q_\phi(z|x)\)</span>为权重，<span class="math inline">\(\log p_\theta(x|z)\)</span>为核的核密度估计 (Kernel Density Estimation)。</p>
-<p>三维可视化如下图所示：</p>
-<p><img src="http://qfxiao.me/img/1571736459981.png" /></p>
-<p>作者还对直接计算<span class="math inline">\(p_\theta(x)=\mathbb{E}_{p_\theta(z)}[p_\theta(x|z)]\)</span>进行了质疑，因为这种方法直接求<span class="math inline">\(x\)</span>的先验，仅仅考虑了<span class="math inline">\(x\)</span>的总体模式，而忽略了<span class="math inline">\(x\)</span>的个体模式。</p>
-<h3 id="find-good-posteriors-for-abnormal-x">Find Good Posteriors for Abnormal <span class="math inline">\(x\)</span></h3>
-<p>通过上面的讨论我们知道了Donut通过找到<span class="math inline">\(x\)</span>的正常后验来估计<span class="math inline">\(x\)</span>在多大程度上与<span class="math inline">\(\tilde{x}\)</span>相似，在这一节作者讨论了文中使用的不同技巧对找到<span class="math inline">\(x\)</span>的后验的作用。对于<strong>Missing Data Injection</strong>作者认为该技巧增强了<strong>M-ELBO</strong>的效果。对于<strong>MCMC Imputation</strong>，作者认为该技巧主要是在检测阶段通过不断迭代提供了更好的后验，如下图所示：</p>
-<p><img src="http://qfxiao.me/img/1571736476085.png" /></p>
-<p>作者认为，虽然对于包含大量异常的样本，Donut不能很好的还原，但在运维场景中，只要对大段异常的开始阶段进行准确预测即可。</p>
-<h3 id="causes-of-time-gradient">Causes of Time Gradient</h3>
-<p>在这一节作者讨论了<strong>Time Gradient</strong>出现的原因。首先假设<span class="math inline">\(x\)</span>都是正常点，这时<span class="math inline">\(x\)</span>的ELBO为： <span class="math display">\[
-\begin{align}
-\mathcal{L}(x)&amp;=\mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x|z)+\log p_\theta(z)-\log q_\phi(z|x)]\\
-&amp;=\mathbb{E}[\log p_\theta(x|z)]+\mathbb{E}[\log p_\theta(z)]+\text{H}[z|x]
-\end{align}
-\]</span> 第一项表明在<span class="math inline">\(z\sim q_\phi(z|x)\)</span>下尽可能重构<span class="math inline">\(x\)</span>。第二项表明<span class="math inline">\(q_\phi(z|x)\)</span>尽量与<span class="math inline">\(z\)</span>的先验<span class="math inline">\(\mathcal{N}(0,I)\)</span>接近。第三项为<span class="math inline">\(q_\phi(z|x)\)</span>的熵，表明<span class="math inline">\(q_\phi(z|x)\)</span>应尽量分散。然而第二项又限制了这种分散的区域，如 Figure 11(c) 所示。同时考虑这三项的话，第一项使得<span class="math inline">\(z\)</span>不能自由地分散，对于不相似的<span class="math inline">\(x\)</span>其对应的<span class="math inline">\(z\)</span>也是不相似的，因为要最大化<span class="math inline">\(x\)</span>的重构概率。然而对于相似的<span class="math inline">\(x\)</span>来说，其对应的<span class="math inline">\(q_\phi(z|x)\)</span>会出现很多重复的部分。当达到平衡时，<strong>Time Gradient</strong>就出现了。</p>
-<p><img src="http://qfxiao.me/img/1571719784233.png" /></p>
-<p>在训练过程中，当<span class="math inline">\(x\)</span>越不相似，<span class="math inline">\(q_\phi(z|x)\)</span>就会相距越远，如上图所示。然而在一开始，参数经过随机初始化，<span class="math inline">\(q_\phi(z|x)\)</span>都是随机散乱的，如 Figure 11(b) 所示。随着训练的进行，<span class="math inline">\(q_\phi(z|x)\)</span>将会不断优化。由于KPI数据往往是光滑的，那么在时间上相距越远的样本就会越不相似，对应的<span class="math inline">\(q_\phi(z|x)\)</span>也会相距更远。这也说明了，训练结束后，时间上相距越远的，<span class="math inline">\(q_\phi(z|x)\)</span>也会相距越远，反之亦然。同时这也表明学习率的设置对本模型的稳定性有至关重要的作用。</p>
-<h3 id="sub-optimal-equilibrium">Sub-Optimal Equilibrium</h3>
-<p>上面我们讨论了随着训练进行<span class="math inline">\(q_\phi(z|x)\)</span>的演变，作者提出在训练过程中可能会遇到模型收敛到次优的情况，如下图所示：</p>
-<p><img src="http://qfxiao.me/img/1571719796266.png" /></p>
-<p>第一行展示的是收敛到最优的情况，第二行展示的是收敛到次优的情况。从第二行的第一个图（Step 100）来看，紫色的点开始穿过绿色的点，随着训练的进行，紫色的点开始将绿色的点推开。到Step 5000的时候，绿色的点已经被分成了两半。下图展示了对应的训练误差和验证误差：</p>
-<p><img src="http://qfxiao.me/img/1571719807778.png" /></p>
-<p>这样的现象会导致在两半绿色区域之间的测试样本会被识别为紫色，从而降低性能。作者提出在<span class="math inline">\(K\)</span>较大的时候这种现象不容易发生，但这时训练的收敛又会成为一个问题。</p>
-</div></article></div></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1"><div class="card widget"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="" src="/img/avatar.png" alt="Your name"></figure><p class="title is-size-4 is-block line-height-inherit">Your name</p><p class="is-size-6 is-block">Your title</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>Your location</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">文章</p><a href="/archives"><p class="title">17</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">分类</p><a href="/categories"><p class="title">9</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">标签</p><a href="/tags"><p class="title">12</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/ppoffice" target="_blank" rel="noopener">关注我</a></div><div class="level is-mobile"><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Github" href="https://github.com/ppoffice"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Facebook" href="https://facebook.com"><i class="fab fa-facebook"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Twitter" href="https://twitter.com"><i class="fab fa-twitter"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Dribbble" href="https://dribbble.com"><i class="fab fa-dribbble"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="RSS" href="/"><i class="fas fa-rss"></i></a></div></div></div><!--!--><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">链接</h3><ul class="menu-list"><li><a class="level is-mobile is-mobile" href="https://hexo.io" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Hexo</span></span><span class="level-right"><span class="level-item tag">hexo.io</span></span></a></li><li><a class="level is-mobile is-mobile" href="https://bulma.io" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Bulma</span></span><span class="level-right"><span class="level-item tag">bulma.io</span></span></a></li></ul></div></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">分类</h3><ul class="menu-list"><li><a class="level is-mobile is-marginless" href="/categories/Research/"><span class="level-start"><span class="level-item">Research</span></span><span class="level-end"><span class="level-item tag">16</span></span></a><ul class="mr-0"><li><a class="level is-mobile is-marginless" href="/categories/Research/Anomaly-Detection/"><span class="level-start"><span class="level-item">Anomaly Detection</span></span><span class="level-end"><span class="level-item tag">11</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Research/GAN/"><span class="level-start"><span class="level-item">GAN</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Research/Misc/"><span class="level-start"><span class="level-item">Misc</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Research/RNN/"><span class="level-start"><span class="level-item">RNN</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Research/Time-Series-Imputation/"><span class="level-start"><span class="level-item">Time Series Imputation</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Research/Tutorial/"><span class="level-start"><span class="level-item">Tutorial</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></li><li><a class="level is-mobile is-marginless" href="/categories/Technical-Notes/"><span class="level-start"><span class="level-item">Technical Notes</span></span><span class="level-end"><span class="level-item tag">1</span></span></a><ul class="mr-0"><li><a class="level is-mobile is-marginless" href="/categories/Technical-Notes/Misc/"><span class="level-start"><span class="level-item">Misc</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></li></ul></div></div></div><div class="card widget"><div class="card-content"><h3 class="menu-label">最新文章</h3><article class="media"><a class="media-left" href="/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/"><p class="image is-64x64"><img class="thumbnail" src="http://qfxiao.me/img/image-20200301230011495.png" alt="Discovering Physical Concepts with Neural Networks"></p></a><div class="media-content size-small"><p><time dateTime="2020-03-01T14:55:02.000Z">2020-03-01</time></p><p class="title is-6"><a class="link-muted" href="/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/">Discovering Physical Concepts with Neural Networks</a></p><p class="is-uppercase"><a class="link-muted" href="/categories/Research/">Research</a> / <a class="link-muted" href="/categories/Research/Misc/">Misc</a></p></div></article><article class="media"><a class="media-left" href="/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/"><p class="image is-64x64"><img class="thumbnail" src="http://qfxiao.me/img/image-20200109102830713.png" alt="Transfer Anomaly Detection by Inferring Latent Domain Representations"></p></a><div class="media-content size-small"><p><time dateTime="2020-02-27T12:02:18.000Z">2020-02-27</time></p><p class="title is-6"><a class="link-muted" href="/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/">Transfer Anomaly Detection by Inferring Latent Domain Representations</a></p><p class="is-uppercase"><a class="link-muted" href="/categories/Research/">Research</a> / <a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></p></div></article><article class="media"><a class="media-left" href="/2020/02/24/Deep-Anomaly-Detection-with-Deviation-Networks/"><p class="image is-64x64"><img class="thumbnail" src="http://qfxiao.me/img/image-20200113104953902.png" alt="Deep Anomaly Detection with Deviation Networks"></p></a><div class="media-content size-small"><p><time dateTime="2020-02-24T02:45:08.000Z">2020-02-24</time></p><p class="title is-6"><a class="link-muted" href="/2020/02/24/Deep-Anomaly-Detection-with-Deviation-Networks/">Deep Anomaly Detection with Deviation Networks</a></p><p class="is-uppercase"><a class="link-muted" href="/categories/Research/">Research</a> / <a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></p></div></article><article class="media"><a class="media-left" href="/2020/01/31/Geant4-%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/"><p class="image is-64x64"><img class="thumbnail" src="http://qfxiao.me/img/image-20200131113557592.png" alt="Geant4 安装教程与调试环境配置"></p></a><div class="media-content size-small"><p><time dateTime="2020-01-31T03:25:59.000Z">2020-01-31</time></p><p class="title is-6"><a class="link-muted" href="/2020/01/31/Geant4-%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/">Geant4 安装教程与调试环境配置</a></p><p class="is-uppercase"><a class="link-muted" href="/categories/Technical-Notes/">Technical Notes</a> / <a class="link-muted" href="/categories/Technical-Notes/Misc/">Misc</a></p></div></article><article class="media"><a class="media-left" href="/2020/01/09/Complementary-Set-Variational-Autoencoder-for-Supervised-Anomaly-Detection/"><p class="image is-64x64"><img class="thumbnail" src="http://qfxiao.me/img/image-20200109102204802.png" alt="Complementary Set Variational Autoencoder for Supervised Anomaly Detection"></p></a><div class="media-content size-small"><p><time dateTime="2020-01-09T02:15:03.000Z">2020-01-09</time></p><p class="title is-6"><a class="link-muted" href="/2020/01/09/Complementary-Set-Variational-Autoencoder-for-Supervised-Anomaly-Detection/">Complementary Set Variational Autoencoder for Supervised Anomaly Detection</a></p><p class="is-uppercase"><a class="link-muted" href="/categories/Research/">Research</a> / <a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></p></div></article></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">归档</h3><ul class="menu-list"><li><a class="level is-mobile is-marginless" href="/archives/2020/03/"><span class="level-start"><span class="level-item">三月 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/archives/2020/02/"><span class="level-start"><span class="level-item">二月 2020</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile is-marginless" href="/archives/2020/01/"><span class="level-start"><span class="level-item">一月 2020</span></span><span class="level-end"><span class="level-item tag">4</span></span></a></li><li><a class="level is-mobile is-marginless" href="/archives/2019/11/"><span class="level-start"><span class="level-item">十一月 2019</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/archives/2019/10/"><span class="level-start"><span class="level-item">十月 2019</span></span><span class="level-end"><span class="level-item tag">5</span></span></a></li><li><a class="level is-mobile is-marginless" href="/archives/2019/09/"><span class="level-start"><span class="level-item">九月 2019</span></span><span class="level-end"><span class="level-item tag">4</span></span></a></li></ul></div></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">标签</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/Anomaly-Detection/"><span class="tag">Anomaly Detection</span><span class="tag is-grey-lightest">9</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Deep-Learning/"><span class="tag">Deep Learning</span><span class="tag is-grey-lightest">13</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Flow-based-Model/"><span class="tag">Flow-based Model</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/GAN/"><span class="tag">GAN</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Machine-Learning/"><span class="tag">Machine Learning</span><span class="tag is-grey-lightest">7</span></a></div><div class="control"><a class="tags has-addons" href="/tags/RNN/"><span class="tag">RNN</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Spectral/"><span class="tag">Spectral</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Statistics/"><span class="tag">Statistics</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Time-Series/"><span class="tag">Time Series</span><span class="tag is-grey-lightest">10</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Transfer-Learning/"><span class="tag">Transfer Learning</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/VAE/"><span class="tag">VAE</span><span class="tag is-grey-lightest">6</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Variational-Inference/"><span class="tag">Variational Inference</span><span class="tag is-grey-lightest">2</span></a></div></div></div></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">订阅更新</h3><form action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open(&#039;https://feedburner.google.com/fb/a/mailverify?uri=&#039;,&#039;popupwindow&#039;,&#039;scrollbars=yes,width=550,height=520&#039;);return true"><input type="hidden" value="" name="uri"><input type="hidden" name="loc" value="en_US"><div class="field has-addons"><div class="control has-icons-left is-expanded"><input class="input" name="email" type="email" placeholder="Email"><span class="icon is-small is-left"><i class="fas fa-envelope"></i></span></div><div class="control"><input class="button is-primary" type="submit" value="订阅"></div></div></form></div></div></div><div class="card widget"><div class="card-content"><div class="notification is-danger">You need to set <code>client_id</code> and <code>slot_id</code> to show this AD unit. Please set it in <code>_config.yml</code>.</div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/logo.svg" alt="Hanzawa の 部屋" height="28"></a><p class="size-small"><span>&copy; 2020 Hanzawa</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script>moment.locale("zh-CN");</script><script>var IcarusThemeSettings = {
-            site: {
-                url: 'http://qfxiao.me',
-                external_link: {"enable":true,"exclude":[]}
+                
+             -->
+        </div>
+        
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2019/10/18/Robust-Anomaly-Detection-for-Multivariate-Time-Series-through-Stochastic-Recurrent-Neural-Network/#more">阅读更多</a>
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-image">
+        <a href="/2019/09/22/Unsupervised-Anomaly-Detection-via-Variational-Auto-Encoder-for-Seasonal-KPIs-in-Web-Applications/" class="image is-7by1">
+            <img class="thumbnail" src="http://qfxiao.me/img/1571719738542.png" alt="Unsupervised Anomaly Detection via Variational Auto-Encoder for Seasonal KPIs in Web Applications">
+        </a>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2019-09-22T12:35:18.000Z">2019-09-22</time>
+                
+                    <i class="fas fa-calendar-check">&nbsp</i>
+                    <time class="level-item has-text-grey" datetime="2020-02-03T08:20:35.623Z">2020-02-03</time>
+                
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Research/">Research</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    25 分钟 读完 (大约 3820 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2019/09/22/Unsupervised-Anomaly-Detection-via-Variational-Auto-Encoder-for-Seasonal-KPIs-in-Web-Applications/">Unsupervised Anomaly Detection via Variational Auto-Encoder for Seasonal KPIs in Web Applications</a>
+            
+        </h1>
+        <div class="content">
+            
+                
+                
+                
+                    
+                    
+                        
+                    
+                
+                    
+                    
+                        
+                    
+                
+                    
+                    
+                        
+                    
+                
+                    
+                    
+                        
+                    
+                
+                    
+                    
+                
+                
+            
+            <h2 id="abstract">Abstract</h2>
+<p>本文提出了Donut，一个基于VAE的无监督时间序列异常检测系统。</p>
+<p><a href="https://dl.acm.org/citation.cfm?id=3185996" target="_blank" rel="noopener">原文</a></p>
+<p><img src="http://qfxiao.me/img/1571719484833.png"></p>
+<h2 id="contribution">Contribution</h2>
+            <!-- 
+                
+                    <h2 id="abstract">Abstract</h2>
+<p>本文提出了Donut，一个基于VAE的无监督时间序列异常检测系统。</p>
+<p><a href="https://dl.acm.org/citation.cfm?id=3185996" target="_blank" rel="noopener">原文</a></p>
+<p><img src="http://qfxiao.me/img/1571719484833.png"></p>
+<h2 id="contribution">Contribution</h2>
+                
+             -->
+        </div>
+        
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2019/09/22/Unsupervised-Anomaly-Detection-via-Variational-Auto-Encoder-for-Seasonal-KPIs-in-Web-Applications/#more">阅读更多</a>
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered" style="flex-shrink: 1">
+                <div>
+                    
+                    <figure class="image is-128x128 has-mb-6">
+                        <img class="" src="http://qfxiao.me/misc/avatar.jpg" alt="Hanzawa">
+                    </figure>
+                    
+                    <p class="is-size-4 is-block">
+                        Hanzawa
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        A graduate student
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Beijing, China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        17
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        9
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        12
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="https://github.com/ppoffice" target="_blank">
+                关注我</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank"
+                title="Github" href="https://github.com/ppoffice">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank"
+                title="Facebook" href="https://facebook.com">
+                
+                <i class="fab fa-facebook"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank"
+                title="Twitter" href="https://twitter.com">
+                
+                <i class="fab fa-twitter"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank"
+                title="Dribbble" href="https://dribbble.com">
+                
+                <i class="fab fa-dribbble"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank"
+                title="RSS" href="/">
+                
+                <i class="fas fa-rss"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+    
+        
+
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            链接
+        </h3>
+        <ul class="menu-list">
+        
+            <li>
+                <a class="level is-mobile" href="https://hexo.io" target="_blank">
+                    <span class="level-left">
+                        <span class="level-item">Hexo</span>
+                    </span>
+                    <span class="level-right">
+                        <span class="level-item tag">hexo.io</span>
+                    </span>
+                </a>
+            </li>
+        
+            <li>
+                <a class="level is-mobile" href="https://github.com/ppoffice" target="_blank">
+                    <span class="level-left">
+                        <span class="level-item">PPOffice</span>
+                    </span>
+                    <span class="level-right">
+                        <span class="level-item tag">github.com</span>
+                    </span>
+                </a>
+            </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+
+
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                分类
+            </h3>
+            <ul class="menu-list">
+            <li>
+        <a class="level is-marginless" href="/categories/Research/">
+            <span class="level-start">
+                <span class="level-item">Research</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">16</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/Research/Anomaly-Detection/">
+            <span class="level-start">
+                <span class="level-item">Anomaly Detection</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">11</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Research/GAN/">
+            <span class="level-start">
+                <span class="level-item">GAN</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Research/Misc/">
+            <span class="level-start">
+                <span class="level-item">Misc</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Research/RNN/">
+            <span class="level-start">
+                <span class="level-item">RNN</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Research/Time-Series-Imputation/">
+            <span class="level-start">
+                <span class="level-item">Time Series Imputation</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Research/Tutorial/">
+            <span class="level-start">
+                <span class="level-item">Tutorial</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/Technical-Notes/">
+            <span class="level-start">
+                <span class="level-item">Technical Notes</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/Technical-Notes/Misc/">
+            <span class="level-start">
+                <span class="level-item">Misc</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li>
+            </ul>
+        </div>
+    </div>
+</div>
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            标签云
+        </h3>
+        <a href="/tags/Anomaly-Detection/" style="font-size: 16.67px;">Anomaly Detection</a> <a href="/tags/Deep-Learning/" style="font-size: 20px;">Deep Learning</a> <a href="/tags/Flow-based-Model/" style="font-size: 10px;">Flow-based Model</a> <a href="/tags/GAN/" style="font-size: 11.67px;">GAN</a> <a href="/tags/Machine-Learning/" style="font-size: 15px;">Machine Learning</a> <a href="/tags/RNN/" style="font-size: 11.67px;">RNN</a> <a href="/tags/Spectral/" style="font-size: 10px;">Spectral</a> <a href="/tags/Statistics/" style="font-size: 10px;">Statistics</a> <a href="/tags/Time-Series/" style="font-size: 18.33px;">Time Series</a> <a href="/tags/Transfer-Learning/" style="font-size: 10px;">Transfer Learning</a> <a href="/tags/VAE/" style="font-size: 13.33px;">VAE</a> <a href="/tags/Variational-Inference/" style="font-size: 11.67px;">Variational Inference</a>
+    </div>
+</div>
+
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+            
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            最新文章
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200301230011495.png" alt="Discovering Physical Concepts with Neural Networks">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-03-01T14:55:02.000Z">2020-03-01</time></div>
+                    <a href="/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Discovering Physical Concepts with Neural Networks</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Misc/">Misc</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200109102830713.png" alt="Transfer Anomaly Detection by Inferring Latent Domain Representations">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-02-27T12:02:18.000Z">2020-02-27</time></div>
+                    <a href="/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Transfer Anomaly Detection by Inferring Latent Domain Representations</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/02/24/Deep-Anomaly-Detection-with-Deviation-Networks/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200113104953902.png" alt="Deep Anomaly Detection with Deviation Networks">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-02-24T02:45:08.000Z">2020-02-24</time></div>
+                    <a href="/2020/02/24/Deep-Anomaly-Detection-with-Deviation-Networks/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Deep Anomaly Detection with Deviation Networks</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/01/31/Geant4-%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200131113557592.png" alt="Geant4 安装教程与调试环境配置">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-01-31T03:25:59.000Z">2020-01-31</time></div>
+                    <a href="/2020/01/31/Geant4-%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Geant4 安装教程与调试环境配置</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Technical-Notes/">Technical Notes</a> / <a class="has-link-grey -link" href="/categories/Technical-Notes/Misc/">Misc</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/01/09/Complementary-Set-Variational-Autoencoder-for-Supervised-Anomaly-Detection/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200109102204802.png" alt="Complementary Set Variational Autoencoder for Supervised Anomaly Detection">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-01-09T02:15:03.000Z">2020-01-09</time></div>
+                    <a href="/2020/01/09/Complementary-Set-Variational-Autoencoder-for-Supervised-Anomaly-Detection/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Complementary Set Variational Autoencoder for Supervised Anomaly Detection</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            归档
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/02/">
+                <span class="level-start">
+                    <span class="level-item">二月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                标签
+            </h3>
+            <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Anomaly-Detection/">
+                        <span class="tag">Anomaly Detection</span>
+                        <span class="tag is-grey">9</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Deep-Learning/">
+                        <span class="tag">Deep Learning</span>
+                        <span class="tag is-grey">13</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Flow-based-Model/">
+                        <span class="tag">Flow-based Model</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/GAN/">
+                        <span class="tag">GAN</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Machine-Learning/">
+                        <span class="tag">Machine Learning</span>
+                        <span class="tag is-grey">7</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/RNN/">
+                        <span class="tag">RNN</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Spectral/">
+                        <span class="tag">Spectral</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Statistics/">
+                        <span class="tag">Statistics</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Time-Series/">
+                        <span class="tag">Time Series</span>
+                        <span class="tag is-grey">10</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Transfer-Learning/">
+                        <span class="tag">Transfer Learning</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/VAE/">
+                        <span class="tag">VAE</span>
+                        <span class="tag is-grey">6</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Variational-Inference/">
+                        <span class="tag">Variational Inference</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+        
+        </div>
+    
+</div>
+
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only has-order-3 column-right ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            最新文章
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200301230011495.png" alt="Discovering Physical Concepts with Neural Networks">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-03-01T14:55:02.000Z">2020-03-01</time></div>
+                    <a href="/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Discovering Physical Concepts with Neural Networks</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Misc/">Misc</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200109102830713.png" alt="Transfer Anomaly Detection by Inferring Latent Domain Representations">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-02-27T12:02:18.000Z">2020-02-27</time></div>
+                    <a href="/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Transfer Anomaly Detection by Inferring Latent Domain Representations</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/02/24/Deep-Anomaly-Detection-with-Deviation-Networks/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200113104953902.png" alt="Deep Anomaly Detection with Deviation Networks">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-02-24T02:45:08.000Z">2020-02-24</time></div>
+                    <a href="/2020/02/24/Deep-Anomaly-Detection-with-Deviation-Networks/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Deep Anomaly Detection with Deviation Networks</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/01/31/Geant4-%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200131113557592.png" alt="Geant4 安装教程与调试环境配置">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-01-31T03:25:59.000Z">2020-01-31</time></div>
+                    <a href="/2020/01/31/Geant4-%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Geant4 安装教程与调试环境配置</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Technical-Notes/">Technical Notes</a> / <a class="has-link-grey -link" href="/categories/Technical-Notes/Misc/">Misc</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/01/09/Complementary-Set-Variational-Autoencoder-for-Supervised-Anomaly-Detection/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200109102204802.png" alt="Complementary Set Variational Autoencoder for Supervised Anomaly Detection">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-01-09T02:15:03.000Z">2020-01-09</time></div>
+                    <a href="/2020/01/09/Complementary-Set-Variational-Autoencoder-for-Supervised-Anomaly-Detection/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Complementary Set Variational Autoencoder for Supervised Anomaly Detection</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            归档
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/02/">
+                <span class="level-start">
+                    <span class="level-item">二月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                标签
+            </h3>
+            <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Anomaly-Detection/">
+                        <span class="tag">Anomaly Detection</span>
+                        <span class="tag is-grey">9</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Deep-Learning/">
+                        <span class="tag">Deep Learning</span>
+                        <span class="tag is-grey">13</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Flow-based-Model/">
+                        <span class="tag">Flow-based Model</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/GAN/">
+                        <span class="tag">GAN</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Machine-Learning/">
+                        <span class="tag">Machine Learning</span>
+                        <span class="tag is-grey">7</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/RNN/">
+                        <span class="tag">RNN</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Spectral/">
+                        <span class="tag">Spectral</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Statistics/">
+                        <span class="tag">Statistics</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Time-Series/">
+                        <span class="tag">Time Series</span>
+                        <span class="tag is-grey">10</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Transfer-Learning/">
+                        <span class="tag">Transfer Learning</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/VAE/">
+                        <span class="tag">VAE</span>
+                        <span class="tag is-grey">6</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Variational-Inference/">
+                        <span class="tag">Variational Inference</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+    
+    
+</div>
+
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/logo.svg" alt="Hanzawa の 部屋" height="28">
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2020 Hanzawa&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                        
+                        <i class="fab fa-creative-commons"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                        
+                        <i class="fab fa-creative-commons-by"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+<script>
+var IcarusThemeSettings = {
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/" target="_blank" rel="noopener">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/mathjax@3.0.0/https://cdn.jsdelivr.net/npm/mathjax@3.0.0/es5/tex-mml-chtml.js" defer></script> -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ],
+            // processEscapes: true
+        },
+        TeX: { 
+            equationNumbers: { autoNumber: "AMS" },
+            extensions: ["AMSmath.js", "AMSsymbols.js"]
+        },
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么..." />
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
             },
-            article: {
-                highlight: {
-                    clipboard: true,
-                    fold: 'unfolded'
-                }
-            }
-        };</script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script src="/js/animation.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
-            if (typeof $.fn.lightGallery === 'function') {
-                $('.article').lightGallery({ selector: '.gallery-item' });
-            }
-            if (typeof $.fn.justifiedGallery === 'function') {
-                if ($('.justified-gallery > p > .gallery-item').length) {
-                    $('.justified-gallery > p > .gallery-item').unwrap();
-                }
-                $('.justified-gallery').justifiedGallery();
-            }
-        });</script><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script><script>window.addEventListener("load", function () {
-            MathJax.Hub.Config({
-                'HTML-CSS': {
-                    matchFontHeight: false
-                },
-                SVG: {
-                    matchFontHeight: false
-                },
-                CommonHTML: {
-                    matchFontHeight: false
-                },
-                tex2jax: {
-                    inlineMath: [
-                        ['$','$'],
-                        ['\\(','\\)']
-                    ]
-                }
-            });
-        });</script><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
-            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
-        });</script></body></html>
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>

@@ -1,12 +1,229 @@
-<!doctype html>
-<html lang="zh"><head><meta charset="utf-8"><meta name="generator" content="Hexo 4.2.0"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>Transfer Anomaly Detection by Inferring Latent Domain Representations - Hanzawa の 部屋</title><meta description="Introduction 作者提出了一种利用迁移学习提升target domain异常检测性能的算法。文中指出现有的基于迁移学习的异常检测算法需要对每个 target domain 进行单独训练，这样做会带来很大的计算开销。本文通过latent domain vectors来实现无需重新训练的异常检测。latent domain vectors是domain的一种隐含表示，通过该domain中的正"><meta property="og:type" content="blog"><meta property="og:title" content="Transfer Anomaly Detection by Inferring Latent Domain Representations"><meta property="og:url" content="http://qfxiao.me/"><meta property="og:site_name" content="Hanzawa の 部屋"><meta property="og:description" content="Introduction 作者提出了一种利用迁移学习提升target domain异常检测性能的算法。文中指出现有的基于迁移学习的异常检测算法需要对每个 target domain 进行单独训练，这样做会带来很大的计算开销。本文通过latent domain vectors来实现无需重新训练的异常检测。latent domain vectors是domain的一种隐含表示，通过该domain中的正"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="http://qfxiao.me/img/image-20200109102830713.png"><meta property="article:published_time" content="2020-02-27T12:02:18.000Z"><meta property="article:modified_time" content="2020-03-04T10:12:20.547Z"><meta property="article:author" content="Hanzawa"><meta property="article:tag" content="Anomaly Detection"><meta property="article:tag" content="Transfer Learning"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="http://qfxiao.me/img/image-20200109102830713.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://qfxiao.me/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/"},"headline":"Hanzawa の 部屋","image":["http://qfxiao.me/img/image-20200109102830713.png"],"datePublished":"2020-02-27T12:02:18.000Z","dateModified":"2020-03-04T10:12:20.547Z","author":{"@type":"Person","name":"Hanzawa"},"description":"Introduction 作者提出了一种利用迁移学习提升target domain异常检测性能的算法。文中指出现有的基于迁移学习的异常检测算法需要对每个 target domain 进行单独训练，这样做会带来很大的计算开销。本文通过latent domain vectors来实现无需重新训练的异常检测。latent domain vectors是domain的一种隐含表示，通过该domain中的正"}</script><link rel="icon" href="/images/favicon.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/logo.svg" alt="Hanzawa の 部屋" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><div class="card-image"><span class="image is-7by3"><img class="thumbnail" src="http://qfxiao.me/img/image-20200109102830713.png" alt="Transfer Anomaly Detection by Inferring Latent Domain Representations"></span></div><article class="card-content article" role="article"><div class="article-meta size-small is-uppercase level is-mobile"><div class="level-left"><time class="level-item" dateTime="2020-02-27T12:02:18.000Z" title="2020-02-27T12:02:18.000Z">2020-02-27</time><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></span><span class="level-item">12 分钟 读完 (大约 1731 个字)</span></div></div><h1 class="title is-3 is-size-4-mobile">Transfer Anomaly Detection by Inferring Latent Domain Representations</h1><div class="content"><h1 id="introduction">Introduction</h1>
+<!DOCTYPE html>
+<html  lang="zh">
+<head>
+    <meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.0" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>Transfer Anomaly Detection by Inferring Latent Domain Representations - Hanzawa の 部屋</title>
+
+
+    <meta name="description" content="Introduction 作者提出了一种利用迁移学习提升target domain异常检测性能的算法。文中指出现有的基于迁移学习的异常检测算法需要对每个 target domain 进行单独训练，这样做会带来很大的计算开销。本文通过latent domain vectors来实现无需重新训练的异常检测。latent domain vectors是domain的一种隐含表示，通过该domain中的正">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Transfer Anomaly Detection by Inferring Latent Domain Representations">
+<meta property="og:url" content="http://qfxiao.me/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/index.html">
+<meta property="og:site_name" content="Hanzawa の 部屋">
+<meta property="og:description" content="Introduction 作者提出了一种利用迁移学习提升target domain异常检测性能的算法。文中指出现有的基于迁移学习的异常检测算法需要对每个 target domain 进行单独训练，这样做会带来很大的计算开销。本文通过latent domain vectors来实现无需重新训练的异常检测。latent domain vectors是domain的一种隐含表示，通过该domain中的正">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://qfxiao.me/img/image-20200109102830713.png">
+<meta property="article:published_time" content="2020-02-27T12:02:18.000Z">
+<meta property="article:modified_time" content="2020-03-04T10:12:20.547Z">
+<meta property="article:author" content="Hanzawa">
+<meta property="article:tag" content="Anomaly Detection">
+<meta property="article:tag" content="Transfer Learning">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://qfxiao.me/img/image-20200109102830713.png">
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.png">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.svg" alt="Transfer Anomaly Detection by Inferring Latent Domain Representations" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">Home</a>
+                
+                <a class="navbar-item"
+                href="/archives">Archives</a>
+                
+                <a class="navbar-item"
+                href="/categories">Categories</a>
+                
+                <a class="navbar-item"
+                href="/tags">Tags</a>
+                
+                <a class="navbar-item"
+                href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-image">
+        <span  class="image is-7by1">
+            <img class="thumbnail" src="http://qfxiao.me/img/image-20200109102830713.png" alt="Transfer Anomaly Detection by Inferring Latent Domain Representations">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-02-27T12:02:18.000Z">2020-02-27</time>
+                
+                    <i class="fas fa-calendar-check">&nbsp</i>
+                    <time class="level-item has-text-grey" datetime="2020-03-04T10:12:20.547Z">2020-03-04</time>
+                
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Research/">Research</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    12 分钟 读完 (大约 1731 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                Transfer Anomaly Detection by Inferring Latent Domain Representations
+            
+        </h1>
+        <div class="content">
+            
+                
+                
+                
+                    
+                    
+                        
+                    
+                
+                    
+                    
+                        
+                    
+                
+                    
+                    
+                        
+                    
+                
+                    
+                    
+                        
+                    
+                
+                    
+                    
+                
+                
+            
+            <h1 id="introduction">Introduction</h1>
 <p>作者提出了一种利用迁移学习提升target domain异常检测性能的算法。文中指出现有的基于迁移学习的异常检测算法需要对每个 target domain 进行单独训练，这样做会带来很大的计算开销。本文通过<em>latent domain vectors</em>来实现无需重新训练的异常检测。<em>latent domain vectors</em>是domain的一种隐含表示，通过该domain中的正常样本得到。在本文中，<em>anomaly score function</em>通过Auto-encoder得到。</p>
 <h1 id="proposed-method">Proposed Method</h1>
 <h2 id="task">Task</h2>
 <p>令<span class="math inline">\(\mathbf{X}_d^+:=\{\mathbf{x}^+_{dn}\}^{N^+_d}_{n=1}\)</span>为第<span class="math inline">\(d\)</span>个domain的异常样本集，<span class="math inline">\(\mathbf{x}_{dn}^+\in\mathbb{R}^M\)</span>为其中第<span class="math inline">\(n\)</span>个样本的<span class="math inline">\(M\)</span>维特征向量，<span class="math inline">\(N^+_d\)</span>为第<span class="math inline">\(d\)</span>个domain异常样本的数量。</p>
 <p>类似的，令<span class="math inline">\(\mathbf{X}_d^-:=\{\mathbf{x}^-_{dn}\}^{N^-_d}_{n=1}\)</span>为第<span class="math inline">\(d\)</span>个domain的正常样本集。我们假设对于每个domain都有<span class="math inline">\(N^+_d\ll N^-_d\)</span>，且特征向量维度都为<span class="math inline">\(M\)</span>。</p>
 <p>假设在 source domain <span class="math inline">\(D_S\)</span>都有正常样本和异常样本，记为<span class="math inline">\(\{\mathbf{X}^+_d\cup\mathbf{X}_d^-\}^{D_S}_{d=1}\)</span>，在 target domain <span class="math inline">\(D_T\)</span>只有正常样本<span class="math inline">\(\{\mathbf{X}_d^-\}^{D_S+D_T}_{d=D_S+1}\)</span>。我们的目标是得到一个对于 target domain 合适的 domain-specific 的异常打分函数。</p>
-<p><img src="http://qfxiao.me/img/image-20200109102606099.png" style="zoom:67%;" /></p>
+<p><img src="http://qfxiao.me/img/image-20200109102606099.png" style="zoom:67%;"></p>
 <h2 id="domain-specific-anomaly-score-function">Domain-specific Anomaly Score Function</h2>
 <p>我们基于Auto-encoder定义异常打分函数。对于每个domain，我们假设存在一个<span class="math inline">\(K\)</span>维的隐变量<span class="math inline">\(\mathbf{z}_d\in\mathbb{R}^K\)</span>。对于第<span class="math inline">\(d\)</span>个 domain，异常打分函数定义如下： <span class="math display">\[
 s_\theta(\mathbf{x}_{dn}|\mathbf{z}_d):=\parallel\mathbf{x}_{dn}-G_{\theta_G}(F_{\theta_F}(\mathbf{x}_{dn},\mathbf{z}_d))\parallel^2
@@ -39,66 +256,1217 @@ s(\mathbf{x}_{d^\prime}):=\int s_{\theta_*}(\mathbf{x_{d^\prime}}|\mathbf{z}_{d^
 <h1 id="experiments">Experiments</h1>
 <h2 id="data">Data</h2>
 <p>实验包含五个数据集，第一个是合成数据集。如下图(a)所示，围绕<span class="math inline">\((0,0)\)</span>有<span class="math inline">\(8\)</span>个圈，每个圈包含了一个内圈作为异常样本，第<span class="math inline">\(7\)</span>个圈被选为target domain，其余的为source domain。第二个是MNIST-r，是加入旋转的MNIST，包含6个domain，其中数字“4”被选为异常样本，其余为正常。第三个为Anuran Calls，包含5个domain。第四个是Landmine，主要用在多任务学习中。第五个是IoT，网络流量数据，包含8个domain。</p>
-<p><img src="http://qfxiao.me/img/image-20200109102643644.png" style="zoom:50%;" /></p>
+<p><img src="http://qfxiao.me/img/image-20200109102643644.png" style="zoom:50%;"></p>
 <h2 id="comparison-methods">Comparison Methods</h2>
 <p>对比的baseline包括NN（普通多层神经网络），NNAUC（加入可微分AUC作为损失函数），AE（普通Autoencoer），AEAUC（加入可微分AUC的AE），OSVM（单类支持向量机），CCSA，TOSVM和OTL。</p>
 <h2 id="results">Results</h2>
 <p>4个真实数据集的结果如下：</p>
-<p><img src="http://qfxiao.me/img/image-20200109102713247.png" style="zoom:50%;" /></p>
-<p><img src="http://qfxiao.me/img/image-20200109102730126.png" style="zoom:50%;" /></p>
-<p><img src="http://qfxiao.me/img/image-20200109102742222.png" style="zoom:50%;" /></p>
-<p><img src="http://qfxiao.me/img/image-20200109102753827.png" style="zoom:50%;" /></p>
+<p><img src="http://qfxiao.me/img/image-20200109102713247.png" style="zoom:50%;"></p>
+<p><img src="http://qfxiao.me/img/image-20200109102730126.png" style="zoom:50%;"></p>
+<p><img src="http://qfxiao.me/img/image-20200109102742222.png" style="zoom:50%;"></p>
+<p><img src="http://qfxiao.me/img/image-20200109102753827.png" style="zoom:50%;"></p>
 <p>表5为考虑隐变量不确定性的ablation study。将原来的公式<span class="math inline">\(\mathcal{L}_d(\theta,\phi):=\mathbb{E}_{q_\phi(\mathbf{z}_d|\mathbf{X}_d^-)}\left[L_d(\theta|\mathbf{z}_d)\right]+\beta D_\text{KL}(q_\phi(\mathbf{z}_d|\mathbf{X}_d^-)\parallel p(\mathbf{z_d}))\)</span>中<span class="math inline">\(q_\phi(\mathbf z_d|\mathbf X_d^-)\)</span>用迪利克雷分布<span class="math inline">\(q_\phi(\mathbf z_d|\mathbf X_d^-)=\delta(\mathbf z_d-\mu_\phi(\mathbf X_d^-))\)</span>代替并且去掉KL散度。</p>
-<p><img src="http://qfxiao.me/img/image-20200109102804386.png" style="zoom: 50%;" /></p>
+<p><img src="http://qfxiao.me/img/image-20200109102804386.png" style="zoom: 50%;"></p>
 <p>表6展示了不同异常比例对效果的影响。</p>
-</div><div class="article-tags size-small is-uppercase mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/Anomaly-Detection/">Anomaly Detection</a><a class="link-muted mr-2" rel="tag" href="/tags/Transfer-Learning/">Transfer Learning</a></div><div class="sharethis-inline-share-buttons"></div><script src="https://platform-api.sharethis.com/js/sharethis.js#property=5e6b2771a4f7c5001226c5e1&amp;product=inline-share-buttons&amp;cms=sop" defer></script></article></div><div class="card"><div class="card-content"><h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3><div class="buttons is-centered"><a class="button is-info donate"><span class="icon is-small"><i class="fab fa-alipay"></i></span><span>支付宝</span><span class="qrcode"><img src="http://qfxiao.me/misc/alipay.jpg" alt="支付宝"></span></a><a class="button donate" href="https://www.buymeacoffee.com/larryshaw0079" style="background-color:rgba(255,128,62,.87);border-color:transparent;color:white;" target="_blank" rel="noopener"><span class="icon is-small"><i class="fas fa-coffee"></i></span><span>送我杯咖啡</span></a><a class="button is-warning donate" onclick="document.getElementById(&#039;paypal-donate-form&#039;).submit()"><span class="icon is-small"><i class="fab fa-paypal"></i></span><span>Paypal</span></a><form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" rel="noopener" id="paypal-donate-form"><input type="hidden" name="cmd" value="_donations"><input type="hidden" name="business" value="larryshaw0079@live.com"><input type="hidden" name="currency_code" value="USD"></form><a class="button is-success donate"><span class="icon is-small"><i class="fab fa-weixin"></i></span><span>微信</span><span class="qrcode"><img src="http://qfxiao.me/misc/wechat.png" alt="微信"></span></a></div></div></div><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">Discovering Physical Concepts with Neural Networks</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2020/02/24/Deep-Anomaly-Detection-with-Deviation-Networks/"><span class="level-item">Deep Anomaly Detection with Deviation Networks</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content"><h3 class="title is-5">评论</h3><div id="disqus_thread"><noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></div><script>var disqus_config = function () {
-            this.page.url = 'http://qfxiao.me/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/';
-            this.page.identifier = '2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/';
-        };
-        (function() {
-            var d = document, s = d.createElement('script');  
-            s.src = '//' + 'http-larryshaw0079-coding-me-blog' + '.disqus.com/embed.js';
-            s.setAttribute('data-timestamp', +new Date());
-            (d.head || d.body).appendChild(s);
-        })();</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1"><div class="card widget"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="" src="/img/avatar.png" alt="Your name"></figure><p class="title is-size-4 is-block line-height-inherit">Your name</p><p class="is-size-6 is-block">Your title</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>Your location</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">文章</p><a href="/archives"><p class="title">17</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">分类</p><a href="/categories"><p class="title">9</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">标签</p><a href="/tags"><p class="title">12</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/ppoffice" target="_blank" rel="noopener">关注我</a></div><div class="level is-mobile"><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Github" href="https://github.com/ppoffice"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Facebook" href="https://facebook.com"><i class="fab fa-facebook"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Twitter" href="https://twitter.com"><i class="fab fa-twitter"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Dribbble" href="https://dribbble.com"><i class="fab fa-dribbble"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="RSS" href="/"><i class="fas fa-rss"></i></a></div></div></div><div class="card widget" id="toc"><div class="card-content"><div class="menu"><h3 class="menu-label">目录</h3><ul class="menu-list"><li><a class="is-flex" href="#introduction"><span class="mr-2">1</span><span>Introduction</span></a></li><li><a class="is-flex" href="#proposed-method"><span class="mr-2">2</span><span>Proposed Method</span></a><ul class="menu-list"><li><a class="is-flex" href="#task"><span class="mr-2">2.1</span><span>Task</span></a></li><li><a class="is-flex" href="#domain-specific-anomaly-score-function"><span class="mr-2">2.2</span><span>Domain-specific Anomaly Score Function</span></a></li><li><a class="is-flex" href="#models-for-latent-domain-vectors"><span class="mr-2">2.3</span><span>Models for Latent Domain Vectors</span></a></li><li><a class="is-flex" href="#objective-function"><span class="mr-2">2.4</span><span>Objective Function</span></a></li><li><a class="is-flex" href="#inference"><span class="mr-2">2.5</span><span>Inference</span></a></li></ul></li><li><a class="is-flex" href="#experiments"><span class="mr-2">3</span><span>Experiments</span></a><ul class="menu-list"><li><a class="is-flex" href="#data"><span class="mr-2">3.1</span><span>Data</span></a></li><li><a class="is-flex" href="#comparison-methods"><span class="mr-2">3.2</span><span>Comparison Methods</span></a></li><li><a class="is-flex" href="#results"><span class="mr-2">3.3</span><span>Results</span></a></li></ul></li></ul></div></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">链接</h3><ul class="menu-list"><li><a class="level is-mobile is-mobile" href="https://hexo.io" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Hexo</span></span><span class="level-right"><span class="level-item tag">hexo.io</span></span></a></li><li><a class="level is-mobile is-mobile" href="https://bulma.io" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Bulma</span></span><span class="level-right"><span class="level-item tag">bulma.io</span></span></a></li></ul></div></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">分类</h3><ul class="menu-list"><li><a class="level is-mobile is-marginless" href="/categories/Research/"><span class="level-start"><span class="level-item">Research</span></span><span class="level-end"><span class="level-item tag">16</span></span></a><ul class="mr-0"><li><a class="level is-mobile is-marginless" href="/categories/Research/Anomaly-Detection/"><span class="level-start"><span class="level-item">Anomaly Detection</span></span><span class="level-end"><span class="level-item tag">11</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Research/GAN/"><span class="level-start"><span class="level-item">GAN</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Research/Misc/"><span class="level-start"><span class="level-item">Misc</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Research/RNN/"><span class="level-start"><span class="level-item">RNN</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Research/Time-Series-Imputation/"><span class="level-start"><span class="level-item">Time Series Imputation</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Research/Tutorial/"><span class="level-start"><span class="level-item">Tutorial</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></li><li><a class="level is-mobile is-marginless" href="/categories/Technical-Notes/"><span class="level-start"><span class="level-item">Technical Notes</span></span><span class="level-end"><span class="level-item tag">1</span></span></a><ul class="mr-0"><li><a class="level is-mobile is-marginless" href="/categories/Technical-Notes/Misc/"><span class="level-start"><span class="level-item">Misc</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></li></ul></div></div></div><div class="card widget"><div class="card-content"><h3 class="menu-label">最新文章</h3><article class="media"><a class="media-left" href="/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/"><p class="image is-64x64"><img class="thumbnail" src="http://qfxiao.me/img/image-20200301230011495.png" alt="Discovering Physical Concepts with Neural Networks"></p></a><div class="media-content size-small"><p><time dateTime="2020-03-01T14:55:02.000Z">2020-03-01</time></p><p class="title is-6"><a class="link-muted" href="/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/">Discovering Physical Concepts with Neural Networks</a></p><p class="is-uppercase"><a class="link-muted" href="/categories/Research/">Research</a> / <a class="link-muted" href="/categories/Research/Misc/">Misc</a></p></div></article><article class="media"><a class="media-left" href="/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/"><p class="image is-64x64"><img class="thumbnail" src="http://qfxiao.me/img/image-20200109102830713.png" alt="Transfer Anomaly Detection by Inferring Latent Domain Representations"></p></a><div class="media-content size-small"><p><time dateTime="2020-02-27T12:02:18.000Z">2020-02-27</time></p><p class="title is-6"><a class="link-muted" href="/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/">Transfer Anomaly Detection by Inferring Latent Domain Representations</a></p><p class="is-uppercase"><a class="link-muted" href="/categories/Research/">Research</a> / <a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></p></div></article><article class="media"><a class="media-left" href="/2020/02/24/Deep-Anomaly-Detection-with-Deviation-Networks/"><p class="image is-64x64"><img class="thumbnail" src="http://qfxiao.me/img/image-20200113104953902.png" alt="Deep Anomaly Detection with Deviation Networks"></p></a><div class="media-content size-small"><p><time dateTime="2020-02-24T02:45:08.000Z">2020-02-24</time></p><p class="title is-6"><a class="link-muted" href="/2020/02/24/Deep-Anomaly-Detection-with-Deviation-Networks/">Deep Anomaly Detection with Deviation Networks</a></p><p class="is-uppercase"><a class="link-muted" href="/categories/Research/">Research</a> / <a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></p></div></article><article class="media"><a class="media-left" href="/2020/01/31/Geant4-%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/"><p class="image is-64x64"><img class="thumbnail" src="http://qfxiao.me/img/image-20200131113557592.png" alt="Geant4 安装教程与调试环境配置"></p></a><div class="media-content size-small"><p><time dateTime="2020-01-31T03:25:59.000Z">2020-01-31</time></p><p class="title is-6"><a class="link-muted" href="/2020/01/31/Geant4-%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/">Geant4 安装教程与调试环境配置</a></p><p class="is-uppercase"><a class="link-muted" href="/categories/Technical-Notes/">Technical Notes</a> / <a class="link-muted" href="/categories/Technical-Notes/Misc/">Misc</a></p></div></article><article class="media"><a class="media-left" href="/2020/01/09/Complementary-Set-Variational-Autoencoder-for-Supervised-Anomaly-Detection/"><p class="image is-64x64"><img class="thumbnail" src="http://qfxiao.me/img/image-20200109102204802.png" alt="Complementary Set Variational Autoencoder for Supervised Anomaly Detection"></p></a><div class="media-content size-small"><p><time dateTime="2020-01-09T02:15:03.000Z">2020-01-09</time></p><p class="title is-6"><a class="link-muted" href="/2020/01/09/Complementary-Set-Variational-Autoencoder-for-Supervised-Anomaly-Detection/">Complementary Set Variational Autoencoder for Supervised Anomaly Detection</a></p><p class="is-uppercase"><a class="link-muted" href="/categories/Research/">Research</a> / <a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></p></div></article></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">归档</h3><ul class="menu-list"><li><a class="level is-mobile is-marginless" href="/archives/2020/03/"><span class="level-start"><span class="level-item">三月 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/archives/2020/02/"><span class="level-start"><span class="level-item">二月 2020</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile is-marginless" href="/archives/2020/01/"><span class="level-start"><span class="level-item">一月 2020</span></span><span class="level-end"><span class="level-item tag">4</span></span></a></li><li><a class="level is-mobile is-marginless" href="/archives/2019/11/"><span class="level-start"><span class="level-item">十一月 2019</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/archives/2019/10/"><span class="level-start"><span class="level-item">十月 2019</span></span><span class="level-end"><span class="level-item tag">5</span></span></a></li><li><a class="level is-mobile is-marginless" href="/archives/2019/09/"><span class="level-start"><span class="level-item">九月 2019</span></span><span class="level-end"><span class="level-item tag">4</span></span></a></li></ul></div></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">标签</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/Anomaly-Detection/"><span class="tag">Anomaly Detection</span><span class="tag is-grey-lightest">9</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Deep-Learning/"><span class="tag">Deep Learning</span><span class="tag is-grey-lightest">13</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Flow-based-Model/"><span class="tag">Flow-based Model</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/GAN/"><span class="tag">GAN</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Machine-Learning/"><span class="tag">Machine Learning</span><span class="tag is-grey-lightest">7</span></a></div><div class="control"><a class="tags has-addons" href="/tags/RNN/"><span class="tag">RNN</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Spectral/"><span class="tag">Spectral</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Statistics/"><span class="tag">Statistics</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Time-Series/"><span class="tag">Time Series</span><span class="tag is-grey-lightest">10</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Transfer-Learning/"><span class="tag">Transfer Learning</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/VAE/"><span class="tag">VAE</span><span class="tag is-grey-lightest">6</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Variational-Inference/"><span class="tag">Variational Inference</span><span class="tag is-grey-lightest">2</span></a></div></div></div></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">订阅更新</h3><form action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open(&#039;https://feedburner.google.com/fb/a/mailverify?uri=&#039;,&#039;popupwindow&#039;,&#039;scrollbars=yes,width=550,height=520&#039;);return true"><input type="hidden" value="" name="uri"><input type="hidden" name="loc" value="en_US"><div class="field has-addons"><div class="control has-icons-left is-expanded"><input class="input" name="email" type="email" placeholder="Email"><span class="icon is-small is-left"><i class="fas fa-envelope"></i></span></div><div class="control"><input class="button is-primary" type="submit" value="订阅"></div></div></form></div></div></div><div class="card widget"><div class="card-content"><div class="notification is-danger">You need to set <code>client_id</code> and <code>slot_id</code> to show this AD unit. Please set it in <code>_config.yml</code>.</div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/logo.svg" alt="Hanzawa の 部屋" height="28"></a><p class="size-small"><span>&copy; 2020 Hanzawa</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script>moment.locale("zh-CN");</script><script>var IcarusThemeSettings = {
-            site: {
-                url: 'http://qfxiao.me',
-                external_link: {"enable":true,"exclude":[]}
+
+            <!--  -->
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/Anomaly-Detection/" rel="tag">Anomaly Detection</a>, <a class="has-link-grey -link" href="/tags/Transfer-Learning/" rel="tag">Transfer Learning</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<a class="button is-info donate">
+    <span class="icon is-small">
+        <i class="fab fa-alipay"></i>
+    </span>
+    <span>支付宝</span>
+    <div class="qrcode"><img src="http://qfxiao.me/misc/alipay.jpg" alt="支付宝"></div>
+</a>
+
+                
+                
+<a class="button is-success donate">
+    <span class="icon is-small">
+        <i class="fab fa-weixin"></i>
+    </span>
+    <span>微信</span>
+    <div class="qrcode"><img src="http://qfxiao.me/misc/wechat.png" alt="微信"></div>
+</a>
+
+                
+                <!-- Visit https://www.paypal.com/donate/buttons/ to get your donate button -->
+
+<a class="button is-warning donate" onclick="document.getElementById(&#39;paypal-donate-form&#39;).submit()">
+    <span class="icon is-small">
+        <i class="fab fa-paypal"></i>
+    </span>
+    <span>Paypal</span>
+</a>
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" id="paypal-donate-form">
+    <input type="hidden" name="cmd" value="_donations" />
+    <input type="hidden" name="business" value="larryshaw0079@live.com" />
+    <input type="hidden" name="currency_code" value="USD" />
+</form>
+
+                
+        </div>
+    </div>
+</div>
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">Discovering Physical Concepts with Neural Networks</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2020/02/24/Deep-Anomaly-Detection-with-Deviation-Networks/">
+                <span class="level-item">Deep Anomaly Detection with Deviation Networks</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<script>
+    var disqus_config = function () {
+        this.page.url = 'http://qfxiao.me/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/';
+        this.page.identifier = '2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/';
+    };
+    (function() {
+        var d = document, s = d.createElement('script');  
+        s.src = '//' + 'http-larryshaw0079-coding-me-blog' + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+
+<div id="disqus_thread">
+    
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript" target="_blank" rel="noopener">comments powered by Disqus.</a></noscript>
+</div>
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered" style="flex-shrink: 1">
+                <div>
+                    
+                    <figure class="image is-128x128 has-mb-6">
+                        <img class="" src="http://qfxiao.me/misc/avatar.jpg" alt="Hanzawa">
+                    </figure>
+                    
+                    <p class="is-size-4 is-block">
+                        Hanzawa
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        A graduate student
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Beijing, China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        17
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        9
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        12
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="https://github.com/ppoffice" target="_blank">
+                关注我</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank"
+                title="Github" href="https://github.com/ppoffice">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank"
+                title="Facebook" href="https://facebook.com">
+                
+                <i class="fab fa-facebook"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank"
+                title="Twitter" href="https://twitter.com">
+                
+                <i class="fab fa-twitter"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank"
+                title="Dribbble" href="https://dribbble.com">
+                
+                <i class="fab fa-dribbble"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank"
+                title="RSS" href="/">
+                
+                <i class="fas fa-rss"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+<div class="card widget" id="toc">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                目录
+            </h3>
+            <ul class="menu-list"><li>
+        <a class="is-flex" href="#introduction">
+        <span class="has-mr-6">1</span>
+        <span>Introduction</span>
+        </a></li><li>
+        <a class="is-flex" href="#proposed-method">
+        <span class="has-mr-6">2</span>
+        <span>Proposed Method</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#task">
+        <span class="has-mr-6">2.1</span>
+        <span>Task</span>
+        </a></li><li>
+        <a class="is-flex" href="#domain-specific-anomaly-score-function">
+        <span class="has-mr-6">2.2</span>
+        <span>Domain-specific Anomaly Score Function</span>
+        </a></li><li>
+        <a class="is-flex" href="#models-for-latent-domain-vectors">
+        <span class="has-mr-6">2.3</span>
+        <span>Models for Latent Domain Vectors</span>
+        </a></li><li>
+        <a class="is-flex" href="#objective-function">
+        <span class="has-mr-6">2.4</span>
+        <span>Objective Function</span>
+        </a></li><li>
+        <a class="is-flex" href="#inference">
+        <span class="has-mr-6">2.5</span>
+        <span>Inference</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#experiments">
+        <span class="has-mr-6">3</span>
+        <span>Experiments</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#data">
+        <span class="has-mr-6">3.1</span>
+        <span>Data</span>
+        </a></li><li>
+        <a class="is-flex" href="#comparison-methods">
+        <span class="has-mr-6">3.2</span>
+        <span>Comparison Methods</span>
+        </a></li><li>
+        <a class="is-flex" href="#results">
+        <span class="has-mr-6">3.3</span>
+        <span>Results</span>
+        </a></li></ul></li></ul>
+        </div>
+    </div>
+</div>
+
+    
+        
+
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            链接
+        </h3>
+        <ul class="menu-list">
+        
+            <li>
+                <a class="level is-mobile" href="https://hexo.io" target="_blank">
+                    <span class="level-left">
+                        <span class="level-item">Hexo</span>
+                    </span>
+                    <span class="level-right">
+                        <span class="level-item tag">hexo.io</span>
+                    </span>
+                </a>
+            </li>
+        
+            <li>
+                <a class="level is-mobile" href="https://github.com/ppoffice" target="_blank">
+                    <span class="level-left">
+                        <span class="level-item">PPOffice</span>
+                    </span>
+                    <span class="level-right">
+                        <span class="level-item tag">github.com</span>
+                    </span>
+                </a>
+            </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+
+
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                分类
+            </h3>
+            <ul class="menu-list">
+            <li>
+        <a class="level is-marginless" href="/categories/Research/">
+            <span class="level-start">
+                <span class="level-item">Research</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">16</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/Research/Anomaly-Detection/">
+            <span class="level-start">
+                <span class="level-item">Anomaly Detection</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">11</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Research/GAN/">
+            <span class="level-start">
+                <span class="level-item">GAN</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Research/Misc/">
+            <span class="level-start">
+                <span class="level-item">Misc</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Research/RNN/">
+            <span class="level-start">
+                <span class="level-item">RNN</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Research/Time-Series-Imputation/">
+            <span class="level-start">
+                <span class="level-item">Time Series Imputation</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Research/Tutorial/">
+            <span class="level-start">
+                <span class="level-item">Tutorial</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/Technical-Notes/">
+            <span class="level-start">
+                <span class="level-item">Technical Notes</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/Technical-Notes/Misc/">
+            <span class="level-start">
+                <span class="level-item">Misc</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li>
+            </ul>
+        </div>
+    </div>
+</div>
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            标签云
+        </h3>
+        <a href="/tags/Anomaly-Detection/" style="font-size: 16.67px;">Anomaly Detection</a> <a href="/tags/Deep-Learning/" style="font-size: 20px;">Deep Learning</a> <a href="/tags/Flow-based-Model/" style="font-size: 10px;">Flow-based Model</a> <a href="/tags/GAN/" style="font-size: 11.67px;">GAN</a> <a href="/tags/Machine-Learning/" style="font-size: 15px;">Machine Learning</a> <a href="/tags/RNN/" style="font-size: 11.67px;">RNN</a> <a href="/tags/Spectral/" style="font-size: 10px;">Spectral</a> <a href="/tags/Statistics/" style="font-size: 10px;">Statistics</a> <a href="/tags/Time-Series/" style="font-size: 18.33px;">Time Series</a> <a href="/tags/Transfer-Learning/" style="font-size: 10px;">Transfer Learning</a> <a href="/tags/VAE/" style="font-size: 13.33px;">VAE</a> <a href="/tags/Variational-Inference/" style="font-size: 11.67px;">Variational Inference</a>
+    </div>
+</div>
+
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+            
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            最新文章
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200301230011495.png" alt="Discovering Physical Concepts with Neural Networks">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-03-01T14:55:02.000Z">2020-03-01</time></div>
+                    <a href="/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Discovering Physical Concepts with Neural Networks</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Misc/">Misc</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200109102830713.png" alt="Transfer Anomaly Detection by Inferring Latent Domain Representations">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-02-27T12:02:18.000Z">2020-02-27</time></div>
+                    <a href="/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Transfer Anomaly Detection by Inferring Latent Domain Representations</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/02/24/Deep-Anomaly-Detection-with-Deviation-Networks/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200113104953902.png" alt="Deep Anomaly Detection with Deviation Networks">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-02-24T02:45:08.000Z">2020-02-24</time></div>
+                    <a href="/2020/02/24/Deep-Anomaly-Detection-with-Deviation-Networks/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Deep Anomaly Detection with Deviation Networks</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/01/31/Geant4-%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200131113557592.png" alt="Geant4 安装教程与调试环境配置">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-01-31T03:25:59.000Z">2020-01-31</time></div>
+                    <a href="/2020/01/31/Geant4-%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Geant4 安装教程与调试环境配置</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Technical-Notes/">Technical Notes</a> / <a class="has-link-grey -link" href="/categories/Technical-Notes/Misc/">Misc</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/01/09/Complementary-Set-Variational-Autoencoder-for-Supervised-Anomaly-Detection/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200109102204802.png" alt="Complementary Set Variational Autoencoder for Supervised Anomaly Detection">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-01-09T02:15:03.000Z">2020-01-09</time></div>
+                    <a href="/2020/01/09/Complementary-Set-Variational-Autoencoder-for-Supervised-Anomaly-Detection/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Complementary Set Variational Autoencoder for Supervised Anomaly Detection</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            归档
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/02/">
+                <span class="level-start">
+                    <span class="level-item">二月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                标签
+            </h3>
+            <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Anomaly-Detection/">
+                        <span class="tag">Anomaly Detection</span>
+                        <span class="tag is-grey">9</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Deep-Learning/">
+                        <span class="tag">Deep Learning</span>
+                        <span class="tag is-grey">13</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Flow-based-Model/">
+                        <span class="tag">Flow-based Model</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/GAN/">
+                        <span class="tag">GAN</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Machine-Learning/">
+                        <span class="tag">Machine Learning</span>
+                        <span class="tag is-grey">7</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/RNN/">
+                        <span class="tag">RNN</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Spectral/">
+                        <span class="tag">Spectral</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Statistics/">
+                        <span class="tag">Statistics</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Time-Series/">
+                        <span class="tag">Time Series</span>
+                        <span class="tag is-grey">10</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Transfer-Learning/">
+                        <span class="tag">Transfer Learning</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/VAE/">
+                        <span class="tag">VAE</span>
+                        <span class="tag is-grey">6</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Variational-Inference/">
+                        <span class="tag">Variational Inference</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+        
+        </div>
+    
+</div>
+
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only has-order-3 column-right ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            最新文章
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200301230011495.png" alt="Discovering Physical Concepts with Neural Networks">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-03-01T14:55:02.000Z">2020-03-01</time></div>
+                    <a href="/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Discovering Physical Concepts with Neural Networks</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Misc/">Misc</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200109102830713.png" alt="Transfer Anomaly Detection by Inferring Latent Domain Representations">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-02-27T12:02:18.000Z">2020-02-27</time></div>
+                    <a href="/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Transfer Anomaly Detection by Inferring Latent Domain Representations</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/02/24/Deep-Anomaly-Detection-with-Deviation-Networks/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200113104953902.png" alt="Deep Anomaly Detection with Deviation Networks">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-02-24T02:45:08.000Z">2020-02-24</time></div>
+                    <a href="/2020/02/24/Deep-Anomaly-Detection-with-Deviation-Networks/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Deep Anomaly Detection with Deviation Networks</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/01/31/Geant4-%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200131113557592.png" alt="Geant4 安装教程与调试环境配置">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-01-31T03:25:59.000Z">2020-01-31</time></div>
+                    <a href="/2020/01/31/Geant4-%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Geant4 安装教程与调试环境配置</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Technical-Notes/">Technical Notes</a> / <a class="has-link-grey -link" href="/categories/Technical-Notes/Misc/">Misc</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/01/09/Complementary-Set-Variational-Autoencoder-for-Supervised-Anomaly-Detection/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200109102204802.png" alt="Complementary Set Variational Autoencoder for Supervised Anomaly Detection">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-01-09T02:15:03.000Z">2020-01-09</time></div>
+                    <a href="/2020/01/09/Complementary-Set-Variational-Autoencoder-for-Supervised-Anomaly-Detection/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Complementary Set Variational Autoencoder for Supervised Anomaly Detection</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            归档
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/02/">
+                <span class="level-start">
+                    <span class="level-item">二月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                标签
+            </h3>
+            <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Anomaly-Detection/">
+                        <span class="tag">Anomaly Detection</span>
+                        <span class="tag is-grey">9</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Deep-Learning/">
+                        <span class="tag">Deep Learning</span>
+                        <span class="tag is-grey">13</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Flow-based-Model/">
+                        <span class="tag">Flow-based Model</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/GAN/">
+                        <span class="tag">GAN</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Machine-Learning/">
+                        <span class="tag">Machine Learning</span>
+                        <span class="tag is-grey">7</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/RNN/">
+                        <span class="tag">RNN</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Spectral/">
+                        <span class="tag">Spectral</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Statistics/">
+                        <span class="tag">Statistics</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Time-Series/">
+                        <span class="tag">Time Series</span>
+                        <span class="tag is-grey">10</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Transfer-Learning/">
+                        <span class="tag">Transfer Learning</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/VAE/">
+                        <span class="tag">VAE</span>
+                        <span class="tag is-grey">6</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Variational-Inference/">
+                        <span class="tag">Variational Inference</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+    
+    
+</div>
+
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/logo.svg" alt="Transfer Anomaly Detection by Inferring Latent Domain Representations" height="28">
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2020 Hanzawa&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                        
+                        <i class="fab fa-creative-commons"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                        
+                        <i class="fab fa-creative-commons-by"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+<script>
+var IcarusThemeSettings = {
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/" target="_blank" rel="noopener">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/mathjax@3.0.0/https://cdn.jsdelivr.net/npm/mathjax@3.0.0/es5/tex-mml-chtml.js" defer></script> -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ],
+            // processEscapes: true
+        },
+        TeX: { 
+            equationNumbers: { autoNumber: "AMS" },
+            extensions: ["AMSmath.js", "AMSsymbols.js"]
+        },
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么..." />
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
             },
-            article: {
-                highlight: {
-                    clipboard: true,
-                    fold: 'unfolded'
-                }
-            }
-        };</script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script src="/js/animation.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
-            if (typeof $.fn.lightGallery === 'function') {
-                $('.article').lightGallery({ selector: '.gallery-item' });
-            }
-            if (typeof $.fn.justifiedGallery === 'function') {
-                if ($('.justified-gallery > p > .gallery-item').length) {
-                    $('.justified-gallery > p > .gallery-item').unwrap();
-                }
-                $('.justified-gallery').justifiedGallery();
-            }
-        });</script><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script><script>window.addEventListener("load", function () {
-            MathJax.Hub.Config({
-                'HTML-CSS': {
-                    matchFontHeight: false
-                },
-                SVG: {
-                    matchFontHeight: false
-                },
-                CommonHTML: {
-                    matchFontHeight: false
-                },
-                tex2jax: {
-                    inlineMath: [
-                        ['$','$'],
-                        ['\\(','\\)']
-                    ]
-                }
-            });
-        });</script><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
-            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
-        });</script></body></html>
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>

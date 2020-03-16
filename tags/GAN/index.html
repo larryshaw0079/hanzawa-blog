@@ -1,206 +1,1394 @@
-<!doctype html>
-<html lang="zh"><head><meta charset="utf-8"><meta name="generator" content="Hexo 4.2.0"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>标签: GAN - Hanzawa の 部屋</title><meta property="og:type" content="blog"><meta property="og:title" content="Hanzawa の 部屋"><meta property="og:url" content="http://qfxiao.me/"><meta property="og:site_name" content="Hanzawa の 部屋"><meta property="og:locale" content="zh_CN"><meta property="article:author" content="Hanzawa"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="http://qfxiao.me/img/og_image.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://qfxiao.me"},"headline":"Hanzawa の 部屋","image":["http://qfxiao.me/img/og_image.png"],"author":{"@type":"Person","name":"Hanzawa"},"description":null}</script><link rel="icon" href="/images/favicon.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/logo.svg" alt="Hanzawa の 部屋" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><div class="card-content"><nav class="breadcrumb" aria-label="breadcrumbs"><ul><li><a href="/tags">标签</a></li><li class="is-active"><a href="#" aria-current="page">GAN</a></li></ul></nav></div></div><div class="card"><div class="card-image"><a class="image is-7by3" href="/2019/11/02/Variational-Approaches-for-Auto-Encoding-Generative-Adversarial-Networks/"><img class="thumbnail" src="http://qfxiao.me/img/image-20191102233101258.png" alt="Variational Approaches for Auto-Encoding Generative Adversarial Networks"></a></div><article class="card-content article" role="article"><div class="article-meta size-small is-uppercase level is-mobile"><div class="level-left"><time class="level-item" dateTime="2019-11-02T15:28:53.000Z" title="2019-11-02T15:28:53.000Z">2019-11-02</time><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/GAN/">GAN</a></span><span class="level-item">18 分钟 读完 (大约 2774 个字)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2019/11/02/Variational-Approaches-for-Auto-Encoding-Generative-Adversarial-Networks/">Variational Approaches for Auto-Encoding Generative Adversarial Networks</a></h1><div class="content"><h1 id="abstract">Abstract</h1>
+<!DOCTYPE html>
+<html  lang="zh">
+<head>
+    <meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.0" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>标签: GAN - Hanzawa の 部屋</title>
+
+
+    <meta property="og:type" content="website">
+<meta property="og:title" content="Hanzawa の 部屋">
+<meta property="og:url" content="http://qfxiao.me/tags/GAN/index.html">
+<meta property="og:site_name" content="Hanzawa の 部屋">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://qfxiao.me/images/og_image.png">
+<meta property="article:author" content="Hanzawa">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://qfxiao.me/images/og_image.png">
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.png">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.svg" alt="Hanzawa の 部屋" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">Home</a>
+                
+                <a class="navbar-item"
+                href="/archives">Archives</a>
+                
+                <a class="navbar-item"
+                href="/categories">Categories</a>
+                
+                <a class="navbar-item"
+                href="/tags">Tags</a>
+                
+                <a class="navbar-item"
+                href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
+    <div class="card-content">
+        <nav class="breadcrumb" aria-label="breadcrumbs">
+        <ul>
+            <li><a href="/tags">标签</a></li>
+            <li class="is-active"><a href="#" aria-current="page">GAN</a></li>
+        </ul>
+        </nav>
+    </div>
+</div>
+
+    <div class="card">
+    
+    <div class="card-image">
+        <a href="/2019/11/02/Variational-Approaches-for-Auto-Encoding-Generative-Adversarial-Networks/" class="image is-7by1">
+            <img class="thumbnail" src="http://qfxiao.me/img/image-20191102233101258.png" alt="Variational Approaches for Auto-Encoding Generative Adversarial Networks">
+        </a>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2019-11-02T15:28:53.000Z">2019-11-02</time>
+                
+                    <i class="fas fa-calendar-check">&nbsp</i>
+                    <time class="level-item has-text-grey" datetime="2020-02-03T08:20:48.802Z">2020-02-03</time>
+                
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Research/">Research</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Research/GAN/">GAN</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    18 分钟 读完 (大约 2774 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2019/11/02/Variational-Approaches-for-Auto-Encoding-Generative-Adversarial-Networks/">Variational Approaches for Auto-Encoding Generative Adversarial Networks</a>
+            
+        </h1>
+        <div class="content">
+            
+                
+                
+                
+                    
+                    
+                        
+                    
+                
+                    
+                    
+                        
+                    
+                
+                    
+                    
+                        
+                    
+                
+                    
+                    
+                        
+                    
+                
+                    
+                    
+                
+                
+            
+            <h1 id="abstract">Abstract</h1>
 <p>本文揭示了对抗生成网络（Generative Adversarial Networks, GAN）和变分自编码器（Variational Auto-encoders, VAE）之间的联系，并据此提出了一种将两者结合的新模型。文中主要是将不可解的似然函数和未知的后验分布用一个非确定的分布（Immplicit Distribution）替代，并加入判别器来使得该分布逼近真实的分布。通过这个方法，作者将VAE中的损失函数进行了替换，变成了GAN中的“生成-判别”模式。</p>
-<p><a href="https://arxiv.org/abs/1706.04987">原文</a></p>
+<p><a href="https://arxiv.org/abs/1706.04987" target="_blank" rel="noopener">原文</a></p>
 <h1 id="contribution">Contribution</h1>
 <p>本文有如下贡献：</p>
-<ul>
-<li>本文提出变分推断（Variational Inference）也能通过对非确定分布的估计应用在GAN中；</li>
-<li>基于似然的模型（Likelihood-based Models）和非似然模型（Likelihood-free Models）能够通过对抗学习结合起来；</li>
-<li>作者根据文中提出的新观点修改了VAE的损失函数，将其称之为Auto-encoding GAN (<span class="math inline">\(\alpha\)</span>-GAN)，并提出了对应的实用的改进；</li>
-<li>本文与众多State-of-Art模型进行了对比</li>
-</ul>
-<h1 id="methodology">Methodology</h1>
-<h2 id="overcoming-intractability-in-generative-models">Overcoming Intractability in Generative Models</h2>
-<h3 id="latent-variable-models">Latent Variable Models</h3>
-<p>隐变量模型通过隐变量的形式描述了数据的产生过程。最简单的形式是假设隐变量<span class="math inline">\(\mathbf{z}\)</span>服从一个先验分布<span class="math inline">\(\mathbf{z}\sim p(\mathbf{z})\)</span>，而数据<span class="math inline">\(\mathbf{x}\)</span>从条件分布<span class="math inline">\(p(\mathbf{x}|\mathbf{z})\)</span>抽样产生。通常来说描述<span class="math inline">\(p(\mathbf{x}|\mathbf{z})\)</span>的模型称为生成器<span class="math inline">\(\mathcal{G}_\theta(\mathbf{z})\)</span>，带有可优化的参数<span class="math inline">\(\theta\)</span>，而<span class="math inline">\(\mathbf{z}\)</span>通常假设为正态分布<span class="math inline">\(\mathbf{z}\sim\mathcal{N}(\mathbf{0},\mathbf{I})\)</span>。</p>
-<p>文中区分了两种隐变量模型，一种是<em>Implicit Latent Variable Models</em>，一种是<em>Prescribed Latent Variable Models</em>。文中的描述不太清楚，个人认为两者的区别是前者图模型中的<span class="math inline">\(\mathbf{x}\)</span>不是一个随机变量，在优化的时候需要用一个刻画生成的<span class="math inline">\(\mathbf{x}\)</span>和真实的<span class="math inline">\(\mathbf{x}\)</span>的差别的函数<span class="math inline">\(\delta(\mathbf{x}-\mathcal{G}_\theta(\mathbf{z}))\)</span>，而后者图模型中<span class="math inline">\(\mathbf{x}\)</span>是一个随机变量，这样可以写出似然函数用极大似然估计。</p>
-<p>无论是GAN还是VAE都需要通过边缘分布<span class="math inline">\(p_\theta(\mathbf{x})\)</span>来刻画建模的好坏，比如说根据<span class="math inline">\(p_\theta(\mathbf{x})\)</span>与真实分布<span class="math inline">\(p^*_\theta(\mathbf{x})\)</span>之间的KL散度<span class="math inline">\(\text{KL}\left[p_\theta(\mathbf{x})\parallel p_\theta^*(\mathbf{x})\right]\)</span>。但通常情况下<span class="math inline">\(p_\theta(\mathbf{x})\)</span>都是不可解的，而GAN和VAE通过不同的途径解决了这个问题。</p>
-<h3 id="generative-adversarial-networks">Generative Adversarial Networks</h3>
-<p>GAN没有直接计算<span class="math inline">\(p_\theta(\mathbf{x})\)</span>，而是使用了一个判别器来判别样本是从<span class="math inline">\(p_\theta(\mathbf{x})\)</span>还是<span class="math inline">\(p_\theta^*(\mathbf{x})\)</span>采样得到的，如果判别器无法进行区分，那我们认为此时<span class="math inline">\(p_\theta(\mathbf{x})\approx p_\theta^*(\mathbf{x})\)</span>。</p>
-<p>令随机变量<span class="math inline">\(y\in\{0,1\}\)</span>，<span class="math inline">\(y=1\)</span>表示样本<span class="math inline">\(\mathbf{x}\)</span>来自真实分布，<span class="math inline">\(y=0\)</span>表示样本<span class="math inline">\(\mathbf{x}\)</span>来自生成分布，而判别器的输出为<span class="math inline">\(\mathbf{x}\)</span>来自真实分布的概率<span class="math inline">\(\mathcal{D}_\phi(\mathbf{x})=p(y=1|\mathbf{x})\)</span>。GAN通过对来自真实分布和生成分布的样本求二元交叉熵来作为判别器损失函数： <span class="math display">\[
-\textbf{Discriminator Loss: }\mathbb{E}_{p^*(\mathbf{x})}[-\log\mathcal{D}_\phi(\mathbf{x})]+\mathbb{E}_{p_\theta(\mathbf{x})}[-\log(1-\mathcal{D}_\phi(\mathbf{x}))]
-\]</span></p>
-<p>生成器将最大化判别器对生成样本判定为真的概率作为损失函数，同时还有一个等价的但在实践中表现更好的替代版本：</p>
-<p><span class="math display">\[
-\textbf{Generator Loss: }\mathbb{E}_{p_\theta(\mathbf{x})}[\log(1-\mathcal{D}_\phi(\mathbf{x}))];\textbf{ Alternative Loss: }\mathbf{E}_{p_\theta(\mathbf{x})}[-\log\mathcal{D}_\phi(\mathbf{x})]
-\]</span></p>
-<h3 id="the-density-ratio-trick">The Density Ratio Trick</h3>
-<p>令<span class="math inline">\(p^*(\mathbf{x})=p(\mathbf{x}|y=1)\)</span>，<span class="math inline">\(p_\theta(\mathbf{x})=p(\mathbf{x}|y=0)\)</span>。定义<em>Density Ratio</em> <span class="math inline">\(r_\phi(\mathbf{x})\)</span>为真实分布和生成分布之间的比例：</p>
-<p><span class="math display">\[
-r_\phi(\mathbf{x})=\frac{p^*(\mathbf{x})}{p_\theta(\mathbf{x})}=\frac{p(\mathbf{x}|y=1)}{p(\mathbf{x}|y=0)}=\frac{p(y=1|\mathbf{x})}{p(y=0|\mathbf{x})}=\frac{\mathcal{D}_\phi(\mathbf{x})}{1-\mathcal{D}_\phi(\mathbf{x})}
-\]</span></p>
-<p>上式表明了<em>Density Ratio</em>的计算可以仅通过从两个分布上采样得到的样本加上一个二分类器<span class="math inline">\(\mathcal{D}_\phi(\mathbf{x})\)</span>实现（假设<span class="math inline">\(p(y=0)=p(y=1)\)</span>）。更深入的说，对于不可解的分布<span class="math inline">\(p_\theta^*(\mathbf{x})\)</span>，我们可以通过计算<em>Density Ratio</em>来了解我们近似的分布<span class="math inline">\(p_\theta(\mathbf{x})\)</span>和真实的<span class="math inline">\(p_\theta^*(\mathbf{x})\)</span>之间的相对性。而且我们只需要能够在两个分布上进行采样，并且训练一个判别器即可。因为判别器是一个普通的分类器，所以大量的主流分类器都可以使用。</p>
-<h3 id="variational-inference">Variational Inference</h3>
-<p>现在来看VAE，另一种解决不可解分布的方法是近似。<em>Variational Inference</em>通过引入一个变分分布<span class="math inline">\(q_\eta(\mathbf{z}|\mathbf{x})\)</span>推出了不可解的<span class="math inline">\(\mathbf{x}\)</span>的对数似然的下界（常被称为证据下界ELBO）：</p>
-<p><span class="math display">\[
-\log p_\theta(\mathbf{x})=\log\int p_\theta(\mathbb{x}|\mathbb{z})p(\mathbf{z})\text{d}\mathbf{z}\geq \mathbb{E}_{q_\eta(\mathbf{z}|\mathbf{x})}\left[\log p_\theta(\mathbf{x}|\mathbf{z})\right]-\text{KL}\left[q_\eta(\mathbf{z}|\mathbf{x})\parallel p(\mathbf{z})\right]=\mathcal{F}(\boldsymbol{\theta}, \boldsymbol{\eta})
-\]</span></p>
-<p>VAE是<em>Variational Inference</em>的一种实现，变分分布通过一个神经网络进行建模，并且建立起了完整的可优化的模型。</p>
-<h3 id="synthetic-likelihood">Synthetic Likelihood</h3>
-<p>当似然函数未知（GAN中没有显式的似然函数，而VAE中有）的时候，<em>Variational Inference</em>便无法直接使用。对于没有显式的似然函数的情况，以VAE的ELBO的第一项为例，假设<span class="math inline">\(p_\theta(\mathbf{x}|\mathbf{z})\)</span>分布的具体形式未知，我们只有从<span class="math inline">\(p_\theta(\mathbf{x}|\mathbf{z})\)</span>采样得到的样本，如何计算<span class="math inline">\(\mathbb{E}_{q_\eta(\mathbf{z}|\mathbf{x})}[\log p_\theta(\mathbf{x}|\mathbf{z})]\)</span>呢？一个方法是乘以<span class="math inline">\(p_\theta^*(\mathbf{x})\)</span>再除以<span class="math inline">\(p_\theta^*(\mathbf{x})\)</span>：</p>
-<p><span class="math display">\[
-\mathbb{E}_{q_\eta(\mathbf{z}|\mathbf{x})}[\log p_\theta(\mathbf{x}|\mathbf{z})]=\mathbb{E}_{q_\eta(\mathbf{z}|\mathbf{x})}\left[\log\frac{p_\theta(\mathbf{x}|\mathbf{z})}{p^*(\mathbf{x})}\right]+\mathbb{E}_{q_\eta(\mathbf{z}|\mathbf{x})}[\log p^*(\mathbf{x})]
-\]</span></p>
-<p>公式(5)中的第一项包括了合成似然<span class="math inline">\(R(\theta)=\frac{p_\theta(\mathbf{x}|\mathbf{z})}{p^*(\mathbf{x})}\)</span>，优化<span class="math inline">\(R(\theta)\)</span>相当于优化<span class="math inline">\(\log p_\theta(\mathbf{x}|\mathbf{z})\)</span>。第二项与生成网络的参数<span class="math inline">\(\theta\)</span>无关，所以在优化的时候可以忽略。</p>
-<h2 id="a-fusion-of-variational-and-adversarial-learning">A Fusion of Variational and Adversarial Learning</h2>
-<p>GAN和VAE分别从不同的角度解决了生成模型的推断问题，我们下面从VAE出发，考虑将两者结合起来。</p>
-<h3 id="implicit-variational-distributions">Implicit Variational Distributions</h3>
-<p>变分推断<strong>Variational Inference</strong>的主要任务就是确定<span class="math inline">\(q_\eta(\mathbf{z}|\mathbf{x})\)</span>，通常的做法如<strong>Mean-field Variational Inference</strong>会假设一个简单的分布，如高斯分布。在本文中不对<span class="math inline">\(q_\eta(\mathbf{z}|\mathbf{x})\)</span>的形式作假设，仅假设其为一个隐含的分布。运用上文提到的<em>Density Ratio Trick</em>，我们可以将VAE损失函数中的第二项改写为：</p>
-<p><span class="math display">\[
--\text{KL}[q_\eta(\mathbf{z}|\mathbf{x})\parallel p(\mathbf{z})]=\mathbb{E}_{q_\eta(\mathbf{z}|\mathbf{x})}\left[\log\frac{p(\mathbf{z})}{q_\eta(\mathbf{z}|\mathbf{x})}\right]\approx\mathbb{E}_{q_\eta(\mathbf{z}|\mathbf{x})}\left[\log\frac{\mathcal{C}_\boldsymbol{\omega}(\mathbf{z})}{1-\mathcal{C}_\boldsymbol{\omega}(\mathbf{z})}\right]
-\]</span></p>
-<p>文中引入了一个隐变量分类器（Latent Classifier）<span class="math inline">\(\mathcal{C}_{\boldsymbol{\omega}}(\mathbf{z})\)</span>，用来判别<span class="math inline">\(\mathbf{z}\)</span>是从编码网络还是从标准高斯分布中采样得到的（猜测这样做的好处是不用再对<span class="math inline">\(\mathbf{z}\)</span>的后验做高斯分布的假设了，也不需要在变分网络输出形成的高斯分布上采样得到<span class="math inline">\(\mathbf{z}\)</span>了，这样重参数技巧也省了）。具体实现上，期望可以用蒙特卡洛方法（采样多次取均值）进行计算。</p>
-<h3 id="likelihood-choice">Likelihood Choice</h3>
-<p>对于VAE损失函数第一项，对应生成网络，我们可以选择对<span class="math inline">\(p(\mathbf{x}|\mathbf{z})\)</span>分布的具体形式做假设， 这样对应<em>Likelihood-based</em>的情况。文中选择的是<em>Zero-mean Laplace Distribution</em> <span class="math inline">\(p_\theta(\mathbf{x}|\mathbf{z})\propto\exp(-\lambda\parallel\mathbf{x}-\mathcal{G}_\theta(\mathbf{z})\parallel_1)\)</span>（不就是<span class="math inline">\(L_1\)</span> Loss吗？？？）。</p>
-<p>对于<em>Likelihood-free</em>的情况，可以继续使用上面提到的<em>Density Ratio Trick</em>，这时需要加一个一个判别器。</p>
-<p><span class="math display">\[
-\mathbb{E}_{q_\eta(\mathbf{z}|\mathbf{x})}\left[-\lambda\parallel\mathbf{x}-\mathcal{G}_\theta(\mathbf{z})\parallel_1\right]\space\space\text{  or  }\space\space\mathbb{E}_{q_\eta(\mathbf{z}|\mathbf{x})}\left[\log\frac{\mathcal{D}_\phi(\mathcal{G}_\theta(\mathbf{z}))}{1-\mathcal{D}_\phi(\mathcal{G}_\theta(\mathbf{z}))}\right]
-\]</span></p>
-<p>对于两种选择，前者对应VAE，好处是不会出现模式崩溃的情况，后者对应GAN，容易出现模式崩溃的情况，但是可以使用对抗学习的方式（这是优点？？？），本文选择两种都用（我全都要.jpg）。</p>
-<h3 id="hybrid-loss-functions">Hybrid Loss Functions</h3>
-<p>将前面的讨论结合起来，最后的损失函数就是：</p>
-<p><span class="math display">\[
-\mathcal{L}(\boldsymbol{\theta},\boldsymbol{\eta})=\mathbb{E}_{q_\eta(\mathbf{z}|\mathbf{x})}\left[-\lambda\parallel\mathbf{x}-\mathcal{G}_\theta(\mathbf{z})\parallel_1+\log\frac{\mathcal{D}_\phi(\mathcal{G}_\theta(\mathbf{z}))}{1-\mathcal{D}_\phi(\mathcal{G}_\theta(\mathbf{z}))}+\log\frac{\mathcal{C}_\boldsymbol{\omega}(\mathbf{z})}{1-\mathcal{C}_\boldsymbol{\omega}(\mathbf{z})}\right]
-\]</span></p>
-<p>最后模型包含四个网络：生成网络<span class="math inline">\(p_\theta(\mathbf{x}|\mathbf{z})\)</span>、推断网络<span class="math inline">\(q_\eta(\mathbf{z}|\mathbf{x})\)</span>以及两个判别器<span class="math inline">\(\mathcal{C}_{\boldsymbol{\omega}}\)</span>和<span class="math inline">\(\mathcal{D}_\phi\)</span>，作者将其命名为<span class="math inline">\(\alpha\)</span>-GAN。</p>
-<p>算法流程如下：</p>
-<p><img src="http://qfxiao.me/img/image-20191106220923748.png" /></p>
-<h3 id="improved-techniques">Improved Techniques</h3>
-<p>作者为了改进模型的稳定性和效率，将生成器的Loss中的<span class="math inline">\(-\log(1-\mathcal{D}_\phi)\)</span>修改为了<span class="math inline">\(\log\mathcal{D}_\phi-\log(1-\mathcal{D}_\phi)\)</span>，并声称这样能提供非饱和（Non-saturating）的梯度：</p>
-<p><span class="math display">\[
-\textbf{Generator Loss: } \mathbb{E}_{q_\eta(\mathbf{z}|\mathbf{x})}\left[\lambda\parallel\mathbf{x}-\mathcal{G}_\theta(\mathbf{z})\parallel_1-\log\mathcal{D}_\phi(\mathcal{G}_\theta(\mathbf{z}))+\log(1-\mathcal{D}_\phi(\mathcal{G}_\theta(\mathbf{z})))\right]
-\]</span></p>
-<p>作者认为在生成器损失函数中加入<span class="math inline">\(\lambda\parallel\mathbf{x}-\mathcal{G}_\theta(\mathbf{z})\parallel_1\)</span>能够在一定程度防止模式崩溃。</p>
-<p>除此之外，作者发现将真实样本（原文是The Samples）作为生成的样本输入到判别器中能够提升性能。作者给出的解释是根据Jensen不等式：<span class="math inline">\(\log p_\theta(\mathbf{x})=\log\int p_\theta(\mathbf{x}|\mathbf{z})p(\mathbf{z})\text{d}\mathbf{z}\geq \mathbb{E}_{p(\mathbf{z})}[\log p_\theta(\mathbf{x}|\mathbf{z})]\)</span>，</p>
-<p>[TODO]</p>
-<h2 id="related-work">Related Work</h2>
-<p>[TODO]</p>
-<p><img src="http://qfxiao.me/img/image-20191102233101258.png" /></p>
-<p><img src="http://qfxiao.me/img/image-20191102233151987.png" /></p>
-<h1 id="experiments">Experiments</h1>
-<p>[TODO]</p>
-<h2 id="metrics">Metrics</h2>
-<p>本文使用了几种不同的评测生成模型的方法：</p>
-<ul>
-<li><strong>Inception Score: </strong></li>
-<li><strong>Multi-scale Structural Similarity (MS-SSIM): </strong></li>
-<li><strong>Independent Wasserstein Critic: </strong></li>
-</ul>
-<h2 id="results-on-colormnist">Results on ColorMNIST</h2>
-<p><img src="http://qfxiao.me/img/image-20191102233220700.png" /></p>
-<p><img src="http://qfxiao.me/img/image-20191102233244847.png" /></p>
-<h2 id="results-on-celeba">Results on CelebA</h2>
-<p><img src="http://qfxiao.me/img/image-20191102233303345.png" /></p>
-<h2 id="results-on-cifar-10">Results on CIFAR-10</h2>
-<p><img src="http://qfxiao.me/img/image-20191102233338213.png" /></p>
-<p><img src="http://qfxiao.me/img/image-20191102233350494.png" /></p>
-</div></article></div><div class="card"><div class="card-image"><a class="image is-7by3" href="/2019/10/16/GAIN-Missing-Data-Imputation-using-Generative-Adversarial-Nets/"><img class="thumbnail" src="http://qfxiao.me/img/1571228929894.png" alt="GAIN: Missing Data Imputation using Generative Adversarial Nets"></a></div><article class="card-content article" role="article"><div class="article-meta size-small is-uppercase level is-mobile"><div class="level-left"><time class="level-item" dateTime="2019-10-16T12:19:10.000Z" title="2019-10-16T12:19:10.000Z">2019-10-16</time><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Time-Series-Imputation/">Time Series Imputation</a></span><span class="level-item">11 分钟 读完 (大约 1656 个字)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2019/10/16/GAIN-Missing-Data-Imputation-using-Generative-Adversarial-Nets/">GAIN: Missing Data Imputation using Generative Adversarial Nets</a></h1><div class="content"><h1 id="abstract">Abstract</h1>
+            <!-- 
+                
+                    <h1 id="abstract">Abstract</h1>
+<p>本文揭示了对抗生成网络（Generative Adversarial Networks, GAN）和变分自编码器（Variational Auto-encoders, VAE）之间的联系，并据此提出了一种将两者结合的新模型。文中主要是将不可解的似然函数和未知的后验分布用一个非确定的分布（Immplicit Distribution）替代，并加入判别器来使得该分布逼近真实的分布。通过这个方法，作者将VAE中的损失函数进行了替换，变成了GAN中的“生成-判别”模式。</p>
+<p><a href="https://arxiv.org/abs/1706.04987" target="_blank" rel="noopener">原文</a></p>
+<h1 id="contribution">Contribution</h1>
+<p>本文有如下贡献：</p>
+                
+             -->
+        </div>
+        
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2019/11/02/Variational-Approaches-for-Auto-Encoding-Generative-Adversarial-Networks/#more">阅读更多</a>
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-image">
+        <a href="/2019/10/16/GAIN-Missing-Data-Imputation-using-Generative-Adversarial-Nets/" class="image is-7by1">
+            <img class="thumbnail" src="http://qfxiao.me/img/1571228929894.png" alt="GAIN: Missing Data Imputation using Generative Adversarial Nets">
+        </a>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2019-10-16T12:19:10.000Z">2019-10-16</time>
+                
+                    <i class="fas fa-calendar-check">&nbsp</i>
+                    <time class="level-item has-text-grey" datetime="2020-02-03T08:18:10.581Z">2020-02-03</time>
+                
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Research/">Research</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Research/Time-Series-Imputation/">Time Series Imputation</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    11 分钟 读完 (大约 1656 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2019/10/16/GAIN-Missing-Data-Imputation-using-Generative-Adversarial-Nets/">GAIN: Missing Data Imputation using Generative Adversarial Nets</a>
+            
+        </h1>
+        <div class="content">
+            
+                
+                
+                
+                    
+                    
+                        
+                    
+                
+                    
+                    
+                        
+                    
+                
+                    
+                    
+                        
+                    
+                
+                    
+                    
+                        
+                    
+                
+                    
+                    
+                
+                
+            
+            <h1 id="abstract">Abstract</h1>
 <p>本文基于GAN提出了一种时间序列缺失值填充（Time Series Imputation）的方法。其主要的思路为生成器<span class="math inline">\(G\)</span>从隐空间<span class="math inline">\(Z\)</span>生成完整的样本，而判别器<span class="math inline">\(D\)</span>则输出样本中不同部分为真实的概率。除此之外，作者提出了使用Hint Vector来揭示原始数据中缺失部分的信息，来优化训练过程。</p>
-<p><a href="https://arxiv.org/abs/1806.02920">原文</a></p>
+<p><a href="https://arxiv.org/abs/1806.02920" target="_blank" rel="noopener">原文</a></p>
 <h1 id="methodology">Methodology</h1>
 <h2 id="problem-formulation">Problem Formulation</h2>
-<p>考虑一个<span class="math inline">\(d\)</span>维的空间<span class="math inline">\(\mathcal{X}=\mathcal{X}_1\times \cdots\times \mathcal{X}_d\)</span>，设<span class="math inline">\(\mathbf{X}=(X_1,\cdots,X_d)\)</span>维空间<span class="math inline">\(\mathcal{X}\)</span>上的随机向量（即理想的完整的时间序列），记其分布为<span class="math inline">\(P(\mathbf{X})\)</span>。设<span class="math inline">\(\mathbf{M}=(M_1,\cdots,M_d)\)</span>为Mask向量表示<span class="math inline">\(\mathbf{X}\)</span>中被观察到的部分。（即标识时间序列哪些部分有缺失），取值为<span class="math inline">\(\{0,1\}^d\)</span>。</p>
-<p>对于每一个<span class="math inline">\(i\in\{1,\cdots,d\}\)</span>，我们定义一个新空间<span class="math inline">\(\tilde{\mathcal{X}}=\mathcal{X}\cup\{*\}\)</span>，其中<span class="math inline">\(*\)</span>表示不属于任意<span class="math inline">\(\mathcal{X}_i\)</span>的一个点。令<span class="math inline">\(\tilde{\mathcal{X}}=\tilde{\mathcal{X}_1}\times\cdots\times\tilde{\mathcal{X}_d}\)</span>，同时定义一个新的随机变量（即我们观测到的含有缺失值的时间序列）<span class="math inline">\(\tilde{\mathbf{X}}=(\tilde{X}_1,\cdots,\tilde{X}_d)\in \tilde{\mathcal{X}}\)</span>： <span class="math display">\[
-\tilde{X}_i=\begin{cases}X_i,&amp;\text{if } M_i=1\\*,&amp;\text{otherwise}\end{cases}
-\]</span> 假设数据集的形式为<span class="math inline">\(\mathcal{D}=\{(\tilde{x}^i,m^i)\}^n_{i=1}\)</span>，我们的任务是从<span class="math inline">\(P(\mathbf{X}|\tilde{\mathbf{X}}=\tilde{x}^i)\)</span>上采样来对缺失值进行填充。</p>
-<h2 id="model-architecture">Model Architecture</h2>
-<p>模型的架构如下图所示：</p>
-<p><img src="http://qfxiao.me/img/1571228929894.png" /></p>
-<h3 id="generator">Generator</h3>
-<p>生成器的输入有三项：<span class="math inline">\(\tilde{\mathbf{X}}\)</span>，<span class="math inline">\(\mathbf{M}\)</span>和随机噪声<span class="math inline">\(\mathbf{Z}\)</span>，输出设为<span class="math inline">\(\bar{\mathbf{X}}\)</span>。设生成器为映射<span class="math inline">\(G: \tilde{\mathcal{X}}\times\{0,1\}^d\times[0,1]^d\rightarrow \mathcal{X}\)</span>，而<span class="math inline">\(\mathbf{Z}\)</span>为<span class="math inline">\(d\)</span>维的高斯噪声。生成器的输出和填充后的时间序列定义为： <span class="math display">\[
-\begin{align}
-\bar{\mathbf{X}}&amp;=G(\tilde{\mathbf{X}},\mathbf{M},(1-\mathbf{M})\odot\mathbf{Z})\\
-\hat{\mathbf{X}}&amp;=\mathbf{M}\odot\tilde{\mathbf{X}}+(1-\mathbf{M})\odot\bar{\mathbf{X}}
-\end{align}
-\]</span> <span class="math inline">\(\bar{\mathbf{X}}\)</span>即为生成器的直接输出，因为其实有些部分没有缺失，生成器还是会为每个部分输出值。</p>
-<p><span class="math inline">\(\hat{\mathbf{X}}\)</span>为填充后的时间序列，对于缺失的部分采用生成器的输出进行填充。</p>
-<h3 id="discriminator">Discriminator</h3>
-<p>和原始的GAN不同的是，我们不需要判断整个样本是真实的或者是生成的，而是需要判断样本的那些部分是真实的或者是生成的，所以判别器为映射<span class="math inline">\(D: \mathcal{X}\rightarrow[0,1]^d\)</span>。判别器的具体目标函数将在后面讨论。</p>
-<h3 id="hint">Hint</h3>
-<p>Hint是一种提示机值，是一个和<span class="math inline">\(\mathbf{X}\)</span>相同维度的随机变量<span class="math inline">\(\mathbf{H}\)</span>，其分布依赖于<span class="math inline">\(\mathbf{M}\)</span>。<span class="math inline">\(\mathbf{H}\)</span>是由用户自己定义的，相当于一种不完整的<span class="math inline">\(\mathbf{M}\)</span>，用来作为判别器的额外输入。</p>
-<h3 id="objective">Objective</h3>
-<p>我们训练判别器最大化正确预测<span class="math inline">\(\mathbf{M}\)</span>的概率，而生成器最小化判别器正确预测<span class="math inline">\(\mathbf{M}\)</span>的概率，目标函数如下： <span class="math display">\[
-\begin{align}
-V(D,G)=&amp;\mathbb{E}_{\hat{X},M,H}[\mathbf{M}^T\log D(\hat{\mathbf{X}},\mathbf{H})\\&amp;+(1-\mathbf{M})^T\log(1-D(\hat{\mathbf{X}},\mathbf{H}))]
-\end{align}
-\]</span> 按照标准的GAN可以将优化函数写成以下的形式： <span class="math display">\[
-\min_G\max_D V(D,G)
-\]</span> 在这里判别器的任务可以看作是一个二分类，而目标函数就是二值交叉熵的定义，因此可以写为： <span class="math display">\[
-\mathcal{L}(a,b)=\sum\limits_{i=1}^d[a_i\log(b_i)+(1-a_i)\log(1-b_i)]
-\]</span> <span class="math inline">\(\mathbf{M}\)</span>可以看作Ground Truth，记<span class="math inline">\(\hat{\mathbf{M}}=D(\hat{\mathbf{X},\mathbf{H}})\)</span>，即判别器输出的预测，因此优化函数可以简记为： <span class="math display">\[
-\min_G\max_D\mathbb{E}[\mathcal{L}(\mathbf{M},\hat{\mathbf{M}})]
-\]</span></p>
-<h2 id="gain-algorithm">GAIN Algorithm</h2>
-<p>下面讨论GAIN算法的训练流程。</p>
-<p>本文通过理论讨论，给出了生成Hint Vector的一个方法，首先定义随机变量<span class="math inline">\(\mathbf{B}=(B_1,\cdots,B_d)\in\{0,1\}^d\)</span>，<span class="math inline">\(\mathbf{B}\)</span>通过从<span class="math inline">\(\{1,\cdots,d\}\)</span>随机均匀采样一个<span class="math inline">\(k\)</span>，然后由下列公式得到： <span class="math display">\[
-B_j=\begin{cases}1, &amp;\text{if }j\neq k\\0, &amp;\text{if }j=k\end{cases}
-\]</span> 定义空间<span class="math inline">\(\mathcal{H}=\{0,0.5,1\}^d\)</span>，Hint Vector为<span class="math inline">\(\mathbf{H}=\mathbf{B}\odot\mathbf{M}+0.5(1-\mathbf{B})\in\mathcal{H}\)</span>。</p>
-<p>判别器的训练过程如下：固定生成器<span class="math inline">\(G\)</span>，对一个大小为<span class="math inline">\(k_D\)</span>的mini-batch，独立同分布采样<span class="math inline">\(k_D\)</span>个<span class="math inline">\(z\)</span>和<span class="math inline">\(b\)</span>，用来计算<span class="math inline">\(\mathbf{Z}\)</span>和<span class="math inline">\(\mathbf{B}\)</span>。判别器的损失函数定义如下： <span class="math display">\[
-\mathcal{L}_D(m,\hat{m},b)=\sum\limits_{i:b_i=0}[m_i\log(\hat{m}_i)+(1-m_i)\log(1-\hat{m}_i)]
-\]</span> 判别器的优化函数为： <span class="math display">\[
-\min_D-\sum\limits_{j=1}^{k_D}\mathcal{L}_D(m(j),\hat{m}(j),b(j))
-\]</span> 其中<span class="math inline">\(\hat{m}(j)=D(\hat{x}(j),m(j))\)</span>。</p>
-<p>在优化了判别器之后，需要优化生成器，对一个大小为<span class="math inline">\(k_G\)</span>的mini-batch，生成器的损失函数包含两个部分，一个是在缺失部分的损失：</p>
-<p><span class="math display">\[
-\mathcal{L}_G(m,\hat{m},b)=-\sum\limits_{i:b_i=0}(1-m_i)\log(\hat{m}_i)
-\]</span> 一个是未缺失部分的损失： <span class="math display">\[
-\mathcal{L}_M(x,x^\prime)=\sum\limits_{i=1}^d m_iL_M(x_i,x_i^\prime)
-\]</span> 其中： <span class="math display">\[
-L_M(x_i,x_i^\prime)=\begin{cases}(x_i^\prime-x_i)^2, &amp;\text{if }x_i\text{ is continuours},\\-x_i\log(x_i^\prime), &amp;\text{if }x_i\text{ is binary}.\end{cases}
-\]</span> 最终的优化函数为： <span class="math display">\[
-\min_G\sum\limits_{j=1}^{k_G}\mathcal{L}_G(m(j),\hat{m}(j),b(j))+\alpha\mathcal{L}_M(\tilde{x}(j),\hat{x}(j))
-\]</span> 算法流程如下：</p>
-<p><img src="http://qfxiao.me/img/1571228999385.png" /></p>
-<h1 id="experiments">Experiments</h1>
-<p>下表为在5个不同数据集上实验，与其他5种方法对比的结果：</p>
-<p><img src="http://qfxiao.me/img/1571229028097.png" /></p>
-<p>上图为GAIN、MissForest和Autoencoder三种模型在不同缺失比例、样本数量、特征维度下的对比曲线图。</p>
-<p>下表为使用不同模型对时间序列进行填充之后，使用逻辑回归进行回归任务的性能：</p>
-<p><img src="http://qfxiao.me/img/1571229051484.png" /></p>
-<p>下图为GAIN、MissForest和Autoencoder三种模型在不同缺失比例下的AUROC曲线图：</p>
-<p><img src="http://qfxiao.me/img/1571229066600.png" /></p>
-<p>下表展示的是作者对时间序列填充算法保持特征-标签关系的能力。作者分别用完整的数据和填充后的数据用逻辑回归模型进行训练，将两者的权重求绝对值和均方根的结果。</p>
-<p><img src="http://qfxiao.me/img/1571229079632.png" /></p>
-</div></article></div></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1"><div class="card widget"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="" src="/img/avatar.png" alt="Your name"></figure><p class="title is-size-4 is-block line-height-inherit">Your name</p><p class="is-size-6 is-block">Your title</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>Your location</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">文章</p><a href="/archives"><p class="title">17</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">分类</p><a href="/categories"><p class="title">9</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">标签</p><a href="/tags"><p class="title">12</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/ppoffice" target="_blank" rel="noopener">关注我</a></div><div class="level is-mobile"><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Github" href="https://github.com/ppoffice"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Facebook" href="https://facebook.com"><i class="fab fa-facebook"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Twitter" href="https://twitter.com"><i class="fab fa-twitter"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Dribbble" href="https://dribbble.com"><i class="fab fa-dribbble"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="RSS" href="/"><i class="fas fa-rss"></i></a></div></div></div><!--!--><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">链接</h3><ul class="menu-list"><li><a class="level is-mobile is-mobile" href="https://hexo.io" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Hexo</span></span><span class="level-right"><span class="level-item tag">hexo.io</span></span></a></li><li><a class="level is-mobile is-mobile" href="https://bulma.io" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Bulma</span></span><span class="level-right"><span class="level-item tag">bulma.io</span></span></a></li></ul></div></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">分类</h3><ul class="menu-list"><li><a class="level is-mobile is-marginless" href="/categories/Research/"><span class="level-start"><span class="level-item">Research</span></span><span class="level-end"><span class="level-item tag">16</span></span></a><ul class="mr-0"><li><a class="level is-mobile is-marginless" href="/categories/Research/Anomaly-Detection/"><span class="level-start"><span class="level-item">Anomaly Detection</span></span><span class="level-end"><span class="level-item tag">11</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Research/GAN/"><span class="level-start"><span class="level-item">GAN</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Research/Misc/"><span class="level-start"><span class="level-item">Misc</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Research/RNN/"><span class="level-start"><span class="level-item">RNN</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Research/Time-Series-Imputation/"><span class="level-start"><span class="level-item">Time Series Imputation</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/categories/Research/Tutorial/"><span class="level-start"><span class="level-item">Tutorial</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></li><li><a class="level is-mobile is-marginless" href="/categories/Technical-Notes/"><span class="level-start"><span class="level-item">Technical Notes</span></span><span class="level-end"><span class="level-item tag">1</span></span></a><ul class="mr-0"><li><a class="level is-mobile is-marginless" href="/categories/Technical-Notes/Misc/"><span class="level-start"><span class="level-item">Misc</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></li></ul></div></div></div><div class="card widget"><div class="card-content"><h3 class="menu-label">最新文章</h3><article class="media"><a class="media-left" href="/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/"><p class="image is-64x64"><img class="thumbnail" src="http://qfxiao.me/img/image-20200301230011495.png" alt="Discovering Physical Concepts with Neural Networks"></p></a><div class="media-content size-small"><p><time dateTime="2020-03-01T14:55:02.000Z">2020-03-01</time></p><p class="title is-6"><a class="link-muted" href="/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/">Discovering Physical Concepts with Neural Networks</a></p><p class="is-uppercase"><a class="link-muted" href="/categories/Research/">Research</a> / <a class="link-muted" href="/categories/Research/Misc/">Misc</a></p></div></article><article class="media"><a class="media-left" href="/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/"><p class="image is-64x64"><img class="thumbnail" src="http://qfxiao.me/img/image-20200109102830713.png" alt="Transfer Anomaly Detection by Inferring Latent Domain Representations"></p></a><div class="media-content size-small"><p><time dateTime="2020-02-27T12:02:18.000Z">2020-02-27</time></p><p class="title is-6"><a class="link-muted" href="/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/">Transfer Anomaly Detection by Inferring Latent Domain Representations</a></p><p class="is-uppercase"><a class="link-muted" href="/categories/Research/">Research</a> / <a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></p></div></article><article class="media"><a class="media-left" href="/2020/02/24/Deep-Anomaly-Detection-with-Deviation-Networks/"><p class="image is-64x64"><img class="thumbnail" src="http://qfxiao.me/img/image-20200113104953902.png" alt="Deep Anomaly Detection with Deviation Networks"></p></a><div class="media-content size-small"><p><time dateTime="2020-02-24T02:45:08.000Z">2020-02-24</time></p><p class="title is-6"><a class="link-muted" href="/2020/02/24/Deep-Anomaly-Detection-with-Deviation-Networks/">Deep Anomaly Detection with Deviation Networks</a></p><p class="is-uppercase"><a class="link-muted" href="/categories/Research/">Research</a> / <a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></p></div></article><article class="media"><a class="media-left" href="/2020/01/31/Geant4-%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/"><p class="image is-64x64"><img class="thumbnail" src="http://qfxiao.me/img/image-20200131113557592.png" alt="Geant4 安装教程与调试环境配置"></p></a><div class="media-content size-small"><p><time dateTime="2020-01-31T03:25:59.000Z">2020-01-31</time></p><p class="title is-6"><a class="link-muted" href="/2020/01/31/Geant4-%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/">Geant4 安装教程与调试环境配置</a></p><p class="is-uppercase"><a class="link-muted" href="/categories/Technical-Notes/">Technical Notes</a> / <a class="link-muted" href="/categories/Technical-Notes/Misc/">Misc</a></p></div></article><article class="media"><a class="media-left" href="/2020/01/09/Complementary-Set-Variational-Autoencoder-for-Supervised-Anomaly-Detection/"><p class="image is-64x64"><img class="thumbnail" src="http://qfxiao.me/img/image-20200109102204802.png" alt="Complementary Set Variational Autoencoder for Supervised Anomaly Detection"></p></a><div class="media-content size-small"><p><time dateTime="2020-01-09T02:15:03.000Z">2020-01-09</time></p><p class="title is-6"><a class="link-muted" href="/2020/01/09/Complementary-Set-Variational-Autoencoder-for-Supervised-Anomaly-Detection/">Complementary Set Variational Autoencoder for Supervised Anomaly Detection</a></p><p class="is-uppercase"><a class="link-muted" href="/categories/Research/">Research</a> / <a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></p></div></article></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">归档</h3><ul class="menu-list"><li><a class="level is-mobile is-marginless" href="/archives/2020/03/"><span class="level-start"><span class="level-item">三月 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/archives/2020/02/"><span class="level-start"><span class="level-item">二月 2020</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile is-marginless" href="/archives/2020/01/"><span class="level-start"><span class="level-item">一月 2020</span></span><span class="level-end"><span class="level-item tag">4</span></span></a></li><li><a class="level is-mobile is-marginless" href="/archives/2019/11/"><span class="level-start"><span class="level-item">十一月 2019</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile is-marginless" href="/archives/2019/10/"><span class="level-start"><span class="level-item">十月 2019</span></span><span class="level-end"><span class="level-item tag">5</span></span></a></li><li><a class="level is-mobile is-marginless" href="/archives/2019/09/"><span class="level-start"><span class="level-item">九月 2019</span></span><span class="level-end"><span class="level-item tag">4</span></span></a></li></ul></div></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">标签</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/Anomaly-Detection/"><span class="tag">Anomaly Detection</span><span class="tag is-grey-lightest">9</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Deep-Learning/"><span class="tag">Deep Learning</span><span class="tag is-grey-lightest">13</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Flow-based-Model/"><span class="tag">Flow-based Model</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/GAN/"><span class="tag">GAN</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Machine-Learning/"><span class="tag">Machine Learning</span><span class="tag is-grey-lightest">7</span></a></div><div class="control"><a class="tags has-addons" href="/tags/RNN/"><span class="tag">RNN</span><span class="tag is-grey-lightest">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Spectral/"><span class="tag">Spectral</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Statistics/"><span class="tag">Statistics</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Time-Series/"><span class="tag">Time Series</span><span class="tag is-grey-lightest">10</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Transfer-Learning/"><span class="tag">Transfer Learning</span><span class="tag is-grey-lightest">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/VAE/"><span class="tag">VAE</span><span class="tag is-grey-lightest">6</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Variational-Inference/"><span class="tag">Variational Inference</span><span class="tag is-grey-lightest">2</span></a></div></div></div></div></div><div class="card widget"><div class="card-content"><div class="menu"><h3 class="menu-label">订阅更新</h3><form action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open(&#039;https://feedburner.google.com/fb/a/mailverify?uri=&#039;,&#039;popupwindow&#039;,&#039;scrollbars=yes,width=550,height=520&#039;);return true"><input type="hidden" value="" name="uri"><input type="hidden" name="loc" value="en_US"><div class="field has-addons"><div class="control has-icons-left is-expanded"><input class="input" name="email" type="email" placeholder="Email"><span class="icon is-small is-left"><i class="fas fa-envelope"></i></span></div><div class="control"><input class="button is-primary" type="submit" value="订阅"></div></div></form></div></div></div><div class="card widget"><div class="card-content"><div class="notification is-danger">You need to set <code>client_id</code> and <code>slot_id</code> to show this AD unit. Please set it in <code>_config.yml</code>.</div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/logo.svg" alt="Hanzawa の 部屋" height="28"></a><p class="size-small"><span>&copy; 2020 Hanzawa</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script>moment.locale("zh-CN");</script><script>var IcarusThemeSettings = {
-            site: {
-                url: 'http://qfxiao.me',
-                external_link: {"enable":true,"exclude":[]}
+            <!-- 
+                
+                    <h1 id="abstract">Abstract</h1>
+<p>本文基于GAN提出了一种时间序列缺失值填充（Time Series Imputation）的方法。其主要的思路为生成器<span class="math inline">\(G\)</span>从隐空间<span class="math inline">\(Z\)</span>生成完整的样本，而判别器<span class="math inline">\(D\)</span>则输出样本中不同部分为真实的概率。除此之外，作者提出了使用Hint Vector来揭示原始数据中缺失部分的信息，来优化训练过程。</p>
+<p><a href="https://arxiv.org/abs/1806.02920" target="_blank" rel="noopener">原文</a></p>
+<h1 id="methodology">Methodology</h1>
+<h2 id="problem-formulation">Problem Formulation</h2>
+                
+             -->
+        </div>
+        
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2019/10/16/GAIN-Missing-Data-Imputation-using-Generative-Adversarial-Nets/#more">阅读更多</a>
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered" style="flex-shrink: 1">
+                <div>
+                    
+                    <figure class="image is-128x128 has-mb-6">
+                        <img class="" src="http://qfxiao.me/misc/avatar.jpg" alt="Hanzawa">
+                    </figure>
+                    
+                    <p class="is-size-4 is-block">
+                        Hanzawa
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        A graduate student
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Beijing, China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        17
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        9
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        12
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="https://github.com/ppoffice" target="_blank">
+                关注我</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank"
+                title="Github" href="https://github.com/ppoffice">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank"
+                title="Facebook" href="https://facebook.com">
+                
+                <i class="fab fa-facebook"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank"
+                title="Twitter" href="https://twitter.com">
+                
+                <i class="fab fa-twitter"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank"
+                title="Dribbble" href="https://dribbble.com">
+                
+                <i class="fab fa-dribbble"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank"
+                title="RSS" href="/">
+                
+                <i class="fas fa-rss"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+    
+        
+
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            链接
+        </h3>
+        <ul class="menu-list">
+        
+            <li>
+                <a class="level is-mobile" href="https://hexo.io" target="_blank">
+                    <span class="level-left">
+                        <span class="level-item">Hexo</span>
+                    </span>
+                    <span class="level-right">
+                        <span class="level-item tag">hexo.io</span>
+                    </span>
+                </a>
+            </li>
+        
+            <li>
+                <a class="level is-mobile" href="https://github.com/ppoffice" target="_blank">
+                    <span class="level-left">
+                        <span class="level-item">PPOffice</span>
+                    </span>
+                    <span class="level-right">
+                        <span class="level-item tag">github.com</span>
+                    </span>
+                </a>
+            </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+
+
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                分类
+            </h3>
+            <ul class="menu-list">
+            <li>
+        <a class="level is-marginless" href="/categories/Research/">
+            <span class="level-start">
+                <span class="level-item">Research</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">16</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/Research/Anomaly-Detection/">
+            <span class="level-start">
+                <span class="level-item">Anomaly Detection</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">11</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Research/GAN/">
+            <span class="level-start">
+                <span class="level-item">GAN</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Research/Misc/">
+            <span class="level-start">
+                <span class="level-item">Misc</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Research/RNN/">
+            <span class="level-start">
+                <span class="level-item">RNN</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Research/Time-Series-Imputation/">
+            <span class="level-start">
+                <span class="level-item">Time Series Imputation</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Research/Tutorial/">
+            <span class="level-start">
+                <span class="level-item">Tutorial</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/Technical-Notes/">
+            <span class="level-start">
+                <span class="level-item">Technical Notes</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/Technical-Notes/Misc/">
+            <span class="level-start">
+                <span class="level-item">Misc</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li>
+            </ul>
+        </div>
+    </div>
+</div>
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            标签云
+        </h3>
+        <a href="/tags/Anomaly-Detection/" style="font-size: 16.67px;">Anomaly Detection</a> <a href="/tags/Deep-Learning/" style="font-size: 20px;">Deep Learning</a> <a href="/tags/Flow-based-Model/" style="font-size: 10px;">Flow-based Model</a> <a href="/tags/GAN/" style="font-size: 11.67px;">GAN</a> <a href="/tags/Machine-Learning/" style="font-size: 15px;">Machine Learning</a> <a href="/tags/RNN/" style="font-size: 11.67px;">RNN</a> <a href="/tags/Spectral/" style="font-size: 10px;">Spectral</a> <a href="/tags/Statistics/" style="font-size: 10px;">Statistics</a> <a href="/tags/Time-Series/" style="font-size: 18.33px;">Time Series</a> <a href="/tags/Transfer-Learning/" style="font-size: 10px;">Transfer Learning</a> <a href="/tags/VAE/" style="font-size: 13.33px;">VAE</a> <a href="/tags/Variational-Inference/" style="font-size: 11.67px;">Variational Inference</a>
+    </div>
+</div>
+
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+            
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            最新文章
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200301230011495.png" alt="Discovering Physical Concepts with Neural Networks">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-03-01T14:55:02.000Z">2020-03-01</time></div>
+                    <a href="/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Discovering Physical Concepts with Neural Networks</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Misc/">Misc</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200109102830713.png" alt="Transfer Anomaly Detection by Inferring Latent Domain Representations">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-02-27T12:02:18.000Z">2020-02-27</time></div>
+                    <a href="/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Transfer Anomaly Detection by Inferring Latent Domain Representations</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/02/24/Deep-Anomaly-Detection-with-Deviation-Networks/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200113104953902.png" alt="Deep Anomaly Detection with Deviation Networks">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-02-24T02:45:08.000Z">2020-02-24</time></div>
+                    <a href="/2020/02/24/Deep-Anomaly-Detection-with-Deviation-Networks/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Deep Anomaly Detection with Deviation Networks</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/01/31/Geant4-%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200131113557592.png" alt="Geant4 安装教程与调试环境配置">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-01-31T03:25:59.000Z">2020-01-31</time></div>
+                    <a href="/2020/01/31/Geant4-%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Geant4 安装教程与调试环境配置</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Technical-Notes/">Technical Notes</a> / <a class="has-link-grey -link" href="/categories/Technical-Notes/Misc/">Misc</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/01/09/Complementary-Set-Variational-Autoencoder-for-Supervised-Anomaly-Detection/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200109102204802.png" alt="Complementary Set Variational Autoencoder for Supervised Anomaly Detection">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-01-09T02:15:03.000Z">2020-01-09</time></div>
+                    <a href="/2020/01/09/Complementary-Set-Variational-Autoencoder-for-Supervised-Anomaly-Detection/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Complementary Set Variational Autoencoder for Supervised Anomaly Detection</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            归档
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/02/">
+                <span class="level-start">
+                    <span class="level-item">二月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                标签
+            </h3>
+            <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Anomaly-Detection/">
+                        <span class="tag">Anomaly Detection</span>
+                        <span class="tag is-grey">9</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Deep-Learning/">
+                        <span class="tag">Deep Learning</span>
+                        <span class="tag is-grey">13</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Flow-based-Model/">
+                        <span class="tag">Flow-based Model</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/GAN/">
+                        <span class="tag">GAN</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Machine-Learning/">
+                        <span class="tag">Machine Learning</span>
+                        <span class="tag is-grey">7</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/RNN/">
+                        <span class="tag">RNN</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Spectral/">
+                        <span class="tag">Spectral</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Statistics/">
+                        <span class="tag">Statistics</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Time-Series/">
+                        <span class="tag">Time Series</span>
+                        <span class="tag is-grey">10</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Transfer-Learning/">
+                        <span class="tag">Transfer Learning</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/VAE/">
+                        <span class="tag">VAE</span>
+                        <span class="tag is-grey">6</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Variational-Inference/">
+                        <span class="tag">Variational Inference</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+        
+        </div>
+    
+</div>
+
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only has-order-3 column-right ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            最新文章
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200301230011495.png" alt="Discovering Physical Concepts with Neural Networks">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-03-01T14:55:02.000Z">2020-03-01</time></div>
+                    <a href="/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Discovering Physical Concepts with Neural Networks</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Misc/">Misc</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200109102830713.png" alt="Transfer Anomaly Detection by Inferring Latent Domain Representations">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-02-27T12:02:18.000Z">2020-02-27</time></div>
+                    <a href="/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Transfer Anomaly Detection by Inferring Latent Domain Representations</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/02/24/Deep-Anomaly-Detection-with-Deviation-Networks/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200113104953902.png" alt="Deep Anomaly Detection with Deviation Networks">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-02-24T02:45:08.000Z">2020-02-24</time></div>
+                    <a href="/2020/02/24/Deep-Anomaly-Detection-with-Deviation-Networks/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Deep Anomaly Detection with Deviation Networks</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/01/31/Geant4-%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200131113557592.png" alt="Geant4 安装教程与调试环境配置">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-01-31T03:25:59.000Z">2020-01-31</time></div>
+                    <a href="/2020/01/31/Geant4-%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Geant4 安装教程与调试环境配置</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Technical-Notes/">Technical Notes</a> / <a class="has-link-grey -link" href="/categories/Technical-Notes/Misc/">Misc</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/01/09/Complementary-Set-Variational-Autoencoder-for-Supervised-Anomaly-Detection/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200109102204802.png" alt="Complementary Set Variational Autoencoder for Supervised Anomaly Detection">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-01-09T02:15:03.000Z">2020-01-09</time></div>
+                    <a href="/2020/01/09/Complementary-Set-Variational-Autoencoder-for-Supervised-Anomaly-Detection/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Complementary Set Variational Autoencoder for Supervised Anomaly Detection</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            归档
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/02/">
+                <span class="level-start">
+                    <span class="level-item">二月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                标签
+            </h3>
+            <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Anomaly-Detection/">
+                        <span class="tag">Anomaly Detection</span>
+                        <span class="tag is-grey">9</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Deep-Learning/">
+                        <span class="tag">Deep Learning</span>
+                        <span class="tag is-grey">13</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Flow-based-Model/">
+                        <span class="tag">Flow-based Model</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/GAN/">
+                        <span class="tag">GAN</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Machine-Learning/">
+                        <span class="tag">Machine Learning</span>
+                        <span class="tag is-grey">7</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/RNN/">
+                        <span class="tag">RNN</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Spectral/">
+                        <span class="tag">Spectral</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Statistics/">
+                        <span class="tag">Statistics</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Time-Series/">
+                        <span class="tag">Time Series</span>
+                        <span class="tag is-grey">10</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Transfer-Learning/">
+                        <span class="tag">Transfer Learning</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/VAE/">
+                        <span class="tag">VAE</span>
+                        <span class="tag is-grey">6</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Variational-Inference/">
+                        <span class="tag">Variational Inference</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+    
+    
+</div>
+
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/logo.svg" alt="Hanzawa の 部屋" height="28">
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2020 Hanzawa&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                        
+                        <i class="fab fa-creative-commons"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                        
+                        <i class="fab fa-creative-commons-by"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+<script>
+var IcarusThemeSettings = {
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/" target="_blank" rel="noopener">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/mathjax@3.0.0/https://cdn.jsdelivr.net/npm/mathjax@3.0.0/es5/tex-mml-chtml.js" defer></script> -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ],
+            // processEscapes: true
+        },
+        TeX: { 
+            equationNumbers: { autoNumber: "AMS" },
+            extensions: ["AMSmath.js", "AMSsymbols.js"]
+        },
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么..." />
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
             },
-            article: {
-                highlight: {
-                    clipboard: true,
-                    fold: 'unfolded'
-                }
-            }
-        };</script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script src="/js/animation.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
-            if (typeof $.fn.lightGallery === 'function') {
-                $('.article').lightGallery({ selector: '.gallery-item' });
-            }
-            if (typeof $.fn.justifiedGallery === 'function') {
-                if ($('.justified-gallery > p > .gallery-item').length) {
-                    $('.justified-gallery > p > .gallery-item').unwrap();
-                }
-                $('.justified-gallery').justifiedGallery();
-            }
-        });</script><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script><script>window.addEventListener("load", function () {
-            MathJax.Hub.Config({
-                'HTML-CSS': {
-                    matchFontHeight: false
-                },
-                SVG: {
-                    matchFontHeight: false
-                },
-                CommonHTML: {
-                    matchFontHeight: false
-                },
-                tex2jax: {
-                    inlineMath: [
-                        ['$','$'],
-                        ['\\(','\\)']
-                    ]
-                }
-            });
-        });</script><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
-            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
-        });</script></body></html>
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>
