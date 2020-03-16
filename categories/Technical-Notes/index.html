@@ -218,18 +218,18 @@
                 
                 
             
-            <h1 id="introduction">Introduction</h1>
-<p>Geant4安装的教程很多，版本都很旧了，这里写一个新版本（10.6）基于Ubuntu的安装教程，并且开启CLion IDE调试。</p>
-<h1 id="step-1-download-packages">Step 1: Download Packages</h1>
-<p>首先进入官网(<a href="http://geant4.web.cern.ch/support/download" target="_blank" rel="noopener" class="uri">http://geant4.web.cern.ch/support/download</a>)下载源代码（推荐tar.gz格式）及数据文件，解压。新建一个文件夹专门用来放<code>Geant4</code>相关文件，新建data，source，build文件夹，将Geant4的文件复制进来并按如下结构组织：</p>
+            <h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>Geant4安装的教程很多，版本都很旧了，这里写一个新版本（10.6）基于Ubuntu的安装教程，并且开启CLion IDE调试。</p>
+<h1 id="Step-1-Download-Packages"><a href="#Step-1-Download-Packages" class="headerlink" title="Step 1: Download Packages"></a>Step 1: Download Packages</h1><p>首先进入官网(<a href="http://geant4.web.cern.ch/support/download" target="_blank" rel="noopener">http://geant4.web.cern.ch/support/download</a>)下载源代码（推荐tar.gz格式）及数据文件，解压。新建一个文件夹专门用来放<code>Geant4</code>相关文件，新建data，source，build文件夹，将Geant4的文件复制进来并按如下结构组织：</p>
 <figure class="highlight bash hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── build</span><br><span class="line">├── data</span><br><span class="line">│   ├── G4ABLA3.1</span><br><span class="line">│   ├── G4EMLOW7.9</span><br><span class="line">│   ├── G4ENSDFSTATE2.2</span><br><span class="line">│   ├── G4INCL1.0</span><br><span class="line">│   ├── G4NDL4.6</span><br><span class="line">│   ├── G4PARTICLEXS2.1</span><br><span class="line">│   ├── G4PII1.3</span><br><span class="line">│   ├── G4SAIDDATA2.0</span><br><span class="line">│   ├── G4TENDL1.3.2</span><br><span class="line">│   ├── PhotonEvaporation5.5</span><br><span class="line">│   ├── RadioactiveDecay5.4</span><br><span class="line">│   └── RealSurface2.1.1</span><br><span class="line">└── <span class="hljs-built_in">source</span></span><br><span class="line">    └── geant4.10.06</span><br></pre></td></tr></table></figure>
+
+
             <!-- 
                 
-                    <h1 id="introduction">Introduction</h1>
-<p>Geant4安装的教程很多，版本都很旧了，这里写一个新版本（10.6）基于Ubuntu的安装教程，并且开启CLion IDE调试。</p>
-<h1 id="step-1-download-packages">Step 1: Download Packages</h1>
-<p>首先进入官网(<a href="http://geant4.web.cern.ch/support/download" target="_blank" rel="noopener" class="uri">http://geant4.web.cern.ch/support/download</a>)下载源代码（推荐tar.gz格式）及数据文件，解压。新建一个文件夹专门用来放<code>Geant4</code>相关文件，新建data，source，build文件夹，将Geant4的文件复制进来并按如下结构组织：</p>
+                    <h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>Geant4安装的教程很多，版本都很旧了，这里写一个新版本（10.6）基于Ubuntu的安装教程，并且开启CLion IDE调试。</p>
+<h1 id="Step-1-Download-Packages"><a href="#Step-1-Download-Packages" class="headerlink" title="Step 1: Download Packages"></a>Step 1: Download Packages</h1><p>首先进入官网(<a href="http://geant4.web.cern.ch/support/download" target="_blank" rel="noopener">http://geant4.web.cern.ch/support/download</a>)下载源代码（推荐tar.gz格式）及数据文件，解压。新建一个文件夹专门用来放<code>Geant4</code>相关文件，新建data，source，build文件夹，将Geant4的文件复制进来并按如下结构组织：</p>
 <figure class="highlight bash hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── build</span><br><span class="line">├── data</span><br><span class="line">│   ├── G4ABLA3.1</span><br><span class="line">│   ├── G4EMLOW7.9</span><br><span class="line">│   ├── G4ENSDFSTATE2.2</span><br><span class="line">│   ├── G4INCL1.0</span><br><span class="line">│   ├── G4NDL4.6</span><br><span class="line">│   ├── G4PARTICLEXS2.1</span><br><span class="line">│   ├── G4PII1.3</span><br><span class="line">│   ├── G4SAIDDATA2.0</span><br><span class="line">│   ├── G4TENDL1.3.2</span><br><span class="line">│   ├── PhotonEvaporation5.5</span><br><span class="line">│   ├── RadioactiveDecay5.4</span><br><span class="line">│   └── RealSurface2.1.1</span><br><span class="line">└── <span class="hljs-built_in">source</span></span><br><span class="line">    └── geant4.10.06</span><br></pre></td></tr></table></figure>
+
+
                 
              -->
         </div>

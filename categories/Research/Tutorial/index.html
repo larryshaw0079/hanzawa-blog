@@ -220,18 +220,18 @@
                 
                 
             
-            <h1 id="deep-generative-models">Deep Generative Models</h1>
-<p>生成模型是指一系列用于随机生成可观测数据的模型。假设在一个高维空间<span class="math inline">\(\mathcal{X}\)</span>中，存在一个随机向量<span class="math inline">\(\mathbf{X}\)</span>服从一个未知的分布<span class="math inline">\(p_r(x),x\in \mathcal{X}\)</span>。生成模型就是根据一些可观测的样本<span class="math inline">\(x^{(1)},x^{(2)},\cdots,x^{(N)}\)</span>来学习一个参数化的模型<span class="math inline">\(p_\theta(x)\)</span>来近似未知分布<span class="math inline">\(p_r(x)\)</span>。</p>
+            <h1 id="Deep-Generative-Models"><a href="#Deep-Generative-Models" class="headerlink" title="Deep Generative Models"></a>Deep Generative Models</h1><p>生成模型是指一系列用于随机生成可观测数据的模型。假设在一个高维空间$\mathcal{X}$中，存在一个随机向量$\mathbf{X}$服从一个未知的分布$p_r(x),x\in \mathcal{X}$。生成模型就是根据一些可观测的样本$x^{(1)},x^{(2)},\cdots,x^{(N)}$来学习一个参数化的模型$p_\theta(x)$来近似未知分布$p_r(x)$。</p>
 <p>生成模型主要用于密度估计和样本生成。</p>
 <hr>
-<p>密度估计即给定一组数据<span class="math inline">\(\mathcal{D}=\{x^{(i)}\},1\leq i\leq N\)</span>，假设他们都是从相同的概率密度函数<span class="math inline">\(p_r(x)\)</span>独立产生的。密度估计就是根据数据集<span class="math inline">\(\mathcal{D}\)</span>来估计其概率密度函数<span class="math inline">\(p_r(x)\)</span>。</p>
+<p>密度估计即给定一组数据$\mathcal{D}={x^{(i)}},1\leq i\leq N$，假设他们都是从相同的概率密度函数$p_r(x)$独立产生的。密度估计就是根据数据集$\mathcal{D}$来估计其概率密度函数$p_r(x)$。</p>
+<p>如果将生成模型用于监督学习，那么就是输出标签的条件概率分布$p(y|x)$，根据贝叶斯公式：</p>
             <!-- 
                 
-                    <h1 id="deep-generative-models">Deep Generative Models</h1>
-<p>生成模型是指一系列用于随机生成可观测数据的模型。假设在一个高维空间<span class="math inline">\(\mathcal{X}\)</span>中，存在一个随机向量<span class="math inline">\(\mathbf{X}\)</span>服从一个未知的分布<span class="math inline">\(p_r(x),x\in \mathcal{X}\)</span>。生成模型就是根据一些可观测的样本<span class="math inline">\(x^{(1)},x^{(2)},\cdots,x^{(N)}\)</span>来学习一个参数化的模型<span class="math inline">\(p_\theta(x)\)</span>来近似未知分布<span class="math inline">\(p_r(x)\)</span>。</p>
+                    <h1 id="Deep-Generative-Models"><a href="#Deep-Generative-Models" class="headerlink" title="Deep Generative Models"></a>Deep Generative Models</h1><p>生成模型是指一系列用于随机生成可观测数据的模型。假设在一个高维空间$\mathcal{X}$中，存在一个随机向量$\mathbf{X}$服从一个未知的分布$p_r(x),x\in \mathcal{X}$。生成模型就是根据一些可观测的样本$x^{(1)},x^{(2)},\cdots,x^{(N)}$来学习一个参数化的模型$p_\theta(x)$来近似未知分布$p_r(x)$。</p>
 <p>生成模型主要用于密度估计和样本生成。</p>
 <hr>
-<p>密度估计即给定一组数据<span class="math inline">\(\mathcal{D}=\{x^{(i)}\},1\leq i\leq N\)</span>，假设他们都是从相同的概率密度函数<span class="math inline">\(p_r(x)\)</span>独立产生的。密度估计就是根据数据集<span class="math inline">\(\mathcal{D}\)</span>来估计其概率密度函数<span class="math inline">\(p_r(x)\)</span>。</p>
+<p>密度估计即给定一组数据$\mathcal{D}={x^{(i)}},1\leq i\leq N$，假设他们都是从相同的概率密度函数$p_r(x)$独立产生的。密度估计就是根据数据集$\mathcal{D}$来估计其概率密度函数$p_r(x)$。</p>
+<p>如果将生成模型用于监督学习，那么就是输出标签的条件概率分布$p(y|x)$，根据贝叶斯公式：</p>
                 
              -->
         </div>

@@ -10,12 +10,12 @@
 <title>Recurrent Neural Networks for Multivariate Time Series with Missing Values - Hanzawa の 部屋</title>
 
 
-    <meta name="description" content="Abstract 文中提出了一种可以处理带缺失值多为时间序列的GRU模型：GRU-D。本模型不仅可以捕捉时间序列中的长期依赖模式，并且还能利用时间序列中的缺失模式来达到更好的时间序列预测效果。 原文 Methodology Notations">
+    <meta name="description" content="Abstract文中提出了一种可以处理带缺失值多为时间序列的GRU模型：GRU-D。本模型不仅可以捕捉时间序列中的长期依赖模式，并且还能利用时间序列中的缺失模式来达到更好的时间序列预测效果。 原文 MethodologyNotations记包含$D$个变量的多变量时间序列为$X&#x3D;(x_1,x_2,\cdots,x_T)^T\in\mathbb{R}^{T\times D}$，其中对于每个$t\in">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Recurrent Neural Networks for Multivariate Time Series with Missing Values">
 <meta property="og:url" content="http://qfxiao.me/2019/10/18/Recurrent-Neural-Networks-for-Multivariate-Time-Series-with-Missing-Values/index.html">
 <meta property="og:site_name" content="Hanzawa の 部屋">
-<meta property="og:description" content="Abstract 文中提出了一种可以处理带缺失值多为时间序列的GRU模型：GRU-D。本模型不仅可以捕捉时间序列中的长期依赖模式，并且还能利用时间序列中的缺失模式来达到更好的时间序列预测效果。 原文 Methodology Notations">
+<meta property="og:description" content="Abstract文中提出了一种可以处理带缺失值多为时间序列的GRU模型：GRU-D。本模型不仅可以捕捉时间序列中的长期依赖模式，并且还能利用时间序列中的缺失模式来达到更好的时间序列预测效果。 原文 MethodologyNotations记包含$D$个变量的多变量时间序列为$X&#x3D;(x_1,x_2,\cdots,x_T)^T\in\mathbb{R}^{T\times D}$，其中对于每个$t\in">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://qfxiao.me/img/1571412138245.png">
 <meta property="article:published_time" content="2019-10-18T15:17:07.000Z">
@@ -217,77 +217,44 @@
                 
                 
             
-            <h1 id="abstract">Abstract</h1>
-<p>文中提出了一种可以处理带缺失值多为时间序列的GRU模型：<strong>GRU-D</strong>。本模型不仅可以捕捉时间序列中的长期依赖模式，并且还能利用时间序列中的缺失模式来达到更好的时间序列预测效果。</p>
+            <h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><p>文中提出了一种可以处理带缺失值多为时间序列的GRU模型：<strong>GRU-D</strong>。本模型不仅可以捕捉时间序列中的长期依赖模式，并且还能利用时间序列中的缺失模式来达到更好的时间序列预测效果。</p>
 <p><a href="https://www.nature.com/articles/s41598-018-24271-9" target="_blank" rel="noopener">原文</a></p>
-<h1 id="methodology">Methodology</h1>
-<h2 id="notations">Notations</h2>
-<p>记包含<span class="math inline">\(D\)</span>个变量的多变量时间序列为<span class="math inline">\(X=(x_1,x_2,\cdots,x_T)^T\in\mathbb{R}^{T\times D}\)</span>，其中对于每个<span class="math inline">\(t\in\{1,2,\cdots,T\},x_t\in\mathbb{R}^D\)</span>表示时间序列在时间<span class="math inline">\(t\)</span>的观测值，<span class="math inline">\(x_t^d\)</span>表示<span class="math inline">\(x_t\)</span>的第<span class="math inline">\(d\)</span>个成分。记<span class="math inline">\(s_t\in\mathbb{R}\)</span>为<span class="math inline">\(t\)</span>时刻的时间戳，并假设第一个观测值的时间戳为<span class="math inline">\(0\)</span>。对于包含缺失值的时间序列，我们用<strong>Masking Vector</strong> <span class="math inline">\(m_t\in\{0,1\}\)</span>进行标记，同时对每个<span class="math inline">\(x_t^d\)</span>维护距离上一个观测值的<strong>Time Interval</strong> <span class="math inline">\(\delta_t^d\in\mathbb{R}\)</span>，公式如下： <span class="math display">\[
-m_t^d=\begin{cases}1, &amp;\text{if }x_t^d\text{ is observed}\\0, &amp;\text{otherwise}\end{cases}
-\]</span></p>
-<p><span class="math display">\[
-\delta_t^d=\begin{cases}s_t-s_{t-1}+\delta_{t-1}^d, &amp;t&gt;1,m_{t-1}^d=0\\s_t-s_{t-1}, &amp;t&gt;1, m_{t-1}^d=1\\0, &amp;t=1\end{cases}
-\]</span></p>
+<h1 id="Methodology"><a href="#Methodology" class="headerlink" title="Methodology"></a>Methodology</h1><h2 id="Notations"><a href="#Notations" class="headerlink" title="Notations"></a>Notations</h2><p>记包含$D$个变量的多变量时间序列为$X=(x_1,x_2,\cdots,x_T)^T\in\mathbb{R}^{T\times D}$，其中对于每个$t\in{1,2,\cdots,T},x_t\in\mathbb{R}^D$表示时间序列在时间$t$的观测值，$x_t^d$表示$x_t$的第$d$个成分。记$s_t\in\mathbb{R}$为$t$时刻的时间戳，并假设第一个观测值的时间戳为$0$。对于包含缺失值的时间序列，我们用<strong>Masking Vector</strong> $m_t\in{0,1}$进行标记，同时对每个$x_t^d$维护距离上一个观测值的<strong>Time Interval</strong> $\delta_t^d\in\mathbb{R}$，公式如下：<br>$$<br>m_t^d=\begin{cases}1, &amp;\text{if }x_t^d\text{ is observed}\0, &amp;\text{otherwise}\end{cases}<br>$$</p>
+<p>$$<br>\delta_t^d=\begin{cases}s_t-s_{t-1}+\delta_{t-1}^d, &amp;t&gt;1,m_{t-1}^d=0\s_t-s_{t-1}, &amp;t&gt;1, m_{t-1}^d=1\0, &amp;t=1\end{cases}<br>$$</p>
 <p>下图是一些示例：</p>
-<p><img src="http://qfxiao.me/img/1571476968374.png"></p>
-<p>在本文中，我们主要关注时间序列的分类问题，即给定数据集<span class="math inline">\(\mathcal{D}=\{(X_n,s_n,M_n)\}_{n=1}^N\)</span>，我们要对每个样本的类别进行预测<span class="math inline">\(l_n\in\{1,\cdots,L\}\)</span>。</p>
-<h2 id="gru-rnn-for-time-series-classification">GRU-RNN for Time Series Classification</h2>
-<p>GRU是一种改进版本的RNN，其最大不同是加入了门控机制。GRU单元的结构如下图所示：</p>
-<p><img src="http://qfxiao.me/img/GRU49241911247.png"></p>
-<p>GRU包含了重置门和更新门，其中重置门<span class="math inline">\(R_t\)</span>负责控制上一时间的隐状态<span class="math inline">\(h_{t-1}\)</span>有多少部分需要保留，而更新门则决定由<span class="math inline">\(R_t\)</span>计算出来的候选隐状态<span class="math inline">\(\tilde{h}_t\)</span>有多少部分需要保留。最后当前时间的隐状态由<span class="math inline">\(h_{t-1}\)</span>和<span class="math inline">\(\tilde{h}_t\)</span>共同算出。GRU的状态更新公式如下： <span class="math display">\[
-\begin{align}
-R_t&amp;=\sigma(W_rx_t+U_rh_{t-1}+b_r)\\
-Z_t&amp;=\sigma(W_zx_t+U_zh_{t-1}+b_z)\\
-\tilde{h}_t&amp;=\text{tanh}(Wx_t+U(R_t\odot h_{t-1})+b)\\
-h_t&amp;=(1-Z_t)\odot h_{t-1}+Z_t\odot \tilde{h}_t
-\end{align}
-\]</span> 文中提出了一些处理缺失值的简单方法：</p>
-<ol type="1">
-<li>直接用均值替代：<span class="math inline">\(x_t^d\leftarrow m_t^dx_t^d+(1-m_t^d)\tilde{x}^d\)</span>，其中<span class="math inline">\(\tilde{x}^d=\frac{\sum_{n=1}^N\sum_{t=1}^{T_n}m_{t,n}^d x_{t,n}^d}{\sum_{n=1}^N\sum_{t=1}^{T_n}m_{t,n}^d\tilde{x}^d}\)</span>。这种方法称为<strong>GRU-Mean</strong>；</li>
-<li>用上一个观测值替代：<span class="math inline">\(x_t^d\leftarrow m_t^d x_t^d+(1-m_t^d)x_{t^\prime}^d\)</span>。这种方法称为<strong>GRU-Forward</strong>；</li>
-<li>不填充，将是否缺失，距离上一个观测值的时间作为额外信息输入：<span class="math inline">\(x_t^{(n)}\leftarrow[x_t^{(n)};m_t^{(n)};\delta_t^{(n)}]\)</span>。这种方法称为<strong>GRU-Simple</strong>。</li>
+<p><img src="http://qfxiao.me/img/1571476968374.png" alt></p>
+<p>在本文中，我们主要关注时间序列的分类问题，即给定数据集$\mathcal{D}={(X_n,s_n,M_n)}_{n=1}^N$，我们要对每个样本的类别进行预测$l_n\in{1,\cdots,L}$。</p>
+<h2 id="GRU-RNN-for-Time-Series-Classification"><a href="#GRU-RNN-for-Time-Series-Classification" class="headerlink" title="GRU-RNN for Time Series Classification"></a>GRU-RNN for Time Series Classification</h2><p>GRU是一种改进版本的RNN，其最大不同是加入了门控机制。GRU单元的结构如下图所示：</p>
+<p><img src="http://qfxiao.me/img/GRU49241911247.png" alt></p>
+<p>GRU包含了重置门和更新门，其中重置门$R_t$负责控制上一时间的隐状态$h_{t-1}$有多少部分需要保留，而更新门则决定由$R_t$计算出来的候选隐状态$\tilde{h}<em>t$有多少部分需要保留。最后当前时间的隐状态由$h</em>{t-1}$和$\tilde{h}<em>t$共同算出。GRU的状态更新公式如下：<br>$$<br>\begin{align}<br>R_t&amp;=\sigma(W_rx_t+U_rh</em>{t-1}+b_r)\<br>Z_t&amp;=\sigma(W_zx_t+U_zh_{t-1}+b_z)\<br>\tilde{h}<em>t&amp;=\text{tanh}(Wx_t+U(R_t\odot h</em>{t-1})+b)\<br>h_t&amp;=(1-Z_t)\odot h_{t-1}+Z_t\odot \tilde{h}_t<br>\end{align}<br>$$<br>文中提出了一些处理缺失值的简单方法：</p>
+<ol>
+<li>直接用均值替代：$x_t^d\leftarrow m_t^dx_t^d+(1-m_t^d)\tilde{x}^d$，其中$\tilde{x}^d=\frac{\sum_{n=1}^N\sum_{t=1}^{T_n}m_{t,n}^d x_{t,n}^d}{\sum_{n=1}^N\sum_{t=1}^{T_n}m_{t,n}^d\tilde{x}^d}$。这种方法称为<strong>GRU-Mean</strong>；</li>
+<li>用上一个观测值替代：$x_t^d\leftarrow m_t^d x_t^d+(1-m_t^d)x_{t^\prime}^d$。这种方法称为<strong>GRU-Forward</strong>；</li>
+<li>不填充，将是否缺失，距离上一个观测值的时间作为额外信息输入：$x_t^{(n)}\leftarrow[x_t^{(n)};m_t^{(n)};\delta_t^{(n)}]$。这种方法称为<strong>GRU-Simple</strong>。</li>
 </ol>
-<h3 id="gru-d-model-with-trainable-decays">GRU-D: Model with Trainable Decays</h3>
-<p>文中提出了时间序列缺失值的两个性质：一个是在上一个观测值距离很远的情况下缺失值倾向于接近一个默认的值，第二个是缺失值的影响会随着时间减弱。为了体现上述两点，文中提出了GPU-D模型，模型框架如下：</p>
-<p><img src="http://qfxiao.me/img/1571412138245.png"></p>
-<p>在模型中，<strong>Decay Rates</strong>被设定为一个带参数的函数和GRU一起训练： <span class="math display">\[
-\gamma_t=\exp\{-\max(0,W_\gamma\delta_t+b_\gamma)\}
-\]</span></p>
-<p><span class="math display">\[
-\hat{x}_t^d=m_t^dx_t^d+(1-m_t^d)(\gamma_{x_t}^dx_{t^\prime}^d+(1-\gamma_{x_t}^d)\tilde{x}^d)
-\]</span> 其中<span class="math inline">\(x_{t^\prime}^d\)</span>是第<span class="math inline">\(d\)</span>个变量的上一个观测值，<span class="math inline">\(\tilde{x}^d\)</span>是第<span class="math inline">\(d\)</span>个变量的经验均值。这样<span class="math inline">\(\hat{x}_t^d\)</span>就代表经过<strong>Input Decay</strong>的输入。</p>
-<p>文中提到只用<strong>Input Decay</strong>是不够的，除此之外作者还使用了<strong>Hidden State Decay</strong>，即对<span class="math inline">\(h_{t-1}\)</span>进行Decay，公式如下： <span class="math display">\[
-\hat{h}_{t-1}=\gamma_{h_t}\odot h_{t-1}
-\]</span> 用Decay之后的<span class="math inline">\(\hat{x}_t\)</span>和<span class="math inline">\(\hat{h}_{t-1}\)</span>替换原始的GRU公式就得到了GRU-D模型： <span class="math display">\[
-\begin{align}
-R_t&amp;=\sigma(W_r\hat{x}_t-U_r\hat{h}_{t-1}+V_rm_t+b_r)\\
-Z_t&amp;=\sigma(W_z\hat{x}_t+U_z\hat{h}_{t-1}+V_zm_t+b_z)\\
-\tilde{h}_t&amp;=\text{tanh}(W\hat{x}_t+U(R_t\odot \hat{h}_{t-1})+Vm_t+b)\\
-h_t&amp;=(1-z_t)\odot \hat{h}_{t-1}+z_t\odot\tilde{h}_t
-\end{align}
-\]</span></p>
-<h1 id="experiments">Experiments</h1>
-<h2 id="baseline-imputation-methods">Baseline Imputation Methods</h2>
-<p>下图为文中比较中用到的Baseline：</p>
-<p><img src="http://qfxiao.me/img/1571673314402.png"></p>
-<h2 id="baseline-prediction-methods">Baseline Prediction Methods</h2>
-<p>下图为文中用到的用来预测的Baseline：</p>
-<p><img src="http://qfxiao.me/img/1571673403956.png"></p>
-<h2 id="results">Results</h2>
-<p>文中用到的数据集如下：</p>
+<h3 id="GRU-D-Model-with-Trainable-Decays"><a href="#GRU-D-Model-with-Trainable-Decays" class="headerlink" title="GRU-D: Model with Trainable Decays"></a>GRU-D: Model with Trainable Decays</h3><p>文中提出了时间序列缺失值的两个性质：一个是在上一个观测值距离很远的情况下缺失值倾向于接近一个默认的值，第二个是缺失值的影响会随着时间减弱。为了体现上述两点，文中提出了GPU-D模型，模型框架如下：</p>
+<p><img src="http://qfxiao.me/img/1571412138245.png" alt></p>
+<p>在模型中，<strong>Decay Rates</strong>被设定为一个带参数的函数和GRU一起训练：<br>$$<br>\gamma_t=\exp{-\max(0,W_\gamma\delta_t+b_\gamma)}<br>$$</p>
+<p>$$<br>\hat{x}<em>t^d=m_t^dx_t^d+(1-m_t^d)(\gamma</em>{x_t}^dx_{t^\prime}^d+(1-\gamma_{x_t}^d)\tilde{x}^d)<br>$$<br>其中$x_{t^\prime}^d$是第$d$个变量的上一个观测值，$\tilde{x}^d$是第$d$个变量的经验均值。这样$\hat{x}_t^d$就代表经过<strong>Input Decay</strong>的输入。</p>
+<p>文中提到只用<strong>Input Decay</strong>是不够的，除此之外作者还使用了<strong>Hidden State Decay</strong>，即对$h_{t-1}$进行Decay，公式如下：<br>$$<br>\hat{h}<em>{t-1}=\gamma</em>{h_t}\odot h_{t-1}<br>$$<br>用Decay之后的$\hat{x}<em>t$和$\hat{h}</em>{t-1}$替换原始的GRU公式就得到了GRU-D模型：<br>$$<br>\begin{align}<br>R_t&amp;=\sigma(W_r\hat{x}<em>t-U_r\hat{h}</em>{t-1}+V_rm_t+b_r)\<br>Z_t&amp;=\sigma(W_z\hat{x}<em>t+U_z\hat{h}</em>{t-1}+V_zm_t+b_z)\<br>\tilde{h}<em>t&amp;=\text{tanh}(W\hat{x}_t+U(R_t\odot \hat{h}</em>{t-1})+Vm_t+b)\<br>h_t&amp;=(1-z_t)\odot \hat{h}_{t-1}+z_t\odot\tilde{h}_t<br>\end{align}<br>$$</p>
+<h1 id="Experiments"><a href="#Experiments" class="headerlink" title="Experiments"></a>Experiments</h1><h2 id="Baseline-Imputation-Methods"><a href="#Baseline-Imputation-Methods" class="headerlink" title="Baseline Imputation Methods"></a>Baseline Imputation Methods</h2><p>下图为文中比较中用到的Baseline：</p>
+<p><img src="http://qfxiao.me/img/1571673314402.png" alt></p>
+<h2 id="Baseline-Prediction-Methods"><a href="#Baseline-Prediction-Methods" class="headerlink" title="Baseline Prediction Methods"></a>Baseline Prediction Methods</h2><p>下图为文中用到的用来预测的Baseline：</p>
+<p><img src="http://qfxiao.me/img/1571673403956.png" alt></p>
+<h2 id="Results"><a href="#Results" class="headerlink" title="Results"></a>Results</h2><p>文中用到的数据集如下：</p>
 <ul>
-<li><em>Gesture phase segmentation dataset (Gesture)</em>.</li>
+<li><em>Gesture phase segmentation dataset (Gesture)</em>. </li>
 <li><em>PhysioNet Challenge 2012 dataset (PhysioNet)</em>.</li>
-<li><em>MIMIC-Ⅲ dataset (MIMIC-Ⅲ)</em>.</li>
+<li><em>MIMIC-Ⅲ dataset (MIMIC-Ⅲ)</em>. </li>
 </ul>
 <p>下图展示了不同方法在人工合成数据集上的表现：</p>
-<p><img src="http://qfxiao.me/img/1571412162954.png"></p>
+<p><img src="http://qfxiao.me/img/1571412162954.png" alt></p>
 <p>下表展示了不同模型在预测任务表现的对比：</p>
-<p><img src="http://qfxiao.me/img/1571412183650.png"></p>
+<p><img src="http://qfxiao.me/img/1571412183650.png" alt></p>
 <p>下表展示了不同方法在MIMIC-Ⅲ和PhysioNet数据集上的多任务表现：</p>
-<p><img src="http://qfxiao.me/img/1571412196724.png"></p>
+<p><img src="http://qfxiao.me/img/1571412196724.png" alt></p>
 <p>下图分别展示了模型学到的<strong>Input Decay</strong>和<strong>Hidden State Decay</strong>：</p>
-<p><img src="http://qfxiao.me/img/1571412221428.png"></p>
+<p><img src="http://qfxiao.me/img/1571412221428.png" alt></p>
 
             <!--  -->
         </div>
@@ -525,39 +492,39 @@ h_t&amp;=(1-z_t)\odot \hat{h}_{t-1}+z_t\odot\tilde{h}_t
                 目录
             </h3>
             <ul class="menu-list"><li>
-        <a class="is-flex" href="#abstract">
+        <a class="is-flex" href="#Abstract">
         <span class="has-mr-6">1</span>
         <span>Abstract</span>
         </a></li><li>
-        <a class="is-flex" href="#methodology">
+        <a class="is-flex" href="#Methodology">
         <span class="has-mr-6">2</span>
         <span>Methodology</span>
         </a><ul class="menu-list"><li>
-        <a class="is-flex" href="#notations">
+        <a class="is-flex" href="#Notations">
         <span class="has-mr-6">2.1</span>
         <span>Notations</span>
         </a></li><li>
-        <a class="is-flex" href="#gru-rnn-for-time-series-classification">
+        <a class="is-flex" href="#GRU-RNN-for-Time-Series-Classification">
         <span class="has-mr-6">2.2</span>
         <span>GRU-RNN for Time Series Classification</span>
         </a><ul class="menu-list"><li>
-        <a class="is-flex" href="#gru-d-model-with-trainable-decays">
+        <a class="is-flex" href="#GRU-D-Model-with-Trainable-Decays">
         <span class="has-mr-6">2.2.1</span>
         <span>GRU-D: Model with Trainable Decays</span>
         </a></li></ul></li></ul></li><li>
-        <a class="is-flex" href="#experiments">
+        <a class="is-flex" href="#Experiments">
         <span class="has-mr-6">3</span>
         <span>Experiments</span>
         </a><ul class="menu-list"><li>
-        <a class="is-flex" href="#baseline-imputation-methods">
+        <a class="is-flex" href="#Baseline-Imputation-Methods">
         <span class="has-mr-6">3.1</span>
         <span>Baseline Imputation Methods</span>
         </a></li><li>
-        <a class="is-flex" href="#baseline-prediction-methods">
+        <a class="is-flex" href="#Baseline-Prediction-Methods">
         <span class="has-mr-6">3.2</span>
         <span>Baseline Prediction Methods</span>
         </a></li><li>
-        <a class="is-flex" href="#results">
+        <a class="is-flex" href="#Results">
         <span class="has-mr-6">3.3</span>
         <span>Results</span>
         </a></li></ul></li></ul>
