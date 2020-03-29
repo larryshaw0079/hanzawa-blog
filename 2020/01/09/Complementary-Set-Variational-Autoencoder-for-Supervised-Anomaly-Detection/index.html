@@ -10,12 +10,12 @@
 <title>Complementary Set Variational Autoencoder for Supervised Anomaly Detection - Hanzawa の 部屋</title>
 
 
-    <meta name="description" content="Introduction对于异常检测问题，异常的模式是多种多样的。有监督模型能够较好地处理训练集中出现过的模式，无监督模型能够处理训练集中未出现过的模式，但对于训练集中出现过的异常模型并没有学习。本文提出了一种既能学习训练集中出现过的异常模式，同时能处理未出现过的异常模式的方法。 Proposed ModelConventional VAE首先回顾一下原始的VAE。 原始VAE中的损失函数为：$$">
+    <meta name="description" content="Introduction 对于异常检测问题，异常的模式是多种多样的。有监督模型能够较好地处理训练集中出现过的模式，无监督模型能够处理训练集中未出现过的模式，但对于训练集中出现过的异常模型并没有学习。本文提出了一种既能学习训练集中出现过的异常模式，同时能处理未出现过的异常模式的方法。 Proposed Model Conventional VAE 首先回顾一下原始的VAE。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Complementary Set Variational Autoencoder for Supervised Anomaly Detection">
 <meta property="og:url" content="http://qfxiao.me/2020/01/09/Complementary-Set-Variational-Autoencoder-for-Supervised-Anomaly-Detection/index.html">
 <meta property="og:site_name" content="Hanzawa の 部屋">
-<meta property="og:description" content="Introduction对于异常检测问题，异常的模式是多种多样的。有监督模型能够较好地处理训练集中出现过的模式，无监督模型能够处理训练集中未出现过的模式，但对于训练集中出现过的异常模型并没有学习。本文提出了一种既能学习训练集中出现过的异常模式，同时能处理未出现过的异常模式的方法。 Proposed ModelConventional VAE首先回顾一下原始的VAE。 原始VAE中的损失函数为：$$">
+<meta property="og:description" content="Introduction 对于异常检测问题，异常的模式是多种多样的。有监督模型能够较好地处理训练集中出现过的模式，无监督模型能够处理训练集中未出现过的模式，但对于训练集中出现过的异常模型并没有学习。本文提出了一种既能学习训练集中出现过的异常模式，同时能处理未出现过的异常模式的方法。 Proposed Model Conventional VAE 首先回顾一下原始的VAE。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://qfxiao.me/img/image-20200109102204802.png">
 <meta property="article:published_time" content="2020-01-09T02:15:03.000Z">
@@ -216,38 +216,80 @@
                 
                 
             
-            <h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>对于异常检测问题，异常的模式是多种多样的。有监督模型能够较好地处理训练集中出现过的模式，无监督模型能够处理训练集中未出现过的模式，但对于训练集中出现过的异常模型并没有学习。本文提出了一种既能学习训练集中出现过的异常模式，同时能处理未出现过的异常模式的方法。</p>
-<h1 id="Proposed-Model"><a href="#Proposed-Model" class="headerlink" title="Proposed Model"></a>Proposed Model</h1><h2 id="Conventional-VAE"><a href="#Conventional-VAE" class="headerlink" title="Conventional VAE"></a>Conventional VAE</h2><p>首先回顾一下原始的VAE。</p>
-<p>原始VAE中的损失函数为：<br>$$<br>\mathcal{L}(\boldsymbol{\theta},\boldsymbol{\phi};\boldsymbol{x})=\mathbb{E}<em>{q(\boldsymbol{z}|\boldsymbol{x};\boldsymbol{\phi})}[\log p(\boldsymbol{x}|\boldsymbol{z};\boldsymbol{\theta})]-\text{KL}[q(\boldsymbol{z}|\boldsymbol{x};\boldsymbol{\phi}\parallel p(\boldsymbol{z}))]<br>$$<br>原文中作者证明了$\mathcal{L}(\boldsymbol{\theta},\boldsymbol{\phi};\boldsymbol{x})\leq\log p(\boldsymbol{x};\boldsymbol{\theta})$，所以$\mathcal{L}(\boldsymbol{\theta},\boldsymbol{\phi};\boldsymbol{x})$可以看作是数据分布$p(\boldsymbol{x})$对数似然的一个下界。$\mathcal{L}(\boldsymbol{\theta},\boldsymbol{\phi};\boldsymbol{x})$又被称为证据下界 (ELBO)。$\mathbb{E}</em>{q(\boldsymbol{z}|\boldsymbol{x};\boldsymbol{\phi})}[\log p(\boldsymbol{x}|\boldsymbol{z};\boldsymbol{\theta})]$中的期望一般用蒙特卡洛来进行估计：<br>$$<br>\begin{align}<br>\mathcal{L}(\boldsymbol{\theta},\boldsymbol{\phi};\boldsymbol{x})\simeq&amp; \frac{1}{L}\sum\limits_l\log p(\boldsymbol{x}|\boldsymbol{z}^{(l)};\boldsymbol{\theta})-\text{KL}[q(\boldsymbol{z}|\boldsymbol{x};\boldsymbol{\phi})\parallel p(\boldsymbol{z})],\<br>\boldsymbol{z}^{(l)}&amp;\sim q(\boldsymbol{z}|\boldsymbol{x};\boldsymbol{\phi}), \space l\in{1,2,\cdots,L}<br>\end{align}<br>$$<br>对于隐变量$\boldsymbol{z}$，一般假设先验服从标准高斯分布，后验服从均值为$\mu$，方差为$\sigma^2$的高斯分布，故KL散度能直接写出解析式：<br>$$<br>\mathcal{L}(\boldsymbol{\theta},\boldsymbol{\phi};\boldsymbol{x})\simeq \frac{1}{L}\sum\limits_l\log p(\boldsymbol{x}|\boldsymbol{z}^{(l)};\boldsymbol{\theta})-C(-\frac{1}{2}-\log\sigma+\frac{1}{2}\sigma^2+\frac{1}{2}\mu^2)<br>$$<br>使用VAE来做异常检测通常是在正常数据上进行训练，在检测阶段，如果是异常样本，那么VAE不能很好地重构它，这样会导致较大的重构误差。</p>
-<h2 id="Prior-Distribution-for-Anomalies"><a href="#Prior-Distribution-for-Anomalies" class="headerlink" title="Prior Distribution for Anomalies"></a>Prior Distribution for Anomalies</h2><p><img src="http://qfxiao.me/img/image-20200109102204802.png" alt></p>
-<p>在原始VAE异常检测中，无论输入样本$\boldsymbol{x}$是否异常，VAE都会使对应编码的后验$p(\boldsymbol{z}|\boldsymbol{x})$服从高斯分布，且施加标准高斯分布的约束。在本文中，作者对异常和正常样本对应的隐变量的先验分布做了不同假设。首先，正常先验依然是标准高斯分布，记为$p_n(\boldsymbol{z})$。而对于异常先验，作者认为异常即为“不正常”，和正常是补集的关系。作者在文中定义异常先验分布$p_a(\boldsymbol{z})$为：<br>$$<br>p_a(\boldsymbol{z})=\frac{1}{Y^\prime}(\max\limits_{\boldsymbol{z}^\prime}p_n(\boldsymbol{z}^\prime)-p_n(\boldsymbol{z}))<br>$$</p>
-<p>其中$Y^\prime$为使$p_a(\boldsymbol{z})$成为一个概率分布的调节因子。实际上，$Y^\prime$往往会成为无限大，因为$p(\boldsymbol z)$在整个定义域上都有定义。为了解决这个问题，作者加入了$p_w(\boldsymbol z)$，一个在每个维度都足够宽的辅助分布：</p>
-<p>$$<br>p_a(\boldsymbol z)=\frac{1}{Y}p_w(\boldsymbol z)\left(\max\limits_{\boldsymbol z^\prime}p_n(\boldsymbol z^\prime)-p_n(\boldsymbol z)\right)<br>$$</p>
-<p>其中$Y$为有限的常数。在文中$p_n(\boldsymbol z)$和$p_w(\boldsymbol z)$都为高斯分布，那么$p_a(\boldsymbol z)$的具体形式为：</p>
-<p>$$<br>p_a(\boldsymbol z)=\frac{1}{Y}\mathcal{N}(\boldsymbol z;\boldsymbol 0,\boldsymbol s^2){\max\limits_{\boldsymbol z^\prime}\mathcal N(\boldsymbol z^\prime;\boldsymbol 0,\boldsymbol 1)-\mathcal N(\boldsymbol z;\boldsymbol 0,\boldsymbol 1)}<br>$$</p>
+            <h1 id="introduction">Introduction</h1>
+<p>对于异常检测问题，异常的模式是多种多样的。有监督模型能够较好地处理训练集中出现过的模式，无监督模型能够处理训练集中未出现过的模式，但对于训练集中出现过的异常模型并没有学习。本文提出了一种既能学习训练集中出现过的异常模式，同时能处理未出现过的异常模式的方法。</p>
+<h1 id="proposed-model">Proposed Model</h1>
+<h2 id="conventional-vae">Conventional VAE</h2>
+<p>首先回顾一下原始的VAE。</p>
+<p>原始VAE中的损失函数为： <span class="math display">\[
+\mathcal{L}(\boldsymbol{\theta},\boldsymbol{\phi};\boldsymbol{x})=\mathbb{E}_{q(\boldsymbol{z}|\boldsymbol{x};\boldsymbol{\phi})}[\log p(\boldsymbol{x}|\boldsymbol{z};\boldsymbol{\theta})]-\text{KL}[q(\boldsymbol{z}|\boldsymbol{x};\boldsymbol{\phi}\parallel p(\boldsymbol{z}))]
+\]</span> 原文中作者证明了<span class="math inline">\(\mathcal{L}(\boldsymbol{\theta},\boldsymbol{\phi};\boldsymbol{x})\leq\log p(\boldsymbol{x};\boldsymbol{\theta})\)</span>，所以<span class="math inline">\(\mathcal{L}(\boldsymbol{\theta},\boldsymbol{\phi};\boldsymbol{x})\)</span>可以看作是数据分布<span class="math inline">\(p(\boldsymbol{x})\)</span>对数似然的一个下界。<span class="math inline">\(\mathcal{L}(\boldsymbol{\theta},\boldsymbol{\phi};\boldsymbol{x})\)</span>又被称为证据下界 (ELBO)。<span class="math inline">\(\mathbb{E}_{q(\boldsymbol{z}|\boldsymbol{x};\boldsymbol{\phi})}[\log p(\boldsymbol{x}|\boldsymbol{z};\boldsymbol{\theta})]\)</span>中的期望一般用蒙特卡洛来进行估计： <span class="math display">\[
+\begin{align}
+\mathcal{L}(\boldsymbol{\theta},\boldsymbol{\phi};\boldsymbol{x})\simeq&amp; \frac{1}{L}\sum\limits_l\log p(\boldsymbol{x}|\boldsymbol{z}^{(l)};\boldsymbol{\theta})-\text{KL}[q(\boldsymbol{z}|\boldsymbol{x};\boldsymbol{\phi})\parallel p(\boldsymbol{z})],\\
+\boldsymbol{z}^{(l)}&amp;\sim q(\boldsymbol{z}|\boldsymbol{x};\boldsymbol{\phi}), \space l\in\{1,2,\cdots,L\}
+\end{align}
+\]</span> 对于隐变量<span class="math inline">\(\boldsymbol{z}\)</span>，一般假设先验服从标准高斯分布，后验服从均值为<span class="math inline">\(\mu\)</span>，方差为<span class="math inline">\(\sigma^2\)</span>的高斯分布，故KL散度能直接写出解析式： <span class="math display">\[
+\mathcal{L}(\boldsymbol{\theta},\boldsymbol{\phi};\boldsymbol{x})\simeq \frac{1}{L}\sum\limits_l\log p(\boldsymbol{x}|\boldsymbol{z}^{(l)};\boldsymbol{\theta})-C(-\frac{1}{2}-\log\sigma+\frac{1}{2}\sigma^2+\frac{1}{2}\mu^2)
+\]</span> 使用VAE来做异常检测通常是在正常数据上进行训练，在检测阶段，如果是异常样本，那么VAE不能很好地重构它，这样会导致较大的重构误差。</p>
+<h2 id="prior-distribution-for-anomalies">Prior Distribution for Anomalies</h2>
+<p><img src="http://qfxiao.me/img/image-20200109102204802.png"></p>
+<p>在原始VAE异常检测中，无论输入样本<span class="math inline">\(\boldsymbol{x}\)</span>是否异常，VAE都会使对应编码的后验<span class="math inline">\(p(\boldsymbol{z}|\boldsymbol{x})\)</span>服从高斯分布，且施加标准高斯分布的约束。在本文中，作者对异常和正常样本对应的隐变量的先验分布做了不同假设。首先，正常先验依然是标准高斯分布，记为<span class="math inline">\(p_n(\boldsymbol{z})\)</span>。而对于异常先验，作者认为异常即为“不正常”，和正常是补集的关系。作者在文中定义异常先验分布<span class="math inline">\(p_a(\boldsymbol{z})\)</span>为： <span class="math display">\[
+p_a(\boldsymbol{z})=\frac{1}{Y^\prime}(\max\limits_{\boldsymbol{z}^\prime}p_n(\boldsymbol{z}^\prime)-p_n(\boldsymbol{z}))
+\]</span></p>
+<p>其中<span class="math inline">\(Y^\prime\)</span>为使<span class="math inline">\(p_a(\boldsymbol{z})\)</span>成为一个概率分布的调节因子。实际上，<span class="math inline">\(Y^\prime\)</span>往往会成为无限大，因为<span class="math inline">\(p(\boldsymbol z)\)</span>在整个定义域上都有定义。为了解决这个问题，作者加入了<span class="math inline">\(p_w(\boldsymbol z)\)</span>，一个在每个维度都足够宽的辅助分布：</p>
+<p><span class="math display">\[
+p_a(\boldsymbol z)=\frac{1}{Y}p_w(\boldsymbol z)\left(\max\limits_{\boldsymbol z^\prime}p_n(\boldsymbol z^\prime)-p_n(\boldsymbol z)\right)
+\]</span></p>
+<p>其中<span class="math inline">\(Y\)</span>为有限的常数。在文中<span class="math inline">\(p_n(\boldsymbol z)\)</span>和<span class="math inline">\(p_w(\boldsymbol z)\)</span>都为高斯分布，那么<span class="math inline">\(p_a(\boldsymbol z)\)</span>的具体形式为：</p>
+<p><span class="math display">\[
+p_a(\boldsymbol z)=\frac{1}{Y}\mathcal{N}(\boldsymbol z;\boldsymbol 0,\boldsymbol s^2)\{\max\limits_{\boldsymbol z^\prime}\mathcal N(\boldsymbol z^\prime;\boldsymbol 0,\boldsymbol 1)-\mathcal N(\boldsymbol z;\boldsymbol 0,\boldsymbol 1)\}
+\]</span></p>
 <p>其中：</p>
-<p>$$<br>\max\limits_{\boldsymbol z^\prime}\mathcal N(\boldsymbol z^\prime;\boldsymbol 0,\boldsymbol 1)=\frac{1}{\sqrt{2\pi}}<br>$$</p>
-<p>$$<br>Y=\int_{-\infty}^{\infty}p_a(\boldsymbol z)\mathrm{d}\boldsymbol z=\frac{1}{\sqrt{2\pi}}\left{1-\frac{1}{\boldsymbol s^2+1}\right}<br>$$</p>
-<p>$\boldsymbol s^2$为超参数，控制分布的宽度。用文中的先验替换VAE原始的KL散度，可写为：</p>
-<p>$$<br>\text{KL}\left[q(\boldsymbol z|\boldsymbol x;\phi)\parallel p_a(\boldsymbol z)\right]=\int_{-\infty}^\infty\mathcal{N}(\boldsymbol z;\boldsymbol \mu,\boldsymbol \sigma^2)\log\frac{\mathcal N(\boldsymbol z;\boldsymbol\mu,\boldsymbol\sigma^2)}{\frac{1}{Y}\mathcal N(\boldsymbol z;\boldsymbol 0,\boldsymbol s^2)\left{\frac{1}{2\pi}-\mathcal N(\boldsymbol z;\boldsymbol0,\boldsymbol 1)\right}}\mathrm{d}\boldsymbol z<br>$$</p>
+<p><span class="math display">\[
+\max\limits_{\boldsymbol z^\prime}\mathcal N(\boldsymbol z^\prime;\boldsymbol 0,\boldsymbol 1)=\frac{1}{\sqrt{2\pi}}
+\]</span></p>
+<p><span class="math display">\[
+Y=\int_{-\infty}^{\infty}p_a(\boldsymbol z)\mathrm{d}\boldsymbol z=\frac{1}{\sqrt{2\pi}}\left\{1-\frac{1}{\boldsymbol s^2+1}\right\}
+\]</span></p>
+<p><span class="math inline">\(\boldsymbol s^2\)</span>为超参数，控制分布的宽度。用文中的先验替换VAE原始的KL散度，可写为：</p>
+<p><span class="math display">\[
+\text{KL}\left[q(\boldsymbol z|\boldsymbol x;\phi)\parallel p_a(\boldsymbol z)\right]=\int_{-\infty}^\infty\mathcal{N}(\boldsymbol z;\boldsymbol \mu,\boldsymbol \sigma^2)\log\frac{\mathcal N(\boldsymbol z;\boldsymbol\mu,\boldsymbol\sigma^2)}{\frac{1}{Y}\mathcal N(\boldsymbol z;\boldsymbol 0,\boldsymbol s^2)\left\{\frac{1}{2\pi}-\mathcal N(\boldsymbol z;\boldsymbol0,\boldsymbol 1)\right\}}\mathrm{d}\boldsymbol z
+\]</span></p>
 <p>展开后：</p>
-<p>$$<br>\begin{align}<br>\text{KL}\left[q(\boldsymbol z|\boldsymbol x;\phi)\parallel p_a(\boldsymbol z)\right]&amp;=<br>\int_{-\infty}^\infty\mathcal{N}(\boldsymbol z;\boldsymbol \mu,\boldsymbol \sigma^2)\log\mathcal{N}(\boldsymbol z;\boldsymbol\mu,\boldsymbol\sigma^2)\mathrm{d}\boldsymbol z\<br>&amp;+\log Y\<br>&amp;-\int_{-\infty}^\infty\mathcal{N}(\boldsymbol z;\boldsymbol \mu,\boldsymbol \sigma^2)\log\mathcal{N}(\boldsymbol z;\boldsymbol 0,\boldsymbol s^2)\mathrm{d}\boldsymbol z\<br>&amp;-\int_{-\infty}^\infty\mathcal{N}(\boldsymbol z;\boldsymbol \mu,\boldsymbol \sigma^2)\log\left{\frac{1}{\sqrt{2\pi}}-\mathcal{N}(\boldsymbol z;\boldsymbol 0, \boldsymbol 1)\right}\mathrm{d}\boldsymbol z<br>\end{align}<br>$$</p>
-<p>使用泰勒展开，$\log (x+\frac{1}{2\pi})\simeq-\log 2\pi+2\pi x$，KL散度可以用下式估计：</p>
-<p>$$<br>\begin{align}<br>\text{KL}\left[q(\boldsymbol z|\boldsymbol x;\phi)\parallel p_a(\boldsymbol z)\right]&amp;\simeq\sqrt{\frac{2\pi}{\boldsymbol\sigma^2+1}}\exp\left(\frac{-\boldsymbol\mu^2}{2(\boldsymbol\sigma^2+1)}\right)\<br>&amp;+\frac{\boldsymbol\mu^2+\boldsymbol\sigma^2}{2\boldsymbol s^2}-\log\boldsymbol\sigma+\log\boldsymbol s+\log\left(\sqrt{\boldsymbol s^2+1}-1\right)\<br>&amp;-\frac{\log(\boldsymbol s^2+1)}{2}+\frac{\log(2\pi)-1}{2}<br>\end{align}<br>$$</p>
-<p>下图为一维时$p_n(\boldsymbol z)$和$p_a(\boldsymbol z)$的示例：</p>
-<p><img src="http://qfxiao.me/img/image-20200109102255322.png" alt></p>
-<h3 id="Implementation-of-proposed-method"><a href="#Implementation-of-proposed-method" class="headerlink" title="Implementation of proposed method"></a>Implementation of proposed method</h3><p>文中使用编码器输出的分布$\mathcal{N}(\boldsymbol z;\boldsymbol \mu, \boldsymbol \sigma^2)$与标准正态分布之间的KL散度来作为异常分数。在每一轮的训练过程中，加入一轮使用Anomaly Prior的训练。</p>
-<p><img src="http://qfxiao.me/img/image-20200109102309048.png" alt></p>
-<h1 id="Experiments"><a href="#Experiments" class="headerlink" title="Experiments"></a>Experiments</h1><h2 id="MNIST"><a href="#MNIST" class="headerlink" title="MNIST"></a>MNIST</h2><p>作者设计了两个Task：</p>
-<ol>
-<li>Task 1. $N$ vs. $\bar{N}$. 将手写数字中的一个作为已知异常，其他作为正常，并加入均匀分布作为未知的异常。</li>
+<p><span class="math display">\[
+\begin{align}
+\text{KL}\left[q(\boldsymbol z|\boldsymbol x;\phi)\parallel p_a(\boldsymbol z)\right]&amp;=
+\int_{-\infty}^\infty\mathcal{N}(\boldsymbol z;\boldsymbol \mu,\boldsymbol \sigma^2)\log\mathcal{N}(\boldsymbol z;\boldsymbol\mu,\boldsymbol\sigma^2)\mathrm{d}\boldsymbol z\\
+&amp;+\log Y\\
+&amp;-\int_{-\infty}^\infty\mathcal{N}(\boldsymbol z;\boldsymbol \mu,\boldsymbol \sigma^2)\log\mathcal{N}(\boldsymbol z;\boldsymbol 0,\boldsymbol s^2)\mathrm{d}\boldsymbol z\\
+&amp;-\int_{-\infty}^\infty\mathcal{N}(\boldsymbol z;\boldsymbol \mu,\boldsymbol \sigma^2)\log\left\{\frac{1}{\sqrt{2\pi}}-\mathcal{N}(\boldsymbol z;\boldsymbol 0, \boldsymbol 1)\right\}\mathrm{d}\boldsymbol z
+\end{align}
+\]</span></p>
+<p>使用泰勒展开，<span class="math inline">\(\log (x+\frac{1}{2\pi})\simeq-\log 2\pi+2\pi x\)</span>，KL散度可以用下式估计：</p>
+<p><span class="math display">\[
+\begin{align}
+\text{KL}\left[q(\boldsymbol z|\boldsymbol x;\phi)\parallel p_a(\boldsymbol z)\right]&amp;\simeq\sqrt{\frac{2\pi}{\boldsymbol\sigma^2+1}}\exp\left(\frac{-\boldsymbol\mu^2}{2(\boldsymbol\sigma^2+1)}\right)\\
+&amp;+\frac{\boldsymbol\mu^2+\boldsymbol\sigma^2}{2\boldsymbol s^2}-\log\boldsymbol\sigma+\log\boldsymbol s+\log\left(\sqrt{\boldsymbol s^2+1}-1\right)\\
+&amp;-\frac{\log(\boldsymbol s^2+1)}{2}+\frac{\log(2\pi)-1}{2}
+\end{align}
+\]</span></p>
+<p>下图为一维时<span class="math inline">\(p_n(\boldsymbol z)\)</span>和<span class="math inline">\(p_a(\boldsymbol z)\)</span>的示例：</p>
+<p><img src="http://qfxiao.me/img/image-20200109102255322.png"></p>
+<h3 id="implementation-of-proposed-method">Implementation of proposed method</h3>
+<p>文中使用编码器输出的分布<span class="math inline">\(\mathcal{N}(\boldsymbol z;\boldsymbol \mu, \boldsymbol \sigma^2)\)</span>与标准正态分布之间的KL散度来作为异常分数。在每一轮的训练过程中，加入一轮使用Anomaly Prior的训练。</p>
+<p><img src="http://qfxiao.me/img/image-20200109102309048.png"></p>
+<h1 id="experiments">Experiments</h1>
+<h2 id="mnist">MNIST</h2>
+<p>作者设计了两个Task：</p>
+<ol type="1">
+<li>Task 1. <span class="math inline">\(N\)</span> vs. <span class="math inline">\(\bar{N}\)</span>. 将手写数字中的一个作为已知异常，其他作为正常，并加入均匀分布作为未知的异常。</li>
 <li>Task 2. 手写数字被分为3组：已知异常，正常，未知异常。</li>
 </ol>
 <p>细节如下表所示：</p>
-<p><img src="http://qfxiao.me/img/image-20200109102402499.png" alt></p>
-<p>在实现上，使用Adam优化器，<code>batch_size</code>为100，<code>epochs</code>为200。<code>Encoder</code>和<code>Decoder</code>都由三层感知机组成，超参数$s^2$设置为400。评测标准使用AUC (area under the receiver characteristic curve)。</p>
+<p><img src="http://qfxiao.me/img/image-20200109102402499.png"></p>
+<p>在实现上，使用Adam优化器，<code>batch_size</code>为100，<code>epochs</code>为200。<code>Encoder</code>和<code>Decoder</code>都由三层感知机组成，超参数<span class="math inline">\(s^2\)</span>设置为400。评测标准使用AUC (area under the receiver characteristic curve)。</p>
 <p>下表为实验结果：</p>
-<p><img src="http://qfxiao.me/img/image-20200109102343271.png" alt></p>
+<p><img src="http://qfxiao.me/img/image-20200109102343271.png"></p>
 
             <!--  -->
         </div>
@@ -485,31 +527,31 @@
                 目录
             </h3>
             <ul class="menu-list"><li>
-        <a class="is-flex" href="#Introduction">
+        <a class="is-flex" href="#introduction">
         <span class="has-mr-6">1</span>
         <span>Introduction</span>
         </a></li><li>
-        <a class="is-flex" href="#Proposed-Model">
+        <a class="is-flex" href="#proposed-model">
         <span class="has-mr-6">2</span>
         <span>Proposed Model</span>
         </a><ul class="menu-list"><li>
-        <a class="is-flex" href="#Conventional-VAE">
+        <a class="is-flex" href="#conventional-vae">
         <span class="has-mr-6">2.1</span>
         <span>Conventional VAE</span>
         </a></li><li>
-        <a class="is-flex" href="#Prior-Distribution-for-Anomalies">
+        <a class="is-flex" href="#prior-distribution-for-anomalies">
         <span class="has-mr-6">2.2</span>
         <span>Prior Distribution for Anomalies</span>
         </a><ul class="menu-list"><li>
-        <a class="is-flex" href="#Implementation-of-proposed-method">
+        <a class="is-flex" href="#implementation-of-proposed-method">
         <span class="has-mr-6">2.2.1</span>
         <span>Implementation of proposed method</span>
         </a></li></ul></li></ul></li><li>
-        <a class="is-flex" href="#Experiments">
+        <a class="is-flex" href="#experiments">
         <span class="has-mr-6">3</span>
         <span>Experiments</span>
         </a><ul class="menu-list"><li>
-        <a class="is-flex" href="#MNIST">
+        <a class="is-flex" href="#mnist">
         <span class="has-mr-6">3.1</span>
         <span>MNIST</span>
         </a></li></ul></li></ul>

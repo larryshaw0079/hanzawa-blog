@@ -10,20 +10,20 @@
 <title>Variational Approaches for Auto-Encoding Generative Adversarial Networks - Hanzawa の 部屋</title>
 
 
-    <meta name="description" content="Abstract本文揭示了对抗生成网络（Generative Adversarial Networks, GAN）和变分自编码器（Variational Auto-encoders, VAE）之间的联系，并据此提出了一种将两者结合的新模型。文中主要是将不可解的似然函数和未知的后验分布用一个非确定的分布（Immplicit Distribution）替代，并加入判别器来使得该分布逼近真实的分布。通过">
+    <meta name="description" content="Abstract 本文揭示了对抗生成网络（Generative Adversarial Networks, GAN）和变分自编码器（Variational Auto-encoders, VAE）之间的联系，并据此提出了一种将两者结合的新模型。文中主要是将不可解的似然函数和未知的后验分布用一个非确定的分布（Immplicit Distribution）替代，并加入判别器来使得该分布逼近真实的分布。通">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Variational Approaches for Auto-Encoding Generative Adversarial Networks">
 <meta property="og:url" content="http://qfxiao.me/2019/11/02/Variational-Approaches-for-Auto-Encoding-Generative-Adversarial-Networks/index.html">
 <meta property="og:site_name" content="Hanzawa の 部屋">
-<meta property="og:description" content="Abstract本文揭示了对抗生成网络（Generative Adversarial Networks, GAN）和变分自编码器（Variational Auto-encoders, VAE）之间的联系，并据此提出了一种将两者结合的新模型。文中主要是将不可解的似然函数和未知的后验分布用一个非确定的分布（Immplicit Distribution）替代，并加入判别器来使得该分布逼近真实的分布。通过">
+<meta property="og:description" content="Abstract 本文揭示了对抗生成网络（Generative Adversarial Networks, GAN）和变分自编码器（Variational Auto-encoders, VAE）之间的联系，并据此提出了一种将两者结合的新模型。文中主要是将不可解的似然函数和未知的后验分布用一个非确定的分布（Immplicit Distribution）替代，并加入判别器来使得该分布逼近真实的分布。通">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://qfxiao.me/img/image-20191102233101258.png">
 <meta property="article:published_time" content="2019-11-02T15:28:53.000Z">
 <meta property="article:modified_time" content="2020-02-03T08:20:48.802Z">
 <meta property="article:author" content="Hanzawa">
 <meta property="article:tag" content="Deep Learning">
-<meta property="article:tag" content="GAN">
 <meta property="article:tag" content="VAE">
+<meta property="article:tag" content="GAN">
 <meta property="article:tag" content="Variational Inference">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://qfxiao.me/img/image-20191102233101258.png">
@@ -218,64 +218,102 @@
                 
                 
             
-            <h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><p>本文揭示了对抗生成网络（Generative Adversarial Networks, GAN）和变分自编码器（Variational Auto-encoders, VAE）之间的联系，并据此提出了一种将两者结合的新模型。文中主要是将不可解的似然函数和未知的后验分布用一个非确定的分布（Immplicit Distribution）替代，并加入判别器来使得该分布逼近真实的分布。通过这个方法，作者将VAE中的损失函数进行了替换，变成了GAN中的“生成-判别”模式。</p>
+            <h1 id="abstract">Abstract</h1>
+<p>本文揭示了对抗生成网络（Generative Adversarial Networks, GAN）和变分自编码器（Variational Auto-encoders, VAE）之间的联系，并据此提出了一种将两者结合的新模型。文中主要是将不可解的似然函数和未知的后验分布用一个非确定的分布（Immplicit Distribution）替代，并加入判别器来使得该分布逼近真实的分布。通过这个方法，作者将VAE中的损失函数进行了替换，变成了GAN中的“生成-判别”模式。</p>
 <p><a href="https://arxiv.org/abs/1706.04987" target="_blank" rel="noopener">原文</a></p>
-<h1 id="Contribution"><a href="#Contribution" class="headerlink" title="Contribution"></a>Contribution</h1><p>本文有如下贡献：</p>
+<h1 id="contribution">Contribution</h1>
+<p>本文有如下贡献：</p>
 <ul>
 <li>本文提出变分推断（Variational Inference）也能通过对非确定分布的估计应用在GAN中；</li>
 <li>基于似然的模型（Likelihood-based Models）和非似然模型（Likelihood-free Models）能够通过对抗学习结合起来；</li>
-<li>作者根据文中提出的新观点修改了VAE的损失函数，将其称之为Auto-encoding GAN ($\alpha$-GAN)，并提出了对应的实用的改进；</li>
+<li>作者根据文中提出的新观点修改了VAE的损失函数，将其称之为Auto-encoding GAN (<span class="math inline">\(\alpha\)</span>-GAN)，并提出了对应的实用的改进；</li>
 <li>本文与众多State-of-Art模型进行了对比</li>
 </ul>
-<h1 id="Methodology"><a href="#Methodology" class="headerlink" title="Methodology"></a>Methodology</h1><h2 id="Overcoming-Intractability-in-Generative-Models"><a href="#Overcoming-Intractability-in-Generative-Models" class="headerlink" title="Overcoming Intractability in Generative Models"></a>Overcoming Intractability in Generative Models</h2><h3 id="Latent-Variable-Models"><a href="#Latent-Variable-Models" class="headerlink" title="Latent Variable Models"></a>Latent Variable Models</h3><p>隐变量模型通过隐变量的形式描述了数据的产生过程。最简单的形式是假设隐变量$\mathbf{z}$服从一个先验分布$\mathbf{z}\sim p(\mathbf{z})$，而数据$\mathbf{x}$从条件分布$p(\mathbf{x}|\mathbf{z})$抽样产生。通常来说描述$p(\mathbf{x}|\mathbf{z})$的模型称为生成器$\mathcal{G}_\theta(\mathbf{z})$，带有可优化的参数$\theta$，而$\mathbf{z}$通常假设为正态分布$\mathbf{z}\sim\mathcal{N}(\mathbf{0},\mathbf{I})$。</p>
-<p>文中区分了两种隐变量模型，一种是<em>Implicit Latent Variable Models</em>，一种是<em>Prescribed Latent Variable Models</em>。文中的描述不太清楚，个人认为两者的区别是前者图模型中的$\mathbf{x}$不是一个随机变量，在优化的时候需要用一个刻画生成的$\mathbf{x}$和真实的$\mathbf{x}$的差别的函数$\delta(\mathbf{x}-\mathcal{G}_\theta(\mathbf{z}))$，而后者图模型中$\mathbf{x}$是一个随机变量，这样可以写出似然函数用极大似然估计。</p>
-<p>无论是GAN还是VAE都需要通过边缘分布$p_\theta(\mathbf{x})$来刻画建模的好坏，比如说根据$p_\theta(\mathbf{x})$与真实分布$p^<em>_\theta(\mathbf{x})$之间的KL散度$\text{KL}\left[p_\theta(\mathbf{x})\parallel p_\theta^</em>(\mathbf{x})\right]$。但通常情况下$p_\theta(\mathbf{x})$都是不可解的，而GAN和VAE通过不同的途径解决了这个问题。</p>
-<h3 id="Generative-Adversarial-Networks"><a href="#Generative-Adversarial-Networks" class="headerlink" title="Generative Adversarial Networks"></a>Generative Adversarial Networks</h3><p>GAN没有直接计算$p_\theta(\mathbf{x})$，而是使用了一个判别器来判别样本是从$p_\theta(\mathbf{x})$还是$p_\theta^<em>(\mathbf{x})$采样得到的，如果判别器无法进行区分，那我们认为此时$p_\theta(\mathbf{x})\approx p_\theta^</em>(\mathbf{x})$。</p>
-<p>令随机变量$y\in{0,1}$，$y=1$表示样本$\mathbf{x}$来自真实分布，$y=0$表示样本$\mathbf{x}$来自生成分布，而判别器的输出为$\mathbf{x}$来自真实分布的概率$\mathcal{D}<em>\phi(\mathbf{x})=p(y=1|\mathbf{x})$。GAN通过对来自真实分布和生成分布的样本求二元交叉熵来作为判别器损失函数：<br>$$<br>\textbf{Discriminator Loss: }\mathbb{E}</em>{p^*(\mathbf{x})}[-\log\mathcal{D}<em>\phi(\mathbf{x})]+\mathbb{E}</em>{p_\theta(\mathbf{x})}[-\log(1-\mathcal{D}_\phi(\mathbf{x}))]<br>$$</p>
+<h1 id="methodology">Methodology</h1>
+<h2 id="overcoming-intractability-in-generative-models">Overcoming Intractability in Generative Models</h2>
+<h3 id="latent-variable-models">Latent Variable Models</h3>
+<p>隐变量模型通过隐变量的形式描述了数据的产生过程。最简单的形式是假设隐变量<span class="math inline">\(\mathbf{z}\)</span>服从一个先验分布<span class="math inline">\(\mathbf{z}\sim p(\mathbf{z})\)</span>，而数据<span class="math inline">\(\mathbf{x}\)</span>从条件分布<span class="math inline">\(p(\mathbf{x}|\mathbf{z})\)</span>抽样产生。通常来说描述<span class="math inline">\(p(\mathbf{x}|\mathbf{z})\)</span>的模型称为生成器<span class="math inline">\(\mathcal{G}_\theta(\mathbf{z})\)</span>，带有可优化的参数<span class="math inline">\(\theta\)</span>，而<span class="math inline">\(\mathbf{z}\)</span>通常假设为正态分布<span class="math inline">\(\mathbf{z}\sim\mathcal{N}(\mathbf{0},\mathbf{I})\)</span>。</p>
+<p>文中区分了两种隐变量模型，一种是<em>Implicit Latent Variable Models</em>，一种是<em>Prescribed Latent Variable Models</em>。文中的描述不太清楚，个人认为两者的区别是前者图模型中的<span class="math inline">\(\mathbf{x}\)</span>不是一个随机变量，在优化的时候需要用一个刻画生成的<span class="math inline">\(\mathbf{x}\)</span>和真实的<span class="math inline">\(\mathbf{x}\)</span>的差别的函数<span class="math inline">\(\delta(\mathbf{x}-\mathcal{G}_\theta(\mathbf{z}))\)</span>，而后者图模型中<span class="math inline">\(\mathbf{x}\)</span>是一个随机变量，这样可以写出似然函数用极大似然估计。</p>
+<p>无论是GAN还是VAE都需要通过边缘分布<span class="math inline">\(p_\theta(\mathbf{x})\)</span>来刻画建模的好坏，比如说根据<span class="math inline">\(p_\theta(\mathbf{x})\)</span>与真实分布<span class="math inline">\(p^*_\theta(\mathbf{x})\)</span>之间的KL散度<span class="math inline">\(\text{KL}\left[p_\theta(\mathbf{x})\parallel p_\theta^*(\mathbf{x})\right]\)</span>。但通常情况下<span class="math inline">\(p_\theta(\mathbf{x})\)</span>都是不可解的，而GAN和VAE通过不同的途径解决了这个问题。</p>
+<h3 id="generative-adversarial-networks">Generative Adversarial Networks</h3>
+<p>GAN没有直接计算<span class="math inline">\(p_\theta(\mathbf{x})\)</span>，而是使用了一个判别器来判别样本是从<span class="math inline">\(p_\theta(\mathbf{x})\)</span>还是<span class="math inline">\(p_\theta^*(\mathbf{x})\)</span>采样得到的，如果判别器无法进行区分，那我们认为此时<span class="math inline">\(p_\theta(\mathbf{x})\approx p_\theta^*(\mathbf{x})\)</span>。</p>
+<p>令随机变量<span class="math inline">\(y\in\{0,1\}\)</span>，<span class="math inline">\(y=1\)</span>表示样本<span class="math inline">\(\mathbf{x}\)</span>来自真实分布，<span class="math inline">\(y=0\)</span>表示样本<span class="math inline">\(\mathbf{x}\)</span>来自生成分布，而判别器的输出为<span class="math inline">\(\mathbf{x}\)</span>来自真实分布的概率<span class="math inline">\(\mathcal{D}_\phi(\mathbf{x})=p(y=1|\mathbf{x})\)</span>。GAN通过对来自真实分布和生成分布的样本求二元交叉熵来作为判别器损失函数： <span class="math display">\[
+\textbf{Discriminator Loss: }\mathbb{E}_{p^*(\mathbf{x})}[-\log\mathcal{D}_\phi(\mathbf{x})]+\mathbb{E}_{p_\theta(\mathbf{x})}[-\log(1-\mathcal{D}_\phi(\mathbf{x}))]
+\]</span></p>
 <p>生成器将最大化判别器对生成样本判定为真的概率作为损失函数，同时还有一个等价的但在实践中表现更好的替代版本：</p>
-<p>$$<br>\textbf{Generator Loss: }\mathbb{E}<em>{p_\theta(\mathbf{x})}[\log(1-\mathcal{D}_\phi(\mathbf{x}))];\textbf{ Alternative Loss: }\mathbf{E}</em>{p_\theta(\mathbf{x})}[-\log\mathcal{D}_\phi(\mathbf{x})]<br>$$</p>
-<h3 id="The-Density-Ratio-Trick"><a href="#The-Density-Ratio-Trick" class="headerlink" title="The Density Ratio Trick"></a>The Density Ratio Trick</h3><p>令$p^<em>(\mathbf{x})=p(\mathbf{x}|y=1)$，$p_\theta(\mathbf{x})=p(\mathbf{x}|y=0)$。定义*Density Ratio</em> $r_\phi(\mathbf{x})$为真实分布和生成分布之间的比例：</p>
-<p>$$<br>r_\phi(\mathbf{x})=\frac{p^*(\mathbf{x})}{p_\theta(\mathbf{x})}=\frac{p(\mathbf{x}|y=1)}{p(\mathbf{x}|y=0)}=\frac{p(y=1|\mathbf{x})}{p(y=0|\mathbf{x})}=\frac{\mathcal{D}_\phi(\mathbf{x})}{1-\mathcal{D}_\phi(\mathbf{x})}<br>$$</p>
-<p>上式表明了<em>Density Ratio*的计算可以仅通过从两个分布上采样得到的样本加上一个二分类器$\mathcal{D}_\phi(\mathbf{x})$实现（假设$p(y=0)=p(y=1)$）。更深入的说，对于不可解的分布$p_\theta^</em>(\mathbf{x})$，我们可以通过计算<em>Density Ratio*来了解我们近似的分布$p_\theta(\mathbf{x})$和真实的$p_\theta^</em>(\mathbf{x})$之间的相对性。而且我们只需要能够在两个分布上进行采样，并且训练一个判别器即可。因为判别器是一个普通的分类器，所以大量的主流分类器都可以使用。</p>
-<h3 id="Variational-Inference"><a href="#Variational-Inference" class="headerlink" title="Variational Inference"></a>Variational Inference</h3><p>现在来看VAE，另一种解决不可解分布的方法是近似。<em>Variational Inference</em>通过引入一个变分分布$q_\eta(\mathbf{z}|\mathbf{x})$推出了不可解的$\mathbf{x}$的对数似然的下界（常被称为证据下界ELBO）：</p>
-<p>$$<br>\log p_\theta(\mathbf{x})=\log\int p_\theta(\mathbb{x}|\mathbb{z})p(\mathbf{z})\text{d}\mathbf{z}\geq \mathbb{E}_{q_\eta(\mathbf{z}|\mathbf{x})}\left[\log p_\theta(\mathbf{x}|\mathbf{z})\right]-\text{KL}\left[q_\eta(\mathbf{z}|\mathbf{x})\parallel p(\mathbf{z})\right]=\mathcal{F}(\boldsymbol{\theta}, \boldsymbol{\eta})<br>$$</p>
+<p><span class="math display">\[
+\textbf{Generator Loss: }\mathbb{E}_{p_\theta(\mathbf{x})}[\log(1-\mathcal{D}_\phi(\mathbf{x}))];\textbf{ Alternative Loss: }\mathbf{E}_{p_\theta(\mathbf{x})}[-\log\mathcal{D}_\phi(\mathbf{x})]
+\]</span></p>
+<h3 id="the-density-ratio-trick">The Density Ratio Trick</h3>
+<p>令<span class="math inline">\(p^*(\mathbf{x})=p(\mathbf{x}|y=1)\)</span>，<span class="math inline">\(p_\theta(\mathbf{x})=p(\mathbf{x}|y=0)\)</span>。定义<em>Density Ratio</em> <span class="math inline">\(r_\phi(\mathbf{x})\)</span>为真实分布和生成分布之间的比例：</p>
+<p><span class="math display">\[
+r_\phi(\mathbf{x})=\frac{p^*(\mathbf{x})}{p_\theta(\mathbf{x})}=\frac{p(\mathbf{x}|y=1)}{p(\mathbf{x}|y=0)}=\frac{p(y=1|\mathbf{x})}{p(y=0|\mathbf{x})}=\frac{\mathcal{D}_\phi(\mathbf{x})}{1-\mathcal{D}_\phi(\mathbf{x})}
+\]</span></p>
+<p>上式表明了<em>Density Ratio</em>的计算可以仅通过从两个分布上采样得到的样本加上一个二分类器<span class="math inline">\(\mathcal{D}_\phi(\mathbf{x})\)</span>实现（假设<span class="math inline">\(p(y=0)=p(y=1)\)</span>）。更深入的说，对于不可解的分布<span class="math inline">\(p_\theta^*(\mathbf{x})\)</span>，我们可以通过计算<em>Density Ratio</em>来了解我们近似的分布<span class="math inline">\(p_\theta(\mathbf{x})\)</span>和真实的<span class="math inline">\(p_\theta^*(\mathbf{x})\)</span>之间的相对性。而且我们只需要能够在两个分布上进行采样，并且训练一个判别器即可。因为判别器是一个普通的分类器，所以大量的主流分类器都可以使用。</p>
+<h3 id="variational-inference">Variational Inference</h3>
+<p>现在来看VAE，另一种解决不可解分布的方法是近似。<em>Variational Inference</em>通过引入一个变分分布<span class="math inline">\(q_\eta(\mathbf{z}|\mathbf{x})\)</span>推出了不可解的<span class="math inline">\(\mathbf{x}\)</span>的对数似然的下界（常被称为证据下界ELBO）：</p>
+<p><span class="math display">\[
+\log p_\theta(\mathbf{x})=\log\int p_\theta(\mathbb{x}|\mathbb{z})p(\mathbf{z})\text{d}\mathbf{z}\geq \mathbb{E}_{q_\eta(\mathbf{z}|\mathbf{x})}\left[\log p_\theta(\mathbf{x}|\mathbf{z})\right]-\text{KL}\left[q_\eta(\mathbf{z}|\mathbf{x})\parallel p(\mathbf{z})\right]=\mathcal{F}(\boldsymbol{\theta}, \boldsymbol{\eta})
+\]</span></p>
 <p>VAE是<em>Variational Inference</em>的一种实现，变分分布通过一个神经网络进行建模，并且建立起了完整的可优化的模型。</p>
-<h3 id="Synthetic-Likelihood"><a href="#Synthetic-Likelihood" class="headerlink" title="Synthetic Likelihood"></a>Synthetic Likelihood</h3><p>当似然函数未知（GAN中没有显式的似然函数，而VAE中有）的时候，<em>Variational Inference*便无法直接使用。对于没有显式的似然函数的情况，以VAE的ELBO的第一项为例，假设$p_\theta(\mathbf{x}|\mathbf{z})$分布的具体形式未知，我们只有从$p_\theta(\mathbf{x}|\mathbf{z})$采样得到的样本，如何计算$\mathbb{E}_{q_\eta(\mathbf{z}|\mathbf{x})}[\log p_\theta(\mathbf{x}|\mathbf{z})]$呢？一个方法是乘以$p_\theta^</em>(\mathbf{x})$再除以$p_\theta^*(\mathbf{x})$：</p>
-<p>$$<br>\mathbb{E}<em>{q_\eta(\mathbf{z}|\mathbf{x})}[\log p_\theta(\mathbf{x}|\mathbf{z})]=\mathbb{E}</em>{q_\eta(\mathbf{z}|\mathbf{x})}\left[\log\frac{p_\theta(\mathbf{x}|\mathbf{z})}{p^<em>(\mathbf{x})}\right]+\mathbb{E}_{q_\eta(\mathbf{z}|\mathbf{x})}[\log p^</em>(\mathbf{x})]<br>$$</p>
-<p>公式(5)中的第一项包括了合成似然$R(\theta)=\frac{p_\theta(\mathbf{x}|\mathbf{z})}{p^*(\mathbf{x})}$，优化$R(\theta)$相当于优化$\log p_\theta(\mathbf{x}|\mathbf{z})$。第二项与生成网络的参数$\theta$无关，所以在优化的时候可以忽略。</p>
-<h2 id="A-Fusion-of-Variational-and-Adversarial-Learning"><a href="#A-Fusion-of-Variational-and-Adversarial-Learning" class="headerlink" title="A Fusion of Variational and Adversarial Learning"></a>A Fusion of Variational and Adversarial Learning</h2><p>GAN和VAE分别从不同的角度解决了生成模型的推断问题，我们下面从VAE出发，考虑将两者结合起来。</p>
-<h3 id="Implicit-Variational-Distributions"><a href="#Implicit-Variational-Distributions" class="headerlink" title="Implicit Variational Distributions"></a>Implicit Variational Distributions</h3><p>变分推断<strong>Variational Inference</strong>的主要任务就是确定$q_\eta(\mathbf{z}|\mathbf{x})$，通常的做法如<strong>Mean-field Variational Inference</strong>会假设一个简单的分布，如高斯分布。在本文中不对$q_\eta(\mathbf{z}|\mathbf{x})$的形式作假设，仅假设其为一个隐含的分布。运用上文提到的<em>Density Ratio Trick</em>，我们可以将VAE损失函数中的第二项改写为：</p>
-<p>$$<br>-\text{KL}[q_\eta(\mathbf{z}|\mathbf{x})\parallel p(\mathbf{z})]=\mathbb{E}<em>{q_\eta(\mathbf{z}|\mathbf{x})}\left[\log\frac{p(\mathbf{z})}{q_\eta(\mathbf{z}|\mathbf{x})}\right]\approx\mathbb{E}</em>{q_\eta(\mathbf{z}|\mathbf{x})}\left[\log\frac{\mathcal{C}_\boldsymbol{\omega}(\mathbf{z})}{1-\mathcal{C}_\boldsymbol{\omega}(\mathbf{z})}\right]<br>$$</p>
-<p>文中引入了一个隐变量分类器（Latent Classifier）$\mathcal{C}_{\boldsymbol{\omega}}(\mathbf{z})$，用来判别$\mathbf{z}$是从编码网络还是从标准高斯分布中采样得到的（猜测这样做的好处是不用再对$\mathbf{z}$的后验做高斯分布的假设了，也不需要在变分网络输出形成的高斯分布上采样得到$\mathbf{z}$了，这样重参数技巧也省了）。具体实现上，期望可以用蒙特卡洛方法（采样多次取均值）进行计算。</p>
-<h3 id="Likelihood-Choice"><a href="#Likelihood-Choice" class="headerlink" title="Likelihood Choice"></a>Likelihood Choice</h3><p>对于VAE损失函数第一项，对应生成网络，我们可以选择对$p(\mathbf{x}|\mathbf{z})$分布的具体形式做假设， 这样对应<em>Likelihood-based<em>的情况。文中选择的是</em>Zero-mean Laplace Distribution</em> $p_\theta(\mathbf{x}|\mathbf{z})\propto\exp(-\lambda\parallel\mathbf{x}-\mathcal{G}_\theta(\mathbf{z})\parallel_1)$（不就是$L_1$ Loss吗？？？）。</p>
+<h3 id="synthetic-likelihood">Synthetic Likelihood</h3>
+<p>当似然函数未知（GAN中没有显式的似然函数，而VAE中有）的时候，<em>Variational Inference</em>便无法直接使用。对于没有显式的似然函数的情况，以VAE的ELBO的第一项为例，假设<span class="math inline">\(p_\theta(\mathbf{x}|\mathbf{z})\)</span>分布的具体形式未知，我们只有从<span class="math inline">\(p_\theta(\mathbf{x}|\mathbf{z})\)</span>采样得到的样本，如何计算<span class="math inline">\(\mathbb{E}_{q_\eta(\mathbf{z}|\mathbf{x})}[\log p_\theta(\mathbf{x}|\mathbf{z})]\)</span>呢？一个方法是乘以<span class="math inline">\(p_\theta^*(\mathbf{x})\)</span>再除以<span class="math inline">\(p_\theta^*(\mathbf{x})\)</span>：</p>
+<p><span class="math display">\[
+\mathbb{E}_{q_\eta(\mathbf{z}|\mathbf{x})}[\log p_\theta(\mathbf{x}|\mathbf{z})]=\mathbb{E}_{q_\eta(\mathbf{z}|\mathbf{x})}\left[\log\frac{p_\theta(\mathbf{x}|\mathbf{z})}{p^*(\mathbf{x})}\right]+\mathbb{E}_{q_\eta(\mathbf{z}|\mathbf{x})}[\log p^*(\mathbf{x})]
+\]</span></p>
+<p>公式(5)中的第一项包括了合成似然<span class="math inline">\(R(\theta)=\frac{p_\theta(\mathbf{x}|\mathbf{z})}{p^*(\mathbf{x})}\)</span>，优化<span class="math inline">\(R(\theta)\)</span>相当于优化<span class="math inline">\(\log p_\theta(\mathbf{x}|\mathbf{z})\)</span>。第二项与生成网络的参数<span class="math inline">\(\theta\)</span>无关，所以在优化的时候可以忽略。</p>
+<h2 id="a-fusion-of-variational-and-adversarial-learning">A Fusion of Variational and Adversarial Learning</h2>
+<p>GAN和VAE分别从不同的角度解决了生成模型的推断问题，我们下面从VAE出发，考虑将两者结合起来。</p>
+<h3 id="implicit-variational-distributions">Implicit Variational Distributions</h3>
+<p>变分推断<strong>Variational Inference</strong>的主要任务就是确定<span class="math inline">\(q_\eta(\mathbf{z}|\mathbf{x})\)</span>，通常的做法如<strong>Mean-field Variational Inference</strong>会假设一个简单的分布，如高斯分布。在本文中不对<span class="math inline">\(q_\eta(\mathbf{z}|\mathbf{x})\)</span>的形式作假设，仅假设其为一个隐含的分布。运用上文提到的<em>Density Ratio Trick</em>，我们可以将VAE损失函数中的第二项改写为：</p>
+<p><span class="math display">\[
+-\text{KL}[q_\eta(\mathbf{z}|\mathbf{x})\parallel p(\mathbf{z})]=\mathbb{E}_{q_\eta(\mathbf{z}|\mathbf{x})}\left[\log\frac{p(\mathbf{z})}{q_\eta(\mathbf{z}|\mathbf{x})}\right]\approx\mathbb{E}_{q_\eta(\mathbf{z}|\mathbf{x})}\left[\log\frac{\mathcal{C}_\boldsymbol{\omega}(\mathbf{z})}{1-\mathcal{C}_\boldsymbol{\omega}(\mathbf{z})}\right]
+\]</span></p>
+<p>文中引入了一个隐变量分类器（Latent Classifier）<span class="math inline">\(\mathcal{C}_{\boldsymbol{\omega}}(\mathbf{z})\)</span>，用来判别<span class="math inline">\(\mathbf{z}\)</span>是从编码网络还是从标准高斯分布中采样得到的（猜测这样做的好处是不用再对<span class="math inline">\(\mathbf{z}\)</span>的后验做高斯分布的假设了，也不需要在变分网络输出形成的高斯分布上采样得到<span class="math inline">\(\mathbf{z}\)</span>了，这样重参数技巧也省了）。具体实现上，期望可以用蒙特卡洛方法（采样多次取均值）进行计算。</p>
+<h3 id="likelihood-choice">Likelihood Choice</h3>
+<p>对于VAE损失函数第一项，对应生成网络，我们可以选择对<span class="math inline">\(p(\mathbf{x}|\mathbf{z})\)</span>分布的具体形式做假设， 这样对应<em>Likelihood-based</em>的情况。文中选择的是<em>Zero-mean Laplace Distribution</em> <span class="math inline">\(p_\theta(\mathbf{x}|\mathbf{z})\propto\exp(-\lambda\parallel\mathbf{x}-\mathcal{G}_\theta(\mathbf{z})\parallel_1)\)</span>（不就是<span class="math inline">\(L_1\)</span> Loss吗？？？）。</p>
 <p>对于<em>Likelihood-free</em>的情况，可以继续使用上面提到的<em>Density Ratio Trick</em>，这时需要加一个一个判别器。</p>
-<p>$$<br>\mathbb{E}<em>{q_\eta(\mathbf{z}|\mathbf{x})}\left[-\lambda\parallel\mathbf{x}-\mathcal{G}_\theta(\mathbf{z})\parallel_1\right]\space\space\text{  or  }\space\space\mathbb{E}</em>{q_\eta(\mathbf{z}|\mathbf{x})}\left[\log\frac{\mathcal{D}_\phi(\mathcal{G}_\theta(\mathbf{z}))}{1-\mathcal{D}_\phi(\mathcal{G}_\theta(\mathbf{z}))}\right]<br>$$</p>
+<p><span class="math display">\[
+\mathbb{E}_{q_\eta(\mathbf{z}|\mathbf{x})}\left[-\lambda\parallel\mathbf{x}-\mathcal{G}_\theta(\mathbf{z})\parallel_1\right]\space\space\text{  or  }\space\space\mathbb{E}_{q_\eta(\mathbf{z}|\mathbf{x})}\left[\log\frac{\mathcal{D}_\phi(\mathcal{G}_\theta(\mathbf{z}))}{1-\mathcal{D}_\phi(\mathcal{G}_\theta(\mathbf{z}))}\right]
+\]</span></p>
 <p>对于两种选择，前者对应VAE，好处是不会出现模式崩溃的情况，后者对应GAN，容易出现模式崩溃的情况，但是可以使用对抗学习的方式（这是优点？？？），本文选择两种都用（我全都要.jpg）。</p>
-<h3 id="Hybrid-Loss-Functions"><a href="#Hybrid-Loss-Functions" class="headerlink" title="Hybrid Loss Functions"></a>Hybrid Loss Functions</h3><p>将前面的讨论结合起来，最后的损失函数就是：</p>
-<p>$$<br>\mathcal{L}(\boldsymbol{\theta},\boldsymbol{\eta})=\mathbb{E}_{q_\eta(\mathbf{z}|\mathbf{x})}\left[-\lambda\parallel\mathbf{x}-\mathcal{G}_\theta(\mathbf{z})\parallel_1+\log\frac{\mathcal{D}_\phi(\mathcal{G}_\theta(\mathbf{z}))}{1-\mathcal{D}_\phi(\mathcal{G}_\theta(\mathbf{z}))}+\log\frac{\mathcal{C}_\boldsymbol{\omega}(\mathbf{z})}{1-\mathcal{C}_\boldsymbol{\omega}(\mathbf{z})}\right]<br>$$</p>
-<p>最后模型包含四个网络：生成网络$p_\theta(\mathbf{x}|\mathbf{z})$、推断网络$q_\eta(\mathbf{z}|\mathbf{x})$以及两个判别器$\mathcal{C}_{\boldsymbol{\omega}}$和$\mathcal{D}_\phi$，作者将其命名为$\alpha$-GAN。</p>
+<h3 id="hybrid-loss-functions">Hybrid Loss Functions</h3>
+<p>将前面的讨论结合起来，最后的损失函数就是：</p>
+<p><span class="math display">\[
+\mathcal{L}(\boldsymbol{\theta},\boldsymbol{\eta})=\mathbb{E}_{q_\eta(\mathbf{z}|\mathbf{x})}\left[-\lambda\parallel\mathbf{x}-\mathcal{G}_\theta(\mathbf{z})\parallel_1+\log\frac{\mathcal{D}_\phi(\mathcal{G}_\theta(\mathbf{z}))}{1-\mathcal{D}_\phi(\mathcal{G}_\theta(\mathbf{z}))}+\log\frac{\mathcal{C}_\boldsymbol{\omega}(\mathbf{z})}{1-\mathcal{C}_\boldsymbol{\omega}(\mathbf{z})}\right]
+\]</span></p>
+<p>最后模型包含四个网络：生成网络<span class="math inline">\(p_\theta(\mathbf{x}|\mathbf{z})\)</span>、推断网络<span class="math inline">\(q_\eta(\mathbf{z}|\mathbf{x})\)</span>以及两个判别器<span class="math inline">\(\mathcal{C}_{\boldsymbol{\omega}}\)</span>和<span class="math inline">\(\mathcal{D}_\phi\)</span>，作者将其命名为<span class="math inline">\(\alpha\)</span>-GAN。</p>
 <p>算法流程如下：</p>
-<p><img src="http://qfxiao.me/img/image-20191106220923748.png" alt></p>
-<h3 id="Improved-Techniques"><a href="#Improved-Techniques" class="headerlink" title="Improved Techniques"></a>Improved Techniques</h3><p>作者为了改进模型的稳定性和效率，将生成器的Loss中的$-\log(1-\mathcal{D}_\phi)$修改为了$\log\mathcal{D}_\phi-\log(1-\mathcal{D}_\phi)$，并声称这样能提供非饱和（Non-saturating）的梯度：</p>
-<p>$$<br>\textbf{Generator Loss: } \mathbb{E}_{q_\eta(\mathbf{z}|\mathbf{x})}\left[\lambda\parallel\mathbf{x}-\mathcal{G}_\theta(\mathbf{z})\parallel_1-\log\mathcal{D}_\phi(\mathcal{G}_\theta(\mathbf{z}))+\log(1-\mathcal{D}_\phi(\mathcal{G}_\theta(\mathbf{z})))\right]<br>$$</p>
-<p>作者认为在生成器损失函数中加入$\lambda\parallel\mathbf{x}-\mathcal{G}_\theta(\mathbf{z})\parallel_1$能够在一定程度防止模式崩溃。</p>
-<p>除此之外，作者发现将真实样本（原文是The Samples）作为生成的样本输入到判别器中能够提升性能。作者给出的解释是根据Jensen不等式：$\log p_\theta(\mathbf{x})=\log\int p_\theta(\mathbf{x}|\mathbf{z})p(\mathbf{z})\text{d}\mathbf{z}\geq \mathbb{E}_{p(\mathbf{z})}[\log p_\theta(\mathbf{x}|\mathbf{z})]$，</p>
+<p><img src="http://qfxiao.me/img/image-20191106220923748.png"></p>
+<h3 id="improved-techniques">Improved Techniques</h3>
+<p>作者为了改进模型的稳定性和效率，将生成器的Loss中的<span class="math inline">\(-\log(1-\mathcal{D}_\phi)\)</span>修改为了<span class="math inline">\(\log\mathcal{D}_\phi-\log(1-\mathcal{D}_\phi)\)</span>，并声称这样能提供非饱和（Non-saturating）的梯度：</p>
+<p><span class="math display">\[
+\textbf{Generator Loss: } \mathbb{E}_{q_\eta(\mathbf{z}|\mathbf{x})}\left[\lambda\parallel\mathbf{x}-\mathcal{G}_\theta(\mathbf{z})\parallel_1-\log\mathcal{D}_\phi(\mathcal{G}_\theta(\mathbf{z}))+\log(1-\mathcal{D}_\phi(\mathcal{G}_\theta(\mathbf{z})))\right]
+\]</span></p>
+<p>作者认为在生成器损失函数中加入<span class="math inline">\(\lambda\parallel\mathbf{x}-\mathcal{G}_\theta(\mathbf{z})\parallel_1\)</span>能够在一定程度防止模式崩溃。</p>
+<p>除此之外，作者发现将真实样本（原文是The Samples）作为生成的样本输入到判别器中能够提升性能。作者给出的解释是根据Jensen不等式：<span class="math inline">\(\log p_\theta(\mathbf{x})=\log\int p_\theta(\mathbf{x}|\mathbf{z})p(\mathbf{z})\text{d}\mathbf{z}\geq \mathbb{E}_{p(\mathbf{z})}[\log p_\theta(\mathbf{x}|\mathbf{z})]\)</span>，</p>
 <p>[TODO]</p>
-<h2 id="Related-Work"><a href="#Related-Work" class="headerlink" title="Related Work"></a>Related Work</h2><p>[TODO]</p>
-<p><img src="http://qfxiao.me/img/image-20191102233101258.png" alt></p>
-<p><img src="http://qfxiao.me/img/image-20191102233151987.png" alt></p>
-<h1 id="Experiments"><a href="#Experiments" class="headerlink" title="Experiments"></a>Experiments</h1><p>[TODO]</p>
-<h2 id="Metrics"><a href="#Metrics" class="headerlink" title="Metrics"></a>Metrics</h2><p>本文使用了几种不同的评测生成模型的方法：</p>
+<h2 id="related-work">Related Work</h2>
+<p>[TODO]</p>
+<p><img src="http://qfxiao.me/img/image-20191102233101258.png"></p>
+<p><img src="http://qfxiao.me/img/image-20191102233151987.png"></p>
+<h1 id="experiments">Experiments</h1>
+<p>[TODO]</p>
+<h2 id="metrics">Metrics</h2>
+<p>本文使用了几种不同的评测生成模型的方法：</p>
 <ul>
-<li>*<em>Inception Score: *</em></li>
-<li>*<em>Multi-scale Structural Similarity (MS-SSIM): *</em></li>
-<li>*<em>Independent Wasserstein Critic: *</em></li>
+<li><strong>Inception Score: </strong></li>
+<li><strong>Multi-scale Structural Similarity (MS-SSIM): </strong></li>
+<li><strong>Independent Wasserstein Critic: </strong></li>
 </ul>
-<h2 id="Results-on-ColorMNIST"><a href="#Results-on-ColorMNIST" class="headerlink" title="Results on ColorMNIST"></a>Results on ColorMNIST</h2><p><img src="http://qfxiao.me/img/image-20191102233220700.png" alt></p>
-<p><img src="http://qfxiao.me/img/image-20191102233244847.png" alt></p>
-<h2 id="Results-on-CelebA"><a href="#Results-on-CelebA" class="headerlink" title="Results on CelebA"></a>Results on CelebA</h2><p><img src="http://qfxiao.me/img/image-20191102233303345.png" alt></p>
-<h2 id="Results-on-CIFAR-10"><a href="#Results-on-CIFAR-10" class="headerlink" title="Results on CIFAR-10"></a>Results on CIFAR-10</h2><p><img src="http://qfxiao.me/img/image-20191102233338213.png" alt></p>
-<p><img src="http://qfxiao.me/img/image-20191102233350494.png" alt></p>
+<h2 id="results-on-colormnist">Results on ColorMNIST</h2>
+<p><img src="http://qfxiao.me/img/image-20191102233220700.png"></p>
+<p><img src="http://qfxiao.me/img/image-20191102233244847.png"></p>
+<h2 id="results-on-celeba">Results on CelebA</h2>
+<p><img src="http://qfxiao.me/img/image-20191102233303345.png"></p>
+<h2 id="results-on-cifar-10">Results on CIFAR-10</h2>
+<p><img src="http://qfxiao.me/img/image-20191102233338213.png"></p>
+<p><img src="http://qfxiao.me/img/image-20191102233350494.png"></p>
 
             <!--  -->
         </div>
@@ -513,83 +551,83 @@
                 目录
             </h3>
             <ul class="menu-list"><li>
-        <a class="is-flex" href="#Abstract">
+        <a class="is-flex" href="#abstract">
         <span class="has-mr-6">1</span>
         <span>Abstract</span>
         </a></li><li>
-        <a class="is-flex" href="#Contribution">
+        <a class="is-flex" href="#contribution">
         <span class="has-mr-6">2</span>
         <span>Contribution</span>
         </a></li><li>
-        <a class="is-flex" href="#Methodology">
+        <a class="is-flex" href="#methodology">
         <span class="has-mr-6">3</span>
         <span>Methodology</span>
         </a><ul class="menu-list"><li>
-        <a class="is-flex" href="#Overcoming-Intractability-in-Generative-Models">
+        <a class="is-flex" href="#overcoming-intractability-in-generative-models">
         <span class="has-mr-6">3.1</span>
         <span>Overcoming Intractability in Generative Models</span>
         </a><ul class="menu-list"><li>
-        <a class="is-flex" href="#Latent-Variable-Models">
+        <a class="is-flex" href="#latent-variable-models">
         <span class="has-mr-6">3.1.1</span>
         <span>Latent Variable Models</span>
         </a></li><li>
-        <a class="is-flex" href="#Generative-Adversarial-Networks">
+        <a class="is-flex" href="#generative-adversarial-networks">
         <span class="has-mr-6">3.1.2</span>
         <span>Generative Adversarial Networks</span>
         </a></li><li>
-        <a class="is-flex" href="#The-Density-Ratio-Trick">
+        <a class="is-flex" href="#the-density-ratio-trick">
         <span class="has-mr-6">3.1.3</span>
         <span>The Density Ratio Trick</span>
         </a></li><li>
-        <a class="is-flex" href="#Variational-Inference">
+        <a class="is-flex" href="#variational-inference">
         <span class="has-mr-6">3.1.4</span>
         <span>Variational Inference</span>
         </a></li><li>
-        <a class="is-flex" href="#Synthetic-Likelihood">
+        <a class="is-flex" href="#synthetic-likelihood">
         <span class="has-mr-6">3.1.5</span>
         <span>Synthetic Likelihood</span>
         </a></li></ul></li><li>
-        <a class="is-flex" href="#A-Fusion-of-Variational-and-Adversarial-Learning">
+        <a class="is-flex" href="#a-fusion-of-variational-and-adversarial-learning">
         <span class="has-mr-6">3.2</span>
         <span>A Fusion of Variational and Adversarial Learning</span>
         </a><ul class="menu-list"><li>
-        <a class="is-flex" href="#Implicit-Variational-Distributions">
+        <a class="is-flex" href="#implicit-variational-distributions">
         <span class="has-mr-6">3.2.1</span>
         <span>Implicit Variational Distributions</span>
         </a></li><li>
-        <a class="is-flex" href="#Likelihood-Choice">
+        <a class="is-flex" href="#likelihood-choice">
         <span class="has-mr-6">3.2.2</span>
         <span>Likelihood Choice</span>
         </a></li><li>
-        <a class="is-flex" href="#Hybrid-Loss-Functions">
+        <a class="is-flex" href="#hybrid-loss-functions">
         <span class="has-mr-6">3.2.3</span>
         <span>Hybrid Loss Functions</span>
         </a></li><li>
-        <a class="is-flex" href="#Improved-Techniques">
+        <a class="is-flex" href="#improved-techniques">
         <span class="has-mr-6">3.2.4</span>
         <span>Improved Techniques</span>
         </a></li></ul></li><li>
-        <a class="is-flex" href="#Related-Work">
+        <a class="is-flex" href="#related-work">
         <span class="has-mr-6">3.3</span>
         <span>Related Work</span>
         </a></li></ul></li><li>
-        <a class="is-flex" href="#Experiments">
+        <a class="is-flex" href="#experiments">
         <span class="has-mr-6">4</span>
         <span>Experiments</span>
         </a><ul class="menu-list"><li>
-        <a class="is-flex" href="#Metrics">
+        <a class="is-flex" href="#metrics">
         <span class="has-mr-6">4.1</span>
         <span>Metrics</span>
         </a></li><li>
-        <a class="is-flex" href="#Results-on-ColorMNIST">
+        <a class="is-flex" href="#results-on-colormnist">
         <span class="has-mr-6">4.2</span>
         <span>Results on ColorMNIST</span>
         </a></li><li>
-        <a class="is-flex" href="#Results-on-CelebA">
+        <a class="is-flex" href="#results-on-celeba">
         <span class="has-mr-6">4.3</span>
         <span>Results on CelebA</span>
         </a></li><li>
-        <a class="is-flex" href="#Results-on-CIFAR-10">
+        <a class="is-flex" href="#results-on-cifar-10">
         <span class="has-mr-6">4.4</span>
         <span>Results on CIFAR-10</span>
         </a></li></ul></li></ul>

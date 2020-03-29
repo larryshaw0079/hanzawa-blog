@@ -220,18 +220,18 @@
                 
                 
             
-            <h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><p>本文基于GAN提出了一种时间序列缺失值填充（Time Series Imputation）的方法。其主要的思路为生成器$G$从隐空间$Z$生成完整的样本，而判别器$D$则输出样本中不同部分为真实的概率。除此之外，作者提出了使用Hint Vector来揭示原始数据中缺失部分的信息，来优化训练过程。</p>
+            <h1 id="abstract">Abstract</h1>
+<p>本文基于GAN提出了一种时间序列缺失值填充（Time Series Imputation）的方法。其主要的思路为生成器<span class="math inline">\(G\)</span>从隐空间<span class="math inline">\(Z\)</span>生成完整的样本，而判别器<span class="math inline">\(D\)</span>则输出样本中不同部分为真实的概率。除此之外，作者提出了使用Hint Vector来揭示原始数据中缺失部分的信息，来优化训练过程。</p>
 <p><a href="https://arxiv.org/abs/1806.02920" target="_blank" rel="noopener">原文</a></p>
-<h1 id="Methodology"><a href="#Methodology" class="headerlink" title="Methodology"></a>Methodology</h1><h2 id="Problem-Formulation"><a href="#Problem-Formulation" class="headerlink" title="Problem Formulation"></a>Problem Formulation</h2><p>考虑一个$d$维的空间$\mathcal{X}=\mathcal{X}_1\times \cdots\times \mathcal{X}_d$，设$\mathbf{X}=(X_1,\cdots,X_d)$维空间$\mathcal{X}$上的随机向量（即理想的完整的时间序列），记其分布为$P(\mathbf{X})$。设$\mathbf{M}=(M_1,\cdots,M_d)$为Mask向量表示$\mathbf{X}$中被观察到的部分。（即标识时间序列哪些部分有缺失），取值为${0,1}^d$。</p>
-<p>对于每一个$i\in{1,\cdots,d}$，我们定义一个新空间$\tilde{\mathcal{X}}=\mathcal{X}\cup{<em>}$，其中$</em>$表示不属于任意$\mathcal{X}<em>i$的一个点。令$\tilde{\mathcal{X}}=\tilde{\mathcal{X}_1}\times\cdots\times\tilde{\mathcal{X}_d}$，同时定义一个新的随机变量（即我们观测到的含有缺失值的时间序列）$\tilde{\mathbf{X}}=(\tilde{X}_1,\cdots,\tilde{X}_d)\in \tilde{\mathcal{X}}$：<br>$$<br>\tilde{X}_i=\begin{cases}X_i,&amp;\text{if } M_i=1\*,&amp;\text{otherwise}\end{cases}<br>$$<br>假设数据集的形式为$\mathcal{D}={(\tilde{x}^i,m^i)}^n</em>{i=1}$，我们的任务是从$P(\mathbf{X}|\tilde{\mathbf{X}}=\tilde{x}^i)$上采样来对缺失值进行填充。</p>
-<h2 id="Model-Architecture"><a href="#Model-Architecture" class="headerlink" title="Model Architecture"></a>Model Architecture</h2><p>模型的架构如下图所示：</p>
+<h1 id="methodology">Methodology</h1>
+<h2 id="problem-formulation">Problem Formulation</h2>
             <!-- 
                 
-                    <h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><p>本文基于GAN提出了一种时间序列缺失值填充（Time Series Imputation）的方法。其主要的思路为生成器$G$从隐空间$Z$生成完整的样本，而判别器$D$则输出样本中不同部分为真实的概率。除此之外，作者提出了使用Hint Vector来揭示原始数据中缺失部分的信息，来优化训练过程。</p>
+                    <h1 id="abstract">Abstract</h1>
+<p>本文基于GAN提出了一种时间序列缺失值填充（Time Series Imputation）的方法。其主要的思路为生成器<span class="math inline">\(G\)</span>从隐空间<span class="math inline">\(Z\)</span>生成完整的样本，而判别器<span class="math inline">\(D\)</span>则输出样本中不同部分为真实的概率。除此之外，作者提出了使用Hint Vector来揭示原始数据中缺失部分的信息，来优化训练过程。</p>
 <p><a href="https://arxiv.org/abs/1806.02920" target="_blank" rel="noopener">原文</a></p>
-<h1 id="Methodology"><a href="#Methodology" class="headerlink" title="Methodology"></a>Methodology</h1><h2 id="Problem-Formulation"><a href="#Problem-Formulation" class="headerlink" title="Problem Formulation"></a>Problem Formulation</h2><p>考虑一个$d$维的空间$\mathcal{X}=\mathcal{X}_1\times \cdots\times \mathcal{X}_d$，设$\mathbf{X}=(X_1,\cdots,X_d)$维空间$\mathcal{X}$上的随机向量（即理想的完整的时间序列），记其分布为$P(\mathbf{X})$。设$\mathbf{M}=(M_1,\cdots,M_d)$为Mask向量表示$\mathbf{X}$中被观察到的部分。（即标识时间序列哪些部分有缺失），取值为${0,1}^d$。</p>
-<p>对于每一个$i\in{1,\cdots,d}$，我们定义一个新空间$\tilde{\mathcal{X}}=\mathcal{X}\cup{<em>}$，其中$</em>$表示不属于任意$\mathcal{X}<em>i$的一个点。令$\tilde{\mathcal{X}}=\tilde{\mathcal{X}_1}\times\cdots\times\tilde{\mathcal{X}_d}$，同时定义一个新的随机变量（即我们观测到的含有缺失值的时间序列）$\tilde{\mathbf{X}}=(\tilde{X}_1,\cdots,\tilde{X}_d)\in \tilde{\mathcal{X}}$：<br>$$<br>\tilde{X}_i=\begin{cases}X_i,&amp;\text{if } M_i=1\*,&amp;\text{otherwise}\end{cases}<br>$$<br>假设数据集的形式为$\mathcal{D}={(\tilde{x}^i,m^i)}^n</em>{i=1}$，我们的任务是从$P(\mathbf{X}|\tilde{\mathbf{X}}=\tilde{x}^i)$上采样来对缺失值进行填充。</p>
-<h2 id="Model-Architecture"><a href="#Model-Architecture" class="headerlink" title="Model Architecture"></a>Model Architecture</h2><p>模型的架构如下图所示：</p>
+<h1 id="methodology">Methodology</h1>
+<h2 id="problem-formulation">Problem Formulation</h2>
                 
              -->
         </div>
