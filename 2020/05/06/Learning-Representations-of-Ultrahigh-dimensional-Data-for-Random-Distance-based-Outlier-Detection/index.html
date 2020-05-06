@@ -10,16 +10,16 @@
 <title>Learning Representations of Ultrahigh-dimensional Data for Random Distance-based Outlier Detection - Hanzawa の 部屋</title>
 
 
-    <meta name="description" content="Introduction 本文提出了一种针对高维数据异常检测的表示学习方法。文中提出了RAMODO框架，一种基于排序的结合表示学习和异常检测的无监督框架。除此之外，基于RAMODO，文中还提出了基于此框架的模型REPEN。 Paper📰  Proposed Method">
+    <meta name="description" content="Introduction 本文提出了一种针对高维数据异常检测的表示学习方法。文中提出了RAMODO框架，一种基于排序的结合表示学习和异常检测的无监督框架。除此之外，基于RAMODO，文中还提出了基于此框架的模型REPEN。 Paper📰 Proposed Method The Proposed Framework: RAMODO">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Learning Representations of Ultrahigh-dimensional Data for Random Distance-based Outlier Detection">
 <meta property="og:url" content="http://qfxiao.me/2020/05/06/Learning-Representations-of-Ultrahigh-dimensional-Data-for-Random-Distance-based-Outlier-Detection/index.html">
 <meta property="og:site_name" content="Hanzawa の 部屋">
-<meta property="og:description" content="Introduction 本文提出了一种针对高维数据异常检测的表示学习方法。文中提出了RAMODO框架，一种基于排序的结合表示学习和异常检测的无监督框架。除此之外，基于RAMODO，文中还提出了基于此框架的模型REPEN。 Paper📰  Proposed Method">
+<meta property="og:description" content="Introduction 本文提出了一种针对高维数据异常检测的表示学习方法。文中提出了RAMODO框架，一种基于排序的结合表示学习和异常检测的无监督框架。除此之外，基于RAMODO，文中还提出了基于此框架的模型REPEN。 Paper📰 Proposed Method The Proposed Framework: RAMODO">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://qfxiao.me/img/image-20200416151126952.png">
 <meta property="article:published_time" content="2020-05-06T03:05:37.000Z">
-<meta property="article:modified_time" content="2020-05-06T03:21:13.585Z">
+<meta property="article:modified_time" content="2020-05-06T06:11:49.625Z">
 <meta property="article:author" content="Hanzawa">
 <meta property="article:tag" content="Anomaly Detection">
 <meta property="article:tag" content="Representation Learning">
@@ -163,7 +163,7 @@
                 <time class="level-item has-text-grey" datetime="2020-05-06T03:05:37.000Z">2020-05-06</time>
                 
                     <i class="fas fa-calendar-check">&nbsp</i>
-                    <time class="level-item has-text-grey" datetime="2020-05-06T03:21:13.585Z">2020-05-06</time>
+                    <time class="level-item has-text-grey" datetime="2020-05-06T06:11:49.625Z">2020-05-06</time>
                 
                 
                 <div class="level-item">
@@ -174,7 +174,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    6 分钟 读完 (大约 859 个字)
+                    9 分钟 读完 (大约 1408 个字)
                 </span>
                 
                 
@@ -219,60 +219,87 @@
             <h1 id="introduction">Introduction</h1>
 <p>本文提出了一种针对高维数据异常检测的表示学习方法。文中提出了<strong>RAMODO</strong>框架，一种基于排序的结合表示学习和异常检测的无监督框架。除此之外，基于<strong>RAMODO</strong>，文中还提出了基于此框架的模型<strong>REPEN</strong>。</p>
 <p><a href="https://arxiv.org/pdf/1806.04808" target="_blank" rel="noopener">Paper📰</a></p>
-<p><img src="http://qfxiao.me/img/image-20200506110652473.png"></p>
 <h1 id="proposed-method">Proposed Method</h1>
 <h2 id="the-proposed-framework-ramodo">The Proposed Framework: <strong>RAMODO</strong></h2>
 <h3 id="problem-statement">Problem Statement</h3>
 <p>我们的目的是为高维数据学习低维表示，同时在学到的低维表示中能够更好地进行异常检测。设有数据集<span class="math inline">\(\mathcal{X}=\{\mathbf x_1,\mathbf x_2,\cdots, \mathbf x_N\}\)</span> (<span class="math inline">\(\mathbf x_i\in \mathbb{R}^D\)</span>) 和一个基于随机距离的异常检测器<span class="math inline">\(\phi:\mathcal{X}\mapsto \mathbb{R}\)</span>，我们的目标是学习一个表示函数<span class="math inline">\(f:\mathcal{X}\mapsto\mathbb{R}^M (M\ll D)\)</span>使得对于所有异常样本<span class="math inline">\(\mathbf x_i\)</span>和正常样本<span class="math inline">\(\mathbf x_j\)</span>都有<span class="math inline">\(\phi(f(\mathbf x_i))&gt;\phi(f(\mathbf x_j))\)</span>。</p>
 <h3 id="ranking-model-based-representation-learning-framework">Ranking Model-based Representation Learning Framework</h3>
-<p><strong>RAMODO</strong>基于<em>pairwise ranking model</em>。第一步是通过一定的预处理算法（原文中称为<em>outlier thresholding</em>）将数据划分为inlier候选集和outlier候选集；第二步通过随机从inlier候选集采样<span class="math inline">\(n\)</span>个样本生成query set <span class="math inline">\((\mathbf x_i,\cdots,\mathbf x_{i+n-1})\)</span>，从inlier候选集采样一个样本生成<em>positive example</em> <span class="math inline">\((\mathbf x^+)\)</span>，从outlier候选集采样一个样本生成<em>negative example</em> <span class="math inline">\((\mathbf x^-)\)</span>，将三者组合生成 <em>metatriplet</em> <span class="math inline">\(T=(&lt;\mathbf x_i,\cdots,\mathbf x_{i+n-1}&gt;,\mathbf x^+,\mathbf x^-)\)</span>；第三步通过神经网络<span class="math inline">\(f\)</span>学习表示；第四步通过<em>outlier score-based ranking loss</em> <span class="math inline">\(L(\phi(f(\mathbf x^+)|&lt;f(\mathbf x_i),\cdots,f(\mathbf x_{i+n-1})&gt;),\phi(f(\mathbf x^-)|&lt;f(\mathbf x_i),\cdots,f(\mathbf x_{i+n-1})&gt;))\)</span>来进行优化，其中<span class="math inline">\(\phi(\cdot|\cdot)\)</span>为</p>
+<p><strong>RAMODO</strong>基于<em>pairwise ranking model</em>。第一步是通过一定的预处理算法（原文中称为<em>outlier thresholding</em>）将数据划分为inlier候选集和outlier候选集；第二步通过随机从inlier候选集采样<span class="math inline">\(n\)</span>个样本生成query set <span class="math inline">\((\mathbf x_i,\cdots,\mathbf x_{i+n-1})\)</span>，从inlier候选集采样一个样本生成<em>positive example</em> <span class="math inline">\((\mathbf x^+)\)</span>，从outlier候选集采样一个样本生成<em>negative example</em> <span class="math inline">\((\mathbf x^-)\)</span>，将三者组合生成 <em>metatriplet</em> <span class="math inline">\(T=(&lt;\mathbf x_i,\cdots,\mathbf x_{i+n-1}&gt;,\mathbf x^+,\mathbf x^-)\)</span>；第三步通过神经网络<span class="math inline">\(f\)</span>学习表示；第四步通过<em>outlier score-based ranking loss</em> <span class="math inline">\(L(\phi(f(\mathbf x^+)|&lt;f(\mathbf x_i),\cdots,f(\mathbf x_{i+n-1})&gt;),\phi(f(\mathbf x^-)|&lt;f(\mathbf x_i),\cdots,f(\mathbf x_{i+n-1})&gt;))\)</span>来进行优化，其中<span class="math inline">\(\phi(\cdot|\cdot)\)</span>为基于距离的异常检测器。</p>
 <p><img src="http://qfxiao.me/img/image-20200416151126952.png"></p>
 <h2 id="a-ramodo-instance-repen">A <strong>RAMODO</strong> Instance: <strong>REPEN</strong></h2>
-<p><strong>REPEN</strong></p>
+<p><strong>REPEN</strong>为<strong>RAMODO</strong>的实例模型，使用Sp作为异常检测器。</p>
 <h3 id="outlier-thresholding-using-state-of-the-art-detectors-and-cantellis-inequality">Outlier Thresholding Using State-of-the-art Detectors and Cantelli's Inequality</h3>
-<p>第一步使用Sp作为</p>
+<p>第一步使用Sp作为基础获得初始anomaly score：</p>
 <blockquote>
 <p><strong>Definition 1</strong> (<em>Sp-based Outlier Scoring</em>). 给定样本<span class="math inline">\(x_i\)</span>，Sp 以以下方式定义该样本的异常程度： <span class="math display">\[
 r_i=\frac{1}{m}\sum\limits_{j=1}^m nn\_dist(\mathbf x_i|\mathcal{S}_j)
-\]</span> 其中</p>
+\]</span> 其中<span class="math inline">\(\mathcal S_j\subset \mathcal X\)</span>为数据集随机采样的子集，<span class="math inline">\(m\)</span>为集成大小，<span class="math inline">\(nn_dist(\cdot|\cdot)\)</span>为<span class="math inline">\(\mathcal S_j\)</span>中最近邻居的距离。</p>
 </blockquote>
+<p>接着通过<em>Cantelli's Inequality</em>来定义<em>Pseudo Outlier</em>：</p>
 <blockquote>
-<p><strong>Definition 2 </strong>(<em>Cantelli's Inequality-based Outlier Thresholding</em>). 给定异常分数向量<span class="math inline">\(\mathbf r\in\mathbb R^N\)</span>， <span class="math display">\[
+<p><strong>Definition 2 </strong>(<em>Cantelli's Inequality-based Outlier Thresholding</em>). 给定异常分数向量<span class="math inline">\(\mathbf r\in\mathbb R^N\)</span>，更高异常分数代表更高的可能性为异常，设<span class="math inline">\(\mu\)</span>和<span class="math inline">\(\delta^2\)</span>分别为均值和方差，<em>Outlier</em>候选集由以下方式确定： <span class="math display">\[
 \mathcal{O}=\{\mathbf x_i|r_i \geq \mu + \alpha\delta\}, \space\forall \mathbf x_i\in\mathcal X, \space r_i\in\mathbf r
-\]</span> 其中<span class="math inline">\(\alpha\geq 0\)</span>为</p>
+\]</span> 其中<span class="math inline">\(\alpha\geq 0\)</span>为自定义的阈值。</p>
 </blockquote>
+<p><em>Inlier</em>候选集<span class="math inline">\(\mathcal I=\mathcal X\backslash \mathcal O\)</span>。</p>
 <h3 id="triplet-sampling-based-on-outlier-scores">Triplet Sampling Based on Outlier Scores</h3>
+<p>首先，从<span class="math inline">\(\mathcal I\)</span>采样一定数量的样本组成<em>query set</em>，每个样本被采样的概率与其对应的异常分数有关：</p>
 <p><span class="math display">\[
 p(\mathbf x_i)=\frac{\mathbb Z-r_i}{\sum_{t=1}^{|\mathcal I|}[\mathbb Z-r_t]}
 \]</span></p>
-<p><span class="math display">\[
+<p>其中<span class="math inline">\(\mathbb Z=\sum_{t=1}^{|\mathcal I|}r_t\)</span>。</p>
+<p>之后从<em>inlier set</em>中均匀随机采样一个<em>positive sample</em> <span class="math inline">\(\mathbf x^+\)</span>。最后从<em>outlier set</em>中根据以下概率采样一个<em>negative sample</em> <span class="math inline">\(\mathbf x^-\)</span>： <span class="math display">\[
 p(\mathbf x_j)=\frac{r_j}{\sum_{t=1}^{|\mathcal O|}r_t}
 \]</span></p>
 <h3 id="a-shallow-data-representation">A Shallow Data Representation</h3>
+<p>单层神经网络用来获得浅层的表示：</p>
 <blockquote>
 <p><strong>Definition 3 </strong>(<em>Single-layer Fully-connected Representations</em>) 给定输入<span class="math inline">\(x\)</span>， <span class="math display">\[
 f_\Theta(\mathbf x)=\{\psi(\mathbf w_1^\top\mathbf x),\psi(\mathbf w_2^\top\mathbf x),\cdots,\psi(\mathbf w_M^\top\mathbf x)\}
-\]</span> 其中</p>
+\]</span> 其中<span class="math inline">\(\psi(\cdot)\)</span>为激活函数，<span class="math inline">\(\mathbf w\)</span>为权重矩阵。</p>
 </blockquote>
 <h3 id="ranking-loss-using-random-nearest-neighbor-distance-based-outlier-scores">Ranking Loss Using Random Nearest Neighbor Distance-based Outlier Scores</h3>
 <p>设<span class="math inline">\(\mathcal{Q}=&lt;f_\Theta(\mathbf x_i),\cdots,f_\Theta(\mathbf x_{i+n-1})&gt;\)</span>为<em>query set</em>，给定样本<span class="math inline">\(\mathbf x\)</span>，<strong>REPEN</strong>根据最近邻距离定义了<span class="math inline">\(f_\Theta(\mathbf x)\)</span>的异常程度： <span class="math display">\[
 \phi(f_\Theta(\mathbf x)|\mathcal{Q})=nn\_dist(f_\Theta(\mathbf x)|\mathcal Q)
-\]</span> 因此，给定三元组<span class="math inline">\(T=(\mathcal Q,f_\Theta(\mathbf x^+),f_\Theta(\mathbf x^-))\)</span>， <span class="math display">\[
+\]</span> 因此，给定三元组<span class="math inline">\(T=(\mathcal Q,f_\Theta(\mathbf x^+),f_\Theta(\mathbf x^-))\)</span>，我们的目标是学得表示<span class="math inline">\(f(\cdot)\)</span>使得： <span class="math display">\[
 nn\_dist(f_\Theta(\mathbf x^+)|\mathcal Q)&lt;nn\_dist(f_\Theta(\mathbf x^-)|\mathcal Q)
-\]</span> 损失函数 <span class="math display">\[
+\]</span> 损失函数： <span class="math display">\[
 J(\Theta;T)=L(\phi(f_\Theta(\mathbf x^+)|\mathcal Q),\phi(f_\Theta(\mathbf x^-)|\mathcal Q))=\\\max\{0, c+nn\_dist(f_\Theta(\mathbf x^+)|\mathcal Q)-nn\_dist(f_\Theta(\mathbf x^-)|\mathcal Q)\}
-\]</span> 其中<span class="math inline">\(c\)</span> <span class="math display">\[
+\]</span> 其中<span class="math inline">\(c\)</span>为边界参数。给定一系列三元组，最终优化目标如下： <span class="math display">\[
 \mathop{\text{arg min}}\limits_{\Theta}\frac{1}{|\mathcal{T}|}\sum\limits_{i=1}^{|\mathcal T|}J(\Theta;T_i)
 \]</span></p>
 <h3 id="the-algorithm-and-its-time-complexity">The Algorithm and Its Time Complexity</h3>
 <p><img src="http://qfxiao.me/img/image-20200416151141351.png"></p>
 <h3 id="leveraging-a-few-labeled-outliers-to-improve-triplet-sampling">Leveraging A Few Labeled Outliers to Improve Triplet Sampling</h3>
 <h1 id="experiments">Experiments</h1>
+<h2 id="datasets">Datasets</h2>
+<ul>
+<li>AD：网络广告检测</li>
+<li>LC：肺癌疾病监测</li>
+<li>p53：异常蛋白质活动检测</li>
+<li>R8：文本分类</li>
+<li>News20：文本分类</li>
+<li>URL：异常网址检测</li>
+<li>Webspam：Pascal Large Scale LearningChallenge</li>
+</ul>
+<h2 id="effectiveness-in-real-world-data-with-thousands-to-millions-of-features">Effectiveness in Real-world Data with Thousands to Millions of Features</h2>
+<p>作者分别使用原始特征和<em>REPEN</em>学到的特征进行异常检测，IMP代表性能提升比例，SU代表加速比例。</p>
 <p><img src="http://qfxiao.me/img/image-20200416151156535.png"></p>
+<h2 id="comparing-to-state-of-the-art-representation-learning-competitors">Comparing to State-of-the-art Representation Learning Competitors</h2>
+<ul>
+<li><strong>AE: </strong>自编码器</li>
+<li><strong>HLLE: </strong> <em>Hessian Locally Linear Embedding</em></li>
+<li><strong>SRP: </strong> <em>Sparse Random Projection</em></li>
+<li><strong>CoP: </strong> <em>Coherent Pursuit</em></li>
+</ul>
 <p><img src="http://qfxiao.me/img/image-20200416151203533.png"></p>
+<h2 id="the-capability-of-leveraging-labeled-outliers-as-prior-knowledge">The Capability of Leveraging Labeled Outliers as Prior Knowledge</h2>
 <p><img src="http://qfxiao.me/img/image-20200416151224069.png"></p>
+<h2 id="sensitivity-test-w.r.t.-the-representation-dimension">Sensitivity Test w.r.t. the Representation Dimension</h2>
 <p><img src="http://qfxiao.me/img/image-20200416151212730.png"></p>
 <p><img src="http://qfxiao.me/img/image-20200416151234583.png"></p>
+<p>文中提到了对于R8、URL、News20这三个数据集在维度<span class="math inline">\(M=1\)</span>的时候表现和其他维度一样好，作者给出的解释是在这几个数据集中异常部分是线性可分的，所以1维就足够了，另一个解释是优化问题。</p>
+<h2 id="scalability-test">Scalability Test</h2>
 <p><img src="http://qfxiao.me/img/image-20200416151241749.png"></p>
 
             <!--  -->
@@ -555,7 +582,31 @@ J(\Theta;T)=L(\phi(f_\Theta(\mathbf x^+)|\mathcal Q),\phi(f_\Theta(\mathbf x^-)|
         <a class="is-flex" href="#experiments">
         <span class="has-mr-6">3</span>
         <span>Experiments</span>
-        </a></li></ul>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#datasets">
+        <span class="has-mr-6">3.1</span>
+        <span>Datasets</span>
+        </a></li><li>
+        <a class="is-flex" href="#effectiveness-in-real-world-data-with-thousands-to-millions-of-features">
+        <span class="has-mr-6">3.2</span>
+        <span>Effectiveness in Real-world Data with Thousands to Millions of Features</span>
+        </a></li><li>
+        <a class="is-flex" href="#comparing-to-state-of-the-art-representation-learning-competitors">
+        <span class="has-mr-6">3.3</span>
+        <span>Comparing to State-of-the-art Representation Learning Competitors</span>
+        </a></li><li>
+        <a class="is-flex" href="#the-capability-of-leveraging-labeled-outliers-as-prior-knowledge">
+        <span class="has-mr-6">3.4</span>
+        <span>The Capability of Leveraging Labeled Outliers as Prior Knowledge</span>
+        </a></li><li>
+        <a class="is-flex" href="#sensitivity-test-w.r.t.-the-representation-dimension">
+        <span class="has-mr-6">3.5</span>
+        <span>Sensitivity Test w.r.t. the Representation Dimension</span>
+        </a></li><li>
+        <a class="is-flex" href="#scalability-test">
+        <span class="has-mr-6">3.6</span>
+        <span>Scalability Test</span>
+        </a></li></ul></li></ul>
         </div>
     </div>
 </div>
