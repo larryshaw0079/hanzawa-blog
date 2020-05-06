@@ -7,18 +7,24 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
-<title>归档 - Hanzawa の 部屋</title>
+<title>Learning Representations of Ultrahigh-dimensional Data for Random Distance-based Outlier Detection - Hanzawa の 部屋</title>
 
 
-    <meta property="og:type" content="website">
-<meta property="og:title" content="Hanzawa の 部屋">
-<meta property="og:url" content="http://qfxiao.me/archives/page/2/index.html">
+    <meta name="description" content="Introduction Paper📰  image-20200506110652473">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Learning Representations of Ultrahigh-dimensional Data for Random Distance-based Outlier Detection">
+<meta property="og:url" content="http://qfxiao.me/2020/05/06/Learning-Representations-of-Ultrahigh-dimensional-Data-for-Random-Distance-based-Outlier-Detection/index.html">
 <meta property="og:site_name" content="Hanzawa の 部屋">
+<meta property="og:description" content="Introduction Paper📰  image-20200506110652473">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://qfxiao.me/images/og_image.png">
+<meta property="og:image" content="http://qfxiao.me/img/image-20200416151126952.png">
+<meta property="article:published_time" content="2020-05-06T03:05:37.000Z">
+<meta property="article:modified_time" content="2020-05-06T03:14:54.460Z">
 <meta property="article:author" content="Hanzawa">
+<meta property="article:tag" content="Anomaly Detection">
+<meta property="article:tag" content="Representation Learning">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://qfxiao.me/images/og_image.png">
+<meta name="twitter:image" content="http://qfxiao.me/img/image-20200416151126952.png">
 
 
 
@@ -88,7 +94,7 @@
         <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/logo.svg" alt="Hanzawa の 部屋" height="28">
+                <img src="/images/logo.svg" alt="Learning Representations of Ultrahigh-dimensional Data for Random Distance-based Outlier Detection" height="28">
             
             </a>
         </div>
@@ -125,6 +131,10 @@
                     
                 
                 
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
                 
                 <a class="navbar-item search" title="搜索" href="javascript:;">
                     <i class="fas fa-search"></i>
@@ -138,263 +148,237 @@
     <section class="section">
         <div class="container">
             <div class="columns">
-                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main">
+                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-image">
+        <span  class="image is-7by1">
+            <img class="thumbnail" src="http://qfxiao.me/img/image-20200416151126952.png" alt="Learning Representations of Ultrahigh-dimensional Data for Random Distance-based Outlier Detection">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
         
-<div class="card widget">
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-05-06T03:05:37.000Z">2020-05-06</time>
+                
+                    <i class="fas fa-calendar-check">&nbsp</i>
+                    <time class="level-item has-text-grey" datetime="2020-05-06T03:14:54.460Z">2020-05-06</time>
+                
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Research/">Research</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    5 分钟 读完 (大约 781 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                Learning Representations of Ultrahigh-dimensional Data for Random Distance-based Outlier Detection
+            
+        </h1>
+        <div class="content">
+            
+                
+                
+                
+                    
+                    
+                        
+                    
+                
+                    
+                    
+                        
+                    
+                
+                    
+                    
+                        
+                    
+                
+                    
+                    
+                        
+                    
+                
+                    
+                    
+                
+                
+            
+            <h1 id="introduction">Introduction</h1>
+<p><a href="https://arxiv.org/pdf/1806.04808" target="_blank" rel="noopener">Paper📰</a></p>
+<figure>
+<img src="C:\Users\larry\AppData\Roaming\Typora\typora-user-images\image-20200506110652473.png" alt="image-20200506110652473"><figcaption>image-20200506110652473</figcaption>
+</figure>
+<h1 id="proposed-method">Proposed Method</h1>
+<h2 id="the-proposed-framework-ramodo">The Proposed Framework: <strong>RAMODO</strong></h2>
+<h3 id="problem-statement">Problem Statement</h3>
+<p>我们的目的是为高维数据学习低维表示，同时在学到的低维表示中能够更好地进行异常检测。设有数据集<span class="math inline">\(\mathcal{X}=\{\mathbf x_1,\mathbf x_2,\cdots, \mathbf x_N\}\)</span> (<span class="math inline">\(\mathbf x_i\in \mathbb{R}^D\)</span>) 和一个基于随机距离的异常检测器<span class="math inline">\(\phi:\mathcal{X}\mapsto \mathbb{R}\)</span>，我们的目标是学习一个表示函数<span class="math inline">\(f:\mathcal{X}\mapsto\mathbb{R}^M (M\ll D)\)</span>使得对于所有异常样本<span class="math inline">\(\mathbf x_i\)</span>和正常样本<span class="math inline">\(\mathbf x_j\)</span>都有<span class="math inline">\(\phi(f(\mathbf x_i))&gt;\phi(f(\mathbf x_j))\)</span>。</p>
+<h3 id="ranking-model-based-representation-learning-framework">Ranking Model-based Representation Learning Framework</h3>
+<p><strong>RAMODO</strong>基于<em>pairwise ranking model</em>。第一步是通过一定的预处理算法（原文中称为<em>outlier thresholding</em>）将数据划分为inlier候选集和outlier候选集；第二步通过随机从inlier候选集采样<span class="math inline">\(n\)</span>个样本生成query set <span class="math inline">\((\mathbf x_i,\cdots,\mathbf x_{i+n-1})\)</span>，从inlier候选集采样一个样本生成<em>positive example</em> <span class="math inline">\((\mathbf x^+)\)</span>，从outlier候选集采样一个样本生成<em>negative example</em> <span class="math inline">\((\mathbf x^-)\)</span>，将三者组合生成 <em>metatriplet</em> <span class="math inline">\(T=(&lt;\mathbf x_i,\cdots,\mathbf x_{i+n-1}&gt;,\mathbf x^+,\mathbf x^-)\)</span>；第三步通过神经网络<span class="math inline">\(f\)</span>学习表示；第四步通过<em>outlier score-based ranking loss</em> <span class="math inline">\(L(\phi(f(\mathbf x^+)|&lt;f(\mathbf x_i),\cdots,f(\mathbf x_{i+n-1})&gt;),\phi(f(\mathbf x^-)|&lt;f(\mathbf x_i),\cdots,f(\mathbf x_{i+n-1})&gt;))\)</span>来进行优化，其中<span class="math inline">\(\phi(\cdot|\cdot)\)</span>为</p>
+<p><img src="http://qfxiao.me/img/image-20200416151126952.png"></p>
+<h2 id="a-ramodo-instance-repen">A <strong>RAMODO</strong> Instance: <strong>REPEN</strong></h2>
+<p><strong>REPEN</strong></p>
+<h3 id="outlier-thresholding-using-state-of-the-art-detectors-and-cantellis-inequality">Outlier Thresholding Using State-of-the-art Detectors and Cantelli's Inequality</h3>
+<p>第一步使用Sp作为</p>
+<blockquote>
+<p><strong>Definition 1</strong> (<em>Sp-based Outlier Scoring</em>). 给定样本<span class="math inline">\(x_i\)</span>，Sp 以以下方式定义该样本的异常程度： <span class="math display">\[
+r_i=\frac{1}{m}\sum\limits_{j=1}^m nn\_dist(\mathbf x_i|\mathcal{S}_j)
+\]</span> 其中</p>
+</blockquote>
+<blockquote>
+<p><strong>Definition 2 </strong>(<em>Cantelli's Inequality-based Outlier Thresholding</em>). 给定异常分数向量<span class="math inline">\(\mathbf r\in\mathbb R^N\)</span>， <span class="math display">\[
+\mathcal{O}=\{\mathbf x_i|r_i \geq \mu + \alpha\delta\}, \space\forall \mathbf x_i\in\mathcal X, \space r_i\in\mathbf r
+\]</span> 其中<span class="math inline">\(\alpha\geq 0\)</span>为</p>
+</blockquote>
+<h3 id="triplet-sampling-based-on-outlier-scores">Triplet Sampling Based on Outlier Scores</h3>
+<p><span class="math display">\[
+p(\mathbf x_i)=\frac{\mathbb Z-r_i}{\sum_{t=1}^{|\mathcal I|}[\mathbb Z-r_t]}
+\]</span></p>
+<p><span class="math display">\[
+p(\mathbf x_j)=\frac{r_j}{\sum_{t=1}^{|\mathcal O|}r_t}
+\]</span></p>
+<h3 id="a-shallow-data-representation">A Shallow Data Representation</h3>
+<blockquote>
+<p><strong>Definition 3 </strong>(<em>Single-layer Fully-connected Representations</em>) 给定输入<span class="math inline">\(x\)</span>， <span class="math display">\[
+f_\Theta(\mathbf x)=\{\psi(\mathbf w_1^\top\mathbf x),\psi(\mathbf w_2^\top\mathbf x),\cdots,\psi(\mathbf w_M^\top\mathbf x)\}
+\]</span> 其中</p>
+</blockquote>
+<h3 id="ranking-loss-using-random-nearest-neighbor-distance-based-outlier-scores">Ranking Loss Using Random Nearest Neighbor Distance-based Outlier Scores</h3>
+<p>设<span class="math inline">\(\mathcal{Q}=&lt;f_\Theta(\mathbf x_i),\cdots,f_\Theta(\mathbf x_{i+n-1})&gt;\)</span>为<em>query set</em>，给定样本<span class="math inline">\(\mathbf x\)</span>，<strong>REPEN</strong>根据最近邻距离定义了<span class="math inline">\(f_\Theta(\mathbf x)\)</span>的异常程度： <span class="math display">\[
+\phi(f_\Theta(\mathbf x)|\mathcal{Q})=nn\_dist(f_\Theta(\mathbf x)|\mathcal Q)
+\]</span> 因此，给定三元组<span class="math inline">\(T=(\mathcal Q,f_\Theta(\mathbf x^+),f_\Theta(\mathbf x^-))\)</span>， <span class="math display">\[
+nn\_dist(f_\Theta(\mathbf x^+)|\mathcal Q)&lt;nn\_dist(f_\Theta(\mathbf x^-)|\mathcal Q)
+\]</span> 损失函数 <span class="math display">\[
+J(\Theta;T)=L(\phi(f_\Theta(\mathbf x^+)|\mathcal Q),\phi(f_\Theta(\mathbf x^-)|\mathcal Q))=\\\max\{0, c+nn\_dist(f_\Theta(\mathbf x^+)|\mathcal Q)-nn\_dist(f_\Theta(\mathbf x^-)|\mathcal Q)\}
+\]</span> 其中<span class="math inline">\(c\)</span> <span class="math display">\[
+\mathop{\text{arg min}}\limits_{\Theta}\frac{1}{|\mathcal{T}|}\sum\limits_{i=1}^{|\mathcal T|}J(\Theta;T_i)
+\]</span></p>
+<h3 id="the-algorithm-and-its-time-complexity">The Algorithm and Its Time Complexity</h3>
+<p><img src="http://qfxiao.me/img/image-20200416151141351.png"></p>
+<h3 id="leveraging-a-few-labeled-outliers-to-improve-triplet-sampling">Leveraging A Few Labeled Outliers to Improve Triplet Sampling</h3>
+<h1 id="experiments">Experiments</h1>
+<p><img src="http://qfxiao.me/img/image-20200416151156535.png"></p>
+<p><img src="http://qfxiao.me/img/image-20200416151203533.png"></p>
+<p><img src="http://qfxiao.me/img/image-20200416151224069.png"></p>
+<p><img src="http://qfxiao.me/img/image-20200416151212730.png"></p>
+<p><img src="http://qfxiao.me/img/image-20200416151234583.png"></p>
+<p><img src="http://qfxiao.me/img/image-20200416151241749.png"></p>
+
+            <!--  -->
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/Anomaly-Detection/" rel="tag">Anomaly Detection</a>, <a class="has-link-grey -link" href="/tags/Representation-Learning/" rel="tag">Representation Learning</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+<div class="card">
     <div class="card-content">
-        <h3 class="tag is-link">
-        2019
-        </h3>
-        <div class="timeline">
-        
-            <article class="media">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
                 
-                <a href="/2019/10/29/Anomaly-Detection-in-Streams-with-Extreme-Value-Theory/" class="media-left">
-                    <p class="image is-64x64">
-                        <img class="thumbnail" src="http://qfxiao.me/img/image-20191029114054583.png" alt="Anomaly Detection in Streams with Extreme Value Theory">
-                    </p>
-                </a>
+<a class="button is-info donate">
+    <span class="icon is-small">
+        <i class="fab fa-alipay"></i>
+    </span>
+    <span>支付宝</span>
+    <div class="qrcode"><img src="http://qfxiao.me/misc/alipay.jpg" alt="支付宝"></div>
+</a>
+
                 
-                <div class="media-content">
-                    <div class="content">
-                        <time class="has-text-grey is-size-7 is-block is-uppercase" datetime="2019-10-29T03:36:22.000Z">2019-10-29</time>
-                        <a href="/2019/10/29/Anomaly-Detection-in-Streams-with-Extreme-Value-Theory/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Anomaly Detection in Streams with Extreme Value Theory</a>
-                        <div class="level article-meta is-mobile">
-                            <div class="level-left">
-                                
-                                <div class="level-item is-size-7 is-uppercase">
-                                <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
-                                </div>
-                                
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </article>
-        
-            <article class="media">
                 
-                <a href="/2019/10/22/An-Introduction-to-Variational-Autoencoders/" class="media-left">
-                    <p class="image is-64x64">
-                        <img class="thumbnail" src="http://qfxiao.me/img/autoencoder23849248011.png" alt="An Introduction to Variational Autoencoders">
-                    </p>
-                </a>
+<a class="button is-success donate">
+    <span class="icon is-small">
+        <i class="fab fa-weixin"></i>
+    </span>
+    <span>微信</span>
+    <div class="qrcode"><img src="http://qfxiao.me/misc/wechat.png" alt="微信"></div>
+</a>
+
                 
-                <div class="media-content">
-                    <div class="content">
-                        <time class="has-text-grey is-size-7 is-block is-uppercase" datetime="2019-10-22T07:14:26.000Z">2019-10-22</time>
-                        <a href="/2019/10/22/An-Introduction-to-Variational-Autoencoders/" class="title has-link-black-ter is-size-6 has-text-weight-normal">An Introduction to Variational Autoencoders</a>
-                        <div class="level article-meta is-mobile">
-                            <div class="level-left">
-                                
-                                <div class="level-item is-size-7 is-uppercase">
-                                <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Tutorial/">Tutorial</a>
-                                </div>
-                                
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </article>
-        
-            <article class="media">
+                <!-- Visit https://www.paypal.com/donate/buttons/ to get your donate button -->
+
+<a class="button is-warning donate" onclick="document.getElementById(&#39;paypal-donate-form&#39;).submit()">
+    <span class="icon is-small">
+        <i class="fab fa-paypal"></i>
+    </span>
+    <span>Paypal</span>
+</a>
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" id="paypal-donate-form">
+    <input type="hidden" name="cmd" value="_donations" />
+    <input type="hidden" name="business" value="larryshaw0079@live.com" />
+    <input type="hidden" name="currency_code" value="USD" />
+</form>
+
                 
-                <a href="/2019/10/18/Recurrent-Neural-Networks-for-Multivariate-Time-Series-with-Missing-Values/" class="media-left">
-                    <p class="image is-64x64">
-                        <img class="thumbnail" src="http://qfxiao.me/img/1571412138245.png" alt="Recurrent Neural Networks for Multivariate Time Series with Missing Values">
-                    </p>
-                </a>
-                
-                <div class="media-content">
-                    <div class="content">
-                        <time class="has-text-grey is-size-7 is-block is-uppercase" datetime="2019-10-18T15:17:07.000Z">2019-10-18</time>
-                        <a href="/2019/10/18/Recurrent-Neural-Networks-for-Multivariate-Time-Series-with-Missing-Values/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Recurrent Neural Networks for Multivariate Time Series with Missing Values</a>
-                        <div class="level article-meta is-mobile">
-                            <div class="level-left">
-                                
-                                <div class="level-item is-size-7 is-uppercase">
-                                <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/RNN/">RNN</a>
-                                </div>
-                                
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </article>
-        
-            <article class="media">
-                
-                <a href="/2019/10/18/Robust-Anomaly-Detection-for-Multivariate-Time-Series-through-Stochastic-Recurrent-Neural-Network/" class="media-left">
-                    <p class="image is-64x64">
-                        <img class="thumbnail" src="http://qfxiao.me/img/1571411043958.png" alt="Robust Anomaly Detection for Multivariate Time Series through Stochastic Recurrent Neural Network">
-                    </p>
-                </a>
-                
-                <div class="media-content">
-                    <div class="content">
-                        <time class="has-text-grey is-size-7 is-block is-uppercase" datetime="2019-10-18T15:00:57.000Z">2019-10-18</time>
-                        <a href="/2019/10/18/Robust-Anomaly-Detection-for-Multivariate-Time-Series-through-Stochastic-Recurrent-Neural-Network/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Robust Anomaly Detection for Multivariate Time Series through Stochastic Recurrent Neural Network</a>
-                        <div class="level article-meta is-mobile">
-                            <div class="level-left">
-                                
-                                <div class="level-item is-size-7 is-uppercase">
-                                <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
-                                </div>
-                                
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </article>
-        
-            <article class="media">
-                
-                <a href="/2019/10/16/GAIN-Missing-Data-Imputation-using-Generative-Adversarial-Nets/" class="media-left">
-                    <p class="image is-64x64">
-                        <img class="thumbnail" src="http://qfxiao.me/img/1571228929894.png" alt="GAIN: Missing Data Imputation using Generative Adversarial Nets">
-                    </p>
-                </a>
-                
-                <div class="media-content">
-                    <div class="content">
-                        <time class="has-text-grey is-size-7 is-block is-uppercase" datetime="2019-10-16T12:19:10.000Z">2019-10-16</time>
-                        <a href="/2019/10/16/GAIN-Missing-Data-Imputation-using-Generative-Adversarial-Nets/" class="title has-link-black-ter is-size-6 has-text-weight-normal">GAIN: Missing Data Imputation using Generative Adversarial Nets</a>
-                        <div class="level article-meta is-mobile">
-                            <div class="level-left">
-                                
-                                <div class="level-item is-size-7 is-uppercase">
-                                <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Time-Series-Imputation/">Time Series Imputation</a>
-                                </div>
-                                
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </article>
-        
-            <article class="media">
-                
-                <a href="/2019/09/22/Anomaly-Detection-with-Generative-Adversarial-Networks-for-Multivariate-Time-Series/" class="media-left">
-                    <p class="image is-64x64">
-                        <img class="thumbnail" src="http://qfxiao.me/img/1565783729478.png" alt="Anomaly Detection with Generative Adversarial Networks for Multivariate Time Series">
-                    </p>
-                </a>
-                
-                <div class="media-content">
-                    <div class="content">
-                        <time class="has-text-grey is-size-7 is-block is-uppercase" datetime="2019-09-22T14:32:18.000Z">2019-09-22</time>
-                        <a href="/2019/09/22/Anomaly-Detection-with-Generative-Adversarial-Networks-for-Multivariate-Time-Series/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Anomaly Detection with Generative Adversarial Networks for Multivariate Time Series</a>
-                        <div class="level article-meta is-mobile">
-                            <div class="level-left">
-                                
-                                <div class="level-item is-size-7 is-uppercase">
-                                <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
-                                </div>
-                                
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </article>
-        
-            <article class="media">
-                
-                <a href="/2019/09/22/ALSR-An-adaptive-label-screening-and-relearning-approach-for-interval-oriented-anomaly-detection/" class="media-left">
-                    <p class="image is-64x64">
-                        <img class="thumbnail" src="http://qfxiao.me/img/1567780227803.png" alt="ALSR: An Adaptive Label Screening and Relearning Approach for Interval-Oriented Anomaly Detection">
-                    </p>
-                </a>
-                
-                <div class="media-content">
-                    <div class="content">
-                        <time class="has-text-grey is-size-7 is-block is-uppercase" datetime="2019-09-22T14:29:18.000Z">2019-09-22</time>
-                        <a href="/2019/09/22/ALSR-An-adaptive-label-screening-and-relearning-approach-for-interval-oriented-anomaly-detection/" class="title has-link-black-ter is-size-6 has-text-weight-normal">ALSR: An Adaptive Label Screening and Relearning Approach for Interval-Oriented Anomaly Detection</a>
-                        <div class="level article-meta is-mobile">
-                            <div class="level-left">
-                                
-                                <div class="level-item is-size-7 is-uppercase">
-                                <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
-                                </div>
-                                
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </article>
-        
-            <article class="media">
-                
-                <a href="/2019/09/22/Unsupervised-Anomaly-Detection-via-Variational-Auto-Encoder-for-Seasonal-KPIs-in-Web-Applications/" class="media-left">
-                    <p class="image is-64x64">
-                        <img class="thumbnail" src="http://qfxiao.me/img/1571719738542.png" alt="Unsupervised Anomaly Detection via Variational Auto-Encoder for Seasonal KPIs in Web Applications">
-                    </p>
-                </a>
-                
-                <div class="media-content">
-                    <div class="content">
-                        <time class="has-text-grey is-size-7 is-block is-uppercase" datetime="2019-09-22T12:35:18.000Z">2019-09-22</time>
-                        <a href="/2019/09/22/Unsupervised-Anomaly-Detection-via-Variational-Auto-Encoder-for-Seasonal-KPIs-in-Web-Applications/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Unsupervised Anomaly Detection via Variational Auto-Encoder for Seasonal KPIs in Web Applications</a>
-                        <div class="level article-meta is-mobile">
-                            <div class="level-left">
-                                
-                                <div class="level-item is-size-7 is-uppercase">
-                                <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
-                                </div>
-                                
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </article>
-        
-            <article class="media">
-                
-                <a href="/2019/09/22/Time-Series-Anomaly-Detection-Service-at-Microsoft/" class="media-left">
-                    <p class="image is-64x64">
-                        <img class="thumbnail" src="http://qfxiao.me/img/1565427857981.png" alt="Time-Series Anomaly Detection Service at Microsoft">
-                    </p>
-                </a>
-                
-                <div class="media-content">
-                    <div class="content">
-                        <time class="has-text-grey is-size-7 is-block is-uppercase" datetime="2019-09-22T12:33:18.000Z">2019-09-22</time>
-                        <a href="/2019/09/22/Time-Series-Anomaly-Detection-Service-at-Microsoft/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Time-Series Anomaly Detection Service at Microsoft</a>
-                        <div class="level article-meta is-mobile">
-                            <div class="level-left">
-                                
-                                <div class="level-item is-size-7 is-uppercase">
-                                <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
-                                </div>
-                                
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </article>
-        
         </div>
     </div>
 </div>
 
-    
 
-    
+
 <div class="card card-transparent">
-    <nav class="pagination is-centered" role="navigation" aria-label="pagination">
-        <div class="pagination-previous">
-            <a class="is-flex-grow has-text-black-ter" href="/archives/">上一页</a>
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2020/03/30/Deep-Weakly-supervised-Anomaly-Detection/">
+                <span class="level-item">Deep Weakly-supervised Anomaly Detection</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
         </div>
-        <div class="pagination-next is-invisible is-hidden-mobile">
-            <a class="is-flex-grow has-text-black-ter" href="/archives/page/3/">下一页</a>
-        </div>
-        <ul class="pagination-list is-hidden-mobile">
-            
-            <li><a class="pagination-link has-text-black-ter" href="/archives/">1</a></li>
-            
-            <li><a class="pagination-link is-current" href="/archives/page/2/">2</a></li>
-            
-        </ul>
-    </nav>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<script>
+    var disqus_config = function () {
+        this.page.url = 'http://qfxiao.me/2020/05/06/Learning-Representations-of-Ultrahigh-dimensional-Data-for-Random-Distance-based-Outlier-Detection/';
+        this.page.identifier = '2020/05/06/Learning-Representations-of-Ultrahigh-dimensional-Data-for-Random-Distance-based-Outlier-Detection/';
+    };
+    (function() {
+        var d = document, s = d.createElement('script');  
+        s.src = '//' + 'http-larryshaw0079-coding-me-blog' + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+
+<div id="disqus_thread">
+    
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript" target="_blank" rel="noopener">comments powered by Disqus.</a></noscript>
+</div>
+    </div>
 </div>
 </div>
                 
@@ -514,6 +498,69 @@
 </div>
     
         
+<div class="card widget" id="toc">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                目录
+            </h3>
+            <ul class="menu-list"><li>
+        <a class="is-flex" href="#introduction">
+        <span class="has-mr-6">1</span>
+        <span>Introduction</span>
+        </a></li><li>
+        <a class="is-flex" href="#proposed-method">
+        <span class="has-mr-6">2</span>
+        <span>Proposed Method</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#the-proposed-framework-ramodo">
+        <span class="has-mr-6">2.1</span>
+        <span>The Proposed Framework: RAMODO</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#problem-statement">
+        <span class="has-mr-6">2.1.1</span>
+        <span>Problem Statement</span>
+        </a></li><li>
+        <a class="is-flex" href="#ranking-model-based-representation-learning-framework">
+        <span class="has-mr-6">2.1.2</span>
+        <span>Ranking Model-based Representation Learning Framework</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#a-ramodo-instance-repen">
+        <span class="has-mr-6">2.2</span>
+        <span>A RAMODO Instance: REPEN</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#outlier-thresholding-using-state-of-the-art-detectors-and-cantellis-inequality">
+        <span class="has-mr-6">2.2.1</span>
+        <span>Outlier Thresholding Using State-of-the-art Detectors and Cantelli's Inequality</span>
+        </a></li><li>
+        <a class="is-flex" href="#triplet-sampling-based-on-outlier-scores">
+        <span class="has-mr-6">2.2.2</span>
+        <span>Triplet Sampling Based on Outlier Scores</span>
+        </a></li><li>
+        <a class="is-flex" href="#a-shallow-data-representation">
+        <span class="has-mr-6">2.2.3</span>
+        <span>A Shallow Data Representation</span>
+        </a></li><li>
+        <a class="is-flex" href="#ranking-loss-using-random-nearest-neighbor-distance-based-outlier-scores">
+        <span class="has-mr-6">2.2.4</span>
+        <span>Ranking Loss Using Random Nearest Neighbor Distance-based Outlier Scores</span>
+        </a></li><li>
+        <a class="is-flex" href="#the-algorithm-and-its-time-complexity">
+        <span class="has-mr-6">2.2.5</span>
+        <span>The Algorithm and Its Time Complexity</span>
+        </a></li><li>
+        <a class="is-flex" href="#leveraging-a-few-labeled-outliers-to-improve-triplet-sampling">
+        <span class="has-mr-6">2.2.6</span>
+        <span>Leveraging A Few Labeled Outliers to Improve Triplet Sampling</span>
+        </a></li></ul></li></ul></li><li>
+        <a class="is-flex" href="#experiments">
+        <span class="has-mr-6">3</span>
+        <span>Experiments</span>
+        </a></li></ul>
+        </div>
+    </div>
+</div>
+
     
         
 
@@ -1277,7 +1324,7 @@
             <div class="level-start has-text-centered-mobile">
                 <a class="footer-logo is-block has-mb-6" href="/">
                 
-                    <img src="/images/logo.svg" alt="Hanzawa の 部屋" height="28">
+                    <img src="/images/logo.svg" alt="Learning Representations of Ultrahigh-dimensional Data for Random Distance-based Outlier Detection" height="28">
                 
                 </a>
                 <p class="is-size-7">
