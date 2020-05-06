@@ -7,15 +7,19 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
-<title>归档: 2019 - Hanzawa の 部屋</title>
+<title>Estimate the Implicit Likelihoods of GANs with Application to Anomaly Detection - Hanzawa の 部屋</title>
 
 
-    <meta property="og:type" content="website">
-<meta property="og:title" content="Hanzawa の 部屋">
-<meta property="og:url" content="http://qfxiao.me/archives/2019/index.html">
+    <meta name="description" content="Introduction Preliminaries Flow-based Models Recap Jacobian Matrix and Determinant 设函数\(f:\mathbb{R}^n\mapsto\mathbb{R}^m\)，由\(f\)的一阶偏导数组成的矩阵叫做Jacobian矩阵： \[">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Estimate the Implicit Likelihoods of GANs with Application to Anomaly Detection">
+<meta property="og:url" content="http://qfxiao.me/2020/05/06/Estimate-the-Implicit-Likelihoods-of-GANs-with-Application-to-Anomaly-Detection/index.html">
 <meta property="og:site_name" content="Hanzawa の 部屋">
+<meta property="og:description" content="Introduction Preliminaries Flow-based Models Recap Jacobian Matrix and Determinant 设函数\(f:\mathbb{R}^n\mapsto\mathbb{R}^m\)，由\(f\)的一阶偏导数组成的矩阵叫做Jacobian矩阵： \[">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://qfxiao.me/images/og_image.png">
+<meta property="article:published_time" content="2020-05-06T07:49:38.000Z">
+<meta property="article:modified_time" content="2020-05-06T09:45:56.488Z">
 <meta property="article:author" content="Hanzawa">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://qfxiao.me/images/og_image.png">
@@ -88,7 +92,7 @@
         <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/logo.svg" alt="Hanzawa の 部屋" height="28">
+                <img src="/images/logo.svg" alt="Estimate the Implicit Likelihoods of GANs with Application to Anomaly Detection" height="28">
             
             </a>
         </div>
@@ -125,6 +129,10 @@
                     
                 
                 
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
                 
                 <a class="navbar-item search" title="搜索" href="javascript:;">
                     <i class="fas fa-search"></i>
@@ -138,270 +146,261 @@
     <section class="section">
         <div class="container">
             <div class="columns">
-                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main">
+                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-05-06T07:49:38.000Z">2020-05-06</time>
+                
+                    <i class="fas fa-calendar-check">&nbsp</i>
+                    <time class="level-item has-text-grey" datetime="2020-05-06T09:45:56.488Z">2020-05-06</time>
+                
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Research/">Research</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    9 分钟 读完 (大约 1327 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                Estimate the Implicit Likelihoods of GANs with Application to Anomaly Detection
+            
+        </h1>
+        <div class="content">
+            
+                
+                
+                
+                    
+                    
+                        
+                    
+                
+                    
+                    
+                        
+                    
+                
+                    
+                    
+                        
+                    
+                
+                    
+                    
+                        
+                    
+                
+                    
+                    
+                
+                
+            
+            <h1 id="introduction">Introduction</h1>
+<h1 id="preliminaries">Preliminaries</h1>
+<h2 id="flow-based-models-recap">Flow-based Models Recap</h2>
+<h3 id="jacobian-matrix-and-determinant">Jacobian Matrix and Determinant</h3>
+<p>设函数<span class="math inline">\(f:\mathbb{R}^n\mapsto\mathbb{R}^m\)</span>，由<span class="math inline">\(f\)</span>的一阶偏导数组成的矩阵叫做Jacobian矩阵： <span class="math display">\[
+\mathbf J=\left[
+\begin{matrix}
+\frac{\partial f_1}{\partial x_1} &amp;\cdots &amp;\frac{\partial f_1}{\partial x_n}\\
+\vdots &amp;\ddots &amp;\vdots\\
+\frac{\partial f_m}{\partial x_1}&amp; \dots&amp; \frac{\partial f_m}{\partial x_n}
+\end{matrix}
+\right]
+\]</span></p>
+<h3 id="change-of-variable-theorem">Change of Variable Theorem</h3>
+<p>给定已知概率分布的随机变量<span class="math inline">\(z\sim\pi(z)\)</span>，新随机变量由可逆映射<span class="math inline">\(f\)</span>给出<span class="math inline">\(x=f(z)\)</span>，<span class="math inline">\(z=f^{-1}(x)\)</span>。由于： <span class="math display">\[
+\int p(x)\mathrm{d}x=\int \pi(z)\mathrm d z=1
+\]</span> 所以<span class="math inline">\(p(x)\)</span>可以由下式得到： <span class="math display">\[
+p(x)=\pi(z)\left|\frac{\mathrm d z}{\mathrm d x}\right|=\pi(f^{-1}(x))\left|\frac{\mathrm d f^{-1}}{\mathrm d x}\right|=\pi(f^{-1}(x))|(f^{-1})^\prime(x)|
+\]</span> <span class="math inline">\(\frac{\mathrm d f^{-1}}{\mathrm d x}\)</span>相当于对逆函数<span class="math inline">\(f^{-1}\)</span>求导，而<span class="math inline">\(z=f^{-1}(x)\)</span>。</p>
+<p>对于多变量的情况： <span class="math display">\[
+\mathbf z\sim \pi(\mathbf z), \mathbf x=f(\mathbf z),\mathbf z = f^{-1}(\mathbf x)\\
+p(\mathbf x) = \pi(\mathbf z)\left|\text{det}\frac{\mathrm d \mathbf z}{\mathrm d \mathbf x}\right|= \pi(f^{-1}(\mathbf x))\left|\text{det}\frac{\mathrm d f^{-1}}{\mathrm d \mathbf x}\right|
+\]</span> <span class="math inline">\(\left|\text{det}\frac{\mathrm d f^{-1}}{\mathrm d \mathbf x}\right|\)</span>为逆函数Jacobian矩阵行列式的绝对值。</p>
+<h2 id="deep-generative-models-as-manifolds">Deep Generative Models as Manifolds</h2>
+<p>一个深度生成模型可以表示为从低维隐空间<span class="math inline">\(\mathcal Z \subseteq R^d\)</span>映射到流形<span class="math inline">\(\mathcal M\subseteq R^D\)</span>的嵌入函数<span class="math inline">\(g:\mathcal Z\rightarrow \mathcal X\)</span>，<span class="math inline">\(D \ll d\)</span>。通常假设<span class="math inline">\(g\)</span>为光滑映射，那么<span class="math inline">\(\mathcal M\)</span>为一个嵌入流形。<span class="math inline">\(g\)</span>在<span class="math inline">\(z\in\mathcal Z\)</span>的雅各比矩阵<span class="math inline">\(\mathbf J_g(z)\)</span>提供了在<span class="math inline">\(x=g(z)\in\mathcal X\)</span>处的切空间，即<span class="math inline">\(\mathbf J_g:T_z\mathcal Z\rightarrow T_x\mathcal X\)</span>。这个映射不是满射，并且值域限制在流形<span class="math inline">\(\mathcal M\)</span>在<span class="math inline">\(x=g(z)\)</span>的切空间，记为<span class="math inline">\(T_x\mathcal M\)</span>。<span class="math inline">\(\mathcal M\)</span>与真实数据流形接近，即<span class="math inline">\(\mathcal M_{data}\)</span>。</p>
+<p>考虑一个定义在隐空间<span class="math inline">\(\mathcal Z\)</span>每一点<span class="math inline">\(z\)</span>上的Riemannian metric： <span class="math display">\[
+\mathbf M(z)=\mathbf J_g(z)^\top\mathbf J_g(z)
+\]</span> 给定两个切空间向量<span class="math inline">\(u,v\in T_z\in\mathcal Z\)</span>，他们的内积定义为<span class="math inline">\(&lt;u,v&gt;=u^\top \mathbf M(z)v\)</span>。</p>
+<p>考虑一个光滑曲线<span class="math inline">\(\gamma:t\in[a,b]\rightarrow\mathcal Z\)</span>， <span class="math display">\[
+L(\gamma)=\int^b_a\sqrt{\hat{\gamma}(t)^\top M_{\gamma(t)}\hat{\gamma}(t)}\mathrm d t
+\]</span></p>
+<h2 id="change-of-variable-on-manifolds">Change of Variable on Manifolds</h2>
+<p>在流形上的<strong>Change of Variable Theorem</strong>是类似的：</p>
+<p><span class="math display">\[
+p_\mathcal{X}(x)=p_\mathcal{Z}(g^{-1}(x))\text{det}(\mathbf J_g(g^{-1}(x))^\top\mathbf J_g(g^{-1}(x)))^{-\frac{1}{2}}
+\]</span></p>
+<p>我们假设隐空间分布<span class="math inline">\(p_\mathcal{Z}\)</span>服从标准正态先验分布<span class="math inline">\(N(0,\mathbf I_d)\)</span>，于是我们可以计算出<span class="math inline">\(x\)</span>的似然：</p>
+<p><span class="math display">\[
+\log(p_\mathcal{X}(g(z)))=\log(p_\mathcal{Z}(z))-\frac{1}{2}\log(\text{det}(\mathbf J_g(z)^\top\mathbf J_g(z)))
+\]</span></p>
+<p>通常我们没法知道真实世界中<span class="math inline">\(\mathcal M_{data}\)</span>的切空间维度是多少，设定<span class="math inline">\(d=\text{dim}\mathcal Z&gt;T_x\mathcal M_{data}\)</span>会导致<span class="math inline">\(\mathbf J_g\)</span>不是满秩矩阵，这时<span class="math inline">\(\text{det}(\mathbf J_g(z)^\top\mathbf J_g(z))=0\)</span>，即无法应用上式计算似然。</p>
+<h2 id="density-estimation-with-neural-networks">Density Estimation with Neural Networks</h2>
+<h2 id="anomaly-detection-with-generative-models">Anomaly Detection with Generative Models</h2>
+<h1 id="proposed-method">Proposed Method</h1>
+<p>对于GAN模型，给定隐变量<span class="math inline">\(z\)</span>和生成器<span class="math inline">\(g\)</span>，我们可以通过公式(8)计算生成样本<span class="math inline">\(g(z)\)</span>的对数似然，为了保证Jacobian矩阵为满秩，我们可以选定较低的隐变量维度<span class="math inline">\(d\)</span>，不过这样会伤害GAN模型的性能。为了解决这个问题，我们需要使用一个<em>inference network</em>来将<span class="math inline">\(x\)</span>映射回<span class="math inline">\(z\)</span>，</p>
+<h2 id="the-variance-network-of-the-generator">The Variance Network of the Generator</h2>
+<p>文中对生成器<span class="math inline">\(g\)</span>进行了扩展：</p>
+<p><span class="math display">\[
+f(z) = g(z) + \sigma(z)\odot\epsilon,\\
+g:\mathcal Z\rightarrow\mathcal X, \sigma:\mathcal Z\rightarrow\mathbb{R},\epsilon\sim N(0,\mathbf I_D)
+\]</span></p>
+<p><span class="math inline">\(g\)</span>代表均值，<span class="math inline">\(\sigma\)</span>代表方差，实际上<span class="math inline">\(\mathbb E_{\epsilon\sim N(0,\mathbf I_D)}f(z)=g(z)\)</span>。为了保证方差在少样本或无样本的区域更大，方差网络采用RBF网络实现。</p>
+<p>首先，从隐空间采样大量的样本，之后使用<strong>K-means</strong>算法将其分为<span class="math inline">\(K\)</span>个聚簇，<span class="math inline">\(c_k\)</span>为第<span class="math inline">\(k\)</span>个簇的中心，<span class="math inline">\(C_k\)</span>为第<span class="math inline">\(k\)</span>个簇的样本数量。对于任何样本<span class="math inline">\(x\)</span>，为了计算其对应的方差，需要用一个<em>inference network</em> <span class="math inline">\(h\)</span>来将其映射到隐空间，即<span class="math inline">\(z=h(x)\)</span>。RBF网络通过输入<span class="math inline">\(z\)</span>到每个簇中心的距离来返回<span class="math inline">\(x\)</span>对应的方差，RBF函数由下式给出： <span class="math display">\[
+\sigma(z)=(\mathbf W^2\mathbf v(z))^{-\frac{1}{2}},\\
+v_k(z) = \exp(-\lambda_k\parallel z-c_k\parallel^2_2), \space k=1,\cdots,K\\
+\lambda_k=\frac{1}{2}\left(\frac{a}{|C_k|}\sum_{z_j\in C_k}\parallel z_j-c_k\parallel_2\right)^{-2}
+\]</span></p>
+<p><span class="math display">\[
+\begin{align}
+\bar{\mathbf M}^z_f&amp;=\mathbb E_{\epsilon\sim N(0,\mathbf I_D)}\mathbf J_f^\top(z)\mathbf J_f(z)\\
+&amp;=\mathbf J_g^\top(z)\mathbf J_g(z)+\mathbf J_\sigma^\top(z)\mathbf J_\sigma(z)
+\end{align}
+\]</span></p>
+<h2 id="the-inference-network-learning">The Inference Network Learning</h2>
+<figure>
+<img src="C:\Users\larry\AppData\Roaming\Typora\typora-user-images\image-20200506174247129.png" alt="image-20200506174247129"><figcaption>image-20200506174247129</figcaption>
+</figure>
+<h2 id="stabilize-training">Stabilize Training</h2>
+<h2 id="algorithm">Algorithm</h2>
+<figure>
+<img src="C:\Users\larry\AppData\Roaming\Typora\typora-user-images\image-20200506174309604.png" alt="image-20200506174309604"><figcaption>image-20200506174309604</figcaption>
+</figure>
+<h1 id="experiments">Experiments</h1>
+<figure>
+<img src="C:\Users\larry\AppData\Roaming\Typora\typora-user-images\image-20200506174343303.png" alt="image-20200506174343303"><figcaption>image-20200506174343303</figcaption>
+</figure>
+<figure>
+<img src="C:\Users\larry\AppData\Roaming\Typora\typora-user-images\image-20200506174352450.png" alt="image-20200506174352450"><figcaption>image-20200506174352450</figcaption>
+</figure>
+<figure>
+<img src="C:\Users\larry\AppData\Roaming\Typora\typora-user-images\image-20200506174403647.png" alt="image-20200506174403647"><figcaption>image-20200506174403647</figcaption>
+</figure>
+<figure>
+<img src="C:\Users\larry\AppData\Roaming\Typora\typora-user-images\image-20200506174414709.png" alt="image-20200506174414709"><figcaption>image-20200506174414709</figcaption>
+</figure>
+<figure>
+<img src="C:\Users\larry\AppData\Roaming\Typora\typora-user-images\image-20200506174435973.png" alt="image-20200506174435973"><figcaption>image-20200506174435973</figcaption>
+</figure>
+<figure>
+<img src="C:\Users\larry\AppData\Roaming\Typora\typora-user-images\image-20200506174450623.png" alt="image-20200506174450623"><figcaption>image-20200506174450623</figcaption>
+</figure>
+<figure>
+<img src="C:\Users\larry\AppData\Roaming\Typora\typora-user-images\image-20200506174505764.png" alt="image-20200506174505764"><figcaption>image-20200506174505764</figcaption>
+</figure>
+<figure>
+<img src="C:\Users\larry\AppData\Roaming\Typora\typora-user-images\image-20200506174526203.png" alt="image-20200506174526203"><figcaption>image-20200506174526203</figcaption>
+</figure>
 
-<div class="card widget">
+            <!--  -->
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+<div class="card">
     <div class="card-content">
-        <h3 class="tag is-link">
-        2019
-        </h3>
-        <div class="timeline">
-        
-            <article class="media">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
                 
-                <a href="/2019/11/02/Variational-Approaches-for-Auto-Encoding-Generative-Adversarial-Networks/" class="media-left">
-                    <p class="image is-64x64">
-                        <img class="thumbnail" src="http://qfxiao.me/img/image-20191102233101258.png" alt="Variational Approaches for Auto-Encoding Generative Adversarial Networks">
-                    </p>
-                </a>
+<a class="button is-info donate">
+    <span class="icon is-small">
+        <i class="fab fa-alipay"></i>
+    </span>
+    <span>支付宝</span>
+    <div class="qrcode"><img src="http://qfxiao.me/misc/alipay.jpg" alt="支付宝"></div>
+</a>
+
                 
-                <div class="media-content">
-                    <div class="content">
-                        <time class="has-text-grey is-size-7 is-block is-uppercase" datetime="2019-11-02T15:28:53.000Z">2019-11-02</time>
-                        <a href="/2019/11/02/Variational-Approaches-for-Auto-Encoding-Generative-Adversarial-Networks/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Variational Approaches for Auto-Encoding Generative Adversarial Networks</a>
-                        <div class="level article-meta is-mobile">
-                            <div class="level-left">
-                                
-                                <div class="level-item is-size-7 is-uppercase">
-                                <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/GAN/">GAN</a>
-                                </div>
-                                
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </article>
-        
-            <article class="media">
                 
-                <a href="/2019/10/29/Anomaly-Detection-in-Streams-with-Extreme-Value-Theory/" class="media-left">
-                    <p class="image is-64x64">
-                        <img class="thumbnail" src="http://qfxiao.me/img/image-20191029114054583.png" alt="Anomaly Detection in Streams with Extreme Value Theory">
-                    </p>
-                </a>
+<a class="button is-success donate">
+    <span class="icon is-small">
+        <i class="fab fa-weixin"></i>
+    </span>
+    <span>微信</span>
+    <div class="qrcode"><img src="http://qfxiao.me/misc/wechat.png" alt="微信"></div>
+</a>
+
                 
-                <div class="media-content">
-                    <div class="content">
-                        <time class="has-text-grey is-size-7 is-block is-uppercase" datetime="2019-10-29T03:36:22.000Z">2019-10-29</time>
-                        <a href="/2019/10/29/Anomaly-Detection-in-Streams-with-Extreme-Value-Theory/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Anomaly Detection in Streams with Extreme Value Theory</a>
-                        <div class="level article-meta is-mobile">
-                            <div class="level-left">
-                                
-                                <div class="level-item is-size-7 is-uppercase">
-                                <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
-                                </div>
-                                
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </article>
-        
-            <article class="media">
+                <!-- Visit https://www.paypal.com/donate/buttons/ to get your donate button -->
+
+<a class="button is-warning donate" onclick="document.getElementById(&#39;paypal-donate-form&#39;).submit()">
+    <span class="icon is-small">
+        <i class="fab fa-paypal"></i>
+    </span>
+    <span>Paypal</span>
+</a>
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" id="paypal-donate-form">
+    <input type="hidden" name="cmd" value="_donations" />
+    <input type="hidden" name="business" value="larryshaw0079@live.com" />
+    <input type="hidden" name="currency_code" value="USD" />
+</form>
+
                 
-                <a href="/2019/10/22/An-Introduction-to-Variational-Autoencoders/" class="media-left">
-                    <p class="image is-64x64">
-                        <img class="thumbnail" src="http://qfxiao.me/img/autoencoder23849248011.png" alt="An Introduction to Variational Autoencoders">
-                    </p>
-                </a>
-                
-                <div class="media-content">
-                    <div class="content">
-                        <time class="has-text-grey is-size-7 is-block is-uppercase" datetime="2019-10-22T07:14:26.000Z">2019-10-22</time>
-                        <a href="/2019/10/22/An-Introduction-to-Variational-Autoencoders/" class="title has-link-black-ter is-size-6 has-text-weight-normal">An Introduction to Variational Autoencoders</a>
-                        <div class="level article-meta is-mobile">
-                            <div class="level-left">
-                                
-                                <div class="level-item is-size-7 is-uppercase">
-                                <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Tutorial/">Tutorial</a>
-                                </div>
-                                
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </article>
-        
-            <article class="media">
-                
-                <a href="/2019/10/18/Recurrent-Neural-Networks-for-Multivariate-Time-Series-with-Missing-Values/" class="media-left">
-                    <p class="image is-64x64">
-                        <img class="thumbnail" src="http://qfxiao.me/img/1571412138245.png" alt="Recurrent Neural Networks for Multivariate Time Series with Missing Values">
-                    </p>
-                </a>
-                
-                <div class="media-content">
-                    <div class="content">
-                        <time class="has-text-grey is-size-7 is-block is-uppercase" datetime="2019-10-18T15:17:07.000Z">2019-10-18</time>
-                        <a href="/2019/10/18/Recurrent-Neural-Networks-for-Multivariate-Time-Series-with-Missing-Values/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Recurrent Neural Networks for Multivariate Time Series with Missing Values</a>
-                        <div class="level article-meta is-mobile">
-                            <div class="level-left">
-                                
-                                <div class="level-item is-size-7 is-uppercase">
-                                <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/RNN/">RNN</a>
-                                </div>
-                                
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </article>
-        
-            <article class="media">
-                
-                <a href="/2019/10/18/Robust-Anomaly-Detection-for-Multivariate-Time-Series-through-Stochastic-Recurrent-Neural-Network/" class="media-left">
-                    <p class="image is-64x64">
-                        <img class="thumbnail" src="http://qfxiao.me/img/1571411043958.png" alt="Robust Anomaly Detection for Multivariate Time Series through Stochastic Recurrent Neural Network">
-                    </p>
-                </a>
-                
-                <div class="media-content">
-                    <div class="content">
-                        <time class="has-text-grey is-size-7 is-block is-uppercase" datetime="2019-10-18T15:00:57.000Z">2019-10-18</time>
-                        <a href="/2019/10/18/Robust-Anomaly-Detection-for-Multivariate-Time-Series-through-Stochastic-Recurrent-Neural-Network/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Robust Anomaly Detection for Multivariate Time Series through Stochastic Recurrent Neural Network</a>
-                        <div class="level article-meta is-mobile">
-                            <div class="level-left">
-                                
-                                <div class="level-item is-size-7 is-uppercase">
-                                <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
-                                </div>
-                                
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </article>
-        
-            <article class="media">
-                
-                <a href="/2019/10/16/GAIN-Missing-Data-Imputation-using-Generative-Adversarial-Nets/" class="media-left">
-                    <p class="image is-64x64">
-                        <img class="thumbnail" src="http://qfxiao.me/img/1571228929894.png" alt="GAIN: Missing Data Imputation using Generative Adversarial Nets">
-                    </p>
-                </a>
-                
-                <div class="media-content">
-                    <div class="content">
-                        <time class="has-text-grey is-size-7 is-block is-uppercase" datetime="2019-10-16T12:19:10.000Z">2019-10-16</time>
-                        <a href="/2019/10/16/GAIN-Missing-Data-Imputation-using-Generative-Adversarial-Nets/" class="title has-link-black-ter is-size-6 has-text-weight-normal">GAIN: Missing Data Imputation using Generative Adversarial Nets</a>
-                        <div class="level article-meta is-mobile">
-                            <div class="level-left">
-                                
-                                <div class="level-item is-size-7 is-uppercase">
-                                <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Time-Series-Imputation/">Time Series Imputation</a>
-                                </div>
-                                
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </article>
-        
-            <article class="media">
-                
-                <a href="/2019/09/22/Anomaly-Detection-with-Generative-Adversarial-Networks-for-Multivariate-Time-Series/" class="media-left">
-                    <p class="image is-64x64">
-                        <img class="thumbnail" src="http://qfxiao.me/img/1565783729478.png" alt="Anomaly Detection with Generative Adversarial Networks for Multivariate Time Series">
-                    </p>
-                </a>
-                
-                <div class="media-content">
-                    <div class="content">
-                        <time class="has-text-grey is-size-7 is-block is-uppercase" datetime="2019-09-22T14:32:18.000Z">2019-09-22</time>
-                        <a href="/2019/09/22/Anomaly-Detection-with-Generative-Adversarial-Networks-for-Multivariate-Time-Series/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Anomaly Detection with Generative Adversarial Networks for Multivariate Time Series</a>
-                        <div class="level article-meta is-mobile">
-                            <div class="level-left">
-                                
-                                <div class="level-item is-size-7 is-uppercase">
-                                <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
-                                </div>
-                                
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </article>
-        
-            <article class="media">
-                
-                <a href="/2019/09/22/ALSR-An-adaptive-label-screening-and-relearning-approach-for-interval-oriented-anomaly-detection/" class="media-left">
-                    <p class="image is-64x64">
-                        <img class="thumbnail" src="http://qfxiao.me/img/1567780227803.png" alt="ALSR: An Adaptive Label Screening and Relearning Approach for Interval-Oriented Anomaly Detection">
-                    </p>
-                </a>
-                
-                <div class="media-content">
-                    <div class="content">
-                        <time class="has-text-grey is-size-7 is-block is-uppercase" datetime="2019-09-22T14:29:18.000Z">2019-09-22</time>
-                        <a href="/2019/09/22/ALSR-An-adaptive-label-screening-and-relearning-approach-for-interval-oriented-anomaly-detection/" class="title has-link-black-ter is-size-6 has-text-weight-normal">ALSR: An Adaptive Label Screening and Relearning Approach for Interval-Oriented Anomaly Detection</a>
-                        <div class="level article-meta is-mobile">
-                            <div class="level-left">
-                                
-                                <div class="level-item is-size-7 is-uppercase">
-                                <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
-                                </div>
-                                
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </article>
-        
-            <article class="media">
-                
-                <a href="/2019/09/22/Unsupervised-Anomaly-Detection-via-Variational-Auto-Encoder-for-Seasonal-KPIs-in-Web-Applications/" class="media-left">
-                    <p class="image is-64x64">
-                        <img class="thumbnail" src="http://qfxiao.me/img/1571719738542.png" alt="Unsupervised Anomaly Detection via Variational Auto-Encoder for Seasonal KPIs in Web Applications">
-                    </p>
-                </a>
-                
-                <div class="media-content">
-                    <div class="content">
-                        <time class="has-text-grey is-size-7 is-block is-uppercase" datetime="2019-09-22T12:35:18.000Z">2019-09-22</time>
-                        <a href="/2019/09/22/Unsupervised-Anomaly-Detection-via-Variational-Auto-Encoder-for-Seasonal-KPIs-in-Web-Applications/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Unsupervised Anomaly Detection via Variational Auto-Encoder for Seasonal KPIs in Web Applications</a>
-                        <div class="level article-meta is-mobile">
-                            <div class="level-left">
-                                
-                                <div class="level-item is-size-7 is-uppercase">
-                                <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
-                                </div>
-                                
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </article>
-        
-            <article class="media">
-                
-                <a href="/2019/09/22/Time-Series-Anomaly-Detection-Service-at-Microsoft/" class="media-left">
-                    <p class="image is-64x64">
-                        <img class="thumbnail" src="http://qfxiao.me/img/1565427857981.png" alt="Time-Series Anomaly Detection Service at Microsoft">
-                    </p>
-                </a>
-                
-                <div class="media-content">
-                    <div class="content">
-                        <time class="has-text-grey is-size-7 is-block is-uppercase" datetime="2019-09-22T12:33:18.000Z">2019-09-22</time>
-                        <a href="/2019/09/22/Time-Series-Anomaly-Detection-Service-at-Microsoft/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Time-Series Anomaly Detection Service at Microsoft</a>
-                        <div class="level article-meta is-mobile">
-                            <div class="level-left">
-                                
-                                <div class="level-item is-size-7 is-uppercase">
-                                <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
-                                </div>
-                                
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </article>
-        
         </div>
     </div>
 </div>
 
 
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2020/05/06/Learning-Representations-of-Ultrahigh-dimensional-Data-for-Random-Distance-based-Outlier-Detection/">
+                <span class="level-item">Learning Representations of Ultrahigh-dimensional Data for Random Distance-based Outlier Detection</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<script>
+    var disqus_config = function () {
+        this.page.url = 'http://qfxiao.me/2020/05/06/Estimate-the-Implicit-Likelihoods-of-GANs-with-Application-to-Anomaly-Detection/';
+        this.page.identifier = '2020/05/06/Estimate-the-Implicit-Likelihoods-of-GANs-with-Application-to-Anomaly-Detection/';
+    };
+    (function() {
+        var d = document, s = d.createElement('script');  
+        s.src = '//' + 'http-larryshaw0079-coding-me-blog' + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+
+<div id="disqus_thread">
+    
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript" target="_blank" rel="noopener">comments powered by Disqus.</a></noscript>
+</div>
+    </div>
+</div>
 </div>
                 
 
@@ -520,6 +519,77 @@
 </div>
     
         
+<div class="card widget" id="toc">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                目录
+            </h3>
+            <ul class="menu-list"><li>
+        <a class="is-flex" href="#introduction">
+        <span class="has-mr-6">1</span>
+        <span>Introduction</span>
+        </a></li><li>
+        <a class="is-flex" href="#preliminaries">
+        <span class="has-mr-6">2</span>
+        <span>Preliminaries</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#flow-based-models-recap">
+        <span class="has-mr-6">2.1</span>
+        <span>Flow-based Models Recap</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#jacobian-matrix-and-determinant">
+        <span class="has-mr-6">2.1.1</span>
+        <span>Jacobian Matrix and Determinant</span>
+        </a></li><li>
+        <a class="is-flex" href="#change-of-variable-theorem">
+        <span class="has-mr-6">2.1.2</span>
+        <span>Change of Variable Theorem</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#deep-generative-models-as-manifolds">
+        <span class="has-mr-6">2.2</span>
+        <span>Deep Generative Models as Manifolds</span>
+        </a></li><li>
+        <a class="is-flex" href="#change-of-variable-on-manifolds">
+        <span class="has-mr-6">2.3</span>
+        <span>Change of Variable on Manifolds</span>
+        </a></li><li>
+        <a class="is-flex" href="#density-estimation-with-neural-networks">
+        <span class="has-mr-6">2.4</span>
+        <span>Density Estimation with Neural Networks</span>
+        </a></li><li>
+        <a class="is-flex" href="#anomaly-detection-with-generative-models">
+        <span class="has-mr-6">2.5</span>
+        <span>Anomaly Detection with Generative Models</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#proposed-method">
+        <span class="has-mr-6">3</span>
+        <span>Proposed Method</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#the-variance-network-of-the-generator">
+        <span class="has-mr-6">3.1</span>
+        <span>The Variance Network of the Generator</span>
+        </a></li><li>
+        <a class="is-flex" href="#the-inference-network-learning">
+        <span class="has-mr-6">3.2</span>
+        <span>The Inference Network Learning</span>
+        </a></li><li>
+        <a class="is-flex" href="#stabilize-training">
+        <span class="has-mr-6">3.3</span>
+        <span>Stabilize Training</span>
+        </a></li><li>
+        <a class="is-flex" href="#algorithm">
+        <span class="has-mr-6">3.4</span>
+        <span>Algorithm</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#experiments">
+        <span class="has-mr-6">4</span>
+        <span>Experiments</span>
+        </a></li></ul>
+        </div>
+    </div>
+</div>
+
     
         
 
@@ -1283,7 +1353,7 @@
             <div class="level-start has-text-centered-mobile">
                 <a class="footer-logo is-block has-mb-6" href="/">
                 
-                    <img src="/images/logo.svg" alt="Hanzawa の 部屋" height="28">
+                    <img src="/images/logo.svg" alt="Estimate the Implicit Likelihoods of GANs with Application to Anomaly Detection" height="28">
                 
                 </a>
                 <p class="is-size-7">
