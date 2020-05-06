@@ -217,18 +217,18 @@
                 
                 
             
-            <h1 id="introduction">Introduction</h1>
-<p>本文提出了一种针对高维数据异常检测的表示学习方法。文中提出了<strong>RAMODO</strong>框架，一种基于排序的结合表示学习和异常检测的无监督框架。除此之外，基于<strong>RAMODO</strong>，文中还提出了基于此框架的模型<strong>REPEN</strong>。</p>
+            <h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>本文提出了一种针对高维数据异常检测的表示学习方法。文中提出了<strong>RAMODO</strong>框架，一种基于排序的结合表示学习和异常检测的无监督框架。除此之外，基于<strong>RAMODO</strong>，文中还提出了基于此框架的模型<strong>REPEN</strong>。</p>
 <p><a href="https://arxiv.org/pdf/1806.04808" target="_blank" rel="noopener">Paper📰</a></p>
-<h1 id="proposed-method">Proposed Method</h1>
-<h2 id="the-proposed-framework-ramodo">The Proposed Framework: <strong>RAMODO</strong></h2>
+<h1 id="Proposed-Method"><a href="#Proposed-Method" class="headerlink" title="Proposed Method"></a>Proposed Method</h1><h2 id="The-Proposed-Framework-RAMODO"><a href="#The-Proposed-Framework-RAMODO" class="headerlink" title="The Proposed Framework: RAMODO"></a>The Proposed Framework: <strong>RAMODO</strong></h2><h3 id="Problem-Statement"><a href="#Problem-Statement" class="headerlink" title="Problem Statement"></a>Problem Statement</h3><p>我们的目的是为高维数据学习低维表示，同时在学到的低维表示中能够更好地进行异常检测。设有数据集$\mathcal{X}={\mathbf x_1,\mathbf x_2,\cdots, \mathbf x_N}$ ($\mathbf x_i\in \mathbb{R}^D$) 和一个基于随机距离的异常检测器$\phi:\mathcal{X}\mapsto \mathbb{R}$，我们的目标是学习一个表示函数$f:\mathcal{X}\mapsto\mathbb{R}^M (M\ll D)$使得对于所有异常样本$\mathbf x_i$和正常样本$\mathbf x_j$都有$\phi(f(\mathbf x_i))&gt;\phi(f(\mathbf x_j))$。</p>
+<h3 id="Ranking-Model-based-Representation-Learning-Framework"><a href="#Ranking-Model-based-Representation-Learning-Framework" class="headerlink" title="Ranking Model-based Representation Learning Framework"></a>Ranking Model-based Representation Learning Framework</h3><p><strong>RAMODO</strong>基于<em>pairwise ranking model<em>。第一步是通过一定的预处理算法（原文中称为</em>outlier thresholding<em>）将数据划分为inlier候选集和outlier候选集；第二步通过随机从inlier候选集采样$n$个样本生成query set $(\mathbf x_i,\cdots,\mathbf x_{i+n-1})$，从inlier候选集采样一个样本生成</em>positive example</em> $(\mathbf x^+)$，从outlier候选集采样一个样本生成<em>negative example</em> $(\mathbf x^-)$，将三者组合生成 <em>metatriplet</em> $T=(&lt;\mathbf x_i,\cdots,\mathbf x_{i+n-1}&gt;,\mathbf x^+,\mathbf x^-)$；第三步通过神经网络$f$学习表示；第四步通过<em>outlier score-based ranking loss</em> $L(\phi(f(\mathbf x^+)|&lt;f(\mathbf x_i),\cdots,f(\mathbf x_{i+n-1})&gt;),\phi(f(\mathbf x^-)|&lt;f(\mathbf x_i),\cdots,f(\mathbf x_{i+n-1})&gt;))$来进行优化，其中$\phi(\cdot|\cdot)$为基于距离的异常检测器。</p>
+<p><img src="http://qfxiao.me/img/image-20200416151126952.png" alt></p>
             <!-- 
                 
-                    <h1 id="introduction">Introduction</h1>
-<p>本文提出了一种针对高维数据异常检测的表示学习方法。文中提出了<strong>RAMODO</strong>框架，一种基于排序的结合表示学习和异常检测的无监督框架。除此之外，基于<strong>RAMODO</strong>，文中还提出了基于此框架的模型<strong>REPEN</strong>。</p>
+                    <h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>本文提出了一种针对高维数据异常检测的表示学习方法。文中提出了<strong>RAMODO</strong>框架，一种基于排序的结合表示学习和异常检测的无监督框架。除此之外，基于<strong>RAMODO</strong>，文中还提出了基于此框架的模型<strong>REPEN</strong>。</p>
 <p><a href="https://arxiv.org/pdf/1806.04808" target="_blank" rel="noopener">Paper📰</a></p>
-<h1 id="proposed-method">Proposed Method</h1>
-<h2 id="the-proposed-framework-ramodo">The Proposed Framework: <strong>RAMODO</strong></h2>
+<h1 id="Proposed-Method"><a href="#Proposed-Method" class="headerlink" title="Proposed Method"></a>Proposed Method</h1><h2 id="The-Proposed-Framework-RAMODO"><a href="#The-Proposed-Framework-RAMODO" class="headerlink" title="The Proposed Framework: RAMODO"></a>The Proposed Framework: <strong>RAMODO</strong></h2><h3 id="Problem-Statement"><a href="#Problem-Statement" class="headerlink" title="Problem Statement"></a>Problem Statement</h3><p>我们的目的是为高维数据学习低维表示，同时在学到的低维表示中能够更好地进行异常检测。设有数据集$\mathcal{X}={\mathbf x_1,\mathbf x_2,\cdots, \mathbf x_N}$ ($\mathbf x_i\in \mathbb{R}^D$) 和一个基于随机距离的异常检测器$\phi:\mathcal{X}\mapsto \mathbb{R}$，我们的目标是学习一个表示函数$f:\mathcal{X}\mapsto\mathbb{R}^M (M\ll D)$使得对于所有异常样本$\mathbf x_i$和正常样本$\mathbf x_j$都有$\phi(f(\mathbf x_i))&gt;\phi(f(\mathbf x_j))$。</p>
+<h3 id="Ranking-Model-based-Representation-Learning-Framework"><a href="#Ranking-Model-based-Representation-Learning-Framework" class="headerlink" title="Ranking Model-based Representation Learning Framework"></a>Ranking Model-based Representation Learning Framework</h3><p><strong>RAMODO</strong>基于<em>pairwise ranking model<em>。第一步是通过一定的预处理算法（原文中称为</em>outlier thresholding<em>）将数据划分为inlier候选集和outlier候选集；第二步通过随机从inlier候选集采样$n$个样本生成query set $(\mathbf x_i,\cdots,\mathbf x_{i+n-1})$，从inlier候选集采样一个样本生成</em>positive example</em> $(\mathbf x^+)$，从outlier候选集采样一个样本生成<em>negative example</em> $(\mathbf x^-)$，将三者组合生成 <em>metatriplet</em> $T=(&lt;\mathbf x_i,\cdots,\mathbf x_{i+n-1}&gt;,\mathbf x^+,\mathbf x^-)$；第三步通过神经网络$f$学习表示；第四步通过<em>outlier score-based ranking loss</em> $L(\phi(f(\mathbf x^+)|&lt;f(\mathbf x_i),\cdots,f(\mathbf x_{i+n-1})&gt;),\phi(f(\mathbf x^-)|&lt;f(\mathbf x_i),\cdots,f(\mathbf x_{i+n-1})&gt;))$来进行优化，其中$\phi(\cdot|\cdot)$为基于距离的异常检测器。</p>
+<p><img src="http://qfxiao.me/img/image-20200416151126952.png" alt></p>
                 
              -->
         </div>
@@ -503,7 +503,7 @@
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Anomaly-Detection/" style="font-size: 18.33px;">Anomaly Detection</a> <a href="/tags/Deep-Learning/" style="font-size: 20px;">Deep Learning</a> <a href="/tags/Flow-based-Model/" style="font-size: 10px;">Flow-based Model</a> <a href="/tags/GAN/" style="font-size: 11.67px;">GAN</a> <a href="/tags/Machine-Learning/" style="font-size: 15px;">Machine Learning</a> <a href="/tags/RNN/" style="font-size: 11.67px;">RNN</a> <a href="/tags/Representation-Learning/" style="font-size: 10px;">Representation Learning</a> <a href="/tags/Spectral/" style="font-size: 10px;">Spectral</a> <a href="/tags/Statistics/" style="font-size: 10px;">Statistics</a> <a href="/tags/Time-Series/" style="font-size: 16.67px;">Time Series</a> <a href="/tags/Transfer-Learning/" style="font-size: 10px;">Transfer Learning</a> <a href="/tags/VAE/" style="font-size: 13.33px;">VAE</a> <a href="/tags/Variational-Inference/" style="font-size: 11.67px;">Variational Inference</a>
+        <a href="/tags/Anomaly-Detection/" style="font-size: 18.57px;">Anomaly Detection</a> <a href="/tags/Deep-Learning/" style="font-size: 20px;">Deep Learning</a> <a href="/tags/Flow-based-Model/" style="font-size: 10px;">Flow-based Model</a> <a href="/tags/GAN/" style="font-size: 12.86px;">GAN</a> <a href="/tags/Machine-Learning/" style="font-size: 15.71px;">Machine Learning</a> <a href="/tags/RNN/" style="font-size: 11.43px;">RNN</a> <a href="/tags/Representation-Learning/" style="font-size: 10px;">Representation Learning</a> <a href="/tags/Spectral/" style="font-size: 10px;">Spectral</a> <a href="/tags/Statistics/" style="font-size: 10px;">Statistics</a> <a href="/tags/Time-Series/" style="font-size: 17.14px;">Time Series</a> <a href="/tags/Transfer-Learning/" style="font-size: 10px;">Transfer Learning</a> <a href="/tags/VAE/" style="font-size: 14.29px;">VAE</a> <a href="/tags/Variational-Inference/" style="font-size: 11.43px;">Variational Inference</a>
     </div>
 </div>
 
@@ -522,7 +522,7 @@
             
             <a href="/2020/05/06/Estimate-the-Implicit-Likelihoods-of-GANs-with-Application-to-Anomaly-Detection/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Estimate the Implicit Likelihoods of GANs with Application to Anomaly Detection">
+                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200506174247129.png" alt="Estimate the Implicit Likelihoods of GANs with Application to Anomaly Detection">
                 </p>
             </a>
             
@@ -718,7 +718,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Anomaly-Detection/">
                         <span class="tag">Anomaly Detection</span>
-                        <span class="tag is-grey">11</span>
+                        <span class="tag is-grey">12</span>
                     </a>
                 </div>
                 
@@ -739,7 +739,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/GAN/">
                         <span class="tag">GAN</span>
-                        <span class="tag is-grey">2</span>
+                        <span class="tag is-grey">3</span>
                     </a>
                 </div>
                 
@@ -833,7 +833,7 @@
             
             <a href="/2020/05/06/Estimate-the-Implicit-Likelihoods-of-GANs-with-Application-to-Anomaly-Detection/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Estimate the Implicit Likelihoods of GANs with Application to Anomaly Detection">
+                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200506174247129.png" alt="Estimate the Implicit Likelihoods of GANs with Application to Anomaly Detection">
                 </p>
             </a>
             
@@ -1029,7 +1029,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Anomaly-Detection/">
                         <span class="tag">Anomaly Detection</span>
-                        <span class="tag is-grey">11</span>
+                        <span class="tag is-grey">12</span>
                     </a>
                 </div>
                 
@@ -1050,7 +1050,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/GAN/">
                         <span class="tag">GAN</span>
-                        <span class="tag is-grey">2</span>
+                        <span class="tag is-grey">3</span>
                     </a>
                 </div>
                 

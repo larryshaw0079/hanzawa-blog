@@ -217,18 +217,18 @@
                 
                 
             
-            <h1 id="introduction">Introduction</h1>
-<p>作者提出了一种利用迁移学习提升target domain异常检测性能的算法。文中指出现有的基于迁移学习的异常检测算法需要对每个 target domain 进行单独训练，这样做会带来很大的计算开销。本文通过<em>latent domain vectors</em>来实现无需重新训练的异常检测。<em>latent domain vectors</em>是domain的一种隐含表示，通过该domain中的正常样本得到。在本文中，<em>anomaly score function</em>通过Auto-encoder得到。</p>
-<h1 id="proposed-method">Proposed Method</h1>
-<h2 id="task">Task</h2>
-<p>令<span class="math inline">\(\mathbf{X}_d^+:=\{\mathbf{x}^+_{dn}\}^{N^+_d}_{n=1}\)</span>为第<span class="math inline">\(d\)</span>个domain的异常样本集，<span class="math inline">\(\mathbf{x}_{dn}^+\in\mathbb{R}^M\)</span>为其中第<span class="math inline">\(n\)</span>个样本的<span class="math inline">\(M\)</span>维特征向量，<span class="math inline">\(N^+_d\)</span>为第<span class="math inline">\(d\)</span>个domain异常样本的数量。</p>
+            <h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>作者提出了一种利用迁移学习提升target domain异常检测性能的算法。文中指出现有的基于迁移学习的异常检测算法需要对每个 target domain 进行单独训练，这样做会带来很大的计算开销。本文通过<em>latent domain vectors</em>来实现无需重新训练的异常检测。<em>latent domain vectors</em>是domain的一种隐含表示，通过该domain中的正常样本得到。在本文中，<em>anomaly score function</em>通过Auto-encoder得到。</p>
+<h1 id="Proposed-Method"><a href="#Proposed-Method" class="headerlink" title="Proposed Method"></a>Proposed Method</h1><h2 id="Task"><a href="#Task" class="headerlink" title="Task"></a>Task</h2><p>令$\mathbf{X}<em>d^+:={\mathbf{x}^+</em>{dn}}^{N^+<em>d}</em>{n=1}$为第$d$个domain的异常样本集，$\mathbf{x}_{dn}^+\in\mathbb{R}^M$为其中第$n$个样本的$M$维特征向量，$N^+_d$为第$d$个domain异常样本的数量。</p>
+<p>类似的，令$\mathbf{X}<em>d^-:={\mathbf{x}^-</em>{dn}}^{N^-<em>d}</em>{n=1}$为第$d$个domain的正常样本集。我们假设对于每个domain都有$N^+_d\ll N^-_d$，且特征向量维度都为$M$。</p>
+<p>假设在 source domain $D_S$都有正常样本和异常样本，记为${\mathbf{X}^+<em>d\cup\mathbf{X}_d^-}^{D_S}</em>{d=1}$，在 target domain $D_T$只有正常样本${\mathbf{X}<em>d^-}^{D_S+D_T}</em>{d=D_S+1}$。我们的目标是得到一个对于 target domain 合适的 domain-specific 的异常打分函数。</p>
+<img src="http://qfxiao.me/img/image-20200109102606099.png" style="zoom:67%;">
             <!-- 
                 
-                    <h1 id="introduction">Introduction</h1>
-<p>作者提出了一种利用迁移学习提升target domain异常检测性能的算法。文中指出现有的基于迁移学习的异常检测算法需要对每个 target domain 进行单独训练，这样做会带来很大的计算开销。本文通过<em>latent domain vectors</em>来实现无需重新训练的异常检测。<em>latent domain vectors</em>是domain的一种隐含表示，通过该domain中的正常样本得到。在本文中，<em>anomaly score function</em>通过Auto-encoder得到。</p>
-<h1 id="proposed-method">Proposed Method</h1>
-<h2 id="task">Task</h2>
-<p>令<span class="math inline">\(\mathbf{X}_d^+:=\{\mathbf{x}^+_{dn}\}^{N^+_d}_{n=1}\)</span>为第<span class="math inline">\(d\)</span>个domain的异常样本集，<span class="math inline">\(\mathbf{x}_{dn}^+\in\mathbb{R}^M\)</span>为其中第<span class="math inline">\(n\)</span>个样本的<span class="math inline">\(M\)</span>维特征向量，<span class="math inline">\(N^+_d\)</span>为第<span class="math inline">\(d\)</span>个domain异常样本的数量。</p>
+                    <h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>作者提出了一种利用迁移学习提升target domain异常检测性能的算法。文中指出现有的基于迁移学习的异常检测算法需要对每个 target domain 进行单独训练，这样做会带来很大的计算开销。本文通过<em>latent domain vectors</em>来实现无需重新训练的异常检测。<em>latent domain vectors</em>是domain的一种隐含表示，通过该domain中的正常样本得到。在本文中，<em>anomaly score function</em>通过Auto-encoder得到。</p>
+<h1 id="Proposed-Method"><a href="#Proposed-Method" class="headerlink" title="Proposed Method"></a>Proposed Method</h1><h2 id="Task"><a href="#Task" class="headerlink" title="Task"></a>Task</h2><p>令$\mathbf{X}<em>d^+:={\mathbf{x}^+</em>{dn}}^{N^+<em>d}</em>{n=1}$为第$d$个domain的异常样本集，$\mathbf{x}_{dn}^+\in\mathbb{R}^M$为其中第$n$个样本的$M$维特征向量，$N^+_d$为第$d$个domain异常样本的数量。</p>
+<p>类似的，令$\mathbf{X}<em>d^-:={\mathbf{x}^-</em>{dn}}^{N^-<em>d}</em>{n=1}$为第$d$个domain的正常样本集。我们假设对于每个domain都有$N^+_d\ll N^-_d$，且特征向量维度都为$M$。</p>
+<p>假设在 source domain $D_S$都有正常样本和异常样本，记为${\mathbf{X}^+<em>d\cup\mathbf{X}_d^-}^{D_S}</em>{d=1}$，在 target domain $D_T$只有正常样本${\mathbf{X}<em>d^-}^{D_S+D_T}</em>{d=D_S+1}$。我们的目标是得到一个对于 target domain 合适的 domain-specific 的异常打分函数。</p>
+<img src="http://qfxiao.me/img/image-20200109102606099.png" style="zoom:67%;">
                 
              -->
         </div>
@@ -503,7 +503,7 @@
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Anomaly-Detection/" style="font-size: 18.33px;">Anomaly Detection</a> <a href="/tags/Deep-Learning/" style="font-size: 20px;">Deep Learning</a> <a href="/tags/Flow-based-Model/" style="font-size: 10px;">Flow-based Model</a> <a href="/tags/GAN/" style="font-size: 11.67px;">GAN</a> <a href="/tags/Machine-Learning/" style="font-size: 15px;">Machine Learning</a> <a href="/tags/RNN/" style="font-size: 11.67px;">RNN</a> <a href="/tags/Representation-Learning/" style="font-size: 10px;">Representation Learning</a> <a href="/tags/Spectral/" style="font-size: 10px;">Spectral</a> <a href="/tags/Statistics/" style="font-size: 10px;">Statistics</a> <a href="/tags/Time-Series/" style="font-size: 16.67px;">Time Series</a> <a href="/tags/Transfer-Learning/" style="font-size: 10px;">Transfer Learning</a> <a href="/tags/VAE/" style="font-size: 13.33px;">VAE</a> <a href="/tags/Variational-Inference/" style="font-size: 11.67px;">Variational Inference</a>
+        <a href="/tags/Anomaly-Detection/" style="font-size: 18.57px;">Anomaly Detection</a> <a href="/tags/Deep-Learning/" style="font-size: 20px;">Deep Learning</a> <a href="/tags/Flow-based-Model/" style="font-size: 10px;">Flow-based Model</a> <a href="/tags/GAN/" style="font-size: 12.86px;">GAN</a> <a href="/tags/Machine-Learning/" style="font-size: 15.71px;">Machine Learning</a> <a href="/tags/RNN/" style="font-size: 11.43px;">RNN</a> <a href="/tags/Representation-Learning/" style="font-size: 10px;">Representation Learning</a> <a href="/tags/Spectral/" style="font-size: 10px;">Spectral</a> <a href="/tags/Statistics/" style="font-size: 10px;">Statistics</a> <a href="/tags/Time-Series/" style="font-size: 17.14px;">Time Series</a> <a href="/tags/Transfer-Learning/" style="font-size: 10px;">Transfer Learning</a> <a href="/tags/VAE/" style="font-size: 14.29px;">VAE</a> <a href="/tags/Variational-Inference/" style="font-size: 11.43px;">Variational Inference</a>
     </div>
 </div>
 
@@ -522,7 +522,7 @@
             
             <a href="/2020/05/06/Estimate-the-Implicit-Likelihoods-of-GANs-with-Application-to-Anomaly-Detection/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Estimate the Implicit Likelihoods of GANs with Application to Anomaly Detection">
+                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200506174247129.png" alt="Estimate the Implicit Likelihoods of GANs with Application to Anomaly Detection">
                 </p>
             </a>
             
@@ -718,7 +718,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Anomaly-Detection/">
                         <span class="tag">Anomaly Detection</span>
-                        <span class="tag is-grey">11</span>
+                        <span class="tag is-grey">12</span>
                     </a>
                 </div>
                 
@@ -739,7 +739,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/GAN/">
                         <span class="tag">GAN</span>
-                        <span class="tag is-grey">2</span>
+                        <span class="tag is-grey">3</span>
                     </a>
                 </div>
                 
@@ -833,7 +833,7 @@
             
             <a href="/2020/05/06/Estimate-the-Implicit-Likelihoods-of-GANs-with-Application-to-Anomaly-Detection/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Estimate the Implicit Likelihoods of GANs with Application to Anomaly Detection">
+                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200506174247129.png" alt="Estimate the Implicit Likelihoods of GANs with Application to Anomaly Detection">
                 </p>
             </a>
             
@@ -1029,7 +1029,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Anomaly-Detection/">
                         <span class="tag">Anomaly Detection</span>
-                        <span class="tag is-grey">11</span>
+                        <span class="tag is-grey">12</span>
                     </a>
                 </div>
                 
@@ -1050,7 +1050,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/GAN/">
                         <span class="tag">GAN</span>
-                        <span class="tag is-grey">2</span>
+                        <span class="tag is-grey">3</span>
                     </a>
                 </div>
                 

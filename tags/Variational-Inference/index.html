@@ -217,18 +217,18 @@
                 
                 
             
-            <h1 id="abstract">Abstract</h1>
-<p>本文揭示了对抗生成网络（Generative Adversarial Networks, GAN）和变分自编码器（Variational Auto-encoders, VAE）之间的联系，并据此提出了一种将两者结合的新模型。文中主要是将不可解的似然函数和未知的后验分布用一个非确定的分布（Immplicit Distribution）替代，并加入判别器来使得该分布逼近真实的分布。通过这个方法，作者将VAE中的损失函数进行了替换，变成了GAN中的“生成-判别”模式。</p>
+            <h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><p>本文揭示了对抗生成网络（Generative Adversarial Networks, GAN）和变分自编码器（Variational Auto-encoders, VAE）之间的联系，并据此提出了一种将两者结合的新模型。文中主要是将不可解的似然函数和未知的后验分布用一个非确定的分布（Immplicit Distribution）替代，并加入判别器来使得该分布逼近真实的分布。通过这个方法，作者将VAE中的损失函数进行了替换，变成了GAN中的“生成-判别”模式。</p>
 <p><a href="https://arxiv.org/abs/1706.04987" target="_blank" rel="noopener">原文</a></p>
-<h1 id="contribution">Contribution</h1>
-<p>本文有如下贡献：</p>
+<h1 id="Contribution"><a href="#Contribution" class="headerlink" title="Contribution"></a>Contribution</h1><p>本文有如下贡献：</p>
+<ul>
+<li>本文提出变分推断（Variational Inference）也能通过对非确定分布的估计应用在GAN中；</li>
             <!-- 
                 
-                    <h1 id="abstract">Abstract</h1>
-<p>本文揭示了对抗生成网络（Generative Adversarial Networks, GAN）和变分自编码器（Variational Auto-encoders, VAE）之间的联系，并据此提出了一种将两者结合的新模型。文中主要是将不可解的似然函数和未知的后验分布用一个非确定的分布（Immplicit Distribution）替代，并加入判别器来使得该分布逼近真实的分布。通过这个方法，作者将VAE中的损失函数进行了替换，变成了GAN中的“生成-判别”模式。</p>
+                    <h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><p>本文揭示了对抗生成网络（Generative Adversarial Networks, GAN）和变分自编码器（Variational Auto-encoders, VAE）之间的联系，并据此提出了一种将两者结合的新模型。文中主要是将不可解的似然函数和未知的后验分布用一个非确定的分布（Immplicit Distribution）替代，并加入判别器来使得该分布逼近真实的分布。通过这个方法，作者将VAE中的损失函数进行了替换，变成了GAN中的“生成-判别”模式。</p>
 <p><a href="https://arxiv.org/abs/1706.04987" target="_blank" rel="noopener">原文</a></p>
-<h1 id="contribution">Contribution</h1>
-<p>本文有如下贡献：</p>
+<h1 id="Contribution"><a href="#Contribution" class="headerlink" title="Contribution"></a>Contribution</h1><p>本文有如下贡献：</p>
+<ul>
+<li>本文提出变分推断（Variational Inference）也能通过对非确定分布的估计应用在GAN中；</li>
                 
              -->
         </div>
@@ -321,18 +321,18 @@
                 
                 
             
-            <h1 id="deep-generative-models">Deep Generative Models</h1>
-<p>生成模型是指一系列用于随机生成可观测数据的模型。假设在一个高维空间<span class="math inline">\(\mathcal{X}\)</span>中，存在一个随机向量<span class="math inline">\(\mathbf{X}\)</span>服从一个未知的分布<span class="math inline">\(p_r(x),x\in \mathcal{X}\)</span>。生成模型就是根据一些可观测的样本<span class="math inline">\(x^{(1)},x^{(2)},\cdots,x^{(N)}\)</span>来学习一个参数化的模型<span class="math inline">\(p_\theta(x)\)</span>来近似未知分布<span class="math inline">\(p_r(x)\)</span>。</p>
+            <h1 id="Deep-Generative-Models"><a href="#Deep-Generative-Models" class="headerlink" title="Deep Generative Models"></a>Deep Generative Models</h1><p>生成模型是指一系列用于随机生成可观测数据的模型。假设在一个高维空间$\mathcal{X}$中，存在一个随机向量$\mathbf{X}$服从一个未知的分布$p_r(x),x\in \mathcal{X}$。生成模型就是根据一些可观测的样本$x^{(1)},x^{(2)},\cdots,x^{(N)}$来学习一个参数化的模型$p_\theta(x)$来近似未知分布$p_r(x)$。</p>
 <p>生成模型主要用于密度估计和样本生成。</p>
 <hr>
-<p>密度估计即给定一组数据<span class="math inline">\(\mathcal{D}=\{x^{(i)}\},1\leq i\leq N\)</span>，假设他们都是从相同的概率密度函数<span class="math inline">\(p_r(x)\)</span>独立产生的。密度估计就是根据数据集<span class="math inline">\(\mathcal{D}\)</span>来估计其概率密度函数<span class="math inline">\(p_r(x)\)</span>。</p>
+<p>密度估计即给定一组数据$\mathcal{D}={x^{(i)}},1\leq i\leq N$，假设他们都是从相同的概率密度函数$p_r(x)$独立产生的。密度估计就是根据数据集$\mathcal{D}$来估计其概率密度函数$p_r(x)$。</p>
+<p>如果将生成模型用于监督学习，那么就是输出标签的条件概率分布$p(y|x)$，根据贝叶斯公式：</p>
             <!-- 
                 
-                    <h1 id="deep-generative-models">Deep Generative Models</h1>
-<p>生成模型是指一系列用于随机生成可观测数据的模型。假设在一个高维空间<span class="math inline">\(\mathcal{X}\)</span>中，存在一个随机向量<span class="math inline">\(\mathbf{X}\)</span>服从一个未知的分布<span class="math inline">\(p_r(x),x\in \mathcal{X}\)</span>。生成模型就是根据一些可观测的样本<span class="math inline">\(x^{(1)},x^{(2)},\cdots,x^{(N)}\)</span>来学习一个参数化的模型<span class="math inline">\(p_\theta(x)\)</span>来近似未知分布<span class="math inline">\(p_r(x)\)</span>。</p>
+                    <h1 id="Deep-Generative-Models"><a href="#Deep-Generative-Models" class="headerlink" title="Deep Generative Models"></a>Deep Generative Models</h1><p>生成模型是指一系列用于随机生成可观测数据的模型。假设在一个高维空间$\mathcal{X}$中，存在一个随机向量$\mathbf{X}$服从一个未知的分布$p_r(x),x\in \mathcal{X}$。生成模型就是根据一些可观测的样本$x^{(1)},x^{(2)},\cdots,x^{(N)}$来学习一个参数化的模型$p_\theta(x)$来近似未知分布$p_r(x)$。</p>
 <p>生成模型主要用于密度估计和样本生成。</p>
 <hr>
-<p>密度估计即给定一组数据<span class="math inline">\(\mathcal{D}=\{x^{(i)}\},1\leq i\leq N\)</span>，假设他们都是从相同的概率密度函数<span class="math inline">\(p_r(x)\)</span>独立产生的。密度估计就是根据数据集<span class="math inline">\(\mathcal{D}\)</span>来估计其概率密度函数<span class="math inline">\(p_r(x)\)</span>。</p>
+<p>密度估计即给定一组数据$\mathcal{D}={x^{(i)}},1\leq i\leq N$，假设他们都是从相同的概率密度函数$p_r(x)$独立产生的。密度估计就是根据数据集$\mathcal{D}$来估计其概率密度函数$p_r(x)$。</p>
+<p>如果将生成模型用于监督学习，那么就是输出标签的条件概率分布$p(y|x)$，根据贝叶斯公式：</p>
                 
              -->
         </div>
@@ -607,7 +607,7 @@
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Anomaly-Detection/" style="font-size: 18.33px;">Anomaly Detection</a> <a href="/tags/Deep-Learning/" style="font-size: 20px;">Deep Learning</a> <a href="/tags/Flow-based-Model/" style="font-size: 10px;">Flow-based Model</a> <a href="/tags/GAN/" style="font-size: 11.67px;">GAN</a> <a href="/tags/Machine-Learning/" style="font-size: 15px;">Machine Learning</a> <a href="/tags/RNN/" style="font-size: 11.67px;">RNN</a> <a href="/tags/Representation-Learning/" style="font-size: 10px;">Representation Learning</a> <a href="/tags/Spectral/" style="font-size: 10px;">Spectral</a> <a href="/tags/Statistics/" style="font-size: 10px;">Statistics</a> <a href="/tags/Time-Series/" style="font-size: 16.67px;">Time Series</a> <a href="/tags/Transfer-Learning/" style="font-size: 10px;">Transfer Learning</a> <a href="/tags/VAE/" style="font-size: 13.33px;">VAE</a> <a href="/tags/Variational-Inference/" style="font-size: 11.67px;">Variational Inference</a>
+        <a href="/tags/Anomaly-Detection/" style="font-size: 18.57px;">Anomaly Detection</a> <a href="/tags/Deep-Learning/" style="font-size: 20px;">Deep Learning</a> <a href="/tags/Flow-based-Model/" style="font-size: 10px;">Flow-based Model</a> <a href="/tags/GAN/" style="font-size: 12.86px;">GAN</a> <a href="/tags/Machine-Learning/" style="font-size: 15.71px;">Machine Learning</a> <a href="/tags/RNN/" style="font-size: 11.43px;">RNN</a> <a href="/tags/Representation-Learning/" style="font-size: 10px;">Representation Learning</a> <a href="/tags/Spectral/" style="font-size: 10px;">Spectral</a> <a href="/tags/Statistics/" style="font-size: 10px;">Statistics</a> <a href="/tags/Time-Series/" style="font-size: 17.14px;">Time Series</a> <a href="/tags/Transfer-Learning/" style="font-size: 10px;">Transfer Learning</a> <a href="/tags/VAE/" style="font-size: 14.29px;">VAE</a> <a href="/tags/Variational-Inference/" style="font-size: 11.43px;">Variational Inference</a>
     </div>
 </div>
 
@@ -626,7 +626,7 @@
             
             <a href="/2020/05/06/Estimate-the-Implicit-Likelihoods-of-GANs-with-Application-to-Anomaly-Detection/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Estimate the Implicit Likelihoods of GANs with Application to Anomaly Detection">
+                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200506174247129.png" alt="Estimate the Implicit Likelihoods of GANs with Application to Anomaly Detection">
                 </p>
             </a>
             
@@ -822,7 +822,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Anomaly-Detection/">
                         <span class="tag">Anomaly Detection</span>
-                        <span class="tag is-grey">11</span>
+                        <span class="tag is-grey">12</span>
                     </a>
                 </div>
                 
@@ -843,7 +843,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/GAN/">
                         <span class="tag">GAN</span>
-                        <span class="tag is-grey">2</span>
+                        <span class="tag is-grey">3</span>
                     </a>
                 </div>
                 
@@ -937,7 +937,7 @@
             
             <a href="/2020/05/06/Estimate-the-Implicit-Likelihoods-of-GANs-with-Application-to-Anomaly-Detection/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Estimate the Implicit Likelihoods of GANs with Application to Anomaly Detection">
+                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200506174247129.png" alt="Estimate the Implicit Likelihoods of GANs with Application to Anomaly Detection">
                 </p>
             </a>
             
@@ -1133,7 +1133,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Anomaly-Detection/">
                         <span class="tag">Anomaly Detection</span>
-                        <span class="tag is-grey">11</span>
+                        <span class="tag is-grey">12</span>
                     </a>
                 </div>
                 
@@ -1154,7 +1154,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/GAN/">
                         <span class="tag">GAN</span>
-                        <span class="tag is-grey">2</span>
+                        <span class="tag is-grey">3</span>
                     </a>
                 </div>
                 
