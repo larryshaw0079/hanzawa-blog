@@ -10,16 +10,16 @@
 <title>Deep Anomaly Detection Using Geometric Transformations - Hanzawa の 部屋</title>
 
 
-    <meta name="description" content="Introduction Preliminaries Probability Distributions Binomial Distribution 二项分布为离散分布，表示进行\(n\)次独立的伯努利实验，每次实验成功的概率为\(p\)的情况下，成功次数\(x\)的分布： \[">
+    <meta name="description" content="Introduction Preliminaries Probability Distributions for Binary Variables Binomial Distribution 二项分布为离散分布，表示进行\(n\)次独立的伯努利实验，每次实验成功的概率为\(p\)的情况下，成功次数\(x\)的分布： \[">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Deep Anomaly Detection Using Geometric Transformations">
 <meta property="og:url" content="http://qfxiao.me/2020/05/07/Deep-Anomaly-Detection-Using-Geometric-Transformations/index.html">
 <meta property="og:site_name" content="Hanzawa の 部屋">
-<meta property="og:description" content="Introduction Preliminaries Probability Distributions Binomial Distribution 二项分布为离散分布，表示进行\(n\)次独立的伯努利实验，每次实验成功的概率为\(p\)的情况下，成功次数\(x\)的分布： \[">
+<meta property="og:description" content="Introduction Preliminaries Probability Distributions for Binary Variables Binomial Distribution 二项分布为离散分布，表示进行\(n\)次独立的伯努利实验，每次实验成功的概率为\(p\)的情况下，成功次数\(x\)的分布： \[">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://qfxiao.me/img/image-20200509211050138.png">
 <meta property="article:published_time" content="2020-05-07T15:21:03.000Z">
-<meta property="article:modified_time" content="2020-05-09T13:12:31.175Z">
+<meta property="article:modified_time" content="2020-05-09T16:51:09.830Z">
 <meta property="article:author" content="Hanzawa">
 <meta property="article:tag" content="Anomaly Detection">
 <meta name="twitter:card" content="summary">
@@ -162,7 +162,7 @@
                 <time class="level-item has-text-grey" datetime="2020-05-07T15:21:03.000Z">2020-05-07</time>
                 
                     <i class="fas fa-calendar-check">&nbsp</i>
-                    <time class="level-item has-text-grey" datetime="2020-05-09T13:12:31.175Z">2020-05-09</time>
+                    <time class="level-item has-text-grey" datetime="2020-05-09T16:51:09.830Z">2020-05-10</time>
                 
                 
                 <div class="level-item">
@@ -173,7 +173,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    7 分钟 读完 (大约 1025 个字)
+                    7 分钟 读完 (大约 1043 个字)
                 </span>
                 
                 
@@ -217,7 +217,7 @@
             
             <h1 id="introduction">Introduction</h1>
 <h1 id="preliminaries">Preliminaries</h1>
-<h2 id="probability-distributions">Probability Distributions</h2>
+<h2 id="probability-distributions-for-binary-variables">Probability Distributions for Binary Variables</h2>
 <h3 id="binomial-distribution">Binomial Distribution</h3>
 <p>二项分布为离散分布，表示进行<span class="math inline">\(n\)</span>次独立的伯努利实验，每次实验成功的概率为<span class="math inline">\(p\)</span>的情况下，成功次数<span class="math inline">\(x\)</span>的分布： <span class="math display">\[
 \begin{align}
@@ -225,16 +225,6 @@ P(x;n,p)&amp;= \left(\begin{matrix}n\\x\end{matrix}\right)p^x(1-p)^{n-x}\\
 &amp;=\frac{n!}{x!(n-x)!}p^x(1-p)^{n-x}
 \end{align}
 \]</span></p>
-<h3 id="multinomial-distribution">Multinomial Distribution</h3>
-<p>多项分布为二项分布的高维扩展版本，在每次试中，可能有<span class="math inline">\(k\)</span>个结果，发生的概率分别为<span class="math inline">\(\boldsymbol p=\{p_1,p_2,\cdots,p_k\}\)</span>。多项分布表示的是每个结果发生的次数<span class="math inline">\(\boldsymbol x=\{x_1,x_2,\cdots,x_k\}\)</span>的概率分布： <span class="math display">\[
-\begin{align}
-P(\boldsymbol{x};n, \boldsymbol{p}) &amp;= \binom{n}{x_1} \binom{n - x_1}{x_2} \cdots \binom{n - \sum_{j=1}^{i-1}x_j}{x_i} \cdots \binom{x_k}{x_k} {p_1}^{x_1} {p_2}^{x_2} \cdots {p_k}^{x_k}\\
-&amp;= \prod_{i=1}^{k} \binom{n - \sum_{j=1}^{i-1}x_j}{x_i} \prod_{i=1}^{k} {p_i}^{x_i}\\
-&amp;= \prod_{i=1}^{k} \frac{(n - \sum_{j=1}^{i-1}x_j)!}{x_i!(n - \sum_{j=1}^{i}x_j)!} \prod_{i=1}^{k} {p_i}^{x_i}\\
-&amp;= \frac{n!}{x_1!(n-{x_1})!} \frac{n-x_1!}{x_2!(n-x_1-x_2)!}\cdots\frac{x_k!}{x_k!0!} \prod_{i=1}^{k} {p_i}^{x_i}\\
-&amp;= \frac{n!}{\prod_{i=1}^{k} {x_i}!} \prod_{i=1}^{k} {p_i}^{x_i}
-\end{align}
-\]</span> 上述公式不难理解，假设最终结果为<span class="math inline">\(\boldsymbol x=\{x_1,x_2,\cdots,x_k\}\)</span>（都为常数），相当于先从<span class="math inline">\(n\)</span>个球中随机取<span class="math inline">\(x_1\)</span>个球，有<span class="math inline">\(\binom{n}{x_1}\)</span>中取法，其概率为<span class="math inline">\(p_1^{x_1}\)</span>，之后从剩下的球中取<span class="math inline">\(x_2\)</span>个球，以此推类。由于每次试验相互独立，故可以直接相乘。</p>
 <h3 id="gamma-function">Gamma Function</h3>
 <p>对于任何实部大于<span class="math inline">\(0\)</span>的复数<span class="math inline">\(x\)</span>，Gamma函数的定义为： <span class="math display">\[
 \Gamma(x)=\int_0^{\infin}s^{x-1}e^{-s}\mathrm d s
@@ -253,64 +243,50 @@ P(\boldsymbol{x};n, \boldsymbol{p}) &amp;= \binom{n}{x_1} \binom{n - x_1}{x_2} \
 \Gamma(\frac{1}{2})=\sqrt{\pi}
 \]</span></p>
 <h3 id="beta-distribution">Beta Distribution</h3>
-<p>Beta分布。<span class="math inline">\(P(p;\boldsymbol \alpha,\beta)\sim \text{Beta}(\boldsymbol\alpha,\beta)\)</span> <span class="math display">\[
+<p>假设我们正在进行一个投硬币的实验，我们有数据集<span class="math inline">\(\mathcal D=\{x_1,\cdots,x_N\}\)</span>并且假设他们从伯努利分布<span class="math inline">\(p(x|\mu)=\mu^{x_n}(1-\mu)^{1-x_n}\)</span>独立同分布采样而来，则似然函数为： <span class="math display">\[
+p(\mathcal D|\mu)=\prod_{n=1}^N p(x_n|\mu)=\prod_{n=1}^N \mu^{x_n}(1-\mu)^{1-x_n}
+\]</span> 对数似然函数为： <span class="math display">\[
+\ln p(\mathcal D|\mu)=\sum_{n=1}^{N}\ln p(x_n|\mu)=\sum_{n=1}^N\{x_n\ln\mu+(1-x_n)\ln(1-\mu)\}
+\]</span> 令其导数为0得到： <span class="math display">\[
+\mu_{ML}=\frac{1}{N}\sum_{n=1}^N x_n
+\]</span> 现在假设我们的数据集为<span class="math inline">\(\mathcal D=\{1,1,1\}\)</span>，也就是说我们只收集到了三个样本，并且都是正例，我们会得到<span class="math inline">\(\mu_{ML}=1\)</span>，而这显然是严重过拟合的。</p>
+<p>为了解决这个问题，我们对<span class="math inline">\(\mu\)</span>引入了先验分布<span class="math inline">\(p(\mu)\)</span>，而这个分布需要</p>
+<p>根据贝叶斯定理： <span class="math display">\[
+p(\mu|\mathcal D)=\frac{p(\mathcal D|\mu)p(\mu)}{p(\mathcal D)}
+\]</span> Beta分布<span class="math inline">\(P(\mu|\boldsymbol \alpha,\beta)\sim \text{Beta}(\boldsymbol\alpha,\beta)\)</span> <span class="math display">\[
 \begin{align}
-P(p;\alpha,\beta) = \frac{1}{B(\alpha,\beta)}p^{\alpha-1}(1-p)^{\beta-1}
+P(\mu|\alpha,\beta) &amp;= \frac{\Gamma(\alpha+\beta)}{\Gamma(\alpha)\Gamma(\beta)}\mu^{\alpha-1}(1-\mu)^{\beta-1}\\ &amp;= \frac{1}{B(\alpha,\beta)}\mu^{\alpha-1}(1-\mu)^{\beta-1}
 \end{align}
 \]</span> <span class="math inline">\(B(\boldsymbol \alpha,\beta)\)</span>称为B函数，为一个标准化函数： <span class="math display">\[
 \begin{align}
 B(\alpha,\beta) = \frac{\Gamma(\alpha)\Gamma(\beta)}{\Gamma(\alpha+\beta)}
 \end{align}
-\]</span> 其目的是为了使整个概率分布积分等于1而存在的。</p>
-<p>因为： <span class="math display">\[
-\begin{align*}
-\int_{0}^{1} P(p;\alpha,\beta) dp &amp;= \int_{0}^{1} \frac{1}{B(\alpha,\beta)}p^{\alpha-1}(1-p)^{\beta-1} dp \\
-&amp;= \frac{1}{B(\alpha,\beta)} \int_{0}^{1} p^{\alpha-1}(1-p)^{\beta-1} dp \\
-&amp;= 1
-\end{align*}
-\]</span> 所以我们有： <span class="math display">\[
+\]</span> 其目的是为了使整个概率分布积分等于1而存在的。 <span class="math display">\[
+\mathbb E[\mu]=\frac{\alpha}{\alpha+\beta}\\
+\text{var}[\mu]=\frac{\alpha\beta}{(\alpha+\beta)^2(\alpha+\beta+1)}
+\]</span></p>
+<p><img src="http://qfxiao.me/img/image-20200509233713635.png" style="zoom:67%;"></p>
+<p>现在我们有了作为<span class="math inline">\(p(\mu)\)</span>先验的Beta分布以及服从伯努利分布的<span class="math inline">\(p(x_n)\)</span>，那么后验分布可以写成： <span class="math display">\[
+p(\mu|m,l,\alpha,\beta)\propto \mu^{m+\alpha-1}(1-\mu)^{l+b-1}
+\]</span> 其中<span class="math inline">\(l=N-m\)</span>，代表失败的次数，<span class="math inline">\(m\)</span>代表成功的次数。 <span class="math display">\[
 \begin{align}
-B(\alpha,\beta) = \int_{0}^{1} p^{\alpha-1}(1-p)^{\beta-1} dp
-\end{align}
-\]</span> 而： <span class="math display">\[
-\begin{align}
-\Gamma(\alpha)\Gamma(\beta) &amp;= \int_{0}^{\infty}u^{\alpha-1}e^{-u}du \int_{0}^{\infty}v^{\beta-1}e^{-v}dv \nonumber\\
-&amp;= \int_{0}^{\infty} \int_{0}^{\infty} u^{\alpha-1}e^{-u} v^{\beta-1}e^{-v} du dv \nonumber\\
-&amp;= \int_{0}^{\infty} \int_{0}^{\infty} u^{\alpha-1} v^{\beta-1}e^{-(u+v)} du dv 
-\end{align}
-\]</span> 我们令<span class="math inline">\(x=\frac{u}{u+v}\)</span>，<span class="math inline">\(y=u+v\)</span>，并且<span class="math inline">\(x\in[0,1]\)</span>，<span class="math inline">\(y\in[0,\infin]\)</span>，故有 <span class="math display">\[
-u=xy\\
-v=(1-x)y
-\]</span> 映射<span class="math inline">\((x,y)\mapsto(u,v)\)</span>的Jacobian矩阵为： <span class="math display">\[
-\begin{align}
-\frac{\partial(u,v)}{\partial(x,y)} &amp;= 
-\begin{bmatrix} 
-    \frac{\partial u}{\partial x} &amp; \frac{\partial u}{\partial y} \\
-    \frac{\partial v}{\partial x} &amp; \frac{\partial v}{\partial y} \\
-\end{bmatrix} \nonumber\\
-&amp;= 
-\begin{bmatrix} 
-    y &amp; x \\
-    -y &amp; 1-x \\
-\end{bmatrix}
-\end{align}
-\]</span> 行列式为： <span class="math display">\[
-\begin{align}
-J &amp;= \left| \frac{\partial(u,v)}{\partial(x,y)} \right| \nonumber\\
-&amp;= y(1-x) - x(-y) \nonumber\\
-&amp;= y
-\end{align}
-\]</span> 所以： <span class="math display">\[
-\begin{align}
-\Gamma(\alpha)\Gamma(\beta) &amp;= \int_{0}^{\infty} \int_{0}^{\infty} u^{\alpha-1} v^{\beta-1}e^{-(u+v)} du dv \nonumber\\
-&amp;= \int_{y=0}^{\infty} \int_{x=0}^{1} (xy)^{\alpha-1} [(1-x)y]^{\beta-1}e^{-y}  y dx dy \nonumber\\
-&amp;= \int_{y=0}^{\infty} \int_{x=0}^{1} x^{\alpha-1} (1-x)^{\beta-1} y^{\alpha + \beta -1} e^{-y}  dx dy \nonumber\\
-&amp;= \int_{0}^{\infty} y^{\alpha + \beta -1} e^{-y} dy\int_{0}^{1} x^{\alpha-1} (1-x)^{\beta-1} dx \nonumber\\
-&amp;= \Gamma(\alpha+\beta) \int_{0}^{1} x^{\alpha-1} (1-x)^{\beta-1} dx \nonumber\\
-&amp;= \Gamma(\alpha+\beta) B(\alpha,\beta)
+p(\mu|m,l,\alpha,\beta)&amp;=\frac{\Gamma(m+\alpha+l+\beta)}{\Gamma(m+a)\Gamma(l+b)}\mu^{m+a-1}(1-\mu)^{l+b-1}\\
+&amp;=\text{Beta}(\alpha+m,\beta+l)
 \end{align}
 \]</span></p>
-<h2 id="dirichlet-distribution">Dirichlet Distribution</h2>
+<h2 id="probability-distributions-for-multinomial-variables">Probability Distributions for Multinomial Variables</h2>
+<h3 id="multinomial-distribution">Multinomial Distribution</h3>
+<p>设一个<span class="math inline">\(K\)</span>维向量<span class="math inline">\(\mathbf x\)</span>，当<span class="math inline">\(x_k\)</span>为<span class="math inline">\(1\)</span>的时候其他元素都为<span class="math inline">\(0\)</span>，如<span class="math inline">\(K=6,x_3=1\)</span>时<span class="math inline">\(\mathbf x\)</span>表示为<span class="math inline">\(\mathbf x=(0,0,1,0,0,0)^\top\)</span>。如果<span class="math inline">\(p(x_k=1)=\mu_k\)</span>，那么<span class="math inline">\(\mathbf x\)</span>的概率分布为： <span class="math display">\[
+p(\mathbf x|\boldsymbol \mu)=\prod_{k=1}^{K}\mu_k^{x_k}
+\]</span> <span class="math inline">\(\mu_k\)</span>满足<span class="math inline">\(\sum_k \mu_k=1\)</span>。假设我们有大小为<span class="math inline">\(N\)</span>的数据集<span class="math inline">\(\mathcal D\)</span>，每个样本服从该分布，那么似然函数： <span class="math display">\[
+p(\mathcal D|\boldsymbol \mu)=\prod_{n=1}^N\prod_{k=1}^K \mu_k^{x_{nk}}=\prod_{k=1}^K \mu_k^{\sum_n x_{nk}}=\prod_{k=1}^K\mu_k^{m_k}
+\]</span> 其中<span class="math inline">\(m_k=\sum_n x_{nk}\)</span>。为了最大化对数似然同时保证<span class="math inline">\(\sum_k \mu_k=1\)</span>，我们可以用拉格朗日乘子法： <span class="math display">\[
+\sum_{k=1}^K m_k\ln \mu_k+\lambda\left(\sum_{k=1}^K\mu_k-1\right)
+\]</span> 我们得到<span class="math inline">\(\mu_k=-m_k/\lambda\)</span>。通过<span class="math inline">\(\sum_k \mu_k=1\)</span>得出<span class="math inline">\(\lambda=-N\)</span>，故最后我们有： <span class="math display">\[
+\mu_k^{ML}=\frac{m_k}{N}
+\]</span></p>
+<h3 id="dirichlet-distribution">Dirichlet Distribution</h3>
+<p><img src="http://qfxiao.me/img/image-20200510005021180.png" style="zoom:67%;"></p>
 <h1 id="proposed-method">Proposed Method</h1>
 <h2 id="overview-discriminative-learning-of-an-anomaly-scoring-function-using-geometric-transformations">Overview: Discriminative Learning of an Anomaly Scoring Function Using Geometric Transformations</h2>
 <h2 id="creating-and-learning-the-self-labeled-dataset">Creating and Learning the Self-Labeled Dataset</h2>
@@ -575,30 +551,34 @@ n_S(x)=\sum_{i=0}^{k-1}\sum_{j=0}^{k-1}([\tilde{\boldsymbol\alpha}_i]_j-1)\log\m
         <span class="has-mr-6">2</span>
         <span>Preliminaries</span>
         </a><ul class="menu-list"><li>
-        <a class="is-flex" href="#probability-distributions">
+        <a class="is-flex" href="#probability-distributions-for-binary-variables">
         <span class="has-mr-6">2.1</span>
-        <span>Probability Distributions</span>
+        <span>Probability Distributions for Binary Variables</span>
         </a><ul class="menu-list"><li>
         <a class="is-flex" href="#binomial-distribution">
         <span class="has-mr-6">2.1.1</span>
         <span>Binomial Distribution</span>
         </a></li><li>
-        <a class="is-flex" href="#multinomial-distribution">
-        <span class="has-mr-6">2.1.2</span>
-        <span>Multinomial Distribution</span>
-        </a></li><li>
         <a class="is-flex" href="#gamma-function">
-        <span class="has-mr-6">2.1.3</span>
+        <span class="has-mr-6">2.1.2</span>
         <span>Gamma Function</span>
         </a></li><li>
         <a class="is-flex" href="#beta-distribution">
-        <span class="has-mr-6">2.1.4</span>
+        <span class="has-mr-6">2.1.3</span>
         <span>Beta Distribution</span>
         </a></li></ul></li><li>
-        <a class="is-flex" href="#dirichlet-distribution">
+        <a class="is-flex" href="#probability-distributions-for-multinomial-variables">
         <span class="has-mr-6">2.2</span>
+        <span>Probability Distributions for Multinomial Variables</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#multinomial-distribution">
+        <span class="has-mr-6">2.2.1</span>
+        <span>Multinomial Distribution</span>
+        </a></li><li>
+        <a class="is-flex" href="#dirichlet-distribution">
+        <span class="has-mr-6">2.2.2</span>
         <span>Dirichlet Distribution</span>
-        </a></li></ul></li><li>
+        </a></li></ul></li></ul></li><li>
         <a class="is-flex" href="#proposed-method">
         <span class="has-mr-6">3</span>
         <span>Proposed Method</span>
