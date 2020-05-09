@@ -1,0 +1,1578 @@
+<!DOCTYPE html>
+<html  lang="zh">
+<head>
+    <meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.0" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>Deep Anomaly Detection Using Geometric Transformations - Hanzawa の 部屋</title>
+
+
+    <meta name="description" content="Introduction Preliminaries Probability Distributions Binomial Distribution 二项分布为离散分布，表示进行\(n\)次独立的伯努利实验，每次实验成功的概率为\(p\)的情况下，成功次数\(x\)的分布： \[">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Deep Anomaly Detection Using Geometric Transformations">
+<meta property="og:url" content="http://qfxiao.me/2020/05/07/Deep-Anomaly-Detection-Using-Geometric-Transformations/index.html">
+<meta property="og:site_name" content="Hanzawa の 部屋">
+<meta property="og:description" content="Introduction Preliminaries Probability Distributions Binomial Distribution 二项分布为离散分布，表示进行\(n\)次独立的伯努利实验，每次实验成功的概率为\(p\)的情况下，成功次数\(x\)的分布： \[">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://qfxiao.me/img/image-20200509211050138.png">
+<meta property="article:published_time" content="2020-05-07T15:21:03.000Z">
+<meta property="article:modified_time" content="2020-05-09T13:12:31.175Z">
+<meta property="article:author" content="Hanzawa">
+<meta property="article:tag" content="Anomaly Detection">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://qfxiao.me/img/image-20200509211050138.png">
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.png">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.svg" alt="Deep Anomaly Detection Using Geometric Transformations" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">Home</a>
+                
+                <a class="navbar-item"
+                href="/archives">Archives</a>
+                
+                <a class="navbar-item"
+                href="/categories">Categories</a>
+                
+                <a class="navbar-item"
+                href="/tags">Tags</a>
+                
+                <a class="navbar-item"
+                href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-image">
+        <span  class="image is-7by1">
+            <img class="thumbnail" src="http://qfxiao.me/img/image-20200509211050138.png" alt="Deep Anomaly Detection Using Geometric Transformations">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-05-07T15:21:03.000Z">2020-05-07</time>
+                
+                    <i class="fas fa-calendar-check">&nbsp</i>
+                    <time class="level-item has-text-grey" datetime="2020-05-09T13:12:31.175Z">2020-05-09</time>
+                
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Research/">Research</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    7 分钟 读完 (大约 1025 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                Deep Anomaly Detection Using Geometric Transformations
+            
+        </h1>
+        <div class="content">
+            
+                
+                
+                
+                    
+                    
+                        
+                    
+                
+                    
+                    
+                        
+                    
+                
+                    
+                    
+                        
+                    
+                
+                    
+                    
+                        
+                    
+                
+                    
+                    
+                
+                
+            
+            <h1 id="introduction">Introduction</h1>
+<h1 id="preliminaries">Preliminaries</h1>
+<h2 id="probability-distributions">Probability Distributions</h2>
+<h3 id="binomial-distribution">Binomial Distribution</h3>
+<p>二项分布为离散分布，表示进行<span class="math inline">\(n\)</span>次独立的伯努利实验，每次实验成功的概率为<span class="math inline">\(p\)</span>的情况下，成功次数<span class="math inline">\(x\)</span>的分布： <span class="math display">\[
+\begin{align}
+P(x;n,p)&amp;= \left(\begin{matrix}n\\x\end{matrix}\right)p^x(1-p)^{n-x}\\
+&amp;=\frac{n!}{x!(n-x)!}p^x(1-p)^{n-x}
+\end{align}
+\]</span></p>
+<h3 id="multinomial-distribution">Multinomial Distribution</h3>
+<p>多项分布为二项分布的高维扩展版本，在每次试中，可能有<span class="math inline">\(k\)</span>个结果，发生的概率分别为<span class="math inline">\(\boldsymbol p=\{p_1,p_2,\cdots,p_k\}\)</span>。多项分布表示的是每个结果发生的次数<span class="math inline">\(\boldsymbol x=\{x_1,x_2,\cdots,x_k\}\)</span>的概率分布： <span class="math display">\[
+\begin{align}
+P(\boldsymbol{x};n, \boldsymbol{p}) &amp;= \binom{n}{x_1} \binom{n - x_1}{x_2} \cdots \binom{n - \sum_{j=1}^{i-1}x_j}{x_i} \cdots \binom{x_k}{x_k} {p_1}^{x_1} {p_2}^{x_2} \cdots {p_k}^{x_k}\\
+&amp;= \prod_{i=1}^{k} \binom{n - \sum_{j=1}^{i-1}x_j}{x_i} \prod_{i=1}^{k} {p_i}^{x_i}\\
+&amp;= \prod_{i=1}^{k} \frac{(n - \sum_{j=1}^{i-1}x_j)!}{x_i!(n - \sum_{j=1}^{i}x_j)!} \prod_{i=1}^{k} {p_i}^{x_i}\\
+&amp;= \frac{n!}{x_1!(n-{x_1})!} \frac{n-x_1!}{x_2!(n-x_1-x_2)!}\cdots\frac{x_k!}{x_k!0!} \prod_{i=1}^{k} {p_i}^{x_i}\\
+&amp;= \frac{n!}{\prod_{i=1}^{k} {x_i}!} \prod_{i=1}^{k} {p_i}^{x_i}
+\end{align}
+\]</span> 上述公式不难理解，假设最终结果为<span class="math inline">\(\boldsymbol x=\{x_1,x_2,\cdots,x_k\}\)</span>（都为常数），相当于先从<span class="math inline">\(n\)</span>个球中随机取<span class="math inline">\(x_1\)</span>个球，有<span class="math inline">\(\binom{n}{x_1}\)</span>中取法，其概率为<span class="math inline">\(p_1^{x_1}\)</span>，之后从剩下的球中取<span class="math inline">\(x_2\)</span>个球，以此推类。由于每次试验相互独立，故可以直接相乘。</p>
+<h3 id="gamma-function">Gamma Function</h3>
+<p>对于任何实部大于<span class="math inline">\(0\)</span>的复数<span class="math inline">\(x\)</span>，Gamma函数的定义为： <span class="math display">\[
+\Gamma(x)=\int_0^{\infin}s^{x-1}e^{-s}\mathrm d s
+\]</span> Gamma函数有一个性质： <span class="math display">\[
+\Gamma(x+1)=x\Gamma(x)
+\]</span> 证明为： <span class="math display">\[
+\begin{align*}
+\Gamma(x+1) &amp;= \int_{0}^{\infty} {s^{x} e^{-s} ds} \\
+&amp;= \big[s^{x} (-e^{-s})\big] \big|_{0}^{\infty} - \int_{0}^{\infty} {(x s^{x-1}) (-e^{-s}) ds} \\
+&amp;= (0 - 0) + x \int_{0}^{\infty} {s^{x-1} e^{-s} ds} \\
+&amp;= x \Gamma(x)
+\end{align*}
+\]</span></p>
+<p><span class="math display">\[
+\Gamma(1)=1\\
+\Gamma(\frac{1}{2})=\sqrt{\pi}
+\]</span></p>
+<h3 id="beta-distribution">Beta Distribution</h3>
+<p>Beta分布。<span class="math inline">\(P(p;\boldsymbol \alpha,\beta)\sim \text{Beta}(\boldsymbol\alpha,\beta)\)</span> <span class="math display">\[
+\begin{align}
+P(p;\alpha,\beta) = \frac{1}{B(\alpha,\beta)}p^{\alpha-1}(1-p)^{\beta-1}
+\end{align}
+\]</span> <span class="math inline">\(B(\boldsymbol \alpha,\beta)\)</span>称为B函数，为一个标准化函数： <span class="math display">\[
+\begin{align}
+B(\alpha,\beta) = \frac{\Gamma(\alpha)\Gamma(\beta)}{\Gamma(\alpha+\beta)}
+\end{align}
+\]</span> 其目的是为了使整个概率分布积分等于1而存在的。</p>
+<p>因为： <span class="math display">\[
+\begin{align*}
+\int_{0}^{1} P(p;\alpha,\beta) dp &amp;= \int_{0}^{1} \frac{1}{B(\alpha,\beta)}p^{\alpha-1}(1-p)^{\beta-1} dp \\
+&amp;= \frac{1}{B(\alpha,\beta)} \int_{0}^{1} p^{\alpha-1}(1-p)^{\beta-1} dp \\
+&amp;= 1
+\end{align*}
+\]</span> 所以我们有： <span class="math display">\[
+\begin{align}
+B(\alpha,\beta) = \int_{0}^{1} p^{\alpha-1}(1-p)^{\beta-1} dp
+\end{align}
+\]</span> 而： <span class="math display">\[
+\begin{align}
+\Gamma(\alpha)\Gamma(\beta) &amp;= \int_{0}^{\infty}u^{\alpha-1}e^{-u}du \int_{0}^{\infty}v^{\beta-1}e^{-v}dv \nonumber\\
+&amp;= \int_{0}^{\infty} \int_{0}^{\infty} u^{\alpha-1}e^{-u} v^{\beta-1}e^{-v} du dv \nonumber\\
+&amp;= \int_{0}^{\infty} \int_{0}^{\infty} u^{\alpha-1} v^{\beta-1}e^{-(u+v)} du dv 
+\end{align}
+\]</span> 我们令<span class="math inline">\(x=\frac{u}{u+v}\)</span>，<span class="math inline">\(y=u+v\)</span>，并且<span class="math inline">\(x\in[0,1]\)</span>，<span class="math inline">\(y\in[0,\infin]\)</span>，故有 <span class="math display">\[
+u=xy\\
+v=(1-x)y
+\]</span> 映射<span class="math inline">\((x,y)\mapsto(u,v)\)</span>的Jacobian矩阵为： <span class="math display">\[
+\begin{align}
+\frac{\partial(u,v)}{\partial(x,y)} &amp;= 
+\begin{bmatrix} 
+    \frac{\partial u}{\partial x} &amp; \frac{\partial u}{\partial y} \\
+    \frac{\partial v}{\partial x} &amp; \frac{\partial v}{\partial y} \\
+\end{bmatrix} \nonumber\\
+&amp;= 
+\begin{bmatrix} 
+    y &amp; x \\
+    -y &amp; 1-x \\
+\end{bmatrix}
+\end{align}
+\]</span> 行列式为： <span class="math display">\[
+\begin{align}
+J &amp;= \left| \frac{\partial(u,v)}{\partial(x,y)} \right| \nonumber\\
+&amp;= y(1-x) - x(-y) \nonumber\\
+&amp;= y
+\end{align}
+\]</span> 所以： <span class="math display">\[
+\begin{align}
+\Gamma(\alpha)\Gamma(\beta) &amp;= \int_{0}^{\infty} \int_{0}^{\infty} u^{\alpha-1} v^{\beta-1}e^{-(u+v)} du dv \nonumber\\
+&amp;= \int_{y=0}^{\infty} \int_{x=0}^{1} (xy)^{\alpha-1} [(1-x)y]^{\beta-1}e^{-y}  y dx dy \nonumber\\
+&amp;= \int_{y=0}^{\infty} \int_{x=0}^{1} x^{\alpha-1} (1-x)^{\beta-1} y^{\alpha + \beta -1} e^{-y}  dx dy \nonumber\\
+&amp;= \int_{0}^{\infty} y^{\alpha + \beta -1} e^{-y} dy\int_{0}^{1} x^{\alpha-1} (1-x)^{\beta-1} dx \nonumber\\
+&amp;= \Gamma(\alpha+\beta) \int_{0}^{1} x^{\alpha-1} (1-x)^{\beta-1} dx \nonumber\\
+&amp;= \Gamma(\alpha+\beta) B(\alpha,\beta)
+\end{align}
+\]</span></p>
+<h2 id="dirichlet-distribution">Dirichlet Distribution</h2>
+<h1 id="proposed-method">Proposed Method</h1>
+<h2 id="overview-discriminative-learning-of-an-anomaly-scoring-function-using-geometric-transformations">Overview: Discriminative Learning of an Anomaly Scoring Function Using Geometric Transformations</h2>
+<h2 id="creating-and-learning-the-self-labeled-dataset">Creating and Learning the Self-Labeled Dataset</h2>
+<h2 id="dirichlet-normality-score">Dirichlet Normality Score</h2>
+<p><span class="math inline">\(n_S(x)\)</span></p>
+<p><span class="math inline">\(\mathcal T=\{T_0,T_1,\cdots,T_{k-1}\}\)</span></p>
+<p><span class="math inline">\(\mathbf y(x)=\text{softmax}(f_{\theta}(x))\)</span></p>
+<p><span class="math display">\[
+n_S(x)=\sum\limits_{i=0}^{k-1}\log p(\mathbf y(T_i(x))|T_i)
+\]</span></p>
+<p><span class="math display">\[
+n_S(x)=\sum_{i=0}^{k-1}\left[\log\Gamma(\sum_{j=0}^{k-1}[\tilde{\boldsymbol\alpha}_i]_j)-\sum_{j=0}^{k-1}\log\Gamma([\tilde{\boldsymbol\alpha}_i]_j)+\sum_{j=0}^{k-1}([\tilde{\boldsymbol\alpha}_i]_j-1)\log\mathbf y(T_i(x))_j\right]
+\]</span></p>
+<p><span class="math display">\[
+n_S(x)=\sum_{i=0}^{k-1}\sum_{j=0}^{k-1}([\tilde{\boldsymbol\alpha}_i]_j-1)\log\mathbf y(T_i(x))_j=\sum_{i=0}^{k-1}(\tilde{\boldsymbol \alpha}_i-1)\cdot\log\mathbf y(T_i(x))
+\]</span></p>
+<h1 id="experiments">Experiments</h1>
+<p><img src="http://qfxiao.me/img/image-20200509211050138.png"></p>
+<p><img src="http://qfxiao.me/img/image-20200509211119999.png" style="zoom: 80%;"></p>
+
+            <!--  -->
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/Anomaly-Detection/" rel="tag">Anomaly Detection</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<a class="button is-info donate">
+    <span class="icon is-small">
+        <i class="fab fa-alipay"></i>
+    </span>
+    <span>支付宝</span>
+    <div class="qrcode"><img src="http://qfxiao.me/misc/alipay.jpg" alt="支付宝"></div>
+</a>
+
+                
+                
+<a class="button is-success donate">
+    <span class="icon is-small">
+        <i class="fab fa-weixin"></i>
+    </span>
+    <span>微信</span>
+    <div class="qrcode"><img src="http://qfxiao.me/misc/wechat.png" alt="微信"></div>
+</a>
+
+                
+                <!-- Visit https://www.paypal.com/donate/buttons/ to get your donate button -->
+
+<a class="button is-warning donate" onclick="document.getElementById(&#39;paypal-donate-form&#39;).submit()">
+    <span class="icon is-small">
+        <i class="fab fa-paypal"></i>
+    </span>
+    <span>Paypal</span>
+</a>
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" id="paypal-donate-form">
+    <input type="hidden" name="cmd" value="_donations" />
+    <input type="hidden" name="business" value="larryshaw0079@live.com" />
+    <input type="hidden" name="currency_code" value="USD" />
+</form>
+
+                
+        </div>
+    </div>
+</div>
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2020/05/07/Classification-based-Anomaly-Detection-for-General-Data/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">Classification-based Anomaly Detection for General Data</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2020/05/06/Generative-Probabilistic-Novelty-Detection-with-Adversarial-Autoencoders/">
+                <span class="level-item">Generative Probabilistic Novelty Detection with Adversarial Autoencoders</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<script>
+    var disqus_config = function () {
+        this.page.url = 'http://qfxiao.me/2020/05/07/Deep-Anomaly-Detection-Using-Geometric-Transformations/';
+        this.page.identifier = '2020/05/07/Deep-Anomaly-Detection-Using-Geometric-Transformations/';
+    };
+    (function() {
+        var d = document, s = d.createElement('script');  
+        s.src = '//' + 'http-larryshaw0079-coding-me-blog' + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+
+<div id="disqus_thread">
+    
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript" target="_blank" rel="noopener">comments powered by Disqus.</a></noscript>
+</div>
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered" style="flex-shrink: 1">
+                <div>
+                    
+                    <figure class="image is-128x128 has-mb-6">
+                        <img class="" src="http://qfxiao.me/misc/avatar.jpg" alt="Hanzawa">
+                    </figure>
+                    
+                    <p class="is-size-4 is-block">
+                        Hanzawa
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        A graduate student
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Beijing, China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        23
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        9
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        13
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="https://github.com/ppoffice" target="_blank">
+                关注我</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank"
+                title="Github" href="https://github.com/ppoffice">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank"
+                title="Facebook" href="https://facebook.com">
+                
+                <i class="fab fa-facebook"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank"
+                title="Twitter" href="https://twitter.com">
+                
+                <i class="fab fa-twitter"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank"
+                title="Dribbble" href="https://dribbble.com">
+                
+                <i class="fab fa-dribbble"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank"
+                title="RSS" href="/">
+                
+                <i class="fas fa-rss"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+<div class="card widget" id="toc">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                目录
+            </h3>
+            <ul class="menu-list"><li>
+        <a class="is-flex" href="#introduction">
+        <span class="has-mr-6">1</span>
+        <span>Introduction</span>
+        </a></li><li>
+        <a class="is-flex" href="#preliminaries">
+        <span class="has-mr-6">2</span>
+        <span>Preliminaries</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#probability-distributions">
+        <span class="has-mr-6">2.1</span>
+        <span>Probability Distributions</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#binomial-distribution">
+        <span class="has-mr-6">2.1.1</span>
+        <span>Binomial Distribution</span>
+        </a></li><li>
+        <a class="is-flex" href="#multinomial-distribution">
+        <span class="has-mr-6">2.1.2</span>
+        <span>Multinomial Distribution</span>
+        </a></li><li>
+        <a class="is-flex" href="#gamma-function">
+        <span class="has-mr-6">2.1.3</span>
+        <span>Gamma Function</span>
+        </a></li><li>
+        <a class="is-flex" href="#beta-distribution">
+        <span class="has-mr-6">2.1.4</span>
+        <span>Beta Distribution</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#dirichlet-distribution">
+        <span class="has-mr-6">2.2</span>
+        <span>Dirichlet Distribution</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#proposed-method">
+        <span class="has-mr-6">3</span>
+        <span>Proposed Method</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#overview-discriminative-learning-of-an-anomaly-scoring-function-using-geometric-transformations">
+        <span class="has-mr-6">3.1</span>
+        <span>Overview: Discriminative Learning of an Anomaly Scoring Function Using Geometric Transformations</span>
+        </a></li><li>
+        <a class="is-flex" href="#creating-and-learning-the-self-labeled-dataset">
+        <span class="has-mr-6">3.2</span>
+        <span>Creating and Learning the Self-Labeled Dataset</span>
+        </a></li><li>
+        <a class="is-flex" href="#dirichlet-normality-score">
+        <span class="has-mr-6">3.3</span>
+        <span>Dirichlet Normality Score</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#experiments">
+        <span class="has-mr-6">4</span>
+        <span>Experiments</span>
+        </a></li></ul>
+        </div>
+    </div>
+</div>
+
+    
+        
+
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            链接
+        </h3>
+        <ul class="menu-list">
+        
+            <li>
+                <a class="level is-mobile" href="https://hexo.io" target="_blank">
+                    <span class="level-left">
+                        <span class="level-item">Hexo</span>
+                    </span>
+                    <span class="level-right">
+                        <span class="level-item tag">hexo.io</span>
+                    </span>
+                </a>
+            </li>
+        
+            <li>
+                <a class="level is-mobile" href="https://github.com/ppoffice" target="_blank">
+                    <span class="level-left">
+                        <span class="level-item">PPOffice</span>
+                    </span>
+                    <span class="level-right">
+                        <span class="level-item tag">github.com</span>
+                    </span>
+                </a>
+            </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+
+
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                分类
+            </h3>
+            <ul class="menu-list">
+            <li>
+        <a class="level is-marginless" href="/categories/Research/">
+            <span class="level-start">
+                <span class="level-item">Research</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">22</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/Research/Anomaly-Detection/">
+            <span class="level-start">
+                <span class="level-item">Anomaly Detection</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">17</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Research/GAN/">
+            <span class="level-start">
+                <span class="level-item">GAN</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Research/Misc/">
+            <span class="level-start">
+                <span class="level-item">Misc</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Research/RNN/">
+            <span class="level-start">
+                <span class="level-item">RNN</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Research/Time-Series-Imputation/">
+            <span class="level-start">
+                <span class="level-item">Time Series Imputation</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Research/Tutorial/">
+            <span class="level-start">
+                <span class="level-item">Tutorial</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/Technical-Notes/">
+            <span class="level-start">
+                <span class="level-item">Technical Notes</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/Technical-Notes/Misc/">
+            <span class="level-start">
+                <span class="level-item">Misc</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li>
+            </ul>
+        </div>
+    </div>
+</div>
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            标签云
+        </h3>
+        <a href="/tags/Anomaly-Detection/" style="font-size: 20px;">Anomaly Detection</a> <a href="/tags/Deep-Learning/" style="font-size: 18.57px;">Deep Learning</a> <a href="/tags/Flow-based-Model/" style="font-size: 10px;">Flow-based Model</a> <a href="/tags/GAN/" style="font-size: 12.86px;">GAN</a> <a href="/tags/Machine-Learning/" style="font-size: 15.71px;">Machine Learning</a> <a href="/tags/RNN/" style="font-size: 11.43px;">RNN</a> <a href="/tags/Representation-Learning/" style="font-size: 10px;">Representation Learning</a> <a href="/tags/Spectral/" style="font-size: 10px;">Spectral</a> <a href="/tags/Statistics/" style="font-size: 10px;">Statistics</a> <a href="/tags/Time-Series/" style="font-size: 17.14px;">Time Series</a> <a href="/tags/Transfer-Learning/" style="font-size: 10px;">Transfer Learning</a> <a href="/tags/VAE/" style="font-size: 14.29px;">VAE</a> <a href="/tags/Variational-Inference/" style="font-size: 11.43px;">Variational Inference</a>
+    </div>
+</div>
+
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+            
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            最新文章
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2020/05/07/Classification-based-Anomaly-Detection-for-General-Data/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Classification-based Anomaly Detection for General Data">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-05-07T15:21:34.000Z">2020-05-07</time></div>
+                    <a href="/2020/05/07/Classification-based-Anomaly-Detection-for-General-Data/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Classification-based Anomaly Detection for General Data</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/05/07/Deep-Anomaly-Detection-Using-Geometric-Transformations/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200509211050138.png" alt="Deep Anomaly Detection Using Geometric Transformations">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-05-07T15:21:03.000Z">2020-05-07</time></div>
+                    <a href="/2020/05/07/Deep-Anomaly-Detection-Using-Geometric-Transformations/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Deep Anomaly Detection Using Geometric Transformations</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/05/06/Generative-Probabilistic-Novelty-Detection-with-Adversarial-Autoencoders/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Generative Probabilistic Novelty Detection with Adversarial Autoencoders">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-05-06T09:52:44.000Z">2020-05-06</time></div>
+                    <a href="/2020/05/06/Generative-Probabilistic-Novelty-Detection-with-Adversarial-Autoencoders/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Generative Probabilistic Novelty Detection with Adversarial Autoencoders</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/05/06/Estimate-the-Implicit-Likelihoods-of-GANs-with-Application-to-Anomaly-Detection/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200506174247129.png" alt="Estimate the Implicit Likelihoods of GANs with Application to Anomaly Detection">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-05-06T07:49:38.000Z">2020-05-06</time></div>
+                    <a href="/2020/05/06/Estimate-the-Implicit-Likelihoods-of-GANs-with-Application-to-Anomaly-Detection/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Estimate the Implicit Likelihoods of GANs with Application to Anomaly Detection</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/05/06/Learning-Representations-of-Ultrahigh-dimensional-Data-for-Random-Distance-based-Outlier-Detection/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200416151126952.png" alt="Learning Representations of Ultrahigh-dimensional Data for Random Distance-based Outlier Detection">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-05-06T03:05:37.000Z">2020-05-06</time></div>
+                    <a href="/2020/05/06/Learning-Representations-of-Ultrahigh-dimensional-Data-for-Random-Distance-based-Outlier-Detection/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Learning Representations of Ultrahigh-dimensional Data for Random Distance-based Outlier Detection</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            归档
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/02/">
+                <span class="level-start">
+                    <span class="level-item">二月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                标签
+            </h3>
+            <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Anomaly-Detection/">
+                        <span class="tag">Anomaly Detection</span>
+                        <span class="tag is-grey">15</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Deep-Learning/">
+                        <span class="tag">Deep Learning</span>
+                        <span class="tag is-grey">13</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Flow-based-Model/">
+                        <span class="tag">Flow-based Model</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/GAN/">
+                        <span class="tag">GAN</span>
+                        <span class="tag is-grey">3</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Machine-Learning/">
+                        <span class="tag">Machine Learning</span>
+                        <span class="tag is-grey">7</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/RNN/">
+                        <span class="tag">RNN</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Representation-Learning/">
+                        <span class="tag">Representation Learning</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Spectral/">
+                        <span class="tag">Spectral</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Statistics/">
+                        <span class="tag">Statistics</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Time-Series/">
+                        <span class="tag">Time Series</span>
+                        <span class="tag is-grey">10</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Transfer-Learning/">
+                        <span class="tag">Transfer Learning</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/VAE/">
+                        <span class="tag">VAE</span>
+                        <span class="tag is-grey">6</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Variational-Inference/">
+                        <span class="tag">Variational Inference</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+        
+        </div>
+    
+</div>
+
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only has-order-3 column-right ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            最新文章
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2020/05/07/Classification-based-Anomaly-Detection-for-General-Data/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Classification-based Anomaly Detection for General Data">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-05-07T15:21:34.000Z">2020-05-07</time></div>
+                    <a href="/2020/05/07/Classification-based-Anomaly-Detection-for-General-Data/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Classification-based Anomaly Detection for General Data</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/05/07/Deep-Anomaly-Detection-Using-Geometric-Transformations/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200509211050138.png" alt="Deep Anomaly Detection Using Geometric Transformations">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-05-07T15:21:03.000Z">2020-05-07</time></div>
+                    <a href="/2020/05/07/Deep-Anomaly-Detection-Using-Geometric-Transformations/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Deep Anomaly Detection Using Geometric Transformations</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/05/06/Generative-Probabilistic-Novelty-Detection-with-Adversarial-Autoencoders/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Generative Probabilistic Novelty Detection with Adversarial Autoencoders">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-05-06T09:52:44.000Z">2020-05-06</time></div>
+                    <a href="/2020/05/06/Generative-Probabilistic-Novelty-Detection-with-Adversarial-Autoencoders/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Generative Probabilistic Novelty Detection with Adversarial Autoencoders</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/05/06/Estimate-the-Implicit-Likelihoods-of-GANs-with-Application-to-Anomaly-Detection/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200506174247129.png" alt="Estimate the Implicit Likelihoods of GANs with Application to Anomaly Detection">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-05-06T07:49:38.000Z">2020-05-06</time></div>
+                    <a href="/2020/05/06/Estimate-the-Implicit-Likelihoods-of-GANs-with-Application-to-Anomaly-Detection/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Estimate the Implicit Likelihoods of GANs with Application to Anomaly Detection</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/05/06/Learning-Representations-of-Ultrahigh-dimensional-Data-for-Random-Distance-based-Outlier-Detection/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200416151126952.png" alt="Learning Representations of Ultrahigh-dimensional Data for Random Distance-based Outlier Detection">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-05-06T03:05:37.000Z">2020-05-06</time></div>
+                    <a href="/2020/05/06/Learning-Representations-of-Ultrahigh-dimensional-Data-for-Random-Distance-based-Outlier-Detection/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Learning Representations of Ultrahigh-dimensional Data for Random Distance-based Outlier Detection</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            归档
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/02/">
+                <span class="level-start">
+                    <span class="level-item">二月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                标签
+            </h3>
+            <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Anomaly-Detection/">
+                        <span class="tag">Anomaly Detection</span>
+                        <span class="tag is-grey">15</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Deep-Learning/">
+                        <span class="tag">Deep Learning</span>
+                        <span class="tag is-grey">13</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Flow-based-Model/">
+                        <span class="tag">Flow-based Model</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/GAN/">
+                        <span class="tag">GAN</span>
+                        <span class="tag is-grey">3</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Machine-Learning/">
+                        <span class="tag">Machine Learning</span>
+                        <span class="tag is-grey">7</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/RNN/">
+                        <span class="tag">RNN</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Representation-Learning/">
+                        <span class="tag">Representation Learning</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Spectral/">
+                        <span class="tag">Spectral</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Statistics/">
+                        <span class="tag">Statistics</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Time-Series/">
+                        <span class="tag">Time Series</span>
+                        <span class="tag is-grey">10</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Transfer-Learning/">
+                        <span class="tag">Transfer Learning</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/VAE/">
+                        <span class="tag">VAE</span>
+                        <span class="tag is-grey">6</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Variational-Inference/">
+                        <span class="tag">Variational Inference</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+    
+    
+</div>
+
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/logo.svg" alt="Deep Anomaly Detection Using Geometric Transformations" height="28">
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2020 Hanzawa&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                        
+                        <i class="fab fa-creative-commons"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                        
+                        <i class="fab fa-creative-commons-by"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+<script>
+var IcarusThemeSettings = {
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/" target="_blank" rel="noopener">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/mathjax@3.0.0/https://cdn.jsdelivr.net/npm/mathjax@3.0.0/es5/tex-mml-chtml.js" defer></script> -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ],
+            // processEscapes: true
+        },
+        TeX: { 
+            equationNumbers: { autoNumber: "AMS" },
+            extensions: ["AMSmath.js", "AMSsymbols.js"]
+        },
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么..." />
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>

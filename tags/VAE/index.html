@@ -217,18 +217,18 @@
                 
                 
             
-            <h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>对于异常检测问题，异常的模式是多种多样的。有监督模型能够较好地处理训练集中出现过的模式，无监督模型能够处理训练集中未出现过的模式，但对于训练集中出现过的异常模型并没有学习。本文提出了一种既能学习训练集中出现过的异常模式，同时能处理未出现过的异常模式的方法。</p>
-<h1 id="Proposed-Model"><a href="#Proposed-Model" class="headerlink" title="Proposed Model"></a>Proposed Model</h1><h2 id="Conventional-VAE"><a href="#Conventional-VAE" class="headerlink" title="Conventional VAE"></a>Conventional VAE</h2><p>首先回顾一下原始的VAE。</p>
-<p>原始VAE中的损失函数为：<br>$$<br>\mathcal{L}(\boldsymbol{\theta},\boldsymbol{\phi};\boldsymbol{x})=\mathbb{E}<em>{q(\boldsymbol{z}|\boldsymbol{x};\boldsymbol{\phi})}[\log p(\boldsymbol{x}|\boldsymbol{z};\boldsymbol{\theta})]-\text{KL}[q(\boldsymbol{z}|\boldsymbol{x};\boldsymbol{\phi}\parallel p(\boldsymbol{z}))]<br>$$<br>原文中作者证明了$\mathcal{L}(\boldsymbol{\theta},\boldsymbol{\phi};\boldsymbol{x})\leq\log p(\boldsymbol{x};\boldsymbol{\theta})$，所以$\mathcal{L}(\boldsymbol{\theta},\boldsymbol{\phi};\boldsymbol{x})$可以看作是数据分布$p(\boldsymbol{x})$对数似然的一个下界。$\mathcal{L}(\boldsymbol{\theta},\boldsymbol{\phi};\boldsymbol{x})$又被称为证据下界 (ELBO)。$\mathbb{E}</em>{q(\boldsymbol{z}|\boldsymbol{x};\boldsymbol{\phi})}[\log p(\boldsymbol{x}|\boldsymbol{z};\boldsymbol{\theta})]$中的期望一般用蒙特卡洛来进行估计：<br>$$<br>\begin{align}<br>\mathcal{L}(\boldsymbol{\theta},\boldsymbol{\phi};\boldsymbol{x})\simeq&amp; \frac{1}{L}\sum\limits_l\log p(\boldsymbol{x}|\boldsymbol{z}^{(l)};\boldsymbol{\theta})-\text{KL}[q(\boldsymbol{z}|\boldsymbol{x};\boldsymbol{\phi})\parallel p(\boldsymbol{z})],\<br>\boldsymbol{z}^{(l)}&amp;\sim q(\boldsymbol{z}|\boldsymbol{x};\boldsymbol{\phi}), \space l\in{1,2,\cdots,L}<br>\end{align}<br>$$<br>对于隐变量$\boldsymbol{z}$，一般假设先验服从标准高斯分布，后验服从均值为$\mu$，方差为$\sigma^2$的高斯分布，故KL散度能直接写出解析式：<br>$$<br>\mathcal{L}(\boldsymbol{\theta},\boldsymbol{\phi};\boldsymbol{x})\simeq \frac{1}{L}\sum\limits_l\log p(\boldsymbol{x}|\boldsymbol{z}^{(l)};\boldsymbol{\theta})-C(-\frac{1}{2}-\log\sigma+\frac{1}{2}\sigma^2+\frac{1}{2}\mu^2)<br>$$<br>使用VAE来做异常检测通常是在正常数据上进行训练，在检测阶段，如果是异常样本，那么VAE不能很好地重构它，这样会导致较大的重构误差。</p>
-<h2 id="Prior-Distribution-for-Anomalies"><a href="#Prior-Distribution-for-Anomalies" class="headerlink" title="Prior Distribution for Anomalies"></a>Prior Distribution for Anomalies</h2><p><img src="http://qfxiao.me/img/image-20200109102204802.png" alt></p>
-<p>在原始VAE异常检测中，无论输入样本$\boldsymbol{x}$是否异常，VAE都会使对应编码的后验$p(\boldsymbol{z}|\boldsymbol{x})$服从高斯分布，且施加标准高斯分布的约束。在本文中，作者对异常和正常样本对应的隐变量的先验分布做了不同假设。首先，正常先验依然是标准高斯分布，记为$p_n(\boldsymbol{z})$。而对于异常先验，作者认为异常即为“不正常”，和正常是补集的关系。作者在文中定义异常先验分布$p_a(\boldsymbol{z})$为：<br>$$<br>p_a(\boldsymbol{z})=\frac{1}{Y^\prime}(\max\limits_{\boldsymbol{z}^\prime}p_n(\boldsymbol{z}^\prime)-p_n(\boldsymbol{z}))<br>$$</p>
+            <h1 id="introduction">Introduction</h1>
+<p>对于异常检测问题，异常的模式是多种多样的。有监督模型能够较好地处理训练集中出现过的模式，无监督模型能够处理训练集中未出现过的模式，但对于训练集中出现过的异常模型并没有学习。本文提出了一种既能学习训练集中出现过的异常模式，同时能处理未出现过的异常模式的方法。</p>
+<h1 id="proposed-model">Proposed Model</h1>
+<h2 id="conventional-vae">Conventional VAE</h2>
+<p>首先回顾一下原始的VAE。</p>
             <!-- 
                 
-                    <h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>对于异常检测问题，异常的模式是多种多样的。有监督模型能够较好地处理训练集中出现过的模式，无监督模型能够处理训练集中未出现过的模式，但对于训练集中出现过的异常模型并没有学习。本文提出了一种既能学习训练集中出现过的异常模式，同时能处理未出现过的异常模式的方法。</p>
-<h1 id="Proposed-Model"><a href="#Proposed-Model" class="headerlink" title="Proposed Model"></a>Proposed Model</h1><h2 id="Conventional-VAE"><a href="#Conventional-VAE" class="headerlink" title="Conventional VAE"></a>Conventional VAE</h2><p>首先回顾一下原始的VAE。</p>
-<p>原始VAE中的损失函数为：<br>$$<br>\mathcal{L}(\boldsymbol{\theta},\boldsymbol{\phi};\boldsymbol{x})=\mathbb{E}<em>{q(\boldsymbol{z}|\boldsymbol{x};\boldsymbol{\phi})}[\log p(\boldsymbol{x}|\boldsymbol{z};\boldsymbol{\theta})]-\text{KL}[q(\boldsymbol{z}|\boldsymbol{x};\boldsymbol{\phi}\parallel p(\boldsymbol{z}))]<br>$$<br>原文中作者证明了$\mathcal{L}(\boldsymbol{\theta},\boldsymbol{\phi};\boldsymbol{x})\leq\log p(\boldsymbol{x};\boldsymbol{\theta})$，所以$\mathcal{L}(\boldsymbol{\theta},\boldsymbol{\phi};\boldsymbol{x})$可以看作是数据分布$p(\boldsymbol{x})$对数似然的一个下界。$\mathcal{L}(\boldsymbol{\theta},\boldsymbol{\phi};\boldsymbol{x})$又被称为证据下界 (ELBO)。$\mathbb{E}</em>{q(\boldsymbol{z}|\boldsymbol{x};\boldsymbol{\phi})}[\log p(\boldsymbol{x}|\boldsymbol{z};\boldsymbol{\theta})]$中的期望一般用蒙特卡洛来进行估计：<br>$$<br>\begin{align}<br>\mathcal{L}(\boldsymbol{\theta},\boldsymbol{\phi};\boldsymbol{x})\simeq&amp; \frac{1}{L}\sum\limits_l\log p(\boldsymbol{x}|\boldsymbol{z}^{(l)};\boldsymbol{\theta})-\text{KL}[q(\boldsymbol{z}|\boldsymbol{x};\boldsymbol{\phi})\parallel p(\boldsymbol{z})],\<br>\boldsymbol{z}^{(l)}&amp;\sim q(\boldsymbol{z}|\boldsymbol{x};\boldsymbol{\phi}), \space l\in{1,2,\cdots,L}<br>\end{align}<br>$$<br>对于隐变量$\boldsymbol{z}$，一般假设先验服从标准高斯分布，后验服从均值为$\mu$，方差为$\sigma^2$的高斯分布，故KL散度能直接写出解析式：<br>$$<br>\mathcal{L}(\boldsymbol{\theta},\boldsymbol{\phi};\boldsymbol{x})\simeq \frac{1}{L}\sum\limits_l\log p(\boldsymbol{x}|\boldsymbol{z}^{(l)};\boldsymbol{\theta})-C(-\frac{1}{2}-\log\sigma+\frac{1}{2}\sigma^2+\frac{1}{2}\mu^2)<br>$$<br>使用VAE来做异常检测通常是在正常数据上进行训练，在检测阶段，如果是异常样本，那么VAE不能很好地重构它，这样会导致较大的重构误差。</p>
-<h2 id="Prior-Distribution-for-Anomalies"><a href="#Prior-Distribution-for-Anomalies" class="headerlink" title="Prior Distribution for Anomalies"></a>Prior Distribution for Anomalies</h2><p><img src="http://qfxiao.me/img/image-20200109102204802.png" alt></p>
-<p>在原始VAE异常检测中，无论输入样本$\boldsymbol{x}$是否异常，VAE都会使对应编码的后验$p(\boldsymbol{z}|\boldsymbol{x})$服从高斯分布，且施加标准高斯分布的约束。在本文中，作者对异常和正常样本对应的隐变量的先验分布做了不同假设。首先，正常先验依然是标准高斯分布，记为$p_n(\boldsymbol{z})$。而对于异常先验，作者认为异常即为“不正常”，和正常是补集的关系。作者在文中定义异常先验分布$p_a(\boldsymbol{z})$为：<br>$$<br>p_a(\boldsymbol{z})=\frac{1}{Y^\prime}(\max\limits_{\boldsymbol{z}^\prime}p_n(\boldsymbol{z}^\prime)-p_n(\boldsymbol{z}))<br>$$</p>
+                    <h1 id="introduction">Introduction</h1>
+<p>对于异常检测问题，异常的模式是多种多样的。有监督模型能够较好地处理训练集中出现过的模式，无监督模型能够处理训练集中未出现过的模式，但对于训练集中出现过的异常模型并没有学习。本文提出了一种既能学习训练集中出现过的异常模式，同时能处理未出现过的异常模式的方法。</p>
+<h1 id="proposed-model">Proposed Model</h1>
+<h2 id="conventional-vae">Conventional VAE</h2>
+<p>首先回顾一下原始的VAE。</p>
                 
              -->
         </div>
@@ -321,18 +321,18 @@
                 
                 
             
-            <h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p><a href="https://ieeexplore.ieee.org/abstract/document/8737430/" target="_blank" rel="noopener">论文📃</a></p>
+            <h1 id="introduction">Introduction</h1>
+<p><a href="https://ieeexplore.ieee.org/abstract/document/8737430/" target="_blank" rel="noopener">论文📃</a></p>
 <p><a href="https://github.com/yantijin/Buzz" target="_blank" rel="noopener">代码📥</a></p>
 <p>本文介绍了一种利用对抗训练来进行时间序列异常检测的方法<em>Buzz</em>。作者认为在现实中复杂的KPI数据大量存在，这种数据通常带有非高斯分布的噪声，同时数据分布复杂，导致一般的生成式模型无法对数据进行很好的建模，所以作者提出了基于对抗训练的模型。在文中，作者的创新点主要有三个：</p>
-<ol>
-<li>为了处理复杂数据，将数据空间分为多个子空间，在每个子空间上进行距离的度量；</li>
+<ol type="1">
             <!-- 
                 
-                    <h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p><a href="https://ieeexplore.ieee.org/abstract/document/8737430/" target="_blank" rel="noopener">论文📃</a></p>
+                    <h1 id="introduction">Introduction</h1>
+<p><a href="https://ieeexplore.ieee.org/abstract/document/8737430/" target="_blank" rel="noopener">论文📃</a></p>
 <p><a href="https://github.com/yantijin/Buzz" target="_blank" rel="noopener">代码📥</a></p>
 <p>本文介绍了一种利用对抗训练来进行时间序列异常检测的方法<em>Buzz</em>。作者认为在现实中复杂的KPI数据大量存在，这种数据通常带有非高斯分布的噪声，同时数据分布复杂，导致一般的生成式模型无法对数据进行很好的建模，所以作者提出了基于对抗训练的模型。在文中，作者的创新点主要有三个：</p>
-<ol>
-<li>为了处理复杂数据，将数据空间分为多个子空间，在每个子空间上进行距离的度量；</li>
+<ol type="1">
                 
              -->
         </div>
@@ -425,18 +425,18 @@
                 
                 
             
-            <h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><p>本文揭示了对抗生成网络（Generative Adversarial Networks, GAN）和变分自编码器（Variational Auto-encoders, VAE）之间的联系，并据此提出了一种将两者结合的新模型。文中主要是将不可解的似然函数和未知的后验分布用一个非确定的分布（Immplicit Distribution）替代，并加入判别器来使得该分布逼近真实的分布。通过这个方法，作者将VAE中的损失函数进行了替换，变成了GAN中的“生成-判别”模式。</p>
+            <h1 id="abstract">Abstract</h1>
+<p>本文揭示了对抗生成网络（Generative Adversarial Networks, GAN）和变分自编码器（Variational Auto-encoders, VAE）之间的联系，并据此提出了一种将两者结合的新模型。文中主要是将不可解的似然函数和未知的后验分布用一个非确定的分布（Immplicit Distribution）替代，并加入判别器来使得该分布逼近真实的分布。通过这个方法，作者将VAE中的损失函数进行了替换，变成了GAN中的“生成-判别”模式。</p>
 <p><a href="https://arxiv.org/abs/1706.04987" target="_blank" rel="noopener">原文</a></p>
-<h1 id="Contribution"><a href="#Contribution" class="headerlink" title="Contribution"></a>Contribution</h1><p>本文有如下贡献：</p>
-<ul>
-<li>本文提出变分推断（Variational Inference）也能通过对非确定分布的估计应用在GAN中；</li>
+<h1 id="contribution">Contribution</h1>
+<p>本文有如下贡献：</p>
             <!-- 
                 
-                    <h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><p>本文揭示了对抗生成网络（Generative Adversarial Networks, GAN）和变分自编码器（Variational Auto-encoders, VAE）之间的联系，并据此提出了一种将两者结合的新模型。文中主要是将不可解的似然函数和未知的后验分布用一个非确定的分布（Immplicit Distribution）替代，并加入判别器来使得该分布逼近真实的分布。通过这个方法，作者将VAE中的损失函数进行了替换，变成了GAN中的“生成-判别”模式。</p>
+                    <h1 id="abstract">Abstract</h1>
+<p>本文揭示了对抗生成网络（Generative Adversarial Networks, GAN）和变分自编码器（Variational Auto-encoders, VAE）之间的联系，并据此提出了一种将两者结合的新模型。文中主要是将不可解的似然函数和未知的后验分布用一个非确定的分布（Immplicit Distribution）替代，并加入判别器来使得该分布逼近真实的分布。通过这个方法，作者将VAE中的损失函数进行了替换，变成了GAN中的“生成-判别”模式。</p>
 <p><a href="https://arxiv.org/abs/1706.04987" target="_blank" rel="noopener">原文</a></p>
-<h1 id="Contribution"><a href="#Contribution" class="headerlink" title="Contribution"></a>Contribution</h1><p>本文有如下贡献：</p>
-<ul>
-<li>本文提出变分推断（Variational Inference）也能通过对非确定分布的估计应用在GAN中；</li>
+<h1 id="contribution">Contribution</h1>
+<p>本文有如下贡献：</p>
                 
              -->
         </div>
@@ -529,18 +529,18 @@
                 
                 
             
-            <h1 id="Deep-Generative-Models"><a href="#Deep-Generative-Models" class="headerlink" title="Deep Generative Models"></a>Deep Generative Models</h1><p>生成模型是指一系列用于随机生成可观测数据的模型。假设在一个高维空间$\mathcal{X}$中，存在一个随机向量$\mathbf{X}$服从一个未知的分布$p_r(x),x\in \mathcal{X}$。生成模型就是根据一些可观测的样本$x^{(1)},x^{(2)},\cdots,x^{(N)}$来学习一个参数化的模型$p_\theta(x)$来近似未知分布$p_r(x)$。</p>
+            <h1 id="deep-generative-models">Deep Generative Models</h1>
+<p>生成模型是指一系列用于随机生成可观测数据的模型。假设在一个高维空间<span class="math inline">\(\mathcal{X}\)</span>中，存在一个随机向量<span class="math inline">\(\mathbf{X}\)</span>服从一个未知的分布<span class="math inline">\(p_r(x),x\in \mathcal{X}\)</span>。生成模型就是根据一些可观测的样本<span class="math inline">\(x^{(1)},x^{(2)},\cdots,x^{(N)}\)</span>来学习一个参数化的模型<span class="math inline">\(p_\theta(x)\)</span>来近似未知分布<span class="math inline">\(p_r(x)\)</span>。</p>
 <p>生成模型主要用于密度估计和样本生成。</p>
 <hr>
-<p>密度估计即给定一组数据$\mathcal{D}={x^{(i)}},1\leq i\leq N$，假设他们都是从相同的概率密度函数$p_r(x)$独立产生的。密度估计就是根据数据集$\mathcal{D}$来估计其概率密度函数$p_r(x)$。</p>
-<p>如果将生成模型用于监督学习，那么就是输出标签的条件概率分布$p(y|x)$，根据贝叶斯公式：</p>
+<p>密度估计即给定一组数据<span class="math inline">\(\mathcal{D}=\{x^{(i)}\},1\leq i\leq N\)</span>，假设他们都是从相同的概率密度函数<span class="math inline">\(p_r(x)\)</span>独立产生的。密度估计就是根据数据集<span class="math inline">\(\mathcal{D}\)</span>来估计其概率密度函数<span class="math inline">\(p_r(x)\)</span>。</p>
             <!-- 
                 
-                    <h1 id="Deep-Generative-Models"><a href="#Deep-Generative-Models" class="headerlink" title="Deep Generative Models"></a>Deep Generative Models</h1><p>生成模型是指一系列用于随机生成可观测数据的模型。假设在一个高维空间$\mathcal{X}$中，存在一个随机向量$\mathbf{X}$服从一个未知的分布$p_r(x),x\in \mathcal{X}$。生成模型就是根据一些可观测的样本$x^{(1)},x^{(2)},\cdots,x^{(N)}$来学习一个参数化的模型$p_\theta(x)$来近似未知分布$p_r(x)$。</p>
+                    <h1 id="deep-generative-models">Deep Generative Models</h1>
+<p>生成模型是指一系列用于随机生成可观测数据的模型。假设在一个高维空间<span class="math inline">\(\mathcal{X}\)</span>中，存在一个随机向量<span class="math inline">\(\mathbf{X}\)</span>服从一个未知的分布<span class="math inline">\(p_r(x),x\in \mathcal{X}\)</span>。生成模型就是根据一些可观测的样本<span class="math inline">\(x^{(1)},x^{(2)},\cdots,x^{(N)}\)</span>来学习一个参数化的模型<span class="math inline">\(p_\theta(x)\)</span>来近似未知分布<span class="math inline">\(p_r(x)\)</span>。</p>
 <p>生成模型主要用于密度估计和样本生成。</p>
 <hr>
-<p>密度估计即给定一组数据$\mathcal{D}={x^{(i)}},1\leq i\leq N$，假设他们都是从相同的概率密度函数$p_r(x)$独立产生的。密度估计就是根据数据集$\mathcal{D}$来估计其概率密度函数$p_r(x)$。</p>
-<p>如果将生成模型用于监督学习，那么就是输出标签的条件概率分布$p(y|x)$，根据贝叶斯公式：</p>
+<p>密度估计即给定一组数据<span class="math inline">\(\mathcal{D}=\{x^{(i)}\},1\leq i\leq N\)</span>，假设他们都是从相同的概率密度函数<span class="math inline">\(p_r(x)\)</span>独立产生的。密度估计就是根据数据集<span class="math inline">\(\mathcal{D}\)</span>来估计其概率密度函数<span class="math inline">\(p_r(x)\)</span>。</p>
                 
              -->
         </div>
@@ -633,18 +633,18 @@
                 
                 
             
-            <h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><p>本文提出了<em>OmniAnomaly</em>：一种针对多变量时间序列的随机循环神经网络异常检测算法。该模型运用了一系列技术来捕捉多变量时间序列的正常模式，并在检测阶段基于重构误差来检测异常，同时本文还提供了一定的理论解释。</p>
+            <h1 id="abstract">Abstract</h1>
+<p>本文提出了<em>OmniAnomaly</em>：一种针对多变量时间序列的随机循环神经网络异常检测算法。该模型运用了一系列技术来捕捉多变量时间序列的正常模式，并在检测阶段基于重构误差来检测异常，同时本文还提供了一定的理论解释。</p>
 <p><a href="https://www.kdd.org/kdd2019/accepted-papers/view/robust-anomaly-detection-for-multivariate-time-series-through-stochastic-re" target="_blank" rel="noopener">原文</a></p>
-<h1 id="Contribution"><a href="#Contribution" class="headerlink" title="Contribution"></a>Contribution</h1><ol>
-<li>提出了<em>OmniAnomaly</em>，一种基于随机循环神经网络的多变量时间序列异常检测算法；</li>
-<li>提出了针对多变量时间序列异常检测的解释方法；</li>
+<h1 id="contribution">Contribution</h1>
+<ol type="1">
             <!-- 
                 
-                    <h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><p>本文提出了<em>OmniAnomaly</em>：一种针对多变量时间序列的随机循环神经网络异常检测算法。该模型运用了一系列技术来捕捉多变量时间序列的正常模式，并在检测阶段基于重构误差来检测异常，同时本文还提供了一定的理论解释。</p>
+                    <h1 id="abstract">Abstract</h1>
+<p>本文提出了<em>OmniAnomaly</em>：一种针对多变量时间序列的随机循环神经网络异常检测算法。该模型运用了一系列技术来捕捉多变量时间序列的正常模式，并在检测阶段基于重构误差来检测异常，同时本文还提供了一定的理论解释。</p>
 <p><a href="https://www.kdd.org/kdd2019/accepted-papers/view/robust-anomaly-detection-for-multivariate-time-series-through-stochastic-re" target="_blank" rel="noopener">原文</a></p>
-<h1 id="Contribution"><a href="#Contribution" class="headerlink" title="Contribution"></a>Contribution</h1><ol>
-<li>提出了<em>OmniAnomaly</em>，一种基于随机循环神经网络的多变量时间序列异常检测算法；</li>
-<li>提出了针对多变量时间序列异常检测的解释方法；</li>
+<h1 id="contribution">Contribution</h1>
+<ol type="1">
                 
              -->
         </div>
@@ -737,18 +737,18 @@
                 
                 
             
-            <h2 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h2><p>本文提出了Donut，一个基于VAE的无监督时间序列异常检测系统。</p>
+            <h2 id="abstract">Abstract</h2>
+<p>本文提出了Donut，一个基于VAE的无监督时间序列异常检测系统。</p>
 <p><a href="https://dl.acm.org/citation.cfm?id=3185996" target="_blank" rel="noopener">原文</a></p>
-<p><img src="http://qfxiao.me/img/1571719484833.png" alt></p>
-<h2 id="Contribution"><a href="#Contribution" class="headerlink" title="Contribution"></a>Contribution</h2><ol>
-<li>Donut中使用到了三个技巧，包括改进后的ELBO、缺失数据注入和MCMC插值；</li>
+<p><img src="http://qfxiao.me/img/1571719484833.png"></p>
+<h2 id="contribution">Contribution</h2>
             <!-- 
                 
-                    <h2 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h2><p>本文提出了Donut，一个基于VAE的无监督时间序列异常检测系统。</p>
+                    <h2 id="abstract">Abstract</h2>
+<p>本文提出了Donut，一个基于VAE的无监督时间序列异常检测系统。</p>
 <p><a href="https://dl.acm.org/citation.cfm?id=3185996" target="_blank" rel="noopener">原文</a></p>
-<p><img src="http://qfxiao.me/img/1571719484833.png" alt></p>
-<h2 id="Contribution"><a href="#Contribution" class="headerlink" title="Contribution"></a>Contribution</h2><ol>
-<li>Donut中使用到了三个技巧，包括改进后的ELBO、缺失数据注入和MCMC插值；</li>
+<p><img src="http://qfxiao.me/img/1571719484833.png"></p>
+<h2 id="contribution">Contribution</h2>
                 
              -->
         </div>
@@ -817,7 +817,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        20
+                        23
                     </p>
                 </div>
             </div>
@@ -945,7 +945,7 @@
                 <span class="level-item">Research</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">19</span>
+                <span class="level-item tag">22</span>
             </span>
         </a><ul><li>
         <a class="level is-marginless" href="/categories/Research/Anomaly-Detection/">
@@ -953,7 +953,7 @@
                 <span class="level-item">Anomaly Detection</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">14</span>
+                <span class="level-item tag">17</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Research/GAN/">
@@ -1023,7 +1023,7 @@
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Anomaly-Detection/" style="font-size: 18.57px;">Anomaly Detection</a> <a href="/tags/Deep-Learning/" style="font-size: 20px;">Deep Learning</a> <a href="/tags/Flow-based-Model/" style="font-size: 10px;">Flow-based Model</a> <a href="/tags/GAN/" style="font-size: 12.86px;">GAN</a> <a href="/tags/Machine-Learning/" style="font-size: 15.71px;">Machine Learning</a> <a href="/tags/RNN/" style="font-size: 11.43px;">RNN</a> <a href="/tags/Representation-Learning/" style="font-size: 10px;">Representation Learning</a> <a href="/tags/Spectral/" style="font-size: 10px;">Spectral</a> <a href="/tags/Statistics/" style="font-size: 10px;">Statistics</a> <a href="/tags/Time-Series/" style="font-size: 17.14px;">Time Series</a> <a href="/tags/Transfer-Learning/" style="font-size: 10px;">Transfer Learning</a> <a href="/tags/VAE/" style="font-size: 14.29px;">VAE</a> <a href="/tags/Variational-Inference/" style="font-size: 11.43px;">Variational Inference</a>
+        <a href="/tags/Anomaly-Detection/" style="font-size: 20px;">Anomaly Detection</a> <a href="/tags/Deep-Learning/" style="font-size: 18.57px;">Deep Learning</a> <a href="/tags/Flow-based-Model/" style="font-size: 10px;">Flow-based Model</a> <a href="/tags/GAN/" style="font-size: 12.86px;">GAN</a> <a href="/tags/Machine-Learning/" style="font-size: 15.71px;">Machine Learning</a> <a href="/tags/RNN/" style="font-size: 11.43px;">RNN</a> <a href="/tags/Representation-Learning/" style="font-size: 10px;">Representation Learning</a> <a href="/tags/Spectral/" style="font-size: 10px;">Spectral</a> <a href="/tags/Statistics/" style="font-size: 10px;">Statistics</a> <a href="/tags/Time-Series/" style="font-size: 17.14px;">Time Series</a> <a href="/tags/Transfer-Learning/" style="font-size: 10px;">Transfer Learning</a> <a href="/tags/VAE/" style="font-size: 14.29px;">VAE</a> <a href="/tags/Variational-Inference/" style="font-size: 11.43px;">Variational Inference</a>
     </div>
 </div>
 
@@ -1037,6 +1037,63 @@
         <h3 class="menu-label">
             最新文章
         </h3>
+        
+        <article class="media">
+            
+            <a href="/2020/05/07/Classification-based-Anomaly-Detection-for-General-Data/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Classification-based Anomaly Detection for General Data">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-05-07T15:21:34.000Z">2020-05-07</time></div>
+                    <a href="/2020/05/07/Classification-based-Anomaly-Detection-for-General-Data/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Classification-based Anomaly Detection for General Data</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/05/07/Deep-Anomaly-Detection-Using-Geometric-Transformations/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200509211050138.png" alt="Deep Anomaly Detection Using Geometric Transformations">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-05-07T15:21:03.000Z">2020-05-07</time></div>
+                    <a href="/2020/05/07/Deep-Anomaly-Detection-Using-Geometric-Transformations/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Deep Anomaly Detection Using Geometric Transformations</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/05/06/Generative-Probabilistic-Novelty-Detection-with-Adversarial-Autoencoders/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Generative Probabilistic Novelty Detection with Adversarial Autoencoders">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-05-06T09:52:44.000Z">2020-05-06</time></div>
+                    <a href="/2020/05/06/Generative-Probabilistic-Novelty-Detection-with-Adversarial-Autoencoders/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Generative Probabilistic Novelty Detection with Adversarial Autoencoders</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+                    </p>
+                </div>
+            </div>
+        </article>
         
         <article class="media">
             
@@ -1076,63 +1133,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2020/03/30/Deep-Weakly-supervised-Anomaly-Detection/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200330001932457.png" alt="Deep Weakly-supervised Anomaly Detection">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-03-29T16:17:24.000Z">2020-03-30</time></div>
-                    <a href="/2020/03/30/Deep-Weakly-supervised-Anomaly-Detection/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Deep Weakly-supervised Anomaly Detection</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200301230011495.png" alt="Discovering Physical Concepts with Neural Networks">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-03-01T14:55:02.000Z">2020-03-01</time></div>
-                    <a href="/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Discovering Physical Concepts with Neural Networks</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Misc/">Misc</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200109102830713.png" alt="Transfer Anomaly Detection by Inferring Latent Domain Representations">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-02-27T12:02:18.000Z">2020-02-27</time></div>
-                    <a href="/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Transfer Anomaly Detection by Inferring Latent Domain Representations</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -1151,7 +1151,7 @@
                     <span class="level-item">五月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">5</span>
                 </span>
             </a>
         </li>
@@ -1238,7 +1238,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Anomaly-Detection/">
                         <span class="tag">Anomaly Detection</span>
-                        <span class="tag is-grey">12</span>
+                        <span class="tag is-grey">15</span>
                     </a>
                 </div>
                 
@@ -1351,6 +1351,63 @@
         
         <article class="media">
             
+            <a href="/2020/05/07/Classification-based-Anomaly-Detection-for-General-Data/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Classification-based Anomaly Detection for General Data">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-05-07T15:21:34.000Z">2020-05-07</time></div>
+                    <a href="/2020/05/07/Classification-based-Anomaly-Detection-for-General-Data/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Classification-based Anomaly Detection for General Data</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/05/07/Deep-Anomaly-Detection-Using-Geometric-Transformations/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200509211050138.png" alt="Deep Anomaly Detection Using Geometric Transformations">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-05-07T15:21:03.000Z">2020-05-07</time></div>
+                    <a href="/2020/05/07/Deep-Anomaly-Detection-Using-Geometric-Transformations/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Deep Anomaly Detection Using Geometric Transformations</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/05/06/Generative-Probabilistic-Novelty-Detection-with-Adversarial-Autoencoders/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Generative Probabilistic Novelty Detection with Adversarial Autoencoders">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-05-06T09:52:44.000Z">2020-05-06</time></div>
+                    <a href="/2020/05/06/Generative-Probabilistic-Novelty-Detection-with-Adversarial-Autoencoders/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Generative Probabilistic Novelty Detection with Adversarial Autoencoders</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2020/05/06/Estimate-the-Implicit-Likelihoods-of-GANs-with-Application-to-Anomaly-Detection/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="http://qfxiao.me/img/image-20200506174247129.png" alt="Estimate the Implicit Likelihoods of GANs with Application to Anomaly Detection">
@@ -1387,63 +1444,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2020/03/30/Deep-Weakly-supervised-Anomaly-Detection/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200330001932457.png" alt="Deep Weakly-supervised Anomaly Detection">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-03-29T16:17:24.000Z">2020-03-30</time></div>
-                    <a href="/2020/03/30/Deep-Weakly-supervised-Anomaly-Detection/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Deep Weakly-supervised Anomaly Detection</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200301230011495.png" alt="Discovering Physical Concepts with Neural Networks">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-03-01T14:55:02.000Z">2020-03-01</time></div>
-                    <a href="/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Discovering Physical Concepts with Neural Networks</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Misc/">Misc</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200109102830713.png" alt="Transfer Anomaly Detection by Inferring Latent Domain Representations">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-02-27T12:02:18.000Z">2020-02-27</time></div>
-                    <a href="/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Transfer Anomaly Detection by Inferring Latent Domain Representations</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -1462,7 +1462,7 @@
                     <span class="level-item">五月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">5</span>
                 </span>
             </a>
         </li>
@@ -1549,7 +1549,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Anomaly-Detection/">
                         <span class="tag">Anomaly Detection</span>
-                        <span class="tag is-grey">12</span>
+                        <span class="tag is-grey">15</span>
                     </a>
                 </div>
                 

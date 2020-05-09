@@ -217,18 +217,18 @@
                 
                 
             
-            <h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>本文基于<strong>Extreme Value Theory</strong>提出了一种不需要手动设置阈值也不需要对数据分布作任何假设的时间序列异常检测方法。除此之外，本方法可以用在通用的自动阈值选择的场合中。</p>
+            <h1 id="introduction">Introduction</h1>
+<p>本文基于<strong>Extreme Value Theory</strong>提出了一种不需要手动设置阈值也不需要对数据分布作任何假设的时间序列异常检测方法。除此之外，本方法可以用在通用的自动阈值选择的场合中。</p>
 <p><a href="https://www.kdd.org/kdd2017/papers/view/anomaly-detection-in-streams-with-extreme-value-theory" target="_blank" rel="noopener">原文</a></p>
-<h1 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h1><p>在很多情况下我们需要进行阈值的选择。阈值的选择可以通过实验的方法或者对数据分布进行假设的方法来得到，不过这样做通常不准确。借助<strong>Extreme Value Theory</strong>我们可以在不需要对原始数据的分布作很强的假设的情况下，推断我们想要的极端事件的分布（在异常检测中就是异常值）。</p>
-<p>下面给出一些数学符号，$X$为随机变量，$F$为累积分布函数，即$F(x)=\mathbb{P}(X\leq x)$。记$F$的“末尾”分布$\bar{F}(x)=1-F(x)=\mathbb{P}(X&gt;x)$。对于一个随机变量$X$和给定的概率$q$，记$z_q$为在$1-q$水平的分位数，即$z_q$为满足$\mathbb{P}(X\leq z_q)\geq 1-q$最小的值。</p>
-<h2 id="Extreme-Value-Distributions"><a href="#Extreme-Value-Distributions" class="headerlink" title="Extreme Value Distributions"></a>Extreme Value Distributions</h2><p><strong>Extreme Value Theory</strong>主要是为了找出极端事件发生的规律，有学者证明，在很弱的条件下，所有极端事件都服从一个特定的分布，而不管原始分布如何。具体形式如下：</p>
+<h1 id="background">Background</h1>
+<p>在很多情况下我们需要进行阈值的选择。阈值的选择可以通过实验的方法或者对数据分布进行假设的方法来得到，不过这样做通常不准确。借助<strong>Extreme Value Theory</strong>我们可以在不需要对原始数据的分布作很强的假设的情况下，推断我们想要的极端事件的分布（在异常检测中就是异常值）。</p>
             <!-- 
                 
-                    <h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>本文基于<strong>Extreme Value Theory</strong>提出了一种不需要手动设置阈值也不需要对数据分布作任何假设的时间序列异常检测方法。除此之外，本方法可以用在通用的自动阈值选择的场合中。</p>
+                    <h1 id="introduction">Introduction</h1>
+<p>本文基于<strong>Extreme Value Theory</strong>提出了一种不需要手动设置阈值也不需要对数据分布作任何假设的时间序列异常检测方法。除此之外，本方法可以用在通用的自动阈值选择的场合中。</p>
 <p><a href="https://www.kdd.org/kdd2017/papers/view/anomaly-detection-in-streams-with-extreme-value-theory" target="_blank" rel="noopener">原文</a></p>
-<h1 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h1><p>在很多情况下我们需要进行阈值的选择。阈值的选择可以通过实验的方法或者对数据分布进行假设的方法来得到，不过这样做通常不准确。借助<strong>Extreme Value Theory</strong>我们可以在不需要对原始数据的分布作很强的假设的情况下，推断我们想要的极端事件的分布（在异常检测中就是异常值）。</p>
-<p>下面给出一些数学符号，$X$为随机变量，$F$为累积分布函数，即$F(x)=\mathbb{P}(X\leq x)$。记$F$的“末尾”分布$\bar{F}(x)=1-F(x)=\mathbb{P}(X&gt;x)$。对于一个随机变量$X$和给定的概率$q$，记$z_q$为在$1-q$水平的分位数，即$z_q$为满足$\mathbb{P}(X\leq z_q)\geq 1-q$最小的值。</p>
-<h2 id="Extreme-Value-Distributions"><a href="#Extreme-Value-Distributions" class="headerlink" title="Extreme Value Distributions"></a>Extreme Value Distributions</h2><p><strong>Extreme Value Theory</strong>主要是为了找出极端事件发生的规律，有学者证明，在很弱的条件下，所有极端事件都服从一个特定的分布，而不管原始分布如何。具体形式如下：</p>
+<h1 id="background">Background</h1>
+<p>在很多情况下我们需要进行阈值的选择。阈值的选择可以通过实验的方法或者对数据分布进行假设的方法来得到，不过这样做通常不准确。借助<strong>Extreme Value Theory</strong>我们可以在不需要对原始数据的分布作很强的假设的情况下，推断我们想要的极端事件的分布（在异常检测中就是异常值）。</p>
                 
              -->
         </div>
@@ -297,7 +297,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        20
+                        23
                     </p>
                 </div>
             </div>
@@ -425,7 +425,7 @@
                 <span class="level-item">Research</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">19</span>
+                <span class="level-item tag">22</span>
             </span>
         </a><ul><li>
         <a class="level is-marginless" href="/categories/Research/Anomaly-Detection/">
@@ -433,7 +433,7 @@
                 <span class="level-item">Anomaly Detection</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">14</span>
+                <span class="level-item tag">17</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Research/GAN/">
@@ -503,7 +503,7 @@
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Anomaly-Detection/" style="font-size: 18.57px;">Anomaly Detection</a> <a href="/tags/Deep-Learning/" style="font-size: 20px;">Deep Learning</a> <a href="/tags/Flow-based-Model/" style="font-size: 10px;">Flow-based Model</a> <a href="/tags/GAN/" style="font-size: 12.86px;">GAN</a> <a href="/tags/Machine-Learning/" style="font-size: 15.71px;">Machine Learning</a> <a href="/tags/RNN/" style="font-size: 11.43px;">RNN</a> <a href="/tags/Representation-Learning/" style="font-size: 10px;">Representation Learning</a> <a href="/tags/Spectral/" style="font-size: 10px;">Spectral</a> <a href="/tags/Statistics/" style="font-size: 10px;">Statistics</a> <a href="/tags/Time-Series/" style="font-size: 17.14px;">Time Series</a> <a href="/tags/Transfer-Learning/" style="font-size: 10px;">Transfer Learning</a> <a href="/tags/VAE/" style="font-size: 14.29px;">VAE</a> <a href="/tags/Variational-Inference/" style="font-size: 11.43px;">Variational Inference</a>
+        <a href="/tags/Anomaly-Detection/" style="font-size: 20px;">Anomaly Detection</a> <a href="/tags/Deep-Learning/" style="font-size: 18.57px;">Deep Learning</a> <a href="/tags/Flow-based-Model/" style="font-size: 10px;">Flow-based Model</a> <a href="/tags/GAN/" style="font-size: 12.86px;">GAN</a> <a href="/tags/Machine-Learning/" style="font-size: 15.71px;">Machine Learning</a> <a href="/tags/RNN/" style="font-size: 11.43px;">RNN</a> <a href="/tags/Representation-Learning/" style="font-size: 10px;">Representation Learning</a> <a href="/tags/Spectral/" style="font-size: 10px;">Spectral</a> <a href="/tags/Statistics/" style="font-size: 10px;">Statistics</a> <a href="/tags/Time-Series/" style="font-size: 17.14px;">Time Series</a> <a href="/tags/Transfer-Learning/" style="font-size: 10px;">Transfer Learning</a> <a href="/tags/VAE/" style="font-size: 14.29px;">VAE</a> <a href="/tags/Variational-Inference/" style="font-size: 11.43px;">Variational Inference</a>
     </div>
 </div>
 
@@ -517,6 +517,63 @@
         <h3 class="menu-label">
             最新文章
         </h3>
+        
+        <article class="media">
+            
+            <a href="/2020/05/07/Classification-based-Anomaly-Detection-for-General-Data/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Classification-based Anomaly Detection for General Data">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-05-07T15:21:34.000Z">2020-05-07</time></div>
+                    <a href="/2020/05/07/Classification-based-Anomaly-Detection-for-General-Data/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Classification-based Anomaly Detection for General Data</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/05/07/Deep-Anomaly-Detection-Using-Geometric-Transformations/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200509211050138.png" alt="Deep Anomaly Detection Using Geometric Transformations">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-05-07T15:21:03.000Z">2020-05-07</time></div>
+                    <a href="/2020/05/07/Deep-Anomaly-Detection-Using-Geometric-Transformations/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Deep Anomaly Detection Using Geometric Transformations</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/05/06/Generative-Probabilistic-Novelty-Detection-with-Adversarial-Autoencoders/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Generative Probabilistic Novelty Detection with Adversarial Autoencoders">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-05-06T09:52:44.000Z">2020-05-06</time></div>
+                    <a href="/2020/05/06/Generative-Probabilistic-Novelty-Detection-with-Adversarial-Autoencoders/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Generative Probabilistic Novelty Detection with Adversarial Autoencoders</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+                    </p>
+                </div>
+            </div>
+        </article>
         
         <article class="media">
             
@@ -556,63 +613,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2020/03/30/Deep-Weakly-supervised-Anomaly-Detection/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200330001932457.png" alt="Deep Weakly-supervised Anomaly Detection">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-03-29T16:17:24.000Z">2020-03-30</time></div>
-                    <a href="/2020/03/30/Deep-Weakly-supervised-Anomaly-Detection/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Deep Weakly-supervised Anomaly Detection</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200301230011495.png" alt="Discovering Physical Concepts with Neural Networks">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-03-01T14:55:02.000Z">2020-03-01</time></div>
-                    <a href="/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Discovering Physical Concepts with Neural Networks</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Misc/">Misc</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200109102830713.png" alt="Transfer Anomaly Detection by Inferring Latent Domain Representations">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-02-27T12:02:18.000Z">2020-02-27</time></div>
-                    <a href="/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Transfer Anomaly Detection by Inferring Latent Domain Representations</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -631,7 +631,7 @@
                     <span class="level-item">五月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">5</span>
                 </span>
             </a>
         </li>
@@ -718,7 +718,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Anomaly-Detection/">
                         <span class="tag">Anomaly Detection</span>
-                        <span class="tag is-grey">12</span>
+                        <span class="tag is-grey">15</span>
                     </a>
                 </div>
                 
@@ -831,6 +831,63 @@
         
         <article class="media">
             
+            <a href="/2020/05/07/Classification-based-Anomaly-Detection-for-General-Data/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Classification-based Anomaly Detection for General Data">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-05-07T15:21:34.000Z">2020-05-07</time></div>
+                    <a href="/2020/05/07/Classification-based-Anomaly-Detection-for-General-Data/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Classification-based Anomaly Detection for General Data</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/05/07/Deep-Anomaly-Detection-Using-Geometric-Transformations/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200509211050138.png" alt="Deep Anomaly Detection Using Geometric Transformations">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-05-07T15:21:03.000Z">2020-05-07</time></div>
+                    <a href="/2020/05/07/Deep-Anomaly-Detection-Using-Geometric-Transformations/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Deep Anomaly Detection Using Geometric Transformations</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/05/06/Generative-Probabilistic-Novelty-Detection-with-Adversarial-Autoencoders/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Generative Probabilistic Novelty Detection with Adversarial Autoencoders">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-05-06T09:52:44.000Z">2020-05-06</time></div>
+                    <a href="/2020/05/06/Generative-Probabilistic-Novelty-Detection-with-Adversarial-Autoencoders/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Generative Probabilistic Novelty Detection with Adversarial Autoencoders</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2020/05/06/Estimate-the-Implicit-Likelihoods-of-GANs-with-Application-to-Anomaly-Detection/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="http://qfxiao.me/img/image-20200506174247129.png" alt="Estimate the Implicit Likelihoods of GANs with Application to Anomaly Detection">
@@ -867,63 +924,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2020/03/30/Deep-Weakly-supervised-Anomaly-Detection/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200330001932457.png" alt="Deep Weakly-supervised Anomaly Detection">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-03-29T16:17:24.000Z">2020-03-30</time></div>
-                    <a href="/2020/03/30/Deep-Weakly-supervised-Anomaly-Detection/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Deep Weakly-supervised Anomaly Detection</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200301230011495.png" alt="Discovering Physical Concepts with Neural Networks">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-03-01T14:55:02.000Z">2020-03-01</time></div>
-                    <a href="/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Discovering Physical Concepts with Neural Networks</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Misc/">Misc</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200109102830713.png" alt="Transfer Anomaly Detection by Inferring Latent Domain Representations">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-02-27T12:02:18.000Z">2020-02-27</time></div>
-                    <a href="/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Transfer Anomaly Detection by Inferring Latent Domain Representations</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -942,7 +942,7 @@
                     <span class="level-item">五月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">5</span>
                 </span>
             </a>
         </li>
@@ -1029,7 +1029,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Anomaly-Detection/">
                         <span class="tag">Anomaly Detection</span>
-                        <span class="tag is-grey">12</span>
+                        <span class="tag is-grey">15</span>
                     </a>
                 </div>
                 

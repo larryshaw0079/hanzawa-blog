@@ -164,7 +164,7 @@
                 <time class="level-item has-text-grey" datetime="2020-05-06T07:49:38.000Z">2020-05-06</time>
                 
                     <i class="fas fa-calendar-check">&nbsp</i>
-                    <time class="level-item has-text-grey" datetime="2020-05-06T09:50:38.668Z">2020-05-06</time>
+                    <time class="level-item has-text-grey" datetime="2020-05-06T11:33:08.974Z">2020-05-06</time>
                 
                 
                 <div class="level-item">
@@ -175,7 +175,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    8 分钟 读完 (大约 1219 个字)
+                    8 分钟 读完 (大约 1253 个字)
                 </span>
                 
                 
@@ -217,18 +217,18 @@
                 
                 
             
-            <h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><h1 id="Preliminaries"><a href="#Preliminaries" class="headerlink" title="Preliminaries"></a>Preliminaries</h1><h2 id="Flow-based-Models-Recap"><a href="#Flow-based-Models-Recap" class="headerlink" title="Flow-based Models Recap"></a>Flow-based Models Recap</h2><h3 id="Jacobian-Matrix-and-Determinant"><a href="#Jacobian-Matrix-and-Determinant" class="headerlink" title="Jacobian Matrix and Determinant"></a>Jacobian Matrix and Determinant</h3><p>设函数$f:\mathbb{R}^n\mapsto\mathbb{R}^m$，由$f$的一阶偏导数组成的矩阵叫做Jacobian矩阵：<br>$$<br>\mathbf J=\left[<br>\begin{matrix}<br>\frac{\partial f_1}{\partial x_1} &amp;\cdots &amp;\frac{\partial f_1}{\partial x_n}\<br>\vdots &amp;\ddots &amp;\vdots\<br>\frac{\partial f_m}{\partial x_1}&amp; \dots&amp; \frac{\partial f_m}{\partial x_n}<br>\end{matrix}<br>\right]<br>$$</p>
-<h3 id="Change-of-Variable-Theorem"><a href="#Change-of-Variable-Theorem" class="headerlink" title="Change of Variable Theorem"></a>Change of Variable Theorem</h3><p>给定已知概率分布的随机变量$z\sim\pi(z)$，新随机变量由可逆映射$f$给出$x=f(z)$，$z=f^{-1}(x)$。由于：<br>$$<br>\int p(x)\mathrm{d}x=\int \pi(z)\mathrm d z=1<br>$$<br>所以$p(x)$可以由下式得到：<br>$$<br>p(x)=\pi(z)\left|\frac{\mathrm d z}{\mathrm d x}\right|=\pi(f^{-1}(x))\left|\frac{\mathrm d f^{-1}}{\mathrm d x}\right|=\pi(f^{-1}(x))|(f^{-1})^\prime(x)|<br>$$<br>$\frac{\mathrm d f^{-1}}{\mathrm d x}$相当于对逆函数$f^{-1}$求导，而$z=f^{-1}(x)$。</p>
-<p>对于多变量的情况：<br>$$<br>\mathbf z\sim \pi(\mathbf z), \mathbf x=f(\mathbf z),\mathbf z = f^{-1}(\mathbf x)\<br>p(\mathbf x) = \pi(\mathbf z)\left|\text{det}\frac{\mathrm d \mathbf z}{\mathrm d \mathbf x}\right|= \pi(f^{-1}(\mathbf x))\left|\text{det}\frac{\mathrm d f^{-1}}{\mathrm d \mathbf x}\right|<br>$$<br>$\left|\text{det}\frac{\mathrm d f^{-1}}{\mathrm d \mathbf x}\right|$为逆函数Jacobian矩阵行列式的绝对值。</p>
-<h2 id="Deep-Generative-Models-as-Manifolds"><a href="#Deep-Generative-Models-as-Manifolds" class="headerlink" title="Deep Generative Models as Manifolds"></a>Deep Generative Models as Manifolds</h2><p>一个深度生成模型可以表示为从低维隐空间$\mathcal Z \subseteq R^d$映射到流形$\mathcal M\subseteq R^D$的嵌入函数$g:\mathcal Z\rightarrow \mathcal X$，$D \ll d$。通常假设$g$为光滑映射，那么$\mathcal M$为一个嵌入流形。$g$在$z\in\mathcal Z$的雅各比矩阵$\mathbf J_g(z)$提供了在$x=g(z)\in\mathcal X$处的切空间，即$\mathbf J_g:T_z\mathcal Z\rightarrow T_x\mathcal X$。这个映射不是满射，并且值域限制在流形$\mathcal M$在$x=g(z)$的切空间，记为$T_x\mathcal M$。$\mathcal M$与真实数据流形接近，即$\mathcal M_{data}$。</p>
-<p>考虑一个定义在隐空间$\mathcal Z$每一点$z$上的Riemannian metric：<br>$$<br>\mathbf M(z)=\mathbf J_g(z)^\top\mathbf J_g(z)<br>$$<br>给定两个切空间向量$u,v\in T_z\in\mathcal Z$，他们的内积定义为$&lt;u,v&gt;=u^\top \mathbf M(z)v$。</p>
+            <h1 id="introduction">Introduction</h1>
+<h1 id="preliminaries">Preliminaries</h1>
+<h2 id="flow-based-models-recap">Flow-based Models Recap</h2>
+<h3 id="jacobian-matrix-and-determinant">Jacobian Matrix and Determinant</h3>
+<p>设函数<span class="math inline">\(f:\mathbb{R}^n\mapsto\mathbb{R}^m\)</span>，由<span class="math inline">\(f\)</span>的一阶偏导数组成的矩阵叫做Jacobian矩阵： <span class="math display">\[
             <!-- 
                 
-                    <h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><h1 id="Preliminaries"><a href="#Preliminaries" class="headerlink" title="Preliminaries"></a>Preliminaries</h1><h2 id="Flow-based-Models-Recap"><a href="#Flow-based-Models-Recap" class="headerlink" title="Flow-based Models Recap"></a>Flow-based Models Recap</h2><h3 id="Jacobian-Matrix-and-Determinant"><a href="#Jacobian-Matrix-and-Determinant" class="headerlink" title="Jacobian Matrix and Determinant"></a>Jacobian Matrix and Determinant</h3><p>设函数$f:\mathbb{R}^n\mapsto\mathbb{R}^m$，由$f$的一阶偏导数组成的矩阵叫做Jacobian矩阵：<br>$$<br>\mathbf J=\left[<br>\begin{matrix}<br>\frac{\partial f_1}{\partial x_1} &amp;\cdots &amp;\frac{\partial f_1}{\partial x_n}\<br>\vdots &amp;\ddots &amp;\vdots\<br>\frac{\partial f_m}{\partial x_1}&amp; \dots&amp; \frac{\partial f_m}{\partial x_n}<br>\end{matrix}<br>\right]<br>$$</p>
-<h3 id="Change-of-Variable-Theorem"><a href="#Change-of-Variable-Theorem" class="headerlink" title="Change of Variable Theorem"></a>Change of Variable Theorem</h3><p>给定已知概率分布的随机变量$z\sim\pi(z)$，新随机变量由可逆映射$f$给出$x=f(z)$，$z=f^{-1}(x)$。由于：<br>$$<br>\int p(x)\mathrm{d}x=\int \pi(z)\mathrm d z=1<br>$$<br>所以$p(x)$可以由下式得到：<br>$$<br>p(x)=\pi(z)\left|\frac{\mathrm d z}{\mathrm d x}\right|=\pi(f^{-1}(x))\left|\frac{\mathrm d f^{-1}}{\mathrm d x}\right|=\pi(f^{-1}(x))|(f^{-1})^\prime(x)|<br>$$<br>$\frac{\mathrm d f^{-1}}{\mathrm d x}$相当于对逆函数$f^{-1}$求导，而$z=f^{-1}(x)$。</p>
-<p>对于多变量的情况：<br>$$<br>\mathbf z\sim \pi(\mathbf z), \mathbf x=f(\mathbf z),\mathbf z = f^{-1}(\mathbf x)\<br>p(\mathbf x) = \pi(\mathbf z)\left|\text{det}\frac{\mathrm d \mathbf z}{\mathrm d \mathbf x}\right|= \pi(f^{-1}(\mathbf x))\left|\text{det}\frac{\mathrm d f^{-1}}{\mathrm d \mathbf x}\right|<br>$$<br>$\left|\text{det}\frac{\mathrm d f^{-1}}{\mathrm d \mathbf x}\right|$为逆函数Jacobian矩阵行列式的绝对值。</p>
-<h2 id="Deep-Generative-Models-as-Manifolds"><a href="#Deep-Generative-Models-as-Manifolds" class="headerlink" title="Deep Generative Models as Manifolds"></a>Deep Generative Models as Manifolds</h2><p>一个深度生成模型可以表示为从低维隐空间$\mathcal Z \subseteq R^d$映射到流形$\mathcal M\subseteq R^D$的嵌入函数$g:\mathcal Z\rightarrow \mathcal X$，$D \ll d$。通常假设$g$为光滑映射，那么$\mathcal M$为一个嵌入流形。$g$在$z\in\mathcal Z$的雅各比矩阵$\mathbf J_g(z)$提供了在$x=g(z)\in\mathcal X$处的切空间，即$\mathbf J_g:T_z\mathcal Z\rightarrow T_x\mathcal X$。这个映射不是满射，并且值域限制在流形$\mathcal M$在$x=g(z)$的切空间，记为$T_x\mathcal M$。$\mathcal M$与真实数据流形接近，即$\mathcal M_{data}$。</p>
-<p>考虑一个定义在隐空间$\mathcal Z$每一点$z$上的Riemannian metric：<br>$$<br>\mathbf M(z)=\mathbf J_g(z)^\top\mathbf J_g(z)<br>$$<br>给定两个切空间向量$u,v\in T_z\in\mathcal Z$，他们的内积定义为$&lt;u,v&gt;=u^\top \mathbf M(z)v$。</p>
+                    <h1 id="introduction">Introduction</h1>
+<h1 id="preliminaries">Preliminaries</h1>
+<h2 id="flow-based-models-recap">Flow-based Models Recap</h2>
+<h3 id="jacobian-matrix-and-determinant">Jacobian Matrix and Determinant</h3>
+<p>设函数<span class="math inline">\(f:\mathbb{R}^n\mapsto\mathbb{R}^m\)</span>，由<span class="math inline">\(f\)</span>的一阶偏导数组成的矩阵叫做Jacobian矩阵： <span class="math display">\[
                 
              -->
         </div>
@@ -321,18 +321,18 @@
                 
                 
             
-            <h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><p>本文揭示了对抗生成网络（Generative Adversarial Networks, GAN）和变分自编码器（Variational Auto-encoders, VAE）之间的联系，并据此提出了一种将两者结合的新模型。文中主要是将不可解的似然函数和未知的后验分布用一个非确定的分布（Immplicit Distribution）替代，并加入判别器来使得该分布逼近真实的分布。通过这个方法，作者将VAE中的损失函数进行了替换，变成了GAN中的“生成-判别”模式。</p>
+            <h1 id="abstract">Abstract</h1>
+<p>本文揭示了对抗生成网络（Generative Adversarial Networks, GAN）和变分自编码器（Variational Auto-encoders, VAE）之间的联系，并据此提出了一种将两者结合的新模型。文中主要是将不可解的似然函数和未知的后验分布用一个非确定的分布（Immplicit Distribution）替代，并加入判别器来使得该分布逼近真实的分布。通过这个方法，作者将VAE中的损失函数进行了替换，变成了GAN中的“生成-判别”模式。</p>
 <p><a href="https://arxiv.org/abs/1706.04987" target="_blank" rel="noopener">原文</a></p>
-<h1 id="Contribution"><a href="#Contribution" class="headerlink" title="Contribution"></a>Contribution</h1><p>本文有如下贡献：</p>
-<ul>
-<li>本文提出变分推断（Variational Inference）也能通过对非确定分布的估计应用在GAN中；</li>
+<h1 id="contribution">Contribution</h1>
+<p>本文有如下贡献：</p>
             <!-- 
                 
-                    <h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><p>本文揭示了对抗生成网络（Generative Adversarial Networks, GAN）和变分自编码器（Variational Auto-encoders, VAE）之间的联系，并据此提出了一种将两者结合的新模型。文中主要是将不可解的似然函数和未知的后验分布用一个非确定的分布（Immplicit Distribution）替代，并加入判别器来使得该分布逼近真实的分布。通过这个方法，作者将VAE中的损失函数进行了替换，变成了GAN中的“生成-判别”模式。</p>
+                    <h1 id="abstract">Abstract</h1>
+<p>本文揭示了对抗生成网络（Generative Adversarial Networks, GAN）和变分自编码器（Variational Auto-encoders, VAE）之间的联系，并据此提出了一种将两者结合的新模型。文中主要是将不可解的似然函数和未知的后验分布用一个非确定的分布（Immplicit Distribution）替代，并加入判别器来使得该分布逼近真实的分布。通过这个方法，作者将VAE中的损失函数进行了替换，变成了GAN中的“生成-判别”模式。</p>
 <p><a href="https://arxiv.org/abs/1706.04987" target="_blank" rel="noopener">原文</a></p>
-<h1 id="Contribution"><a href="#Contribution" class="headerlink" title="Contribution"></a>Contribution</h1><p>本文有如下贡献：</p>
-<ul>
-<li>本文提出变分推断（Variational Inference）也能通过对非确定分布的估计应用在GAN中；</li>
+<h1 id="contribution">Contribution</h1>
+<p>本文有如下贡献：</p>
                 
              -->
         </div>
@@ -425,18 +425,18 @@
                 
                 
             
-            <h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><p>本文基于GAN提出了一种时间序列缺失值填充（Time Series Imputation）的方法。其主要的思路为生成器$G$从隐空间$Z$生成完整的样本，而判别器$D$则输出样本中不同部分为真实的概率。除此之外，作者提出了使用Hint Vector来揭示原始数据中缺失部分的信息，来优化训练过程。</p>
+            <h1 id="abstract">Abstract</h1>
+<p>本文基于GAN提出了一种时间序列缺失值填充（Time Series Imputation）的方法。其主要的思路为生成器<span class="math inline">\(G\)</span>从隐空间<span class="math inline">\(Z\)</span>生成完整的样本，而判别器<span class="math inline">\(D\)</span>则输出样本中不同部分为真实的概率。除此之外，作者提出了使用Hint Vector来揭示原始数据中缺失部分的信息，来优化训练过程。</p>
 <p><a href="https://arxiv.org/abs/1806.02920" target="_blank" rel="noopener">原文</a></p>
-<h1 id="Methodology"><a href="#Methodology" class="headerlink" title="Methodology"></a>Methodology</h1><h2 id="Problem-Formulation"><a href="#Problem-Formulation" class="headerlink" title="Problem Formulation"></a>Problem Formulation</h2><p>考虑一个$d$维的空间$\mathcal{X}=\mathcal{X}_1\times \cdots\times \mathcal{X}_d$，设$\mathbf{X}=(X_1,\cdots,X_d)$维空间$\mathcal{X}$上的随机向量（即理想的完整的时间序列），记其分布为$P(\mathbf{X})$。设$\mathbf{M}=(M_1,\cdots,M_d)$为Mask向量表示$\mathbf{X}$中被观察到的部分。（即标识时间序列哪些部分有缺失），取值为${0,1}^d$。</p>
-<p>对于每一个$i\in{1,\cdots,d}$，我们定义一个新空间$\tilde{\mathcal{X}}=\mathcal{X}\cup{<em>}$，其中$</em>$表示不属于任意$\mathcal{X}<em>i$的一个点。令$\tilde{\mathcal{X}}=\tilde{\mathcal{X}_1}\times\cdots\times\tilde{\mathcal{X}_d}$，同时定义一个新的随机变量（即我们观测到的含有缺失值的时间序列）$\tilde{\mathbf{X}}=(\tilde{X}_1,\cdots,\tilde{X}_d)\in \tilde{\mathcal{X}}$：<br>$$<br>\tilde{X}_i=\begin{cases}X_i,&amp;\text{if } M_i=1\*,&amp;\text{otherwise}\end{cases}<br>$$<br>假设数据集的形式为$\mathcal{D}={(\tilde{x}^i,m^i)}^n</em>{i=1}$，我们的任务是从$P(\mathbf{X}|\tilde{\mathbf{X}}=\tilde{x}^i)$上采样来对缺失值进行填充。</p>
-<h2 id="Model-Architecture"><a href="#Model-Architecture" class="headerlink" title="Model Architecture"></a>Model Architecture</h2><p>模型的架构如下图所示：</p>
+<h1 id="methodology">Methodology</h1>
+<h2 id="problem-formulation">Problem Formulation</h2>
             <!-- 
                 
-                    <h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><p>本文基于GAN提出了一种时间序列缺失值填充（Time Series Imputation）的方法。其主要的思路为生成器$G$从隐空间$Z$生成完整的样本，而判别器$D$则输出样本中不同部分为真实的概率。除此之外，作者提出了使用Hint Vector来揭示原始数据中缺失部分的信息，来优化训练过程。</p>
+                    <h1 id="abstract">Abstract</h1>
+<p>本文基于GAN提出了一种时间序列缺失值填充（Time Series Imputation）的方法。其主要的思路为生成器<span class="math inline">\(G\)</span>从隐空间<span class="math inline">\(Z\)</span>生成完整的样本，而判别器<span class="math inline">\(D\)</span>则输出样本中不同部分为真实的概率。除此之外，作者提出了使用Hint Vector来揭示原始数据中缺失部分的信息，来优化训练过程。</p>
 <p><a href="https://arxiv.org/abs/1806.02920" target="_blank" rel="noopener">原文</a></p>
-<h1 id="Methodology"><a href="#Methodology" class="headerlink" title="Methodology"></a>Methodology</h1><h2 id="Problem-Formulation"><a href="#Problem-Formulation" class="headerlink" title="Problem Formulation"></a>Problem Formulation</h2><p>考虑一个$d$维的空间$\mathcal{X}=\mathcal{X}_1\times \cdots\times \mathcal{X}_d$，设$\mathbf{X}=(X_1,\cdots,X_d)$维空间$\mathcal{X}$上的随机向量（即理想的完整的时间序列），记其分布为$P(\mathbf{X})$。设$\mathbf{M}=(M_1,\cdots,M_d)$为Mask向量表示$\mathbf{X}$中被观察到的部分。（即标识时间序列哪些部分有缺失），取值为${0,1}^d$。</p>
-<p>对于每一个$i\in{1,\cdots,d}$，我们定义一个新空间$\tilde{\mathcal{X}}=\mathcal{X}\cup{<em>}$，其中$</em>$表示不属于任意$\mathcal{X}<em>i$的一个点。令$\tilde{\mathcal{X}}=\tilde{\mathcal{X}_1}\times\cdots\times\tilde{\mathcal{X}_d}$，同时定义一个新的随机变量（即我们观测到的含有缺失值的时间序列）$\tilde{\mathbf{X}}=(\tilde{X}_1,\cdots,\tilde{X}_d)\in \tilde{\mathcal{X}}$：<br>$$<br>\tilde{X}_i=\begin{cases}X_i,&amp;\text{if } M_i=1\*,&amp;\text{otherwise}\end{cases}<br>$$<br>假设数据集的形式为$\mathcal{D}={(\tilde{x}^i,m^i)}^n</em>{i=1}$，我们的任务是从$P(\mathbf{X}|\tilde{\mathbf{X}}=\tilde{x}^i)$上采样来对缺失值进行填充。</p>
-<h2 id="Model-Architecture"><a href="#Model-Architecture" class="headerlink" title="Model Architecture"></a>Model Architecture</h2><p>模型的架构如下图所示：</p>
+<h1 id="methodology">Methodology</h1>
+<h2 id="problem-formulation">Problem Formulation</h2>
                 
              -->
         </div>
@@ -505,7 +505,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        20
+                        23
                     </p>
                 </div>
             </div>
@@ -633,7 +633,7 @@
                 <span class="level-item">Research</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">19</span>
+                <span class="level-item tag">22</span>
             </span>
         </a><ul><li>
         <a class="level is-marginless" href="/categories/Research/Anomaly-Detection/">
@@ -641,7 +641,7 @@
                 <span class="level-item">Anomaly Detection</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">14</span>
+                <span class="level-item tag">17</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Research/GAN/">
@@ -711,7 +711,7 @@
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Anomaly-Detection/" style="font-size: 18.57px;">Anomaly Detection</a> <a href="/tags/Deep-Learning/" style="font-size: 20px;">Deep Learning</a> <a href="/tags/Flow-based-Model/" style="font-size: 10px;">Flow-based Model</a> <a href="/tags/GAN/" style="font-size: 12.86px;">GAN</a> <a href="/tags/Machine-Learning/" style="font-size: 15.71px;">Machine Learning</a> <a href="/tags/RNN/" style="font-size: 11.43px;">RNN</a> <a href="/tags/Representation-Learning/" style="font-size: 10px;">Representation Learning</a> <a href="/tags/Spectral/" style="font-size: 10px;">Spectral</a> <a href="/tags/Statistics/" style="font-size: 10px;">Statistics</a> <a href="/tags/Time-Series/" style="font-size: 17.14px;">Time Series</a> <a href="/tags/Transfer-Learning/" style="font-size: 10px;">Transfer Learning</a> <a href="/tags/VAE/" style="font-size: 14.29px;">VAE</a> <a href="/tags/Variational-Inference/" style="font-size: 11.43px;">Variational Inference</a>
+        <a href="/tags/Anomaly-Detection/" style="font-size: 20px;">Anomaly Detection</a> <a href="/tags/Deep-Learning/" style="font-size: 18.57px;">Deep Learning</a> <a href="/tags/Flow-based-Model/" style="font-size: 10px;">Flow-based Model</a> <a href="/tags/GAN/" style="font-size: 12.86px;">GAN</a> <a href="/tags/Machine-Learning/" style="font-size: 15.71px;">Machine Learning</a> <a href="/tags/RNN/" style="font-size: 11.43px;">RNN</a> <a href="/tags/Representation-Learning/" style="font-size: 10px;">Representation Learning</a> <a href="/tags/Spectral/" style="font-size: 10px;">Spectral</a> <a href="/tags/Statistics/" style="font-size: 10px;">Statistics</a> <a href="/tags/Time-Series/" style="font-size: 17.14px;">Time Series</a> <a href="/tags/Transfer-Learning/" style="font-size: 10px;">Transfer Learning</a> <a href="/tags/VAE/" style="font-size: 14.29px;">VAE</a> <a href="/tags/Variational-Inference/" style="font-size: 11.43px;">Variational Inference</a>
     </div>
 </div>
 
@@ -725,6 +725,63 @@
         <h3 class="menu-label">
             最新文章
         </h3>
+        
+        <article class="media">
+            
+            <a href="/2020/05/07/Classification-based-Anomaly-Detection-for-General-Data/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Classification-based Anomaly Detection for General Data">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-05-07T15:21:34.000Z">2020-05-07</time></div>
+                    <a href="/2020/05/07/Classification-based-Anomaly-Detection-for-General-Data/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Classification-based Anomaly Detection for General Data</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/05/07/Deep-Anomaly-Detection-Using-Geometric-Transformations/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200509211050138.png" alt="Deep Anomaly Detection Using Geometric Transformations">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-05-07T15:21:03.000Z">2020-05-07</time></div>
+                    <a href="/2020/05/07/Deep-Anomaly-Detection-Using-Geometric-Transformations/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Deep Anomaly Detection Using Geometric Transformations</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/05/06/Generative-Probabilistic-Novelty-Detection-with-Adversarial-Autoencoders/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Generative Probabilistic Novelty Detection with Adversarial Autoencoders">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-05-06T09:52:44.000Z">2020-05-06</time></div>
+                    <a href="/2020/05/06/Generative-Probabilistic-Novelty-Detection-with-Adversarial-Autoencoders/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Generative Probabilistic Novelty Detection with Adversarial Autoencoders</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+                    </p>
+                </div>
+            </div>
+        </article>
         
         <article class="media">
             
@@ -764,63 +821,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2020/03/30/Deep-Weakly-supervised-Anomaly-Detection/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200330001932457.png" alt="Deep Weakly-supervised Anomaly Detection">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-03-29T16:17:24.000Z">2020-03-30</time></div>
-                    <a href="/2020/03/30/Deep-Weakly-supervised-Anomaly-Detection/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Deep Weakly-supervised Anomaly Detection</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200301230011495.png" alt="Discovering Physical Concepts with Neural Networks">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-03-01T14:55:02.000Z">2020-03-01</time></div>
-                    <a href="/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Discovering Physical Concepts with Neural Networks</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Misc/">Misc</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200109102830713.png" alt="Transfer Anomaly Detection by Inferring Latent Domain Representations">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-02-27T12:02:18.000Z">2020-02-27</time></div>
-                    <a href="/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Transfer Anomaly Detection by Inferring Latent Domain Representations</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -839,7 +839,7 @@
                     <span class="level-item">五月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">5</span>
                 </span>
             </a>
         </li>
@@ -926,7 +926,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Anomaly-Detection/">
                         <span class="tag">Anomaly Detection</span>
-                        <span class="tag is-grey">12</span>
+                        <span class="tag is-grey">15</span>
                     </a>
                 </div>
                 
@@ -1039,6 +1039,63 @@
         
         <article class="media">
             
+            <a href="/2020/05/07/Classification-based-Anomaly-Detection-for-General-Data/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Classification-based Anomaly Detection for General Data">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-05-07T15:21:34.000Z">2020-05-07</time></div>
+                    <a href="/2020/05/07/Classification-based-Anomaly-Detection-for-General-Data/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Classification-based Anomaly Detection for General Data</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/05/07/Deep-Anomaly-Detection-Using-Geometric-Transformations/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200509211050138.png" alt="Deep Anomaly Detection Using Geometric Transformations">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-05-07T15:21:03.000Z">2020-05-07</time></div>
+                    <a href="/2020/05/07/Deep-Anomaly-Detection-Using-Geometric-Transformations/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Deep Anomaly Detection Using Geometric Transformations</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/05/06/Generative-Probabilistic-Novelty-Detection-with-Adversarial-Autoencoders/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Generative Probabilistic Novelty Detection with Adversarial Autoencoders">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-05-06T09:52:44.000Z">2020-05-06</time></div>
+                    <a href="/2020/05/06/Generative-Probabilistic-Novelty-Detection-with-Adversarial-Autoencoders/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Generative Probabilistic Novelty Detection with Adversarial Autoencoders</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2020/05/06/Estimate-the-Implicit-Likelihoods-of-GANs-with-Application-to-Anomaly-Detection/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="http://qfxiao.me/img/image-20200506174247129.png" alt="Estimate the Implicit Likelihoods of GANs with Application to Anomaly Detection">
@@ -1075,63 +1132,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2020/03/30/Deep-Weakly-supervised-Anomaly-Detection/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200330001932457.png" alt="Deep Weakly-supervised Anomaly Detection">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-03-29T16:17:24.000Z">2020-03-30</time></div>
-                    <a href="/2020/03/30/Deep-Weakly-supervised-Anomaly-Detection/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Deep Weakly-supervised Anomaly Detection</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200301230011495.png" alt="Discovering Physical Concepts with Neural Networks">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-03-01T14:55:02.000Z">2020-03-01</time></div>
-                    <a href="/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Discovering Physical Concepts with Neural Networks</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Misc/">Misc</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="http://qfxiao.me/img/image-20200109102830713.png" alt="Transfer Anomaly Detection by Inferring Latent Domain Representations">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-02-27T12:02:18.000Z">2020-02-27</time></div>
-                    <a href="/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Transfer Anomaly Detection by Inferring Latent Domain Representations</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Research/">Research</a> / <a class="has-link-grey -link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -1150,7 +1150,7 @@
                     <span class="level-item">五月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">5</span>
                 </span>
             </a>
         </li>
@@ -1237,7 +1237,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Anomaly-Detection/">
                         <span class="tag">Anomaly Detection</span>
-                        <span class="tag is-grey">12</span>
+                        <span class="tag is-grey">15</span>
                     </a>
                 </div>
                 
