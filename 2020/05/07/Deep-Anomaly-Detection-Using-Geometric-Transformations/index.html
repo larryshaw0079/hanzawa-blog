@@ -19,7 +19,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://qfxiao.me/img/image-20200509211050138.png">
 <meta property="article:published_time" content="2020-05-07T15:21:03.000Z">
-<meta property="article:modified_time" content="2020-05-09T16:51:09.830Z">
+<meta property="article:modified_time" content="2020-05-09T16:55:44.826Z">
 <meta property="article:author" content="Hanzawa">
 <meta property="article:tag" content="Anomaly Detection">
 <meta name="twitter:card" content="summary">
@@ -162,7 +162,7 @@
                 <time class="level-item has-text-grey" datetime="2020-05-07T15:21:03.000Z">2020-05-07</time>
                 
                     <i class="fas fa-calendar-check">&nbsp</i>
-                    <time class="level-item has-text-grey" datetime="2020-05-09T16:51:09.830Z">2020-05-10</time>
+                    <time class="level-item has-text-grey" datetime="2020-05-09T16:55:44.826Z">2020-05-10</time>
                 
                 
                 <div class="level-item">
@@ -173,7 +173,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    7 分钟 读完 (大约 1043 个字)
+                    7 分钟 读完 (大约 1084 个字)
                 </span>
                 
                 
@@ -286,7 +286,14 @@ p(\mathcal D|\boldsymbol \mu)=\prod_{n=1}^N\prod_{k=1}^K \mu_k^{x_{nk}}=\prod_{k
 \mu_k^{ML}=\frac{m_k}{N}
 \]</span></p>
 <h3 id="dirichlet-distribution">Dirichlet Distribution</h3>
+<p><span class="math display">\[
+p(\boldsymbol \mu|\boldsymbol \alpha) \propto \prod_{k=1}^{K}\mu_k^{a_{k-1}}
+\]</span></p>
+<p><span class="math display">\[
+\text{Dir}(\boldsymbol \mu|\boldsymbol\alpha)=\frac{\Gamma(\alpha_0)}{\Gamma(\alpha_1)\cdots\Gamma(\alpha_K)}\prod_{k=1}^K\mu_k^{a_{k-1}}
+\]</span></p>
 <p><img src="http://qfxiao.me/img/image-20200510005021180.png" style="zoom:67%;"></p>
+<p><img src="http://qfxiao.me/img/image-20200510005507729.png"></p>
 <h1 id="proposed-method">Proposed Method</h1>
 <h2 id="overview-discriminative-learning-of-an-anomaly-scoring-function-using-geometric-transformations">Overview: Discriminative Learning of an Anomaly Scoring Function Using Geometric Transformations</h2>
 <h2 id="creating-and-learning-the-self-labeled-dataset">Creating and Learning the Self-Labeled Dataset</h2>
