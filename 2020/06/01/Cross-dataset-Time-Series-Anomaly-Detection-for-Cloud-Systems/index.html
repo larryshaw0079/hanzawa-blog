@@ -17,7 +17,7 @@
   <meta name="description" content="">
   <meta name="author" content="Hanzawa">
   <meta name="keywords" content="">
-  <title>Learning Representations of Ultrahigh-dimensional Data for Random Distance-based Outlier Detection - Hanzawa の 部屋</title>
+  <title>Cross-dataset Time Series Anomaly Detection for Cloud Systems - Hanzawa の 部屋</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
@@ -147,8 +147,8 @@
               
                 <div class="mt-3 post-meta">
                   <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-                  <time datetime="2020-05-06 11:05">
-                    2020年5月6日 上午
+                  <time datetime="2020-06-01 16:14">
+                    2020年6月1日 下午
                   </time>
                 </div>
               
@@ -158,7 +158,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    1.3k 字
+                    1.8k 字
                   </span>
                 
 
@@ -168,7 +168,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    18
+                    21
                      分钟
                   </span>
                 
@@ -198,90 +198,97 @@
             
             <article class="markdown-body">
               <h1 id="introduction">Introduction</h1>
-<p>本文提出了一种针对高维数据异常检测的表示学习方法。文中提出了<strong>RAMODO</strong>框架，一种基于排序的结合表示学习和异常检测的无监督框架。除此之外，基于<strong>RAMODO</strong>，文中还提出了基于此框架的模型<strong>REPEN</strong>。</p>
-<p><a href="https://arxiv.org/pdf/1806.04808" target="_blank" rel="noopener">Paper📰</a></p>
-<h1 id="proposed-method">Proposed Method</h1>
-<h2 id="the-proposed-framework-ramodo">The Proposed Framework: <strong>RAMODO</strong></h2>
-<h3 id="problem-statement">Problem Statement</h3>
-<p>我们的目的是为高维数据学习低维表示，同时在学到的低维表示中能够更好地进行异常检测。设有数据集<span class="math inline">\(\mathcal{X}=\{\mathbf x_1,\mathbf x_2,\cdots, \mathbf x_N\}\)</span> (<span class="math inline">\(\mathbf x_i\in \mathbb{R}^D\)</span>) 和一个基于随机距离的异常检测器<span class="math inline">\(\phi:\mathcal{X}\mapsto \mathbb{R}\)</span>，我们的目标是学习一个表示函数<span class="math inline">\(f:\mathcal{X}\mapsto\mathbb{R}^M (M\ll D)\)</span>使得对于所有异常样本<span class="math inline">\(\mathbf x_i\)</span>和正常样本<span class="math inline">\(\mathbf x_j\)</span>都有<span class="math inline">\(\phi(f(\mathbf x_i))&gt;\phi(f(\mathbf x_j))\)</span>。</p>
-<h3 id="ranking-model-based-representation-learning-framework">Ranking Model-based Representation Learning Framework</h3>
-<p><strong>RAMODO</strong>基于<em>pairwise ranking model</em>。第一步是通过一定的预处理算法（原文中称为<em>outlier thresholding</em>）将数据划分为inlier候选集和outlier候选集；第二步通过随机从inlier候选集采样<span class="math inline">\(n\)</span>个样本生成query set <span class="math inline">\((\mathbf x_i,\cdots,\mathbf x_{i+n-1})\)</span>，从inlier候选集采样一个样本生成<em>positive example</em> <span class="math inline">\((\mathbf x^+)\)</span>，从outlier候选集采样一个样本生成<em>negative example</em> <span class="math inline">\((\mathbf x^-)\)</span>，将三者组合生成 <em>metatriplet</em> <span class="math inline">\(T=(&lt;\mathbf x_i,\cdots,\mathbf x_{i+n-1}&gt;,\mathbf x^+,\mathbf x^-)\)</span>；第三步通过神经网络<span class="math inline">\(f\)</span>学习表示；第四步通过<em>outlier score-based ranking loss</em> <span class="math inline">\(L(\phi(f(\mathbf x^+)|&lt;f(\mathbf x_i),\cdots,f(\mathbf x_{i+n-1})&gt;),\phi(f(\mathbf x^-)|&lt;f(\mathbf x_i),\cdots,f(\mathbf x_{i+n-1})&gt;))\)</span>来进行优化，其中<span class="math inline">\(\phi(\cdot|\cdot)\)</span>为基于距离的异常检测器。</p>
-<p><img src="http://qfxiao.me/img/image-20200416151126952.png" srcset="/img/loading.gif" /></p>
-<h2 id="a-ramodo-instance-repen">A <strong>RAMODO</strong> Instance: <strong>REPEN</strong></h2>
-<p><strong>REPEN</strong>为<strong>RAMODO</strong>的实例模型，使用Sp作为异常检测器。</p>
-<h3 id="outlier-thresholding-using-state-of-the-art-detectors-and-cantellis-inequality">Outlier Thresholding Using State-of-the-art Detectors and Cantelli's Inequality</h3>
-<p>第一步使用Sp作为基础获得初始anomaly score：</p>
-<blockquote>
-<p><strong>Definition 1</strong> (<em>Sp-based Outlier Scoring</em>). 给定样本<span class="math inline">\(x_i\)</span>，Sp 以以下方式定义该样本的异常程度： <span class="math display">\[
-r_i=\frac{1}{m}\sum\limits_{j=1}^m nn\_dist(\mathbf x_i|\mathcal{S}_j)
-\]</span> 其中<span class="math inline">\(\mathcal S_j\subset \mathcal X\)</span>为数据集随机采样的子集，<span class="math inline">\(m\)</span>为集成大小，<span class="math inline">\(nn_dist(\cdot|\cdot)\)</span>为<span class="math inline">\(\mathcal S_j\)</span>中最近邻居的距离。</p>
-</blockquote>
-<p>接着通过<em>Cantelli's Inequality</em>来定义<em>Pseudo Outlier</em>：</p>
-<blockquote>
-<p><strong>Definition 2 </strong>(<em>Cantelli's Inequality-based Outlier Thresholding</em>). 给定异常分数向量<span class="math inline">\(\mathbf r\in\mathbb R^N\)</span>，更高异常分数代表更高的可能性为异常，设<span class="math inline">\(\mu\)</span>和<span class="math inline">\(\delta^2\)</span>分别为均值和方差，<em>Outlier</em>候选集由以下方式确定： <span class="math display">\[
-\mathcal{O}=\{\mathbf x_i|r_i \geq \mu + \alpha\delta\}, \space\forall \mathbf x_i\in\mathcal X, \space r_i\in\mathbf r
-\]</span> 其中<span class="math inline">\(\alpha\geq 0\)</span>为自定义的阈值。</p>
-</blockquote>
-<p><em>Inlier</em>候选集<span class="math inline">\(\mathcal I=\mathcal X\backslash \mathcal O\)</span>。</p>
-<h3 id="triplet-sampling-based-on-outlier-scores">Triplet Sampling Based on Outlier Scores</h3>
-<p>首先，从<span class="math inline">\(\mathcal I\)</span>采样一定数量的样本组成<em>query set</em>，每个样本被采样的概率与其对应的异常分数有关：</p>
-<p><span class="math display">\[
-p(\mathbf x_i)=\frac{\mathbb Z-r_i}{\sum_{t=1}^{|\mathcal I|}[\mathbb Z-r_t]}
+<p>本文介绍了一种用于云计算平台的时间序列异常检测框架。为了解决标签不足的问题，文中使用了迁移学习的方法，即在有标签的source domain上训练模型，在没有标签的target domain上检测。同时，文中还使用了主动学习的方法来挑选最有价值的无标签样本进行标记。</p>
+<p><a href="https://www.usenix.org/system/files/atc19-zhang-xu.pdf" target="_blank" rel="noopener">📰Get Paper</a></p>
+<h1 id="background">Background</h1>
+<p>针对云计算平台数据的异常检测通常是应用在云监控数据，如KPI、CPU使用率、系统负载等时序数据上。和传统的异常检测不一样的是，时序异常检测往往更难，文中总结了以下几个挑战：</p>
+<ul>
+<li>异常特征的差异性。在不同的云服务系统中，对异常的容忍度是不同的，所以对每个场景或系统组件设置准确的阈值来进行异常检测是十分困难的；</li>
+<li>时间依赖性。该异常检测问题处理的是时间序列数据，而传统的异常检测并不会考虑时间依赖性；</li>
+<li>无监督学习的性能问题。无监督的异常检测方法的性能有限，会带来大量的误报；</li>
+<li>有监督学习需要大量标签。</li>
+</ul>
+<h1 id="proposed-approach">Proposed Approach</h1>
+<p>为了解决上述挑战，文中提出了一个时间序列异常检测框架ATAD (Active Transfer Anomaly Detection)。该框架结合了迁移学习技术和主动学习技术，示意图如下：</p>
+<p><img src="http://qfxiao.me/img/image-20200313212728223.png" srcset="/img/loading.gif" /></p>
+<p>未标记数据<span class="math inline">\(T_u\)</span>是我们要检测的目标数据 (target domain)，标记数据<span class="math inline">\(T_l\)</span>是我们的源数据 (source domain)，可以是开源数据或者是其他系统的监控数据。</p>
+<h2 id="transfer-learning-component">Transfer Learning Component</h2>
+<p>在应用迁移学习时，我们需要考虑以下几个因素：</p>
+<ul>
+<li>我们处理的是时间序列数据，即在不同的时间点上样本之间不是相互独立的。为了解决这个问题，我们提取了不同的特征，每一个时间点被转换为了高维的特征向量，且每个时间点附近的背景信息被保存在了特征向量之中；</li>
+<li>时间序列的粒度。粗粒度的迁移学习不利于发现异常，本文采用细粒度，即数据点级别的迁移学习；</li>
+<li>迁移学习需要source domain和target domain具有潜在的相似性，所以我们需要对source domain中的样本进行过滤。</li>
+</ul>
+<p><img src="http://qfxiao.me/img/image-20200313212813264.png" srcset="/img/loading.gif" /></p>
+<h3 id="feature-identification">Feature Identification</h3>
+<p>这一节描述特征工程中用到的特征。在提取特征之前，文中使用了离散傅里叶变换来识别时间序列的周期<span class="math inline">\(p\)</span>，并为后面滑动窗口的大小原则作参考。</p>
+<h4 id="statistical-features">Statistical Features</h4>
+<p>统计特征包含了一些基本的统计信息，如均值、方差等，用到的特征如下表所示：</p>
+<p><img src="http://qfxiao.me/img/image-20200313212825252.png" srcset="/img/loading.gif" /></p>
+<p>表中的统计特征都是基于大小等于周期<span class="math inline">\(p\)</span>的滑动窗口的。</p>
+<h4 id="forecasting-error-features">Forecasting Error Features</h4>
+<p>使用预测特征的理由是如果一个数据点偏离预测值很远，那么它很有可能是异常。文中使用了多种时间序列预测模型，如SARIMA、Holt、Holt-Winters、STL等。最终的预测结果使用下式来加权集成： <span class="math display">\[
+\hat{Y}_t=\sum\limits_{m=1}^{M}\frac{\hat{Y}_{m,t}}{M-1}\left(1-\frac{RMSE_{m,t}}{\sum\limits_{n=1}^M RMSE_{n,t}}\right)
+\]</span> <span class="math inline">\(M\)</span>代表<span class="math inline">\(M\)</span>个不同模型，<span class="math inline">\(RMSE_{m,t}\)</span>代表模型<span class="math inline">\(m\)</span>在时间<span class="math inline">\(t\)</span>的<span class="math inline">\(RMSE\)</span>，<span class="math inline">\(\hat{Y}_t\)</span>是在时间<span class="math inline">\(t\)</span>的最终预测结果。之后，使用下表中的Metrics来计算不同预测特征：</p>
+<p><img src="http://qfxiao.me/img/image-20200313212836275.png" srcset="/img/loading.gif" /></p>
+<p>同样的，上述特征都是基于窗口的。</p>
+<h4 id="temporal-features">Temporal Features</h4>
+<p>这一部分是一些时间序列相关特征：</p>
+<p><img src="http://qfxiao.me/img/image-20200313212850411.png" srcset="/img/loading.gif" /></p>
+<p>最后，总共提取了37个特征，并且每个特征都进行了正则化。</p>
+<h3 id="the-transfer-between-source-domain-and-target-domain">The Transfer between Source Domain and Target Domain</h3>
+<p>本文结合了基于实例的迁移学习(<strong>Instance-based Transfer Learning</strong>)和基于特征的迁移学习(<strong>Feature-based Transfer Learning</strong>)。</p>
+<p>首先，source domain中的数据差异性是比较大的，所以我们需要选择与target domain相似的样本。</p>
+<p>基于实例的迁移学习(<strong>Instance-based Transfer Learning</strong>)的思想是选择source domain中与target domain相似的样本。对于source domain，在将时间序列<span class="math inline">\(T_l\)</span>转换为特征<span class="math inline">\(F_l\)</span>之后，本文使用<span class="math inline">\(K-means\)</span>算法将<span class="math inline">\(F_l\)</span>分成若干个簇。每个簇<span class="math inline">\(F_l^i, i\in[1,K]\)</span>是<span class="math inline">\(F_l\)</span>的不重叠子集。为了选择合适的样本，我们计算了target domain中的样本和每个簇中心点的欧几里得距离，然后样本会和距离最近的簇<span class="math inline">\(F_l^i\)</span>联系起来。</p>
+<p>之后，为了使source domain和target domain在特征空间的差别更小，作者在每个簇上使用了<strong>CORrelation ALignment</strong> (CORAL) 算法。CORAL是一种领域适应算法 (<strong>Domain Adaption</strong>)，其基本思想是对source domain和target domain进行线性变换使其二阶统计信息（即协方差矩阵）的差别最小化： <span class="math display">\[
+\min_A\parallel A^\top C^i_lA-C^i_u\parallel_F^2
 \]</span></p>
-<p>其中<span class="math inline">\(\mathbb Z=\sum_{t=1}^{|\mathcal I|}r_t\)</span>。</p>
-<p>之后从<em>inlier set</em>中均匀随机采样一个<em>positive sample</em> <span class="math inline">\(\mathbf x^+\)</span>。最后从<em>outlier set</em>中根据以下概率采样一个<em>negative sample</em> <span class="math inline">\(\mathbf x^-\)</span>： <span class="math display">\[
-p(\mathbf x_j)=\frac{r_j}{\sum_{t=1}^{|\mathcal O|}r_t}
-\]</span></p>
-<h3 id="a-shallow-data-representation">A Shallow Data Representation</h3>
-<p>单层神经网络用来获得浅层的表示：</p>
-<blockquote>
-<p><strong>Definition 3 </strong>(<em>Single-layer Fully-connected Representations</em>) 给定输入<span class="math inline">\(x\)</span>， <span class="math display">\[
-f_\Theta(\mathbf x)=\{\psi(\mathbf w_1^\top\mathbf x),\psi(\mathbf w_2^\top\mathbf x),\cdots,\psi(\mathbf w_M^\top\mathbf x)\}
-\]</span> 其中<span class="math inline">\(\psi(\cdot)\)</span>为激活函数，<span class="math inline">\(\mathbf w\)</span>为权重矩阵。</p>
-</blockquote>
-<h3 id="ranking-loss-using-random-nearest-neighbor-distance-based-outlier-scores">Ranking Loss Using Random Nearest Neighbor Distance-based Outlier Scores</h3>
-<p>设<span class="math inline">\(\mathcal{Q}=&lt;f_\Theta(\mathbf x_i),\cdots,f_\Theta(\mathbf x_{i+n-1})&gt;\)</span>为<em>query set</em>，给定样本<span class="math inline">\(\mathbf x\)</span>，<strong>REPEN</strong>根据最近邻距离定义了<span class="math inline">\(f_\Theta(\mathbf x)\)</span>的异常程度： <span class="math display">\[
-\phi(f_\Theta(\mathbf x)|\mathcal{Q})=nn\_dist(f_\Theta(\mathbf x)|\mathcal Q)
-\]</span> 因此，给定三元组<span class="math inline">\(T=(\mathcal Q,f_\Theta(\mathbf x^+),f_\Theta(\mathbf x^-))\)</span>，我们的目标是学得表示<span class="math inline">\(f(\cdot)\)</span>使得： <span class="math display">\[
-nn\_dist(f_\Theta(\mathbf x^+)|\mathcal Q)&lt;nn\_dist(f_\Theta(\mathbf x^-)|\mathcal Q)
-\]</span> 损失函数： <span class="math display">\[
-J(\Theta;T)=L(\phi(f_\Theta(\mathbf x^+)|\mathcal Q),\phi(f_\Theta(\mathbf x^-)|\mathcal Q))=\\\max\{0, c+nn\_dist(f_\Theta(\mathbf x^+)|\mathcal Q)-nn\_dist(f_\Theta(\mathbf x^-)|\mathcal Q)\}
-\]</span> 其中<span class="math inline">\(c\)</span>为边界参数。给定一系列三元组，最终优化目标如下： <span class="math display">\[
-\mathop{\text{arg min}}\limits_{\Theta}\frac{1}{|\mathcal{T}|}\sum\limits_{i=1}^{|\mathcal T|}J(\Theta;T_i)
-\]</span></p>
-<h3 id="the-algorithm-and-its-time-complexity">The Algorithm and Its Time Complexity</h3>
-<p><img src="http://qfxiao.me/img/image-20200416151141351.png" srcset="/img/loading.gif" /></p>
-<h3 id="leveraging-a-few-labeled-outliers-to-improve-triplet-sampling">Leveraging A Few Labeled Outliers to Improve Triplet Sampling</h3>
+<p>在最后一步，作者在每一个sub source domain <span class="math inline">\(\hat{F}_l^i\)</span>训练了有监督模型（随机森林或SVM），所以最后我们得到了<span class="math inline">\(K\)</span>个基模型。</p>
+<h2 id="active-learning-component">Active Learning Component</h2>
+<p>由于数据的差异性和复杂性太大，仅仅使用迁移学习的技术不足以达到很好的效果。在ATAD中，作者使用了主动学习技术来用较少的成本标注最有价值的样本来提升性能。本文中使用基于<strong>Uncertainty</strong>和<strong>Context Diversity</strong>的主动学习。</p>
+<h3 id="uncertainty">Uncertainty</h3>
+<p>大多数主动学习算法使用不确定性 (Uncertainty) 来作为选择要标记的样本的准则。 <span class="math display">\[
+Uncertainty=-|Prob(Normal)-Prob(Anomaly)|
+\]</span> 其中的<span class="math inline">\(Prob\)</span>由基模型给出。</p>
+<h3 id="context-diversity">Context Diversity</h3>
+<p>多样性 (Diversity) 也是一个选择要标记样本的重要参考。如果有两个相似的样本，那么就没有必要将他们都标记。</p>
+<p>时间上相邻的样本往往也是相似的。</p>
+<p>具体的来说，我们对所有样本按照<strong>Uncertainty</strong>排序，然后进行一次扫描，如果当前样本在候选集中某个样本的<strong>Context</strong>之中，我们则忽略当前样本，因为这代表当前样本和候选集中的那个样本是相似的。如果不在<strong>Context</strong>之中，我们则将该样本加入候选集中。</p>
+<p>判断是否在某个样本的<strong>Context</strong>中，如下图所示，直接判断是否落在区间<span class="math inline">\([t-\alpha,t+\alpha]\)</span>中就是了。</p>
+<p><img src="http://qfxiao.me/img/image-20200313212905175.png" srcset="/img/loading.gif" /></p>
+<p>主动学习模块的算法流程图如下图所示：</p>
+<p><img src="http://qfxiao.me/img/image-20200313212948057.png" srcset="/img/loading.gif" /></p>
 <h1 id="experiments">Experiments</h1>
-<h2 id="datasets">Datasets</h2>
-<ul>
-<li>AD：网络广告检测</li>
-<li>LC：肺癌疾病监测</li>
-<li>p53：异常蛋白质活动检测</li>
-<li>R8：文本分类</li>
-<li>News20：文本分类</li>
-<li>URL：异常网址检测</li>
-<li>Webspam：Pascal Large Scale LearningChallenge</li>
-</ul>
-<h2 id="effectiveness-in-real-world-data-with-thousands-to-millions-of-features">Effectiveness in Real-world Data with Thousands to Millions of Features</h2>
-<p>作者分别使用原始特征和<em>REPEN</em>学到的特征进行异常检测，IMP代表性能提升比例，SU代表加速比例。</p>
-<p><img src="http://qfxiao.me/img/image-20200416151156535.png" srcset="/img/loading.gif" /></p>
-<h2 id="comparing-to-state-of-the-art-representation-learning-competitors">Comparing to State-of-the-art Representation Learning Competitors</h2>
-<ul>
-<li><strong>AE: </strong>自编码器</li>
-<li><strong>HLLE: </strong> <em>Hessian Locally Linear Embedding</em></li>
-<li><strong>SRP: </strong> <em>Sparse Random Projection</em></li>
-<li><strong>CoP: </strong> <em>Coherent Pursuit</em></li>
-</ul>
-<p><img src="http://qfxiao.me/img/image-20200416151203533.png" srcset="/img/loading.gif" /></p>
-<h2 id="the-capability-of-leveraging-labeled-outliers-as-prior-knowledge">The Capability of Leveraging Labeled Outliers as Prior Knowledge</h2>
-<p><img src="http://qfxiao.me/img/image-20200416151224069.png" srcset="/img/loading.gif" /></p>
-<h2 id="sensitivity-test-w.r.t.-the-representation-dimension">Sensitivity Test w.r.t. the Representation Dimension</h2>
-<p><img src="http://qfxiao.me/img/image-20200416151212730.png" srcset="/img/loading.gif" /></p>
-<p><img src="http://qfxiao.me/img/image-20200416151234583.png" srcset="/img/loading.gif" /></p>
-<p>文中提到了对于R8、URL、News20这三个数据集在维度<span class="math inline">\(M=1\)</span>的时候表现和其他维度一样好，作者给出的解释是在这几个数据集中异常部分是线性可分的，所以1维就足够了，另一个解释是优化问题。</p>
-<h2 id="scalability-test">Scalability Test</h2>
-<p><img src="http://qfxiao.me/img/image-20200416151241749.png" srcset="/img/loading.gif" /></p>
+<p>在实验部分，作者试图回答以下问题：</p>
+<ol type="1">
+<li>ATAD的效果如何？</li>
+<li>迁移学习模块的有效性如何？</li>
+<li>主动学习模块的有效性如何？</li>
+<li>ATAD在基于公开数据时对公司内部数据检测效果如何？</li>
+</ol>
+<h2 id="dataset-and-setup">Dataset and Setup</h2>
+<p>下表是用到的数据集的一些基本信息：</p>
+<p><img src="http://qfxiao.me/img/image-20200313213006305.png" srcset="/img/loading.gif" /></p>
+<h2 id="evaluation-metric">Evaluation Metric</h2>
+<p>评测标准使用的是F1-score： <span class="math display">\[
+F1=\frac{2\cdot P\cdot R}{P+R}, \space P=\frac{TP}{TP+FP}, \space R=\frac{TP}{TP+FN}
+\]</span></p>
+<h2 id="results">Results</h2>
+<h3 id="rq1-how-effective-is-atad">RQ1: How effective is ATAD?</h3>
+<p>Baseline包括孤立森林、K-Sigma、S-H-ESD和随机森林。</p>
+<p>最终结果如下表所示：</p>
+<p><img src="http://qfxiao.me/img/image-20200313213040896.png" srcset="/img/loading.gif" /></p>
+<h3 id="rq2-how-effective-is-the-transfer-learning-component">RQ2: How effective is the Transfer Learning Component?</h3>
+<p><img src="http://qfxiao.me/img/image-20200313213058084.png" srcset="/img/loading.gif" /></p>
+<p><img src="http://qfxiao.me/img/image-20200313213108654.png" srcset="/img/loading.gif" /></p>
+<p><img src="http://qfxiao.me/img/image-20200313213123043.png" srcset="/img/loading.gif" /></p>
+<p><img src="http://qfxiao.me/img/image-20200313213132432.png" srcset="/img/loading.gif" /></p>
+<p><img src="http://qfxiao.me/img/image-20200313213143405.png" srcset="/img/loading.gif" /></p>
+<h3 id="rq3-how-effective-is-the-active-learning-component">RQ3: How effective is the Active Learning component?</h3>
+<p><img src="http://qfxiao.me/img/image-20200313213153698.png" srcset="/img/loading.gif" /></p>
+<p><img src="http://qfxiao.me/img/image-20200313213208820.png" srcset="/img/loading.gif" /></p>
+<h3 id="rq4-how-effective-is-atad-in-detecting-anomalies-in-a-companys-local-dataset-based-on-public-datasets">RQ4: How effective is ATAD in detecting anomalies in a company’s local dataset based on public datasets?</h3>
+<p><img src="http://qfxiao.me/img/image-20200313213219578.png" srcset="/img/loading.gif" /></p>
 
             </article>
             <hr>
@@ -303,7 +310,7 @@ J(\Theta;T)=L(\phi(f_\Theta(\mathbf x^+)|\mathcal Q),\phi(f_\Theta(\mathbf x^-)|
                     
                       <a class="hover-with-bg" href="/tags/Anomaly-Detection/">Anomaly Detection</a>
                     
-                      <a class="hover-with-bg" href="/tags/Representation-Learning/">Representation Learning</a>
+                      <a class="hover-with-bg" href="/tags/Transfer-Learning/">Transfer Learning</a>
                     
                   </div>
                 
@@ -316,18 +323,12 @@ J(\Theta;T)=L(\phi(f_\Theta(\mathbf x^+)|\mathcal Q),\phi(f_\Theta(\mathbf x^-)|
                   <div class="post-prev col-6">
                     
                     
-                      <a href="/2020/06/01/Cross-dataset-Time-Series-Anomaly-Detection-for-Cloud-Systems/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Cross-dataset Time Series Anomaly Detection for Cloud Systems</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </div>
                   <div class="post-next col-6">
                     
                     
-                      <a href="/2020/03/30/Deep-Weakly-supervised-Anomaly-Detection/">
-                        <span class="hidden-mobile">Deep Weakly-supervised Anomaly Detection</span>
+                      <a href="/2020/05/06/Learning-Representations-of-Ultrahigh-dimensional-Data-for-Random-Distance-based-Outlier-Detection/">
+                        <span class="hidden-mobile">Learning Representations of Ultrahigh-dimensional Data for Random Distance-based Outlier Detection</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -346,8 +347,8 @@ J(\Theta;T)=L(\phi(f_\Theta(\mathbf x^+)|\mathcal Q),\phi(f_\Theta(\mathbf x^-)|
     <div id="disqus_thread"></div>
     <script type="text/javascript">
       var disqus_config = function () {
-        this.page.url = 'http://qfxiao.me/2020/05/06/Learning-Representations-of-Ultrahigh-dimensional-Data-for-Random-Distance-based-Outlier-Detection/';
-        this.page.identifier = '/2020/05/06/Learning-Representations-of-Ultrahigh-dimensional-Data-for-Random-Distance-based-Outlier-Detection/';
+        this.page.url = 'http://qfxiao.me/2020/06/01/Cross-dataset-Time-Series-Anomaly-Detection-for-Cloud-Systems/';
+        this.page.identifier = '/2020/06/01/Cross-dataset-Time-Series-Anomaly-Detection-for-Cloud-Systems/';
       };
       var oldLoadDq = window.onload;
       window.onload = function () {
@@ -497,7 +498,7 @@ J(\Theta;T)=L(\phi(f_\Theta(\mathbf x^+)|\mathcal Q),\phi(f_\Theta(\mathbf x^-)|
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "Learning Representations of Ultrahigh-dimensional Data for Random Distance-based Outlier Detection&nbsp;",
+        "Cross-dataset Time Series Anomaly Detection for Cloud Systems&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 70,
