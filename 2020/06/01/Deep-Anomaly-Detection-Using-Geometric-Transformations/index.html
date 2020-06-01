@@ -158,7 +158,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    921 字
+                    1.3k 字
                   </span>
                 
 
@@ -168,7 +168,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    12
+                    18
                      分钟
                   </span>
                 
@@ -235,7 +235,7 @@ n_S(x)=\sum_{i=0}^{k-1}\sum_{j=0}^{k-1}([\tilde{\boldsymbol\alpha}_i]_j-1)\log\m
 <h2 id="baselines">Baselines</h2>
 <p>文中用到了如下的Baseline：</p>
 <ul>
-<li><strong>One-class SVM. </strong></li>
+<li><strong>One-class SVM. </strong>单类支持向量机，作者使用了三个变体，分别为<strong>RAW-OC-SVM</strong>——使用原始数据作为输入，<strong>CAE-OC-SVM</strong>——使用一个卷积自编码器来获得低维表示作为输入和<strong>E2E-OC-SVM</strong>——全名为<strong>One-Class Deep Support Vector Data Description</strong>；</li>
 <li><strong>Deep structured energy-based models. </strong></li>
 <li><strong>Deep Autoencoding Gaussian Mixture Model. </strong></li>
 <li><strong>Generative Adversarial Networks. </strong></li>
@@ -248,9 +248,28 @@ n_S(x)=\sum_{i=0}^{k-1}\sum_{j=0}^{k-1}([\tilde{\boldsymbol\alpha}_i]_j-1)\log\m
 <li><strong>CatsVsDogs</strong></li>
 </ul>
 <h2 id="experimental-protocol">Experimental Protocol</h2>
+<p>设数据集有<span class="math inline">\(C\)</span>个类，我们会进行<span class="math inline">\(C\)</span>次实验，在第<span class="math inline">\(c\)</span>次实验 (<span class="math inline">\(1\leq c \leq C\)</span>)中我们会将第<span class="math inline">\(c\)</span>个类作为正常样本，而其他类作为异常样本。在训练阶段，训练集只包含正常样本，而在测试阶段则会有正常样本和异常样本。在获得异常分数之后，阈值<span class="math inline">\(\lambda\)</span>则根据ROC曲线下面积选择。</p>
+<p>实验中使用的几何变换基于以下三种基变换：</p>
+<ul>
+<li><strong>Horizontal flip: </strong> 记为<span class="math inline">\(T_b^{flip}(x)\)</span>，<span class="math inline">\(b\in\{T,F\}\)</span>代表是否翻转；</li>
+<li><strong>Translation: </strong> 记为<span class="math inline">\(T_{s_h,s_w}^{trans}(x)\)</span>，其中<span class="math inline">\(s_h,s_w\in\{-1,0,1\}\)</span>。在长宽两个维度上位移分别为<span class="math inline">\(0.25\)</span>高度和<span class="math inline">\(0.25\)</span>宽度，这两个维度发生位移的方向由<span class="math inline">\(s_h\)</span>和<span class="math inline">\(s_w\)</span>决定，当<span class="math inline">\(s_h=s_w=0\)</span>时代表不移动；</li>
+<li><strong>Rotation by multiples 90 degrees: </strong> 记为<span class="math inline">\(T_k^{rot}(x)\)</span>，<span class="math inline">\(k\in\{0,1,2,3\}\)</span>。旋转<span class="math inline">\(k\times90\)</span>度。</li>
+</ul>
+<p>将三种基变换叠加有： <span class="math display">\[
+\mathcal T=\left\{
+ T_k^{rot}\circ T_{s_h,s_w}^{trans}\circ T_b^{flip} : \begin{matrix}
+ b &amp;\in \{T,F\}\\
+ s_h,s_w&amp;\in\{-1,0,1\}\\
+ k&amp;\in\{0,1,2,3\}
+ \end{matrix} 
+\right\}
+\]</span> 最终几何变换种数为<span class="math inline">\(2\times3\times3\times4=72\)</span>种。</p>
+<p>分类器模型使用的是<strong>Wide Residual Network</strong>，优化器为Adam，Batch size为128，训练轮数为200。</p>
 <h2 id="results">Results</h2>
-<p><img src="http://qfxiao.me/img/image-20200509211050138.png" srcset="/img/loading.gif" /></p>
 <p><img src="http://qfxiao.me/img/image-20200509211119999.png" srcset="/img/loading.gif"  /></p>
+<h2 id="identifying-out-of-distribution-samples-in-labeled-multi-class-datasets">Identifying Out-of-distribution Samples in Labeled Multi-class Datasets</h2>
+<h2 id="on-the-intuition-for-using-geometric-transformations">On the Intuition for Using Geometric Transformations</h2>
+<p><img src="http://qfxiao.me/img/image-20200509211050138.png" srcset="/img/loading.gif" /></p>
 
             </article>
             <hr>
