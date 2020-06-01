@@ -158,7 +158,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    1.8k 字
+                    2.2k 字
                   </span>
                 
 
@@ -168,7 +168,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    21
+                    25
                      分钟
                   </span>
                 
@@ -278,16 +278,29 @@ F1=\frac{2\cdot P\cdot R}{P+R}, \space P=\frac{TP}{TP+FP}, \space R=\frac{TP}{TP
 <p>Baseline包括孤立森林、K-Sigma、S-H-ESD和随机森林。</p>
 <p>最终结果如下表所示：</p>
 <p><img src="http://qfxiao.me/img/image-20200313213040896.png" srcset="/img/loading.gif" /></p>
-<h3 id="rq2-how-effective-is-the-transfer-learning-component">RQ2: How effective is the Transfer Learning Component?</h3>
+<p>为了评测ATAD利用标签的能力，我们比较了RF在达到和ATAD相似F1 score情况下所需标签的数量，如下表所示：</p>
 <p><img src="http://qfxiao.me/img/image-20200313213058084.png" srcset="/img/loading.gif" /></p>
+<h3 id="rq2-how-effective-is-the-transfer-learning-component">RQ2: How effective is the Transfer Learning Component?</h3>
+<p>我们从以下两个方面来探究模型迁移知识的能力：</p>
+<ul>
+<li>使用文中所用到的特征的重要性</li>
+<li>本模型迁移知识的能力</li>
+</ul>
+<p>对于第一点，作者提出传统的方法一般只提取了统计特征，而本文还提取了多种其他特征。作者对提取不同特征进行了比较试验，结果如下表所示：</p>
 <p><img src="http://qfxiao.me/img/image-20200313213108654.png" srcset="/img/loading.gif" /></p>
+<p>除此之外，作者还展示了不同数据集下前10有效的特征：</p>
 <p><img src="http://qfxiao.me/img/image-20200313213123043.png" srcset="/img/loading.gif" /></p>
+<p>对于第二点，作者比较了是否使用文中的领域适应算法CORAL，在达到相似F1 score下所需的标签数，如下表所示：</p>
 <p><img src="http://qfxiao.me/img/image-20200313213132432.png" srcset="/img/loading.gif" /></p>
-<p><img src="http://qfxiao.me/img/image-20200313213143405.png" srcset="/img/loading.gif" /></p>
 <h3 id="rq3-how-effective-is-the-active-learning-component">RQ3: How effective is the Active Learning component?</h3>
+<p>为了验证本文所用的主动学习的有效性，作者进行了对比试验。第一个模型 (Supervised model) 使用全部标签但不使用迁移学习训练，第二个 (Naïve) 为只使用主动学习而不使用迁移学习，第三个为本文提出的模型。结果如下图所示，为了达到相似的性能，不同模型需要的标签数。</p>
+<p><img src="http://qfxiao.me/img/image-20200313213143405.png" srcset="/img/loading.gif" /></p>
+<p>下表展示了使用不同主动学习策略 (U - conventional uncertainty method, UCD - 本文使用的方法, random - 随机选择) 进行标记得到的结果：</p>
 <p><img src="http://qfxiao.me/img/image-20200313213153698.png" srcset="/img/loading.gif" /></p>
+<p>同时作者还对不同<span class="math inline">\(\alpha\)</span>的选择进行了实验：</p>
 <p><img src="http://qfxiao.me/img/image-20200313213208820.png" srcset="/img/loading.gif" /></p>
 <h3 id="rq4-how-effective-is-atad-in-detecting-anomalies-in-a-companys-local-dataset-based-on-public-datasets">RQ4: How effective is ATAD in detecting anomalies in a company’s local dataset based on public datasets?</h3>
+<p>这里作者对比了不同方法在微软内部数据集上的结果：</p>
 <p><img src="http://qfxiao.me/img/image-20200313213219578.png" srcset="/img/loading.gif" /></p>
 
             </article>
