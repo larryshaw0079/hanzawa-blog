@@ -158,7 +158,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    1.3k 字
+                    2.3k 字
                   </span>
                 
 
@@ -168,7 +168,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    14
+                    25
                      分钟
                   </span>
                 
@@ -241,8 +241,7 @@
 <p>输入<code>cat /etc/issue</code>可以看到默认拉取的是最新的Ubuntu 20.04 LTS：</p>
 <p><img src="http://qfxiao.me/img/image-20200602144424552.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <h1 id="build-customized-docker-images">Build Customized Docker Images</h1>
-<p>如果没有现成的Docker镜像能满足我们的需求，我们可以考虑自己写一个</p>
-<p>类似于<code>C++</code>或<code>Python</code>中的对象的继承，Dockerfile也可以“继承”，这意味着我们不必从头写起。</p>
+<p>如果没有现成的Docker镜像能满足我们的需求，我们可以考虑自己写一个。要自定义一个Docker镜像需要两步，第一步是编写Dockerfile，第二步是使用<code>docker build</code>命令构建镜像。Dockerfile可以看作是一个脚本，描述了我们构建镜像所需要的全部命令，比如要构建一个用于Python科学计算的Docker镜像，我们需要在Dockerfile中编写安装Python的命令，安装Numpy、Scipy等常用包的命令等等。我们先来上手编写Dockerfile，这里我准备写一个包含<a href="https://hexo.io/" target="_blank" rel="noopener">hexo博客框架</a>的镜像，这个框架需要node作为基础环境，不过我们不需要在Dockerfile里写安装node的命令。因为类似于<code>C++</code>或<code>Python</code>中的对象的继承，Dockerfile也可以“继承”，这意味着我们不必从头写起。我们先来看一下完整的Dockfile和效果，再来一一解释。</p>
 <pre><code class="hljs dockerfile"><span class="hljs-keyword">FROM</span> node
 
 --------------------------------------------------------------
@@ -250,18 +249,34 @@
 <span class="hljs-keyword">RUN</span><span class="bash"> npm install -g hexo-cli</span>
 <span class="hljs-keyword">EXPOSE</span> <span class="hljs-number">4000</span>
 <span class="hljs-keyword">CMD</span><span class="bash"> hexo init blog &amp;&amp; <span class="hljs-built_in">cd</span> blog &amp;&amp; hexo generate &amp;&amp; hexo server</span></code></pre>
+<p>运行结果如下所示，可以看到Docker按照我们写的Dockerfile一行一行的进行镜像的构建：</p>
 <p><img src="http://qfxiao.me/img/image-20200602161816051.png" srcset="/img/loading.gif" style="zoom: 50%;" /></p>
+<p>现在来解释Docerfile里的内容。<code>FROM &lt;docker image&gt;</code>表示继承其他的镜像，这里我们使用node官方的镜像。接下来是安装hexo，<code>RUN &lt;command&gt;</code>表示执行命令，这里我们直接用<code>npm install -g hexo-cli</code>进行安装。由于要浏览博客网页需要开放端口，而Docker容器运行的时候和外部主机是完全隔断的，要使外部主机访问Docker容器端口，需要暴露端口。<code>EXPOSE &lt;port&gt;</code>代表暴露端口，这里用的是4000端口。之后是创建博客和启动本地服务，<code>CMD &lt;command&gt;</code>和<code>RUN &lt;command&gt;</code>的区别是RUN会在构建的时候执行，而CMD是在容器启动之后才会执行。<code>hexo init blog &amp;&amp; cd blog &amp;&amp; hexo generate &amp;&amp; hexo server</code>分别代表初始化博客、进入博客所在文件夹、生成博客网站、启动本地服务器。更多指令可以参考<a href="https://docs.docker.com/engine/reference/builder/" target="_blank" rel="noopener">官方文档</a>。</p>
+<p>然后我们使用<code>docker build -t test_hexo .</code>命令构建镜像。</p>
+<blockquote>
+<p>构建镜像 <code>docker build -t &lt;image_name&gt; &lt;direcotry&gt;</code></p>
+</blockquote>
+<p>运行镜像：</p>
 <p><img src="http://qfxiao.me/img/image-20200602161640400.png" srcset="/img/loading.gif" style="zoom: 33%;" /></p>
+<p>可以看到容器启动后开始执行博客初始化。</p>
 <p><img src="http://qfxiao.me/img/image-20200602161713537.png" srcset="/img/loading.gif" style="zoom:33%;" /></p>
+<p>最后在<code>locahost:4000</code>上启动了一个本地服务器，在浏览器中输入这个地址，可以看到刚刚构建好的博客：</p>
 <p><img src="http://qfxiao.me/img/image-20200602161524359.png" srcset="/img/loading.gif" style="zoom: 50%;" /></p>
+<p>值得注意的是，在Dockerfile中我们暴露了4000端口，使用<code>-p</code>标签可以达到同样的效果：<code>docker run -p &lt;docker_port&gt;:&lt;local_port&gt; &lt;image_name&gt;</code>。比如<code>docker run -p 9999:8888 xxxx</code>代表将Docker容器中的9999端口转发到外部主机的8888端口。如果你是在远程服务器上使用的Docker，那么端口只是被转发到了远程服务器上，还得手动将远程服务器再转发到你本机上才能直接在本机浏览器上看到页面。</p>
 <h2 id="build-docker-images-with-aliyun-container-registry">Build Docker Images with Aliyun Container Registry</h2>
-<p>可以使用<a href="https://cr.console.aliyun.com/" target="_blank" rel="noopener">阿里云容器镜像服务</a></p>
+<p>因为某些原因，如果在构建镜像的时候需要通过<code>apt-get update</code>更新源，会发现无论如何都会卡住。这个时候可以使用<a href="https://cr.console.aliyun.com/" target="_blank" rel="noopener">阿里云容器镜像服务</a>，在阿里的服务器上构建好镜像，再拉取到自己的机器上。注册好帐号之后，点击创建镜像仓库：</p>
 <p><img src="http://qfxiao.me/img/image-20200602162228133.png" srcset="/img/loading.gif" /></p>
+<p>这里仓库类型如果没有特殊需求建议使用公开，然后填写一些基本信息：</p>
 <p><img src="http://qfxiao.me/img/image-20200602162334122.png" srcset="/img/loading.gif" style="zoom: 67%;" /></p>
+<p>之后设置代码源，其实就是告诉阿里云从哪儿获取Dockerfile，我这里用的是Github，所以需要先在阿里云中关联Github账号，然后在Github中创建一个用来放Dockerfile的仓库。构建设置里有一个“海外机器构建”，这正是我们使用阿里云容器服务的主要目的，勾选。</p>
 <p><img src="http://qfxiao.me/img/image-20200602162419289.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
-<p><img src="http://qfxiao.me/img/image-20200602162710789.png" srcset="/img/loading.gif" style="zoom: 33%;" /></p>
+<p>镜像仓库创建好之后，点进去，在构建页面点击添加规则：</p>
+<p><img src="http://qfxiao.me/img/image-20200602162710789.png" srcset="/img/loading.gif" style="zoom: 50%;" /></p>
+<p>按下图进行设置即可，镜像版本就是你想要的镜像名字：</p>
 <p><img src="http://qfxiao.me/img/image-20200602162740273.png" srcset="/img/loading.gif" style="zoom: 67%;" /></p>
+<p>点击“立即构建”：</p>
 <p><img src="http://qfxiao.me/img/image-20200602162816545.png" srcset="/img/loading.gif" style="zoom: 50%;" /></p>
+<p>等待一段时间后，如果构建成功，便可以进行拉取了，在镜像仓库的基本信息页面可以看到地址：</p>
 <p><img src="http://qfxiao.me/img/image-20200602162533220.png" srcset="/img/loading.gif" style="zoom: 50%;" /></p>
 <h1 id="what-is-openpai">What is OpenPAI</h1>
 <h1 id="submit-jobs-to-openpai">Submit Jobs to OpenPAI</h1>
