@@ -8,7 +8,7 @@
     <link href="/2020/06/02/Ubuntu20-4LTS-%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE-CUDA10-2-cuDNN7-6-5-Tensorflow-Pytorch/"/>
     <url>/2020/06/02/Ubuntu20-4LTS-%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE-CUDA10-2-cuDNN7-6-5-Tensorflow-Pytorch/</url>
     
-    <content type="html"><![CDATA[<h1 id="introduction">Introduction</h1><p>Ubuntu的最新LTS版本也更新到了20.04，在给新机器配置深度学习环境的时候发现比以前容易了许多，特此写一篇Tutorial。这里的安装方法只针对Ubuntu20.04LTS，对于其他版本的系统可能不太适用。</p><h1 id="install-gpu-drivers">Install GPU Drivers</h1><p>这里假设安装系统之后已经做好了必要的配置（安装常用软件依赖、修改国内源等）。Ubuntu20.04中GPU驱动可以直接通过GUI界面安装，十分方便，方法是找到软件与更新 (Software &amp; Updates)，在附加驱动 (additional drivers) 选项卡中选择驱动版本，一般是选择“专有，tested” (proprietary, tested) 那个，之后点Apply Changes，重启。</p><p><img src="http://qfxiao.me/img/software_updates_additional_drivers_nvidia.png" srcset="/img/loading.gif" /></p><h1 id="install-cuda-cudnn">Install CUDA &amp; cuDNN</h1><p>这里选择apt-get的方式安装CUDA：</p><pre><code class="hljs bash">sudo apt-get install nvidia-cuda-toolkit</code></pre><p>输入<code>nvcc --version</code>可以测试是否安装成功，输入<code>nvidia-smi</code>可以看到GPU信息和CUDA版本。</p><p>之后安装cuDNN，进入<a href="https://developer.nvidia.com/cudnn" target="_blank" rel="noopener">官网</a>，选择Download cuDNN：</p><p><img src="http://qfxiao.me/img/image-20200602112803325.png" srcset="/img/loading.gif" /></p><p>会要求登录，如果没有账号的注册一个即可。在这里根据CUDA版本选择适合的cuDNN，我这里是CUDA10.2。我们选择deb包的方式安装，下载下图中圈出来的三个deb包，依次用<code>sudo dpkg -i xxx.deb</code>命令安装。</p><p><img src="http://qfxiao.me/img/image-20200602112922230.png" srcset="/img/loading.gif" /></p><h1 id="configure-python">Configure Python</h1><p>为了更好地管理Python包和虚拟环境，我们需要安装Anaconda。使用Anaconda之后，我们可以创建虚拟环境，虚拟环境之间互不干扰。做科学实验我们一般需要安装大量的Python包，有的包之间甚至还有冲突，如果我们把他们都安装在同一个环境下就会难以管理，甚至出冲突。而有了虚拟环境之后，我们可以把不同需求放在不同虚拟环境中，比如深度学习开发放在一个虚拟环境中（安装Tensorflow等），网站开发放在一个虚拟环境中（安装Flask等）。Anaconda默认自带大量的包，不过我们一般会创建新的虚拟环境去安装新的包，所以这里我们选用Miniconda。Miniconda和Anaconda唯一的区别是不会自带大量Python包，这里大家自行选择。Anaconda国内镜像下载地址为：https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/，Miniconda国内镜像下载地址为：https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/。</p><p>比如说我们下载的是<code>Miniconda3-py38_4.8.2-Linux-x86_64.sh</code>，执行<code>bash Miniconda3-py38_4.8.2-Linux-x86_64.sh</code>即可安装。显示一大屏用户协议哪儿按<code>q</code>可以直接跳过，其他选项的默认的输入<code>yes</code>即可。在提示是否需要conda init的时候记得输入<code>yes</code>。</p><p>安装成功之后，重开一个终端，可以看到现在处于<code>base</code>环境中：</p><p><img src="http://qfxiao.me/img/image-20200602114523426.png" srcset="/img/loading.gif" /></p><p>我们先配置一下国内镜像，执行</p><pre><code class="hljs bash">vim ~/.condarc</code></pre><p>然后粘贴下列文本使用清华源：</p><pre><code class="hljs less"><span class="hljs-attribute">channels</span>:  - defaults<span class="hljs-attribute">show_channel_urls</span>: true<span class="hljs-attribute">channel_alias</span>: <span class="hljs-attribute">https</span>:<span class="hljs-comment">//mirrors.tuna.tsinghua.edu.cn/anaconda</span><span class="hljs-attribute">default_channels</span>:  - <span class="hljs-attribute">https</span>:<span class="hljs-comment">//mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main</span>  - <span class="hljs-attribute">https</span>:<span class="hljs-comment">//mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free</span>  - <span class="hljs-attribute">https</span>:<span class="hljs-comment">//mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/r</span>  - <span class="hljs-attribute">https</span>:<span class="hljs-comment">//mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/pro</span>  - <span class="hljs-attribute">https</span>:<span class="hljs-comment">//mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/msys2</span><span class="hljs-attribute">custom_channels</span>:  <span class="hljs-attribute">conda-forge</span>: <span class="hljs-attribute">https</span>:<span class="hljs-comment">//mirrors.tuna.tsinghua.edu.cn/anaconda/cloud</span>  <span class="hljs-attribute">msys2</span>: <span class="hljs-attribute">https</span>:<span class="hljs-comment">//mirrors.tuna.tsinghua.edu.cn/anaconda/cloud</span>  <span class="hljs-attribute">bioconda</span>: <span class="hljs-attribute">https</span>:<span class="hljs-comment">//mirrors.tuna.tsinghua.edu.cn/anaconda/cloud</span>  <span class="hljs-attribute">menpo</span>: <span class="hljs-attribute">https</span>:<span class="hljs-comment">//mirrors.tuna.tsinghua.edu.cn/anaconda/cloud</span>  <span class="hljs-attribute">pytorch</span>: <span class="hljs-attribute">https</span>:<span class="hljs-comment">//mirrors.tuna.tsinghua.edu.cn/anaconda/cloud</span>  <span class="hljs-attribute">simpleitk</span>: <span class="hljs-attribute">https</span>:<span class="hljs-comment">//mirrors.tuna.tsinghua.edu.cn/anaconda/cloud</span></code></pre><p>之后我们输入<code>conda create -n &lt;your_name&gt;</code>创建一个新的虚拟环境，如果需要指定Python版本，则<code>conda create --n &lt;your_name&gt; python=&lt;python_version&gt;</code>。之后输入<code>conda activate &lt;your_name&gt;</code>进入虚拟环境，如果需要退出，则使用<code>conda deactivate</code>。</p><p>安装常用包：</p><pre><code class="hljs bash">conda install --yes numpy scipy pandas matplotlib tqdm pip jupyter</code></pre><p><code>--yes</code>的作用是手动输入<code>y</code>来确认是否安装，这里列出的是一些最常用的Python包，大家可以根据自己的需求自行调整。<code>conda install</code>为Anaconda中安装Python包的方式。</p><h1 id="install-pytorch">Install PyTorch</h1><p>这里来安装PyTorch环境，推荐使用<code>conda create -n pytorch</code>创建一个专有虚拟环境，然后使用<code>conda install</code>安装常用包。对于安装PyTorch，我们可以使用<code>conda</code>也可以使用<code>pip</code>安装。<code>pip</code>是另外一个安装Python包的工具，由于不检查依赖所以比<code>conda</code>安装速度快，而且包的数量比<code>conda</code>多，使用也更广泛。同样<code>pip</code>也可以使用国内镜像加速下载，详见https://mirrors.tuna.tsinghua.edu.cn/help/pypi/。</p><p>对于CUDA10.2，官方给出的用<code>conda</code>安装PyTorch的命令是：</p><pre><code class="hljs bash">conda install pytorch torchvision cudatoolkit=10.2 -c pytorch</code></pre><p>用<code>pip</code>安装PyTorch的命令是：</p><pre><code class="hljs bash">pip install torch torchvision</code></pre><p>对于其他版本的CUDA安装命令可能不一样，可以去<a href="https://pytorch.org/get-started/locally/" target="_blank" rel="noopener">官网</a>查看。</p><h1 id="install-tensorflow">Install Tensorflow</h1><p>安装Tensorflow环境同样推荐创建一个专有虚拟环境。对于Tensorflow2的安装，使用<code>pip</code>十分方便，使用</p><pre><code class="hljs bash">pip install tensorflow tensorflow-gpu</code></pre><p>即可。要安装其他版本的Tensorflow可以使用<code>pip install tensorflow==&lt;tf_version&gt; tensorflow-gpu==&lt;tf_version&gt;</code>来指定版本。不过不同版本的Tensorflow要求的CUDA版本都有所不同，可以参考<a href="https://www.tensorflow.org/install/source#linux" target="_blank" rel="noopener">官网</a>的说明。</p>]]></content>
+    <content type="html"><![CDATA[<h1 id="introduction">Introduction</h1><p>Ubuntu的最新LTS版本也更新到了20.04，在给新机器配置深度学习环境的时候发现比以前容易了许多，特此写一篇Tutorial。这里的安装方法只针对Ubuntu20.04LTS，对于其他版本的系统可能不太适用。</p><h1 id="install-gpu-drivers">Install GPU Drivers</h1><p>这里假设安装系统之后已经做好了必要的配置（安装常用软件依赖、修改国内源等）。Ubuntu20.04中GPU驱动可以直接通过GUI界面安装，十分方便，方法是找到软件与更新 (Software &amp; Updates)，在附加驱动 (additional drivers) 选项卡中选择驱动版本，一般是选择“专有，tested” (proprietary, tested) 那个，之后点Apply Changes，重启。</p><p><img src="http://qfxiao.me/img/software_updates_additional_drivers_nvidia.png" srcset="/img/loading.gif" /></p><h1 id="install-cuda-cudnn">Install CUDA &amp; cuDNN</h1><p>这里选择apt-get的方式安装CUDA：</p><pre><code class="hljs bash">sudo apt-get install nvidia-cuda-toolkit</code></pre><p>输入<code>nvcc --version</code>可以测试是否安装成功，输入<code>nvidia-smi</code>可以看到GPU信息和CUDA版本。</p><p>之后安装cuDNN，进入<a href="https://developer.nvidia.com/cudnn" target="_blank" rel="noopener">官网</a>，选择Download cuDNN：</p><p><img src="http://qfxiao.me/img/image-20200602112803325.png" srcset="/img/loading.gif" /></p><p>会要求登录，如果没有账号的注册一个即可。在这里根据CUDA版本选择适合的cuDNN，我这里是CUDA10.2。我们选择deb包的方式安装，下载下图中圈出来的三个deb包，依次用<code>sudo dpkg -i xxx.deb</code>命令安装。</p><p><img src="http://qfxiao.me/img/image-20200602112922230.png" srcset="/img/loading.gif" /></p><h1 id="configure-python">Configure Python</h1><p>为了更好地管理Python包和虚拟环境，我们需要安装Anaconda。使用Anaconda之后，我们可以创建虚拟环境，虚拟环境之间互不干扰。做科学实验我们一般需要安装大量的Python包，有的包之间甚至还有冲突，如果我们把他们都安装在同一个环境下就会难以管理，甚至出冲突。而有了虚拟环境之后，我们可以把不同需求放在不同虚拟环境中，比如深度学习开发放在一个虚拟环境中（安装Tensorflow等），网站开发放在一个虚拟环境中（安装Flask等）。Anaconda默认自带大量的包，不过我们一般会创建新的虚拟环境去安装新的包，所以这里我们选用Miniconda。Miniconda和Anaconda唯一的区别是不会自带大量Python包，这里大家自行选择。Anaconda国内镜像下载地址为：https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/，Miniconda国内镜像下载地址为：https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/。</p><p>比如说我们下载的是<code>Miniconda3-py38_4.8.2-Linux-x86_64.sh</code>，执行<code>bash Miniconda3-py38_4.8.2-Linux-x86_64.sh</code>即可安装。显示一大屏用户协议哪儿按<code>q</code>可以直接跳过，其他选项的默认的输入<code>yes</code>即可。在提示是否需要conda init的时候记得输入<code>yes</code>。</p><p>安装成功之后，重开一个终端，可以看到现在处于<code>base</code>环境中：</p><p><img src="http://qfxiao.me/img/image-20200602114523426.png" srcset="/img/loading.gif" /></p><p>我们先配置一下国内镜像，执行</p><pre><code class="hljs bash">vim ~/.condarc</code></pre><p>然后粘贴下列文本使用清华源：</p><pre><code class="hljs less"><span class="hljs-attribute">channels</span>:  - defaults<span class="hljs-attribute">show_channel_urls</span>: true<span class="hljs-attribute">channel_alias</span>: <span class="hljs-attribute">https</span>:<span class="hljs-comment">//mirrors.tuna.tsinghua.edu.cn/anaconda</span><span class="hljs-attribute">default_channels</span>:  - <span class="hljs-attribute">https</span>:<span class="hljs-comment">//mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main</span>  - <span class="hljs-attribute">https</span>:<span class="hljs-comment">//mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free</span>  - <span class="hljs-attribute">https</span>:<span class="hljs-comment">//mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/r</span>  - <span class="hljs-attribute">https</span>:<span class="hljs-comment">//mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/pro</span>  - <span class="hljs-attribute">https</span>:<span class="hljs-comment">//mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/msys2</span><span class="hljs-attribute">custom_channels</span>:  <span class="hljs-attribute">conda-forge</span>: <span class="hljs-attribute">https</span>:<span class="hljs-comment">//mirrors.tuna.tsinghua.edu.cn/anaconda/cloud</span>  <span class="hljs-attribute">msys2</span>: <span class="hljs-attribute">https</span>:<span class="hljs-comment">//mirrors.tuna.tsinghua.edu.cn/anaconda/cloud</span>  <span class="hljs-attribute">bioconda</span>: <span class="hljs-attribute">https</span>:<span class="hljs-comment">//mirrors.tuna.tsinghua.edu.cn/anaconda/cloud</span>  <span class="hljs-attribute">menpo</span>: <span class="hljs-attribute">https</span>:<span class="hljs-comment">//mirrors.tuna.tsinghua.edu.cn/anaconda/cloud</span>  <span class="hljs-attribute">pytorch</span>: <span class="hljs-attribute">https</span>:<span class="hljs-comment">//mirrors.tuna.tsinghua.edu.cn/anaconda/cloud</span>  <span class="hljs-attribute">simpleitk</span>: <span class="hljs-attribute">https</span>:<span class="hljs-comment">//mirrors.tuna.tsinghua.edu.cn/anaconda/cloud</span></code></pre><p>之后我们输入<code>conda create -n &lt;your_name&gt;</code>创建一个新的虚拟环境，如果需要指定Python版本，则<code>conda create --n &lt;your_name&gt; python=&lt;python_version&gt;</code>。之后输入<code>conda activate &lt;your_name&gt;</code>进入虚拟环境，如果需要退出，则使用<code>conda deactivate</code>。</p><p>安装常用包：</p><pre><code class="hljs bash">conda install --yes numpy scipy pandas matplotlib tqdm pip jupyter</code></pre><p><code>--yes</code>的作用是手动输入<code>y</code>来确认是否安装，这里列出的是一些最常用的Python包，大家可以根据自己的需求自行调整。<code>conda install</code>为Anaconda中安装Python包的方式。</p><h1 id="install-pytorch">Install PyTorch</h1><p>这里来安装PyTorch环境，推荐使用<code>conda create -n pytorch</code>创建一个专有虚拟环境，然后使用<code>conda install</code>安装常用包。对于安装PyTorch，我们可以使用<code>conda</code>也可以使用<code>pip</code>安装。<code>pip</code>是另外一个安装Python包的工具，由于不检查依赖所以比<code>conda</code>安装速度快，而且包的数量比<code>conda</code>多，使用也更广泛。同样<code>pip</code>也可以使用国内镜像加速下载，详见https://mirrors.tuna.tsinghua.edu.cn/help/pypi/。</p><p>对于CUDA10.2，官方给出的用<code>conda</code>安装PyTorch的命令是：</p><pre><code class="hljs bash">conda install pytorch torchvision cudatoolkit=10.2 -c pytorch</code></pre><p>用<code>pip</code>安装PyTorch的命令是：</p><pre><code class="hljs bash">pip install torch torchvision</code></pre><p>对于其他版本的CUDA安装命令可能不一样，可以去<a href="https://pytorch.org/get-started/locally/" target="_blank" rel="noopener">官网</a>查看。</p><p>可以使用以下命令来测试GPU版本的PyTorch是否正常工作：</p><pre><code class="hljs bash">python -c <span class="hljs-string">"import torch; print(torch.cuda.is_available())"</span></code></pre><h1 id="install-tensorflow">Install Tensorflow</h1><p>安装Tensorflow环境同样推荐创建一个专有虚拟环境。对于Tensorflow2的安装，使用<code>pip</code>十分方便，使用</p><pre><code class="hljs bash">pip install tensorflow tensorflow-gpu</code></pre><p>即可。要安装其他版本的Tensorflow可以使用<code>pip install tensorflow==&lt;tf_version&gt; tensorflow-gpu==&lt;tf_version&gt;</code>来指定版本。不过不同版本的Tensorflow要求的CUDA版本都有所不同，可以参考<a href="https://www.tensorflow.org/install/source#linux" target="_blank" rel="noopener">官网</a>的说明。</p><p>可以使用以下命令来测试GPU版本的Tensorflow是否正常工作：</p><pre><code class="hljs bash">python -c <span class="hljs-string">"import tensorflow as tf; tf.config.list_physical_devices('GPU')"</span></code></pre>]]></content>
     
     
     <categories>
@@ -219,9 +219,9 @@
     
     <tags>
       
-      <tag>Anomaly Detection</tag>
-      
       <tag>Deep Learning</tag>
+      
+      <tag>Anomaly Detection</tag>
       
     </tags>
     
@@ -275,9 +275,9 @@
     
     <tags>
       
-      <tag>Anomaly Detection</tag>
-      
       <tag>VAE</tag>
+      
+      <tag>Anomaly Detection</tag>
       
     </tags>
     
@@ -304,9 +304,9 @@
     
     <tags>
       
-      <tag>Time Series</tag>
-      
       <tag>Deep Learning</tag>
+      
+      <tag>Time Series</tag>
       
     </tags>
     
@@ -333,15 +333,15 @@
     
     <tags>
       
-      <tag>Time Series</tag>
-      
-      <tag>Machine Learning</tag>
-      
-      <tag>Anomaly Detection</tag>
+      <tag>VAE</tag>
       
       <tag>Deep Learning</tag>
       
-      <tag>VAE</tag>
+      <tag>Time Series</tag>
+      
+      <tag>Anomaly Detection</tag>
+      
+      <tag>Machine Learning</tag>
       
     </tags>
     
@@ -368,11 +368,11 @@
     
     <tags>
       
-      <tag>Deep Learning</tag>
-      
       <tag>Variational Inference</tag>
       
       <tag>VAE</tag>
+      
+      <tag>Deep Learning</tag>
       
       <tag>GAN</tag>
       
@@ -403,9 +403,9 @@
       
       <tag>Time Series</tag>
       
-      <tag>Statistics</tag>
-      
       <tag>Machine Learning</tag>
+      
+      <tag>Statistics</tag>
       
     </tags>
     
@@ -432,11 +432,11 @@
     
     <tags>
       
-      <tag>Deep Learning</tag>
-      
       <tag>Variational Inference</tag>
       
       <tag>VAE</tag>
+      
+      <tag>Deep Learning</tag>
       
     </tags>
     
@@ -463,9 +463,9 @@
     
     <tags>
       
-      <tag>Time Series</tag>
-      
       <tag>Deep Learning</tag>
+      
+      <tag>Time Series</tag>
       
       <tag>RNN</tag>
       
@@ -494,15 +494,15 @@
     
     <tags>
       
-      <tag>Time Series</tag>
-      
-      <tag>Machine Learning</tag>
-      
-      <tag>Anomaly Detection</tag>
+      <tag>VAE</tag>
       
       <tag>Deep Learning</tag>
       
-      <tag>VAE</tag>
+      <tag>Time Series</tag>
+      
+      <tag>Anomaly Detection</tag>
+      
+      <tag>Machine Learning</tag>
       
       <tag>RNN</tag>
       
@@ -533,9 +533,9 @@
     
     <tags>
       
-      <tag>Time Series</tag>
-      
       <tag>Deep Learning</tag>
+      
+      <tag>Time Series</tag>
       
       <tag>GAN</tag>
       
@@ -564,13 +564,13 @@
     
     <tags>
       
-      <tag>Time Series</tag>
+      <tag>Deep Learning</tag>
       
-      <tag>Machine Learning</tag>
+      <tag>Time Series</tag>
       
       <tag>Anomaly Detection</tag>
       
-      <tag>Deep Learning</tag>
+      <tag>Machine Learning</tag>
       
     </tags>
     
@@ -597,13 +597,13 @@
     
     <tags>
       
-      <tag>Time Series</tag>
+      <tag>Deep Learning</tag>
       
-      <tag>Machine Learning</tag>
+      <tag>Time Series</tag>
       
       <tag>Anomaly Detection</tag>
       
-      <tag>Deep Learning</tag>
+      <tag>Machine Learning</tag>
       
     </tags>
     
@@ -630,15 +630,15 @@
     
     <tags>
       
-      <tag>Time Series</tag>
-      
-      <tag>Machine Learning</tag>
-      
-      <tag>Anomaly Detection</tag>
+      <tag>VAE</tag>
       
       <tag>Deep Learning</tag>
       
-      <tag>VAE</tag>
+      <tag>Time Series</tag>
+      
+      <tag>Anomaly Detection</tag>
+      
+      <tag>Machine Learning</tag>
       
     </tags>
     
@@ -665,13 +665,13 @@
     
     <tags>
       
-      <tag>Time Series</tag>
+      <tag>Deep Learning</tag>
       
-      <tag>Machine Learning</tag>
+      <tag>Time Series</tag>
       
       <tag>Anomaly Detection</tag>
       
-      <tag>Deep Learning</tag>
+      <tag>Machine Learning</tag>
       
       <tag>Spectral</tag>
       
