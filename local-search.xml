@@ -4,6 +4,35 @@
   
   
   <entry>
+    <title>面向OpenPAI的Docker镜像配置及OpenPAI基本使用方法</title>
+    <link href="/2020/06/02/%E9%9D%A2%E5%90%91OpenPAI%E7%9A%84Docker%E9%95%9C%E5%83%8F%E9%85%8D%E7%BD%AE%E5%8F%8AOpenPAI%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/"/>
+    <url>/2020/06/02/%E9%9D%A2%E5%90%91OpenPAI%E7%9A%84Docker%E9%95%9C%E5%83%8F%E9%85%8D%E7%BD%AE%E5%8F%8AOpenPAI%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/</url>
+    
+    <content type="html"><![CDATA[<h1 id="introduction">Introduction</h1><p>&quot;Best practice&quot;</p><h1 id="docker-from-scratch">Docker from Scratch</h1><h1 id="write-customized-docker-images">Write Customized Docker Images</h1><h1 id="what-is-openpai">What is OpenPAI</h1><h1 id="submit-jobs-to-openpai">Submit Jobs to OpenPAI</h1>]]></content>
+    
+    
+    <categories>
+      
+      <category>Technical Notes</category>
+      
+      <category>Misc</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Docker</tag>
+      
+      <tag>OpenPAI</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Ubuntu20.04LTS 深度学习环境配置 CUDA10.2 + cuDNN7.6.5 + Tensorflow + Pytorch</title>
     <link href="/2020/06/02/Ubuntu20-4LTS-%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE-CUDA10-2-cuDNN7-6-5-Tensorflow-Pytorch/"/>
     <url>/2020/06/02/Ubuntu20-4LTS-%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE-CUDA10-2-cuDNN7-6-5-Tensorflow-Pytorch/</url>
