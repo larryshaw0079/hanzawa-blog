@@ -158,7 +158,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    682 字
+                    1.3k 字
                   </span>
                 
 
@@ -168,7 +168,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    7
+                    14
                      分钟
                   </span>
                 
@@ -208,7 +208,61 @@
 <p><img src="http://qfxiao.me/img/Container@2x_2020-602.png" srcset="/img/loading.gif" /></p>
 <p><img src="http://qfxiao.me/img/VM@2x_20200602.png" srcset="/img/loading.gif" /></p>
 <p>这一节我们先不讨论如何自己写Docker镜像，只是先讨论Docker的基本操作。</p>
-<h1 id="write-customized-docker-images">Write Customized Docker Images</h1>
+<h2 id="basic-operations">Basic Operations</h2>
+<p>Docker新安装好当然是没有什么镜像的，首先我们使用<code>docker pull hello-world</code>来下载一个测试镜像。</p>
+<blockquote>
+<p>拉取镜像 <code>docker pull &lt;image_name&gt;</code></p>
+</blockquote>
+<p>在输入之后，Docker会自动在远程服务器上查找对应的镜像进行下载。由于我的电脑上已经有这个镜像了，所以显示是下面的样子：</p>
+<p><img src="http://qfxiao.me/img/image-20200602142125342.png" srcset="/img/loading.gif" /></p>
+<p>接下来，我们输入<code>docker run hello-world</code>运行这个镜像。</p>
+<blockquote>
+<p>运行镜像<code>docker run &lt;image_name&gt;</code></p>
+</blockquote>
+<p>可以看到，Docker输出了一些信息就自己退出了，这和我们理解的虚拟机不太一样。在Docker里面，我们既可以创建一个完整的系统，用户在运行之后就可以正常使用这个操作系统，也可以创建一个简单的服务，默认运行完一些指令就退出了。这里的<code>hello-world</code>镜像这是输出了一些信息后就自动退出了，因为这就是这个镜像的全部内容。</p>
+<p><img src="http://qfxiao.me/img/image-20200602142314849.png" srcset="/img/loading.gif" /></p>
+<p>我们尝试来运行一个完整的系统，先用<code>docker pull ubuntu</code>拉取Ubuntu Docker镜像：</p>
+<p><img src="http://qfxiao.me/img/image-20200602142718332.png" srcset="/img/loading.gif" /></p>
+<p>接下来我们使用</p>
+<p><img src="http://qfxiao.me/img/image-20200602144354467.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<blockquote>
+<p><code>-it</code>的意思是什么？根据<code>docker run --help</code>：</p>
+<pre><code class="hljs routeros">-i, --interactive                    Keep STDIN open even <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> attached
+    --ip string                      IPv4<span class="hljs-built_in"> address </span>(e.g., 172.30.100.104)
+    --ip6 string                    <span class="hljs-built_in"> IPv6 address </span>(e.g., 2001:db8::33)
+    --ipc string                     IPC mode <span class="hljs-keyword">to</span> use
+    --isolation string               Container isolation technology
+    --kernel-memory bytes            Kernel memory limit
+-t, --tty                            Allocate a pseudo-TTY
+    --ulimit ulimit                  Ulimit options (default [])
+</code></pre>
+<p>其实<code>-it</code>是<code>-i</code>和<code>-t</code>的合并写法，意思是运行后进入这个容器并且启用shell，不然运行之后就会放到后台而不会进入容器中。而<code>--rm</code>则代表容器退出之后会被删除（镜像不会被删除），每次运行实际上会创建一个新的容器，如果不加<code>--rm</code>或退出之后不手动删除的话会看到一堆停止运行的容器。</p>
+</blockquote>
+<p>输入<code>cat /etc/issue</code>可以看到默认拉取的是最新的Ubuntu 20.04 LTS：</p>
+<p><img src="http://qfxiao.me/img/image-20200602144424552.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<h1 id="build-customized-docker-images">Build Customized Docker Images</h1>
+<p>如果没有现成的Docker镜像能满足我们的需求，我们可以考虑自己写一个</p>
+<p>类似于<code>C++</code>或<code>Python</code>中的对象的继承，Dockerfile也可以“继承”，这意味着我们不必从头写起。</p>
+<pre><code class="hljs dockerfile"><span class="hljs-keyword">FROM</span> node
+
+--------------------------------------------------------------
+
+<span class="hljs-keyword">RUN</span><span class="bash"> npm install -g hexo-cli</span>
+<span class="hljs-keyword">EXPOSE</span> <span class="hljs-number">4000</span>
+<span class="hljs-keyword">CMD</span><span class="bash"> hexo init blog &amp;&amp; <span class="hljs-built_in">cd</span> blog &amp;&amp; hexo generate &amp;&amp; hexo server</span></code></pre>
+<p><img src="http://qfxiao.me/img/image-20200602161816051.png" srcset="/img/loading.gif" style="zoom: 50%;" /></p>
+<p><img src="http://qfxiao.me/img/image-20200602161640400.png" srcset="/img/loading.gif" style="zoom: 33%;" /></p>
+<p><img src="http://qfxiao.me/img/image-20200602161713537.png" srcset="/img/loading.gif" style="zoom:33%;" /></p>
+<p><img src="http://qfxiao.me/img/image-20200602161524359.png" srcset="/img/loading.gif" style="zoom: 50%;" /></p>
+<h2 id="build-docker-images-with-aliyun-container-registry">Build Docker Images with Aliyun Container Registry</h2>
+<p>可以使用<a href="https://cr.console.aliyun.com/" target="_blank" rel="noopener">阿里云容器镜像服务</a></p>
+<p><img src="http://qfxiao.me/img/image-20200602162228133.png" srcset="/img/loading.gif" /></p>
+<p><img src="http://qfxiao.me/img/image-20200602162334122.png" srcset="/img/loading.gif" style="zoom: 67%;" /></p>
+<p><img src="http://qfxiao.me/img/image-20200602162419289.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="http://qfxiao.me/img/image-20200602162710789.png" srcset="/img/loading.gif" style="zoom: 33%;" /></p>
+<p><img src="http://qfxiao.me/img/image-20200602162740273.png" srcset="/img/loading.gif" style="zoom: 67%;" /></p>
+<p><img src="http://qfxiao.me/img/image-20200602162816545.png" srcset="/img/loading.gif" style="zoom: 50%;" /></p>
+<p><img src="http://qfxiao.me/img/image-20200602162533220.png" srcset="/img/loading.gif" style="zoom: 50%;" /></p>
 <h1 id="what-is-openpai">What is OpenPAI</h1>
 <h1 id="submit-jobs-to-openpai">Submit Jobs to OpenPAI</h1>
 
