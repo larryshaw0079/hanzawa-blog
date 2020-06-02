@@ -8,7 +8,7 @@
     <link href="/2020/06/02/%E9%9D%A2%E5%90%91OpenPAI%E7%9A%84Docker%E9%95%9C%E5%83%8F%E9%85%8D%E7%BD%AE%E5%8F%8AOpenPAI%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/"/>
     <url>/2020/06/02/%E9%9D%A2%E5%90%91OpenPAI%E7%9A%84Docker%E9%95%9C%E5%83%8F%E9%85%8D%E7%BD%AE%E5%8F%8AOpenPAI%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/</url>
     
-    <content type="html"><![CDATA[<h1 id="introduction">Introduction</h1><p>实验室服务器集群采用OpenPAI来进行GPU资源的管理，而OpenPAI采用了Docker作为基础，即代码都放在Docker容器中运行。由于Docker的使用、Docker镜像的配置都有一定的门槛，所以这里写一篇Tutorial来进行介绍。本文不是网上资料的拼凑，而是经过本人走弯路踩坑形成的&quot;Best practice&quot;。主要内容包括Docker的介绍、Docker的基本使用、如何配置自己的Docker镜像以及OpenPAI平台的基本使用，但不包括Docker和OpenPAI的安装。</p><h1 id="docker-from-scratch">Docker from Scratch</h1><p>要理解Docker是什么，从虚拟机开始讲可能会比较好理解。虚拟机大家可能都很熟悉了，比如说我用的系统是Windows，但我需要Linux系统来作为一个Flask编写的网站的服务器，但是又不想单独安装Linux系统，于是可以使用虚拟机来解决这个问题。安装VMWare Workstation，去官网下载Ubuntu系统镜像，然后在VMWare中安装好系统，然后从头配置Flask相关环境。实际上我需要的仅仅是一个Flask运行环境而已，而使用虚拟机却需要如此“大费周章”，这时Docker出现了，网上有大量现成的Flask Docker镜像，配置好了你所需的Flask环境，你只需要下载这些镜像，然后运行它，你就得到了一个Flask运行环境，而与你当前使用的系统无关。如果你需要一个Tomcat的运行环境，那么去找一个Tomcat的Docker镜像就行。Docker将需求或者说服务绑定在了Docker镜像中（<strong>轻量化</strong>，一个需求对应一个Docker镜像，每个镜像都很小），你有什么需求，去找相应的镜像即可（或者自己写一个），镜像的运行是以虚拟机的形式存在，所以他们之间也是互不干扰的。同时，你在写好一个Docker镜像之后，你还可以<strong>分享</strong>给别人，这样其他人就不用重新配置，直接运行你给他的镜像即可。Docker有两个比较关键的概念：</p><ul><li><strong>镜像 Images： </strong>这里的镜像不是指我们安装系统时下载的ISO镜像，Docker镜像就是把你需要的东西（一个系统+需要的服务）集中到一起，相当于做菜的菜谱；</li><li><strong>容器 Containers：</strong> 如果一个Docker镜像启动了，那么就会有一个Docker容器产生，相当于按照菜谱做出来的菜。</li></ul><p><img src="http://qfxiao.me/img/Container@2x_2020-602.png" srcset="/img/loading.gif" /></p><p><img src="http://qfxiao.me/img/VM@2x_20200602.png" srcset="/img/loading.gif" /></p><p>这一节我们先不讨论如何自己写Docker镜像，只是先讨论Docker的基本操作。</p><h2 id="basic-operations">Basic Operations</h2><p>Docker新安装好当然是没有什么镜像的，首先我们使用<code>docker pull hello-world</code>来下载一个测试镜像。</p><blockquote><p>拉取镜像 <code>docker pull &lt;image_name&gt;</code></p></blockquote><p>在输入之后，Docker会自动在远程服务器上查找对应的镜像进行下载。由于我的电脑上已经有这个镜像了，所以显示是下面的样子：</p><p><img src="http://qfxiao.me/img/image-20200602142125342.png" srcset="/img/loading.gif" /></p><p>接下来，我们输入<code>docker run hello-world</code>运行这个镜像。</p><blockquote><p>运行镜像<code>docker run &lt;image_name&gt;</code></p></blockquote><p>可以看到，Docker输出了一些信息就自己退出了，这和我们理解的虚拟机不太一样。在Docker里面，我们既可以创建一个完整的系统，用户在运行之后就可以正常使用这个操作系统，也可以创建一个简单的服务，默认运行完一些指令就退出了。这里的<code>hello-world</code>镜像这是输出了一些信息后就自动退出了，因为这就是这个镜像的全部内容。</p><p><img src="http://qfxiao.me/img/image-20200602142314849.png" srcset="/img/loading.gif" /></p><p>我们尝试来运行一个完整的系统，先用<code>docker pull ubuntu</code>拉取Ubuntu Docker镜像：</p><p><img src="http://qfxiao.me/img/image-20200602142718332.png" srcset="/img/loading.gif" /></p><p>接下来我们使用</p><p><img src="http://qfxiao.me/img/image-20200602144354467.png" srcset="/img/loading.gif" style="zoom:67%;" /></p><blockquote><p><code>-it</code>的意思是什么？根据<code>docker run --help</code>：</p><pre><code class="hljs routeros">-i, --interactive                    Keep STDIN open even <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> attached    --ip string                      IPv4<span class="hljs-built_in"> address </span>(e.g., 172.30.100.104)    --ip6 string                    <span class="hljs-built_in"> IPv6 address </span>(e.g., 2001:db8::33)    --ipc string                     IPC mode <span class="hljs-keyword">to</span> use    --isolation string               Container isolation technology    --kernel-memory bytes            Kernel memory limit-t, --tty                            Allocate a pseudo-TTY    --ulimit ulimit                  Ulimit options (default [])</code></pre><p>其实<code>-it</code>是<code>-i</code>和<code>-t</code>的合并写法，意思是运行后进入这个容器并且启用shell，不然运行之后就会放到后台而不会进入容器中。而<code>--rm</code>则代表容器退出之后会被删除（镜像不会被删除），每次运行实际上会创建一个新的容器，如果不加<code>--rm</code>或退出之后不手动删除的话会看到一堆停止运行的容器。</p></blockquote><p>输入<code>cat /etc/issue</code>可以看到默认拉取的是最新的Ubuntu 20.04 LTS：</p><p><img src="http://qfxiao.me/img/image-20200602144424552.png" srcset="/img/loading.gif" style="zoom:67%;" /></p><h1 id="build-customized-docker-images">Build Customized Docker Images</h1><p>如果没有现成的Docker镜像能满足我们的需求，我们可以考虑自己写一个</p><p>类似于<code>C++</code>或<code>Python</code>中的对象的继承，Dockerfile也可以“继承”，这意味着我们不必从头写起。</p><pre><code class="hljs dockerfile"><span class="hljs-keyword">FROM</span> node--------------------------------------------------------------<span class="hljs-keyword">RUN</span><span class="bash"> npm install -g hexo-cli</span><span class="hljs-keyword">EXPOSE</span> <span class="hljs-number">4000</span><span class="hljs-keyword">CMD</span><span class="bash"> hexo init blog &amp;&amp; <span class="hljs-built_in">cd</span> blog &amp;&amp; hexo generate &amp;&amp; hexo server</span></code></pre><p><img src="http://qfxiao.me/img/image-20200602161816051.png" srcset="/img/loading.gif" style="zoom: 50%;" /></p><p><img src="http://qfxiao.me/img/image-20200602161640400.png" srcset="/img/loading.gif" style="zoom: 33%;" /></p><p><img src="http://qfxiao.me/img/image-20200602161713537.png" srcset="/img/loading.gif" style="zoom:33%;" /></p><p><img src="http://qfxiao.me/img/image-20200602161524359.png" srcset="/img/loading.gif" style="zoom: 50%;" /></p><h2 id="build-docker-images-with-aliyun-container-registry">Build Docker Images with Aliyun Container Registry</h2><p>可以使用<a href="https://cr.console.aliyun.com/" target="_blank" rel="noopener">阿里云容器镜像服务</a></p><p><img src="http://qfxiao.me/img/image-20200602162228133.png" srcset="/img/loading.gif" /></p><p><img src="http://qfxiao.me/img/image-20200602162334122.png" srcset="/img/loading.gif" style="zoom: 67%;" /></p><p><img src="http://qfxiao.me/img/image-20200602162419289.png" srcset="/img/loading.gif" style="zoom:67%;" /></p><p><img src="http://qfxiao.me/img/image-20200602162710789.png" srcset="/img/loading.gif" style="zoom: 33%;" /></p><p><img src="http://qfxiao.me/img/image-20200602162740273.png" srcset="/img/loading.gif" style="zoom: 67%;" /></p><p><img src="http://qfxiao.me/img/image-20200602162816545.png" srcset="/img/loading.gif" style="zoom: 50%;" /></p><p><img src="http://qfxiao.me/img/image-20200602162533220.png" srcset="/img/loading.gif" style="zoom: 50%;" /></p><h1 id="what-is-openpai">What is OpenPAI</h1><h1 id="submit-jobs-to-openpai">Submit Jobs to OpenPAI</h1>]]></content>
+    <content type="html"><![CDATA[<h1 id="introduction">Introduction</h1><p>实验室服务器集群采用OpenPAI来进行GPU资源的管理，而OpenPAI采用了Docker作为基础，即代码都放在Docker容器中运行。由于Docker的使用、Docker镜像的配置都有一定的门槛，所以这里写一篇Tutorial来进行介绍。本文不是网上资料的拼凑，而是经过本人走弯路踩坑形成的&quot;Best practice&quot;。主要内容包括Docker的介绍、Docker的基本使用、如何配置自己的Docker镜像以及OpenPAI平台的基本使用，但不包括Docker和OpenPAI的安装。</p><h1 id="docker-from-scratch">Docker from Scratch</h1><p>要理解Docker是什么，从虚拟机开始讲可能会比较好理解。虚拟机大家可能都很熟悉了，比如说我用的系统是Windows，但我需要Linux系统来作为一个Flask编写的网站的服务器，但是又不想单独安装Linux系统，于是可以使用虚拟机来解决这个问题。安装VMWare Workstation，去官网下载Ubuntu系统镜像，然后在VMWare中安装好系统，然后从头配置Flask相关环境。实际上我需要的仅仅是一个Flask运行环境而已，而使用虚拟机却需要如此“大费周章”，这时Docker出现了，网上有大量现成的Flask Docker镜像，配置好了你所需的Flask环境，你只需要下载这些镜像，然后运行它，你就得到了一个Flask运行环境，而与你当前使用的系统无关。如果你需要一个Tomcat的运行环境，那么去找一个Tomcat的Docker镜像就行。Docker将需求或者说服务绑定在了Docker镜像中（<strong>轻量化</strong>，一个需求对应一个Docker镜像，每个镜像都很小），你有什么需求，去找相应的镜像即可（或者自己写一个），镜像的运行是以虚拟机的形式存在，所以他们之间也是互不干扰的。同时，你在写好一个Docker镜像之后，你还可以<strong>分享</strong>给别人，这样其他人就不用重新配置，直接运行你给他的镜像即可。Docker有两个比较关键的概念：</p><ul><li><strong>镜像 Images： </strong>这里的镜像不是指我们安装系统时下载的ISO镜像，Docker镜像就是把你需要的东西（一个系统+需要的服务）集中到一起，相当于做菜的菜谱；</li><li><strong>容器 Containers：</strong> 如果一个Docker镜像启动了，那么就会有一个Docker容器产生，相当于按照菜谱做出来的菜。</li></ul><p><img src="http://qfxiao.me/img/Container@2x_2020-602.png" srcset="/img/loading.gif" style="zoom:33%;" /></p><p><img src="http://qfxiao.me/img/VM@2x_20200602.png" srcset="/img/loading.gif" style="zoom:33%;" /></p><p>这一节我们先不讨论如何自己写Docker镜像，只是先讨论Docker的基本操作。</p><h2 id="basic-operations">Basic Operations</h2><p>Docker新安装好当然是没有什么镜像的，首先我们使用<code>docker pull hello-world</code>来下载一个测试镜像。</p><blockquote><p>拉取镜像 <code>docker pull &lt;image_name&gt;</code></p></blockquote><p>在输入之后，Docker会自动在远程服务器上查找对应的镜像进行下载。由于我的电脑上已经有这个镜像了，所以显示是下面的样子：</p><p><img src="http://qfxiao.me/img/image-20200602142125342.png" srcset="/img/loading.gif" /></p><p>接下来，我们输入<code>docker run hello-world</code>运行这个镜像。</p><blockquote><p>运行镜像<code>docker run &lt;image_name&gt;</code></p></blockquote><p>可以看到，Docker输出了一些信息就自己退出了，这和我们理解的虚拟机不太一样。在Docker里面，我们既可以创建一个完整的系统，用户在运行之后就可以正常使用这个操作系统，也可以创建一个简单的服务，默认运行完一些指令就退出了。这里的<code>hello-world</code>镜像这是输出了一些信息后就自动退出了，因为这就是这个镜像的全部内容。</p><p><img src="http://qfxiao.me/img/image-20200602142314849.png" srcset="/img/loading.gif" /></p><p>我们尝试来运行一个完整的系统，先用<code>docker pull ubuntu</code>拉取Ubuntu Docker镜像：</p><p><img src="http://qfxiao.me/img/image-20200602142718332.png" srcset="/img/loading.gif" /></p><p>接下来我们使用</p><p><img src="http://qfxiao.me/img/image-20200602144354467.png" srcset="/img/loading.gif" style="zoom:67%;" /></p><blockquote><p><code>-it</code>的意思是什么？根据<code>docker run --help</code>：</p><pre><code class="hljs routeros">-i, --interactive                    Keep STDIN open even <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> attached    --ip string                      IPv4<span class="hljs-built_in"> address </span>(e.g., 172.30.100.104)    --ip6 string                    <span class="hljs-built_in"> IPv6 address </span>(e.g., 2001:db8::33)    --ipc string                     IPC mode <span class="hljs-keyword">to</span> use    --isolation string               Container isolation technology    --kernel-memory bytes            Kernel memory limit-t, --tty                            Allocate a pseudo-TTY    --ulimit ulimit                  Ulimit options (default [])</code></pre><p>其实<code>-it</code>是<code>-i</code>和<code>-t</code>的合并写法，意思是运行后进入这个容器并且启用shell，不然运行之后就会放到后台而不会进入容器中。而<code>--rm</code>则代表容器退出之后会被删除（镜像不会被删除），每次运行实际上会创建一个新的容器，如果不加<code>--rm</code>或退出之后不手动删除的话会看到一堆停止运行的容器。</p></blockquote><p>输入<code>cat /etc/issue</code>可以看到默认拉取的是最新的Ubuntu 20.04 LTS：</p><p><img src="http://qfxiao.me/img/image-20200602144424552.png" srcset="/img/loading.gif" style="zoom:67%;" /></p><h1 id="build-customized-docker-images">Build Customized Docker Images</h1><p>如果没有现成的Docker镜像能满足我们的需求，我们可以考虑自己写一个</p><p>类似于<code>C++</code>或<code>Python</code>中的对象的继承，Dockerfile也可以“继承”，这意味着我们不必从头写起。</p><pre><code class="hljs dockerfile"><span class="hljs-keyword">FROM</span> node--------------------------------------------------------------<span class="hljs-keyword">RUN</span><span class="bash"> npm install -g hexo-cli</span><span class="hljs-keyword">EXPOSE</span> <span class="hljs-number">4000</span><span class="hljs-keyword">CMD</span><span class="bash"> hexo init blog &amp;&amp; <span class="hljs-built_in">cd</span> blog &amp;&amp; hexo generate &amp;&amp; hexo server</span></code></pre><p><img src="http://qfxiao.me/img/image-20200602161816051.png" srcset="/img/loading.gif" style="zoom: 50%;" /></p><p><img src="http://qfxiao.me/img/image-20200602161640400.png" srcset="/img/loading.gif" style="zoom: 33%;" /></p><p><img src="http://qfxiao.me/img/image-20200602161713537.png" srcset="/img/loading.gif" style="zoom:33%;" /></p><p><img src="http://qfxiao.me/img/image-20200602161524359.png" srcset="/img/loading.gif" style="zoom: 50%;" /></p><h2 id="build-docker-images-with-aliyun-container-registry">Build Docker Images with Aliyun Container Registry</h2><p>可以使用<a href="https://cr.console.aliyun.com/" target="_blank" rel="noopener">阿里云容器镜像服务</a></p><p><img src="http://qfxiao.me/img/image-20200602162228133.png" srcset="/img/loading.gif" /></p><p><img src="http://qfxiao.me/img/image-20200602162334122.png" srcset="/img/loading.gif" style="zoom: 67%;" /></p><p><img src="http://qfxiao.me/img/image-20200602162419289.png" srcset="/img/loading.gif" style="zoom:67%;" /></p><p><img src="http://qfxiao.me/img/image-20200602162710789.png" srcset="/img/loading.gif" style="zoom: 33%;" /></p><p><img src="http://qfxiao.me/img/image-20200602162740273.png" srcset="/img/loading.gif" style="zoom: 67%;" /></p><p><img src="http://qfxiao.me/img/image-20200602162816545.png" srcset="/img/loading.gif" style="zoom: 50%;" /></p><p><img src="http://qfxiao.me/img/image-20200602162533220.png" srcset="/img/loading.gif" style="zoom: 50%;" /></p><h1 id="what-is-openpai">What is OpenPAI</h1><h1 id="submit-jobs-to-openpai">Submit Jobs to OpenPAI</h1>]]></content>
     
     
     <categories>
@@ -248,9 +248,9 @@
     
     <tags>
       
-      <tag>Anomaly Detection</tag>
-      
       <tag>Deep Learning</tag>
+      
+      <tag>Anomaly Detection</tag>
       
     </tags>
     
@@ -304,9 +304,9 @@
     
     <tags>
       
-      <tag>Anomaly Detection</tag>
-      
       <tag>VAE</tag>
+      
+      <tag>Anomaly Detection</tag>
       
     </tags>
     
@@ -333,9 +333,9 @@
     
     <tags>
       
-      <tag>Time Series</tag>
-      
       <tag>Deep Learning</tag>
+      
+      <tag>Time Series</tag>
       
     </tags>
     
@@ -362,15 +362,15 @@
     
     <tags>
       
+      <tag>VAE</tag>
+      
+      <tag>Deep Learning</tag>
+      
       <tag>Time Series</tag>
       
       <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
-      
-      <tag>Deep Learning</tag>
-      
-      <tag>VAE</tag>
       
     </tags>
     
@@ -397,11 +397,11 @@
     
     <tags>
       
-      <tag>Deep Learning</tag>
-      
       <tag>Variational Inference</tag>
       
       <tag>VAE</tag>
+      
+      <tag>Deep Learning</tag>
       
       <tag>GAN</tag>
       
@@ -461,11 +461,11 @@
     
     <tags>
       
-      <tag>Deep Learning</tag>
-      
       <tag>Variational Inference</tag>
       
       <tag>VAE</tag>
+      
+      <tag>Deep Learning</tag>
       
     </tags>
     
@@ -492,9 +492,9 @@
     
     <tags>
       
-      <tag>Time Series</tag>
-      
       <tag>Deep Learning</tag>
+      
+      <tag>Time Series</tag>
       
       <tag>RNN</tag>
       
@@ -523,15 +523,15 @@
     
     <tags>
       
+      <tag>VAE</tag>
+      
+      <tag>Deep Learning</tag>
+      
       <tag>Time Series</tag>
       
       <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
-      
-      <tag>Deep Learning</tag>
-      
-      <tag>VAE</tag>
       
       <tag>RNN</tag>
       
@@ -562,9 +562,9 @@
     
     <tags>
       
-      <tag>Time Series</tag>
-      
       <tag>Deep Learning</tag>
+      
+      <tag>Time Series</tag>
       
       <tag>GAN</tag>
       
@@ -593,13 +593,13 @@
     
     <tags>
       
+      <tag>Deep Learning</tag>
+      
       <tag>Time Series</tag>
       
       <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
-      
-      <tag>Deep Learning</tag>
       
     </tags>
     
@@ -626,13 +626,13 @@
     
     <tags>
       
+      <tag>Deep Learning</tag>
+      
       <tag>Time Series</tag>
       
       <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
-      
-      <tag>Deep Learning</tag>
       
     </tags>
     
@@ -659,15 +659,15 @@
     
     <tags>
       
+      <tag>VAE</tag>
+      
+      <tag>Deep Learning</tag>
+      
       <tag>Time Series</tag>
       
       <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
-      
-      <tag>Deep Learning</tag>
-      
-      <tag>VAE</tag>
       
     </tags>
     
@@ -694,13 +694,13 @@
     
     <tags>
       
+      <tag>Deep Learning</tag>
+      
       <tag>Time Series</tag>
       
       <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
-      
-      <tag>Deep Learning</tag>
       
       <tag>Spectral</tag>
       
