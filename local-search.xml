@@ -8,7 +8,7 @@
     <link href="/2020/06/02/Ubuntu20-4LTS-%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE-CUDA10-2-cuDNN7-6-5-Tensorflow-Pytorch/"/>
     <url>/2020/06/02/Ubuntu20-4LTS-%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE-CUDA10-2-cuDNN7-6-5-Tensorflow-Pytorch/</url>
     
-    <content type="html"><![CDATA[<h1 id="introduction">Introduction</h1><p>Ubuntu的最新LTS版本也更新到了20.04，在给新机器配置深度学习环境的时候发现比以前容易了许多，特此写一篇Tutorial。</p><h1 id="install-gpu-drivers">Install GPU Drivers</h1><p>这里假设安装系统之后已经做好了必要的配置（安装常用软件依赖等）。GPU驱动可以直接通过GUI界面安装，十分方便，方法是找到软件与更新 (Software &amp; Updates)，</p><p><img src="http://qfxiao.me/img/2020051418093848.png" srcset="/img/loading.gif" /></p><h1 id="install-cuda-cudnn">Install CUDA &amp; cuDNN</h1><h1 id="configure-python">Configure Python</h1><h1 id="install-pytorch">Install Pytorch</h1><h1 id="install-tensorflow">Install Tensorflow</h1>]]></content>
+    <content type="html"><![CDATA[<h1 id="introduction">Introduction</h1><p>Ubuntu的最新LTS版本也更新到了20.04，在给新机器配置深度学习环境的时候发现比以前容易了许多，特此写一篇Tutorial。这里的安装方法只针对Ubuntu20.04LTS，对于其他版本的系统可能不太适用。</p><h1 id="install-gpu-drivers">Install GPU Drivers</h1><p>这里假设安装系统之后已经做好了必要的配置（安装常用软件依赖等）。Ubuntu20.04中GPU驱动可以直接通过GUI界面安装，十分方便，方法是找到软件与更新 (Software &amp; Updates)，</p><p><img src="http://qfxiao.me/img/software_updates_additional_drivers_nvidia.png" srcset="/img/loading.gif" /></p><h1 id="install-cuda-cudnn">Install CUDA &amp; cuDNN</h1><h1 id="configure-python">Configure Python</h1><h1 id="install-pytorch">Install Pytorch</h1><h1 id="install-tensorflow">Install Tensorflow</h1>]]></content>
     
     
     <categories>
@@ -219,9 +219,9 @@
     
     <tags>
       
-      <tag>Deep Learning</tag>
-      
       <tag>Anomaly Detection</tag>
+      
+      <tag>Deep Learning</tag>
       
     </tags>
     
@@ -275,9 +275,9 @@
     
     <tags>
       
-      <tag>VAE</tag>
-      
       <tag>Anomaly Detection</tag>
+      
+      <tag>VAE</tag>
       
     </tags>
     
@@ -304,9 +304,9 @@
     
     <tags>
       
-      <tag>Deep Learning</tag>
-      
       <tag>Time Series</tag>
+      
+      <tag>Deep Learning</tag>
       
     </tags>
     
@@ -333,15 +333,15 @@
     
     <tags>
       
-      <tag>VAE</tag>
-      
-      <tag>Deep Learning</tag>
-      
       <tag>Time Series</tag>
+      
+      <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
       
-      <tag>Anomaly Detection</tag>
+      <tag>Deep Learning</tag>
+      
+      <tag>VAE</tag>
       
     </tags>
     
@@ -368,11 +368,11 @@
     
     <tags>
       
+      <tag>Deep Learning</tag>
+      
       <tag>Variational Inference</tag>
       
       <tag>VAE</tag>
-      
-      <tag>Deep Learning</tag>
       
       <tag>GAN</tag>
       
@@ -403,9 +403,9 @@
       
       <tag>Time Series</tag>
       
-      <tag>Statistics</tag>
-      
       <tag>Machine Learning</tag>
+      
+      <tag>Statistics</tag>
       
     </tags>
     
@@ -432,11 +432,11 @@
     
     <tags>
       
+      <tag>Deep Learning</tag>
+      
       <tag>Variational Inference</tag>
       
       <tag>VAE</tag>
-      
-      <tag>Deep Learning</tag>
       
     </tags>
     
@@ -463,9 +463,9 @@
     
     <tags>
       
-      <tag>Deep Learning</tag>
-      
       <tag>Time Series</tag>
+      
+      <tag>Deep Learning</tag>
       
       <tag>RNN</tag>
       
@@ -494,15 +494,15 @@
     
     <tags>
       
-      <tag>VAE</tag>
-      
-      <tag>Deep Learning</tag>
-      
       <tag>Time Series</tag>
+      
+      <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
       
-      <tag>Anomaly Detection</tag>
+      <tag>Deep Learning</tag>
+      
+      <tag>VAE</tag>
       
       <tag>RNN</tag>
       
@@ -533,9 +533,9 @@
     
     <tags>
       
-      <tag>Deep Learning</tag>
-      
       <tag>Time Series</tag>
+      
+      <tag>Deep Learning</tag>
       
       <tag>GAN</tag>
       
@@ -564,13 +564,13 @@
     
     <tags>
       
-      <tag>Deep Learning</tag>
-      
       <tag>Time Series</tag>
+      
+      <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
       
-      <tag>Anomaly Detection</tag>
+      <tag>Deep Learning</tag>
       
     </tags>
     
@@ -597,13 +597,13 @@
     
     <tags>
       
-      <tag>Deep Learning</tag>
-      
       <tag>Time Series</tag>
+      
+      <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
       
-      <tag>Anomaly Detection</tag>
+      <tag>Deep Learning</tag>
       
     </tags>
     
@@ -630,15 +630,15 @@
     
     <tags>
       
-      <tag>VAE</tag>
-      
-      <tag>Deep Learning</tag>
-      
       <tag>Time Series</tag>
+      
+      <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
       
-      <tag>Anomaly Detection</tag>
+      <tag>Deep Learning</tag>
+      
+      <tag>VAE</tag>
       
     </tags>
     
@@ -665,13 +665,13 @@
     
     <tags>
       
-      <tag>Deep Learning</tag>
-      
       <tag>Time Series</tag>
+      
+      <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
       
-      <tag>Anomaly Detection</tag>
+      <tag>Deep Learning</tag>
       
       <tag>Spectral</tag>
       
