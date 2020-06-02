@@ -158,7 +158,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    531 字
+                    654 字
                   </span>
                 
 
@@ -168,7 +168,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    5
+                    7
                      分钟
                   </span>
                 
@@ -200,10 +200,10 @@
               <h1 id="introduction">Introduction</h1>
 <p>实验室服务器集群采用OpenPAI来进行GPU资源的管理，而OpenPAI采用了Docker作为基础，即代码都放在Docker容器中运行。由于Docker的使用、Docker镜像的配置都有一定的门槛，所以这里写一篇Tutorial来进行介绍。本文不是网上资料的拼凑，而是经过本人走弯路踩坑形成的&quot;Best practice&quot;。主要内容包括Docker的介绍、Docker的基本使用、如何配置自己的Docker镜像以及OpenPAI平台的基本使用，但不包括Docker和OpenPAI的安装。</p>
 <h1 id="docker-from-scratch">Docker from Scratch</h1>
-<p>要理解Docker是什么，从虚拟机开始讲可能会比较好理解。虚拟机大家可能都很熟悉了，比如说我用的系统是Windows，但我需要Linux系统来作为一个Flask编写的网站的服务器，但是又不想单独安装Linux系统，于是可以使用虚拟机来解决这个问题。安装VMWare Workstation，去官网下载Ubuntu系统镜像，然后在VMWare中安装好系统，然后从头配置Flask相关环境。实际上我需要的仅仅是一个Flask运行环境而已，而使用虚拟机却需要如此“大费周章”，这时Docker出现了，网上有大量现成的Flask Docker镜像，配置好了你所需的Flask环境，你只需要下载这些镜像，然后运行它，你就得到了一个Flask运行环境，而与你当前使用的系统无关。如果你需要一个Tomcat的运行环境，那么去找一个Tomcat的Docker镜像就行。Docker将需求或者说服务绑定在了Docker镜像中，你有什么需求，去找相应的镜像即可（或者自己写一个），镜像的运行是以虚拟机的形式存在，所以他们之间也是互不干扰的。</p>
+<p>要理解Docker是什么，从虚拟机开始讲可能会比较好理解。虚拟机大家可能都很熟悉了，比如说我用的系统是Windows，但我需要Linux系统来作为一个Flask编写的网站的服务器，但是又不想单独安装Linux系统，于是可以使用虚拟机来解决这个问题。安装VMWare Workstation，去官网下载Ubuntu系统镜像，然后在VMWare中安装好系统，然后从头配置Flask相关环境。实际上我需要的仅仅是一个Flask运行环境而已，而使用虚拟机却需要如此“大费周章”，这时Docker出现了，网上有大量现成的Flask Docker镜像，配置好了你所需的Flask环境，你只需要下载这些镜像，然后运行它，你就得到了一个Flask运行环境，而与你当前使用的系统无关。如果你需要一个Tomcat的运行环境，那么去找一个Tomcat的Docker镜像就行。Docker将需求或者说服务绑定在了Docker镜像中（<strong>轻量化</strong>，一个需求对应一个Docker镜像，每个镜像都很小），你有什么需求，去找相应的镜像即可（或者自己写一个），镜像的运行是以虚拟机的形式存在，所以他们之间也是互不干扰的。同时，你在写好一个Docker镜像之后，你还可以<strong>分享</strong>给别人，这样其他人就不用重新配置，直接运行你给他的镜像即可。Docker有两个比较关键的概念：</p>
 <ul>
-<li><strong>镜像 Images： </strong>这里的镜像不是指我们安装系统时下载的ISO镜像，Docker镜像</li>
-<li><strong>容器 Containers：</strong> 如果一个Docker镜像启动了，那么就会有一个Docker容器</li>
+<li><strong>镜像 Images： </strong>这里的镜像不是指我们安装系统时下载的ISO镜像，Docker镜像就是把你需要的东西（一个系统+需要的服务）集中到一起，相当于做菜的菜谱；</li>
+<li><strong>容器 Containers：</strong> 如果一个Docker镜像启动了，那么就会有一个Docker容器产生，相当于按照菜谱做出来的菜。</li>
 </ul>
 <p><img src="http://qfxiao.me/img/Container@2x_2020-602.png" srcset="/img/loading.gif" /></p>
 <p><img src="http://qfxiao.me/img/VM@2x_20200602.png" srcset="/img/loading.gif" /></p>
