@@ -17,7 +17,7 @@
   <meta name="description" content="">
   <meta name="author" content="Hanzawa">
   <meta name="keywords" content="">
-  <title>Cross-dataset Time Series Anomaly Detection for Cloud Systems - Hanzawa の 部屋</title>
+  <title>Estimate the Implicit Likelihoods of GANs with Application to Anomaly Detection - Hanzawa の 部屋</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
@@ -147,8 +147,8 @@
               
                 <div class="mt-3 post-meta">
                   <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-                  <time datetime="2020-06-01 16:14">
-                    2020年6月1日 下午
+                  <time datetime="2020-05-06 15:49">
+                    2020年5月6日 下午
                   </time>
                 </div>
               
@@ -158,7 +158,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    2.2k 字
+                    1.2k 字
                   </span>
                 
 
@@ -168,7 +168,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    25
+                    18
                      分钟
                   </span>
                 
@@ -198,110 +198,88 @@
             
             <article class="markdown-body">
               <h1 id="introduction">Introduction</h1>
-<p>本文介绍了一种用于云计算平台的时间序列异常检测框架。为了解决标签不足的问题，文中使用了迁移学习的方法，即在有标签的source domain上训练模型，在没有标签的target domain上检测。同时，文中还使用了主动学习的方法来挑选最有价值的无标签样本进行标记。</p>
-<p><a href="https://www.usenix.org/system/files/atc19-zhang-xu.pdf" target="_blank" rel="noopener">📰Get Paper</a></p>
-<h1 id="background">Background</h1>
-<p>针对云计算平台数据的异常检测通常是应用在云监控数据，如KPI、CPU使用率、系统负载等时序数据上。和传统的异常检测不一样的是，时序异常检测往往更难，文中总结了以下几个挑战：</p>
-<ul>
-<li>异常特征的差异性。在不同的云服务系统中，对异常的容忍度是不同的，所以对每个场景或系统组件设置准确的阈值来进行异常检测是十分困难的；</li>
-<li>时间依赖性。该异常检测问题处理的是时间序列数据，而传统的异常检测并不会考虑时间依赖性；</li>
-<li>无监督学习的性能问题。无监督的异常检测方法的性能有限，会带来大量的误报；</li>
-<li>有监督学习需要大量标签。</li>
-</ul>
-<h1 id="proposed-approach">Proposed Approach</h1>
-<p>为了解决上述挑战，文中提出了一个时间序列异常检测框架ATAD (Active Transfer Anomaly Detection)。该框架结合了迁移学习技术和主动学习技术，示意图如下：</p>
-<p><img src="http://qfxiao.me/img/image-20200313212728223.png" srcset="/img/loading.gif" /></p>
-<p>未标记数据<span class="math inline">\(T_u\)</span>是我们要检测的目标数据 (target domain)，标记数据<span class="math inline">\(T_l\)</span>是我们的源数据 (source domain)，可以是开源数据或者是其他系统的监控数据。</p>
-<h2 id="transfer-learning-component">Transfer Learning Component</h2>
-<p>在应用迁移学习时，我们需要考虑以下几个因素：</p>
-<ul>
-<li>我们处理的是时间序列数据，即在不同的时间点上样本之间不是相互独立的。为了解决这个问题，我们提取了不同的特征，每一个时间点被转换为了高维的特征向量，且每个时间点附近的背景信息被保存在了特征向量之中；</li>
-<li>时间序列的粒度。粗粒度的迁移学习不利于发现异常，本文采用细粒度，即数据点级别的迁移学习；</li>
-<li>迁移学习需要source domain和target domain具有潜在的相似性，所以我们需要对source domain中的样本进行过滤。</li>
-</ul>
-<p><img src="http://qfxiao.me/img/image-20200313212813264.png" srcset="/img/loading.gif" /></p>
-<h3 id="feature-identification">Feature Identification</h3>
-<p>这一节描述特征工程中用到的特征。在提取特征之前，文中使用了离散傅里叶变换来识别时间序列的周期<span class="math inline">\(p\)</span>，并为后面滑动窗口的大小原则作参考。</p>
-<h4 id="statistical-features">Statistical Features</h4>
-<p>统计特征包含了一些基本的统计信息，如均值、方差等，用到的特征如下表所示：</p>
-<p><img src="http://qfxiao.me/img/image-20200313212825252.png" srcset="/img/loading.gif" /></p>
-<p>表中的统计特征都是基于大小等于周期<span class="math inline">\(p\)</span>的滑动窗口的。</p>
-<h4 id="forecasting-error-features">Forecasting Error Features</h4>
-<p>使用预测特征的理由是如果一个数据点偏离预测值很远，那么它很有可能是异常。文中使用了多种时间序列预测模型，如SARIMA、Holt、Holt-Winters、STL等。最终的预测结果使用下式来加权集成： <span class="math display">\[
-\hat{Y}_t=\sum\limits_{m=1}^{M}\frac{\hat{Y}_{m,t}}{M-1}\left(1-\frac{RMSE_{m,t}}{\sum\limits_{n=1}^M RMSE_{n,t}}\right)
-\]</span> <span class="math inline">\(M\)</span>代表<span class="math inline">\(M\)</span>个不同模型，<span class="math inline">\(RMSE_{m,t}\)</span>代表模型<span class="math inline">\(m\)</span>在时间<span class="math inline">\(t\)</span>的<span class="math inline">\(RMSE\)</span>，<span class="math inline">\(\hat{Y}_t\)</span>是在时间<span class="math inline">\(t\)</span>的最终预测结果。之后，使用下表中的Metrics来计算不同预测特征：</p>
-<p><img src="http://qfxiao.me/img/image-20200313212836275.png" srcset="/img/loading.gif" /></p>
-<p>同样的，上述特征都是基于窗口的。</p>
-<h4 id="temporal-features">Temporal Features</h4>
-<p>这一部分是一些时间序列相关特征：</p>
-<p><img src="http://qfxiao.me/img/image-20200313212850411.png" srcset="/img/loading.gif" /></p>
-<p>最后，总共提取了37个特征，并且每个特征都进行了正则化。</p>
-<h3 id="the-transfer-between-source-domain-and-target-domain">The Transfer between Source Domain and Target Domain</h3>
-<p>本文结合了基于实例的迁移学习(<strong>Instance-based Transfer Learning</strong>)和基于特征的迁移学习(<strong>Feature-based Transfer Learning</strong>)。</p>
-<p>首先，source domain中的数据差异性是比较大的，所以我们需要选择与target domain相似的样本。</p>
-<p>基于实例的迁移学习(<strong>Instance-based Transfer Learning</strong>)的思想是选择source domain中与target domain相似的样本。对于source domain，在将时间序列<span class="math inline">\(T_l\)</span>转换为特征<span class="math inline">\(F_l\)</span>之后，本文使用<span class="math inline">\(K-means\)</span>算法将<span class="math inline">\(F_l\)</span>分成若干个簇。每个簇<span class="math inline">\(F_l^i, i\in[1,K]\)</span>是<span class="math inline">\(F_l\)</span>的不重叠子集。为了选择合适的样本，我们计算了target domain中的样本和每个簇中心点的欧几里得距离，然后样本会和距离最近的簇<span class="math inline">\(F_l^i\)</span>联系起来。</p>
-<p>之后，为了使source domain和target domain在特征空间的差别更小，作者在每个簇上使用了<strong>CORrelation ALignment</strong> (CORAL) 算法。CORAL是一种领域适应算法 (<strong>Domain Adaption</strong>)，其基本思想是对source domain和target domain进行线性变换使其二阶统计信息（即协方差矩阵）的差别最小化： <span class="math display">\[
-\min_A\parallel A^\top C^i_lA-C^i_u\parallel_F^2
+<h1 id="preliminaries">Preliminaries</h1>
+<h2 id="flow-based-models-recap">Flow-based Models Recap</h2>
+<h3 id="jacobian-matrix-and-determinant">Jacobian Matrix and Determinant</h3>
+<p>设函数<span class="math inline">\(f:\mathbb{R}^n\mapsto\mathbb{R}^m\)</span>，由<span class="math inline">\(f\)</span>的一阶偏导数组成的矩阵叫做Jacobian矩阵： <span class="math display">\[
+\mathbf J=\left[
+\begin{matrix}
+\frac{\partial f_1}{\partial x_1} &amp;\cdots &amp;\frac{\partial f_1}{\partial x_n}\\
+\vdots &amp;\ddots &amp;\vdots\\
+\frac{\partial f_m}{\partial x_1}&amp; \dots&amp; \frac{\partial f_m}{\partial x_n}
+\end{matrix}
+\right]
 \]</span></p>
-<p>在最后一步，作者在每一个sub source domain <span class="math inline">\(\hat{F}_l^i\)</span>训练了有监督模型（随机森林或SVM），所以最后我们得到了<span class="math inline">\(K\)</span>个基模型。</p>
-<h2 id="active-learning-component">Active Learning Component</h2>
-<p>由于数据的差异性和复杂性太大，仅仅使用迁移学习的技术不足以达到很好的效果。在ATAD中，作者使用了主动学习技术来用较少的成本标注最有价值的样本来提升性能。本文中使用基于<strong>Uncertainty</strong>和<strong>Context Diversity</strong>的主动学习。</p>
-<h3 id="uncertainty">Uncertainty</h3>
-<p>大多数主动学习算法使用不确定性 (Uncertainty) 来作为选择要标记的样本的准则。 <span class="math display">\[
-Uncertainty=-|Prob(Normal)-Prob(Anomaly)|
-\]</span> 其中的<span class="math inline">\(Prob\)</span>由基模型给出。</p>
-<h3 id="context-diversity">Context Diversity</h3>
-<p>多样性 (Diversity) 也是一个选择要标记样本的重要参考。如果有两个相似的样本，那么就没有必要将他们都标记。</p>
-<p>时间上相邻的样本往往也是相似的。</p>
-<p>具体的来说，我们对所有样本按照<strong>Uncertainty</strong>排序，然后进行一次扫描，如果当前样本在候选集中某个样本的<strong>Context</strong>之中，我们则忽略当前样本，因为这代表当前样本和候选集中的那个样本是相似的。如果不在<strong>Context</strong>之中，我们则将该样本加入候选集中。</p>
-<p>判断是否在某个样本的<strong>Context</strong>中，如下图所示，直接判断是否落在区间<span class="math inline">\([t-\alpha,t+\alpha]\)</span>中就是了。</p>
-<p><img src="http://qfxiao.me/img/image-20200313212905175.png" srcset="/img/loading.gif" /></p>
-<p>主动学习模块的算法流程图如下图所示：</p>
-<p><img src="http://qfxiao.me/img/image-20200313212948057.png" srcset="/img/loading.gif" /></p>
+<h3 id="change-of-variable-theorem">Change of Variable Theorem</h3>
+<p>给定已知概率分布的随机变量<span class="math inline">\(z\sim\pi(z)\)</span>，新随机变量由可逆映射<span class="math inline">\(f\)</span>给出<span class="math inline">\(x=f(z)\)</span>，<span class="math inline">\(z=f^{-1}(x)\)</span>。由于： <span class="math display">\[
+\int p(x)\mathrm{d}x=\int \pi(z)\mathrm d z=1
+\]</span> 所以<span class="math inline">\(p(x)\)</span>可以由下式得到： <span class="math display">\[
+p(x)=\pi(z)\left|\frac{\mathrm d z}{\mathrm d x}\right|=\pi(f^{-1}(x))\left|\frac{\mathrm d f^{-1}}{\mathrm d x}\right|=\pi(f^{-1}(x))|(f^{-1})^\prime(x)|
+\]</span> <span class="math inline">\(\frac{\mathrm d f^{-1}}{\mathrm d x}\)</span>相当于对逆函数<span class="math inline">\(f^{-1}\)</span>求导，而<span class="math inline">\(z=f^{-1}(x)\)</span>。</p>
+<p>对于多变量的情况： <span class="math display">\[
+\mathbf z\sim \pi(\mathbf z), \mathbf x=f(\mathbf z),\mathbf z = f^{-1}(\mathbf x)\\
+p(\mathbf x) = \pi(\mathbf z)\left|\text{det}\frac{\mathrm d \mathbf z}{\mathrm d \mathbf x}\right|= \pi(f^{-1}(\mathbf x))\left|\text{det}\frac{\mathrm d f^{-1}}{\mathrm d \mathbf x}\right|
+\]</span> <span class="math inline">\(\left|\text{det}\frac{\mathrm d f^{-1}}{\mathrm d \mathbf x}\right|\)</span>为逆函数Jacobian矩阵行列式的绝对值。</p>
+<h2 id="deep-generative-models-as-manifolds">Deep Generative Models as Manifolds</h2>
+<p>一个深度生成模型可以表示为从低维隐空间<span class="math inline">\(\mathcal Z \subseteq R^d\)</span>映射到流形<span class="math inline">\(\mathcal M\subseteq R^D\)</span>的嵌入函数<span class="math inline">\(g:\mathcal Z\rightarrow \mathcal X\)</span>，<span class="math inline">\(D \ll d\)</span>。通常假设<span class="math inline">\(g\)</span>为光滑映射，那么<span class="math inline">\(\mathcal M\)</span>为一个嵌入流形。<span class="math inline">\(g\)</span>在<span class="math inline">\(z\in\mathcal Z\)</span>的雅各比矩阵<span class="math inline">\(\mathbf J_g(z)\)</span>提供了在<span class="math inline">\(x=g(z)\in\mathcal X\)</span>处的切空间，即<span class="math inline">\(\mathbf J_g:T_z\mathcal Z\rightarrow T_x\mathcal X\)</span>。这个映射不是满射，并且值域限制在流形<span class="math inline">\(\mathcal M\)</span>在<span class="math inline">\(x=g(z)\)</span>的切空间，记为<span class="math inline">\(T_x\mathcal M\)</span>。<span class="math inline">\(\mathcal M\)</span>与真实数据流形接近，即<span class="math inline">\(\mathcal M_{data}\)</span>。</p>
+<p>考虑一个定义在隐空间<span class="math inline">\(\mathcal Z\)</span>每一点<span class="math inline">\(z\)</span>上的Riemannian metric： <span class="math display">\[
+\mathbf M(z)=\mathbf J_g(z)^\top\mathbf J_g(z)
+\]</span> 给定两个切空间向量<span class="math inline">\(u,v\in T_z\in\mathcal Z\)</span>，他们的内积定义为<span class="math inline">\(&lt;u,v&gt;=u^\top \mathbf M(z)v\)</span>。</p>
+<p>考虑一个光滑曲线<span class="math inline">\(\gamma:t\in[a,b]\rightarrow\mathcal Z\)</span>， <span class="math display">\[
+L(\gamma)=\int^b_a\sqrt{\hat{\gamma}(t)^\top M_{\gamma(t)}\hat{\gamma}(t)}\mathrm d t
+\]</span></p>
+<h2 id="change-of-variable-on-manifolds">Change of Variable on Manifolds</h2>
+<p>在流形上的<strong>Change of Variable Theorem</strong>是类似的：</p>
+<p><span class="math display">\[
+p_\mathcal{X}(x)=p_\mathcal{Z}(g^{-1}(x))\text{det}(\mathbf J_g(g^{-1}(x))^\top\mathbf J_g(g^{-1}(x)))^{-\frac{1}{2}}
+\]</span></p>
+<p>我们假设隐空间分布<span class="math inline">\(p_\mathcal{Z}\)</span>服从标准正态先验分布<span class="math inline">\(N(0,\mathbf I_d)\)</span>，于是我们可以计算出<span class="math inline">\(x\)</span>的似然：</p>
+<p><span class="math display">\[
+\log(p_\mathcal{X}(g(z)))=\log(p_\mathcal{Z}(z))-\frac{1}{2}\log(\text{det}(\mathbf J_g(z)^\top\mathbf J_g(z)))
+\]</span></p>
+<p>通常我们没法知道真实世界中<span class="math inline">\(\mathcal M_{data}\)</span>的切空间维度是多少，设定<span class="math inline">\(d=\text{dim}\mathcal Z&gt;T_x\mathcal M_{data}\)</span>会导致<span class="math inline">\(\mathbf J_g\)</span>不是满秩矩阵，这时<span class="math inline">\(\text{det}(\mathbf J_g(z)^\top\mathbf J_g(z))=0\)</span>，即无法应用上式计算似然。</p>
+<h2 id="density-estimation-with-neural-networks">Density Estimation with Neural Networks</h2>
+<h2 id="anomaly-detection-with-generative-models">Anomaly Detection with Generative Models</h2>
+<h1 id="proposed-method">Proposed Method</h1>
+<p>对于GAN模型，给定隐变量<span class="math inline">\(z\)</span>和生成器<span class="math inline">\(g\)</span>，我们可以通过公式(8)计算生成样本<span class="math inline">\(g(z)\)</span>的对数似然，为了保证Jacobian矩阵为满秩，我们可以选定较低的隐变量维度<span class="math inline">\(d\)</span>，不过这样会伤害GAN模型的性能。为了解决这个问题，我们需要使用一个<em>inference network</em>来将<span class="math inline">\(x\)</span>映射回<span class="math inline">\(z\)</span>，</p>
+<h2 id="the-variance-network-of-the-generator">The Variance Network of the Generator</h2>
+<p>文中对生成器<span class="math inline">\(g\)</span>进行了扩展：</p>
+<p><span class="math display">\[
+f(z) = g(z) + \sigma(z)\odot\epsilon,\\
+g:\mathcal Z\rightarrow\mathcal X, \sigma:\mathcal Z\rightarrow\mathbb{R},\epsilon\sim N(0,\mathbf I_D)
+\]</span></p>
+<p><span class="math inline">\(g\)</span>代表均值，<span class="math inline">\(\sigma\)</span>代表方差，实际上<span class="math inline">\(\mathbb E_{\epsilon\sim N(0,\mathbf I_D)}f(z)=g(z)\)</span>。为了保证方差在少样本或无样本的区域更大，方差网络采用RBF网络实现。</p>
+<p>首先，从隐空间采样大量的样本，之后使用<strong>K-means</strong>算法将其分为<span class="math inline">\(K\)</span>个聚簇，<span class="math inline">\(c_k\)</span>为第<span class="math inline">\(k\)</span>个簇的中心，<span class="math inline">\(C_k\)</span>为第<span class="math inline">\(k\)</span>个簇的样本数量。对于任何样本<span class="math inline">\(x\)</span>，为了计算其对应的方差，需要用一个<em>inference network</em> <span class="math inline">\(h\)</span>来将其映射到隐空间，即<span class="math inline">\(z=h(x)\)</span>。RBF网络通过输入<span class="math inline">\(z\)</span>到每个簇中心的距离来返回<span class="math inline">\(x\)</span>对应的方差，RBF函数由下式给出： <span class="math display">\[
+\sigma(z)=(\mathbf W^2\mathbf v(z))^{-\frac{1}{2}},\\
+v_k(z) = \exp(-\lambda_k\parallel z-c_k\parallel^2_2), \space k=1,\cdots,K\\
+\lambda_k=\frac{1}{2}\left(\frac{a}{|C_k|}\sum_{z_j\in C_k}\parallel z_j-c_k\parallel_2\right)^{-2}
+\]</span></p>
+<p><span class="math display">\[
+\begin{align}
+\bar{\mathbf M}^z_f&amp;=\mathbb E_{\epsilon\sim N(0,\mathbf I_D)}\mathbf J_f^\top(z)\mathbf J_f(z)\\
+&amp;=\mathbf J_g^\top(z)\mathbf J_g(z)+\mathbf J_\sigma^\top(z)\mathbf J_\sigma(z)
+\end{align}
+\]</span></p>
+<h2 id="the-inference-network-learning">The Inference Network Learning</h2>
+<p><img src="http://qfxiao.me/img/image-20200506174247129.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><span class="math display">\[
+\max_{h,\sigma}\mathbb E_{x\sim p_{data}(x)}\left[\log(p(x|z))|_{z=h(x)}\right]
+\]</span></p>
+<p><span class="math display">\[
+\max_{h,\sigma}\mathbb E_{x\sim p_{data}(x), z=h(x)}\left[\log(p(x|z))-\text{KL}\right]
+\]</span></p>
+<h2 id="stabilize-training">Stabilize Training</h2>
+<h2 id="algorithm">Algorithm</h2>
+<p><img src="http://qfxiao.me/img/image-20200506174309604.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <h1 id="experiments">Experiments</h1>
-<p>在实验部分，作者试图回答以下问题：</p>
-<ol type="1">
-<li>ATAD的效果如何？</li>
-<li>迁移学习模块的有效性如何？</li>
-<li>主动学习模块的有效性如何？</li>
-<li>ATAD在基于公开数据时对公司内部数据检测效果如何？</li>
-</ol>
-<h2 id="dataset-and-setup">Dataset and Setup</h2>
-<p>下表是用到的数据集的一些基本信息：</p>
-<p><img src="http://qfxiao.me/img/image-20200313213006305.png" srcset="/img/loading.gif" /></p>
-<h2 id="evaluation-metric">Evaluation Metric</h2>
-<p>评测标准使用的是F1-score： <span class="math display">\[
-F1=\frac{2\cdot P\cdot R}{P+R}, \space P=\frac{TP}{TP+FP}, \space R=\frac{TP}{TP+FN}
-\]</span></p>
-<h2 id="results">Results</h2>
-<h3 id="rq1-how-effective-is-atad">RQ1: How effective is ATAD?</h3>
-<p>Baseline包括孤立森林、K-Sigma、S-H-ESD和随机森林。</p>
-<p>最终结果如下表所示：</p>
-<p><img src="http://qfxiao.me/img/image-20200313213040896.png" srcset="/img/loading.gif" /></p>
-<p>为了评测ATAD利用标签的能力，我们比较了RF在达到和ATAD相似F1 score情况下所需标签的数量，如下表所示：</p>
-<p><img src="http://qfxiao.me/img/image-20200313213058084.png" srcset="/img/loading.gif" /></p>
-<h3 id="rq2-how-effective-is-the-transfer-learning-component">RQ2: How effective is the Transfer Learning Component?</h3>
-<p>我们从以下两个方面来探究模型迁移知识的能力：</p>
-<ul>
-<li>使用文中所用到的特征的重要性</li>
-<li>本模型迁移知识的能力</li>
-</ul>
-<p>对于第一点，作者提出传统的方法一般只提取了统计特征，而本文还提取了多种其他特征。作者对提取不同特征进行了比较试验，结果如下表所示：</p>
-<p><img src="http://qfxiao.me/img/image-20200313213108654.png" srcset="/img/loading.gif" /></p>
-<p>除此之外，作者还展示了不同数据集下前10有效的特征：</p>
-<p><img src="http://qfxiao.me/img/image-20200313213123043.png" srcset="/img/loading.gif" /></p>
-<p>对于第二点，作者比较了是否使用文中的领域适应算法CORAL，在达到相似F1 score下所需的标签数，如下表所示：</p>
-<p><img src="http://qfxiao.me/img/image-20200313213132432.png" srcset="/img/loading.gif" /></p>
-<h3 id="rq3-how-effective-is-the-active-learning-component">RQ3: How effective is the Active Learning component?</h3>
-<p>为了验证本文所用的主动学习的有效性，作者进行了对比试验。第一个模型 (Supervised model) 使用全部标签但不使用迁移学习训练，第二个 (Naïve) 为只使用主动学习而不使用迁移学习，第三个为本文提出的模型。结果如下图所示，为了达到相似的性能，不同模型需要的标签数。</p>
-<p><img src="http://qfxiao.me/img/image-20200313213143405.png" srcset="/img/loading.gif" /></p>
-<p>下表展示了使用不同主动学习策略 (U - conventional uncertainty method, UCD - 本文使用的方法, random - 随机选择) 进行标记得到的结果：</p>
-<p><img src="http://qfxiao.me/img/image-20200313213153698.png" srcset="/img/loading.gif" /></p>
-<p>同时作者还对不同<span class="math inline">\(\alpha\)</span>的选择进行了实验：</p>
-<p><img src="http://qfxiao.me/img/image-20200313213208820.png" srcset="/img/loading.gif" /></p>
-<h3 id="rq4-how-effective-is-atad-in-detecting-anomalies-in-a-companys-local-dataset-based-on-public-datasets">RQ4: How effective is ATAD in detecting anomalies in a company’s local dataset based on public datasets?</h3>
-<p>这里作者对比了不同方法在微软内部数据集上的结果：</p>
-<p><img src="http://qfxiao.me/img/image-20200313213219578.png" srcset="/img/loading.gif" /></p>
+<p><img src="http://qfxiao.me/img/image-20200506174343303.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="http://qfxiao.me/img/image-20200506174352450.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="http://qfxiao.me/img/image-20200506174403647.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="http://qfxiao.me/img/image-20200506174414709.png" srcset="/img/loading.gif" /></p>
+<p><img src="http://qfxiao.me/img/image-20200506174435973.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="http://qfxiao.me/img/image-20200506174450623.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="http://qfxiao.me/img/image-20200506174505764.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="http://qfxiao.me/img/image-20200506174526203.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 
             </article>
             <hr>
@@ -323,7 +301,7 @@ F1=\frac{2\cdot P\cdot R}{P+R}, \space P=\frac{TP}{TP+FP}, \space R=\frac{TP}{TP
                     
                       <a class="hover-with-bg" href="/tags/Anomaly-Detection/">Anomaly Detection</a>
                     
-                      <a class="hover-with-bg" href="/tags/Transfer-Learning/">Transfer Learning</a>
+                      <a class="hover-with-bg" href="/tags/GAN/">GAN</a>
                     
                   </div>
                 
@@ -336,9 +314,9 @@ F1=\frac{2\cdot P\cdot R}{P+R}, \space P=\frac{TP}{TP+FP}, \space R=\frac{TP}{TP
                   <div class="post-prev col-6">
                     
                     
-                      <a href="/2020/06/01/Deep-Anomaly-Detection-Using-Geometric-Transformations/">
+                      <a href="/2020/06/01/Cross-dataset-Time-Series-Anomaly-Detection-for-Cloud-Systems/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Deep Anomaly Detection Using Geometric Transformations</span>
+                        <span class="hidden-mobile">Cross-dataset Time Series Anomaly Detection for Cloud Systems</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -346,8 +324,8 @@ F1=\frac{2\cdot P\cdot R}{P+R}, \space P=\frac{TP}{TP+FP}, \space R=\frac{TP}{TP
                   <div class="post-next col-6">
                     
                     
-                      <a href="/2020/05/06/Estimate-the-Implicit-Likelihoods-of-GANs-with-Application-to-Anomaly-Detection/">
-                        <span class="hidden-mobile">Estimate the Implicit Likelihoods of GANs with Application to Anomaly Detection</span>
+                      <a href="/2020/05/06/Learning-Representations-of-Ultrahigh-dimensional-Data-for-Random-Distance-based-Outlier-Detection/">
+                        <span class="hidden-mobile">Learning Representations of Ultrahigh-dimensional Data for Random Distance-based Outlier Detection</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -366,8 +344,8 @@ F1=\frac{2\cdot P\cdot R}{P+R}, \space P=\frac{TP}{TP+FP}, \space R=\frac{TP}{TP
     <div id="disqus_thread"></div>
     <script type="text/javascript">
       var disqus_config = function () {
-        this.page.url = 'http://qfxiao.me/2020/06/01/Cross-dataset-Time-Series-Anomaly-Detection-for-Cloud-Systems/';
-        this.page.identifier = '/2020/06/01/Cross-dataset-Time-Series-Anomaly-Detection-for-Cloud-Systems/';
+        this.page.url = 'http://qfxiao.me/2020/05/06/Estimate-the-Implicit-Likelihoods-of-GANs-with-Application-to-Anomaly-Detection/';
+        this.page.identifier = '/2020/05/06/Estimate-the-Implicit-Likelihoods-of-GANs-with-Application-to-Anomaly-Detection/';
       };
       var oldLoadDq = window.onload;
       window.onload = function () {
@@ -517,7 +495,7 @@ F1=\frac{2\cdot P\cdot R}{P+R}, \space P=\frac{TP}{TP+FP}, \space R=\frac{TP}{TP
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "Cross-dataset Time Series Anomaly Detection for Cloud Systems&nbsp;",
+        "Estimate the Implicit Likelihoods of GANs with Application to Anomaly Detection&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 70,

@@ -4,11 +4,38 @@
   
   
   <entry>
+    <title>Classification-based Anomaly Detection for General Data</title>
+    <link href="/2020/06/02/Classification-based-Anomaly-Detection-for-General-Data/"/>
+    <url>/2020/06/02/Classification-based-Anomaly-Detection-for-General-Data/</url>
+    
+    <content type="html"><![CDATA[<h1 id="introduction">Introduction</h1><ul><li><strong>Reconstruction Methods</strong></li><li><strong>Distributional Methods</strong></li><li><strong>Classification-based Methods</strong></li></ul><h1 id="proposed-method">Proposed Method</h1><h2 id="classification-based-anomaly-detection">Classification-based Anomaly Detection</h2><p>假设所有数据位于空间<span class="math inline">\(R^L\)</span>内，而正常数据位于子空间<span class="math inline">\(X\subset R^L\)</span>内。我们假设所有的异常样本位于<span class="math inline">\(X\)</span>之外。为了检测异常，我们希望学习一个分类器<span class="math inline">\(C\)</span>使得对于所有的<span class="math inline">\(x\in X\)</span>有<span class="math inline">\(C(x)=1\)</span>，而对所有的<span class="math inline">\(x\in R^L\backslash X\)</span>有<span class="math inline">\(C(x)=0\)</span>。</p><p>单分类方法的思想是直接学习<span class="math inline">\(P(x\in X)\)</span>，代表的方法有One-Class SVM，DSVDD等。<em>Geometric-transformation classification</em> (GEOM) 则将数据空间<span class="math inline">\(X\)</span>通过<span class="math inline">\(M\)</span>个几何变换转换到一系列子空间<span class="math inline">\(X_1,\cdots,X_M\)</span>。之后训练一个分类器来预测样本<span class="math inline">\(T(x,m)\)</span>对应的几何变换的种类<span class="math inline">\(m\)</span>。转换后的正常图片空间记为<span class="math inline">\(\cup_m X_m\)</span>，所以该方法尝试估计以下条件概率： <span class="math display">\[P(m^\prime|T(x,m))=\frac{P(T(x,m)\in X_{m^\prime})P(m^\prime)}{\sum_{\bar{m}}P(T(x,m)\in X_{\bar{m}})P(\tilde{m})}-\frac{P(T(x,m)\in X_{m^\prime})}{\sum_{\bar{m}}P(T(x,m)\in X_{\bar{m}})}\]</span></p><p>对于异常的样本，</p><h2 id="distance-based-multiple-transformation-classification">Distance-based Multiple Transformation Classification</h2><p><img src="http://qfxiao.me/img/image-20200602230200536.png" srcset="/img/loading.gif" /></p><h2 id="parameterizing-the-set-of-transformations">Parameterizing the Set of Transformations</h2><h1 id="experiments">Experiments</h1><h2 id="image-experiments">Image Experiments</h2><p><img src="http://qfxiao.me/img/image-20200602231400942.png" srcset="/img/loading.gif" /></p><p><img src="http://qfxiao.me/img/image-20200602231415730.png" srcset="/img/loading.gif" /></p><p><img src="http://qfxiao.me/img/image-20200602231456162.png" srcset="/img/loading.gif" /></p><p><img src="http://qfxiao.me/img/image-20200602231554660.png" srcset="/img/loading.gif" /></p><h2 id="tabular-data-experiments">Tabular Data Experiments</h2><p><img src="http://qfxiao.me/img/image-20200602231515504.png" srcset="/img/loading.gif" /></p><p><img src="http://qfxiao.me/img/image-20200602231612977.png" srcset="/img/loading.gif" /></p><p><img src="http://qfxiao.me/img/image-20200602231627277.png" srcset="/img/loading.gif" /></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>Research</category>
+      
+      <category>Anomaly Detection</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Anomaly Detection</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>面向OpenPAI的Docker镜像配置及OpenPAI基本使用方法</title>
     <link href="/2020/06/02/%E9%9D%A2%E5%90%91OpenPAI%E7%9A%84Docker%E9%95%9C%E5%83%8F%E9%85%8D%E7%BD%AE%E5%8F%8AOpenPAI%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/"/>
     <url>/2020/06/02/%E9%9D%A2%E5%90%91OpenPAI%E7%9A%84Docker%E9%95%9C%E5%83%8F%E9%85%8D%E7%BD%AE%E5%8F%8AOpenPAI%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/</url>
     
-    <content type="html"><![CDATA[<h1 id="introduction">Introduction</h1><p>实验室服务器集群采用OpenPAI来进行GPU资源的管理，而OpenPAI采用了Docker作为基础，即代码都放在Docker容器中运行。由于Docker的使用、Docker镜像的配置都有一定的门槛，所以这里写一篇Tutorial来进行介绍。本文不是网上资料的拼凑，而是经过本人走弯路踩坑形成的&quot;Best practice&quot;。主要内容包括Docker的介绍、Docker的基本使用、如何配置自己的Docker镜像以及OpenPAI平台的基本使用，但不包括Docker和OpenPAI的安装。</p><h1 id="docker-from-scratch">Docker from Scratch</h1><p>要理解Docker是什么，从虚拟机开始讲可能会比较好理解。虚拟机大家可能都很熟悉了，比如说我用的系统是Windows，但我需要Linux系统来作为一个Flask编写的网站的服务器，但是又不想单独安装Linux系统，于是可以使用虚拟机来解决这个问题。安装VMWare Workstation，去官网下载Ubuntu系统镜像，然后在VMWare中安装好系统，然后从头配置Flask相关环境。实际上我需要的仅仅是一个Flask运行环境而已，而使用虚拟机却需要如此“大费周章”，这时Docker出现了，网上有大量现成的Flask Docker镜像，配置好了你所需的Flask环境，你只需要下载这些镜像，然后运行它，你就得到了一个Flask运行环境，而与你当前使用的系统无关。如果你需要一个Tomcat的运行环境，那么去找一个Tomcat的Docker镜像就行。Docker将需求或者说服务绑定在了Docker镜像中（<strong>轻量化</strong>，一个需求对应一个Docker镜像，每个镜像都很小），你有什么需求，去找相应的镜像即可（或者自己写一个），镜像的运行是以虚拟机的形式存在，所以他们之间也是互不干扰的。同时，你在写好一个Docker镜像之后，你还可以<strong>分享</strong>给别人，这样其他人就不用重新配置，直接运行你给他的镜像即可。Docker有两个比较关键的概念：</p><ul><li><strong>镜像 Images： </strong>这里的镜像不是指我们安装系统时下载的ISO镜像，Docker镜像就是把你需要的东西（一个系统+需要的服务）集中到一起，相当于做菜的菜谱；</li><li><strong>容器 Containers：</strong> 如果一个Docker镜像启动了，那么就会有一个Docker容器产生，相当于按照菜谱做出来的菜。</li></ul><p><img src="http://qfxiao.me/img/Container@2x_2020-602.png" srcset="/img/loading.gif" style="zoom:33%;" /></p><p><img src="http://qfxiao.me/img/VM@2x_20200602.png" srcset="/img/loading.gif" style="zoom:33%;" /></p><p>这一节我们先不讨论如何自己写Docker镜像，只是先讨论Docker的基本操作。</p><h2 id="basic-operations">Basic Operations</h2><p>Docker新安装好当然是没有什么镜像的，首先我们使用<code>docker pull hello-world</code>来下载一个测试镜像。</p><blockquote><p>拉取镜像 <code>docker pull &lt;image_name&gt;</code></p></blockquote><p>在输入之后，Docker会自动在远程服务器上查找对应的镜像进行下载。由于我的电脑上已经有这个镜像了，所以显示是下面的样子：</p><p><img src="http://qfxiao.me/img/image-20200602142125342.png" srcset="/img/loading.gif" /></p><p>接下来，我们输入<code>docker run hello-world</code>运行这个镜像。</p><blockquote><p>运行镜像<code>docker run &lt;image_name&gt;</code></p></blockquote><p>可以看到，Docker输出了一些信息就自己退出了，这和我们理解的虚拟机不太一样。在Docker里面，我们既可以创建一个完整的系统，用户在运行之后就可以正常使用这个操作系统，也可以创建一个简单的服务，默认运行完一些指令就退出了。这里的<code>hello-world</code>镜像这是输出了一些信息后就自动退出了，因为这就是这个镜像的全部内容。</p><p><img src="http://qfxiao.me/img/image-20200602142314849.png" srcset="/img/loading.gif" /></p><p>我们尝试来运行一个完整的系统，先用<code>docker pull ubuntu</code>拉取Ubuntu Docker镜像：</p><p><img src="http://qfxiao.me/img/image-20200602142718332.png" srcset="/img/loading.gif" /></p><p>接下来我们使用</p><p><img src="http://qfxiao.me/img/image-20200602144354467.png" srcset="/img/loading.gif" style="zoom:67%;" /></p><blockquote><p><code>-it</code>的意思是什么？根据<code>docker run --help</code>：</p><pre><code class="hljs routeros">-i, --interactive                    Keep STDIN open even <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> attached    --ip string                      IPv4<span class="hljs-built_in"> address </span>(e.g., 172.30.100.104)    --ip6 string                    <span class="hljs-built_in"> IPv6 address </span>(e.g., 2001:db8::33)    --ipc string                     IPC mode <span class="hljs-keyword">to</span> use    --isolation string               Container isolation technology    --kernel-memory bytes            Kernel memory limit-t, --tty                            Allocate a pseudo-TTY    --ulimit ulimit                  Ulimit options (default [])</code></pre><p>其实<code>-it</code>是<code>-i</code>和<code>-t</code>的合并写法，意思是运行后进入这个容器并且启用shell，不然运行之后就会放到后台而不会进入容器中。而<code>--rm</code>则代表容器退出之后会被删除（镜像不会被删除），每次运行实际上会创建一个新的容器，如果不加<code>--rm</code>或退出之后不手动删除的话会看到一堆停止运行的容器。</p></blockquote><p>输入<code>cat /etc/issue</code>可以看到默认拉取的是最新的Ubuntu 20.04 LTS：</p><p><img src="http://qfxiao.me/img/image-20200602144424552.png" srcset="/img/loading.gif" style="zoom:67%;" /></p><h1 id="build-customized-docker-images">Build Customized Docker Images</h1><p>如果没有现成的Docker镜像能满足我们的需求，我们可以考虑自己写一个。要自定义一个Docker镜像需要两步，第一步是编写Dockerfile，第二步是使用<code>docker build</code>命令构建镜像。Dockerfile可以看作是一个脚本，描述了我们构建镜像所需要的全部命令，比如要构建一个用于Python科学计算的Docker镜像，我们需要在Dockerfile中编写安装Python的命令，安装Numpy、Scipy等常用包的命令等等。我们先来上手编写Dockerfile，这里我准备写一个包含<a href="https://hexo.io/" target="_blank" rel="noopener">hexo博客框架</a>的镜像，这个框架需要node作为基础环境，不过我们不需要在Dockerfile里写安装node的命令。因为类似于<code>C++</code>或<code>Python</code>中的对象的继承，Dockerfile也可以“继承”，这意味着我们不必从头写起。我们先来看一下完整的Dockfile和效果，再来一一解释。</p><pre><code class="hljs dockerfile"><span class="hljs-keyword">FROM</span> node--------------------------------------------------------------<span class="hljs-keyword">RUN</span><span class="bash"> npm install -g hexo-cli</span><span class="hljs-keyword">EXPOSE</span> <span class="hljs-number">4000</span><span class="hljs-keyword">CMD</span><span class="bash"> hexo init blog &amp;&amp; <span class="hljs-built_in">cd</span> blog &amp;&amp; hexo generate &amp;&amp; hexo server</span></code></pre><p>运行结果如下所示，可以看到Docker按照我们写的Dockerfile一行一行的进行镜像的构建：</p><p><img src="http://qfxiao.me/img/image-20200602161816051.png" srcset="/img/loading.gif" style="zoom: 50%;" /></p><p>现在来解释Docerfile里的内容。<code>FROM &lt;docker image&gt;</code>表示继承其他的镜像，这里我们使用node官方的镜像。接下来是安装hexo，<code>RUN &lt;command&gt;</code>表示执行命令，这里我们直接用<code>npm install -g hexo-cli</code>进行安装。由于要浏览博客网页需要开放端口，而Docker容器运行的时候和外部主机是完全隔断的，要使外部主机访问Docker容器端口，需要暴露端口。<code>EXPOSE &lt;port&gt;</code>代表暴露端口，这里用的是4000端口。之后是创建博客和启动本地服务，<code>CMD &lt;command&gt;</code>和<code>RUN &lt;command&gt;</code>的区别是RUN会在构建的时候执行，而CMD是在容器启动之后才会执行。<code>hexo init blog &amp;&amp; cd blog &amp;&amp; hexo generate &amp;&amp; hexo server</code>分别代表初始化博客、进入博客所在文件夹、生成博客网站、启动本地服务器。更多指令可以参考<a href="https://docs.docker.com/engine/reference/builder/" target="_blank" rel="noopener">官方文档</a>。</p><p>然后我们使用<code>docker build -t test_hexo .</code>命令构建镜像。</p><blockquote><p>构建镜像 <code>docker build -t &lt;image_name&gt; &lt;direcotry&gt;</code></p></blockquote><p>运行镜像：</p><p><img src="http://qfxiao.me/img/image-20200602161640400.png" srcset="/img/loading.gif" style="zoom: 33%;" /></p><p>可以看到容器启动后开始执行博客初始化。</p><p><img src="http://qfxiao.me/img/image-20200602161713537.png" srcset="/img/loading.gif" style="zoom:33%;" /></p><p>最后在<code>locahost:4000</code>上启动了一个本地服务器，在浏览器中输入这个地址，可以看到刚刚构建好的博客：</p><p><img src="http://qfxiao.me/img/image-20200602161524359.png" srcset="/img/loading.gif" style="zoom: 50%;" /></p><p>值得注意的是，在Dockerfile中我们暴露了4000端口，使用<code>-p</code>标签可以达到同样的效果：<code>docker run -p &lt;docker_port&gt;:&lt;local_port&gt; &lt;image_name&gt;</code>。比如<code>docker run -p 9999:8888 xxxx</code>代表将Docker容器中的9999端口转发到外部主机的8888端口。如果你是在远程服务器上使用的Docker，那么端口只是被转发到了远程服务器上，还得手动将远程服务器再转发到你本机上才能直接在本机浏览器上看到页面。</p><h2 id="build-docker-images-with-aliyun-container-registry">Build Docker Images with Aliyun Container Registry</h2><p>因为某些原因，如果在构建镜像的时候需要通过<code>apt-get update</code>更新源，会发现无论如何都会卡住。这个时候可以使用<a href="https://cr.console.aliyun.com/" target="_blank" rel="noopener">阿里云容器镜像服务</a>，在阿里的服务器上构建好镜像，再拉取到自己的机器上。注册好帐号之后，点击创建镜像仓库：</p><p><img src="http://qfxiao.me/img/image-20200602162228133.png" srcset="/img/loading.gif" /></p><p>这里仓库类型如果没有特殊需求建议使用公开，然后填写一些基本信息：</p><p><img src="http://qfxiao.me/img/image-20200602162334122.png" srcset="/img/loading.gif" style="zoom: 67%;" /></p><p>之后设置代码源，其实就是告诉阿里云从哪儿获取Dockerfile，我这里用的是Github，所以需要先在阿里云中关联Github账号，然后在Github中创建一个用来放Dockerfile的仓库。构建设置里有一个“海外机器构建”，这正是我们使用阿里云容器服务的主要目的，勾选。</p><p><img src="http://qfxiao.me/img/image-20200602162419289.png" srcset="/img/loading.gif" style="zoom:67%;" /></p><p>镜像仓库创建好之后，点进去，在构建页面点击添加规则：</p><p><img src="http://qfxiao.me/img/image-20200602162710789.png" srcset="/img/loading.gif" style="zoom: 50%;" /></p><p>按下图进行设置即可，镜像版本就是你想要的镜像名字：</p><p><img src="http://qfxiao.me/img/image-20200602162740273.png" srcset="/img/loading.gif" style="zoom: 67%;" /></p><p>点击“立即构建”：</p><p><img src="http://qfxiao.me/img/image-20200602162816545.png" srcset="/img/loading.gif" style="zoom: 50%;" /></p><p>等待一段时间后，如果构建成功，便可以进行拉取了，在镜像仓库的基本信息页面可以看到地址：</p><p><img src="http://qfxiao.me/img/image-20200602162533220.png" srcset="/img/loading.gif" style="zoom: 50%;" /></p><h1 id="what-is-openpai">What is OpenPAI</h1><h1 id="submit-jobs-to-openpai">Submit Jobs to OpenPAI</h1>]]></content>
+    <content type="html"><![CDATA[<h1 id="introduction">Introduction</h1><p>实验室服务器集群采用OpenPAI来进行GPU资源的管理，而OpenPAI采用了Docker作为基础，即代码都放在Docker容器中运行。由于Docker的使用、Docker镜像的配置都有一定的门槛，所以这里写一篇Tutorial来进行介绍。本文不是网上资料的拼凑，而是经过本人走弯路踩坑形成的&quot;Best practice&quot;。主要内容包括Docker的介绍、Docker的基本使用、如何配置自己的Docker镜像以及OpenPAI平台的基本使用，但不包括Docker和OpenPAI的安装。</p><h1 id="docker-from-scratch">Docker from Scratch</h1><p>要理解Docker是什么，从虚拟机开始讲可能会比较好理解。虚拟机大家可能都很熟悉了，比如说我用的系统是Windows，但我需要Linux系统来作为一个Flask编写的网站的服务器，但是又不想单独安装Linux系统，于是可以使用虚拟机来解决这个问题。安装VMWare Workstation，去官网下载Ubuntu系统镜像，然后在VMWare中安装好系统，然后从头配置Flask相关环境。实际上我需要的仅仅是一个Flask运行环境而已，而使用虚拟机却需要如此“大费周章”，这时Docker出现了，网上有大量现成的Flask Docker镜像，配置好了你所需的Flask环境，你只需要下载这些镜像，然后运行它，你就得到了一个Flask运行环境，而与你当前使用的系统无关。如果你需要一个Tomcat的运行环境，那么去找一个Tomcat的Docker镜像就行。Docker将需求或者说服务绑定在了Docker镜像中（<strong>轻量化</strong>，一个需求对应一个Docker镜像，每个镜像都很小），你有什么需求，去找相应的镜像即可（或者自己写一个），镜像的运行是以虚拟机的形式存在，所以他们之间也是互不干扰的。同时，你在写好一个Docker镜像之后，你还可以<strong>分享</strong>给别人，这样其他人就不用重新配置，直接运行你给他的镜像即可。Docker有两个比较关键的概念：</p><ul><li><strong>镜像 Images： </strong>这里的镜像不是指我们安装系统时下载的ISO镜像，Docker镜像就是把你需要的东西（一个系统+需要的服务）集中到一起，相当于做菜的菜谱；</li><li><strong>容器 Containers：</strong> 如果一个Docker镜像启动了，那么就会有一个Docker容器产生，相当于按照菜谱做出来的菜。</li></ul><p><img src="http://qfxiao.me/img/Container@2x_2020-602.png" srcset="/img/loading.gif" style="zoom:33%;" /></p><p><img src="http://qfxiao.me/img/VM@2x_20200602.png" srcset="/img/loading.gif" style="zoom:33%;" /></p><p>这一节我们先不讨论如何自己写Docker镜像，只是先讨论Docker的基本操作。</p><h2 id="basic-operations">Basic Operations</h2><p>Docker新安装好当然是没有什么镜像的，首先我们使用<code>docker pull hello-world</code>来下载一个测试镜像。</p><blockquote><p>拉取镜像 <code>docker pull &lt;image_name&gt;</code></p></blockquote><p>在输入之后，Docker会自动在远程服务器上查找对应的镜像进行下载。由于我的电脑上已经有这个镜像了，所以显示是下面的样子：</p><p><img src="http://qfxiao.me/img/image-20200602142125342.png" srcset="/img/loading.gif" /></p><p>接下来，我们输入<code>docker run hello-world</code>运行这个镜像。</p><blockquote><p>运行镜像<code>docker run &lt;image_name&gt;</code></p></blockquote><p>可以看到，Docker输出了一些信息就自己退出了，这和我们理解的虚拟机不太一样。在Docker里面，我们既可以创建一个完整的系统，用户在运行之后就可以正常使用这个操作系统，也可以创建一个简单的服务，默认运行完一些指令就退出了。这里的<code>hello-world</code>镜像这是输出了一些信息后就自动退出了，因为这就是这个镜像的全部内容。</p><p><img src="http://qfxiao.me/img/image-20200602142314849.png" srcset="/img/loading.gif" /></p><p>我们尝试来运行一个完整的系统，先用<code>docker pull ubuntu</code>拉取Ubuntu Docker镜像：</p><p><img src="http://qfxiao.me/img/image-20200602142718332.png" srcset="/img/loading.gif" /></p><p>接下来我们使用</p><p><img src="http://qfxiao.me/img/image-20200602144354467.png" srcset="/img/loading.gif" style="zoom:67%;" /></p><blockquote><p><code>-it</code>的意思是什么？根据<code>docker run --help</code>：</p><pre><code class="hljs routeros">-i, --interactive                    Keep STDIN open even <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> attached    --ip string                      IPv4<span class="hljs-built_in"> address </span>(e.g., 172.30.100.104)    --ip6 string                    <span class="hljs-built_in"> IPv6 address </span>(e.g., 2001:db8::33)    --ipc string                     IPC mode <span class="hljs-keyword">to</span> use    --isolation string               Container isolation technology    --kernel-memory bytes            Kernel memory limit-t, --tty                            Allocate a pseudo-TTY    --ulimit ulimit                  Ulimit options (default [])</code></pre><p>其实<code>-it</code>是<code>-i</code>和<code>-t</code>的合并写法，意思是运行后进入这个容器并且启用shell，不然运行之后就会放到后台而不会进入容器中。而<code>--rm</code>则代表容器退出之后会被删除（镜像不会被删除），每次运行实际上会创建一个新的容器，如果不加<code>--rm</code>或退出之后不手动删除的话会看到一堆停止运行的容器。</p></blockquote><p>输入<code>cat /etc/issue</code>可以看到默认拉取的是最新的Ubuntu 20.04 LTS：</p><p><img src="http://qfxiao.me/img/image-20200602144424552.png" srcset="/img/loading.gif" style="zoom:67%;" /></p><h1 id="build-customized-docker-images">Build Customized Docker Images</h1><p>如果没有现成的Docker镜像能满足我们的需求，我们可以考虑自己写一个。要自定义一个Docker镜像需要两步，第一步是编写Dockerfile，第二步是使用<code>docker build</code>命令构建镜像。Dockerfile可以看作是一个脚本，描述了我们构建镜像所需要的全部命令，比如要构建一个用于Python科学计算的Docker镜像，我们需要在Dockerfile中编写安装Python的命令，安装Numpy、Scipy等常用包的命令等等。我们先来上手编写Dockerfile，这里我准备写一个包含<a href="https://hexo.io/" target="_blank" rel="noopener">hexo博客框架</a>的镜像，这个框架需要node作为基础环境，不过我们不需要在Dockerfile里写安装node的命令。因为类似于<code>C++</code>或<code>Python</code>中的对象的继承，Dockerfile也可以“继承”，这意味着我们不必从头写起。我们先来看一下完整的Dockfile和效果，再来一一解释。</p><pre><code class="hljs dockerfile"><span class="hljs-keyword">FROM</span> node--------------------------------------------------------------<span class="hljs-keyword">RUN</span><span class="bash"> npm install -g hexo-cli</span><span class="hljs-keyword">EXPOSE</span> <span class="hljs-number">4000</span><span class="hljs-keyword">CMD</span><span class="bash"> hexo init blog &amp;&amp; <span class="hljs-built_in">cd</span> blog &amp;&amp; hexo generate &amp;&amp; hexo server</span></code></pre><p>运行结果如下所示，可以看到Docker按照我们写的Dockerfile一行一行的进行镜像的构建：</p><p><img src="http://qfxiao.me/img/image-20200602161816051.png" srcset="/img/loading.gif" style="zoom: 50%;" /></p><p>现在来解释Docerfile里的内容。<code>FROM &lt;docker image&gt;</code>表示继承其他的镜像，这里我们使用node官方的镜像。接下来是安装hexo，<code>RUN &lt;command&gt;</code>表示执行命令，这里我们直接用<code>npm install -g hexo-cli</code>进行安装。由于要浏览博客网页需要开放端口，而Docker容器运行的时候和外部主机是完全隔断的，要使外部主机访问Docker容器端口，需要暴露端口。<code>EXPOSE &lt;port&gt;</code>代表暴露端口，这里用的是4000端口。之后是创建博客和启动本地服务，<code>CMD &lt;command&gt;</code>和<code>RUN &lt;command&gt;</code>的区别是RUN会在构建的时候执行，而CMD是在容器启动之后才会执行。<code>hexo init blog &amp;&amp; cd blog &amp;&amp; hexo generate &amp;&amp; hexo server</code>分别代表初始化博客、进入博客所在文件夹、生成博客网站、启动本地服务器。更多指令可以参考<a href="https://docs.docker.com/engine/reference/builder/" target="_blank" rel="noopener">官方文档</a>。</p><p>然后我们使用<code>docker build -t test_hexo .</code>命令构建镜像。</p><blockquote><p>构建镜像 <code>docker build -t &lt;image_name&gt; &lt;direcotry&gt;</code></p></blockquote><p>运行镜像：</p><p><img src="http://qfxiao.me/img/image-20200602161640400.png" srcset="/img/loading.gif" style="zoom: 33%;" /></p><p>可以看到容器启动后开始执行博客初始化。</p><p><img src="http://qfxiao.me/img/image-20200602161713537.png" srcset="/img/loading.gif" style="zoom:33%;" /></p><p>最后在<code>locahost:4000</code>上启动了一个本地服务器，在浏览器中输入这个地址，可以看到刚刚构建好的博客：</p><p><img src="http://qfxiao.me/img/image-20200602161524359.png" srcset="/img/loading.gif" style="zoom: 50%;" /></p><p>值得注意的是，在Dockerfile中我们暴露了4000端口，使用<code>-p</code>标签可以达到同样的效果：<code>docker run -p &lt;docker_port&gt;:&lt;local_port&gt; &lt;image_name&gt;</code>。比如<code>docker run -p 9999:8888 xxxx</code>代表将Docker容器中的9999端口转发到外部主机的8888端口。如果你是在远程服务器上使用的Docker，那么端口只是被转发到了远程服务器上，还得手动将远程服务器再转发到你本机上才能直接在本机浏览器上看到页面。</p><h2 id="build-docker-images-with-aliyun-container-registry">Build Docker Images with Aliyun Container Registry</h2><p>因为某些原因，如果在构建镜像的时候需要通过<code>apt-get update</code>更新源，会发现无论如何都会卡住。这个时候可以使用<a href="https://cr.console.aliyun.com/" target="_blank" rel="noopener">阿里云容器镜像服务</a>，在阿里的服务器上构建好镜像，再拉取到自己的机器上。注册好帐号之后，点击创建镜像仓库：</p><p><img src="http://qfxiao.me/img/image-20200602162228133.png" srcset="/img/loading.gif" /></p><p>这里仓库类型如果没有特殊需求建议使用公开，然后填写一些基本信息：</p><p><img src="http://qfxiao.me/img/image-20200602162334122.png" srcset="/img/loading.gif" style="zoom: 67%;" /></p><p>之后设置代码源，其实就是告诉阿里云从哪儿获取Dockerfile，我这里用的是Github，所以需要先在阿里云中关联Github账号，然后在Github中创建一个用来放Dockerfile的仓库。构建设置里有一个“海外机器构建”，这正是我们使用阿里云容器服务的主要目的，勾选。</p><p><img src="http://qfxiao.me/img/image-20200602162419289.png" srcset="/img/loading.gif" style="zoom:67%;" /></p><p>镜像仓库创建好之后，点进去，在构建页面点击添加规则：</p><p><img src="http://qfxiao.me/img/image-20200602162710789.png" srcset="/img/loading.gif" style="zoom: 50%;" /></p><p>按下图进行设置即可，镜像版本就是你想要的镜像名字：</p><p><img src="http://qfxiao.me/img/image-20200602162740273.png" srcset="/img/loading.gif" style="zoom: 67%;" /></p><p>点击“立即构建”：</p><p><img src="http://qfxiao.me/img/image-20200602162816545.png" srcset="/img/loading.gif" style="zoom: 50%;" /></p><p>等待一段时间后，如果构建成功，便可以进行拉取了，在镜像仓库的基本信息页面可以看到地址：</p><p><img src="http://qfxiao.me/img/image-20200602162533220.png" srcset="/img/loading.gif" style="zoom: 50%;" /></p><h1 id="build-docker-images-for-deep-learning">Build Docker Images for Deep Learning</h1><p>TODO.</p><h1 id="what-is-openpai">What is OpenPAI</h1><p>TODO.</p><h1 id="submit-jobs-to-openpai">Submit Jobs to OpenPAI</h1><p>TODO.</p>]]></content>
     
     
     <categories>
@@ -110,6 +137,35 @@
       <tag>Anomaly Detection</tag>
       
       <tag>Transfer Learning</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>Estimate the Implicit Likelihoods of GANs with Application to Anomaly Detection</title>
+    <link href="/2020/05/06/Estimate-the-Implicit-Likelihoods-of-GANs-with-Application-to-Anomaly-Detection/"/>
+    <url>/2020/05/06/Estimate-the-Implicit-Likelihoods-of-GANs-with-Application-to-Anomaly-Detection/</url>
+    
+    <content type="html"><![CDATA[<h1 id="introduction">Introduction</h1><h1 id="preliminaries">Preliminaries</h1><h2 id="flow-based-models-recap">Flow-based Models Recap</h2><h3 id="jacobian-matrix-and-determinant">Jacobian Matrix and Determinant</h3><p>设函数<span class="math inline">\(f:\mathbb{R}^n\mapsto\mathbb{R}^m\)</span>，由<span class="math inline">\(f\)</span>的一阶偏导数组成的矩阵叫做Jacobian矩阵： <span class="math display">\[\mathbf J=\left[\begin{matrix}\frac{\partial f_1}{\partial x_1} &amp;\cdots &amp;\frac{\partial f_1}{\partial x_n}\\\vdots &amp;\ddots &amp;\vdots\\\frac{\partial f_m}{\partial x_1}&amp; \dots&amp; \frac{\partial f_m}{\partial x_n}\end{matrix}\right]\]</span></p><h3 id="change-of-variable-theorem">Change of Variable Theorem</h3><p>给定已知概率分布的随机变量<span class="math inline">\(z\sim\pi(z)\)</span>，新随机变量由可逆映射<span class="math inline">\(f\)</span>给出<span class="math inline">\(x=f(z)\)</span>，<span class="math inline">\(z=f^{-1}(x)\)</span>。由于： <span class="math display">\[\int p(x)\mathrm{d}x=\int \pi(z)\mathrm d z=1\]</span> 所以<span class="math inline">\(p(x)\)</span>可以由下式得到： <span class="math display">\[p(x)=\pi(z)\left|\frac{\mathrm d z}{\mathrm d x}\right|=\pi(f^{-1}(x))\left|\frac{\mathrm d f^{-1}}{\mathrm d x}\right|=\pi(f^{-1}(x))|(f^{-1})^\prime(x)|\]</span> <span class="math inline">\(\frac{\mathrm d f^{-1}}{\mathrm d x}\)</span>相当于对逆函数<span class="math inline">\(f^{-1}\)</span>求导，而<span class="math inline">\(z=f^{-1}(x)\)</span>。</p><p>对于多变量的情况： <span class="math display">\[\mathbf z\sim \pi(\mathbf z), \mathbf x=f(\mathbf z),\mathbf z = f^{-1}(\mathbf x)\\p(\mathbf x) = \pi(\mathbf z)\left|\text{det}\frac{\mathrm d \mathbf z}{\mathrm d \mathbf x}\right|= \pi(f^{-1}(\mathbf x))\left|\text{det}\frac{\mathrm d f^{-1}}{\mathrm d \mathbf x}\right|\]</span> <span class="math inline">\(\left|\text{det}\frac{\mathrm d f^{-1}}{\mathrm d \mathbf x}\right|\)</span>为逆函数Jacobian矩阵行列式的绝对值。</p><h2 id="deep-generative-models-as-manifolds">Deep Generative Models as Manifolds</h2><p>一个深度生成模型可以表示为从低维隐空间<span class="math inline">\(\mathcal Z \subseteq R^d\)</span>映射到流形<span class="math inline">\(\mathcal M\subseteq R^D\)</span>的嵌入函数<span class="math inline">\(g:\mathcal Z\rightarrow \mathcal X\)</span>，<span class="math inline">\(D \ll d\)</span>。通常假设<span class="math inline">\(g\)</span>为光滑映射，那么<span class="math inline">\(\mathcal M\)</span>为一个嵌入流形。<span class="math inline">\(g\)</span>在<span class="math inline">\(z\in\mathcal Z\)</span>的雅各比矩阵<span class="math inline">\(\mathbf J_g(z)\)</span>提供了在<span class="math inline">\(x=g(z)\in\mathcal X\)</span>处的切空间，即<span class="math inline">\(\mathbf J_g:T_z\mathcal Z\rightarrow T_x\mathcal X\)</span>。这个映射不是满射，并且值域限制在流形<span class="math inline">\(\mathcal M\)</span>在<span class="math inline">\(x=g(z)\)</span>的切空间，记为<span class="math inline">\(T_x\mathcal M\)</span>。<span class="math inline">\(\mathcal M\)</span>与真实数据流形接近，即<span class="math inline">\(\mathcal M_{data}\)</span>。</p><p>考虑一个定义在隐空间<span class="math inline">\(\mathcal Z\)</span>每一点<span class="math inline">\(z\)</span>上的Riemannian metric： <span class="math display">\[\mathbf M(z)=\mathbf J_g(z)^\top\mathbf J_g(z)\]</span> 给定两个切空间向量<span class="math inline">\(u,v\in T_z\in\mathcal Z\)</span>，他们的内积定义为<span class="math inline">\(&lt;u,v&gt;=u^\top \mathbf M(z)v\)</span>。</p><p>考虑一个光滑曲线<span class="math inline">\(\gamma:t\in[a,b]\rightarrow\mathcal Z\)</span>， <span class="math display">\[L(\gamma)=\int^b_a\sqrt{\hat{\gamma}(t)^\top M_{\gamma(t)}\hat{\gamma}(t)}\mathrm d t\]</span></p><h2 id="change-of-variable-on-manifolds">Change of Variable on Manifolds</h2><p>在流形上的<strong>Change of Variable Theorem</strong>是类似的：</p><p><span class="math display">\[p_\mathcal{X}(x)=p_\mathcal{Z}(g^{-1}(x))\text{det}(\mathbf J_g(g^{-1}(x))^\top\mathbf J_g(g^{-1}(x)))^{-\frac{1}{2}}\]</span></p><p>我们假设隐空间分布<span class="math inline">\(p_\mathcal{Z}\)</span>服从标准正态先验分布<span class="math inline">\(N(0,\mathbf I_d)\)</span>，于是我们可以计算出<span class="math inline">\(x\)</span>的似然：</p><p><span class="math display">\[\log(p_\mathcal{X}(g(z)))=\log(p_\mathcal{Z}(z))-\frac{1}{2}\log(\text{det}(\mathbf J_g(z)^\top\mathbf J_g(z)))\]</span></p><p>通常我们没法知道真实世界中<span class="math inline">\(\mathcal M_{data}\)</span>的切空间维度是多少，设定<span class="math inline">\(d=\text{dim}\mathcal Z&gt;T_x\mathcal M_{data}\)</span>会导致<span class="math inline">\(\mathbf J_g\)</span>不是满秩矩阵，这时<span class="math inline">\(\text{det}(\mathbf J_g(z)^\top\mathbf J_g(z))=0\)</span>，即无法应用上式计算似然。</p><h2 id="density-estimation-with-neural-networks">Density Estimation with Neural Networks</h2><h2 id="anomaly-detection-with-generative-models">Anomaly Detection with Generative Models</h2><h1 id="proposed-method">Proposed Method</h1><p>对于GAN模型，给定隐变量<span class="math inline">\(z\)</span>和生成器<span class="math inline">\(g\)</span>，我们可以通过公式(8)计算生成样本<span class="math inline">\(g(z)\)</span>的对数似然，为了保证Jacobian矩阵为满秩，我们可以选定较低的隐变量维度<span class="math inline">\(d\)</span>，不过这样会伤害GAN模型的性能。为了解决这个问题，我们需要使用一个<em>inference network</em>来将<span class="math inline">\(x\)</span>映射回<span class="math inline">\(z\)</span>，</p><h2 id="the-variance-network-of-the-generator">The Variance Network of the Generator</h2><p>文中对生成器<span class="math inline">\(g\)</span>进行了扩展：</p><p><span class="math display">\[f(z) = g(z) + \sigma(z)\odot\epsilon,\\g:\mathcal Z\rightarrow\mathcal X, \sigma:\mathcal Z\rightarrow\mathbb{R},\epsilon\sim N(0,\mathbf I_D)\]</span></p><p><span class="math inline">\(g\)</span>代表均值，<span class="math inline">\(\sigma\)</span>代表方差，实际上<span class="math inline">\(\mathbb E_{\epsilon\sim N(0,\mathbf I_D)}f(z)=g(z)\)</span>。为了保证方差在少样本或无样本的区域更大，方差网络采用RBF网络实现。</p><p>首先，从隐空间采样大量的样本，之后使用<strong>K-means</strong>算法将其分为<span class="math inline">\(K\)</span>个聚簇，<span class="math inline">\(c_k\)</span>为第<span class="math inline">\(k\)</span>个簇的中心，<span class="math inline">\(C_k\)</span>为第<span class="math inline">\(k\)</span>个簇的样本数量。对于任何样本<span class="math inline">\(x\)</span>，为了计算其对应的方差，需要用一个<em>inference network</em> <span class="math inline">\(h\)</span>来将其映射到隐空间，即<span class="math inline">\(z=h(x)\)</span>。RBF网络通过输入<span class="math inline">\(z\)</span>到每个簇中心的距离来返回<span class="math inline">\(x\)</span>对应的方差，RBF函数由下式给出： <span class="math display">\[\sigma(z)=(\mathbf W^2\mathbf v(z))^{-\frac{1}{2}},\\v_k(z) = \exp(-\lambda_k\parallel z-c_k\parallel^2_2), \space k=1,\cdots,K\\\lambda_k=\frac{1}{2}\left(\frac{a}{|C_k|}\sum_{z_j\in C_k}\parallel z_j-c_k\parallel_2\right)^{-2}\]</span></p><p><span class="math display">\[\begin{align}\bar{\mathbf M}^z_f&amp;=\mathbb E_{\epsilon\sim N(0,\mathbf I_D)}\mathbf J_f^\top(z)\mathbf J_f(z)\\&amp;=\mathbf J_g^\top(z)\mathbf J_g(z)+\mathbf J_\sigma^\top(z)\mathbf J_\sigma(z)\end{align}\]</span></p><h2 id="the-inference-network-learning">The Inference Network Learning</h2><p><img src="http://qfxiao.me/img/image-20200506174247129.png" srcset="/img/loading.gif" style="zoom:67%;" /></p><p><span class="math display">\[\max_{h,\sigma}\mathbb E_{x\sim p_{data}(x)}\left[\log(p(x|z))|_{z=h(x)}\right]\]</span></p><p><span class="math display">\[\max_{h,\sigma}\mathbb E_{x\sim p_{data}(x), z=h(x)}\left[\log(p(x|z))-\text{KL}\right]\]</span></p><h2 id="stabilize-training">Stabilize Training</h2><h2 id="algorithm">Algorithm</h2><p><img src="http://qfxiao.me/img/image-20200506174309604.png" srcset="/img/loading.gif" style="zoom:67%;" /></p><h1 id="experiments">Experiments</h1><p><img src="http://qfxiao.me/img/image-20200506174343303.png" srcset="/img/loading.gif" style="zoom:67%;" /></p><p><img src="http://qfxiao.me/img/image-20200506174352450.png" srcset="/img/loading.gif" style="zoom:67%;" /></p><p><img src="http://qfxiao.me/img/image-20200506174403647.png" srcset="/img/loading.gif" style="zoom:67%;" /></p><p><img src="http://qfxiao.me/img/image-20200506174414709.png" srcset="/img/loading.gif" /></p><p><img src="http://qfxiao.me/img/image-20200506174435973.png" srcset="/img/loading.gif" style="zoom:67%;" /></p><p><img src="http://qfxiao.me/img/image-20200506174450623.png" srcset="/img/loading.gif" style="zoom:67%;" /></p><p><img src="http://qfxiao.me/img/image-20200506174505764.png" srcset="/img/loading.gif" style="zoom:67%;" /></p><p><img src="http://qfxiao.me/img/image-20200506174526203.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>Research</category>
+      
+      <category>Anomaly Detection</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Anomaly Detection</tag>
+      
+      <tag>GAN</tag>
       
     </tags>
     
@@ -333,9 +389,9 @@
     
     <tags>
       
-      <tag>Time Series</tag>
-      
       <tag>Deep Learning</tag>
+      
+      <tag>Time Series</tag>
       
     </tags>
     
@@ -362,15 +418,15 @@
     
     <tags>
       
-      <tag>Time Series</tag>
-      
-      <tag>Machine Learning</tag>
-      
       <tag>VAE</tag>
       
       <tag>Deep Learning</tag>
       
+      <tag>Time Series</tag>
+      
       <tag>Anomaly Detection</tag>
+      
+      <tag>Machine Learning</tag>
       
     </tags>
     
@@ -432,9 +488,9 @@
       
       <tag>Time Series</tag>
       
-      <tag>Statistics</tag>
-      
       <tag>Machine Learning</tag>
+      
+      <tag>Statistics</tag>
       
     </tags>
     
@@ -492,9 +548,9 @@
     
     <tags>
       
-      <tag>Time Series</tag>
-      
       <tag>Deep Learning</tag>
+      
+      <tag>Time Series</tag>
       
       <tag>RNN</tag>
       
@@ -523,15 +579,15 @@
     
     <tags>
       
-      <tag>Time Series</tag>
-      
-      <tag>Machine Learning</tag>
-      
       <tag>VAE</tag>
       
       <tag>Deep Learning</tag>
       
+      <tag>Time Series</tag>
+      
       <tag>Anomaly Detection</tag>
+      
+      <tag>Machine Learning</tag>
       
       <tag>RNN</tag>
       
@@ -562,9 +618,9 @@
     
     <tags>
       
-      <tag>Time Series</tag>
-      
       <tag>Deep Learning</tag>
+      
+      <tag>Time Series</tag>
       
       <tag>GAN</tag>
       
@@ -593,13 +649,13 @@
     
     <tags>
       
-      <tag>Time Series</tag>
-      
-      <tag>Machine Learning</tag>
-      
       <tag>Deep Learning</tag>
       
+      <tag>Time Series</tag>
+      
       <tag>Anomaly Detection</tag>
+      
+      <tag>Machine Learning</tag>
       
     </tags>
     
@@ -626,13 +682,13 @@
     
     <tags>
       
-      <tag>Time Series</tag>
-      
-      <tag>Machine Learning</tag>
-      
       <tag>Deep Learning</tag>
       
+      <tag>Time Series</tag>
+      
       <tag>Anomaly Detection</tag>
+      
+      <tag>Machine Learning</tag>
       
     </tags>
     
@@ -659,15 +715,15 @@
     
     <tags>
       
-      <tag>Time Series</tag>
-      
-      <tag>Machine Learning</tag>
-      
       <tag>VAE</tag>
       
       <tag>Deep Learning</tag>
       
+      <tag>Time Series</tag>
+      
       <tag>Anomaly Detection</tag>
+      
+      <tag>Machine Learning</tag>
       
     </tags>
     
@@ -694,13 +750,13 @@
     
     <tags>
       
-      <tag>Time Series</tag>
-      
-      <tag>Machine Learning</tag>
-      
       <tag>Deep Learning</tag>
       
+      <tag>Time Series</tag>
+      
       <tag>Anomaly Detection</tag>
+      
+      <tag>Machine Learning</tag>
       
       <tag>Spectral</tag>
       
