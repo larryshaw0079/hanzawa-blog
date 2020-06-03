@@ -158,7 +158,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    2.3k 字
+                    4k 字
                   </span>
                 
 
@@ -168,7 +168,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    25
+                    51
                      分钟
                   </span>
                 
@@ -278,12 +278,158 @@
 <p><img src="http://qfxiao.me/img/image-20200602162816545.png" srcset="/img/loading.gif" style="zoom: 50%;" /></p>
 <p>等待一段时间后，如果构建成功，便可以进行拉取了，在镜像仓库的基本信息页面可以看到地址：</p>
 <p><img src="http://qfxiao.me/img/image-20200602162533220.png" srcset="/img/loading.gif" style="zoom: 50%;" /></p>
+<p>将阿里云上的镜像拉取到本机之后一般会想要对镜像改名，可以使用<code>docker tag &lt;old_name&gt; &lt;new_name&gt;</code>。</p>
 <h1 id="build-docker-images-for-deep-learning">Build Docker Images for Deep Learning</h1>
-<p>TODO.</p>
-<h1 id="what-is-openpai">What is OpenPAI</h1>
-<p>TODO.</p>
-<h1 id="submit-jobs-to-openpai">Submit Jobs to OpenPAI</h1>
-<p>TODO.</p>
+<h2 id="startup">Startup</h2>
+<p>在Docker中配置适用于OpenPAI的深度学习镜像不是一件容易的事，会有很多的坑，这里专门说一下如何配置。推荐在阿里云容器镜像服务中进行构建，会少很多麻烦。</p>
+<p>第一步是初始镜像，由于需要用到CUDA，这里可以根据自己的需求（比如不同CUDA版本支持的GPU驱动版本不一样，还有Tensorflow不同版本对CUDA和cuDNN要求也不一样）从Nvidia的Dockerhub<a href="https://hub.docker.com/r/nvidia/cuda" target="_blank" rel="noopener">官方页面</a>选择合适的CUDA和cuDNN版本：</p>
+<p><img src="http://qfxiao.me/img/image-20200603145713190.png" srcset="/img/loading.gif" style="zoom: 80%;" /></p>
+<p>这里我们选择CUDA10.1 + cuDNN7：</p>
+<pre><code class="hljs dockerfile"><span class="hljs-keyword">FROM</span> nvidia/cuda:<span class="hljs-number">10.1</span>-cudnn7-devel-ubuntu18.<span class="hljs-number">04</span></code></pre>
+<p>这一条主要是解决乱码问题以及定义用到的软件包的版本，这里Miniconda版本设置为4.5.4的原因是这是最后一个自带Python3.6的版本，我在这儿为了稳定所以用了Python3.6，大家也可以安装最新版的Miniconda：</p>
+<pre><code class="hljs dockerfile"><span class="hljs-keyword">ENV</span> LANG=C.UTF-<span class="hljs-number">8</span> LC_ALL=C.UTF-<span class="hljs-number">8</span>
+<span class="hljs-keyword">ENV</span> HADOOP_VERSION=<span class="hljs-number">2.7</span>.<span class="hljs-number">2</span>
+<span class="hljs-keyword">LABEL</span><span class="bash"> HADOOP_VERSION=2.7.2</span>
+<span class="hljs-keyword">ENV</span> MINICONDA_VERSION=<span class="hljs-number">4.5</span>.<span class="hljs-number">4</span></code></pre>
+<p>接下来安装必须的包，大家可以根据需求自行调整，<code>-y</code>标签代表Yes，即自动同意安装：</p>
+<pre><code class="hljs dockerfile"><span class="hljs-keyword">RUN</span><span class="bash"> DEBIAN_FRONTEND=noninteractive &amp;&amp; \</span>
+<span class="bash">    apt-get -y update &amp;&amp; \</span>
+<span class="bash">    apt-get -y install build-essential \</span>
+<span class="bash">        wget \</span>
+<span class="bash">        git \</span>
+<span class="bash">        curl \</span>
+<span class="bash">        unzip \</span>
+<span class="bash">        automake \</span>
+<span class="bash">        openjdk-8-jdk \</span>
+<span class="bash">        openssh-server \</span>
+<span class="bash">        openssh-client \</span>
+<span class="bash">        lsof \</span>
+<span class="bash">        libcupti-dev &amp;&amp; \</span>
+<span class="bash">    apt-get clean &amp;&amp; \</span>
+<span class="bash">    rm -rf /var/lib/apt/lists/*</span></code></pre>
+<p>安装Miniconda并设置环境变量，<code>-b</code>标签可以让Miniconda无交互自动安装：</p>
+<pre><code class="hljs dockerfile"><span class="hljs-keyword">RUN</span><span class="bash"> wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-<span class="hljs-variable">$&#123;MINICONDA_VERSION&#125;</span>-Linux-x86_64.sh &amp;&amp; /bin/bash Miniconda3-<span class="hljs-variable">$&#123;MINICONDA_VERSION&#125;</span>-Linux-x86_64.sh -b -p /opt/miniconda \</span>
+<span class="bash">&amp;&amp; rm Miniconda3-<span class="hljs-variable">$&#123;MINICONDA_VERSION&#125;</span>-Linux-x86_64.sh</span>
+<span class="hljs-keyword">ENV</span> PATH /opt/miniconda/bin:$PATH</code></pre>
+<p>安装Hadoop，OpenPAI平台会用到：</p>
+<pre><code class="hljs dockerfile"><span class="hljs-keyword">RUN</span><span class="bash"> wget -qO- http://archive.apache.org/dist/hadoop/common/hadoop-<span class="hljs-variable">$&#123;HADOOP_VERSION&#125;</span>/hadoop-<span class="hljs-variable">$&#123;HADOOP_VERSION&#125;</span>.tar.gz | \</span>
+<span class="bash">    tar xz -C /usr/<span class="hljs-built_in">local</span> &amp;&amp; \</span>
+<span class="bash">    mv /usr/<span class="hljs-built_in">local</span>/hadoop-<span class="hljs-variable">$&#123;HADOOP_VERSION&#125;</span> /usr/<span class="hljs-built_in">local</span>/hadoop</span></code></pre>
+<p><code>ENV</code>的作用是配置环境变量。配置JAVA和Hadoop环境变量：</p>
+<pre><code class="hljs dockerfile"><span class="hljs-keyword">ENV</span> JAVA_HOME=/usr/lib/jvm/java-<span class="hljs-number">8</span>-openjdk-amd64 \
+    HADOOP_INSTALL=/usr/local/hadoop \
+    NVIDIA_VISIBLE_DEVICES=all
+
+<span class="hljs-keyword">ENV</span> HADOOP_PREFIX=$&#123;HADOOP_INSTALL&#125; \
+    HADOOP_BIN_DIR=$&#123;HADOOP_INSTALL&#125;/bin \
+    HADOOP_SBIN_DIR=$&#123;HADOOP_INSTALL&#125;/sbin \
+    HADOOP_HDFS_HOME=$&#123;HADOOP_INSTALL&#125; \
+    HADOOP_COMMON_LIB_NATIVE_DIR=$&#123;HADOOP_INSTALL&#125;/lib/native \
+    HADOOP_OPTS=<span class="hljs-string">"-Djava.library.path=$&#123;HADOOP_INSTALL&#125;/lib/native"</span></code></pre>
+<p>设置PATH环境变量：</p>
+<pre><code class="hljs dockerfile"><span class="hljs-keyword">ENV</span> PATH=/usr/local/nvidia/bin:/usr/local/cuda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$&#123;HADOOP_BIN_DIR&#125;:$&#123;HADOOP_SBIN_DIR&#125; \
+LD_LIBRARY_PATH=/usr/local/cuda/extras/CUPTI/lib:/usr/local/cuda/extras/CUPTI/lib64:/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/usr/local/cuda/lib64:/usr/local/cuda/targets/x86_64-linux/lib/stubs:$&#123;JAVA_HOME&#125;/jre/lib/amd64/server</code></pre>
+<p>完整的Dockerfile如下：</p>
+<pre><code class="hljs dockerfile"><span class="hljs-keyword">FROM</span> nvidia/cuda:<span class="hljs-number">10.1</span>-cudnn7-devel-ubuntu18.<span class="hljs-number">04</span>
+
+<span class="hljs-keyword">ENV</span> LANG=C.UTF-<span class="hljs-number">8</span> LC_ALL=C.UTF-<span class="hljs-number">8</span>
+<span class="hljs-keyword">ENV</span> HADOOP_VERSION=<span class="hljs-number">2.7</span>.<span class="hljs-number">2</span>
+<span class="hljs-keyword">LABEL</span><span class="bash"> HADOOP_VERSION=2.7.2</span>
+<span class="hljs-keyword">ENV</span> MINICONDA_VERSION=<span class="hljs-number">4.5</span>.<span class="hljs-number">4</span>
+
+<span class="hljs-keyword">RUN</span><span class="bash"> DEBIAN_FRONTEND=noninteractive &amp;&amp; \</span>
+<span class="bash">    apt-get -y update &amp;&amp; \</span>
+<span class="bash">    apt-get -y install build-essential \</span>
+<span class="bash">        wget \</span>
+<span class="bash">        git \</span>
+<span class="bash">        curl \</span>
+<span class="bash">        unzip \</span>
+<span class="bash">        automake \</span>
+<span class="bash">        openjdk-8-jdk \</span>
+<span class="bash">        openssh-server \</span>
+<span class="bash">        openssh-client \</span>
+<span class="bash">        lsof \</span>
+<span class="bash">        libcupti-dev &amp;&amp; \</span>
+<span class="bash">    apt-get clean &amp;&amp; \</span>
+<span class="bash">    rm -rf /var/lib/apt/lists/*</span>
+
+<span class="hljs-keyword">RUN</span><span class="bash"> wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-<span class="hljs-variable">$&#123;MINICONDA_VERSION&#125;</span>-Linux-x86_64.sh &amp;&amp; /bin/bash Miniconda3-<span class="hljs-variable">$&#123;MINICONDA_VERSION&#125;</span>-Linux-x86_64.sh -b -p /opt/miniconda \</span>
+<span class="bash">&amp;&amp; rm Miniconda3-<span class="hljs-variable">$&#123;MINICONDA_VERSION&#125;</span>-Linux-x86_64.sh</span>
+<span class="hljs-keyword">ENV</span> PATH /opt/miniconda/bin:$PATH
+    
+<span class="hljs-keyword">RUN</span><span class="bash"> wget -qO- http://archive.apache.org/dist/hadoop/common/hadoop-<span class="hljs-variable">$&#123;HADOOP_VERSION&#125;</span>/hadoop-<span class="hljs-variable">$&#123;HADOOP_VERSION&#125;</span>.tar.gz | \</span>
+<span class="bash">    tar xz -C /usr/<span class="hljs-built_in">local</span> &amp;&amp; \</span>
+<span class="bash">    mv /usr/<span class="hljs-built_in">local</span>/hadoop-<span class="hljs-variable">$&#123;HADOOP_VERSION&#125;</span> /usr/<span class="hljs-built_in">local</span>/hadoop</span>
+    
+<span class="hljs-keyword">ENV</span> JAVA_HOME=/usr/lib/jvm/java-<span class="hljs-number">8</span>-openjdk-amd64 \
+    HADOOP_INSTALL=/usr/local/hadoop \
+    NVIDIA_VISIBLE_DEVICES=all
+
+<span class="hljs-keyword">ENV</span> HADOOP_PREFIX=$&#123;HADOOP_INSTALL&#125; \
+    HADOOP_BIN_DIR=$&#123;HADOOP_INSTALL&#125;/bin \
+    HADOOP_SBIN_DIR=$&#123;HADOOP_INSTALL&#125;/sbin \
+    HADOOP_HDFS_HOME=$&#123;HADOOP_INSTALL&#125; \
+    HADOOP_COMMON_LIB_NATIVE_DIR=$&#123;HADOOP_INSTALL&#125;/lib/native \
+    HADOOP_OPTS=<span class="hljs-string">"-Djava.library.path=$&#123;HADOOP_INSTALL&#125;/lib/native"</span>
+
+<span class="hljs-keyword">ENV</span> PATH=/usr/local/nvidia/bin:/usr/local/cuda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$&#123;HADOOP_BIN_DIR&#125;:$&#123;HADOOP_SBIN_DIR&#125;:$PATH \
+LD_LIBRARY_PATH=/usr/local/cuda/extras/CUPTI/lib:/usr/local/cuda/extras/CUPTI/lib64:/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/usr/local/cuda/lib64:/usr/local/cuda/targets/x86_64-linux/lib/stubs:$&#123;JAVA_HOME&#125;/jre/lib/amd64/server</code></pre>
+<p>建议先把这一部分进行构建，作为基础镜像，后面要配置其他环境（如安装Pytorch框架登），就不用重复构建这部分，还减少了出错的可能性。这里说一下，启动带CUDA的Docker镜像需要在<code>docker run</code>加上额外的参数<code>--runtime nvidia</code>。</p>
+<p>接下来安装深度学习框架。</p>
+<h2 id="configure-pytorch">Configure PyTorch</h2>
+<p>假设上面的镜像我们命名为xiaoqinfeng/base，那么构建PyTorch的Dockerfile可以像下面这么写：</p>
+<pre><code class="hljs dockerfile"><span class="hljs-keyword">FROM</span> xiaoqinfeng/base
+
+<span class="hljs-keyword">RUN</span><span class="bash"> pip install -U pip</span>
+<span class="hljs-keyword">RUN</span><span class="bash"> pip install numpy scipy pandas matplotlib tqdm</span>
+<span class="hljs-keyword">RUN</span><span class="bash"> pip install torch==1.5.0+cu101 torchvision==0.6.0+cu101 -f https://download.pytorch.org/whl/torch_stable.html</span></code></pre>
+<p>因为这里我用的CUDA10.1，其他版本的CUDA安装指令可能不太一样，具体可以参考<a href="https://pytorch.org/get-started/locally/" target="_blank" rel="noopener">官网</a>。</p>
+<h2 id="configure-tensorflow">Configure Tensorflow</h2>
+<p>如果是安装Tensorflow，那么构建Tensorflow的Dockerfile可以像下面这么写：</p>
+<pre><code class="hljs dockerfile"><span class="hljs-keyword">FROM</span> xiaoqinfeng/base
+
+<span class="hljs-keyword">RUN</span><span class="bash"> pip install -U pip</span>
+<span class="hljs-keyword">RUN</span><span class="bash"> pip install numpy scipy pandas matplotlib tqdm tensorflow-gpu</span></code></pre>
+<p>这里会自动安装最新版本的Tensorflow2。Tensorflow不同版本对CUDA和cuDNN版本甚至Python版本的支持都不太一样，可以参考<a href="https://www.tensorflow.org/install/source#linux" target="_blank" rel="noopener">官网</a>的说明。</p>
+<h1 id="deep-learning-with-openpai">Deep Learning with OpenPAI</h1>
+<h2 id="what-is-openpai">What is OpenPAI</h2>
+<p>OpenPAI是一个分布式深度学习计算资源管理平台，对于我们用户来说，只需要定义好Docker镜像，然后编写好任务设置，提交到平台之后，平台便会自动分配计算资源来运行任务。</p>
+<p>OpenPAI界面：</p>
+<p><img src="http://qfxiao.me/img/openpai-3_20200603.png" srcset="/img/loading.gif" style="zoom: 33%;" /></p>
+<p><img src="http://qfxiao.me/img/openpai-4_20200603.png" srcset="/img/loading.gif" style="zoom:33%;" /></p>
+<p>下面我们来讲讲怎么向OpenPAI平台提交任务。</p>
+<h2 id="submit-jobs-to-openpai">Submit Jobs to OpenPAI</h2>
+<h3 id="pack-code-data-files">Pack Code &amp; Data Files</h3>
+<p>假设你已经完成了代码的编写和测试，你的目录结构可能看起来是这样：</p>
+<pre><code class="hljs bash">.
+├── README.md
+├── data
+│   └── dataset.csv
+├── main.py
+└── src
+    ├── data.py
+    └── net.py</code></pre>
+<p>因为OpenPAI会创建一个虚拟容器来运行你的代码，所以你的数据和代码必须要以某种方式传送到OpenPAI上的虚拟容器中。我们先来打包，在代码目录下执行<code>tar -cvf files.tar ./</code>。之后，运行<code>python -m http.server &lt;port&gt;</code>。打开浏览器输入<code>&lt;server_ip&gt;:&lt;port&gt;</code>应该就能看到你的文件了：</p>
+<p><img src="http://qfxiao.me/img/image-20200603194237439.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p>由于这个http进程需要一直运行，所以建议使用<code>screen</code>放到后台执行。</p>
+<h3 id="configure-tasks">Configure Tasks</h3>
+<p>像OpenPAI提交任务可以采用网页提交也可以使用VSCode插件，这里我们采用网页提交。登入OpenPAI界面，点击Submit Job：</p>
+<p><img src="http://qfxiao.me/img/image-20200603194425227.png" srcset="/img/loading.gif" /></p>
+<p>可以看到提交任务的界面：</p>
+<p><img src="http://qfxiao.me/img/image-20200603194501703.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p>Job name大家可以自己设置。在Command一栏，是执行任务所需的全部命令，首先我们要做的就是将代码数据压缩包下载到容器中并解压：</p>
+<pre><code class="hljs bash">wget &lt;server_ip&gt;:&lt;port&gt;/files.tar
+
+tar -xvf files.tar</code></pre>
+<p>然后是运行代码，假设我这里的任务比较简单，只有一行main.py的调用：</p>
+<pre><code class="hljs bash">python main.py</code></pre>
+<p>如果任务的执行比较复杂，也只需把命令填到Command里即可，OpenPAI会自动执行。接下来是设置配置，可以选GPU的数量，内存大小等等：</p>
+<p><img src="http://qfxiao.me/img/image-20200603194711139.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p>然后是镜像的选择：</p>
+<p><img src="http://qfxiao.me/img/image-20200603194721231.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p>要注意在本机上构建好镜像之后，需要把镜像重命名为<code>&lt;repository_address&gt;/&lt;image_name&gt;</code>的格式（我们的<code>&lt;repository&gt;</code>是<code>lin-ai-27:5000</code>，假设我的镜像名是<code>xiaoqinfeng/pytorch</code>，那就是改成<code>lin-ai-27:5000/xiaoqinfeng/pytorch</code>），然后执行<code>docker push</code>推送到Docker镜像服务器上才能在OpenPAI上使用。</p>
+<p>提交之后，可以在Jobs界面看到任务的运行情况：</p>
+<p><img src="http://qfxiao.me/img/image-20200603194828484.png" srcset="/img/loading.gif" style="zoom: 50%;" /></p>
 
             </article>
             <hr>
@@ -317,6 +463,12 @@
                 <div class="post-prevnext row">
                   <div class="post-prev col-6">
                     
+                    
+                      <a href="/2020/06/02/Classification-based-Anomaly-Detection-for-General-Data/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Classification-based Anomaly Detection for General Data</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </div>
                   <div class="post-next col-6">
