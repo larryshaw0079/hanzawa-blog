@@ -158,7 +158,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    1.2k 字
+                    1.4k 字
                   </span>
                 
 
@@ -168,7 +168,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    18
+                    21
                      分钟
                   </span>
                 
@@ -252,31 +252,52 @@ g:\mathcal Z\rightarrow\mathcal X, \sigma:\mathcal Z\rightarrow\mathbb{R},\epsil
 <blockquote>
 <p>RBF网络 <span class="math display">\[
 h(x)=\exp\left(-\frac{(x-c)^2}{r^2}\right)
-\]</span> <img src="http://qfxiao.me/img/rbf_function_20200606.png" srcset="/img/loading.gif" /></p>
-<p><img src="http://qfxiao.me/img/rbf_nn_20200606.png" srcset="/img/loading.gif" /></p>
+\]</span> <img src="http://qfxiao.me/img/rbf_function_20200606.png" srcset="/img/loading.gif" style="zoom: 80%;" /></p>
+<p><img src="http://qfxiao.me/img/rbf_nn_20200606.png" srcset="/img/loading.gif" style="zoom: 50%;" /></p>
 </blockquote>
 <p>首先，从隐空间采样大量的样本，之后使用<strong>K-means</strong>算法将其分为<span class="math inline">\(K\)</span>个聚簇，<span class="math inline">\(c_k\)</span>为第<span class="math inline">\(k\)</span>个簇的中心，<span class="math inline">\(C_k\)</span>为第<span class="math inline">\(k\)</span>个簇的样本数量。对于任何样本<span class="math inline">\(x\)</span>，为了计算其对应的方差，需要用一个<em>inference network</em> <span class="math inline">\(h\)</span>来将其映射到隐空间，即<span class="math inline">\(z=h(x)\)</span>。RBF网络通过输入<span class="math inline">\(z\)</span>到每个簇中心的距离来返回<span class="math inline">\(x\)</span>对应的方差，RBF函数由下式给出： <span class="math display">\[
 \sigma(z)=(\mathbf W^2\mathbf v(z))^{-\frac{1}{2}},\\
 v_k(z) = \exp(-\lambda_k\parallel z-c_k\parallel^2_2), \space k=1,\cdots,K\\
 \lambda_k=\frac{1}{2}\left(\frac{a}{|C_k|}\sum_{z_j\in C_k}\parallel z_j-c_k\parallel_2\right)^{-2}
 \]</span></p>
+<p>其中<span class="math inline">\(\alpha\)</span>为核的超参数，<span class="math inline">\(\mathbf W\)</span>为模型参数。给定生成器<span class="math inline">\(g\)</span>，我们可以通过最小化<span class="math inline">\(f(z)\)</span>和<span class="math inline">\(x\)</span>之间的距离来优化参数<span class="math inline">\(\mathbf W\)</span>。</p>
 <p><span class="math display">\[
 \begin{align}
 \bar{\mathbf M}^z_f&amp;=\mathbb E_{\epsilon\sim N(0,\mathbf I_D)}\mathbf J_f^\top(z)\mathbf J_f(z)\\
 &amp;=\mathbf J_g^\top(z)\mathbf J_g(z)+\mathbf J_\sigma^\top(z)\mathbf J_\sigma(z)
 \end{align}
 \]</span></p>
+<blockquote>
+<p><strong>LEMMA 1. </strong> 对于<span class="math inline">\(K\geq \text{dim}(\mathcal Z)+1\)</span>和满秩矩阵<span class="math inline">\(\mathbf W^2\)</span>，<span class="math inline">\(\bar{\mathbf M}_f^z\)</span>为一个满秩矩阵。生成样本的对数似然由下式给出： <span class="math display">\[
+\mathbb E_{\epsilon\sim N(0,\mathbf I_D)}\log(p_\mathcal{X}(f(z)))=\log(p_\mathcal{Z}(z))-\frac{1}{2}\log(\text{det}(\bar{\mathbf M}_f^z))
+\]</span></p>
+</blockquote>
 <h2 id="the-inference-network-learning">The Inference Network Learning</h2>
 <p><img src="http://qfxiao.me/img/image-20200506174247129.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <p><span class="math display">\[
 \max_{h,\sigma}\mathbb E_{x\sim p_{data}(x)}\left[\log(p(x|z))|_{z=h(x)}\right]
 \]</span></p>
+<p><span class="math inline">\(p(x|z)\)</span></p>
 <p><span class="math display">\[
 \max_{h,\sigma}\mathbb E_{x\sim p_{data}(x), z=h(x)}\left[\log(p(x|z))-\text{KL}\right]
 \]</span></p>
+<blockquote>
+<p><strong>LEMMA 2. </strong> <span class="math display">\[
+f(z)\sim GP(g(z), \Lambda_\sigma)
+\]</span></p>
+</blockquote>
+<p><span class="math display">\[
+L_{h,\sigma}=\mathbb E_{x\sim p_{data}}\left[\sum_{i=1}^D[-\frac{1}{2}(g_i(h(x))-x_i)^2/\sigma_i^2(h(x))-\log\sigma_i(h(x))]-\text{KL}(q(z|x)\parallel p(z))\right]
+\]</span></p>
 <h2 id="stabilize-training">Stabilize Training</h2>
+<p><span class="math display">\[
+\min_{g,h}\mathbb E_{z\sim p(z)}[\parallel z-h(g(z))\parallel^2]
+\]</span></p>
 <h2 id="algorithm">Algorithm</h2>
-<p><img src="http://qfxiao.me/img/image-20200506174309604.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="http://qfxiao.me/img/image-20200506174309604.png" srcset="/img/loading.gif" style="zoom: 80%;" /></p>
+<blockquote>
+<p><strong>LEMMA 3. </strong></p>
+</blockquote>
 <h1 id="experiments">Experiments</h1>
 <p><img src="http://qfxiao.me/img/image-20200506174343303.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <p><img src="http://qfxiao.me/img/image-20200506174352450.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
@@ -319,6 +340,12 @@ v_k(z) = \exp(-\lambda_k\parallel z-c_k\parallel^2_2), \space k=1,\cdots,K\\
                 <div class="post-prevnext row">
                   <div class="post-prev col-6">
                     
+                    
+                      <a href="/2020/06/06/Generative-Probabilistic-Novelty-Detection-with-Adversarial-Autoencoders/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Generative Probabilistic Novelty Detection with Adversarial Autoencoders</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </div>
                   <div class="post-next col-6">

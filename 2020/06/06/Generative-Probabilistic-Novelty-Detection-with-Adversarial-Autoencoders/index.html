@@ -17,7 +17,7 @@
   <meta name="description" content="">
   <meta name="author" content="Hanzawa">
   <meta name="keywords" content="">
-  <title>Time-Series Anomaly Detection Service at Microsoft - Hanzawa の 部屋</title>
+  <title>Generative Probabilistic Novelty Detection with Adversarial Autoencoders - Hanzawa の 部屋</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
@@ -147,8 +147,8 @@
               
                 <div class="mt-3 post-meta">
                   <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-                  <time datetime="2019-09-22 20:33">
-                    2019年9月22日 晚上
+                  <time datetime="2020-06-06 12:03">
+                    2020年6月6日 中午
                   </time>
                 </div>
               
@@ -158,7 +158,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    1.5k 字
+                    382 字
                   </span>
                 
 
@@ -168,7 +168,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    18
+                    5
                      分钟
                   </span>
                 
@@ -197,85 +197,48 @@
           <div class="post-content mx-auto" id="post">
             
             <article class="markdown-body">
-              <h2 id="abstract">Abstract</h2>
-<p>本文借鉴计算机视觉中的显著性检测，提出了一种基于Spectral Residual的时间序列异常检测算法。</p>
-<p><a href="https://www.kdd.org/kdd2019/accepted-papers/view/time-series-anomaly-detection-service-at-microsoft" target="_blank" rel="noopener">原文</a></p>
-<p>这篇文章还提出了几个时间序列异常检测落地的难点：</p>
-<ol type="1">
-<li><strong>Lack of Labels.</strong> 在实际生产环境中会产生大量的KPI，而很难对每个KPI进行人工标注。</li>
-<li><strong>Generalization.</strong> 不同KPI所表现出来的模式也不尽相同，如Figure 1所示。现有方法很难在所有模式的KPI上都表现良好。</li>
-<li><strong>Efficiency.</strong> 在实际场景中，会产生大量的时间序列数据，同时对异常检测算法的时间效率有要求。</li>
-</ol>
-<p><img src="http://qfxiao.me/img/1565414991291.png" srcset="/img/loading.gif" /></p>
-<h2 id="contribution">Contribution</h2>
-<ul>
-<li>将Visual Saliency Detection的方法引入了时间序列异常检测。</li>
-<li>结合Spectral Residual和CNN提高了异常检测的效果。</li>
-<li>算法具有良好的时间效率和通用性。</li>
-</ul>
-<h2 id="background">Background</h2>
-<h3 id="spectral-residual">Spectral Residual</h3>
-<p>SR(Spectral Residual)算法主要包含三个步骤：</p>
-<ol type="1">
-<li>通过傅里叶变换得到log amplitude spectrum；</li>
-<li>计算spectral residual；</li>
-<li>通过傅里叶逆变换回到时间域。</li>
-</ol>
-<p>更形式化的表述为如下：</p>
-<p>给定一个序列<span class="math inline">\(\mathbb{x}\)</span>，则有：</p>
-<p><span class="math display">\[A(f)=Amplitude(\mathscr{F}(\mathbb{x}))\]</span></p>
-<p><span class="math display">\[P(f)=Phrase(\mathscr{F}(\mathbb{x}))\]</span></p>
-<p><span class="math display">\[L(f)=\log(A(f))\]</span></p>
-<p><span class="math display">\[AL(F)=h_1(f)\cdot L(f)\]</span></p>
-<p><span class="math display">\[R(f)=L(f)-AL(f)\]</span></p>
-<p><span class="math display">\[S(\mathbb{x})=\parallel\mathscr{F}^{-1}(\exp(R(f)+iP(f)))\parallel\]</span></p>
-<p>其中<span class="math inline">\(\mathscr{F}\)</span>和<span class="math inline">\(\mathscr{F}^{-1}\)</span>分别表示傅里叶变换和傅里叶逆变换；<span class="math inline">\(\mathbb{x}\in \mathbb{R}^{n\times 1}\)</span>表示输入序列；<span class="math inline">\(A(f)\)</span>为幅度谱，<span class="math inline">\(P(f)\)</span>为相位谱，<span class="math inline">\(L(f)\)</span>为对数幅度谱，<span class="math inline">\(AL(F)\)</span>为均值滤波后的对数幅度谱；<span class="math inline">\(R(f)\)</span>为spectral residual；<span class="math inline">\(S(\mathbb{x})\)</span>称为saliency map。Figure 4为文中给出的Saliency Map示意图。</p>
-<p><img src="http://qfxiao.me/img/1565425536516.png" srcset="/img/loading.gif" /></p>
-<h2 id="methodology">Methodology</h2>
-<h3 id="problem-definition">Problem Definition</h3>
+              <h1 id="abstract">Abstract</h1>
+<h1 id="background">Background</h1>
+<h2 id="manifold">Manifold</h2>
+<figure>
+<img src="http://qfxiao.me/img/manifold_2d.gif" srcset="/img/loading.gif" alt="Some examples of 2d manifolds" /><figcaption>Some examples of 2d manifolds</figcaption>
+</figure>
 <blockquote>
-<p>给定一系列实数值<span class="math inline">\(\mathbb{x}=x_1,x_2,\cdots,x_n\)</span>，时间序列异常检测的任务是产生一个输出序列<span class="math inline">\(\mathbb{y}=y_1,y_2,\cdots,y_n\)</span>其中<span class="math inline">\(y_i\in\{0,1\}\)</span>表示<span class="math inline">\(x_i\)</span>是否为异常点。</p>
+<p>一个<span class="math inline">\(n\)</span>维拓扑流形（<strong>Topological Manifold</strong>）<span class="math inline">\(\mathcal{M}\)</span>是一个带有和<span class="math inline">\(n\)</span>维实空间<span class="math inline">\(\mathbb{R}^n\)</span>同胚（Homeomorphic）的可数基（Countable Base）的拓扑豪斯道夫空间（Topological Hausdorff Space）。即对于<span class="math inline">\(\mathcal{M}\)</span>上的任意一个点<span class="math inline">\(p\)</span>都有一个开邻域（Open Neighborhood）<span class="math inline">\(U\)</span>和一个同胚映射<span class="math inline">\(\varphi:U\mapsto V\)</span>将<span class="math inline">\(U\)</span>映射到开集<span class="math inline">\(V\in\mathbb{R}^n\)</span>。同时：</p>
+<ul>
+<li>映射<span class="math inline">\(\varphi:U\mapsto V\)</span>被称为<strong>Chart</strong>或<strong>Coordinate System</strong></li>
+<li>集合<span class="math inline">\(U\)</span>为该Chart的<strong>Domain</strong>或<strong>Local Coordinate Neighborhood</strong></li>
+<li>点<span class="math inline">\(p\in U\)</span>的像（Image)记为<span class="math inline">\(\varphi(p)\in\mathbb{R}^n\)</span>，被称为<span class="math inline">\(p\)</span>在Chart中的<strong>Coordinates</strong>或<strong>Local Coordinates</strong></li>
+<li>Chart的集合<span class="math inline">\(\{\varphi_\alpha|\alpha\in\mathbb{N}\}\)</span>，其中定义域<span class="math inline">\(U_\alpha\)</span>，被称为<span class="math inline">\(\mathcal{M}\)</span>的<strong>Atlas</strong>，如果<span class="math inline">\(\mathop{\cup}\limits_{\alpha\in\mathbb{N}}U_\alpha=\mathcal{M}\)</span></li>
+</ul>
 </blockquote>
-<h3 id="sr">SR</h3>
-<p>对于给定序列<span class="math inline">\(\mathbb{x}\)</span>，计算Saliency Map <span class="math inline">\(S(\mathbb{x})\)</span>，输出序列<span class="math inline">\(O(\mathbb{x})\)</span>定义为：</p>
-<p><span class="math display">\[O(x_i)=\begin{cases}1,\quad \text{if}\frac{S(x_i)-\overline{S(x_i)}}{\overline{S(x_i)}}&gt;\tau\\\\0,\quad \text{otherwise}\end{cases}\]</span></p>
-<p>其中<span class="math inline">\(S(x_i)\)</span>为<span class="math inline">\(x_i\)</span>对应的Saliency Map的值，<span class="math inline">\(\overline{S(x_i)}\)</span>为<span class="math inline">\(x_i\)</span>附近Saliency Map局部均值。</p>
-<hr />
-<p>在实际操作中，FFT是在一个滑动窗口中进行的，文中提到SR方法在点位于窗口中央时效果更好，所以在进行测试的时候，按照如下方法对当前点<span class="math inline">\(x_n\)</span>(也就是当前序列最后一个点)之后的点进行预测：</p>
-<p><span class="math display">\[\overline{g}=\frac{1}{m}\sum_{i=1}^m g(x_n,x_{n-i})\]</span></p>
-<p><span class="math display">\[x_{n+1}=x_{n-m+1}+\overline{g}\cdot m\]</span></p>
-<p>其中<span class="math inline">\(g(x_i,x_j)\)</span>代表<span class="math inline">\(x_i\)</span>和<span class="math inline">\(x_j\)</span>两点构成的直线的梯度；<span class="math inline">\(\overline{g}\)</span>代表所处理的点的平均梯度；<span class="math inline">\(m\)</span>为所处理的点的数量。在本文中设置<span class="math inline">\(m=5\)</span>。文中发现第一个预测的值很重要，所以直接把<span class="math inline">\(x_{n+1}\)</span>赋值<span class="math inline">\(k\)</span>次添加到序列的末尾。</p>
-<h3 id="sr-cnn">SR-CNN</h3>
-<p><img src="http://qfxiao.me/img/1565427857981.png" srcset="/img/loading.gif" /></p>
-<p>本文提到，仅仅使用一个阈值来进行异常的判断太过简单，于是提出使用一个判别模型来进行异常的判断。由于训练数据没有标签，所以使用如下的公式人工加入异常：</p>
-<p><span class="math display">\[x=(\overline{x}+mean)(1+var)\cdot r+x\]</span></p>
-<p>其中<span class="math inline">\(\overline{x}\)</span>所处理的点的局部均值；<span class="math inline">\(mean\)</span>和<span class="math inline">\(var\)</span>为当前滑动窗口点的均值和方差；<span class="math inline">\(r\sim \mathcal{N}(0,1)\)</span>为服从标准正态分布的噪声。</p>
-<hr />
-<p>对于判别模型使用的是CNN，主要包含两个1维卷积层(kernel size等于窗口大小<span class="math inline">\(w\)</span>)和两个全连接层。两个卷积层的channel size分别为<span class="math inline">\(w\)</span>和<span class="math inline">\(2w\)</span>。</p>
-<h2 id="experiments">Experiments</h2>
-<h3 id="datasets">Datasets</h3>
-<p><img src="http://qfxiao.me/img/1565445958030.png" srcset="/img/loading.gif" /></p>
-<p>所用数据集包含清华AIOps竞赛数据、Yahoo和Microsoft的KPI数据。</p>
-<h3 id="evaluation-metrics">Evaluation Metrics</h3>
-<p>算法准确率方面用了precision，recall和<span class="math inline">\(F_1\)</span>-score。</p>
-<p><img src="http://qfxiao.me/img/1565449295457.png" srcset="/img/loading.gif" /></p>
-<p>由于在实际场景中KPI的异常往往是以一段一段的形式出现，且并不要求某一个时间点出现异常算法就马上检测出来，只要检测出来的时间在一定的容忍范围内即可。本文使用了一些调整的手段，如Figure 6。对于某一段异常，设段首的异常位于时间点<span class="math inline">\(t_{truth}\)</span>，预测为异常的结果中时间在<span class="math inline">\(t_{truth}\)</span>之后且距<span class="math inline">\(t_{truth}\)</span>最近的时间点设为<span class="math inline">\(t_{predict}\)</span>，那么对于一个预先设定的容忍范围<span class="math inline">\(k\)</span>，只要<span class="math inline">\(t_{predict}-t_{truth}\leq k+1\)</span>那么在预测结果中整段异常就会重置为<span class="math inline">\(1\)</span>，否则全部重置为<span class="math inline">\(0\)</span>。</p>
-<h3 id="results">Results</h3>
-<p>实验部分使用了两种训练方式，一种是cold-start，即把所有数据都用来测试，另一种是把数据分为训练测试两部分，在训练集上训练，最后在测试集上进行测试。两种方法适用的baseline不同，最后结果如Table 2和Table 3所示：</p>
-<p><img src="http://qfxiao.me/img/1565500578722.png" srcset="/img/loading.gif" /></p>
-<hr />
-<p>在SR的参数设置上，<span class="math inline">\(h_q(f)\)</span>中的<span class="math inline">\(q\)</span>为3，局部平均所用的点数目<span class="math inline">\(z\)</span>为21，阈值<span class="math inline">\(\tau\)</span>为3，估计点的数量<span class="math inline">\(k\)</span>为5，滑动窗口的大小<span class="math inline">\(w\)</span>在KPI、Yahoo、Microsoft三个数据集上分别为1440、64和30。SR-CNN的<span class="math inline">\(q\)</span>，<span class="math inline">\(z\)</span>，<span class="math inline">\(k\)</span>，<span class="math inline">\(w\)</span>设置与SR相同。</p>
-<h3 id="additional-experiments-with-dnn">Additional Experiments with DNN</h3>
-<p>文中还对有监督的情况进行了测试，具体做法是从时间序列提取特征，然后将Saliency Map也作为特征引入，构造一个有监督的Neural Network进行测试。</p>
-<p>提取的特征如Table 5所示：</p>
-<p><img src="http://qfxiao.me/img/1565502099432.png" srcset="/img/loading.gif" /></p>
-<hr />
-<p>神经网络的结构为两层全连接层，并添加了Dropout Ratio为0.5的Dropout Layer。两个Layer使用了<span class="math inline">\(L_1=L_2=0.0001\)</span>的正则化。同时为了处理样本不平衡的情况使用了过采样来使正负样本的比例为<span class="math inline">\(1:2\)</span>。结构如Figure 7所示：</p>
-<p><img src="http://qfxiao.me/img/1565502126919.png" srcset="/img/loading.gif" /></p>
-<hr />
-<p>训练测试集的情况如Table 6所示，最终结果如Table 7所示，P-R曲线如Figure 8所示。可以看到使用了SR特征的DNN效果由于没有使用SR特征的DNN。</p>
-<p><img src="http://qfxiao.me/img/1565502349310.png" srcset="/img/loading.gif" /></p>
-<p><img src="http://qfxiao.me/img/1565502360013.png" srcset="/img/loading.gif" /></p>
+<figure>
+<img src="http://qfxiao.me/img/coordinate_chart_manifold.png" srcset="/img/loading.gif" alt="Charts on a Manifold" /><figcaption>Charts on a Manifold</figcaption>
+</figure>
+<h2 id="tangent-spaces">Tangent Spaces</h2>
+<p>流形<span class="math inline">\(\mathcal{M}\)</span>在点<span class="math inline">\(x\)</span>的切空间（<strong>Tangent Space</strong>）<span class="math inline">\(\mathcal{T}_x\mathcal{M}\)</span></p>
+<figure>
+<img src="http://qfxiao.me/img/tangent_space_vector.png" srcset="/img/loading.gif" alt="A tangent space example" /><figcaption>A tangent space example</figcaption>
+</figure>
+<h1 id="methodology">Methodology</h1>
+<h2 id="generative-probabilistic-novelty-detection">Generative Probabilistic Novelty Detection</h2>
+<p>我们假设训练数据<span class="math inline">\(x_1,\cdots,x_N\)</span>，其中<span class="math inline">\(x_i\in\mathbb{R}^m\)</span>，从一个分布采样的来，并带有随机噪声<span class="math inline">\(\xi\)</span>： <span class="math display">\[
+x_i=f(z_i)+\xi_i, \space\space\space i=1,\cdots,N
+\]</span> 其中<span class="math inline">\(z_i\in\mathbb{R}^n\)</span>，<span class="math inline">\(f:\Omega\mapsto\mathbb{R}^m\)</span>定义了一个<span class="math inline">\(n\)</span>维带参流形<span class="math inline">\(\mathcal{M}\equiv f(\Omega)\)</span>。同时假设存在<span class="math inline">\(g:\mathbb{R}^m\mapsto\mathbb{R}^n\)</span>，对任意<span class="math inline">\(x\in\mathcal{M}\)</span>都有<span class="math inline">\(f(g(x))=x\)</span>。</p>
+<p>对于一个测试样本<span class="math inline">\(\bar{x}\in\mathbb{R}^m\)</span>，通过<span class="math inline">\(\bar x^{\parallel}=f(\bar z)\)</span>有<span class="math inline">\(\bar{x}^\parallel\in\mathcal M\)</span>，其中<span class="math inline">\(\bar z = g(\bar x)\)</span>。 <span class="math display">\[
+f(z)=f(\bar z)+J_f(\bar z)(z-\bar z)+O(\parallel z-\bar z\parallel ^2)
+\]</span> <img src="http://qfxiao.me/img/image-20191108223206246.png" srcset="/img/loading.gif" /></p>
+<p><img src="http://qfxiao.me/img/image-20191108223217178.png" srcset="/img/loading.gif" /></p>
+<h2 id="manifold-learning-with-adversarial-autoencoders">Manifold Learning with Adversarial Autoencoders</h2>
+<p><img src="http://qfxiao.me/img/image-20191108223234710.png" srcset="/img/loading.gif" /></p>
+<h1 id="experiments">Experiments</h1>
+<p><img src="http://qfxiao.me/img/image-20191108223306243.png" srcset="/img/loading.gif" /></p>
+<p><img src="http://qfxiao.me/img/image-20191108223317643.png" srcset="/img/loading.gif" /></p>
+<p><img src="http://qfxiao.me/img/image-20191108223326045.png" srcset="/img/loading.gif" /></p>
+<p><img src="http://qfxiao.me/img/image-20191108223336971.png" srcset="/img/loading.gif" /></p>
+<p><img src="http://qfxiao.me/img/image-20191108223345592.png" srcset="/img/loading.gif" /></p>
+<p><img src="http://qfxiao.me/img/image-20191108223354578.png" srcset="/img/loading.gif" /></p>
+<p><img src="http://qfxiao.me/img/image-20191108223403265.png" srcset="/img/loading.gif" /></p>
 
             </article>
             <hr>
@@ -295,15 +258,11 @@
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/Time-Series/">Time Series</a>
-                    
-                      <a class="hover-with-bg" href="/tags/Machine-Learning/">Machine Learning</a>
-                    
                       <a class="hover-with-bg" href="/tags/Anomaly-Detection/">Anomaly Detection</a>
                     
-                      <a class="hover-with-bg" href="/tags/Deep-Learning/">Deep Learning</a>
+                      <a class="hover-with-bg" href="/tags/GAN/">GAN</a>
                     
-                      <a class="hover-with-bg" href="/tags/Spectral/">Spectral</a>
+                      <a class="hover-with-bg" href="/tags/Novelty-Detection/">Novelty Detection</a>
                     
                   </div>
                 
@@ -316,15 +275,15 @@
                   <div class="post-prev col-6">
                     
                     
-                      <a href="/2019/09/22/Unsupervised-Anomaly-Detection-via-Variational-Auto-Encoder-for-Seasonal-KPIs-in-Web-Applications/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Unsupervised Anomaly Detection via Variational Auto-Encoder for Seasonal KPIs in Web Applications</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </div>
                   <div class="post-next col-6">
                     
+                    
+                      <a href="/2020/06/06/Estimate-the-Implicit-Likelihoods-of-GANs-with-Application-to-Anomaly-Detection/">
+                        <span class="hidden-mobile">Estimate the Implicit Likelihoods of GANs with Application to Anomaly Detection</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
                     
                   </div>
                 </div>
@@ -340,8 +299,8 @@
     <div id="disqus_thread"></div>
     <script type="text/javascript">
       var disqus_config = function () {
-        this.page.url = 'http://qfxiao.me/2019/09/22/Time-Series-Anomaly-Detection-Service-at-Microsoft/';
-        this.page.identifier = '/2019/09/22/Time-Series-Anomaly-Detection-Service-at-Microsoft/';
+        this.page.url = 'http://qfxiao.me/2020/06/06/Generative-Probabilistic-Novelty-Detection-with-Adversarial-Autoencoders/';
+        this.page.identifier = '/2020/06/06/Generative-Probabilistic-Novelty-Detection-with-Adversarial-Autoencoders/';
       };
       var oldLoadDq = window.onload;
       window.onload = function () {
@@ -491,7 +450,7 @@
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "Time-Series Anomaly Detection Service at Microsoft&nbsp;",
+        "Generative Probabilistic Novelty Detection with Adversarial Autoencoders&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 70,
