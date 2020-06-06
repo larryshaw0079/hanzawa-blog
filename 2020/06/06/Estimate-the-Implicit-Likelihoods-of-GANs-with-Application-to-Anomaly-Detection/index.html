@@ -17,7 +17,7 @@
   <meta name="description" content="">
   <meta name="author" content="Hanzawa">
   <meta name="keywords" content="">
-  <title>Anomaly Detection with Generative Adversarial Networks for Multivariate Time Series - Hanzawa の 部屋</title>
+  <title>Estimate the Implicit Likelihoods of GANs with Application to Anomaly Detection - Hanzawa の 部屋</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
@@ -147,8 +147,8 @@
               
                 <div class="mt-3 post-meta">
                   <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-                  <time datetime="2019-09-22 22:32">
-                    2019年9月22日 晚上
+                  <time datetime="2020-06-06 10:57">
+                    2020年6月6日 上午
                   </time>
                 </div>
               
@@ -158,7 +158,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    1.5k 字
+                    1.2k 字
                   </span>
                 
 
@@ -168,7 +168,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    19
+                    18
                      分钟
                   </span>
                 
@@ -198,90 +198,94 @@
             
             <article class="markdown-body">
               <h1 id="introduction">Introduction</h1>
-<p>这篇文章提出了一个基于GAN的时间序列异常检测模型。</p>
-<p><a href="https://arxiv.org/abs/1809.04758" target="_blank" rel="noopener">原文</a></p>
-<h2 id="contribution">Contribution</h2>
-<ol type="1">
-<li>提出了基于GAN的时间序列无监督异常检测模型</li>
-<li>我们使用基于LSTM的GAN来对多变量时间序列进行建模</li>
-<li>结合使用了Residual Loss和Discrimination Loss来进行异常的判断</li>
-</ol>
-<h2 id="background">Background</h2>
-<h3 id="generative-adversarial-networks">Generative Adversarial Networks</h3>
-<h4 id="gans-in-a-nutshell-an-extremely-simple-explanation">GANs In a Nutshell, an extremely simple explanation</h4>
-<ul>
-<li>我们想要从一个复杂的、高维的数据分布<span class="math inline">\(p_r(x)\)</span>上采样得到我们想要的数据点，然而<span class="math inline">\(p_r(x)\)</span>无法直接求得</li>
-<li>代替方法：从一个简单的、已知的分布<span class="math inline">\(p_z(z)\)</span>上采样，然后学习一个Transformation <span class="math inline">\(G(z): z\rightarrow x\)</span>来将<span class="math inline">\(z\)</span>映射到<span class="math inline">\(x\)</span></li>
-</ul>
-<p><img src="http://qfxiao.me/img/1565836885697.png" srcset="/img/loading.gif" /></p>
-<h4 id="training-two-player-game">Training: Two-player Game</h4>
-<ul>
-<li><strong>Generator Network: </strong> 从随机分布<span class="math inline">\(p_z(z)\)</span>采样<span class="math inline">\(z\)</span>，通过映射生成样本<span class="math inline">\(x\)</span>，这个生成的样本要尽量“真实”。怎么“真实”？优化生成器参数<span class="math inline">\(\theta_G\)</span>最大化判别器对生成样本的评分即可</li>
-<li><strong>Discriminator Network: </strong>接受一个样本<span class="math inline">\(x\)</span>，判断其是生成的样本还是真实的样本。在训练阶段，我们是知道一个样本<span class="math inline">\(x\)</span>到底是生成的还是真实的，所以优化判别器参数<span class="math inline">\(\theta_D\)</span>最小化判别器对生成样本的评分，最大化对真实样本的评分（即最大化分辨真实样本的能力）</li>
-</ul>
-<p><img src="http://qfxiao.me/img/1565836982707.png" srcset="/img/loading.gif" /></p>
-<p>形式化的来讲，优化函数如下：</p>
-<p><span class="math display">\[\min\limits_{\theta_G}\max\limits_{\theta_D}V(G,D)=\mathbb{E}_{x\sim p_{data}(x)\log(\underbrace{D_{\theta{D}}(x)}_{判别器对真实样本的评分})}+\mathbb{E}_{z\sim p_z(z)}\log(1-\underbrace{D_{\theta_d}(G_{\theta_G}(z))}_{判别器对生成样本的评分})\]</span></p>
-<p>训练过程如下：</p>
-<p><img src="http://qfxiao.me/img/1565837745003.png" srcset="/img/loading.gif" /></p>
-<h3 id="long-short-time-memory-networks">Long Short Time Memory Networks</h3>
-<h4 id="vanilla-recurrent-neural-networks">Vanilla Recurrent Neural Networks</h4>
-<p>普通的神经网络：</p>
-<p><img src="http://images0.cnblogs.com/blog2015/680781/201508/021735264703915.png" srcset="/img/loading.gif" /></p>
-<p>概括的来讲，可以涵盖为一个公式<span class="math inline">\(\hat{\mathbf{y}}=f(\mathbf{x})\)</span>。对于一个样本<span class="math inline">\(\mathbf{x}\)</span>，通过多层神经网络映射，输出<span class="math inline">\(\mathbf{y}\)</span>。</p>
-<p>对于RNN，我们处理的是序列数据，也就是说所有样本之间并不是相互独立的。对于一个序列中的一个样本<span class="math inline">\(x_t\in\{x_1,x_2,\cdots,x_n\}\)</span>，将其输入到神经网络的时候，为了建模<span class="math inline">\(x_t\)</span>之前的子序列对<span class="math inline">\(x_t\)</span>的影响关系，需要将这个子序列的信息也输入到神经网络中，怎么做呢？为每一个样本点保存一个State。即定义<span class="math inline">\(h_t=g(\hat{y_t})=g(f(x_t))\)</span>，对于当前样本点，<span class="math inline">\(\hat{y_t}=f(x_t,h_{t-1})\)</span>。也就是说神经网络的输入不仅包含了当前样本点的特征，也包含了上一个样本点的“状态”(上一个样本点的“状态”又隐含了上上个样本点的“状态”...)，就像是为网络加上了短期记忆。</p>
-<p><img src="https://adventuresinmachinelearning.com/wp-content/uploads/2017/09/Recurrent-neural-network.png" srcset="/img/loading.gif" /></p>
-<p><img src="http://qfxiao.me/img/1565838639451.png" srcset="/img/loading.gif" /></p>
-<p><img src="http://qfxiao.me/img/1565838658532.png" srcset="/img/loading.gif" /></p>
-<h4 id="gradient-flow-of-vanilla-rnn">Gradient Flow of Vanilla RNN</h4>
-<p>下面来进行一些形式化的定义，假设在时刻<span class="math inline">\(t\)</span>网络输入特征为<span class="math inline">\(x_t\)</span>，输出隐含状态为<span class="math inline">\(h_{t}\)</span>，其不仅和当前输入<span class="math inline">\(x_t\)</span>有关，还和上一个隐含状态<span class="math inline">\(h_{t-1}\)</span>有关：</p>
-<ul>
-<li>当前时刻总的净输入<span class="math inline">\(z_t=Uh_{t-1}+Wx_t+b\)</span></li>
-<li>当前时刻输出隐含状态<span class="math inline">\(h_t=f(z_t)\)</span></li>
-<li>当前时刻输出<span class="math inline">\(\hat{y}_t=Vh_t\)</span></li>
-</ul>
-<p>RNN的梯度更新公式(推导过程比较复杂)：</p>
-<p><span class="math display">\[\frac{\partial{\mathcal{L}}}{\partial U}=\sum\limits_{t=1}^T\sum\limits_{k=1}^t \delta_{t,k}\mathbf{h}_{k-1}^T\]</span></p>
-<p><span class="math display">\[\frac{\partial{\mathcal{L}}}{\partial{W}}=\sum\limits_{t=1}^T\sum\limits_{k=1}^t \delta_{t,k}x_k^T\]</span></p>
-<p><span class="math display">\[\frac{\partial\mathcal{L}}{\partial{b}}=\sum\limits_{t=1}^T\sum\limits_{k=1}^t\delta_{t,k}\]</span></p>
-<p>其中<span class="math inline">\(\delta_{t,k}=\frac{\partial{\mathcal{L}}}{\partial{z_k}}=\text{diag}(f^\prime(z_k))U^T\delta_{t,k+1}\)</span>定义为第<span class="math inline">\(t\)</span>时刻的损失对第<span class="math inline">\(k\)</span>时刻隐藏神经层的净输入<span class="math inline">\(z_k\)</span>的导数，且<span class="math inline">\(z_k=Uh_{k-1}+Wx_k+b,1\leq k&lt;t\)</span>。</p>
-<p>RNN的梯度流向如下图红箭头所示：</p>
-<p><img src="http://qfxiao.me/img/1565838776226.png" srcset="/img/loading.gif" /></p>
-<p>RNN会遇到梯度消失和梯度爆炸的问题。根据前面的公式，<span class="math inline">\(\delta_{t,k}\)</span>实际上是递归定义的，展开得到：</p>
-<p><span class="math display">\[\delta_{t,k}=\prod\limits_{\tau=k}^{t-1}(\text{diag}(f^\prime(z_\tau))U^T)\delta_{t,t}\]</span></p>
-<p>如果定义<span class="math inline">\(\gamma\cong\parallel\text{diag}(f^\prime(z_\tau))U^T\parallel\)</span>，那么<span class="math inline">\(\delta_{t,k}\cong\gamma^{t-k}\delta_{t,t}\)</span>。在<span class="math inline">\(t-k\)</span>很大时，<span class="math inline">\(\gamma&lt;1\)</span>会导致梯度消失，<span class="math inline">\(\gamma&gt;1\)</span>时会导致梯度爆炸。</p>
-<p><img src="http://qfxiao.me/img/1565839064829.png" srcset="/img/loading.gif" /></p>
-<p><img src="http://qfxiao.me/img/1565839083693.png" srcset="/img/loading.gif" /></p>
-<h4 id="long-short-time-memory">Long Short Time Memory</h4>
-<p>LSTM是一种解决RNN梯度消失问题的改进版本：</p>
-<p><img src="http://qfxiao.me/img/1565839135232.png" srcset="/img/loading.gif" /></p>
-<p>在LSTM中，维护了两个State，<span class="math inline">\(c_t\)</span>和<span class="math inline">\(h_t\)</span>。其中<span class="math inline">\(c_t\)</span>由遗忘门<span class="math inline">\(f\)</span>与上一个<span class="math inline">\(c_{t-1}\)</span>相乘(代表继承上一个Cell的信息并加以一定程度的遗忘)，加上输出门<span class="math inline">\(i\)</span>与Gate Gate <span class="math inline">\(g\)</span>相乘(Gate Gate代表当前的候选状态，输出门<span class="math inline">\(i\)</span>控制当前候选状态有多少信息需要保存)。最后，输出门<span class="math inline">\(o\)</span>控制当前时刻的Cell State <span class="math inline">\(c_t\)</span>有多少信息需要输出给外部状态<span class="math inline">\(h_t\)</span>。</p>
-<p>三个门的计算方式为：</p>
-<p><span class="math display">\[i_t=\sigma(W_ix_t+U_ih_{t-1}+b_i)\]</span></p>
-<p><span class="math display">\[f_t=\sigma(W_fx_t+U_fh_{t-1}+b_f)\]</span></p>
-<p><span class="math display">\[o_t=\sigma(W_ox_t+U_oh_{t-1}+b_o)\]</span></p>
-<p><img src="http://qfxiao.me/img/1565839263008.png" srcset="/img/loading.gif" /></p>
-<p><img src="http://qfxiao.me/img/1565839279246.png" srcset="/img/loading.gif" /></p>
-<h2 id="methodology">Methodology</h2>
-<p>总体框架图如Fig 1所示：</p>
-<p><img src="http://qfxiao.me/img/1565783729478.png" srcset="/img/loading.gif" /></p>
-<h3 id="gan-with-lstm-rnn">GAN with LSTM-RNN</h3>
-<p>网络结构上生成器和判别器都是LSTM，优化函数和普通GAN一样：</p>
-<p><span class="math display">\[\min\limits_G\max\limits_D V(D,G)=\mathbb{E}_{x\sim p_{data}(x)}[\log D(x)]+\mathbb{E}_{z\sim p_z(z)}[\log (1-D(G(z)))]\]</span></p>
-<h3 id="gan-based-anomaly-score">GAN-based Anomaly Score</h3>
-<p>在测试阶段，需要使用梯度优化寻找一个使得<span class="math inline">\(G_{rnn}(z)\)</span>最接近<span class="math inline">\(X^{test}\)</span>的<span class="math inline">\(z^k\)</span>：</p>
-<p><span class="math display">\[\min\limits_{Z^k}Error(X^{test},G_{rnn}(Z^k))=1-Similarity(X^{test},G_{rnn}(Z^k))\]</span></p>
-<p>本文定义了两种Anomaly Score，一种是Residual Loss：</p>
-<p><span class="math display">\[Res(X^{test}_t)=\sum\limits_{i=1}^n|x^{test,i}_t-G_{rnn}(Z^{k,i}_t)|\]</span></p>
-<p>一种是Discrimination Loss，即判别器的输出<span class="math inline">\(D_{rnn}(x_t^{test})\)</span>。</p>
-<p>总的Anomaly Score：</p>
-<p><span class="math display">\[S^{test}_t=\lambda Res(X^{test}_t)+(1-\lambda)D_{rnn}(x^{test}_t)\]</span></p>
-<h3 id="anomaly-detection-framework">Anomaly Detection Framework</h3>
-<p>模型的算法流程如下：</p>
-<p><img src="http://qfxiao.me/img/1565784946781.png" srcset="/img/loading.gif" /></p>
-<p>由于本文是多变量时间序列预测，而且时间序列的长度有可能比较长，作者使用了滑动窗口和PCA来进行预处理。</p>
-<h2 id="experiments">Experiments</h2>
-<p><img src="http://qfxiao.me/img/1565847175265.png" srcset="/img/loading.gif" /></p>
+<h1 id="preliminaries">Preliminaries</h1>
+<h2 id="flow-based-models-recap">Flow-based Models Recap</h2>
+<h3 id="jacobian-matrix-and-determinant">Jacobian Matrix and Determinant</h3>
+<p>设函数<span class="math inline">\(f:\mathbb{R}^n\mapsto\mathbb{R}^m\)</span>，由<span class="math inline">\(f\)</span>的一阶偏导数组成的矩阵叫做Jacobian矩阵： <span class="math display">\[
+\mathbf J=\left[
+\begin{matrix}
+\frac{\partial f_1}{\partial x_1} &amp;\cdots &amp;\frac{\partial f_1}{\partial x_n}\\
+\vdots &amp;\ddots &amp;\vdots\\
+\frac{\partial f_m}{\partial x_1}&amp; \dots&amp; \frac{\partial f_m}{\partial x_n}
+\end{matrix}
+\right]
+\]</span></p>
+<h3 id="change-of-variable-theorem">Change of Variable Theorem</h3>
+<p>给定已知概率分布的随机变量<span class="math inline">\(z\sim\pi(z)\)</span>，新随机变量由可逆映射<span class="math inline">\(f\)</span>给出<span class="math inline">\(x=f(z)\)</span>，<span class="math inline">\(z=f^{-1}(x)\)</span>。由于： <span class="math display">\[
+\int p(x)\mathrm{d}x=\int \pi(z)\mathrm d z=1
+\]</span> 所以<span class="math inline">\(p(x)\)</span>可以由下式得到： <span class="math display">\[
+p(x)=\pi(z)\left|\frac{\mathrm d z}{\mathrm d x}\right|=\pi(f^{-1}(x))\left|\frac{\mathrm d f^{-1}}{\mathrm d x}\right|=\pi(f^{-1}(x))|(f^{-1})^\prime(x)|
+\]</span> <span class="math inline">\(\frac{\mathrm d f^{-1}}{\mathrm d x}\)</span>相当于对逆函数<span class="math inline">\(f^{-1}\)</span>求导，而<span class="math inline">\(z=f^{-1}(x)\)</span>。</p>
+<p>对于多变量的情况： <span class="math display">\[
+\mathbf z\sim \pi(\mathbf z), \mathbf x=f(\mathbf z),\mathbf z = f^{-1}(\mathbf x)\\
+p(\mathbf x) = \pi(\mathbf z)\left|\text{det}\frac{\mathrm d \mathbf z}{\mathrm d \mathbf x}\right|= \pi(f^{-1}(\mathbf x))\left|\text{det}\frac{\mathrm d f^{-1}}{\mathrm d \mathbf x}\right|
+\]</span> <span class="math inline">\(\left|\text{det}\frac{\mathrm d f^{-1}}{\mathrm d \mathbf x}\right|\)</span>为逆函数Jacobian矩阵行列式的绝对值。</p>
+<h2 id="deep-generative-models-as-manifolds">Deep Generative Models as Manifolds</h2>
+<p>一个深度生成模型可以表示为从低维隐空间<span class="math inline">\(\mathcal Z \subseteq R^d\)</span>映射到流形<span class="math inline">\(\mathcal M\subseteq R^D\)</span>的嵌入函数<span class="math inline">\(g:\mathcal Z\rightarrow \mathcal X\)</span>，<span class="math inline">\(D \ll d\)</span>。通常假设<span class="math inline">\(g\)</span>为光滑映射，那么<span class="math inline">\(\mathcal M\)</span>为一个嵌入流形。<span class="math inline">\(g\)</span>在<span class="math inline">\(z\in\mathcal Z\)</span>的雅各比矩阵<span class="math inline">\(\mathbf J_g(z)\)</span>提供了在<span class="math inline">\(x=g(z)\in\mathcal X\)</span>处的切空间，即<span class="math inline">\(\mathbf J_g:T_z\mathcal Z\rightarrow T_x\mathcal X\)</span>。这个映射不是满射，并且值域限制在流形<span class="math inline">\(\mathcal M\)</span>在<span class="math inline">\(x=g(z)\)</span>的切空间，记为<span class="math inline">\(T_x\mathcal M\)</span>。<span class="math inline">\(\mathcal M\)</span>与真实数据流形接近，即<span class="math inline">\(\mathcal M_{data}\)</span>。</p>
+<p>考虑一个定义在隐空间<span class="math inline">\(\mathcal Z\)</span>每一点<span class="math inline">\(z\)</span>上的Riemannian metric： <span class="math display">\[
+\mathbf M(z)=\mathbf J_g(z)^\top\mathbf J_g(z)
+\]</span> 给定两个切空间向量<span class="math inline">\(u,v\in T_z\in\mathcal Z\)</span>，他们的内积定义为<span class="math inline">\(&lt;u,v&gt;=u^\top \mathbf M(z)v\)</span>。</p>
+<p>考虑一个光滑曲线<span class="math inline">\(\gamma:t\in[a,b]\rightarrow\mathcal Z\)</span>， <span class="math display">\[
+L(\gamma)=\int^b_a\sqrt{\hat{\gamma}(t)^\top M_{\gamma(t)}\hat{\gamma}(t)}\mathrm d t
+\]</span></p>
+<h2 id="change-of-variable-on-manifolds">Change of Variable on Manifolds</h2>
+<p>在流形上的<strong>Change of Variable Theorem</strong>是类似的：</p>
+<p><span class="math display">\[
+p_\mathcal{X}(x)=p_\mathcal{Z}(g^{-1}(x))\text{det}(\mathbf J_g(g^{-1}(x))^\top\mathbf J_g(g^{-1}(x)))^{-\frac{1}{2}}
+\]</span></p>
+<p>我们假设隐空间分布<span class="math inline">\(p_\mathcal{Z}\)</span>服从标准正态先验分布<span class="math inline">\(N(0,\mathbf I_d)\)</span>，于是我们可以计算出<span class="math inline">\(x\)</span>的似然：</p>
+<p><span class="math display">\[
+\log(p_\mathcal{X}(g(z)))=\log(p_\mathcal{Z}(z))-\frac{1}{2}\log(\text{det}(\mathbf J_g(z)^\top\mathbf J_g(z)))
+\]</span></p>
+<p>通常我们没法知道真实世界中<span class="math inline">\(\mathcal M_{data}\)</span>的切空间维度是多少，设定<span class="math inline">\(d=\text{dim}\mathcal Z&gt;T_x\mathcal M_{data}\)</span>会导致<span class="math inline">\(\mathbf J_g\)</span>不是满秩矩阵，这时<span class="math inline">\(\text{det}(\mathbf J_g(z)^\top\mathbf J_g(z))=0\)</span>，即无法应用上式计算似然。</p>
+<h2 id="density-estimation-with-neural-networks">Density Estimation with Neural Networks</h2>
+<h2 id="anomaly-detection-with-generative-models">Anomaly Detection with Generative Models</h2>
+<h1 id="proposed-method">Proposed Method</h1>
+<p>对于GAN模型，给定隐变量<span class="math inline">\(z\)</span>和生成器<span class="math inline">\(g\)</span>，我们可以通过公式(8)计算生成样本<span class="math inline">\(g(z)\)</span>的对数似然，为了保证Jacobian矩阵为满秩，我们可以选定较低的隐变量维度<span class="math inline">\(d\)</span>，不过这样会伤害GAN模型的性能。为了解决这个问题，我们需要使用一个<em>inference network</em>来将<span class="math inline">\(x\)</span>映射回<span class="math inline">\(z\)</span>，</p>
+<h2 id="the-variance-network-of-the-generator">The Variance Network of the Generator</h2>
+<p>文中对生成器<span class="math inline">\(g\)</span>进行了扩展：</p>
+<p><span class="math display">\[
+f(z) = g(z) + \sigma(z)\odot\epsilon,\\
+g:\mathcal Z\rightarrow\mathcal X, \sigma:\mathcal Z\rightarrow\mathbb{R},\epsilon\sim N(0,\mathbf I_D)
+\]</span></p>
+<p><span class="math inline">\(g\)</span>代表均值，<span class="math inline">\(\sigma\)</span>代表方差，实际上<span class="math inline">\(\mathbb E_{\epsilon\sim N(0,\mathbf I_D)}f(z)=g(z)\)</span>。为了保证方差在少样本或无样本的区域更大，方差网络采用RBF网络实现。</p>
+<blockquote>
+<p>RBF网络 <span class="math display">\[
+h(x)=\exp\left(-\frac{(x-c)^2}{r^2}\right)
+\]</span> <img src="http://qfxiao.me/img/rbf_function_20200606.png" srcset="/img/loading.gif" /></p>
+<p><img src="http://qfxiao.me/img/rbf_nn_20200606.png" srcset="/img/loading.gif" /></p>
+</blockquote>
+<p>首先，从隐空间采样大量的样本，之后使用<strong>K-means</strong>算法将其分为<span class="math inline">\(K\)</span>个聚簇，<span class="math inline">\(c_k\)</span>为第<span class="math inline">\(k\)</span>个簇的中心，<span class="math inline">\(C_k\)</span>为第<span class="math inline">\(k\)</span>个簇的样本数量。对于任何样本<span class="math inline">\(x\)</span>，为了计算其对应的方差，需要用一个<em>inference network</em> <span class="math inline">\(h\)</span>来将其映射到隐空间，即<span class="math inline">\(z=h(x)\)</span>。RBF网络通过输入<span class="math inline">\(z\)</span>到每个簇中心的距离来返回<span class="math inline">\(x\)</span>对应的方差，RBF函数由下式给出： <span class="math display">\[
+\sigma(z)=(\mathbf W^2\mathbf v(z))^{-\frac{1}{2}},\\
+v_k(z) = \exp(-\lambda_k\parallel z-c_k\parallel^2_2), \space k=1,\cdots,K\\
+\lambda_k=\frac{1}{2}\left(\frac{a}{|C_k|}\sum_{z_j\in C_k}\parallel z_j-c_k\parallel_2\right)^{-2}
+\]</span></p>
+<p><span class="math display">\[
+\begin{align}
+\bar{\mathbf M}^z_f&amp;=\mathbb E_{\epsilon\sim N(0,\mathbf I_D)}\mathbf J_f^\top(z)\mathbf J_f(z)\\
+&amp;=\mathbf J_g^\top(z)\mathbf J_g(z)+\mathbf J_\sigma^\top(z)\mathbf J_\sigma(z)
+\end{align}
+\]</span></p>
+<h2 id="the-inference-network-learning">The Inference Network Learning</h2>
+<p><img src="http://qfxiao.me/img/image-20200506174247129.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><span class="math display">\[
+\max_{h,\sigma}\mathbb E_{x\sim p_{data}(x)}\left[\log(p(x|z))|_{z=h(x)}\right]
+\]</span></p>
+<p><span class="math display">\[
+\max_{h,\sigma}\mathbb E_{x\sim p_{data}(x), z=h(x)}\left[\log(p(x|z))-\text{KL}\right]
+\]</span></p>
+<h2 id="stabilize-training">Stabilize Training</h2>
+<h2 id="algorithm">Algorithm</h2>
+<p><img src="http://qfxiao.me/img/image-20200506174309604.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<h1 id="experiments">Experiments</h1>
+<p><img src="http://qfxiao.me/img/image-20200506174343303.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="http://qfxiao.me/img/image-20200506174352450.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="http://qfxiao.me/img/image-20200506174403647.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="http://qfxiao.me/img/image-20200506174414709.png" srcset="/img/loading.gif" /></p>
+<p><img src="http://qfxiao.me/img/image-20200506174435973.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="http://qfxiao.me/img/image-20200506174450623.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="http://qfxiao.me/img/image-20200506174505764.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="http://qfxiao.me/img/image-20200506174526203.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 
             </article>
             <hr>
@@ -301,13 +305,9 @@
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/Time-Series/">Time Series</a>
-                    
                       <a class="hover-with-bg" href="/tags/Anomaly-Detection/">Anomaly Detection</a>
                     
-                      <a class="hover-with-bg" href="/tags/Machine-Learning/">Machine Learning</a>
-                    
-                      <a class="hover-with-bg" href="/tags/Deep-Learning/">Deep Learning</a>
+                      <a class="hover-with-bg" href="/tags/GAN/">GAN</a>
                     
                   </div>
                 
@@ -320,18 +320,12 @@
                   <div class="post-prev col-6">
                     
                     
-                      <a href="/2019/10/16/GAIN-Missing-Data-Imputation-using-Generative-Adversarial-Nets/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">GAIN: Missing Data Imputation using Generative Adversarial Nets</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </div>
                   <div class="post-next col-6">
                     
                     
-                      <a href="/2019/09/22/ALSR-An-adaptive-label-screening-and-relearning-approach-for-interval-oriented-anomaly-detection/">
-                        <span class="hidden-mobile">ALSR: An Adaptive Label Screening and Relearning Approach for Interval-Oriented Anomaly Detection</span>
+                      <a href="/2020/06/02/Classification-based-Anomaly-Detection-for-General-Data/">
+                        <span class="hidden-mobile">Classification-based Anomaly Detection for General Data</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -350,8 +344,8 @@
     <div id="disqus_thread"></div>
     <script type="text/javascript">
       var disqus_config = function () {
-        this.page.url = 'http://qfxiao.me/2019/09/22/Anomaly-Detection-with-Generative-Adversarial-Networks-for-Multivariate-Time-Series/';
-        this.page.identifier = '/2019/09/22/Anomaly-Detection-with-Generative-Adversarial-Networks-for-Multivariate-Time-Series/';
+        this.page.url = 'http://qfxiao.me/2020/06/06/Estimate-the-Implicit-Likelihoods-of-GANs-with-Application-to-Anomaly-Detection/';
+        this.page.identifier = '/2020/06/06/Estimate-the-Implicit-Likelihoods-of-GANs-with-Application-to-Anomaly-Detection/';
       };
       var oldLoadDq = window.onload;
       window.onload = function () {
@@ -501,7 +495,7 @@
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "Anomaly Detection with Generative Adversarial Networks for Multivariate Time Series&nbsp;",
+        "Estimate the Implicit Likelihoods of GANs with Application to Anomaly Detection&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 70,
