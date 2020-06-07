@@ -158,7 +158,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    382 字
+                    168 字
                   </span>
                 
 
@@ -168,7 +168,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    5
+                    2
                      分钟
                   </span>
                 
@@ -197,29 +197,7 @@
           <div class="post-content mx-auto" id="post">
             
             <article class="markdown-body">
-              <h1 id="abstract">Abstract</h1>
-<h1 id="background">Background</h1>
-<h2 id="manifold">Manifold</h2>
-<figure>
-<img src="http://qfxiao.me/img/manifold_2d.gif" srcset="/img/loading.gif" alt="Some examples of 2d manifolds" /><figcaption>Some examples of 2d manifolds</figcaption>
-</figure>
-<blockquote>
-<p>一个<span class="math inline">\(n\)</span>维拓扑流形（<strong>Topological Manifold</strong>）<span class="math inline">\(\mathcal{M}\)</span>是一个带有和<span class="math inline">\(n\)</span>维实空间<span class="math inline">\(\mathbb{R}^n\)</span>同胚（Homeomorphic）的可数基（Countable Base）的拓扑豪斯道夫空间（Topological Hausdorff Space）。即对于<span class="math inline">\(\mathcal{M}\)</span>上的任意一个点<span class="math inline">\(p\)</span>都有一个开邻域（Open Neighborhood）<span class="math inline">\(U\)</span>和一个同胚映射<span class="math inline">\(\varphi:U\mapsto V\)</span>将<span class="math inline">\(U\)</span>映射到开集<span class="math inline">\(V\in\mathbb{R}^n\)</span>。同时：</p>
-<ul>
-<li>映射<span class="math inline">\(\varphi:U\mapsto V\)</span>被称为<strong>Chart</strong>或<strong>Coordinate System</strong></li>
-<li>集合<span class="math inline">\(U\)</span>为该Chart的<strong>Domain</strong>或<strong>Local Coordinate Neighborhood</strong></li>
-<li>点<span class="math inline">\(p\in U\)</span>的像（Image)记为<span class="math inline">\(\varphi(p)\in\mathbb{R}^n\)</span>，被称为<span class="math inline">\(p\)</span>在Chart中的<strong>Coordinates</strong>或<strong>Local Coordinates</strong></li>
-<li>Chart的集合<span class="math inline">\(\{\varphi_\alpha|\alpha\in\mathbb{N}\}\)</span>，其中定义域<span class="math inline">\(U_\alpha\)</span>，被称为<span class="math inline">\(\mathcal{M}\)</span>的<strong>Atlas</strong>，如果<span class="math inline">\(\mathop{\cup}\limits_{\alpha\in\mathbb{N}}U_\alpha=\mathcal{M}\)</span></li>
-</ul>
-</blockquote>
-<figure>
-<img src="http://qfxiao.me/img/coordinate_chart_manifold.png" srcset="/img/loading.gif" alt="Charts on a Manifold" /><figcaption>Charts on a Manifold</figcaption>
-</figure>
-<h2 id="tangent-spaces">Tangent Spaces</h2>
-<p>流形<span class="math inline">\(\mathcal{M}\)</span>在点<span class="math inline">\(x\)</span>的切空间（<strong>Tangent Space</strong>）<span class="math inline">\(\mathcal{T}_x\mathcal{M}\)</span></p>
-<figure>
-<img src="http://qfxiao.me/img/tangent_space_vector.png" srcset="/img/loading.gif" alt="A tangent space example" /><figcaption>A tangent space example</figcaption>
-</figure>
+              <h1 id="introduction">Introduction</h1>
 <h1 id="methodology">Methodology</h1>
 <h2 id="generative-probabilistic-novelty-detection">Generative Probabilistic Novelty Detection</h2>
 <p>我们假设训练数据<span class="math inline">\(x_1,\cdots,x_N\)</span>，其中<span class="math inline">\(x_i\in\mathbb{R}^m\)</span>，从一个分布采样的来，并带有随机噪声<span class="math inline">\(\xi\)</span>： <span class="math display">\[
@@ -227,17 +205,17 @@ x_i=f(z_i)+\xi_i, \space\space\space i=1,\cdots,N
 \]</span> 其中<span class="math inline">\(z_i\in\mathbb{R}^n\)</span>，<span class="math inline">\(f:\Omega\mapsto\mathbb{R}^m\)</span>定义了一个<span class="math inline">\(n\)</span>维带参流形<span class="math inline">\(\mathcal{M}\equiv f(\Omega)\)</span>。同时假设存在<span class="math inline">\(g:\mathbb{R}^m\mapsto\mathbb{R}^n\)</span>，对任意<span class="math inline">\(x\in\mathcal{M}\)</span>都有<span class="math inline">\(f(g(x))=x\)</span>。</p>
 <p>对于一个测试样本<span class="math inline">\(\bar{x}\in\mathbb{R}^m\)</span>，通过<span class="math inline">\(\bar x^{\parallel}=f(\bar z)\)</span>有<span class="math inline">\(\bar{x}^\parallel\in\mathcal M\)</span>，其中<span class="math inline">\(\bar z = g(\bar x)\)</span>。 <span class="math display">\[
 f(z)=f(\bar z)+J_f(\bar z)(z-\bar z)+O(\parallel z-\bar z\parallel ^2)
-\]</span> <img src="http://qfxiao.me/img/image-20191108223206246.png" srcset="/img/loading.gif" /></p>
-<p><img src="http://qfxiao.me/img/image-20191108223217178.png" srcset="/img/loading.gif" /></p>
+\]</span> <img src="http://qfxiao.me/img/image-20191108223206246.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="http://qfxiao.me/img/image-20191108223217178.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <h2 id="manifold-learning-with-adversarial-autoencoders">Manifold Learning with Adversarial Autoencoders</h2>
-<p><img src="http://qfxiao.me/img/image-20191108223234710.png" srcset="/img/loading.gif" /></p>
+<p><img src="http://qfxiao.me/img/image-20191108223234710.png" srcset="/img/loading.gif" style="zoom: 67%;" /></p>
 <h1 id="experiments">Experiments</h1>
 <p><img src="http://qfxiao.me/img/image-20191108223306243.png" srcset="/img/loading.gif" /></p>
-<p><img src="http://qfxiao.me/img/image-20191108223317643.png" srcset="/img/loading.gif" /></p>
+<p><img src="http://qfxiao.me/img/image-20191108223317643.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <p><img src="http://qfxiao.me/img/image-20191108223326045.png" srcset="/img/loading.gif" /></p>
-<p><img src="http://qfxiao.me/img/image-20191108223336971.png" srcset="/img/loading.gif" /></p>
-<p><img src="http://qfxiao.me/img/image-20191108223345592.png" srcset="/img/loading.gif" /></p>
-<p><img src="http://qfxiao.me/img/image-20191108223354578.png" srcset="/img/loading.gif" /></p>
+<p><img src="http://qfxiao.me/img/image-20191108223336971.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="http://qfxiao.me/img/image-20191108223345592.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="http://qfxiao.me/img/image-20191108223354578.png" srcset="/img/loading.gif" style="zoom: 67%;" /></p>
 <p><img src="http://qfxiao.me/img/image-20191108223403265.png" srcset="/img/loading.gif" /></p>
 
             </article>
@@ -274,6 +252,12 @@ f(z)=f(\bar z)+J_f(\bar z)(z-\bar z)+O(\parallel z-\bar z\parallel ^2)
                 <div class="post-prevnext row">
                   <div class="post-prev col-6">
                     
+                    
+                      <a href="/2020/06/06/An-Intuitive-Guide-to-Manifolds/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">An Intuitive Guide to Manifolds</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </div>
                   <div class="post-next col-6">

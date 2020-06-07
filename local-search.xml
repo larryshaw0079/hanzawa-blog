@@ -4,11 +4,38 @@
   
   
   <entry>
+    <title>An Intuitive Guide to Manifolds</title>
+    <link href="/2020/06/06/An-Intuitive-Guide-to-Manifolds/"/>
+    <url>/2020/06/06/An-Intuitive-Guide-to-Manifolds/</url>
+    
+    <content type="html"><![CDATA[<h1 id="introduction">Introduction</h1><h1 id="manifold">Manifold</h1><p>下图是一些流形的示例：</p><p><img src="http://qfxiao.me/img/manifold_2d.gif" srcset="/img/loading.gif" alt="Some examples of 2d manifolds" style="zoom:80%;" /></p><blockquote><p>一个<span class="math inline">\(n\)</span>维拓扑流形（<strong>Topological Manifold</strong>）<span class="math inline">\(\mathcal{M}\)</span>是一个带有和<span class="math inline">\(n\)</span>维实空间<span class="math inline">\(\mathbb{R}^n\)</span>同胚（Homeomorphic）的可数基（Countable Base）的拓扑豪斯道夫空间（Topological Hausdorff Space）。即对于<span class="math inline">\(\mathcal{M}\)</span>上的任意一个点<span class="math inline">\(p\)</span>都有一个开邻域（Open Neighborhood）<span class="math inline">\(U\)</span>和一个同胚映射<span class="math inline">\(\varphi:U\mapsto V\)</span>将<span class="math inline">\(U\)</span>映射到开集<span class="math inline">\(V\in\mathbb{R}^n\)</span>。同时：</p><ul><li>映射<span class="math inline">\(\varphi:U\mapsto V\)</span>被称为<strong>Chart</strong>或<strong>Coordinate System</strong>（中文：坐标卡）</li><li>集合<span class="math inline">\(U\)</span>为该Chart的<strong>Domain</strong>或<strong>Local Coordinate Neighborhood</strong></li><li>点<span class="math inline">\(p\in U\)</span>的像（Image)记为<span class="math inline">\(\varphi(p)\in\mathbb{R}^n\)</span>，被称为<span class="math inline">\(p\)</span>在Chart中的<strong>Coordinates</strong>或<strong>Local Coordinates</strong></li><li>Chart的集合<span class="math inline">\(\{\varphi_\alpha|\alpha\in\mathbb{N}\}\)</span>，其中定义域<span class="math inline">\(U_\alpha\)</span>，被称为<span class="math inline">\(\mathcal{M}\)</span>的<strong>Atlas</strong>，如果<span class="math inline">\(\mathop{\cup}\limits_{\alpha\in\mathbb{N}}U_\alpha=\mathcal{M}\)</span>（中文：图册）</li></ul></blockquote><p><img src="http://qfxiao.me/img/coordinate_chart_manifold.png" srcset="/img/loading.gif" style="zoom:80%;" /></p><p>如上图所示，</p><h1 id="tangent-spaces">Tangent Spaces</h1><p>流形<span class="math inline">\(\mathcal{M}\)</span>在点<span class="math inline">\(x\)</span>的切空间（<strong>Tangent Space</strong>）<span class="math inline">\(\mathcal{T}_x\mathcal{M}\)</span>。下图展示了一个嵌入在三维欧氏空间中的二维流形及其在点<span class="math inline">\(x\)</span>上的切空间。</p><p><img src="http://qfxiao.me/img/tangent_space_vector.png" srcset="/img/loading.gif" alt="A tangent space example" style="zoom: 50%;" /></p><h2 id="tangent-spaces-as-the-velocity-of-curves">Tangent Spaces as the Velocity of Curves</h2><p>假设我们有一个光滑流形<span class="math inline">\(M\)</span>及点<span class="math inline">\(p\in M\)</span>，坐标卡<span class="math inline">\(\varphi:U\rightarrow \mathbb R^n\)</span>，其中<span class="math inline">\(U\)</span>为<span class="math inline">\(M\)</span>的包含<span class="math inline">\(p\)</span>的开集。设<span class="math inline">\(\gamma:t\rightarrow M\)</span>，<span class="math inline">\(t\in[a,b]\)</span>为经过<span class="math inline">\(p\)</span>的光滑曲线。通过叠加<span class="math inline">\(\gamma\)</span>和<span class="math inline">\(\varphi\)</span>，我们就得到了<span class="math inline">\(t\)</span>到<span class="math inline">\(\mathbb R^n\)</span>的映射<span class="math inline">\(\varphi\circ\gamma:t\rightarrow \mathbb R^n\)</span>。</p><p>记<span class="math inline">\(\mathbf x=\varphi\circ\gamma(t)\)</span>，这可以解释为在时间<span class="math inline">\(t\)</span>时我们在流形<span class="math inline">\(M\)</span>上的位置或者坐标，于是<span class="math inline">\(t=t_0\)</span>时的速度<span class="math inline">\(\mathbf v_p=\frac{\mathrm d\varphi\circ\gamma(t)}{\mathrm d t}\vline_{t=t_0}=\left[\frac{\mathrm d x^1(t)}{\mathrm d t},\cdots,\frac{\mathrm d x^n(t)}{\mathrm d t}\right]\vline_{t=t_0}\)</span>，其中<span class="math inline">\(x^i(t)\)</span>为坐标<span class="math inline">\(\mathbf x\)</span>的第<span class="math inline">\(i\)</span>个分量。在点<span class="math inline">\(p\)</span>的切向量（Tangent Vector）即为<span class="math inline">\(\mathbf v_p\)</span>。如果我们把所有可能的曲线<span class="math inline">\(\gamma\)</span>对应的切向量组合到一起，就得到了切空间（Tangent Space），记为<span class="math inline">\(T_pM\)</span>。</p><h2 id="basis-of-the-tangent-space">Basis of the Tangent Space</h2><p><span class="math inline">\(f:M\rightarrow \mathbb R\)</span>和<span class="math inline">\(\gamma:t\rightarrow M\)</span> <span class="math display">\[\begin{align}\frac{\mathrm d f\circ\gamma(t)}{\mathrm d t}|_{t=t_0}&amp;=\frac{\mathrm d(f\circ\varphi^{-1}\circ\varphi\circ\gamma)(t)}{\mathrm d t}|_{t=t_0}\\&amp;=\frac{\mathrm d((f\circ \varphi^{-1})\circ(\varphi\circ\gamma))(t)}{\mathrm d t}|_{t=t_0}\\&amp;=\sum_i\frac{\partial(f\circ\varphi^{-1})(x)}{\partial x_i}|_{x=\varphi\circ\gamma(t_0)}\frac{\mathrm d(\varphi\circ\gamma)^i(t)}{\mathrm d t}|_{t=t_0}\\&amp;=\sum_i\frac{\partial(f\circ\varphi^{-1})(x)}{\partial x_i}|_{x=\varphi(p)}\frac{\mathrm d(\varphi\circ\gamma)^i(t)}{\mathrm d t}|_{t=t_0}\\&amp;=\sum_i (\text{basis for component }i)(\text{velocity of component }i\text{ w.r.t. to }\varphi)\end{align}\]</span></p><p><span class="math display">\[\left(\frac{\partial}{\partial x^i}\right)_p(f)=\frac{\partial(f\circ\varphi^{-1})(\varphi(p))}{\partial x_i}\]</span></p><p><span class="math display">\[\begin{align}\mathbf v &amp;= \sum_{i=1}^n v(x^i)\cdot\left(\frac{\partial}{\partial x^i}\right)_p\\&amp; =\sum_{i=1}^n\frac{\mathrm d(\varphi\circ\gamma)^i(t)}{\mathrm d t}|_{t=t_0}\cdot\left(\frac{\partial}{\partial x^i}\right)_p\end{align}\]</span></p><h2 id="change-of-basis-for-tangent-vector">Change of Basis for Tangent Vector</h2><h1 id="riemannian-manifolds">Riemannian Manifolds</h1>]]></content>
+    
+    
+    <categories>
+      
+      <category>Research</category>
+      
+      <category>Tutorial</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Manifold</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Generative Probabilistic Novelty Detection with Adversarial Autoencoders</title>
     <link href="/2020/06/06/Generative-Probabilistic-Novelty-Detection-with-Adversarial-Autoencoders/"/>
     <url>/2020/06/06/Generative-Probabilistic-Novelty-Detection-with-Adversarial-Autoencoders/</url>
     
-    <content type="html"><![CDATA[<h1 id="abstract">Abstract</h1><h1 id="background">Background</h1><h2 id="manifold">Manifold</h2><figure><img src="http://qfxiao.me/img/manifold_2d.gif" srcset="/img/loading.gif" alt="Some examples of 2d manifolds" /><figcaption>Some examples of 2d manifolds</figcaption></figure><blockquote><p>一个<span class="math inline">\(n\)</span>维拓扑流形（<strong>Topological Manifold</strong>）<span class="math inline">\(\mathcal{M}\)</span>是一个带有和<span class="math inline">\(n\)</span>维实空间<span class="math inline">\(\mathbb{R}^n\)</span>同胚（Homeomorphic）的可数基（Countable Base）的拓扑豪斯道夫空间（Topological Hausdorff Space）。即对于<span class="math inline">\(\mathcal{M}\)</span>上的任意一个点<span class="math inline">\(p\)</span>都有一个开邻域（Open Neighborhood）<span class="math inline">\(U\)</span>和一个同胚映射<span class="math inline">\(\varphi:U\mapsto V\)</span>将<span class="math inline">\(U\)</span>映射到开集<span class="math inline">\(V\in\mathbb{R}^n\)</span>。同时：</p><ul><li>映射<span class="math inline">\(\varphi:U\mapsto V\)</span>被称为<strong>Chart</strong>或<strong>Coordinate System</strong></li><li>集合<span class="math inline">\(U\)</span>为该Chart的<strong>Domain</strong>或<strong>Local Coordinate Neighborhood</strong></li><li>点<span class="math inline">\(p\in U\)</span>的像（Image)记为<span class="math inline">\(\varphi(p)\in\mathbb{R}^n\)</span>，被称为<span class="math inline">\(p\)</span>在Chart中的<strong>Coordinates</strong>或<strong>Local Coordinates</strong></li><li>Chart的集合<span class="math inline">\(\{\varphi_\alpha|\alpha\in\mathbb{N}\}\)</span>，其中定义域<span class="math inline">\(U_\alpha\)</span>，被称为<span class="math inline">\(\mathcal{M}\)</span>的<strong>Atlas</strong>，如果<span class="math inline">\(\mathop{\cup}\limits_{\alpha\in\mathbb{N}}U_\alpha=\mathcal{M}\)</span></li></ul></blockquote><figure><img src="http://qfxiao.me/img/coordinate_chart_manifold.png" srcset="/img/loading.gif" alt="Charts on a Manifold" /><figcaption>Charts on a Manifold</figcaption></figure><h2 id="tangent-spaces">Tangent Spaces</h2><p>流形<span class="math inline">\(\mathcal{M}\)</span>在点<span class="math inline">\(x\)</span>的切空间（<strong>Tangent Space</strong>）<span class="math inline">\(\mathcal{T}_x\mathcal{M}\)</span></p><figure><img src="http://qfxiao.me/img/tangent_space_vector.png" srcset="/img/loading.gif" alt="A tangent space example" /><figcaption>A tangent space example</figcaption></figure><h1 id="methodology">Methodology</h1><h2 id="generative-probabilistic-novelty-detection">Generative Probabilistic Novelty Detection</h2><p>我们假设训练数据<span class="math inline">\(x_1,\cdots,x_N\)</span>，其中<span class="math inline">\(x_i\in\mathbb{R}^m\)</span>，从一个分布采样的来，并带有随机噪声<span class="math inline">\(\xi\)</span>： <span class="math display">\[x_i=f(z_i)+\xi_i, \space\space\space i=1,\cdots,N\]</span> 其中<span class="math inline">\(z_i\in\mathbb{R}^n\)</span>，<span class="math inline">\(f:\Omega\mapsto\mathbb{R}^m\)</span>定义了一个<span class="math inline">\(n\)</span>维带参流形<span class="math inline">\(\mathcal{M}\equiv f(\Omega)\)</span>。同时假设存在<span class="math inline">\(g:\mathbb{R}^m\mapsto\mathbb{R}^n\)</span>，对任意<span class="math inline">\(x\in\mathcal{M}\)</span>都有<span class="math inline">\(f(g(x))=x\)</span>。</p><p>对于一个测试样本<span class="math inline">\(\bar{x}\in\mathbb{R}^m\)</span>，通过<span class="math inline">\(\bar x^{\parallel}=f(\bar z)\)</span>有<span class="math inline">\(\bar{x}^\parallel\in\mathcal M\)</span>，其中<span class="math inline">\(\bar z = g(\bar x)\)</span>。 <span class="math display">\[f(z)=f(\bar z)+J_f(\bar z)(z-\bar z)+O(\parallel z-\bar z\parallel ^2)\]</span> <img src="http://qfxiao.me/img/image-20191108223206246.png" srcset="/img/loading.gif" /></p><p><img src="http://qfxiao.me/img/image-20191108223217178.png" srcset="/img/loading.gif" /></p><h2 id="manifold-learning-with-adversarial-autoencoders">Manifold Learning with Adversarial Autoencoders</h2><p><img src="http://qfxiao.me/img/image-20191108223234710.png" srcset="/img/loading.gif" /></p><h1 id="experiments">Experiments</h1><p><img src="http://qfxiao.me/img/image-20191108223306243.png" srcset="/img/loading.gif" /></p><p><img src="http://qfxiao.me/img/image-20191108223317643.png" srcset="/img/loading.gif" /></p><p><img src="http://qfxiao.me/img/image-20191108223326045.png" srcset="/img/loading.gif" /></p><p><img src="http://qfxiao.me/img/image-20191108223336971.png" srcset="/img/loading.gif" /></p><p><img src="http://qfxiao.me/img/image-20191108223345592.png" srcset="/img/loading.gif" /></p><p><img src="http://qfxiao.me/img/image-20191108223354578.png" srcset="/img/loading.gif" /></p><p><img src="http://qfxiao.me/img/image-20191108223403265.png" srcset="/img/loading.gif" /></p>]]></content>
+    <content type="html"><![CDATA[<h1 id="introduction">Introduction</h1><h1 id="methodology">Methodology</h1><h2 id="generative-probabilistic-novelty-detection">Generative Probabilistic Novelty Detection</h2><p>我们假设训练数据<span class="math inline">\(x_1,\cdots,x_N\)</span>，其中<span class="math inline">\(x_i\in\mathbb{R}^m\)</span>，从一个分布采样的来，并带有随机噪声<span class="math inline">\(\xi\)</span>： <span class="math display">\[x_i=f(z_i)+\xi_i, \space\space\space i=1,\cdots,N\]</span> 其中<span class="math inline">\(z_i\in\mathbb{R}^n\)</span>，<span class="math inline">\(f:\Omega\mapsto\mathbb{R}^m\)</span>定义了一个<span class="math inline">\(n\)</span>维带参流形<span class="math inline">\(\mathcal{M}\equiv f(\Omega)\)</span>。同时假设存在<span class="math inline">\(g:\mathbb{R}^m\mapsto\mathbb{R}^n\)</span>，对任意<span class="math inline">\(x\in\mathcal{M}\)</span>都有<span class="math inline">\(f(g(x))=x\)</span>。</p><p>对于一个测试样本<span class="math inline">\(\bar{x}\in\mathbb{R}^m\)</span>，通过<span class="math inline">\(\bar x^{\parallel}=f(\bar z)\)</span>有<span class="math inline">\(\bar{x}^\parallel\in\mathcal M\)</span>，其中<span class="math inline">\(\bar z = g(\bar x)\)</span>。 <span class="math display">\[f(z)=f(\bar z)+J_f(\bar z)(z-\bar z)+O(\parallel z-\bar z\parallel ^2)\]</span> <img src="http://qfxiao.me/img/image-20191108223206246.png" srcset="/img/loading.gif" style="zoom:67%;" /></p><p><img src="http://qfxiao.me/img/image-20191108223217178.png" srcset="/img/loading.gif" style="zoom:67%;" /></p><h2 id="manifold-learning-with-adversarial-autoencoders">Manifold Learning with Adversarial Autoencoders</h2><p><img src="http://qfxiao.me/img/image-20191108223234710.png" srcset="/img/loading.gif" style="zoom: 67%;" /></p><h1 id="experiments">Experiments</h1><p><img src="http://qfxiao.me/img/image-20191108223306243.png" srcset="/img/loading.gif" /></p><p><img src="http://qfxiao.me/img/image-20191108223317643.png" srcset="/img/loading.gif" style="zoom:67%;" /></p><p><img src="http://qfxiao.me/img/image-20191108223326045.png" srcset="/img/loading.gif" /></p><p><img src="http://qfxiao.me/img/image-20191108223336971.png" srcset="/img/loading.gif" style="zoom:67%;" /></p><p><img src="http://qfxiao.me/img/image-20191108223345592.png" srcset="/img/loading.gif" style="zoom:67%;" /></p><p><img src="http://qfxiao.me/img/image-20191108223354578.png" srcset="/img/loading.gif" style="zoom: 67%;" /></p><p><img src="http://qfxiao.me/img/image-20191108223403265.png" srcset="/img/loading.gif" /></p>]]></content>
     
     
     <categories>
@@ -335,9 +362,9 @@
     
     <tags>
       
-      <tag>Anomaly Detection</tag>
-      
       <tag>Deep Learning</tag>
+      
+      <tag>Anomaly Detection</tag>
       
     </tags>
     
@@ -391,9 +418,9 @@
     
     <tags>
       
-      <tag>Anomaly Detection</tag>
-      
       <tag>VAE</tag>
+      
+      <tag>Anomaly Detection</tag>
       
     </tags>
     
@@ -420,9 +447,9 @@
     
     <tags>
       
-      <tag>Time Series</tag>
-      
       <tag>Deep Learning</tag>
+      
+      <tag>Time Series</tag>
       
     </tags>
     
@@ -449,15 +476,15 @@
     
     <tags>
       
-      <tag>Time Series</tag>
-      
-      <tag>Machine Learning</tag>
-      
-      <tag>Anomaly Detection</tag>
+      <tag>VAE</tag>
       
       <tag>Deep Learning</tag>
       
-      <tag>VAE</tag>
+      <tag>Anomaly Detection</tag>
+      
+      <tag>Time Series</tag>
+      
+      <tag>Machine Learning</tag>
       
     </tags>
     
@@ -484,11 +511,11 @@
     
     <tags>
       
-      <tag>Deep Learning</tag>
-      
       <tag>Variational Inference</tag>
       
       <tag>VAE</tag>
+      
+      <tag>Deep Learning</tag>
       
       <tag>GAN</tag>
       
@@ -548,11 +575,11 @@
     
     <tags>
       
-      <tag>Deep Learning</tag>
-      
       <tag>Variational Inference</tag>
       
       <tag>VAE</tag>
+      
+      <tag>Deep Learning</tag>
       
     </tags>
     
@@ -579,9 +606,9 @@
     
     <tags>
       
-      <tag>Time Series</tag>
-      
       <tag>Deep Learning</tag>
+      
+      <tag>Time Series</tag>
       
       <tag>RNN</tag>
       
@@ -610,15 +637,15 @@
     
     <tags>
       
-      <tag>Time Series</tag>
-      
-      <tag>Machine Learning</tag>
-      
-      <tag>Anomaly Detection</tag>
+      <tag>VAE</tag>
       
       <tag>Deep Learning</tag>
       
-      <tag>VAE</tag>
+      <tag>Anomaly Detection</tag>
+      
+      <tag>Time Series</tag>
+      
+      <tag>Machine Learning</tag>
       
       <tag>RNN</tag>
       
@@ -649,9 +676,9 @@
     
     <tags>
       
-      <tag>Time Series</tag>
-      
       <tag>Deep Learning</tag>
+      
+      <tag>Time Series</tag>
       
       <tag>GAN</tag>
       
@@ -680,13 +707,13 @@
     
     <tags>
       
-      <tag>Time Series</tag>
-      
-      <tag>Machine Learning</tag>
+      <tag>Deep Learning</tag>
       
       <tag>Anomaly Detection</tag>
       
-      <tag>Deep Learning</tag>
+      <tag>Time Series</tag>
+      
+      <tag>Machine Learning</tag>
       
     </tags>
     
@@ -713,13 +740,13 @@
     
     <tags>
       
-      <tag>Time Series</tag>
-      
-      <tag>Machine Learning</tag>
+      <tag>Deep Learning</tag>
       
       <tag>Anomaly Detection</tag>
       
-      <tag>Deep Learning</tag>
+      <tag>Time Series</tag>
+      
+      <tag>Machine Learning</tag>
       
     </tags>
     
@@ -746,15 +773,15 @@
     
     <tags>
       
-      <tag>Time Series</tag>
-      
-      <tag>Machine Learning</tag>
-      
-      <tag>Anomaly Detection</tag>
+      <tag>VAE</tag>
       
       <tag>Deep Learning</tag>
       
-      <tag>VAE</tag>
+      <tag>Anomaly Detection</tag>
+      
+      <tag>Time Series</tag>
+      
+      <tag>Machine Learning</tag>
       
     </tags>
     
@@ -781,13 +808,13 @@
     
     <tags>
       
-      <tag>Time Series</tag>
-      
-      <tag>Machine Learning</tag>
+      <tag>Deep Learning</tag>
       
       <tag>Anomaly Detection</tag>
       
-      <tag>Deep Learning</tag>
+      <tag>Time Series</tag>
+      
+      <tag>Machine Learning</tag>
       
       <tag>Spectral</tag>
       
