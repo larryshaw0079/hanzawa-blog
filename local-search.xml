@@ -35,7 +35,7 @@
     <link href="/2020/06/06/Generative-Probabilistic-Novelty-Detection-with-Adversarial-Autoencoders/"/>
     <url>/2020/06/06/Generative-Probabilistic-Novelty-Detection-with-Adversarial-Autoencoders/</url>
     
-    <content type="html"><![CDATA[<h1 id="introduction">Introduction</h1><h1 id="methodology">Methodology</h1><h2 id="generative-probabilistic-novelty-detection">Generative Probabilistic Novelty Detection</h2><p>我们假设训练数据<span class="math inline">\(x_1,\cdots,x_N\)</span>，其中<span class="math inline">\(x_i\in\mathbb{R}^m\)</span>，从一个分布采样的来，并带有随机噪声<span class="math inline">\(\xi\)</span>： <span class="math display">\[x_i=f(z_i)+\xi_i, \space\space\space i=1,\cdots,N\]</span> 其中<span class="math inline">\(z_i\in\mathbb{R}^n\)</span>，<span class="math inline">\(f:\Omega\mapsto\mathbb{R}^m\)</span>定义了一个<span class="math inline">\(n\)</span>维带参流形<span class="math inline">\(\mathcal{M}\equiv f(\Omega)\)</span>。同时假设存在<span class="math inline">\(g:\mathbb{R}^m\mapsto\mathbb{R}^n\)</span>，对任意<span class="math inline">\(x\in\mathcal{M}\)</span>都有<span class="math inline">\(f(g(x))=x\)</span>。</p><p>对于一个测试样本<span class="math inline">\(\bar{x}\in\mathbb{R}^m\)</span>，通过<span class="math inline">\(\bar x^{\parallel}=f(\bar z)\)</span>有<span class="math inline">\(\bar{x}^\parallel\in\mathcal M\)</span>，其中<span class="math inline">\(\bar z = g(\bar x)\)</span>。 <span class="math display">\[f(z)=f(\bar z)+J_f(\bar z)(z-\bar z)+O(\parallel z-\bar z\parallel ^2)\]</span> <img src="http://qfxiao.me/img/image-20191108223206246.png" srcset="/img/loading.gif" style="zoom:67%;" /></p><p><img src="http://qfxiao.me/img/image-20191108223217178.png" srcset="/img/loading.gif" style="zoom:67%;" /></p><h2 id="manifold-learning-with-adversarial-autoencoders">Manifold Learning with Adversarial Autoencoders</h2><p><img src="http://qfxiao.me/img/image-20191108223234710.png" srcset="/img/loading.gif" style="zoom: 67%;" /></p><h1 id="experiments">Experiments</h1><p><img src="http://qfxiao.me/img/image-20191108223306243.png" srcset="/img/loading.gif" /></p><p><img src="http://qfxiao.me/img/image-20191108223317643.png" srcset="/img/loading.gif" style="zoom:67%;" /></p><p><img src="http://qfxiao.me/img/image-20191108223326045.png" srcset="/img/loading.gif" /></p><p><img src="http://qfxiao.me/img/image-20191108223336971.png" srcset="/img/loading.gif" style="zoom:67%;" /></p><p><img src="http://qfxiao.me/img/image-20191108223345592.png" srcset="/img/loading.gif" style="zoom:67%;" /></p><p><img src="http://qfxiao.me/img/image-20191108223354578.png" srcset="/img/loading.gif" style="zoom: 67%;" /></p><p><img src="http://qfxiao.me/img/image-20191108223403265.png" srcset="/img/loading.gif" /></p>]]></content>
+    <content type="html"><![CDATA[<h1 id="introduction">Introduction</h1><p>这篇文章介绍了一种基于概率分布的异常检测方法。其基本思想是假设正常样本服从定义在流形<span class="math inline">\(M\)</span>上的分布，而对于任意一点<span class="math inline">\(\bar x\)</span>，通过投影到流形<span class="math inline">\(M\)</span>上<span class="math inline">\(x^\parallel\)</span>，可以分解为平行于切空间的部分<span class="math inline">\(x^\parallel\)</span>和正交与切空间的部分<span class="math inline">\(x^\bot\)</span>。原始的坐标<span class="math inline">\(\bar x\)</span>被转换到<span class="math inline">\(x^\parallel\)</span>局部坐标系中，然后似然通过转换后的坐标系进行计算。</p><h1 id="methodology">Methodology</h1><h2 id="generative-probabilistic-novelty-detection">Generative Probabilistic Novelty Detection</h2><p>我们假设训练数据<span class="math inline">\(x_1,\cdots,x_N\)</span>，其中<span class="math inline">\(x_i\in\mathbb{R}^m\)</span>，从一个分布采样的来，并带有随机噪声<span class="math inline">\(\xi\)</span>： <span class="math display">\[x_i=f(z_i)+\xi_i, \space\space\space i=1,\cdots,N\]</span> 其中<span class="math inline">\(z_i\in\mathbb{R}^n\)</span>，<span class="math inline">\(f:\Omega\mapsto\mathbb{R}^m\)</span>定义了一个<span class="math inline">\(n\)</span>维带参流形<span class="math inline">\(\mathcal{M}\equiv f(\Omega)\)</span>。注意这里噪声的加入使得样本的值域扩展到了整个实数空间。同时假设存在<span class="math inline">\(g:\mathbb{R}^m\mapsto\mathbb{R}^n\)</span>，对任意<span class="math inline">\(x\in\mathcal{M}\)</span>都有<span class="math inline">\(f(g(x))=x\)</span>。<span class="math inline">\(f\)</span>和<span class="math inline">\(g\)</span>后面会通过神经网络实现。</p><p>对于一个测试样本<span class="math inline">\(\bar{x}\in\mathbb{R}^m\)</span>，我们可以得到其在<span class="math inline">\(M\)</span>上的投影，这是通过逆变换<span class="math inline">\(\bar z = g(\bar x)\)</span>得到对应<span class="math inline">\(z\)</span>的然后再通过<span class="math inline">\(\bar x^{\parallel}=f(\bar z)\)</span>得到。<span class="math inline">\(f\)</span>在<span class="math inline">\(\bar z\)</span>的一阶泰勒展开为： <span class="math display">\[f(z)=f(\bar z)+J_f(\bar z)(z-\bar z)+O(\parallel z-\bar z\parallel ^2)\]</span> <img src="http://qfxiao.me/img/image-20191108223206246.png" srcset="/img/loading.gif" style="zoom:67%;" /></p><p>其中<span class="math inline">\(J_f(\bar z)\)</span>为<span class="math inline">\(f\)</span>在点<span class="math inline">\(\bar z\)</span>的雅各比矩阵。<span class="math inline">\(\mathcal T=\text{span}(J_f(\bar z))\)</span>代表点<span class="math inline">\(\bar z\)</span>处由<span class="math inline">\(J_f(\bar z)\)</span>的<span class="math inline">\(n\)</span>个独立向量组成的切空间。通过对<span class="math inline">\(J_f(\bar z)\)</span>进行奇异值分解<span class="math inline">\(J_f(\bar z)=U^\parallel SV^\top\)</span>。 <span class="math display">\[\bar w=U^\top\bar x=\left[\begin{matrix}U^{\parallel^\top}\bar x\\ U^{\bot^\top}\bar x\end{matrix}\right]=\left[\begin{matrix}\bar w^\parallel\\ \bar w^\bot\end{matrix}\right]\]</span> 坐标<span class="math inline">\(\bar w\)</span>可以分解为平行于<span class="math inline">\(\mathcal T\)</span>和正交于<span class="math inline">\(\mathcal T\)</span>两部分。</p><p>定义在施加变换前后的坐标系上的概率分布<span class="math inline">\(p_X(x)\)</span>和<span class="math inline">\(p_W(w)\)</span>是等价的，不过对于<span class="math inline">\(p_W(w)\)</span>，我们假设平行部分和正交部分是独立的，即： <span class="math display">\[p_X(x)=p_W(w)=p_W(w^\parallel,w^\bot)=p_{W^\parallel}(w^\parallel)p_{W^\bot}(w^\bot)\]</span> 这一假设的依据是随机噪声部分假设主要是往流形之外偏离的，即与<span class="math inline">\(\mathcal T\)</span>正交，所以<span class="math inline">\(W^\bot\)</span>主要是反映噪声的部分。而噪声与样本分布相独立的假设是合理的。于是，异常分数可以定义为： <span class="math display">\[p_X(\bar x)=p_{W^\parallel}(\bar w^\parallel)p_{W^\bot}(\bar w^\bot)=\begin{cases}\geq \gamma \Rightarrow \text{Inlier}\\&lt;\gamma\Rightarrow\text{Outlier}\end{cases}\]</span></p><h2 id="computing-the-distribution-of-data-samples">Computing the Distribution of Data Samples</h2><p>上面的异常分数需要计算<span class="math inline">\(p_{W^\parallel}(\bar w^\parallel)\)</span>和<span class="math inline">\(p_{W^\bot}(\bar w^\bot)\)</span>。给定测试样本<span class="math inline">\(\bar x\)</span>，投影到流形<span class="math inline">\(\bar x^\parallel=f(g(\bar x))\)</span>。<span class="math inline">\(\bar w^\parallel\)</span>可以重写为<span class="math inline">\(\bar w^\parallel=U^{\parallel^\top}\bar x=U^{\parallel^\top}(\bar x-\bar x^{\parallel})+U^{\parallel^\top}\bar x^\parallel=U^{\parallel^\top}\bar x^\parallel\)</span>，即我们假设<span class="math inline">\(U^{\parallel^\top}(\bar x-\bar x^\parallel)\approx 0\)</span>。<span class="math inline">\(w^\parallel(z)=U^{\parallel^\top}f(\bar z)+SV^\top(z-\bar z)+O(\parallel z-\bar z\parallel^2)\)</span></p><p>上 <span class="math display">\[p_{W^\parallel}(w^\parallel)=|\text{det}S^{-1}|p_Z(z)\]</span> 为了半径<span class="math inline">\(\parallel w^\bot\parallel\)</span> <span class="math display">\[p_{W^\bot}(w^\bot)\approx\frac{\Gamma(\frac{m-n}{2})}{2\pi^{\frac{m-n}{2}}\parallel w^\bot\parallel^{m-n}}p_{\parallel W^\bot\parallel}(\parallel w^\bot\parallel)\]</span></p><p>其中<span class="math inline">\(\Gamma(\cdot)\)</span>代表Gamma函数</p><h2 id="manifold-learning-with-adversarial-autoencoders">Manifold Learning with Adversarial Autoencoders</h2><p><img src="http://qfxiao.me/img/image-20191108223234710.png" srcset="/img/loading.gif" style="zoom: 67%;" /></p><h3 id="adversarial-losses">Adversarial Losses</h3><p>对于隐变量<span class="math inline">\(z\)</span> <span class="math display">\[\mathcal L_{adv-d_z}(x,g,D_z)=E[\log(D_z(\mathcal N(0,1)))]+E[\log(1-D_z(g(x)))]\]</span> 对于样本<span class="math inline">\(x\)</span> <span class="math display">\[\mathcal L_{adv-d_x}(x,D_x,f)=E[\log(D_x(x))]+E[\log(1-D_x(f(\mathcal N(0,1))))]\]</span></p><h3 id="autoencoder-loss">Autoencoder Loss</h3><p><span class="math display">\[\mathcal L_\text{error}(x,g,f)=-E_z[\log(p(f(g(x))|x))]\]</span></p><h3 id="full-objective">Full Objective</h3><p><span class="math display">\[\mathcal L(x,g,D_z,D_x,f)=\mathcal L_{adv-d_z}+\mathcal L_{adv-d_x}+\lambda \mathcal L_\text{error}\]</span></p><p>下图</p><p><img src="http://qfxiao.me/img/image-20191108223217178.png" srcset="/img/loading.gif" style="zoom:67%;" /></p><h1 id="experiments">Experiments</h1><h2 id="datasets">Datasets</h2><ul><li><strong>MNIST. </strong> 手册数字识别数据集。</li><li><strong>The Coil-100. </strong>包含7200张100个不同物体的不同角度的图片。</li><li><strong>Fashion-MNIST. </strong> 手册数字识别数据集彩色版。</li><li><strong>Others. </strong> 前三个数据集都是采用一个类作为inlier，而其他类作为outlier。在这一设置中inlier采样自数据集CIFAR-10(CIFAR-100)，而outlier采样自TinyImageNet、LSUN和iSUN。</li></ul><h2 id="results">Results</h2><h3 id="mnist-dataset">MNIST Dataset</h3><p><img src="http://qfxiao.me/img/image-20191108223306243.png" srcset="/img/loading.gif" /></p><p><img src="http://qfxiao.me/img/image-20191108223336971.png" srcset="/img/loading.gif" style="zoom:67%;" /></p><h3 id="coil-100-dataset">Coil-100 Dataset</h3><p><img src="http://qfxiao.me/img/image-20191108223317643.png" srcset="/img/loading.gif" style="zoom:67%;" /></p><h3 id="fashion-mnist">Fashion-MNIST</h3><p><img src="http://qfxiao.me/img/image-20191108223326045.png" srcset="/img/loading.gif" /></p><h3 id="cifar-10-cifar-100">CIFAR-10 (CIFAR-100)</h3><p><img src="http://qfxiao.me/img/image-20191108223354578.png" srcset="/img/loading.gif" style="zoom: 67%;" /></p><h3 id="ablation">Ablation</h3><p><img src="http://qfxiao.me/img/image-20191108223403265.png" srcset="/img/loading.gif" /></p><p><img src="http://qfxiao.me/img/image-20191108223345592.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>]]></content>
     
     
     <categories>
@@ -51,9 +51,9 @@
       
       <tag>Anomaly Detection</tag>
       
-      <tag>GAN</tag>
-      
       <tag>Novelty Detection</tag>
+      
+      <tag>GAN</tag>
       
     </tags>
     
@@ -362,9 +362,9 @@
     
     <tags>
       
-      <tag>Anomaly Detection</tag>
-      
       <tag>Deep Learning</tag>
+      
+      <tag>Anomaly Detection</tag>
       
     </tags>
     
@@ -418,9 +418,9 @@
     
     <tags>
       
-      <tag>Anomaly Detection</tag>
-      
       <tag>VAE</tag>
+      
+      <tag>Anomaly Detection</tag>
       
     </tags>
     
@@ -447,9 +447,9 @@
     
     <tags>
       
-      <tag>Time Series</tag>
-      
       <tag>Deep Learning</tag>
+      
+      <tag>Time Series</tag>
       
     </tags>
     
@@ -476,15 +476,15 @@
     
     <tags>
       
+      <tag>VAE</tag>
+      
+      <tag>Deep Learning</tag>
+      
       <tag>Time Series</tag>
       
       <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
-      
-      <tag>Deep Learning</tag>
-      
-      <tag>VAE</tag>
       
     </tags>
     
@@ -511,11 +511,11 @@
     
     <tags>
       
-      <tag>Deep Learning</tag>
-      
       <tag>Variational Inference</tag>
       
       <tag>VAE</tag>
+      
+      <tag>Deep Learning</tag>
       
       <tag>GAN</tag>
       
@@ -575,11 +575,11 @@
     
     <tags>
       
-      <tag>Deep Learning</tag>
-      
       <tag>Variational Inference</tag>
       
       <tag>VAE</tag>
+      
+      <tag>Deep Learning</tag>
       
     </tags>
     
@@ -606,9 +606,9 @@
     
     <tags>
       
-      <tag>Time Series</tag>
-      
       <tag>Deep Learning</tag>
+      
+      <tag>Time Series</tag>
       
       <tag>RNN</tag>
       
@@ -637,15 +637,15 @@
     
     <tags>
       
+      <tag>VAE</tag>
+      
+      <tag>Deep Learning</tag>
+      
       <tag>Time Series</tag>
       
       <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
-      
-      <tag>Deep Learning</tag>
-      
-      <tag>VAE</tag>
       
       <tag>RNN</tag>
       
@@ -676,9 +676,9 @@
     
     <tags>
       
-      <tag>Time Series</tag>
-      
       <tag>Deep Learning</tag>
+      
+      <tag>Time Series</tag>
       
       <tag>GAN</tag>
       
@@ -707,13 +707,13 @@
     
     <tags>
       
+      <tag>Deep Learning</tag>
+      
       <tag>Time Series</tag>
       
       <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
-      
-      <tag>Deep Learning</tag>
       
     </tags>
     
@@ -740,13 +740,13 @@
     
     <tags>
       
+      <tag>Deep Learning</tag>
+      
       <tag>Time Series</tag>
       
       <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
-      
-      <tag>Deep Learning</tag>
       
     </tags>
     
@@ -773,15 +773,15 @@
     
     <tags>
       
+      <tag>VAE</tag>
+      
+      <tag>Deep Learning</tag>
+      
       <tag>Time Series</tag>
       
       <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
-      
-      <tag>Deep Learning</tag>
-      
-      <tag>VAE</tag>
       
     </tags>
     
@@ -808,13 +808,13 @@
     
     <tags>
       
+      <tag>Deep Learning</tag>
+      
       <tag>Time Series</tag>
       
       <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
-      
-      <tag>Deep Learning</tag>
       
       <tag>Spectral</tag>
       
