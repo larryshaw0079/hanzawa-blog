@@ -17,7 +17,7 @@
   <meta name="description" content="">
   <meta name="author" content="Hanzawa">
   <meta name="keywords" content="">
-  <title>Complementary Set Variational Autoencoder for Supervised Anomaly Detection - Hanzawa の 部屋</title>
+  <title>Time2Graph: Revisiting Time Series Modeling with Dynamic Shapelets - Hanzawa の 部屋</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
@@ -147,8 +147,8 @@
               
                 <div class="mt-3 post-meta">
                   <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-                  <time datetime="2020-01-09 10:15">
-                    2020年1月9日 上午
+                  <time datetime="2020-06-13 16:42">
+                    2020年6月13日 下午
                   </time>
                 </div>
               
@@ -158,7 +158,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    1.4k 字
+                    304 字
                   </span>
                 
 
@@ -168,7 +168,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    21
+                    4
                      分钟
                   </span>
                 
@@ -198,79 +198,43 @@
             
             <article class="markdown-body">
               <h1 id="introduction">Introduction</h1>
-<p>对于异常检测问题，异常的模式是多种多样的。有监督模型能够较好地处理训练集中出现过的模式，无监督模型能够处理训练集中未出现过的模式，但对于训练集中出现过的异常模型并没有学习。本文提出了一种既能学习训练集中出现过的异常模式，同时能处理未出现过的异常模式的方法。</p>
-<h1 id="proposed-model">Proposed Model</h1>
-<h2 id="conventional-vae">Conventional VAE</h2>
-<p>首先回顾一下原始的VAE。</p>
-<p>原始VAE中的损失函数为： <span class="math display">\[
-\mathcal{L}(\boldsymbol{\theta},\boldsymbol{\phi};\boldsymbol{x})=\mathbb{E}_{q(\boldsymbol{z}|\boldsymbol{x};\boldsymbol{\phi})}[\log p(\boldsymbol{x}|\boldsymbol{z};\boldsymbol{\theta})]-\text{KL}[q(\boldsymbol{z}|\boldsymbol{x};\boldsymbol{\phi}\parallel p(\boldsymbol{z}))]
-\]</span> 原文中作者证明了<span class="math inline">\(\mathcal{L}(\boldsymbol{\theta},\boldsymbol{\phi};\boldsymbol{x})\leq\log p(\boldsymbol{x};\boldsymbol{\theta})\)</span>，所以<span class="math inline">\(\mathcal{L}(\boldsymbol{\theta},\boldsymbol{\phi};\boldsymbol{x})\)</span>可以看作是数据分布<span class="math inline">\(p(\boldsymbol{x})\)</span>对数似然的一个下界。<span class="math inline">\(\mathcal{L}(\boldsymbol{\theta},\boldsymbol{\phi};\boldsymbol{x})\)</span>又被称为证据下界 (ELBO)。<span class="math inline">\(\mathbb{E}_{q(\boldsymbol{z}|\boldsymbol{x};\boldsymbol{\phi})}[\log p(\boldsymbol{x}|\boldsymbol{z};\boldsymbol{\theta})]\)</span>中的期望一般用蒙特卡洛来进行估计： <span class="math display">\[
-\begin{align}
-\mathcal{L}(\boldsymbol{\theta},\boldsymbol{\phi};\boldsymbol{x})\simeq&amp; \frac{1}{L}\sum\limits_l\log p(\boldsymbol{x}|\boldsymbol{z}^{(l)};\boldsymbol{\theta})-\text{KL}[q(\boldsymbol{z}|\boldsymbol{x};\boldsymbol{\phi})\parallel p(\boldsymbol{z})],\\
-\boldsymbol{z}^{(l)}&amp;\sim q(\boldsymbol{z}|\boldsymbol{x};\boldsymbol{\phi}), \space l\in\{1,2,\cdots,L\}
-\end{align}
-\]</span> 对于隐变量<span class="math inline">\(\boldsymbol{z}\)</span>，一般假设先验服从标准高斯分布，后验服从均值为<span class="math inline">\(\mu\)</span>，方差为<span class="math inline">\(\sigma^2\)</span>的高斯分布，故KL散度能直接写出解析式： <span class="math display">\[
-\mathcal{L}(\boldsymbol{\theta},\boldsymbol{\phi};\boldsymbol{x})\simeq \frac{1}{L}\sum\limits_l\log p(\boldsymbol{x}|\boldsymbol{z}^{(l)};\boldsymbol{\theta})-C(-\frac{1}{2}-\log\sigma+\frac{1}{2}\sigma^2+\frac{1}{2}\mu^2)
-\]</span> 使用VAE来做异常检测通常是在正常数据上进行训练，在检测阶段，如果是异常样本，那么VAE不能很好地重构它，这样会导致较大的重构误差。</p>
-<h2 id="prior-distribution-for-anomalies">Prior Distribution for Anomalies</h2>
-<p><img src="http://qfxiao.me/img/image-20200109102204802.png" srcset="/img/loading.gif" /></p>
-<p>在原始VAE异常检测中，无论输入样本<span class="math inline">\(\boldsymbol{x}\)</span>是否异常，VAE都会使对应编码的后验<span class="math inline">\(p(\boldsymbol{z}|\boldsymbol{x})\)</span>服从高斯分布，且施加标准高斯分布的约束。在本文中，作者对异常和正常样本对应的隐变量的先验分布做了不同假设。首先，正常先验依然是标准高斯分布，记为<span class="math inline">\(p_n(\boldsymbol{z})\)</span>。而对于异常先验，作者认为异常即为“不正常”，和正常是补集的关系。作者在文中定义异常先验分布<span class="math inline">\(p_a(\boldsymbol{z})\)</span>为： <span class="math display">\[
-p_a(\boldsymbol{z})=\frac{1}{Y^\prime}(\max\limits_{\boldsymbol{z}^\prime}p_n(\boldsymbol{z}^\prime)-p_n(\boldsymbol{z}))
+<p><a href="https://arxiv.org/abs/1911.04143" target="_blank" rel="noopener">📰Get Paper</a></p>
+<h1 id="preliminaries">Preliminaries</h1>
+<p>时间序列集合<span class="math inline">\(T=\{t_1,\cdots,t_{|T|}\}\)</span>包含若干条时序数据<span class="math inline">\(t=\{x_1,\cdots,x_n\}\)</span>。一个<span class="math inline">\(t\)</span>的片段<span class="math inline">\(s\)</span>是<span class="math inline">\(t\)</span>的一个连续子序列。如果<span class="math inline">\(t\)</span>能被切分成<span class="math inline">\(m\)</span>个长度都为<span class="math inline">\(l\)</span>的片段，那么我们就有<span class="math inline">\(t=\{\{x_{l*k+1},\cdots,x_{l*k+l}\},0\leq k\leq m-1\}\)</span>。度量两个片段<span class="math inline">\(s_i\)</span>和<span class="math inline">\(s_j\)</span>之间距离的函数记为<span class="math inline">\(d(s_i,s_j)\)</span>，</p>
+<blockquote>
+<p><strong>Definition 1 </strong> <strong><em>Alignment</em></strong>. 给定两个长度分别为<span class="math inline">\(l_i\)</span>和<span class="math inline">\(l_j\)</span>的序列<span class="math inline">\(s_i\)</span>和<span class="math inline">\(s_j\)</span>，一个<em>alignment</em> <span class="math inline">\(a=(a_1,a_2)\)</span>是一个满足以下条件的长度为<span class="math inline">\(p\)</span>的下标序列： <span class="math display">\[
+1\leq a_k(1)\leq\cdots\leq a_k(p)=l_k,\\
+a_k(n+1)-a_k(n)\leq 1,\\
+\text{for }k=i,j,\text{ and }1\leq n\leq p-1
 \]</span></p>
-<p>其中<span class="math inline">\(Y^\prime\)</span>为使<span class="math inline">\(p_a(\boldsymbol{z})\)</span>成为一个概率分布的调节因子。实际上，<span class="math inline">\(Y^\prime\)</span>往往会成为无限大，因为<span class="math inline">\(p(\boldsymbol z)\)</span>在整个定义域上都有定义。为了解决这个问题，作者加入了<span class="math inline">\(p_w(\boldsymbol z)\)</span>，一个在每个维度都足够宽的辅助分布：</p>
-<p><span class="math display">\[
-p_a(\boldsymbol z)=\frac{1}{Y}p_w(\boldsymbol z)\left(\max\limits_{\boldsymbol z^\prime}p_n(\boldsymbol z^\prime)-p_n(\boldsymbol z)\right)
+</blockquote>
+<p>我们把<span class="math inline">\(s_i\)</span>和<span class="math inline">\(s_j\)</span>所有可能的<em>alignment</em>记为<span class="math inline">\(\mathcal{A}(s_i,s_j)\)</span>。</p>
+<p>DTW (<em>Dynamic Time Warping</em>) 定义为给定一个预定义的距离度量<span class="math inline">\(\tau\)</span>，在所有可能的<em>alignment</em> <span class="math inline">\(\mathcal{A}(s_i,s_j)\)</span>中满足使得<span class="math inline">\(\tau\)</span>最小的<span class="math inline">\(\tau\)</span>： <span class="math display">\[
+d_\text{DTW}(s_i,s_j)=\min_{a\in\mathcal{A}(s_i,s_j)}\tau(s_i,s_j|a)
 \]</span></p>
-<p>其中<span class="math inline">\(Y\)</span>为有限的常数。在文中<span class="math inline">\(p_n(\boldsymbol z)\)</span>和<span class="math inline">\(p_w(\boldsymbol z)\)</span>都为高斯分布，那么<span class="math inline">\(p_a(\boldsymbol z)\)</span>的具体形式为：</p>
-<p><span class="math display">\[
-p_a(\boldsymbol z)=\frac{1}{Y}\mathcal{N}(\boldsymbol z;\boldsymbol 0,\boldsymbol s^2)\{\max\limits_{\boldsymbol z^\prime}\mathcal N(\boldsymbol z^\prime;\boldsymbol 0,\boldsymbol 1)-\mathcal N(\boldsymbol z;\boldsymbol 0,\boldsymbol 1)\}
+<p>进一步的，我们可以定义一个子序列<span class="math inline">\(s\)</span>和时间序列<span class="math inline">\(t\)</span>之间的距离度量： <span class="math display">\[
+D(s,t)=\min_{1\leq k\leq m} d(s,s_k)
 \]</span></p>
-<p>其中：</p>
-<p><span class="math display">\[
-\max\limits_{\boldsymbol z^\prime}\mathcal N(\boldsymbol z^\prime;\boldsymbol 0,\boldsymbol 1)=\frac{1}{\sqrt{2\pi}}
-\]</span></p>
-<p><span class="math display">\[
-Y=\int_{-\infty}^{\infty}p_a(\boldsymbol z)\mathrm{d}\boldsymbol z=\frac{1}{\sqrt{2\pi}}\left\{1-\frac{1}{\boldsymbol s^2+1}\right\}
-\]</span></p>
-<p><span class="math inline">\(\boldsymbol s^2\)</span>为超参数，控制分布的宽度。用文中的先验替换VAE原始的KL散度，可写为：</p>
-<p><span class="math display">\[
-\text{KL}\left[q(\boldsymbol z|\boldsymbol x;\phi)\parallel p_a(\boldsymbol z)\right]=\int_{-\infty}^\infty\mathcal{N}(\boldsymbol z;\boldsymbol \mu,\boldsymbol \sigma^2)\log\frac{\mathcal N(\boldsymbol z;\boldsymbol\mu,\boldsymbol\sigma^2)}{\frac{1}{Y}\mathcal N(\boldsymbol z;\boldsymbol 0,\boldsymbol s^2)\left\{\frac{1}{2\pi}-\mathcal N(\boldsymbol z;\boldsymbol0,\boldsymbol 1)\right\}}\mathrm{d}\boldsymbol z
-\]</span></p>
-<p>展开后：</p>
-<p><span class="math display">\[
-\begin{align}
-\text{KL}\left[q(\boldsymbol z|\boldsymbol x;\phi)\parallel p_a(\boldsymbol z)\right]&amp;=
-\int_{-\infty}^\infty\mathcal{N}(\boldsymbol z;\boldsymbol \mu,\boldsymbol \sigma^2)\log\mathcal{N}(\boldsymbol z;\boldsymbol\mu,\boldsymbol\sigma^2)\mathrm{d}\boldsymbol z\\
-&amp;+\log Y\\
-&amp;-\int_{-\infty}^\infty\mathcal{N}(\boldsymbol z;\boldsymbol \mu,\boldsymbol \sigma^2)\log\mathcal{N}(\boldsymbol z;\boldsymbol 0,\boldsymbol s^2)\mathrm{d}\boldsymbol z\\
-&amp;-\int_{-\infty}^\infty\mathcal{N}(\boldsymbol z;\boldsymbol \mu,\boldsymbol \sigma^2)\log\left\{\frac{1}{\sqrt{2\pi}}-\mathcal{N}(\boldsymbol z;\boldsymbol 0, \boldsymbol 1)\right\}\mathrm{d}\boldsymbol z
-\end{align}
-\]</span></p>
-<p>使用泰勒展开，<span class="math inline">\(\log (x+\frac{1}{2\pi})\simeq-\log 2\pi+2\pi x\)</span>，KL散度可以用下式估计：</p>
-<p><span class="math display">\[
-\begin{align}
-\text{KL}\left[q(\boldsymbol z|\boldsymbol x;\phi)\parallel p_a(\boldsymbol z)\right]&amp;\simeq\sqrt{\frac{2\pi}{\boldsymbol\sigma^2+1}}\exp\left(\frac{-\boldsymbol\mu^2}{2(\boldsymbol\sigma^2+1)}\right)\\
-&amp;+\frac{\boldsymbol\mu^2+\boldsymbol\sigma^2}{2\boldsymbol s^2}-\log\boldsymbol\sigma+\log\boldsymbol s+\log\left(\sqrt{\boldsymbol s^2+1}-1\right)\\
-&amp;-\frac{\log(\boldsymbol s^2+1)}{2}+\frac{\log(2\pi)-1}{2}
-\end{align}
-\]</span></p>
-<p>下图为一维时<span class="math inline">\(p_n(\boldsymbol z)\)</span>和<span class="math inline">\(p_a(\boldsymbol z)\)</span>的示例：</p>
-<p><img src="http://qfxiao.me/img/image-20200109102255322.png" srcset="/img/loading.gif" /></p>
-<h3 id="implementation-of-proposed-method">Implementation of proposed method</h3>
-<p>文中使用编码器输出的分布<span class="math inline">\(\mathcal{N}(\boldsymbol z;\boldsymbol \mu, \boldsymbol \sigma^2)\)</span>与标准正态分布之间的KL散度来作为异常分数。在每一轮的训练过程中，加入一轮使用Anomaly Prior的训练。</p>
-<p><img src="http://qfxiao.me/img/image-20200109102309048.png" srcset="/img/loading.gif" /></p>
+<blockquote>
+<p><strong>Definition 2 </strong> <strong><em>Shapelet. </em></strong></p>
+</blockquote>
+<h1 id="framework">Framework</h1>
+<p><img src="http://qfxiao.me/img/image-20200311150951240.png" srcset="/img/loading.gif" /></p>
+<p><img src="http://qfxiao.me/img/image-20200311151009386.png" srcset="/img/loading.gif" /></p>
+<p><img src="http://qfxiao.me/img/image-20200311151016288.png" srcset="/img/loading.gif" /></p>
 <h1 id="experiments">Experiments</h1>
-<h2 id="mnist">MNIST</h2>
-<p>作者设计了两个Task：</p>
-<ol type="1">
-<li>Task 1. <span class="math inline">\(N\)</span> vs. <span class="math inline">\(\bar{N}\)</span>. 将手写数字中的一个作为已知异常，其他作为正常，并加入均匀分布作为未知的异常。</li>
-<li>Task 2. 手写数字被分为3组：已知异常，正常，未知异常。</li>
-</ol>
-<p>细节如下表所示：</p>
-<p><img src="http://qfxiao.me/img/image-20200109102402499.png" srcset="/img/loading.gif" /></p>
-<p>在实现上，使用Adam优化器，<code>batch_size</code>为100，<code>epochs</code>为200。<code>Encoder</code>和<code>Decoder</code>都由三层感知机组成，超参数<span class="math inline">\(s^2\)</span>设置为400。评测标准使用AUC (area under the receiver characteristic curve)。</p>
-<p>下表为实验结果：</p>
-<p><img src="http://qfxiao.me/img/image-20200109102343271.png" srcset="/img/loading.gif" /></p>
+<p><img src="http://qfxiao.me/img/image-20200311151034549.png" srcset="/img/loading.gif" /></p>
+<p><img src="http://qfxiao.me/img/image-20200311151044993.png" srcset="/img/loading.gif" /></p>
+<p><img src="http://qfxiao.me/img/image-20200311151055248.png" srcset="/img/loading.gif" /></p>
+<p><img src="http://qfxiao.me/img/image-20200311151106395.png" srcset="/img/loading.gif" /></p>
+<p><img src="http://qfxiao.me/img/image-20200311151116749.png" srcset="/img/loading.gif" /></p>
+<h1 id="details">Details</h1>
+<p><img src="http://qfxiao.me/img/image-20200311151332256.png" srcset="/img/loading.gif" /></p>
+<p><img src="http://qfxiao.me/img/image-20200311151346942.png" srcset="/img/loading.gif" /></p>
+<p><img src="http://qfxiao.me/img/image-20200311151356183.png" srcset="/img/loading.gif" /></p>
+<p><img src="http://qfxiao.me/img/image-20200311151405496.png" srcset="/img/loading.gif" /></p>
+<p><img src="http://qfxiao.me/img/image-20200311151415288.png" srcset="/img/loading.gif" /></p>
+<p><img src="http://qfxiao.me/img/image-20200311151429396.png" srcset="/img/loading.gif" /></p>
 
             </article>
             <hr>
@@ -282,7 +246,7 @@ Y=\int_{-\infty}^{\infty}p_a(\boldsymbol z)\mathrm{d}\boldsymbol z=\frac{1}{\sqr
                     
                       <a class="hover-with-bg" href="/categories/Research/">Research</a>
                     
-                      <a class="hover-with-bg" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+                      <a class="hover-with-bg" href="/categories/Research/Time-Series-Modeling/">Time Series Modeling</a>
                     
                   </div>
                 
@@ -290,9 +254,9 @@ Y=\int_{-\infty}^{\infty}p_a(\boldsymbol z)\mathrm{d}\boldsymbol z=\frac{1}{\sqr
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/VAE/">VAE</a>
+                      <a class="hover-with-bg" href="/tags/Time-Series/">Time Series</a>
                     
-                      <a class="hover-with-bg" href="/tags/Anomaly-Detection/">Anomaly Detection</a>
+                      <a class="hover-with-bg" href="/tags/Shapelet/">Shapelet</a>
                     
                   </div>
                 
@@ -305,18 +269,12 @@ Y=\int_{-\infty}^{\infty}p_a(\boldsymbol z)\mathrm{d}\boldsymbol z=\frac{1}{\sqr
                   <div class="post-prev col-6">
                     
                     
-                      <a href="/2020/01/31/Geant4-%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Geant4 安装教程与调试环境配置</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </div>
                   <div class="post-next col-6">
                     
                     
-                      <a href="/2020/01/08/Time-Series-Anomaly-Detection-Paper-List/">
-                        <span class="hidden-mobile">Time Series Anomaly Detection Paper List</span>
+                      <a href="/2020/06/06/An-Intuitive-Guide-to-Manifolds/">
+                        <span class="hidden-mobile">An Intuitive Guide to Manifolds</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -335,8 +293,8 @@ Y=\int_{-\infty}^{\infty}p_a(\boldsymbol z)\mathrm{d}\boldsymbol z=\frac{1}{\sqr
     <div id="disqus_thread"></div>
     <script type="text/javascript">
       var disqus_config = function () {
-        this.page.url = 'http://qfxiao.me/2020/01/09/Complementary-Set-Variational-Autoencoder-for-Supervised-Anomaly-Detection/';
-        this.page.identifier = '/2020/01/09/Complementary-Set-Variational-Autoencoder-for-Supervised-Anomaly-Detection/';
+        this.page.url = 'http://qfxiao.me/2020/06/13/Time2Graph-Revisiting-Time-Series-Modeling-with-Dynamic-Shapelets/';
+        this.page.identifier = '/2020/06/13/Time2Graph-Revisiting-Time-Series-Modeling-with-Dynamic-Shapelets/';
       };
       var oldLoadDq = window.onload;
       window.onload = function () {
@@ -486,7 +444,7 @@ Y=\int_{-\infty}^{\infty}p_a(\boldsymbol z)\mathrm{d}\boldsymbol z=\frac{1}{\sqr
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "Complementary Set Variational Autoencoder for Supervised Anomaly Detection&nbsp;",
+        "Time2Graph: Revisiting Time Series Modeling with Dynamic Shapelets&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 70,
