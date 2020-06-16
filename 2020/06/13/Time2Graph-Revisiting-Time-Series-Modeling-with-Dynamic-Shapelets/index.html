@@ -158,7 +158,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    304 字
+                    710 字
                   </span>
                 
 
@@ -168,7 +168,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    4
+                    10
                      分钟
                   </span>
                 
@@ -198,6 +198,7 @@
             
             <article class="markdown-body">
               <h1 id="introduction">Introduction</h1>
+<p>本文介绍了一种</p>
 <p><a href="https://arxiv.org/abs/1911.04143" target="_blank" rel="noopener">📰Get Paper</a></p>
 <h1 id="preliminaries">Preliminaries</h1>
 <p>时间序列集合<span class="math inline">\(T=\{t_1,\cdots,t_{|T|}\}\)</span>包含若干条时序数据<span class="math inline">\(t=\{x_1,\cdots,x_n\}\)</span>。一个<span class="math inline">\(t\)</span>的片段<span class="math inline">\(s\)</span>是<span class="math inline">\(t\)</span>的一个连续子序列。如果<span class="math inline">\(t\)</span>能被切分成<span class="math inline">\(m\)</span>个长度都为<span class="math inline">\(l\)</span>的片段，那么我们就有<span class="math inline">\(t=\{\{x_{l*k+1},\cdots,x_{l*k+l}\},0\leq k\leq m-1\}\)</span>。度量两个片段<span class="math inline">\(s_i\)</span>和<span class="math inline">\(s_j\)</span>之间距离的函数记为<span class="math inline">\(d(s_i,s_j)\)</span>，</p>
@@ -216,11 +217,40 @@ d_\text{DTW}(s_i,s_j)=\min_{a\in\mathcal{A}(s_i,s_j)}\tau(s_i,s_j|a)
 D(s,t)=\min_{1\leq k\leq m} d(s,s_k)
 \]</span></p>
 <blockquote>
-<p><strong>Definition 2 </strong> <strong><em>Shapelet. </em></strong></p>
+<p><strong>Definition 2 </strong> <strong>Shapelet. </strong> <span class="math display">\[
+\mathcal L=-g(S_{pos}(\boldsymbol v,T),S_{neg}(\boldsymbol v,T))
+\]</span> <span class="math inline">\(\mathcal L\)</span>描述了在shapelet <span class="math inline">\(\boldsymbol v\)</span>下正负样本集的相异性。<span class="math inline">\(S_{*}(\boldsymbol v,T)\)</span>表示</p>
 </blockquote>
 <h1 id="framework">Framework</h1>
 <p><img src="http://qfxiao.me/img/image-20200311150951240.png" srcset="/img/loading.gif" /></p>
+<h2 id="time-aware-shapelet-extraction">Time-Aware Shapelet Extraction</h2>
+<p>我们定义了两个参数来定量的测量shapelet在不同时间上的动态影响。第一个是局部因子<span class="math inline">\(\boldsymbol w_n\)</span>，用来控制shapelet内部<span class="math inline">\(n\)</span>个元素的权重，那么shapelet <span class="math inline">\(\boldsymbol v\)</span>和片段<span class="math inline">\(\boldsymbol s\)</span>的距离为： <span class="math display">\[
+\begin{align}
+\hat{d}(\boldsymbol v,\boldsymbol s|\boldsymbol w) &amp;= \tau(\boldsymbol v,\boldsymbol s|\boldsymbol a^*,\boldsymbol w)\\
+&amp; = \left(\sum_{k=1}^{p}\boldsymbol w_{\boldsymbol a^*_1(k)}\cdot(\boldsymbol v_{\boldsymbol a^*_1(k)}-\boldsymbol s_{\boldsymbol a^*_2(k)})^2\right)^{\frac{1}{2}}
+\end{align}
+\]</span> 其中<span class="math inline">\(\boldsymbol a^*\)</span>为DTW距离下的最佳对齐。</p>
+<p>第二个是全局因素<span class="math inline">\(\boldsymbol u_m\)</span>，这主要是通过对不同片段<span class="math inline">\(\boldsymbol s\)</span>施加不同的权重实现的，于是shapelet <span class="math inline">\(\boldsymbol v\)</span>和时间序列<span class="math inline">\(\boldsymbol t\)</span>的距离可以重写为： <span class="math display">\[
+\hat{D}(\boldsymbol v,\boldsymbol t|\boldsymbol w,\boldsymbol u)=\min_{1\leq k\leq m}\boldsymbol u_k\cdot\hat{d}(\boldsymbol v,\boldsymbol s_k|\boldsymbol w)
+\]</span> 其中<span class="math inline">\(\boldsymbol t\)</span>被分割为<span class="math inline">\(m\)</span>个片段：<span class="math inline">\(\boldsymbol t=\{\boldsymbol s_1,\cdots,\boldsymbol s_m\}\)</span>。</p>
+<p>计算shapelet候选集的算法如下：</p>
+<p><img src="http://qfxiao.me/img/image-20200311151332256.png" srcset="/img/loading.gif" /></p>
+<p>考虑使用shapelet解决时间序列二分类问题，我们有时序集合<span class="math inline">\(T\)</span>，以及shapelet候选集，</p>
+<p><span class="math display">\[
+\hat{\mathcal L}=-g(S_{pos}(\boldsymbol v,T),S_{neg}(\boldsymbol v,T))+\lambda\parallel \boldsymbol w\parallel+\epsilon\parallel \boldsymbol u\parallel
+\]</span></p>
+<p>整个过程</p>
+<p><img src="http://qfxiao.me/img/image-20200311151346942.png" srcset="/img/loading.gif" /></p>
+<h2 id="shapelet-evolution-graph">Shapelet Evolution Graph</h2>
+<blockquote>
+<p><strong>Definition 3 Shapelet Evolution Graph. </strong></p>
+</blockquote>
+<h3 id="graph-construction">Graph Construction</h3>
+<p><span class="math display">\[
+\boldsymbol p_{i,j}=\frac{\max(\hat{d}_{i,*}(\boldsymbol v_{i,*},\boldsymbol s_i))-\hat{d}_{i,j}(\boldsymbol v_{i,j},\boldsymbol s_i)}{\max(\hat{d}_{i,*}(\boldsymbol v_{i,*},\boldsymbol s_i))-\min(\hat{d}_{i,*}(\boldsymbol v_{i,*},\boldsymbol s_i))}
+\]</span></p>
 <p><img src="http://qfxiao.me/img/image-20200311151009386.png" srcset="/img/loading.gif" /></p>
+<h2 id="representation-learning">Representation Learning</h2>
 <p><img src="http://qfxiao.me/img/image-20200311151016288.png" srcset="/img/loading.gif" /></p>
 <h1 id="experiments">Experiments</h1>
 <p><img src="http://qfxiao.me/img/image-20200311151034549.png" srcset="/img/loading.gif" /></p>
@@ -229,8 +259,6 @@ D(s,t)=\min_{1\leq k\leq m} d(s,s_k)
 <p><img src="http://qfxiao.me/img/image-20200311151106395.png" srcset="/img/loading.gif" /></p>
 <p><img src="http://qfxiao.me/img/image-20200311151116749.png" srcset="/img/loading.gif" /></p>
 <h1 id="details">Details</h1>
-<p><img src="http://qfxiao.me/img/image-20200311151332256.png" srcset="/img/loading.gif" /></p>
-<p><img src="http://qfxiao.me/img/image-20200311151346942.png" srcset="/img/loading.gif" /></p>
 <p><img src="http://qfxiao.me/img/image-20200311151356183.png" srcset="/img/loading.gif" /></p>
 <p><img src="http://qfxiao.me/img/image-20200311151405496.png" srcset="/img/loading.gif" /></p>
 <p><img src="http://qfxiao.me/img/image-20200311151415288.png" srcset="/img/loading.gif" /></p>
