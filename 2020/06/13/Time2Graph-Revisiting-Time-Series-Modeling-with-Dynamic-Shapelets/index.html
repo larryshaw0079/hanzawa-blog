@@ -158,7 +158,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    710 字
+                    933 字
                   </span>
                 
 
@@ -168,7 +168,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    10
+                    13
                      分钟
                   </span>
                 
@@ -198,7 +198,7 @@
             
             <article class="markdown-body">
               <h1 id="introduction">Introduction</h1>
-<p>本文介绍了一种</p>
+<p>本文旨在提供一种可解释的高效的时间序列建模（表示学习）方法来更好地服务分类任务。Shapelet在时间序列分类任务上体现了良好的可解释性。不过传统的基于Shapelet的方法忽略了Shapelet在不同时间片段上的动态性，即整个时间维度上不同的时间片段可能适合用不同的Shapelet。作者基于此设计了动态的<em>time-aware shapelet</em>，并且定义了<em>shapelet evolution graph</em>来捕获Shapelet在时间维度上的动态变化。</p>
 <p><a href="https://arxiv.org/abs/1911.04143" target="_blank" rel="noopener">📰Get Paper</a></p>
 <h1 id="preliminaries">Preliminaries</h1>
 <p>时间序列集合<span class="math inline">\(T=\{t_1,\cdots,t_{|T|}\}\)</span>包含若干条时序数据<span class="math inline">\(t=\{x_1,\cdots,x_n\}\)</span>。一个<span class="math inline">\(t\)</span>的片段<span class="math inline">\(s\)</span>是<span class="math inline">\(t\)</span>的一个连续子序列。如果<span class="math inline">\(t\)</span>能被切分成<span class="math inline">\(m\)</span>个长度都为<span class="math inline">\(l\)</span>的片段，那么我们就有<span class="math inline">\(t=\{\{x_{l*k+1},\cdots,x_{l*k+l}\},0\leq k\leq m-1\}\)</span>。度量两个片段<span class="math inline">\(s_i\)</span>和<span class="math inline">\(s_j\)</span>之间距离的函数记为<span class="math inline">\(d(s_i,s_j)\)</span>，</p>
@@ -235,7 +235,7 @@ D(s,t)=\min_{1\leq k\leq m} d(s,s_k)
 \]</span> 其中<span class="math inline">\(\boldsymbol t\)</span>被分割为<span class="math inline">\(m\)</span>个片段：<span class="math inline">\(\boldsymbol t=\{\boldsymbol s_1,\cdots,\boldsymbol s_m\}\)</span>。</p>
 <p>计算shapelet候选集的算法如下：</p>
 <p><img src="http://qfxiao.me/img/image-20200311151332256.png" srcset="/img/loading.gif" /></p>
-<p>考虑使用shapelet解决时间序列二分类问题，我们有时序集合<span class="math inline">\(T\)</span>，以及shapelet候选集，</p>
+<p>考虑使用shapelet解决时间序列二分类问题，我们有带有标签的时序集合<span class="math inline">\(T\)</span>，以及shapelet候选集，</p>
 <p><span class="math display">\[
 \hat{\mathcal L}=-g(S_{pos}(\boldsymbol v,T),S_{neg}(\boldsymbol v,T))+\lambda\parallel \boldsymbol w\parallel+\epsilon\parallel \boldsymbol u\parallel
 \]</span></p>
@@ -246,11 +246,16 @@ D(s,t)=\min_{1\leq k\leq m} d(s,s_k)
 <p><strong>Definition 3 Shapelet Evolution Graph. </strong></p>
 </blockquote>
 <h3 id="graph-construction">Graph Construction</h3>
+<p>我们首先将每个时序的每一个片段<span class="math inline">\(\boldsymbol s_i\)</span>和最近的shapelet关联起来。对于<span class="math inline">\(\boldsymbol s_i\)</span>的shapetlet记为<span class="math inline">\(\boldsymbol v_{i,*}\)</span></p>
 <p><span class="math display">\[
 \boldsymbol p_{i,j}=\frac{\max(\hat{d}_{i,*}(\boldsymbol v_{i,*},\boldsymbol s_i))-\hat{d}_{i,j}(\boldsymbol v_{i,j},\boldsymbol s_i)}{\max(\hat{d}_{i,*}(\boldsymbol v_{i,*},\boldsymbol s_i))-\min(\hat{d}_{i,*}(\boldsymbol v_{i,*},\boldsymbol s_i))}
 \]</span></p>
+<p>其中<span class="math inline">\(\hat{d}_{i,*}(\boldsymbol v_{i,*},\boldsymbol s_i)=\boldsymbol u_*[i]*\hat{d}(\boldsymbol v_{i,*},\boldsymbol s_i|\boldsymbol w_*)\)</span>，</p>
 <p><img src="http://qfxiao.me/img/image-20200311151009386.png" srcset="/img/loading.gif" /></p>
 <h2 id="representation-learning">Representation Learning</h2>
+<p><span class="math display">\[
+\boldsymbol\Phi_i=\left(\sum_j p_{i,j}\cdot\boldsymbol \mu(\boldsymbol v_{i,j})\right),\space 1\leq i \leq m
+\]</span></p>
 <p><img src="http://qfxiao.me/img/image-20200311151016288.png" srcset="/img/loading.gif" /></p>
 <h1 id="experiments">Experiments</h1>
 <p><img src="http://qfxiao.me/img/image-20200311151034549.png" srcset="/img/loading.gif" /></p>
