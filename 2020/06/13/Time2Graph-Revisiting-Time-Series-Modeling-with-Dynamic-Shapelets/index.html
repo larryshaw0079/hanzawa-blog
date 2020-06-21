@@ -158,7 +158,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    1.7k 字
+                    2.2k 字
                   </span>
                 
 
@@ -168,7 +168,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    22
+                    28
                      分钟
                   </span>
                 
@@ -257,27 +257,36 @@ D(s,t)=\min_{1\leq k\leq m} d(s,s_k)
 <p>其中<span class="math inline">\(\hat{d}_{i,*}(\boldsymbol v_{i,*},\boldsymbol s_i)=\boldsymbol u_*[i]*\hat{d}(\boldsymbol v_{i,*},\boldsymbol s_i|\boldsymbol w_*)&lt;\delta\)</span>。对每一对相邻的片段<span class="math inline">\((\boldsymbol s_i,\boldsymbol s_{i+1})\)</span>的Shapelet <span class="math inline">\(\boldsymbol v_{i,j}\)</span>和<span class="math inline">\(\boldsymbol v_{i+1,k}\)</span>，我们创建一条连接<span class="math inline">\(\boldsymbol v_{*,j}\)</span>和<span class="math inline">\(\boldsymbol v_{*,k}\)</span>的边<span class="math inline">\(e_{j,k}\)</span>，权重为<span class="math inline">\(\boldsymbol p_{i,j}\cdot\boldsymbol p_{i+1,k}\)</span>。最后，所有重复的边会被合并。建图的算法流程图如下：</p>
 <p><img src="http://qfxiao.me/img/image-20200311151009386.png" srcset="/img/loading.gif" /></p>
 <h2 id="representation-learning">Representation Learning</h2>
-<p>之后，我们使用DeepWalk算法来获取获取每个结点（Shapelet）的嵌入表示。对于时序<span class="math inline">\(\boldsymbol t=\{\boldsymbol s_1,\cdots,\boldsymbol s_m\}\)</span>即对应的Shapelet <span class="math inline">\(\{\boldsymbol v_{1,*},\cdots, v_{m,*}\}\)</span>和对应的概率<span class="math inline">\(\{\boldsymbol p_{1,*},\cdots,\boldsymbol p_{m,*}\}\)</span>，每个Shaplet <span class="math inline">\(\boldsymbol v_{i,j}\)</span>的表示记为<span class="math inline">\(\boldsymbol \mu(\boldsymbol v_{i,j})\)</span>。</p>
+<p>之后，我们使用DeepWalk算法来获取获取每个结点（Shapelet）的嵌入表示。对于时序<span class="math inline">\(\boldsymbol t=\{\boldsymbol s_1,\cdots,\boldsymbol s_m\}\)</span>即对应的Shapelet <span class="math inline">\(\{\boldsymbol v_{1,*},\cdots, v_{m,*}\}\)</span>和对应的概率<span class="math inline">\(\{\boldsymbol p_{1,*},\cdots,\boldsymbol p_{m,*}\}\)</span>，每个Shaplet <span class="math inline">\(\boldsymbol v_{i,j}\)</span>的表示记为<span class="math inline">\(\boldsymbol \mu(\boldsymbol v_{i,j})\)</span>。片段<span class="math inline">\(\boldsymbol s_i\)</span>对应的嵌入向量为对应的Shapelet嵌入向量与对应的概率值加权求和：</p>
 <p><span class="math display">\[
 \boldsymbol\Phi_i=\left(\sum_j p_{i,j}\cdot\boldsymbol \mu(\boldsymbol v_{i,j})\right),\space 1\leq i \leq m
 \]</span></p>
+<p>算法流程如下：</p>
 <p><img src="http://qfxiao.me/img/image-20200311151016288.png" srcset="/img/loading.gif" /></p>
 <h1 id="experiments">Experiments</h1>
 <h2 id="experimental-setup">Experimental Setup</h2>
+<p>文中用了<em>Earthquakes</em> (EQS)、<em>WormsTwoClass</em> (WTC)、<em>Strawberry</em> (STB)、<em>Electricity Consumption Records</em> (ECR)和<em>Network Traffic Flow</em> (NTF) 这五个数据集，其中后两个为作者自己收集的数据集。五个数据集对应的统计信息如下：</p>
 <p><img src="http://qfxiao.me/img/image-20200311151034549.png" srcset="/img/loading.gif" /></p>
+<p>文中与多个Baseline进行了比较，包括:</p>
+<ul>
+<li><strong>Distance-based Models: </strong>文中使用了不同的距离度量与基于1-NN的模型进行组合，包括Euclidean Distance (ED)、Dynamic Time Warping (DTW)、Weighted DTW (WDTW)、Complexity-Invariant Distance (CID) 和 Derivative DTW (DDTW)；</li>
+<li><strong>Feature-based Models: </strong>文中分别使用了提取特征（均值、标准差等）和原始序列来训练XGBoost。除此之外，还使用了 Bag-of-Patterns (BoP)、Time Series Forest (TSF)、Elastic Ensembles (EE) 和 基于SAX的 Vector Space Model (SAXVSM)；</li>
+<li><strong>Shapelet-based Models: </strong>这部分模型包括 Learn Time Series Shapelets (LS)、Fast Shapelets (FS)、和 Learned Pattern Similarity (LPS)；</li>
+<li><strong>Deep Learning Models: </strong>这部分模型包括MLP、LSTM和VAE。</li>
+</ul>
 <h2 id="comparison-results">Comparison Results</h2>
+<p>对于前三个公共数据集评测标准采用Accuracy，后两个数据集因为样本类比不均衡，所以采用了Precision、Recall和F1作为评测标准。结果如下：</p>
 <p><img src="http://qfxiao.me/img/image-20200311151044993.png" srcset="/img/loading.gif" /></p>
+<p>在EQS数据集上，Time2Graph打败了所有Baseline，而在WTC和STB这两个数据集上也达到了较好的效果。在ECR和NTF这两个真实数据集上，Time2Graph在F1上打败了所有Baseline。</p>
 <h2 id="parameter-analysis">Parameter Analysis</h2>
+<p>本节对Shapelet的数量<span class="math inline">\(K\)</span>、嵌入维度<span class="math inline">\(B\)</span>和片段长度<span class="math inline">\(l\)</span>进行了参数分析。结果如下：</p>
 <p><img src="http://qfxiao.me/img/image-20200311151055248.png" srcset="/img/loading.gif" /></p>
 <h2 id="case-study-of-time-aware-shapelets">Case Study of Time-Aware Shapelets</h2>
-<h2 id="case-study-of-the-shapelet-evolution-graph">Case Study of the Shapelet Evolution Graph</h2>
-<p><img src="http://qfxiao.me/img/image-20200311151106395.png" srcset="/img/loading.gif" /></p>
+<p>本节作者对提出的<em>Time-Aware Shapetlet</em>进行了细致的探究。</p>
 <p><img src="http://qfxiao.me/img/image-20200311151116749.png" srcset="/img/loading.gif" /></p>
-<h1 id="details">Details</h1>
-<p><img src="http://qfxiao.me/img/image-20200311151356183.png" srcset="/img/loading.gif" /></p>
-<p><img src="http://qfxiao.me/img/image-20200311151405496.png" srcset="/img/loading.gif" /></p>
-<p><img src="http://qfxiao.me/img/image-20200311151415288.png" srcset="/img/loading.gif" /></p>
-<p><img src="http://qfxiao.me/img/image-20200311151429396.png" srcset="/img/loading.gif" /></p>
+<h2 id="case-study-of-the-shapelet-evolution-graph">Case Study of the Shapelet Evolution Graph</h2>
+<p>本节作者对<em>Shapelet Evolution Graph</em>进行了细致的探究。下图分别为一月份和七月份的<em>Shapelet Evolution Graph</em>。在一月，45号Shapelet的度较大，而且对应的时间因素在一月和二月也较大（图中深色部分）。说明45号Shapelet在一月份具有代表性。而在七月，45号Shapelet的重要性降低，而42号Shapelet在七月的重要性很高。</p>
+<p><img src="http://qfxiao.me/img/image-20200311151106395.png" srcset="/img/loading.gif" /></p>
 
             </article>
             <hr>
