@@ -8,7 +8,7 @@
     <link href="/2020/06/22/PRML-Notes-Probability-Distributions-1/"/>
     <url>/2020/06/22/PRML-Notes-Probability-Distributions-1/</url>
     
-    <content type="html"><![CDATA[<h1 id="overview">Overview</h1><p>这是PRML (Pattern Recognition and Machine Learning) 第二章<code>Probability Distributions</code>笔记的第一部分，主要包括<code>2.1. Binary Variables</code>和<code>2.2. Multinomial Variables</code>这两节。</p><h1 id="probability-distributions-for-binary-variables">Probability Distributions for Binary Variables</h1><h2 id="intro">Intro</h2><p>这一节主要针对二值随机变量的建模，即<span class="math inline">\(x\in\{0,1\}\)</span>。这里可以想象为我们有一个硬币，<span class="math inline">\(x=1\)</span>代表正面朝上，而<span class="math inline">\(x=0\)</span>代表反面朝上，并且正面朝上的概率为<span class="math inline">\(\mu\)</span>，即： <span class="math display">\[p(x=1|\mu)=\mu\]</span> 其中<span class="math inline">\(0\leqslant \mu \leqslant 1\)</span>。<span class="math inline">\(x\)</span>的概率分布可以写为： <span class="math display">\[\text{Bern}(x|\mu)=\mu^x(1-\mu)^{1-x}\]</span> 也就是我们熟知的<strong>伯努利分布 (Bernoulli Distribution)</strong>。其均值和方差分别为： <span class="math display">\[\begin{align}\mathbb E[x]&amp;=\mu\\\text{var}[x] &amp;= \mu(1-\mu)\end{align}\]</span> 现在来考虑参数估计任务。假设我们正在进行一个投硬币的实验，每一次投币都服从伯努利分布且相互独立，我们将每次采集到的观测值组成数据集<span class="math inline">\(\mathcal D=\{x_1,\cdots,x_N\}\)</span>，则似然函数为： <span class="math display">\[p(\mathcal D|\mu)=\prod_{n=1}^N p(x_n|\mu)=\prod_{n=1}^N \mu^{x_n}(1-\mu)^{1-x_n}\]</span> 如果采用极大似然估计的话，我们可以最大化似然函数，这等价于最大化对数似然： <span class="math display">\[\ln p(\mathcal D|\mu)=\sum_{n=1}^{N}\ln p(x_n|\mu)=\sum_{n=1}^N\{x_n\ln\mu+(1-x_n)\ln(1-\mu)\}\]</span> 令其导数为0得到极值点： <span class="math display">\[\mu_{ML}=\frac{1}{N}\sum_{n=1}^N x_n\]</span> 这相当于样本均值，不过这样做会有严重的问题。假设我们的数据集为<span class="math inline">\(\mathcal D=\{1,1,1\}\)</span>，也就是说我们只收集到了三个样本，并且都是正例，我们会得到<span class="math inline">\(\mu_{ML}=1\)</span>，而这显然是严重过拟合的。稍后我们会说说如何应对这种情况（加入先验）。</p><h2 id="binomial-distribution">Binomial Distribution</h2><p>我们同样可以对多次伯努利实验进行概率建模。记<span class="math inline">\(m\)</span>为成功的次数，<span class="math inline">\(N\)</span>为数据集大小，可知这个概率应该与<span class="math inline">\(\mu^m(1-\mu)^{N-m}\)</span>成正比。乘以标准化系数后即我们熟知的<strong>二项分布 (Binomial Distribution)</strong>： <span class="math display">\[\text{Bin}(m|N,\mu)=\binom{N}{m}\mu^m(1-\mu)^{N-m}\]</span></p><p>其中： <span class="math display">\[\binom{N}{m}=\frac{N!}{(N-m)!m!}\]</span> 其均值和方差分别为： <span class="math display">\[\begin{align}\mathbb E[m]&amp;=N\mu\\\text{var}[m]&amp;=N\mu(1-\mu)\end{align}\]</span></p><h2 id="gamma-function">Gamma Function</h2><iframe src="http://qfxiao.me/html/surface_wave.html"></iframe><p>对于任何实部大于<span class="math inline">\(0\)</span>的复数<span class="math inline">\(x\)</span>，Gamma函数的定义为： <span class="math display">\[\Gamma(x)=\int_0^{\infty}s^{x-1}e^{-s}\mathrm d s\]</span> Gamma函数有一个性质： <span class="math display">\[\Gamma(x+1)=x\Gamma(x)\]</span> 证明为： <span class="math display">\[\begin{align*}\Gamma(x+1) &amp;= \int_{0}^{\infty} {s^{x} e^{-s} ds} \\&amp;= \big[s^{x} (-e^{-s})\big] \big|_{0}^{\infty} - \int_{0}^{\infty} {(x s^{x-1}) (-e^{-s}) ds} \\&amp;= (0 - 0) + x \int_{0}^{\infty} {s^{x-1} e^{-s} ds} \\&amp;= x \Gamma(x)\end{align*}\]</span></p><p><span class="math display">\[\Gamma(1)=1\\\Gamma(\frac{1}{2})=\sqrt{\pi}\]</span></p><h2 id="beta-distribution">Beta Distribution</h2><p>现在我们来讨论如何解决刚才提到的最大似然估计过拟合问题。为了解决这个问题，我们使用贝叶斯的思路，对<span class="math inline">\(\mu\)</span>引入了先验分布<span class="math inline">\(p(\mu)\)</span>。而这个分布需要具有良好的解释性和数学性质。</p><p>根据贝叶斯定理： <span class="math display">\[p(\mu|\mathcal D)=\frac{p(\mathcal D|\mu)p(\mu)}{p(\mathcal D)}\]</span> 而<span class="math inline">\(p(\mathcal D)=\int_0^1 p(\mathcal D|\mu)p(\mu)\mathrm d\mu\)</span>只受数据集影响，而数据集是固定的，所以为常数，因此<span class="math inline">\(p(\mu|\mathcal D)\propto p(\mathcal D|\mu)p(\mu)\)</span>。</p><p>Beta分布<span class="math inline">\(P(\mu|\boldsymbol \alpha,\beta)\sim \text{Beta}(\boldsymbol\alpha,\beta)\)</span> <span class="math display">\[\begin{align}P(\mu|\alpha,\beta) &amp;= \frac{\Gamma(\alpha+\beta)}{\Gamma(\alpha)\Gamma(\beta)}\mu^{\alpha-1}(1-\mu)^{\beta-1}\\ &amp;= \frac{1}{B(\alpha,\beta)}\mu^{\alpha-1}(1-\mu)^{\beta-1}\end{align}\]</span> <span class="math inline">\(B(\boldsymbol \alpha,\beta)\)</span>称为B函数，为一个标准化函数： <span class="math display">\[\begin{align}B(\alpha,\beta) = \frac{\Gamma(\alpha)\Gamma(\beta)}{\Gamma(\alpha+\beta)}\end{align}\]</span> 其目的是为了使整个概率分布积分等于1而存在的。 <span class="math display">\[\mathbb E[\mu]=\frac{\alpha}{\alpha+\beta}\\\text{var}[\mu]=\frac{\alpha\beta}{(\alpha+\beta)^2(\alpha+\beta+1)}\]</span></p><p><img src="http://qfxiao.me/img/image-20200509233713635.png" srcset="/img/loading.gif" style="zoom:67%;" /></p><p>现在我们有了作为<span class="math inline">\(p(\mu)\)</span>先验的Beta分布以及服从伯努利分布的<span class="math inline">\(p(x_n)\)</span>，那么后验分布可以写成： <span class="math display">\[p(\mu|m,l,\alpha,\beta)\propto \mu^{m+\alpha-1}(1-\mu)^{l+b-1}\]</span> 其中<span class="math inline">\(l=N-m\)</span>，代表失败的次数，<span class="math inline">\(m\)</span>代表成功的次数。 <span class="math display">\[\begin{align}p(\mu|m,l,\alpha,\beta)&amp;=\frac{\Gamma(m+\alpha+l+\beta)}{\Gamma(m+a)\Gamma(l+b)}\mu^{m+a-1}(1-\mu)^{l+b-1}\\&amp;=\text{Beta}(\alpha+m,\beta+l)\end{align}\]</span></p><h1 id="probability-distributions-for-multinomial-variables">Probability Distributions for Multinomial Variables</h1><h2 id="intro-1">Intro</h2><p>设一个<span class="math inline">\(K\)</span>维向量<span class="math inline">\(\mathbf x\)</span>，当<span class="math inline">\(x_k\)</span>为<span class="math inline">\(1\)</span>的时候其他元素都为<span class="math inline">\(0\)</span>，如<span class="math inline">\(K=6,x_3=1\)</span>时<span class="math inline">\(\mathbf x\)</span>表示为<span class="math inline">\(\mathbf x=(0,0,1,0,0,0)^\top\)</span>。如果<span class="math inline">\(p(x_k=1)=\mu_k\)</span>，那么<span class="math inline">\(\mathbf x\)</span>的概率分布为： <span class="math display">\[p(\mathbf x|\boldsymbol \mu)=\prod_{k=1}^{K}\mu_k^{x_k}\]</span> <span class="math inline">\(\mu_k\)</span>满足<span class="math inline">\(\sum_k \mu_k=1\)</span>。假设我们有大小为<span class="math inline">\(N\)</span>的数据集<span class="math inline">\(\mathcal D\)</span>，每个样本服从该分布，那么似然函数： <span class="math display">\[p(\mathcal D|\boldsymbol \mu)=\prod_{n=1}^N\prod_{k=1}^K \mu_k^{x_{nk}}=\prod_{k=1}^K \mu_k^{\sum_n x_{nk}}=\prod_{k=1}^K\mu_k^{m_k}\]</span> 其中<span class="math inline">\(m_k=\sum_n x_{nk}\)</span>，即<span class="math inline">\(x_k=1\)</span>的数量。为了最大化对数似然同时保证<span class="math inline">\(\sum_k \mu_k=1\)</span>，我们可以用拉格朗日乘子法： <span class="math display">\[\sum_{k=1}^K m_k\ln \mu_k+\lambda\left(\sum_{k=1}^K\mu_k-1\right)\]</span> 我们得到<span class="math inline">\(\mu_k=-m_k/\lambda\)</span>。通过<span class="math inline">\(\sum_k \mu_k=1\)</span>得出<span class="math inline">\(\lambda=-N\)</span>，故最后我们有： <span class="math display">\[\mu_k^{ML}=\frac{m_k}{N}\]</span></p><h2 id="multinomial-distribution">Multinomial Distribution</h2><p><span class="math display">\[\text{Mult}(m_1,m_2,\cdots,m_K|\boldsymbol\mu,N)=\binom{N}{m_1m_2\cdots m_K}\prod_{k=1}^K\mu_k^{m_k}\]</span></p><h2 id="dirichlet-distribution">Dirichlet Distribution</h2><p>共轭先验</p><p><span class="math display">\[p(\boldsymbol \mu|\boldsymbol \alpha) \propto \prod_{k=1}^{K}\mu_k^{a_{k-1}}\]</span></p><p><span class="math display">\[\text{Dir}(\boldsymbol \mu|\boldsymbol\alpha)=\frac{\Gamma(\alpha_0)}{\Gamma(\alpha_1)\cdots\Gamma(\alpha_K)}\prod_{k=1}^K\mu_k^{a_{k-1}}\]</span></p><p><img src="http://qfxiao.me/img/image-20200510005021180.png" srcset="/img/loading.gif" style="zoom:67%;" /></p><p><span class="math display">\[p(\boldsymbol\mu|\mathcal D,\boldsymbol\alpha)\propto p(\mathcal D|\boldsymbol\mu)p(\boldsymbol\mu|\boldsymbol\alpha)\propto\prod_{k=1}^K \mu_k^{\alpha_k+m_k-1}\]</span></p><p><span class="math display">\[\begin{align}p(\boldsymbol\mu|\mathcal D,\boldsymbol\alpha) &amp;= \text{Dir}(\boldsymbol\mu|\boldsymbol\alpha+\mathbf m)\\&amp;=\frac{\Gamma(\alpha_0+N)}{\Gamma(\alpha_1+m_1)\cdots\Gamma(\alpha_K+m_K)}\prod_{k=1}^K\mu_k^{\alpha_k+m_k-1}\end{align}\]</span></p><p><img src="http://qfxiao.me/img/image-20200510005507729.png" srcset="/img/loading.gif" /></p>]]></content>
+    <content type="html"><![CDATA[<h1 id="overview">Overview</h1><p>这是PRML (Pattern Recognition and Machine Learning) 第二章<code>Probability Distributions</code>笔记的第一部分，主要包括<code>2.1. Binary Variables</code>和<code>2.2. Multinomial Variables</code>这两节。</p><h1 id="probability-distributions-for-binary-variables">Probability Distributions for Binary Variables</h1><h2 id="intro">Intro</h2><p>这一节主要针对二值随机变量的建模，即<span class="math inline">\(x\in\{0,1\}\)</span>。这里可以想象为我们有一个硬币，<span class="math inline">\(x=1\)</span>代表正面朝上，而<span class="math inline">\(x=0\)</span>代表反面朝上，并且正面朝上的概率为<span class="math inline">\(\mu\)</span>，即： <span class="math display">\[p(x=1|\mu)=\mu\]</span> 其中<span class="math inline">\(0\leqslant \mu \leqslant 1\)</span>。<span class="math inline">\(x\)</span>的概率分布可以写为： <span class="math display">\[\text{Bern}(x|\mu)=\mu^x(1-\mu)^{1-x}\]</span> 也就是我们熟知的<strong>伯努利分布 (Bernoulli Distribution)</strong>。其均值和方差分别为： <span class="math display">\[\begin{align}\mathbb E[x]&amp;=\mu\\\text{var}[x] &amp;= \mu(1-\mu)\end{align}\]</span> 现在来考虑参数估计任务。假设我们正在进行一个投硬币的实验，每一次投币都服从伯努利分布且相互独立，我们将每次采集到的观测值组成数据集<span class="math inline">\(\mathcal D=\{x_1,\cdots,x_N\}\)</span>，则似然函数为： <span class="math display">\[p(\mathcal D|\mu)=\prod_{n=1}^N p(x_n|\mu)=\prod_{n=1}^N \mu^{x_n}(1-\mu)^{1-x_n}\]</span> 如果采用极大似然估计的话，我们可以最大化似然函数，这等价于最大化对数似然： <span class="math display">\[\ln p(\mathcal D|\mu)=\sum_{n=1}^{N}\ln p(x_n|\mu)=\sum_{n=1}^N\{x_n\ln\mu+(1-x_n)\ln(1-\mu)\}\]</span> 令其导数为0得到极值点： <span class="math display">\[\mu_{ML}=\frac{1}{N}\sum_{n=1}^N x_n\]</span> 这相当于样本均值，不过这样做会有严重的问题。假设我们的数据集为<span class="math inline">\(\mathcal D=\{1,1,1\}\)</span>，也就是说我们只收集到了三个样本，并且都是正例，我们会得到<span class="math inline">\(\mu_{ML}=1\)</span>，而这显然是严重过拟合的。稍后我们会说说如何应对这种情况（加入先验）。</p><h2 id="binomial-distribution">Binomial Distribution</h2><p>我们同样可以对多次伯努利实验进行概率建模。记<span class="math inline">\(m\)</span>为成功的次数，<span class="math inline">\(N\)</span>为数据集大小，可知这个概率应该与<span class="math inline">\(\mu^m(1-\mu)^{N-m}\)</span>成正比。乘以标准化系数后即我们熟知的<strong>二项分布 (Binomial Distribution)</strong>： <span class="math display">\[\text{Bin}(m|N,\mu)=\binom{N}{m}\mu^m(1-\mu)^{N-m}\]</span></p><p>其中： <span class="math display">\[\binom{N}{m}=\frac{N!}{(N-m)!m!}\]</span> 其均值和方差分别为： <span class="math display">\[\begin{align}\mathbb E[m]&amp;=N\mu\\\text{var}[m]&amp;=N\mu(1-\mu)\end{align}\]</span></p><h2 id="gamma-function">Gamma Function</h2><iframe width="100%" src="http://qfxiao.me/html/surface_wave.html"></iframe><p>对于任何实部大于<span class="math inline">\(0\)</span>的复数<span class="math inline">\(x\)</span>，Gamma函数的定义为： <span class="math display">\[\Gamma(x)=\int_0^{\infty}s^{x-1}e^{-s}\mathrm d s\]</span> Gamma函数有一个性质： <span class="math display">\[\Gamma(x+1)=x\Gamma(x)\]</span> 证明为： <span class="math display">\[\begin{align*}\Gamma(x+1) &amp;= \int_{0}^{\infty} {s^{x} e^{-s} ds} \\&amp;= \big[s^{x} (-e^{-s})\big] \big|_{0}^{\infty} - \int_{0}^{\infty} {(x s^{x-1}) (-e^{-s}) ds} \\&amp;= (0 - 0) + x \int_{0}^{\infty} {s^{x-1} e^{-s} ds} \\&amp;= x \Gamma(x)\end{align*}\]</span></p><p><span class="math display">\[\Gamma(1)=1\\\Gamma(\frac{1}{2})=\sqrt{\pi}\]</span></p><h2 id="beta-distribution">Beta Distribution</h2><p>现在我们来讨论如何解决刚才提到的最大似然估计过拟合问题。为了解决这个问题，我们使用贝叶斯的思路，对<span class="math inline">\(\mu\)</span>引入了先验分布<span class="math inline">\(p(\mu)\)</span>。而这个分布需要具有良好的解释性和数学性质。</p><p>根据贝叶斯定理： <span class="math display">\[p(\mu|\mathcal D)=\frac{p(\mathcal D|\mu)p(\mu)}{p(\mathcal D)}\]</span> 而<span class="math inline">\(p(\mathcal D)=\int_0^1 p(\mathcal D|\mu)p(\mu)\mathrm d\mu\)</span>只受数据集影响，而数据集是固定的，所以为常数，因此<span class="math inline">\(p(\mu|\mathcal D)\propto p(\mathcal D|\mu)p(\mu)\)</span>。</p><p>Beta分布<span class="math inline">\(P(\mu|\boldsymbol \alpha,\beta)\sim \text{Beta}(\boldsymbol\alpha,\beta)\)</span> <span class="math display">\[\begin{align}P(\mu|\alpha,\beta) &amp;= \frac{\Gamma(\alpha+\beta)}{\Gamma(\alpha)\Gamma(\beta)}\mu^{\alpha-1}(1-\mu)^{\beta-1}\\ &amp;= \frac{1}{B(\alpha,\beta)}\mu^{\alpha-1}(1-\mu)^{\beta-1}\end{align}\]</span> <span class="math inline">\(B(\boldsymbol \alpha,\beta)\)</span>称为B函数，为一个标准化函数： <span class="math display">\[\begin{align}B(\alpha,\beta) = \frac{\Gamma(\alpha)\Gamma(\beta)}{\Gamma(\alpha+\beta)}\end{align}\]</span> 其目的是为了使整个概率分布积分等于1而存在的。 <span class="math display">\[\mathbb E[\mu]=\frac{\alpha}{\alpha+\beta}\\\text{var}[\mu]=\frac{\alpha\beta}{(\alpha+\beta)^2(\alpha+\beta+1)}\]</span></p><p><img src="http://qfxiao.me/img/image-20200509233713635.png" srcset="/img/loading.gif" style="zoom:67%;" /></p><p>现在我们有了作为<span class="math inline">\(p(\mu)\)</span>先验的Beta分布以及服从伯努利分布的<span class="math inline">\(p(x_n)\)</span>，那么后验分布可以写成： <span class="math display">\[p(\mu|m,l,\alpha,\beta)\propto \mu^{m+\alpha-1}(1-\mu)^{l+b-1}\]</span> 其中<span class="math inline">\(l=N-m\)</span>，代表失败的次数，<span class="math inline">\(m\)</span>代表成功的次数。 <span class="math display">\[\begin{align}p(\mu|m,l,\alpha,\beta)&amp;=\frac{\Gamma(m+\alpha+l+\beta)}{\Gamma(m+a)\Gamma(l+b)}\mu^{m+a-1}(1-\mu)^{l+b-1}\\&amp;=\text{Beta}(\alpha+m,\beta+l)\end{align}\]</span></p><h1 id="probability-distributions-for-multinomial-variables">Probability Distributions for Multinomial Variables</h1><h2 id="intro-1">Intro</h2><p>设一个<span class="math inline">\(K\)</span>维向量<span class="math inline">\(\mathbf x\)</span>，当<span class="math inline">\(x_k\)</span>为<span class="math inline">\(1\)</span>的时候其他元素都为<span class="math inline">\(0\)</span>，如<span class="math inline">\(K=6,x_3=1\)</span>时<span class="math inline">\(\mathbf x\)</span>表示为<span class="math inline">\(\mathbf x=(0,0,1,0,0,0)^\top\)</span>。如果<span class="math inline">\(p(x_k=1)=\mu_k\)</span>，那么<span class="math inline">\(\mathbf x\)</span>的概率分布为： <span class="math display">\[p(\mathbf x|\boldsymbol \mu)=\prod_{k=1}^{K}\mu_k^{x_k}\]</span> <span class="math inline">\(\mu_k\)</span>满足<span class="math inline">\(\sum_k \mu_k=1\)</span>。假设我们有大小为<span class="math inline">\(N\)</span>的数据集<span class="math inline">\(\mathcal D\)</span>，每个样本服从该分布，那么似然函数： <span class="math display">\[p(\mathcal D|\boldsymbol \mu)=\prod_{n=1}^N\prod_{k=1}^K \mu_k^{x_{nk}}=\prod_{k=1}^K \mu_k^{\sum_n x_{nk}}=\prod_{k=1}^K\mu_k^{m_k}\]</span> 其中<span class="math inline">\(m_k=\sum_n x_{nk}\)</span>，即<span class="math inline">\(x_k=1\)</span>的数量。为了最大化对数似然同时保证<span class="math inline">\(\sum_k \mu_k=1\)</span>，我们可以用拉格朗日乘子法： <span class="math display">\[\sum_{k=1}^K m_k\ln \mu_k+\lambda\left(\sum_{k=1}^K\mu_k-1\right)\]</span> 我们得到<span class="math inline">\(\mu_k=-m_k/\lambda\)</span>。通过<span class="math inline">\(\sum_k \mu_k=1\)</span>得出<span class="math inline">\(\lambda=-N\)</span>，故最后我们有： <span class="math display">\[\mu_k^{ML}=\frac{m_k}{N}\]</span></p><h2 id="multinomial-distribution">Multinomial Distribution</h2><p><span class="math display">\[\text{Mult}(m_1,m_2,\cdots,m_K|\boldsymbol\mu,N)=\binom{N}{m_1m_2\cdots m_K}\prod_{k=1}^K\mu_k^{m_k}\]</span></p><h2 id="dirichlet-distribution">Dirichlet Distribution</h2><p>共轭先验</p><p><span class="math display">\[p(\boldsymbol \mu|\boldsymbol \alpha) \propto \prod_{k=1}^{K}\mu_k^{a_{k-1}}\]</span></p><p><span class="math display">\[\text{Dir}(\boldsymbol \mu|\boldsymbol\alpha)=\frac{\Gamma(\alpha_0)}{\Gamma(\alpha_1)\cdots\Gamma(\alpha_K)}\prod_{k=1}^K\mu_k^{a_{k-1}}\]</span></p><p><img src="http://qfxiao.me/img/image-20200510005021180.png" srcset="/img/loading.gif" style="zoom:67%;" /></p><p><span class="math display">\[p(\boldsymbol\mu|\mathcal D,\boldsymbol\alpha)\propto p(\mathcal D|\boldsymbol\mu)p(\boldsymbol\mu|\boldsymbol\alpha)\propto\prod_{k=1}^K \mu_k^{\alpha_k+m_k-1}\]</span></p><p><span class="math display">\[\begin{align}p(\boldsymbol\mu|\mathcal D,\boldsymbol\alpha) &amp;= \text{Dir}(\boldsymbol\mu|\boldsymbol\alpha+\mathbf m)\\&amp;=\frac{\Gamma(\alpha_0+N)}{\Gamma(\alpha_1+m_1)\cdots\Gamma(\alpha_K+m_K)}\prod_{k=1}^K\mu_k^{\alpha_k+m_k-1}\end{align}\]</span></p><p><img src="http://qfxiao.me/img/image-20200510005507729.png" srcset="/img/loading.gif" /></p>]]></content>
     
     
     <categories>
@@ -238,7 +238,7 @@
     <link href="/2020/06/01/Deep-Anomaly-Detection-Using-Geometric-Transformations/"/>
     <url>/2020/06/01/Deep-Anomaly-Detection-Using-Geometric-Transformations/</url>
     
-    <content type="html"><![CDATA[<h1 id="introduction">Introduction</h1><p>本文考虑图像数据的异常检测问题。与基于重构的方法不同，本文提出的方法通过对正常图片施加不同的几何变换之后，训练一个多分类器将无监督异常检测问题转化为一个有监督问题。本方法背后的直觉是在训练能够分辨不同变换后的图片之后，分类器一定学得了一些显著的几何特征，这些几何特征是正常类别独有的。</p><h1 id="proposed-method">Proposed Method</h1><h2 id="problem-statement">Problem Statement</h2><p>本文考虑针对图像的异常检测。记<span class="math inline">\(\mathcal X\)</span>为所有自然图像的空间，<span class="math inline">\(X\subseteq\mathcal X\)</span>为正常图像集合。给定数据集<span class="math inline">\(S\subseteq X\)</span>，异常检测的目的是学习一个分类器<span class="math inline">\(h_S(x):\mathcal X\rightarrow\{0,1\}\)</span>，其中<span class="math inline">\(h_S(x)=1\Leftrightarrow x\in X\)</span>。</p><p>为了兼顾查准率和查全率，常用的设置是学习一个打分函数<span class="math inline">\(n_S(x):\mathcal X\rightarrow\mathbb R\)</span>，分数越高代表样本属于<span class="math inline">\(X\)</span>的概率越大。之后，通过设定阈值，便可以构建异常分类器： <span class="math display">\[\begin{align}h_S^\lambda(x)=\begin{cases}1 &amp; n_S(x)\leq\lambda\\0 &amp; n_S(x)&lt;\lambda\end{cases}\end{align}\]</span></p><h2 id="discriminative-learning-of-an-anomaly-scoring-function-using-geometric-transformations">Discriminative Learning of an Anomaly Scoring Function Using Geometric Transformations</h2><p>有初始数据集<span class="math inline">\(S\)</span>，几何变换集合<span class="math inline">\(\mathcal T\)</span>，通过对<span class="math inline">\(S\)</span>中每个样本施加这<span class="math inline">\(|\mathcal T|\)</span>个几何变换得到新数据集记为<span class="math inline">\(S_\mathcal{T}\)</span>，且<span class="math inline">\(S_\mathcal{T}\)</span>中每个样本的标签为变换的序号。之后，在<span class="math inline">\(S_\mathcal{T}\)</span>上训练一个<span class="math inline">\(|\mathcal T|\)</span>分类器。在测试阶段，对测试样本同样施加<span class="math inline">\(|\mathcal T|\)</span>个几何变换，分类器会给出经过<span class="math inline">\(\mathrm{softmax}\)</span>的输出向量，最终的异常分数由经过输出的向量构造的分布对数似然得来。</p><h3 id="creating-and-learning-the-self-labeled-dataset">Creating and Learning the Self-Labeled Dataset</h3><p>设<span class="math inline">\(\mathcal T=\{T_0,T_1,\cdots,T_{k-1}\}\)</span>为几何变换集合，<span class="math inline">\(1\leq i\leq k-1,\space T_i:\mathcal X\rightarrow \mathcal X\)</span>，且<span class="math inline">\(T_0(x)=x\)</span>。<span class="math inline">\(S_\mathcal{T}\)</span>定义为：</p><p><span class="math display">\[S_\mathcal T=\{(T_j(x),j):x\in S,T_j\in\mathcal T\}\]</span> 对于每个<span class="math inline">\(x\in S\)</span>，<span class="math inline">\(j\)</span>为<span class="math inline">\(T_j(x)\)</span>的标签。我们直接学习一个<span class="math inline">\(K\)</span>类分类器<span class="math inline">\(f_\theta\)</span>，来预测输入样本对应的几何变换种类，这相当于是一个图像分类问题。</p><p><img src="C:\Users\larry\AppData\Roaming\Typora\typora-user-images\image-20200621175220803.png" srcset="/img/loading.gif" alt="image-20200621175220803" style="zoom:67%;" /></p><h3 id="dirichlet-normality-score">Dirichlet Normality Score</h3><p>接下来要做的是如何定义异常分数，记为<span class="math inline">\(n_S(x)\)</span>，这是文中的一个重要的部分。设几何变换集合<span class="math inline">\(\mathcal T=\{T_0,T_1,\cdots,T_{k-1}\}\)</span>，且<span class="math inline">\(k\)</span>分类器<span class="math inline">\(f_\theta\)</span>在<span class="math inline">\(S_\mathcal{T}\)</span>上完成训练。对于任意一个样本<span class="math inline">\(x\)</span>，令<span class="math inline">\(\mathbf y(x)=\text{softmax}(f_{\theta}(x))\)</span>，即分类器<span class="math inline">\(f_\theta\)</span>输出的<span class="math inline">\(\text{softmax}\)</span>之后的向量。异常分数<span class="math inline">\(n_S(x)\)</span>定义为：</p><p><span class="math display">\[n_S(x)=\sum\limits_{i=0}^{k-1}\log p(\mathbf y(T_i(x))|T_i)\]</span></p><p>该异常分数定义为每个类别上，在几何变换<span class="math inline">\(T_i\)</span>的条件下，输出的<span class="math inline">\(\mathbf y\)</span>的对数似然之和。每个条件分布假设为<span class="math inline">\(\mathbf y(T_i(x))|T_i\sim\text{Dir}(\boldsymbol \alpha_i)\)</span>，其中<span class="math inline">\(\boldsymbol \alpha_i\in\mathbb R^k_+\)</span>，<span class="math inline">\(x\sim p_X(x)\)</span>，<span class="math inline">\(i\sim\text{Uni}(0,k-1)\)</span>，而<span class="math inline">\(p_X(x)\)</span>代表正常样本的真实数据分布。</p><p><span class="math display">\[n_S(x)=\sum_{i=0}^{k-1}\left[\log\Gamma(\sum_{j=0}^{k-1}[\tilde{\boldsymbol\alpha}_i]_j)-\sum_{j=0}^{k-1}\log\Gamma([\tilde{\boldsymbol\alpha}_i]_j)+\sum_{j=0}^{k-1}([\tilde{\boldsymbol\alpha}_i]_j-1)\log\mathbf y(T_i(x))_j\right]\]</span></p><p><span class="math display">\[n_S(x)=\sum_{i=0}^{k-1}\sum_{j=0}^{k-1}([\tilde{\boldsymbol\alpha}_i]_j-1)\log\mathbf y(T_i(x))_j=\sum_{i=0}^{k-1}(\tilde{\boldsymbol \alpha}_i-1)\cdot\log\mathbf y(T_i(x))\]</span></p><p>一个简单的形式是<span class="math inline">\(\hat{n}_S(x)=\frac{1}{k}\sum^{k-1}_{j=0}[\mathbf y(T_j(x))]_j\)</span>，</p><h1 id="experiments">Experiments</h1><h2 id="baselines">Baselines</h2><p>文中用到了如下的Baseline：</p><ul><li><strong>One-class SVM. </strong>单类支持向量机，作者使用了三个变体，分别为<strong>RAW-OC-SVM</strong>——使用原始数据作为输入，<strong>CAE-OC-SVM</strong>——使用一个卷积自编码器来获得低维表示作为输入和<strong>E2E-OC-SVM</strong>——全名为<strong>One-Class Deep Support Vector Data Description</strong>；</li><li><strong>Deep structured energy-based models. </strong></li><li><strong>Deep Autoencoding Gaussian Mixture Model. </strong></li><li><strong>Generative Adversarial Networks. </strong></li></ul><h2 id="datasets">Datasets</h2><ul><li><strong>CIFAR-10</strong></li><li><strong>CIFAR-100</strong></li><li><strong>Fashion-MNIST</strong></li><li><strong>CatsVsDogs</strong></li></ul><h2 id="experimental-protocol">Experimental Protocol</h2><p>设数据集有<span class="math inline">\(C\)</span>个类，我们会进行<span class="math inline">\(C\)</span>次实验，在第<span class="math inline">\(c\)</span>次实验 (<span class="math inline">\(1\leq c \leq C\)</span>)中我们会将第<span class="math inline">\(c\)</span>个类作为正常样本，而其他类作为异常样本。在训练阶段，训练集只包含正常样本，而在测试阶段则会有正常样本和异常样本。在获得异常分数之后，阈值<span class="math inline">\(\lambda\)</span>则根据ROC曲线下面积选择。</p><p>实验中使用的几何变换基于以下三种基变换：</p><ul><li><strong>Horizontal flip: </strong> 记为<span class="math inline">\(T_b^{flip}(x)\)</span>，<span class="math inline">\(b\in\{T,F\}\)</span>代表是否翻转；</li><li><strong>Translation: </strong> 记为<span class="math inline">\(T_{s_h,s_w}^{trans}(x)\)</span>，其中<span class="math inline">\(s_h,s_w\in\{-1,0,1\}\)</span>。在长宽两个维度上位移分别为<span class="math inline">\(0.25\)</span>高度和<span class="math inline">\(0.25\)</span>宽度，这两个维度发生位移的方向由<span class="math inline">\(s_h\)</span>和<span class="math inline">\(s_w\)</span>决定，当<span class="math inline">\(s_h=s_w=0\)</span>时代表不移动；</li><li><strong>Rotation by multiples 90 degrees: </strong> 记为<span class="math inline">\(T_k^{rot}(x)\)</span>，<span class="math inline">\(k\in\{0,1,2,3\}\)</span>。旋转<span class="math inline">\(k\times90\)</span>度。</li></ul><p>将三种基变换叠加有： <span class="math display">\[\mathcal T=\left\{ T_k^{rot}\circ T_{s_h,s_w}^{trans}\circ T_b^{flip} : \begin{matrix} b &amp;\in \{T,F\}\\ s_h,s_w&amp;\in\{-1,0,1\}\\ k&amp;\in\{0,1,2,3\} \end{matrix} \right\}\]</span> 最终几何变换种数为<span class="math inline">\(2\times3\times3\times4=72\)</span>种。</p><p>分类器模型使用的是<strong>Wide Residual Network</strong>，优化器为Adam，Batch size为128，训练轮数为200。</p><h2 id="results">Results</h2><p><img src="http://qfxiao.me/img/image-20200509211119999.png" srcset="/img/loading.gif"  /></p><h2 id="identifying-out-of-distribution-samples-in-labeled-multi-class-datasets">Identifying Out-of-distribution Samples in Labeled Multi-class Datasets</h2><h2 id="on-the-intuition-for-using-geometric-transformations">On the Intuition for Using Geometric Transformations</h2><p><img src="http://qfxiao.me/img/image-20200509211050138.png" srcset="/img/loading.gif" /></p>]]></content>
+    <content type="html"><![CDATA[<h1 id="introduction">Introduction</h1><p>本文考虑图像数据的异常检测问题。与基于重构的方法不同，本文提出的方法通过对正常图片施加不同的几何变换之后，训练一个多分类器将无监督异常检测问题转化为一个有监督问题。本方法背后的直觉是在训练能够分辨不同变换后的图片之后，分类器一定学得了一些显著的几何特征，这些几何特征是正常类别独有的。</p><h1 id="proposed-method">Proposed Method</h1><h2 id="problem-statement">Problem Statement</h2><p>本文考虑针对图像的异常检测。记<span class="math inline">\(\mathcal X\)</span>为所有自然图像的空间，<span class="math inline">\(X\subseteq\mathcal X\)</span>为正常图像集合。给定数据集<span class="math inline">\(S\subseteq X\)</span>，异常检测的目的是学习一个分类器<span class="math inline">\(h_S(x):\mathcal X\rightarrow\{0,1\}\)</span>，其中<span class="math inline">\(h_S(x)=1\Leftrightarrow x\in X\)</span>。</p><p>为了兼顾查准率和查全率，常用的设置是学习一个打分函数<span class="math inline">\(n_S(x):\mathcal X\rightarrow\mathbb R\)</span>，分数越高代表样本属于<span class="math inline">\(X\)</span>的概率越大。之后，通过设定阈值，便可以构建异常分类器： <span class="math display">\[\begin{align}h_S^\lambda(x)=\begin{cases}1 &amp; n_S(x)\leq\lambda\\0 &amp; n_S(x)&lt;\lambda\end{cases}\end{align}\]</span></p><h2 id="discriminative-learning-of-an-anomaly-scoring-function-using-geometric-transformations">Discriminative Learning of an Anomaly Scoring Function Using Geometric Transformations</h2><p>有初始数据集<span class="math inline">\(S\)</span>，几何变换集合<span class="math inline">\(\mathcal T\)</span>，通过对<span class="math inline">\(S\)</span>中每个样本施加这<span class="math inline">\(|\mathcal T|\)</span>个几何变换得到新数据集记为<span class="math inline">\(S_\mathcal{T}\)</span>，且<span class="math inline">\(S_\mathcal{T}\)</span>中每个样本的标签为变换的序号。之后，在<span class="math inline">\(S_\mathcal{T}\)</span>上训练一个<span class="math inline">\(|\mathcal T|\)</span>分类器。在测试阶段，对测试样本同样施加<span class="math inline">\(|\mathcal T|\)</span>个几何变换，分类器会给出经过<span class="math inline">\(\mathrm{softmax}\)</span>的输出向量，最终的异常分数由经过输出的向量构造的分布对数似然得来。</p><h3 id="creating-and-learning-the-self-labeled-dataset">Creating and Learning the Self-Labeled Dataset</h3><p>设<span class="math inline">\(\mathcal T=\{T_0,T_1,\cdots,T_{k-1}\}\)</span>为几何变换集合，<span class="math inline">\(1\leq i\leq k-1,\space T_i:\mathcal X\rightarrow \mathcal X\)</span>，且<span class="math inline">\(T_0(x)=x\)</span>。<span class="math inline">\(S_\mathcal{T}\)</span>定义为：</p><p><span class="math display">\[S_\mathcal T=\{(T_j(x),j):x\in S,T_j\in\mathcal T\}\]</span> 对于每个<span class="math inline">\(x\in S\)</span>，<span class="math inline">\(j\)</span>为<span class="math inline">\(T_j(x)\)</span>的标签。我们直接学习一个<span class="math inline">\(K\)</span>类分类器<span class="math inline">\(f_\theta\)</span>，来预测输入样本对应的几何变换种类，这相当于是一个图像分类问题。</p><p><img src="http://qfxiao.me/img/image-20200621175220803.png" srcset="/img/loading.gif" style="zoom:67%;" /></p><h3 id="dirichlet-normality-score">Dirichlet Normality Score</h3><p>接下来要做的是如何定义异常分数，记为<span class="math inline">\(n_S(x)\)</span>，这是文中的一个重要的部分。设几何变换集合<span class="math inline">\(\mathcal T=\{T_0,T_1,\cdots,T_{k-1}\}\)</span>，且<span class="math inline">\(k\)</span>分类器<span class="math inline">\(f_\theta\)</span>在<span class="math inline">\(S_\mathcal{T}\)</span>上完成训练。对于任意一个样本<span class="math inline">\(x\)</span>，令<span class="math inline">\(\mathbf y(x)=\text{softmax}(f_{\theta}(x))\)</span>，即分类器<span class="math inline">\(f_\theta\)</span>输出的<span class="math inline">\(\text{softmax}\)</span>之后的向量。异常分数<span class="math inline">\(n_S(x)\)</span>定义为：</p><p><span class="math display">\[n_S(x)=\sum\limits_{i=0}^{k-1}\log p(\mathbf y(T_i(x))|T_i)\]</span></p><p>该异常分数定义为每个类别上，在几何变换<span class="math inline">\(T_i\)</span>的条件下，输出的<span class="math inline">\(\mathbf y\)</span>的对数似然之和。每个条件分布假设为<span class="math inline">\(\mathbf y(T_i(x))|T_i\sim\text{Dir}(\boldsymbol \alpha_i)\)</span>，其中<span class="math inline">\(\boldsymbol \alpha_i\in\mathbb R^k_+\)</span>，<span class="math inline">\(x\sim p_X(x)\)</span>，<span class="math inline">\(i\sim\text{Uni}(0,k-1)\)</span>，而<span class="math inline">\(p_X(x)\)</span>代表正常样本的真实数据分布。</p><p><span class="math display">\[n_S(x)=\sum_{i=0}^{k-1}\left[\log\Gamma(\sum_{j=0}^{k-1}[\tilde{\boldsymbol\alpha}_i]_j)-\sum_{j=0}^{k-1}\log\Gamma([\tilde{\boldsymbol\alpha}_i]_j)+\sum_{j=0}^{k-1}([\tilde{\boldsymbol\alpha}_i]_j-1)\log\mathbf y(T_i(x))_j\right]\]</span></p><p><span class="math display">\[n_S(x)=\sum_{i=0}^{k-1}\sum_{j=0}^{k-1}([\tilde{\boldsymbol\alpha}_i]_j-1)\log\mathbf y(T_i(x))_j=\sum_{i=0}^{k-1}(\tilde{\boldsymbol \alpha}_i-1)\cdot\log\mathbf y(T_i(x))\]</span></p><p>一个简单的形式是<span class="math inline">\(\hat{n}_S(x)=\frac{1}{k}\sum^{k-1}_{j=0}[\mathbf y(T_j(x))]_j\)</span>，</p><p><img src="http://qfxiao.me/img/image-20200621202358920.png" srcset="/img/loading.gif" style="zoom: 67%;" /></p><h1 id="experiments">Experiments</h1><h2 id="baselines">Baselines</h2><p>文中用到了如下的Baseline：</p><ul><li><strong>One-class SVM. </strong>单类支持向量机，作者使用了三个变体，分别为<strong>RAW-OC-SVM</strong>——使用原始数据作为输入，<strong>CAE-OC-SVM</strong>——使用一个卷积自编码器来获得低维表示作为输入和<strong>E2E-OC-SVM</strong>——全名为<strong>One-Class Deep Support Vector Data Description</strong>；</li><li><strong>Deep structured energy-based models. </strong></li><li><strong>Deep Autoencoding Gaussian Mixture Model. </strong></li><li><strong>Generative Adversarial Networks. </strong></li></ul><h2 id="datasets">Datasets</h2><ul><li><strong>CIFAR-10</strong></li><li><strong>CIFAR-100</strong></li><li><strong>Fashion-MNIST</strong></li><li><strong>CatsVsDogs</strong></li></ul><h2 id="experimental-protocol">Experimental Protocol</h2><p>设数据集有<span class="math inline">\(C\)</span>个类，我们会进行<span class="math inline">\(C\)</span>次实验，在第<span class="math inline">\(c\)</span>次实验 (<span class="math inline">\(1\leq c \leq C\)</span>)中我们会将第<span class="math inline">\(c\)</span>个类作为正常样本，而其他类作为异常样本。在训练阶段，训练集只包含正常样本，而在测试阶段则会有正常样本和异常样本。在获得异常分数之后，阈值<span class="math inline">\(\lambda\)</span>则根据ROC曲线下面积选择。</p><p>实验中使用的几何变换基于以下三种基变换：</p><ul><li><strong>Horizontal flip: </strong> 记为<span class="math inline">\(T_b^{flip}(x)\)</span>，<span class="math inline">\(b\in\{T,F\}\)</span>代表是否翻转；</li><li><strong>Translation: </strong> 记为<span class="math inline">\(T_{s_h,s_w}^{trans}(x)\)</span>，其中<span class="math inline">\(s_h,s_w\in\{-1,0,1\}\)</span>。在长宽两个维度上位移分别为<span class="math inline">\(0.25\)</span>高度和<span class="math inline">\(0.25\)</span>宽度，这两个维度发生位移的方向由<span class="math inline">\(s_h\)</span>和<span class="math inline">\(s_w\)</span>决定，当<span class="math inline">\(s_h=s_w=0\)</span>时代表不移动；</li><li><strong>Rotation by multiples 90 degrees: </strong> 记为<span class="math inline">\(T_k^{rot}(x)\)</span>，<span class="math inline">\(k\in\{0,1,2,3\}\)</span>。旋转<span class="math inline">\(k\times90\)</span>度。</li></ul><p>将三种基变换叠加有： <span class="math display">\[\mathcal T=\left\{ T_k^{rot}\circ T_{s_h,s_w}^{trans}\circ T_b^{flip} : \begin{matrix} b &amp;\in \{T,F\}\\ s_h,s_w&amp;\in\{-1,0,1\}\\ k&amp;\in\{0,1,2,3\} \end{matrix} \right\}\]</span> 最终几何变换种数为<span class="math inline">\(2\times3\times3\times4=72\)</span>种。</p><p>分类器模型使用的是<strong>Wide Residual Network</strong>，优化器为Adam，Batch size为128，训练轮数为200。</p><h2 id="results">Results</h2><p><img src="http://qfxiao.me/img/image-20200509211119999.png" srcset="/img/loading.gif"  /></p><h2 id="identifying-out-of-distribution-samples-in-labeled-multi-class-datasets">Identifying Out-of-distribution Samples in Labeled Multi-class Datasets</h2><h2 id="on-the-intuition-for-using-geometric-transformations">On the Intuition for Using Geometric Transformations</h2><p><img src="http://qfxiao.me/img/image-20200509211050138.png" srcset="/img/loading.gif" /></p>]]></content>
     
     
     <categories>
@@ -420,9 +420,9 @@
     
     <tags>
       
-      <tag>Deep Learning</tag>
-      
       <tag>Anomaly Detection</tag>
+      
+      <tag>Deep Learning</tag>
       
     </tags>
     
@@ -476,9 +476,9 @@
     
     <tags>
       
-      <tag>VAE</tag>
-      
       <tag>Anomaly Detection</tag>
+      
+      <tag>VAE</tag>
       
     </tags>
     
@@ -505,9 +505,9 @@
     
     <tags>
       
-      <tag>Deep Learning</tag>
-      
       <tag>Time Series</tag>
+      
+      <tag>Deep Learning</tag>
       
     </tags>
     
@@ -534,15 +534,15 @@
     
     <tags>
       
-      <tag>VAE</tag>
-      
-      <tag>Deep Learning</tag>
-      
       <tag>Time Series</tag>
       
       <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
+      
+      <tag>Deep Learning</tag>
+      
+      <tag>VAE</tag>
       
     </tags>
     
@@ -569,11 +569,11 @@
     
     <tags>
       
+      <tag>Deep Learning</tag>
+      
       <tag>Variational Inference</tag>
       
       <tag>VAE</tag>
-      
-      <tag>Deep Learning</tag>
       
       <tag>GAN</tag>
       
@@ -633,11 +633,11 @@
     
     <tags>
       
+      <tag>Deep Learning</tag>
+      
       <tag>Variational Inference</tag>
       
       <tag>VAE</tag>
-      
-      <tag>Deep Learning</tag>
       
     </tags>
     
@@ -664,9 +664,9 @@
     
     <tags>
       
-      <tag>Deep Learning</tag>
-      
       <tag>Time Series</tag>
+      
+      <tag>Deep Learning</tag>
       
       <tag>RNN</tag>
       
@@ -695,15 +695,15 @@
     
     <tags>
       
-      <tag>VAE</tag>
-      
-      <tag>Deep Learning</tag>
-      
       <tag>Time Series</tag>
       
       <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
+      
+      <tag>Deep Learning</tag>
+      
+      <tag>VAE</tag>
       
       <tag>RNN</tag>
       
@@ -734,9 +734,9 @@
     
     <tags>
       
-      <tag>Deep Learning</tag>
-      
       <tag>Time Series</tag>
+      
+      <tag>Deep Learning</tag>
       
       <tag>GAN</tag>
       
@@ -765,13 +765,13 @@
     
     <tags>
       
-      <tag>Deep Learning</tag>
-      
       <tag>Time Series</tag>
       
       <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
+      
+      <tag>Deep Learning</tag>
       
     </tags>
     
@@ -798,13 +798,13 @@
     
     <tags>
       
-      <tag>Deep Learning</tag>
-      
       <tag>Time Series</tag>
       
       <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
+      
+      <tag>Deep Learning</tag>
       
     </tags>
     
@@ -831,15 +831,15 @@
     
     <tags>
       
-      <tag>VAE</tag>
-      
-      <tag>Deep Learning</tag>
-      
       <tag>Time Series</tag>
       
       <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
+      
+      <tag>Deep Learning</tag>
+      
+      <tag>VAE</tag>
       
     </tags>
     
@@ -866,13 +866,13 @@
     
     <tags>
       
-      <tag>Deep Learning</tag>
-      
       <tag>Time Series</tag>
       
       <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
+      
+      <tag>Deep Learning</tag>
       
       <tag>Spectral</tag>
       
