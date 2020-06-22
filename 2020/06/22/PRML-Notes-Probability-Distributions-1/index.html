@@ -158,7 +158,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    1.4k 字
+                    1.6k 字
                   </span>
                 
 
@@ -168,7 +168,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    21
+                    24
                      分钟
                   </span>
                 
@@ -230,8 +230,6 @@ p(\mathcal D|\mu)=\prod_{n=1}^N p(x_n|\mu)=\prod_{n=1}^N \mu^{x_n}(1-\mu)^{1-x_n
 \end{align}
 \]</span></p>
 <h2 id="gamma-function">Gamma Function</h2>
-<iframe width="100%" src="http://qfxiao.me/html/surface_wave.html">
-</iframe>
 <p>对于任何实部大于<span class="math inline">\(0\)</span>的复数<span class="math inline">\(x\)</span>，Gamma函数的定义为： <span class="math display">\[
 \Gamma(x)=\int_0^{\infty}s^{x-1}e^{-s}\mathrm d s
 \]</span> Gamma函数有一个性质： <span class="math display">\[
@@ -252,20 +250,44 @@ p(\mathcal D|\mu)=\prod_{n=1}^N p(x_n|\mu)=\prod_{n=1}^N \mu^{x_n}(1-\mu)^{1-x_n
 <p>现在我们来讨论如何解决刚才提到的最大似然估计过拟合问题。为了解决这个问题，我们使用贝叶斯的思路，对<span class="math inline">\(\mu\)</span>引入了先验分布<span class="math inline">\(p(\mu)\)</span>。而这个分布需要具有良好的解释性和数学性质。</p>
 <p>根据贝叶斯定理： <span class="math display">\[
 p(\mu|\mathcal D)=\frac{p(\mathcal D|\mu)p(\mu)}{p(\mathcal D)}
-\]</span> 而<span class="math inline">\(p(\mathcal D)=\int_0^1 p(\mathcal D|\mu)p(\mu)\mathrm d\mu\)</span>只受数据集影响，而数据集是固定的，所以为常数，因此<span class="math inline">\(p(\mu|\mathcal D)\propto p(\mathcal D|\mu)p(\mu)\)</span>。</p>
-<p>Beta分布<span class="math inline">\(P(\mu|\boldsymbol \alpha,\beta)\sim \text{Beta}(\boldsymbol\alpha,\beta)\)</span> <span class="math display">\[
+\]</span> 而<span class="math inline">\(p(\mathcal D)=\int_0^1 p(\mathcal D|\mu)p(\mu)\mathrm d\mu\)</span>只受数据集影响，而数据集是固定的，所以为常数，因此<span class="math inline">\(p(\mu|\mathcal D)\propto p(\mathcal D|\mu)p(\mu)\)</span>。而似然函数为<span class="math inline">\(\mu^x(1-\mu)^{1-x}\)</span>的乘积，如果先验也采用<span class="math inline">\(\mu\)</span>和<span class="math inline">\(1-\mu\)</span>的幂的乘积的形式，那么后验分布也将和先验形式相同，这种性质在统计学中被称为<strong>先验共轭 (conjugacy)</strong>。</p>
+<p>这里我们直接给出这个先验分布，再来分析它的性质。这个分布叫做<strong>Beta分布 (Beta Distribution)</strong><span class="math inline">\(P(\mu|a,b)\sim \text{Beta}(a,b)\)</span>： <span class="math display">\[
 \begin{align}
-P(\mu|\alpha,\beta) &amp;= \frac{\Gamma(\alpha+\beta)}{\Gamma(\alpha)\Gamma(\beta)}\mu^{\alpha-1}(1-\mu)^{\beta-1}\\ &amp;= \frac{1}{B(\alpha,\beta)}\mu^{\alpha-1}(1-\mu)^{\beta-1}
+\text{Beta}(\mu|a,b) &amp;= \frac{\Gamma(a+b)}{\Gamma(a\Gamma(b)}\mu^{a-1}(1-\mu)^{b-1}\\ &amp;= \frac{1}{B(a,b)}\mu^{a-1}(1-\mu)^{b-1}
 \end{align}
 \]</span> <span class="math inline">\(B(\boldsymbol \alpha,\beta)\)</span>称为B函数，为一个标准化函数： <span class="math display">\[
 \begin{align}
-B(\alpha,\beta) = \frac{\Gamma(\alpha)\Gamma(\beta)}{\Gamma(\alpha+\beta)}
+B(a,b) = \frac{\Gamma(a)\Gamma(b)}{\Gamma(a+b)}
 \end{align}
-\]</span> 其目的是为了使整个概率分布积分等于1而存在的。 <span class="math display">\[
+\]</span> 其目的是为了使整个概率分布积分等于1而存在的。Gamma函数的定义为： <span class="math display">\[
+\Gamma(x)=\int_0^{\infty}s^{x-1}e^{-s}\mathrm d s
+\]</span> Gamma函数有一个性质：</p>
+<p><span class="math display">\[
+\Gamma(x+1)=x\Gamma(x)
+\]</span> 证明为： <span class="math display">\[
+\begin{align*}
+\Gamma(x+1) &amp;= \int_{0}^{\infty} {s^{x} e^{-s} ds} \\
+&amp;= \big[s^{x} (-e^{-s})\big] \big|_{0}^{\infty} - \int_{0}^{\infty} {(x s^{x-1}) (-e^{-s}) ds} \\
+&amp;= (0 - 0) + x \int_{0}^{\infty} {s^{x-1} e^{-s} ds} \\
+&amp;= x \Gamma(x)
+\end{align*}
+\]</span></p>
+<p>除此之外：</p>
+<p><span class="math display">\[
+\Gamma(1)=1\\
+\Gamma(\frac{1}{2})=\sqrt{\pi}
+\]</span></p>
+<p>可以验证： <span class="math display">\[
+\int_0^1\text{Beta}(\mu|a,b)\mathrm d\mu=1
+\]</span></p>
+<p>Beta分布的均值和方差为：</p>
+<p><span class="math display">\[
 \mathbb E[\mu]=\frac{\alpha}{\alpha+\beta}\\
 \text{var}[\mu]=\frac{\alpha\beta}{(\alpha+\beta)^2(\alpha+\beta+1)}
 \]</span></p>
 <p><img src="http://qfxiao.me/img/image-20200509233713635.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<iframe width="600px" height="400px" src="http://qfxiao.me/html/beta_distribution_vis.html">
+</iframe>
 <p>现在我们有了作为<span class="math inline">\(p(\mu)\)</span>先验的Beta分布以及服从伯努利分布的<span class="math inline">\(p(x_n)\)</span>，那么后验分布可以写成： <span class="math display">\[
 p(\mu|m,l,\alpha,\beta)\propto \mu^{m+\alpha-1}(1-\mu)^{l+b-1}
 \]</span> 其中<span class="math inline">\(l=N-m\)</span>，代表失败的次数，<span class="math inline">\(m\)</span>代表成功的次数。 <span class="math display">\[
