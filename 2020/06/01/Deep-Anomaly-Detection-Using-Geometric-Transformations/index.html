@@ -218,8 +218,9 @@ h_S^\lambda(x)=
 <p><span class="math display">\[
 S_\mathcal T=\{(T_j(x),j):x\in S,T_j\in\mathcal T\}
 \]</span> 对于每个<span class="math inline">\(x\in S\)</span>，<span class="math inline">\(j\)</span>为<span class="math inline">\(T_j(x)\)</span>的标签。我们直接学习一个<span class="math inline">\(K\)</span>类分类器<span class="math inline">\(f_\theta\)</span>，来预测输入样本对应的几何变换种类，这相当于是一个图像分类问题。</p>
+<p><img src="C:\Users\larry\AppData\Roaming\Typora\typora-user-images\image-20200621175220803.png" srcset="/img/loading.gif" alt="image-20200621175220803" style="zoom:67%;" /></p>
 <h3 id="dirichlet-normality-score">Dirichlet Normality Score</h3>
-<p>我们现在来定义异常分数<span class="math inline">\(n_S(x)\)</span>。设几何变换集合<span class="math inline">\(\mathcal T=\{T_0,T_1,\cdots,T_{k-1}\}\)</span>，且<span class="math inline">\(k\)</span>分类器<span class="math inline">\(f_\theta\)</span>在<span class="math inline">\(S_\mathcal{T}\)</span>上完成训练。对于任意一个样本<span class="math inline">\(x\)</span>，令<span class="math inline">\(\mathbf y(x)=\text{softmax}(f_{\theta}(x))\)</span>，即分类器<span class="math inline">\(f_\theta\)</span>输出的<span class="math inline">\(\text{softmax}\)</span>之后的向量。异常分数<span class="math inline">\(n_S(x)\)</span>定义为：</p>
+<p>接下来要做的是如何定义异常分数，记为<span class="math inline">\(n_S(x)\)</span>，这是文中的一个重要的部分。设几何变换集合<span class="math inline">\(\mathcal T=\{T_0,T_1,\cdots,T_{k-1}\}\)</span>，且<span class="math inline">\(k\)</span>分类器<span class="math inline">\(f_\theta\)</span>在<span class="math inline">\(S_\mathcal{T}\)</span>上完成训练。对于任意一个样本<span class="math inline">\(x\)</span>，令<span class="math inline">\(\mathbf y(x)=\text{softmax}(f_{\theta}(x))\)</span>，即分类器<span class="math inline">\(f_\theta\)</span>输出的<span class="math inline">\(\text{softmax}\)</span>之后的向量。异常分数<span class="math inline">\(n_S(x)\)</span>定义为：</p>
 <p><span class="math display">\[
 n_S(x)=\sum\limits_{i=0}^{k-1}\log p(\mathbf y(T_i(x))|T_i)
 \]</span></p>
