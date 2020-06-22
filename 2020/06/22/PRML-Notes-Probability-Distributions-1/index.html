@@ -158,7 +158,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    1.7k 字
+                    1.9k 字
                   </span>
                 
 
@@ -168,7 +168,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    24
+                    27
                      分钟
                   </span>
                 
@@ -285,24 +285,21 @@ B(a,b) = \frac{\Gamma(a)\Gamma(b)}{\Gamma(a+b)}
 \mathbb E[\mu]=\frac{a}{a+b}\\
 \text{var}[\mu]=\frac{ab}{(a+b)^2(a+b+1)}
 \]</span></p>
-<p>在</p>
+<p>因为后验分布与先验和似然函数的乘积成比例，那么： <span class="math display">\[
+p(\mu|m,l,a,b)\propto\mu^{m+a-1}(1-\mu)^{l+b-1}
+\]</span></p>
+<p>其中<span class="math inline">\(l=N-m\)</span>。乘上标准化因子，就得到： <span class="math display">\[
+p(\mu|m,l,a,b)=\frac{\Gamma(m+a+l+b)}{\Gamma(m+a)\Gamma(l+b)}\mu^{m+a-1}(1-\mu)^{l+b-1}
+\]</span> 得到的仍然是Beta分布，相当于把<span class="math inline">\(a\rightarrow{m+a}\)</span>，<span class="math inline">\(b\rightarrow{l+b}\)</span>。同时不难发现，参数<span class="math inline">\(a\)</span>和<span class="math inline">\(b\)</span>都有比较直观的意义。<span class="math inline">\(a\)</span>可以看作是历史记录中，成功的次数，<span class="math inline">\(b\)</span>可以看作是历史记录中失败的次数，比如<span class="math inline">\(a=2\)</span>，<span class="math inline">\(b=3\)</span>，根据经验成功的概率应该在<span class="math inline">\(\frac{2}{2+3}=0.4\)</span>左右，即我们的先验为成功的概率为<span class="math inline">\(0.4\)</span>（见下图左下角的子图）。如果在实验中，又进行了<span class="math inline">\(7\)</span>次实验，其中<span class="math inline">\(m=6\)</span>，<span class="math inline">\(l=1\)</span>，由于成功的次数变多了，<span class="math inline">\(a=2+6=8\)</span>，<span class="math inline">\(b=3+1=4\)</span>，直觉上来说我们对成功概率的估计应当相应提高，大概为<span class="math inline">\(\frac{8}{8+4}\approx 0.67\)</span>左右。这时的Beta分布如右下角的图的样子，也印证了我们的直觉。</p>
 <p><img src="http://qfxiao.me/img/image-20200509233713635.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <p>以下为互动演示：</p>
 <div>
 <iframe width="650px" height="450px" align="middle" src="http://qfxiao.me/html/beta_distribution_vis.html">
 </iframe>
 </div>
-<p>现在我们有了作为<span class="math inline">\(p(\mu)\)</span>先验的Beta分布以及服从伯努利分布的<span class="math inline">\(p(x_n)\)</span>，那么后验分布可以写成： <span class="math display">\[
-p(\mu|m,l,\alpha,\beta)\propto \mu^{m+\alpha-1}(1-\mu)^{l+b-1}
-\]</span> 其中<span class="math inline">\(l=N-m\)</span>，代表失败的次数，<span class="math inline">\(m\)</span>代表成功的次数。 <span class="math display">\[
-\begin{align}
-p(\mu|m,l,\alpha,\beta)&amp;=\frac{\Gamma(m+\alpha+l+\beta)}{\Gamma(m+a)\Gamma(l+b)}\mu^{m+a-1}(1-\mu)^{l+b-1}\\
-&amp;=\text{Beta}(\alpha+m,\beta+l)
-\end{align}
-\]</span></p>
 <h1 id="probability-distributions-for-multinomial-variables">Probability Distributions for Multinomial Variables</h1>
 <h2 id="intro-1">Intro</h2>
-<p>设一个<span class="math inline">\(K\)</span>维向量<span class="math inline">\(\mathbf x\)</span>，当<span class="math inline">\(x_k\)</span>为<span class="math inline">\(1\)</span>的时候其他元素都为<span class="math inline">\(0\)</span>，如<span class="math inline">\(K=6,x_3=1\)</span>时<span class="math inline">\(\mathbf x\)</span>表示为<span class="math inline">\(\mathbf x=(0,0,1,0,0,0)^\top\)</span>。如果<span class="math inline">\(p(x_k=1)=\mu_k\)</span>，那么<span class="math inline">\(\mathbf x\)</span>的概率分布为： <span class="math display">\[
+<p>前面我们讨论了二值随机变量，现在我们将其扩展到。设一个<span class="math inline">\(K\)</span>维向量<span class="math inline">\(\mathbf x\)</span>，当<span class="math inline">\(x_k\)</span>为<span class="math inline">\(1\)</span>的时候其他元素都为<span class="math inline">\(0\)</span>，如<span class="math inline">\(K=6,x_3=1\)</span>时<span class="math inline">\(\mathbf x\)</span>表示为<span class="math inline">\(\mathbf x=(0,0,1,0,0,0)^\top\)</span>。如果<span class="math inline">\(p(x_k=1)=\mu_k\)</span>，那么<span class="math inline">\(\mathbf x\)</span>的概率分布为： <span class="math display">\[
 p(\mathbf x|\boldsymbol \mu)=\prod_{k=1}^{K}\mu_k^{x_k}
 \]</span> <span class="math inline">\(\mu_k\)</span>满足<span class="math inline">\(\sum_k \mu_k=1\)</span>。假设我们有大小为<span class="math inline">\(N\)</span>的数据集<span class="math inline">\(\mathcal D\)</span>，每个样本服从该分布，那么似然函数： <span class="math display">\[
 p(\mathcal D|\boldsymbol \mu)=\prod_{n=1}^N\prod_{k=1}^K \mu_k^{x_{nk}}=\prod_{k=1}^K \mu_k^{\sum_n x_{nk}}=\prod_{k=1}^K\mu_k^{m_k}
