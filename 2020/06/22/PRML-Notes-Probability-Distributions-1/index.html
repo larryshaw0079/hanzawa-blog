@@ -158,7 +158,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    1.9k 字
+                    2.2k 字
                   </span>
                 
 
@@ -168,7 +168,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    27
+                    31
                      分钟
                   </span>
                 
@@ -299,38 +299,52 @@ p(\mu|m,l,a,b)=\frac{\Gamma(m+a+l+b)}{\Gamma(m+a)\Gamma(l+b)}\mu^{m+a-1}(1-\mu)^
 </div>
 <h1 id="probability-distributions-for-multinomial-variables">Probability Distributions for Multinomial Variables</h1>
 <h2 id="intro-1">Intro</h2>
-<p>前面我们讨论了二值随机变量，现在我们将其扩展到。设一个<span class="math inline">\(K\)</span>维向量<span class="math inline">\(\mathbf x\)</span>，当<span class="math inline">\(x_k\)</span>为<span class="math inline">\(1\)</span>的时候其他元素都为<span class="math inline">\(0\)</span>，如<span class="math inline">\(K=6,x_3=1\)</span>时<span class="math inline">\(\mathbf x\)</span>表示为<span class="math inline">\(\mathbf x=(0,0,1,0,0,0)^\top\)</span>。如果<span class="math inline">\(p(x_k=1)=\mu_k\)</span>，那么<span class="math inline">\(\mathbf x\)</span>的概率分布为： <span class="math display">\[
+<p>前面我们讨论了二值随机变量，现在我们将其扩展到多值变量。设一个<span class="math inline">\(K\)</span>维向量<span class="math inline">\(\mathbf x\)</span>，当<span class="math inline">\(x_k\)</span>为<span class="math inline">\(1\)</span>的时候其他元素都为<span class="math inline">\(0\)</span>，如<span class="math inline">\(K=6,x_3=1\)</span>时<span class="math inline">\(\mathbf x\)</span>表示为<span class="math inline">\(\mathbf x=(0,0,1,0,0,0)^\top\)</span>。如果<span class="math inline">\(p(x_k=1)=\mu_k\)</span>，那么<span class="math inline">\(\mathbf x\)</span>的概率分布为： <span class="math display">\[
 p(\mathbf x|\boldsymbol \mu)=\prod_{k=1}^{K}\mu_k^{x_k}
-\]</span> <span class="math inline">\(\mu_k\)</span>满足<span class="math inline">\(\sum_k \mu_k=1\)</span>。假设我们有大小为<span class="math inline">\(N\)</span>的数据集<span class="math inline">\(\mathcal D\)</span>，每个样本服从该分布，那么似然函数： <span class="math display">\[
+\]</span> <span class="math inline">\(\mu_k\)</span>满足<span class="math inline">\(\sum_k \mu_k=1\)</span>和<span class="math inline">\(\mu_k\geqslant 0\)</span>，该分布被称作是<strong>Categorical Distribution</strong>。易知其均值为： <span class="math display">\[
+\begin{align}
+\mathbb E[\mathbf x|\boldsymbol \mu]=\sum_{\mathbf x}p(\mathbf x|\boldsymbol \mu)\mathbf x=\boldsymbol \mu
+\end{align}
+\]</span> 假设我们有大小为<span class="math inline">\(N\)</span>的数据集<span class="math inline">\(\mathcal D\)</span>，每个样本服从该分布且相互独立，那么似然函数： <span class="math display">\[
 p(\mathcal D|\boldsymbol \mu)=\prod_{n=1}^N\prod_{k=1}^K \mu_k^{x_{nk}}=\prod_{k=1}^K \mu_k^{\sum_n x_{nk}}=\prod_{k=1}^K\mu_k^{m_k}
 \]</span> 其中<span class="math inline">\(m_k=\sum_n x_{nk}\)</span>，即<span class="math inline">\(x_k=1\)</span>的数量。为了最大化对数似然同时保证<span class="math inline">\(\sum_k \mu_k=1\)</span>，我们可以用拉格朗日乘子法： <span class="math display">\[
 \sum_{k=1}^K m_k\ln \mu_k+\lambda\left(\sum_{k=1}^K\mu_k-1\right)
 \]</span> 我们得到<span class="math inline">\(\mu_k=-m_k/\lambda\)</span>。通过<span class="math inline">\(\sum_k \mu_k=1\)</span>得出<span class="math inline">\(\lambda=-N\)</span>，故最后我们有： <span class="math display">\[
 \mu_k^{ML}=\frac{m_k}{N}
 \]</span></p>
+<p>这相当于是<span class="math inline">\(x_k=1\)</span>的数量除以总数。</p>
 <h2 id="multinomial-distribution">Multinomial Distribution</h2>
+<p>类似的，我们可以对多次实验进行建模，假设进行<span class="math inline">\(N\)</span>次独立实验，概率分布可以写为：</p>
 <p><span class="math display">\[
 \text{Mult}(m_1,m_2,\cdots,m_K|\boldsymbol\mu,N)=\binom{N}{m_1m_2\cdots m_K}\prod_{k=1}^K\mu_k^{m_k}
 \]</span></p>
+<p>这也是我们熟知的<strong>多项分布 (Multinomial Distribution)</strong>，其中<span class="math inline">\(\binom{N}{m_1m_2\cdots m_K}\)</span>为正则化因子： <span class="math display">\[
+\binom{N}{m_1m_2\cdots m_K}=\frac{N!}{m_1!m_2!\cdots m_K!}
+\]</span> 注意<span class="math inline">\(\sum\limits_{k=1}^K m_k=N\)</span>。</p>
 <h2 id="dirichlet-distribution">Dirichlet Distribution</h2>
-<p>共轭先验</p>
+<p>有了前面Beta的启发，我们同样可以对多项分布的参数<span class="math inline">\(\mu_k\)</span>建立共轭先验。首先根据似然函数，我们知道先验应当与<span class="math inline">\(\mu_k\)</span>的幂的乘积成比例：</p>
 <p><span class="math display">\[
 p(\boldsymbol \mu|\boldsymbol \alpha) \propto \prod_{k=1}^{K}\mu_k^{a_{k-1}}
 \]</span></p>
-<p><span class="math display">\[
+<p>其中<span class="math inline">\(0\leqslant \mu_k\leqslant 1\)</span>且<span class="math inline">\(\sum_k\mu_k=1\)</span>。和Beta分布不同，由于要满足<span class="math inline">\(\sum\mu_k=1\)</span>，所以<span class="math inline">\(\{\mu_k\}\)</span>的取值会位于<span class="math inline">\(K-1\)</span>的单纯型上，如下图所示：</p>
+<p><img src="http://qfxiao.me/img/image-20200510005021180.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p>加上标准化因子，我们就得到了所谓的先验分布，称之为<strong>迪利克雷分布 (Dirichlet Distribution)</strong>： <span class="math display">\[
 \text{Dir}(\boldsymbol \mu|\boldsymbol\alpha)=\frac{\Gamma(\alpha_0)}{\Gamma(\alpha_1)\cdots\Gamma(\alpha_K)}\prod_{k=1}^K\mu_k^{a_{k-1}}
 \]</span></p>
-<p><img src="http://qfxiao.me/img/image-20200510005021180.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p>其中<span class="math inline">\(\Gamma(\cdot)\)</span>为Gamma函数，<span class="math inline">\(\alpha_0=\sum\limits_{k=1}^K\alpha_k\)</span>。下图为不同条件下的迪利克雷分布的可视化：</p>
+<p><img src="http://qfxiao.me/img/image-20200510005507729.png" srcset="/img/loading.gif" /></p>
+<p><span class="math inline">\(\boldsymbol \mu\)</span>的后验与先验和似然函数的乘积成正比：</p>
 <p><span class="math display">\[
 p(\boldsymbol\mu|\mathcal D,\boldsymbol\alpha)\propto p(\mathcal D|\boldsymbol\mu)p(\boldsymbol\mu|\boldsymbol\alpha)\propto\prod_{k=1}^K \mu_k^{\alpha_k+m_k-1}
 \]</span></p>
+<p>不难验证：</p>
 <p><span class="math display">\[
 \begin{align}
 p(\boldsymbol\mu|\mathcal D,\boldsymbol\alpha) &amp;= \text{Dir}(\boldsymbol\mu|\boldsymbol\alpha+\mathbf m)\\
 &amp;=\frac{\Gamma(\alpha_0+N)}{\Gamma(\alpha_1+m_1)\cdots\Gamma(\alpha_K+m_K)}\prod_{k=1}^K\mu_k^{\alpha_k+m_k-1}
 \end{align}
 \]</span></p>
-<p><img src="http://qfxiao.me/img/image-20200510005507729.png" srcset="/img/loading.gif" /></p>
+<p>即后验同样为迪利克雷分布。</p>
 
             </article>
             <hr>
