@@ -158,7 +158,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    1.3k 字
+                    1.5k 字
                   </span>
                 
 
@@ -168,7 +168,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    18
+                    19
                      分钟
                   </span>
                 
@@ -224,15 +224,19 @@ S_\mathcal T=\{(T_j(x),j):x\in S,T_j\in\mathcal T\}
 <p><span class="math display">\[
 n_S(x)=\sum\limits_{i=0}^{k-1}\log p(\mathbf y(T_i(x))|T_i)
 \]</span></p>
-<p>该异常分数定义为每个类别上，在几何变换<span class="math inline">\(T_i\)</span>的条件下，输出的<span class="math inline">\(\mathbf y\)</span>的对数似然之和。每个条件分布假设为<span class="math inline">\(\mathbf y(T_i(x))|T_i\sim\text{Dir}(\boldsymbol \alpha_i)\)</span>，其中<span class="math inline">\(\boldsymbol \alpha_i\in\mathbb R^k_+\)</span>，<span class="math inline">\(x\sim p_X(x)\)</span>，<span class="math inline">\(i\sim\text{Uni}(0,k-1)\)</span>，而<span class="math inline">\(p_X(x)\)</span>代表正常样本的真实数据分布。</p>
+<p>该异常分数定义为每个类别上，在几何变换<span class="math inline">\(T_i\)</span>的条件下，输出的<span class="math inline">\(\mathbf y\)</span>的对数似然之和。每个条件分布假设为<span class="math inline">\(\mathbf y(T_i(x))|T_i\sim\text{Dir}(\boldsymbol \alpha_i)\)</span>，其中<span class="math inline">\(\boldsymbol \alpha_i\in\mathbb R^k_+\)</span>，<span class="math inline">\(x\sim p_X(x)\)</span>，<span class="math inline">\(i\sim\text{Uni}(0,k-1)\)</span>，而<span class="math inline">\(p_X(x)\)</span>代表正常样本的真实数据分布。于是：</p>
 <p><span class="math display">\[
 n_S(x)=\sum_{i=0}^{k-1}\left[\log\Gamma(\sum_{j=0}^{k-1}[\tilde{\boldsymbol\alpha}_i]_j)-\sum_{j=0}^{k-1}\log\Gamma([\tilde{\boldsymbol\alpha}_i]_j)+\sum_{j=0}^{k-1}([\tilde{\boldsymbol\alpha}_i]_j-1)\log\mathbf y(T_i(x))_j\right]
 \]</span></p>
+<p>因为<span class="math inline">\(\tilde{\alpha}_i\)</span>相对于<span class="math inline">\(x\)</span>来说是常数，所以可以直接忽略，于是式子简化为：</p>
 <p><span class="math display">\[
 n_S(x)=\sum_{i=0}^{k-1}\sum_{j=0}^{k-1}([\tilde{\boldsymbol\alpha}_i]_j-1)\log\mathbf y(T_i(x))_j=\sum_{i=0}^{k-1}(\tilde{\boldsymbol \alpha}_i-1)\cdot\log\mathbf y(T_i(x))
 \]</span></p>
 <p>一个简单的形式是<span class="math inline">\(\hat{n}_S(x)=\frac{1}{k}\sum^{k-1}_{j=0}[\mathbf y(T_j(x))]_j\)</span>，</p>
 <p><img src="http://qfxiao.me/img/image-20200621202358920.png" srcset="/img/loading.gif" style="zoom: 67%;" /></p>
+<p>整个算法的流程如下：</p>
+<p><img src="http://qfxiao.me/img/image-20200622224913279.png" srcset="/img/loading.gif" style="zoom: 67%;" /></p>
+<p>这里简单说一下检测阶段的流程。在训练好模型之后，对于一个新样本<span class="math inline">\(x\)</span>，对其进行<span class="math inline">\(K\)</span>个几何变换之后，得到<span class="math inline">\(K\)</span>个样本<span class="math inline">\(\{T_i(x)\}\)</span>，对于每个样本分类器<span class="math inline">\(f_\theta\)</span>会给出输出<span class="math inline">\(\mathbf y(T_i(x))\)</span>。</p>
 <h1 id="experiments">Experiments</h1>
 <h2 id="baselines">Baselines</h2>
 <p>文中用到了如下的Baseline：</p>
