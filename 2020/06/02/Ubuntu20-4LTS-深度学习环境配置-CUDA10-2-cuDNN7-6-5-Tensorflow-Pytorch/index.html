@@ -201,20 +201,20 @@
 <p>Ubuntu的最新LTS版本也更新到了20.04，在给新机器配置深度学习环境的时候发现比以前容易了许多，特此写一篇Tutorial。这里的安装方法只针对Ubuntu20.04LTS，对于其他版本的系统可能不太适用。</p>
 <h1 id="install-gpu-drivers">Install GPU Drivers</h1>
 <p>这里假设安装系统之后已经做好了必要的配置（安装常用软件依赖、修改国内源等）。Ubuntu20.04中GPU驱动可以直接通过GUI界面安装，十分方便，方法是找到软件与更新 (Software &amp; Updates)，在附加驱动 (additional drivers) 选项卡中选择驱动版本，一般是选择“专有，tested” (proprietary, tested) 那个，之后点Apply Changes，重启。</p>
-<p><img src="http://qfxiao.me/img/software_updates_additional_drivers_nvidia.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/24/xevtVosYOH7D68I.png" srcset="/img/loading.gif" /></p>
 <h1 id="install-cuda-cudnn">Install CUDA &amp; cuDNN</h1>
 <p>这里选择apt-get的方式安装CUDA：</p>
 <pre><code class="hljs bash">sudo apt-get install nvidia-cuda-toolkit</code></pre>
 <p>输入<code>nvcc --version</code>可以测试是否安装成功，输入<code>nvidia-smi</code>可以看到GPU信息和CUDA版本。</p>
 <p>之后安装cuDNN，进入<a href="https://developer.nvidia.com/cudnn" target="_blank" rel="noopener">官网</a>，选择Download cuDNN：</p>
-<p><img src="http://qfxiao.me/img/image-20200602112803325.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/24/VYBRoINFDC9ObA1.png" srcset="/img/loading.gif" /></p>
 <p>会要求登录，如果没有账号的注册一个即可。在这里根据CUDA版本选择适合的cuDNN，我这里是CUDA10.2。我们选择deb包的方式安装，下载下图中圈出来的三个deb包，依次用<code>sudo dpkg -i xxx.deb</code>命令安装。</p>
-<p><img src="http://qfxiao.me/img/image-20200602112922230.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/24/qcDG5t3JY6vfoQM.png" srcset="/img/loading.gif" /></p>
 <h1 id="configure-python">Configure Python</h1>
 <p>为了更好地管理Python包和虚拟环境，我们需要安装Anaconda。使用Anaconda之后，我们可以创建虚拟环境，虚拟环境之间互不干扰。做科学实验我们一般需要安装大量的Python包，有的包之间甚至还有冲突，如果我们把他们都安装在同一个环境下就会难以管理，甚至出冲突。而有了虚拟环境之后，我们可以把不同需求放在不同虚拟环境中，比如深度学习开发放在一个虚拟环境中（安装Tensorflow等），网站开发放在一个虚拟环境中（安装Flask等）。Anaconda默认自带大量的包，不过我们一般会创建新的虚拟环境去安装新的包，所以这里我们选用Miniconda。Miniconda和Anaconda唯一的区别是不会自带大量Python包，这里大家自行选择。Anaconda国内镜像下载地址为：https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/，Miniconda国内镜像下载地址为：https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/。</p>
 <p>比如说我们下载的是<code>Miniconda3-py38_4.8.2-Linux-x86_64.sh</code>，执行<code>bash Miniconda3-py38_4.8.2-Linux-x86_64.sh</code>即可安装。显示一大屏用户协议哪儿按<code>q</code>可以直接跳过，其他选项的默认的输入<code>yes</code>即可。在提示是否需要conda init的时候记得输入<code>yes</code>。</p>
 <p>安装成功之后，重开一个终端，可以看到现在处于<code>base</code>环境中：</p>
-<p><img src="http://qfxiao.me/img/image-20200602114523426.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/24/giml1UKzWuyqTjr.png" srcset="/img/loading.gif" /></p>
 <p>我们先配置一下国内镜像，执行</p>
 <pre><code class="hljs bash">vim ~/.condarc</code></pre>
 <p>然后粘贴下列文本使用清华源：</p>

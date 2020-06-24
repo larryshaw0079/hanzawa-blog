@@ -214,12 +214,12 @@ G_\gamma:x\mapsto \exp(-(1+\gamma x)^{-\frac{1}{\gamma}}), \space\space\space\sp
 <p><strong>THEOREM: </strong>(Fisher-Tippett-Gnedenko). 令<span class="math inline">\(X_1,X_2,\cdots,X_n,\cdots\)</span>为独立同分布的随机变量序列，<span class="math inline">\(M_n=\max \{X_1,\cdots,X_n\}\)</span>。如果实数对序列<span class="math inline">\((a_n,b_n)\)</span>存在且满足<span class="math inline">\(a_n&gt;0\)</span>和<span class="math inline">\(\lim\limits_{n\rightarrow \infty}P\left(\frac{M_n-b_n}{a_n}\leq x\right)=F(x)\)</span>，其中<span class="math inline">\(F\)</span>为非退化分布函数，那么<span class="math inline">\(F\)</span>属于Gumbel、Fréchet或Weibull分布族（或总称Generalized Extreme Value Distribution）中的一种。</p>
 </blockquote>
 <p>这是一个反直觉的结论，但是想到当事件发生变得极端时，即<span class="math inline">\(\mathbb{P}(X&gt;x)\rightarrow 0\)</span>，<span class="math inline">\(\bar{F}(x)=\mathbb{P}(X&gt;x)\)</span>分布的形状其实并没有很多种选择。Table 1展示了几种不同分布对应的<span class="math inline">\(\gamma\)</span>：</p>
-<p><img src="http://qfxiao.me/img/image-20191029162343219.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/24/jyhoWZGc2gFTrJv.png" srcset="/img/loading.gif" /></p>
 <p>Figure 1展示了几种不同<span class="math inline">\(\gamma\)</span>情况下的“末尾”分布：</p>
-<p><img src="http://qfxiao.me/img/image-20191029113903386.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/24/4rmZL1AMcBJ2Vzq.png" srcset="/img/loading.gif" /></p>
 <h2 id="power-of-evt">Power of EVT</h2>
 <p>根据<strong>Extreme Value Theory</strong>，我们可以在原始分布未知的情况下计算极端事件的概率。但是<span class="math inline">\(\bar{G}_\gamma\)</span>分布中参数<span class="math inline">\(\gamma\)</span>是未知的，我们需要一种高效的方法来进行估计。<strong>The Peaks-Over-Threshold</strong> (POT) 方法是本文介绍的一种方法。</p>
-<p><img src="http://qfxiao.me/img/image-20191029162456947.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/24/hX2T1IkMAqfioZl.png" srcset="/img/loading.gif" /></p>
 <h2 id="peaks-over-threshold-approach">Peaks-Over-Threshold Approach</h2>
 <p>POT方法依赖于Pickands-Balkema-De Haan定理（极值理论第二定理），维基百科版：</p>
 <blockquote>
@@ -273,15 +273,15 @@ x^*_{\text{max}}=2\frac{\bar{Y}-Y^m}{(Y^m)^2}
 <p>本文据此提出了时间序列流的异常检测方法。首先根据已知的观测值<span class="math inline">\(X_1,\cdots,X_n\)</span>得到阈值<span class="math inline">\(z_q\)</span>，然后根据数据的特性运用两种不同方法来更新<span class="math inline">\(z_q\)</span>。对于平稳时间序列，使用SPOT；对于非平稳时间序列，使用DSPOT。</p>
 <h2 id="initialization-step">Initialization Step</h2>
 <p>在进行异常检测之前，需要根据已有的观测数据进行<span class="math inline">\(z_q\)</span>的估计。给定<span class="math inline">\(n\)</span>个观测值<span class="math inline">\(X_1,\cdots,X_n\)</span>和一个固定的概率值<span class="math inline">\(q\)</span>，我们的目标是估计阈值<span class="math inline">\(z_q\)</span>使得<span class="math inline">\(\mathbb{P}(X&gt;z_q)&lt;q\)</span>。其主要流程是首先设定一个较大的阈值<span class="math inline">\(t\)</span>，然后通过拟合GPD分布来计算<span class="math inline">\(z_q\)</span>。过程如下图所示：</p>
-<p><img src="http://qfxiao.me/img/image-20191029114030518.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/24/fzeC8vuDtA6mEdl.png" srcset="/img/loading.gif" /></p>
 <p>算法流程如下所示：</p>
-<p><img src="http://qfxiao.me/img/image-20191029114001461.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/24/AEQpnZPiW3C4mr7.png" srcset="/img/loading.gif" /></p>
 <p><span class="math inline">\(Y_t\)</span>代表大于<span class="math inline">\(t\)</span>的观测值的集合，GPD分布的拟合使用了前文提到的Grimshaw's Trick。</p>
 <h2 id="finding-anomalies-in-a-stream">Finding Anomalies in a Stream</h2>
 <p>通过Initialization Step使用POT算法得到的<span class="math inline">\(z_q\)</span>，我们定义其为&quot;Normality Bound&quot;，用于后面的检测。在后面的步骤中，我们会根据新得到的观测值来更新<span class="math inline">\(z_q\)</span>。</p>
 <h3 id="stationary-case">Stationary Case</h3>
 <p>我们首先来讨论时间序列没有时间依赖性的情况（<span class="math inline">\(X_1,\cdots,X_n\)</span>之间独立同分布）。通过POT算法对所有观测值得到<span class="math inline">\(z_q\)</span>之后，Streaming POT (SPOT) 算法会检查<span class="math inline">\(X_n\)</span>之后的值（数据流场景，<span class="math inline">\(X_1,\cdots,X_n\)</span>是历史数据，还会有新的数据进来），如果大于<span class="math inline">\(z_q\)</span>，则将<span class="math inline">\(X_i\)</span>加入异常点集合中；如果大于<span class="math inline">\(t\)</span>但小于<span class="math inline">\(z_q\)</span>，则将<span class="math inline">\(X_i\)</span>加入观测值集合中，更新<span class="math inline">\(z_q\)</span>；其他情况我们<span class="math inline">\(X_i\)</span>是正常情况。算法流程图如下：</p>
-<p><img src="http://qfxiao.me/img/image-20191029114020571.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/24/h5yKnlCAYxbHu2R.png" srcset="/img/loading.gif" /></p>
 <h3 id="drifting-case">Drifting Case</h3>
 <p>SPOT算法只适用于平稳分布的情况，但在现实生活中这样的假设过强了。于是作者提出了能处理时间依赖性的Streaming POT with Drift (DSPOT) 算法。</p>
 <p><img src="http://qfxiao.me/img/image-20191029114054583.png" srcset="/img/loading.gif" /></p>

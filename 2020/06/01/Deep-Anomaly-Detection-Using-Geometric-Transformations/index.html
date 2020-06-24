@@ -158,7 +158,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    2.3k 字
+                    2.4k 字
                   </span>
                 
 
@@ -218,7 +218,7 @@ h_S^\lambda(x)=
 <p><span class="math display">\[
 S_\mathcal T=\{(T_j(x),j):x\in S,T_j\in\mathcal T\}
 \]</span> 对于每个<span class="math inline">\(x\in S\)</span>，<span class="math inline">\(j\)</span>为<span class="math inline">\(T_j(x)\)</span>的标签。我们直接学习一个<span class="math inline">\(K\)</span>类分类器<span class="math inline">\(f_\theta\)</span>，来预测输入样本对应的几何变换种类，这相当于是一个图像分类问题。</p>
-<p><img src="http://qfxiao.me/img/image-20200621175220803.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/24/XBFKcPio64u3U1C.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <h3 id="dirichlet-normality-score">Dirichlet Normality Score</h3>
 <p>接下来要做的是如何定义异常分数，记为<span class="math inline">\(n_S(x)\)</span>，这是文中的一个重要的部分。设几何变换集合<span class="math inline">\(\mathcal T=\{T_0,T_1,\cdots,T_{k-1}\}\)</span>，且<span class="math inline">\(k\)</span>分类器<span class="math inline">\(f_\theta\)</span>在<span class="math inline">\(S_\mathcal{T}\)</span>上完成训练。对于任意一个样本<span class="math inline">\(x\)</span>，令<span class="math inline">\(\mathbf y(x)=\text{softmax}(f_{\theta}(x))\)</span>，即分类器<span class="math inline">\(f_\theta\)</span>输出的<span class="math inline">\(\text{softmax}\)</span>之后的向量。异常分数<span class="math inline">\(n_S(x)\)</span>定义为：</p>
 <p><span class="math display">\[
@@ -295,7 +295,6 @@ scores += dirichlet_normality_score(mle_alpha_t, x_test_p)</code></pre>
 <p>函数<code>dirichlet_normality_score</code>代码如下：</p>
 <pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">dirichlet_normality_score</span><span class="hljs-params">(alpha, p)</span>:</span>
     <span class="hljs-keyword">return</span> np.sum((alpha - <span class="hljs-number">1</span>) * np.log(p), axis=<span class="hljs-number">-1</span>)</code></pre>
-<hr />
 <h1 id="experiments">Experiments</h1>
 <h2 id="baselines">Baselines</h2>
 <p>文中用到了如下的Baseline：</p>
@@ -306,12 +305,14 @@ scores += dirichlet_normality_score(mle_alpha_t, x_test_p)</code></pre>
 <li><strong>Generative Adversarial Networks. </strong></li>
 </ul>
 <h2 id="datasets">Datasets</h2>
+<p>文中用到了一下几个数据集：</p>
 <ul>
 <li><strong>CIFAR-10</strong></li>
 <li><strong>CIFAR-100</strong></li>
 <li><strong>Fashion-MNIST</strong></li>
 <li><strong>CatsVsDogs</strong></li>
 </ul>
+<p>在实验中所有图片都被归一化到<span class="math inline">\([-1,1]\)</span>的范围。</p>
 <h2 id="experimental-protocol">Experimental Protocol</h2>
 <p>设数据集有<span class="math inline">\(C\)</span>个类，我们会进行<span class="math inline">\(C\)</span>次实验，在第<span class="math inline">\(c\)</span>次实验 (<span class="math inline">\(1\leq c \leq C\)</span>)中我们会将第<span class="math inline">\(c\)</span>个类作为正常样本，而其他类作为异常样本。在训练阶段，训练集只包含正常样本，而在测试阶段则会有正常样本和异常样本。在获得异常分数之后，阈值<span class="math inline">\(\lambda\)</span>则根据ROC曲线下面积选择。</p>
 <p>实验中使用的几何变换基于以下三种基变换：</p>
@@ -331,10 +332,10 @@ scores += dirichlet_normality_score(mle_alpha_t, x_test_p)</code></pre>
 \]</span> 最终几何变换种数为<span class="math inline">\(2\times3\times3\times4=72\)</span>种。</p>
 <p>分类器模型使用的是<strong>Wide Residual Network</strong>，优化器为Adam，Batch size为128，训练轮数为200。</p>
 <h2 id="results">Results</h2>
-<p><img src="http://qfxiao.me/img/image-20200509211119999.png" srcset="/img/loading.gif"  /></p>
+<p><img src="https://i.loli.net/2020/06/24/gHZohrvz9MGYmxi.png" srcset="/img/loading.gif" /></p>
 <h2 id="identifying-out-of-distribution-samples-in-labeled-multi-class-datasets">Identifying Out-of-distribution Samples in Labeled Multi-class Datasets</h2>
 <h2 id="on-the-intuition-for-using-geometric-transformations">On the Intuition for Using Geometric Transformations</h2>
-<p><img src="http://qfxiao.me/img/image-20200509211050138.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/24/8Pi4EKCRuBXrYgp.png" srcset="/img/loading.gif" /></p>
 
             </article>
             <hr>
