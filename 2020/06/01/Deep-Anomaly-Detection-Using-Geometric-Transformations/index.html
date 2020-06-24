@@ -158,7 +158,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    1.5k 字
+                    2.2k 字
                   </span>
                 
 
@@ -168,7 +168,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    19
+                    31
                      分钟
                   </span>
                 
@@ -224,19 +224,77 @@ S_\mathcal T=\{(T_j(x),j):x\in S,T_j\in\mathcal T\}
 <p><span class="math display">\[
 n_S(x)=\sum\limits_{i=0}^{k-1}\log p(\mathbf y(T_i(x))|T_i)
 \]</span></p>
-<p>该异常分数定义为每个类别上，在几何变换<span class="math inline">\(T_i\)</span>的条件下，输出的<span class="math inline">\(\mathbf y\)</span>的对数似然之和。每个条件分布假设为<span class="math inline">\(\mathbf y(T_i(x))|T_i\sim\text{Dir}(\boldsymbol \alpha_i)\)</span>，其中<span class="math inline">\(\boldsymbol \alpha_i\in\mathbb R^k_+\)</span>，<span class="math inline">\(x\sim p_X(x)\)</span>，<span class="math inline">\(i\sim\text{Uni}(0,k-1)\)</span>，而<span class="math inline">\(p_X(x)\)</span>代表正常样本的真实数据分布。于是：</p>
+<p>该异常分数定义为每个类别上，在几何变换<span class="math inline">\(T_i\)</span>的条件下，输出的<span class="math inline">\(\mathbf y\)</span>的对数似然之和。在文中，作者假设<span class="math inline">\(\mathbf y(T_i(x)|T_i\)</span>服从迪利克雷分布：<span class="math inline">\(\mathbf y(T_i(x))|T_i\sim\text{Dir}(\boldsymbol \alpha_i)\)</span>，其中<span class="math inline">\(\boldsymbol \alpha_i\in\mathbb R^k_+\)</span>，<span class="math inline">\(x\sim p_X(x)\)</span>，<span class="math inline">\(i\sim\text{Uni}(0,k-1)\)</span>，而<span class="math inline">\(p_X(x)\)</span>代表正常样本的真实数据分布。于是：</p>
 <p><span class="math display">\[
 n_S(x)=\sum_{i=0}^{k-1}\left[\log\Gamma(\sum_{j=0}^{k-1}[\tilde{\boldsymbol\alpha}_i]_j)-\sum_{j=0}^{k-1}\log\Gamma([\tilde{\boldsymbol\alpha}_i]_j)+\sum_{j=0}^{k-1}([\tilde{\boldsymbol\alpha}_i]_j-1)\log\mathbf y(T_i(x))_j\right]
 \]</span></p>
-<p>因为<span class="math inline">\(\tilde{\alpha}_i\)</span>相对于<span class="math inline">\(x\)</span>来说是常数，所以可以直接忽略，于是式子简化为：</p>
-<p><span class="math display">\[
+<p>注意这里的每个<span class="math inline">\(\boldsymbol \alpha_i\)</span>都是一个向量，即对于每个变换<span class="math inline">\(i\)</span>，都对应一个迪利克雷分布，其参数为<span class="math inline">\(\boldsymbol\alpha_i\)</span>；在对训练集进行第<span class="math inline">\(i\)</span>个几何变换之后，我们得到了<span class="math inline">\(\{T_i(x)\}\)</span>，</p>
+<pre><code class="hljs bash">[INFO] value of mle_alpha_t:
+ [ 0.10228925  0.08997199  0.13083569  0.10862965  0.09811163  0.08527119
+  0.17637901  0.27628416  0.12873376  0.19197053  0.11587154  0.09873095
+  0.12700618  0.07688542  0.10488203  0.12499191  0.11637607  0.07739511
+  0.13049147  0.51031647  0.20546597  0.15558449  0.09288609  0.12134945
+  0.09324992  0.14650162  0.16281216  0.11827823  0.08214853  0.15618336
+  0.28129761  0.45293697  0.11485838  1.78598954  0.16556983  0.1141158
+  0.10909459  0.13916602  0.11563799  0.07309986  0.11049714  0.12974086
+  0.15930642  0.13714361  0.13938356  0.70619553  0.11174039  0.07201538
+  0.16626109  0.12153727  0.09548811  0.07940956  0.15832209  0.11035474
+  0.12487912  0.16937875  0.23212662  0.37041831  0.08557451  0.0839439
+  0.09924258  0.39766872  0.14917286  0.08704662  0.09554555  0.31047109
+  0.24504759  0.16812463  0.11508187 63.98878807  0.12971073  0.07972932]</code></pre>
+<p>因为<span class="math inline">\(\tilde{\alpha}_i\)</span>相对于<span class="math inline">\(x\)</span>来说是常数，所以可以直接忽略，于是式子简化为： <span class="math display">\[
 n_S(x)=\sum_{i=0}^{k-1}\sum_{j=0}^{k-1}([\tilde{\boldsymbol\alpha}_i]_j-1)\log\mathbf y(T_i(x))_j=\sum_{i=0}^{k-1}(\tilde{\boldsymbol \alpha}_i-1)\cdot\log\mathbf y(T_i(x))
 \]</span></p>
-<p>一个简单的形式是<span class="math inline">\(\hat{n}_S(x)=\frac{1}{k}\sum^{k-1}_{j=0}[\mathbf y(T_j(x))]_j\)</span>，</p>
-<p><img src="http://qfxiao.me/img/image-20200621202358920.png" srcset="/img/loading.gif" style="zoom: 67%;" /></p>
+<p>作者还给出了一种简化的形式，<span class="math inline">\(\hat{n}_S(x)=\frac{1}{k}\sum^{k-1}_{j=0}[\mathbf y(T_j(x))]_j\)</span>。相当于说，对于每个变换<span class="math inline">\(T_i\)</span>分类器都会给出一个<span class="math inline">\(\text{softmax}\)</span>向量，取其第<span class="math inline">\(i\)</span>个分量<span class="math inline">\([\mathbf y(T_j(x))]_j\)</span>，然后把每个变换对应的<span class="math inline">\([\mathbf y(T_j(x))]_j\)</span>加起来。</p>
+<p><img src="https://i.loli.net/2020/06/23/fLkst4i7Hu6PhQl.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <p>整个算法的流程如下：</p>
-<p><img src="http://qfxiao.me/img/image-20200622224913279.png" srcset="/img/loading.gif" style="zoom: 67%;" /></p>
-<p>这里简单说一下检测阶段的流程。在训练好模型之后，对于一个新样本<span class="math inline">\(x\)</span>，对其进行<span class="math inline">\(K\)</span>个几何变换之后，得到<span class="math inline">\(K\)</span>个样本<span class="math inline">\(\{T_i(x)\}\)</span>，对于每个样本分类器<span class="math inline">\(f_\theta\)</span>会给出输出<span class="math inline">\(\mathbf y(T_i(x))\)</span>。</p>
+<p><img src="https://i.loli.net/2020/06/23/z8MpdeoD6ZGavlN.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p>这里结合作者的源代码简单说一下检测阶段的流程。</p>
+<hr />
+<pre><code class="hljs python"><span class="hljs-keyword">for</span> t_ind <span class="hljs-keyword">in</span> range(transformer.n_transforms):
+        observed_dirichlet = mdl.predict(transformer.transform_batch(observed_data, [t_ind] * len(observed_data)), batch_size=<span class="hljs-number">1024</span>)</code></pre>
+<p>在训练好模型之后，对于训练集的所有样本，对其进行<span class="math inline">\(K\)</span>个几何变换之后，得到<span class="math inline">\(K\)</span>个样本<span class="math inline">\(\{T_i(x)\}\)</span>，对于所有第<span class="math inline">\(i\)</span>个几何变换对应的样本<span class="math inline">\(\{T_i(x)\}\)</span>，通过分类器<span class="math inline">\(f_\theta\)</span>会给出输出<span class="math inline">\(\mathbf y(T_i(x))\)</span>。这里对应算法中的第<span class="math inline">\(7-8\)</span>行，这个<code>observed_dirichlet</code>就是<span class="math inline">\(S_i\)</span>。</p>
+<hr />
+<pre><code class="hljs python">log_p_hat_train = np.log(observed_dirichlet).mean(axis=<span class="hljs-number">0</span>)
+
+alpha_sum_approx = calc_approx_alpha_sum(observed_dirichlet)
+alpha_0 = observed_dirichlet.mean(axis=<span class="hljs-number">0</span>) * alpha_sum_approx</code></pre>
+<p>之后这部分主要对应算法中的<span class="math inline">\(9-11\)</span>行。作者把所有的第<span class="math inline">\(i\)</span>个变换，分类器的输出的集合（也就是变量<code>observed_dirichlet</code>）记为<span class="math inline">\(S_i\)</span>，<span class="math inline">\(\bar s\)</span>为<span class="math inline">\(S_i\)</span>的平均，<span class="math inline">\(\bar l\)</span>为<span class="math inline">\(S_i\)</span>对数的平均（变量<code>log_p_hat_train</code>），初始值<span class="math inline">\(\tilde{\alpha}_i\)</span>由<span class="math inline">\(\bar s\frac{(k-1)(-\Psi(1))}{\bar s\cdot\log\bar s-\bar s\cdot\bar l}\)</span>给出（变量<code>alpha_0</code>）。函数<code>calc_approx_alpha_sum</code>实现的是算法中第<span class="math inline">\(11\)</span>行的<span class="math inline">\(\frac{(k-1)(-\Psi(1))}{\bar s\cdot\log\bar s-\bar s\cdot\bar l}\)</span>，代码如下：</p>
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">calc_approx_alpha_sum</span><span class="hljs-params">(observations)</span>:</span>
+    N = len(observations)
+    f = np.mean(observations, axis=<span class="hljs-number">0</span>)
+
+    <span class="hljs-keyword">return</span> (N * (len(f) - <span class="hljs-number">1</span>) * (-psi(<span class="hljs-number">1</span>))) / (
+        N * np.sum(f * np.log(f)) - np.sum(f * np.sum(np.log(observations), axis=<span class="hljs-number">0</span>)))</code></pre>
+<hr />
+<pre><code class="hljs python">mle_alpha_t = fixed_point_dirichlet_mle(alpha_0, log_p_hat_train)</code></pre>
+<p>这里对应算法中的<span class="math inline">\(12-14\)</span>行，即重复<span class="math inline">\(\tilde\alpha_i\leftarrow\Psi^{-1}\left(\Psi(\sum_j[\alpha_i]_j)+\bar l\right)\)</span>来估计<span class="math inline">\(\alpha\)</span>，函数<code>fixed_point_dirichlet_mle</code>代码如下：</p>
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">fixed_point_dirichlet_mle</span><span class="hljs-params">(alpha_init, log_p_hat, max_iter=<span class="hljs-number">1000</span>)</span>:</span>
+    alpha_new = alpha_old = alpha_init
+    <span class="hljs-keyword">for</span> _ <span class="hljs-keyword">in</span> range(max_iter):
+        alpha_new = inv_psi(psi(np.sum(alpha_old)) + log_p_hat)
+        <span class="hljs-keyword">if</span> np.sqrt(np.sum((alpha_old - alpha_new) ** <span class="hljs-number">2</span>)) &lt; <span class="hljs-number">1e-9</span>:
+            <span class="hljs-keyword">break</span>
+        alpha_old = alpha_new
+    <span class="hljs-keyword">return</span> alpha_new</code></pre>
+<p><span class="math inline">\(\Psi^{-1}(\cdot)\)</span>是通过数值方法来估计的：</p>
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">inv_psi</span><span class="hljs-params">(y, iters=<span class="hljs-number">5</span>)</span>:</span>
+    <span class="hljs-comment"># initial estimate</span>
+    cond = y &gt;= <span class="hljs-number">-2.22</span>
+    x = cond * (np.exp(y) + <span class="hljs-number">0.5</span>) + (<span class="hljs-number">1</span> - cond) * <span class="hljs-number">-1</span> / (y - psi(<span class="hljs-number">1</span>))
+
+    <span class="hljs-keyword">for</span> _ <span class="hljs-keyword">in</span> range(iters):
+        x = x - (psi(x) - y) / polygamma(<span class="hljs-number">1</span>, x)
+    <span class="hljs-keyword">return</span> x</code></pre>
+<hr />
+<p>最后，在得到对<span class="math inline">\(\alpha\)</span>的估计之后，可以来计算测试样本的分数了。这里对应的是算法中的第<span class="math inline">\(16\)</span>行。</p>
+<pre><code class="hljs python">x_test_p = mdl.predict(transformer.transform_batch(x_test, [t_ind] * len(x_test)), batch_size=<span class="hljs-number">1024</span>)
+
+scores += dirichlet_normality_score(mle_alpha_t, x_test_p)</code></pre>
+<p>函数<code>dirichlet_normality_score</code>代码如下：</p>
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">dirichlet_normality_score</span><span class="hljs-params">(alpha, p)</span>:</span>
+    <span class="hljs-keyword">return</span> np.sum((alpha - <span class="hljs-number">1</span>) * np.log(p), axis=<span class="hljs-number">-1</span>)</code></pre>
+<hr />
 <h1 id="experiments">Experiments</h1>
 <h2 id="baselines">Baselines</h2>
 <p>文中用到了如下的Baseline：</p>
