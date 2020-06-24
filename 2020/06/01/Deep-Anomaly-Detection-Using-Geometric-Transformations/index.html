@@ -158,7 +158,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    2.2k 字
+                    2.3k 字
                   </span>
                 
 
@@ -168,7 +168,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    31
+                    33
                      分钟
                   </span>
                 
@@ -228,7 +228,10 @@ n_S(x)=\sum\limits_{i=0}^{k-1}\log p(\mathbf y(T_i(x))|T_i)
 <p><span class="math display">\[
 n_S(x)=\sum_{i=0}^{k-1}\left[\log\Gamma(\sum_{j=0}^{k-1}[\tilde{\boldsymbol\alpha}_i]_j)-\sum_{j=0}^{k-1}\log\Gamma([\tilde{\boldsymbol\alpha}_i]_j)+\sum_{j=0}^{k-1}([\tilde{\boldsymbol\alpha}_i]_j-1)\log\mathbf y(T_i(x))_j\right]
 \]</span></p>
-<p>注意这里的每个<span class="math inline">\(\boldsymbol \alpha_i\)</span>都是一个向量，即对于每个变换<span class="math inline">\(i\)</span>，都对应一个迪利克雷分布，其参数为<span class="math inline">\(\boldsymbol\alpha_i\)</span>；在对训练集进行第<span class="math inline">\(i\)</span>个几何变换之后，我们得到了<span class="math inline">\(\{T_i(x)\}\)</span>，</p>
+<p>因为<span class="math inline">\(\tilde{\alpha}_i\)</span>相对于<span class="math inline">\(x\)</span>来说是常数，所以可以直接忽略，于是式子简化为： <span class="math display">\[
+n_S(x)=\sum_{i=0}^{k-1}\sum_{j=0}^{k-1}([\tilde{\boldsymbol\alpha}_i]_j-1)\log\mathbf y(T_i(x))_j=\sum_{i=0}^{k-1}(\tilde{\boldsymbol \alpha}_i-1)\cdot\log\mathbf y(T_i(x))
+\]</span></p>
+<p>注意这里的每个<span class="math inline">\(\boldsymbol \alpha_i\)</span>都是一个向量，即对于每个变换<span class="math inline">\(i\)</span>，都对应一个迪利克雷分布，其参数为<span class="math inline">\(\boldsymbol\alpha_i\)</span>；在对训练集进行第<span class="math inline">\(i\)</span>个几何变换之后，我们得到了<span class="math inline">\(\{T_i(x)\}\)</span>，然后分类器<span class="math inline">\(f_\theta(\cdot)\)</span>的输出<span class="math inline">\(\mathbf y(T_i(x))\)</span>相当于迪利克雷分布的观测值，我们需要根据观测值来估计参数<span class="math inline">\(\boldsymbol \alpha_i\)</span>，然后根据这个参数来计算<span class="math inline">\(n_S(x)\)</span>。对于<span class="math inline">\(\boldsymbol\alpha_i\)</span>，可以知道其第<span class="math inline">\(i\)</span>个分量应该是相对比较大的，下面是运行官方代码得到的<span class="math inline">\(\boldsymbol\alpha_i\)</span>的结果（<span class="math inline">\(i=69\)</span>，<span class="math inline">\(i\)</span>从<span class="math inline">\(0\)</span>开始，总共为<span class="math inline">\(72\)</span>维），可以看到第<span class="math inline">\(69\)</span>个分量是最大的。</p>
 <pre><code class="hljs bash">[INFO] value of mle_alpha_t:
  [ 0.10228925  0.08997199  0.13083569  0.10862965  0.09811163  0.08527119
   0.17637901  0.27628416  0.12873376  0.19197053  0.11587154  0.09873095
@@ -242,11 +245,9 @@ n_S(x)=\sum_{i=0}^{k-1}\left[\log\Gamma(\sum_{j=0}^{k-1}[\tilde{\boldsymbol\alph
   0.12487912  0.16937875  0.23212662  0.37041831  0.08557451  0.0839439
   0.09924258  0.39766872  0.14917286  0.08704662  0.09554555  0.31047109
   0.24504759  0.16812463  0.11508187 63.98878807  0.12971073  0.07972932]</code></pre>
-<p>因为<span class="math inline">\(\tilde{\alpha}_i\)</span>相对于<span class="math inline">\(x\)</span>来说是常数，所以可以直接忽略，于是式子简化为： <span class="math display">\[
-n_S(x)=\sum_{i=0}^{k-1}\sum_{j=0}^{k-1}([\tilde{\boldsymbol\alpha}_i]_j-1)\log\mathbf y(T_i(x))_j=\sum_{i=0}^{k-1}(\tilde{\boldsymbol \alpha}_i-1)\cdot\log\mathbf y(T_i(x))
-\]</span></p>
-<p>作者还给出了一种简化的形式，<span class="math inline">\(\hat{n}_S(x)=\frac{1}{k}\sum^{k-1}_{j=0}[\mathbf y(T_j(x))]_j\)</span>。相当于说，对于每个变换<span class="math inline">\(T_i\)</span>分类器都会给出一个<span class="math inline">\(\text{softmax}\)</span>向量，取其第<span class="math inline">\(i\)</span>个分量<span class="math inline">\([\mathbf y(T_j(x))]_j\)</span>，然后把每个变换对应的<span class="math inline">\([\mathbf y(T_j(x))]_j\)</span>加起来。</p>
+<p>下图也展示了对于每个变换<span class="math inline">\(i\)</span>，<span class="math inline">\(\mathbf y(T_i(x)|T_i\)</span>分布的情况：</p>
 <p><img src="https://i.loli.net/2020/06/23/fLkst4i7Hu6PhQl.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p>作者还给出了一种简化的形式，<span class="math inline">\(\hat{n}_S(x)=\frac{1}{k}\sum^{k-1}_{j=0}[\mathbf y(T_j(x))]_j\)</span>。相当于说，对于每个变换<span class="math inline">\(T_i\)</span>分类器都会给出一个<span class="math inline">\(\text{softmax}\)</span>向量，取其第<span class="math inline">\(i\)</span>个分量<span class="math inline">\([\mathbf y(T_j(x))]_j\)</span>，然后把每个变换对应的<span class="math inline">\([\mathbf y(T_j(x))]_j\)</span>加起来。</p>
 <p>整个算法的流程如下：</p>
 <p><img src="https://i.loli.net/2020/06/23/z8MpdeoD6ZGavlN.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <p>这里结合作者的源代码简单说一下检测阶段的流程。</p>
