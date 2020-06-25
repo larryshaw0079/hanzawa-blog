@@ -197,80 +197,109 @@
           <div class="post-content mx-auto" id="post">
             
             <article class="markdown-body">
-              <h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>本文关注<code>Deep Anomaly Detection</code>，也就是用深度学习的方法来进行异常检测。文中提到现有的<code>Deep Anomaly Detection</code>存在两个弊端：一个是采用深度学习方法来进行特征学习，然后通过下游任务得到<code>Anomaly Score</code>，相比文中End-to-End的<code>Anomaly Score</code>学习，存在优化不充分的风险；另一个是现有的方法主要是无监督学习，无法利用已知的信息（如少量标签）。为此，本文提出了一种端到端的异常检测框架，来解决上述问题。</p>
+              <h1 id="introduction">Introduction</h1>
+<p>本文关注<code>Deep Anomaly Detection</code>，也就是用深度学习的方法来进行异常检测。文中提到现有的<code>Deep Anomaly Detection</code>存在两个弊端：一个是采用深度学习方法来进行特征学习，然后通过下游任务得到<code>Anomaly Score</code>，相比文中End-to-End的<code>Anomaly Score</code>学习，存在优化不充分的风险；另一个是现有的方法主要是无监督学习，无法利用已知的信息（如少量标签）。为此，本文提出了一种端到端的异常检测框架，来解决上述问题。</p>
 <p>本文的主要贡献如下：</p>
 <ul>
 <li>提出了一种端到端的异常检测框架，直接学习<code>Anomaly Score</code>并且可以利用已知信息；</li>
 <li>基于提出的框架，文中提出了一种实例方法 (DevNet)。</li>
 </ul>
-<img src="https://i.loli.net/2020/06/25/XT7fqQRWEOuocgy.png" srcset="/img/loading.gif" style="zoom:67%;" />
-
-<h1 id="Proposed-Model"><a href="#Proposed-Model" class="headerlink" title="Proposed Model"></a>Proposed Model</h1><h2 id="End-To-End-Anomaly-Score-Learning"><a href="#End-To-End-Anomaly-Score-Learning" class="headerlink" title="End-To-End Anomaly Score Learning"></a>End-To-End Anomaly Score Learning</h2><h3 id="Problem-Statement"><a href="#Problem-Statement" class="headerlink" title="Problem Statement"></a>Problem Statement</h3><p>为了区别于传统的两阶段异常检测（先学习特征表示，然后在学到的特征上定义一个<code>anomaly measure</code>来得到<code>anomaly score</code>），作者对端到端的异常检测问题重新进行形式化。</p>
-<p>给定$N+K$个样本$\mathcal{X}={\boldsymbol x_1,\boldsymbol x_2,\cdots,\boldsymbol x_N,\boldsymbol x_{N+1},\cdots,\boldsymbol x_{N+K}}$，其中$\boldsymbol x_i\in\mathbb{R}^D$，无标签样本集$\mathcal{U}={\boldsymbol x_1,\boldsymbol x_2,\cdots,\boldsymbol x_N}$，有标签样本集$\mathcal{K}={\boldsymbol x_{N+1},\cdots,\boldsymbol x_{N+K}}$，且$K\ll N$。异常检测的目标是学习一个<code>anomaly scoring function</code>$\phi:\mathcal{X}\mapsto\mathbb{R}$使得$\phi(\boldsymbol x_i)&gt;\phi(\boldsymbol x_j)$，其中$\boldsymbol x_i$为异常样本，$\boldsymbol x_j$为正常样本。</p>
-<h3 id="The-Proposed-Framework"><a href="#The-Proposed-Framework" class="headerlink" title="The Proposed Framework"></a>The Proposed Framework</h3><p>为了解决这个问题，文中提出了一种通用异常检测框架，模型框架如下图所示：</p>
+<p><img src="https://i.loli.net/2020/06/25/XT7fqQRWEOuocgy.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<h1 id="proposed-model">Proposed Model</h1>
+<h2 id="end-to-end-anomaly-score-learning">End-To-End Anomaly Score Learning</h2>
+<h3 id="problem-statement">Problem Statement</h3>
+<p>为了区别于传统的两阶段异常检测（先学习特征表示，然后在学到的特征上定义一个<code>anomaly measure</code>来得到<code>anomaly score</code>），作者对端到端的异常检测问题重新进行形式化。</p>
+<p>给定<span class="math inline">\(N+K\)</span>个样本<span class="math inline">\(\mathcal{X}=\{\boldsymbol x_1,\boldsymbol x_2,\cdots,\boldsymbol x_N,\boldsymbol x_{N+1},\cdots,\boldsymbol x_{N+K}\}\)</span>，其中<span class="math inline">\(\boldsymbol x_i\in\mathbb{R}^D\)</span>，无标签样本集<span class="math inline">\(\mathcal{U}=\{\boldsymbol x_1,\boldsymbol x_2,\cdots,\boldsymbol x_N\}\)</span>，有标签样本集<span class="math inline">\(\mathcal{K}=\{\boldsymbol x_{N+1},\cdots,\boldsymbol x_{N+K}\}\)</span>，且<span class="math inline">\(K\ll N\)</span>。异常检测的目标是学习一个<code>anomaly scoring function</code><span class="math inline">\(\phi:\mathcal{X}\mapsto\mathbb{R}\)</span>使得<span class="math inline">\(\phi(\boldsymbol x_i)&gt;\phi(\boldsymbol x_j)\)</span>，其中<span class="math inline">\(\boldsymbol x_i\)</span>为异常样本，<span class="math inline">\(\boldsymbol x_j\)</span>为正常样本。</p>
+<h3 id="the-proposed-framework">The Proposed Framework</h3>
+<p>为了解决这个问题，文中提出了一种通用异常检测框架，模型框架如下图所示：</p>
 <p>模型框架如下图所示：</p>
-<img src="https://i.loli.net/2020/06/25/ZuE1mb2Ytv6Jdl7.png" srcset="/img/loading.gif" style="zoom:50%;" />
-
+<p><img src="https://i.loli.net/2020/06/25/ZuE1mb2Ytv6Jdl7.png" srcset="/img/loading.gif" style="zoom:50%;" /></p>
 <p>主要包含三个部分：</p>
-<ol>
-<li><em>anomaly scoring network</em>. 图中左边的部分，一个函数$\phi$，输入样本$\mathbf{x}$，输出<code>anomaly score</code></li>
-<li><em>reference score generator</em>. 图中右边的部分。只有一个<em>anomaly scoring network</em>并不能进行训练，需要训练的目标。为此加入<em>reference score generator</em>，输入为随机选择的$l$个正常样本，输出<code>reference score</code>（这$l$个正常样本<code>anomaly score</code>的均值，记为$\mu_\mathcal{R}$）</li>
-<li><em>deviation loss</em>. $\phi(\mathbf{x})$，$\mu_\mathcal{R}$及对应的标准差$\sigma_\mathcal{R}$作为<code>deviation loss</code>函数的输入。因为$\mu_\mathcal{R}$和$\sigma_\mathcal{R}$对应正常样本集的均值和方差，那么异常样本的<code>anomaly score</code>应该和$\mu_\mathcal{R}$差别比较大，而正常样本则应该接近$\mu_\mathcal{R}$。</li>
+<ol type="1">
+<li><em>anomaly scoring network</em>. 图中左边的部分，一个函数<span class="math inline">\(\phi\)</span>，输入样本<span class="math inline">\(\mathbf{x}\)</span>，输出<code>anomaly score</code></li>
+<li><em>reference score generator</em>. 图中右边的部分。只有一个<em>anomaly scoring network</em>并不能进行训练，需要训练的目标。为此加入<em>reference score generator</em>，输入为随机选择的<span class="math inline">\(l\)</span>个正常样本，输出<code>reference score</code>（这<span class="math inline">\(l\)</span>个正常样本<code>anomaly score</code>的均值，记为<span class="math inline">\(\mu_\mathcal{R}\)</span>）</li>
+<li><em>deviation loss</em>. <span class="math inline">\(\phi(\mathbf{x})\)</span>，<span class="math inline">\(\mu_\mathcal{R}\)</span>及对应的标准差<span class="math inline">\(\sigma_\mathcal{R}\)</span>作为<code>deviation loss</code>函数的输入。因为<span class="math inline">\(\mu_\mathcal{R}\)</span>和<span class="math inline">\(\sigma_\mathcal{R}\)</span>对应正常样本集的均值和方差，那么异常样本的<code>anomaly score</code>应该和<span class="math inline">\(\mu_\mathcal{R}\)</span>差别比较大，而正常样本则应该接近<span class="math inline">\(\mu_\mathcal{R}\)</span>。</li>
 </ol>
-<h2 id="Deviation-Networks"><a href="#Deviation-Networks" class="headerlink" title="Deviation Networks"></a>Deviation Networks</h2><p>下面是上述三个部件的具体实现。</p>
-<h3 id="End-To-End-Anomaly-Scoring-Network"><a href="#End-To-End-Anomaly-Scoring-Network" class="headerlink" title="End-To-End Anomaly Scoring Network"></a>End-To-End Anomaly Scoring Network</h3><p>记$\mathcal{Q}\in\mathbb{R}^M$为中间表示空间，<code>anomaly scoring network</code>$\phi(\cdot;\Theta):\mathcal{X}\mapsto\mathbb{R}$可以定义为数据表示学习$\psi(\cdot;\Theta_t):\mathcal{X}\mapsto\mathcal{Q}$和异常分数学习$\eta(\cdot;\Theta_s):\mathcal{Q}\mapsto\mathbb{R}$两阶段的组合，其中$\Theta={\Theta_t,\Theta_s}$。</p>
-<p>$\psi(\cdot;\Theta_t)$可以用一个$H$层神经网络来实现：<br>$$<br>\mathrm{q}=\psi(\mathbf{x};\Theta_t)<br>$$<br>其中$\mathbf{x}\in\mathcal{X}$，$\mathrm{q}\in\mathcal{Q}$。</p>
-<p>$\eta(\cdot;\Theta_s)$可以用一个单层的神经网络来实现：<br>$$<br>\eta(\mathrm q;\Theta_s)=\sum\limits_{i=1}^M w_i^oq_i+w_{M+1}^o<br>$$<br>其中$\mathrm q\in\mathcal Q$，$\Theta_s={\mathbf{w}^o}$。</p>
-<p>所以有：<br>$$<br>\phi(\mathbf{x};\Theta)=\eta(\psi(\mathbf{x};\Theta_t);\Theta_s)<br>$$</p>
-<h3 id="Gaussian-Prior-based-Reference-Scores"><a href="#Gaussian-Prior-based-Reference-Scores" class="headerlink" title="Gaussian Prior-based Reference Scores"></a>Gaussian Prior-based Reference Scores</h3><p>有两种方法来获得$\mu_\mathcal{R}$，一种是data-driven，一种是prior-driven。如果是data-driven的话则采用另一个神经网络，文中表示为了更好的解释性和计算效率，所以采用的是prior-driven。<br>$$<br>\begin{align}<br>r_1,r_2,\cdots,r_l\sim \mathcal{N}(\mu,\sigma^2),\<br>\mu_\mathcal{R}=\frac{1}{l}\sum\limits_{i=1}^l r_i<br>\end{align}<br>$$<br>在文中，采用的prior是标准高斯分布。</p>
-<h2 id="Z-Score-Based-Deviation-Loss"><a href="#Z-Score-Based-Deviation-Loss" class="headerlink" title="Z-Score Based Deviation Loss"></a>Z-Score Based Deviation Loss</h2><p><em>anomaly scoring network</em>的优化目标可以定义为Z-Score的方式：<br>$$<br>dev(\boldsymbol x)=\frac{\phi(\boldsymbol x;\Theta)-\mu_{\mathcal{R}}}{\sigma_{\mathcal{R}}}<br>$$<br>$dev(\boldsymbol x)$可以看作是样本偏离标准的程度，而我们肯定希望异常样本偏离标准越大，正常样本越接近标准。文中采用的损失函数是<code>Contrastive Loss</code>：<br>$$<br>L(\phi(\boldsymbol x;\Theta),\mu_\mathcal{R},\sigma_\mathcal{R})=(1-y)|dev(\boldsymbol x)| + y \max(0, a - dev(\boldsymbol x))<br>$$<br><code>Contrastive Loss</code>的直观解释可以看下图：</p>
-<img src="https://i.loli.net/2020/06/25/aPbSipCsk2JwNcD.png" srcset="/img/loading.gif" style="zoom: 33%;" />
-
+<h2 id="deviation-networks">Deviation Networks</h2>
+<p>下面是上述三个部件的具体实现。</p>
+<h3 id="end-to-end-anomaly-scoring-network">End-To-End Anomaly Scoring Network</h3>
+<p>记<span class="math inline">\(\mathcal{Q}\in\mathbb{R}^M\)</span>为中间表示空间，<code>anomaly scoring network</code><span class="math inline">\(\phi(\cdot;\Theta):\mathcal{X}\mapsto\mathbb{R}\)</span>可以定义为数据表示学习<span class="math inline">\(\psi(\cdot;\Theta_t):\mathcal{X}\mapsto\mathcal{Q}\)</span>和异常分数学习<span class="math inline">\(\eta(\cdot;\Theta_s):\mathcal{Q}\mapsto\mathbb{R}\)</span>两阶段的组合，其中<span class="math inline">\(\Theta=\{\Theta_t,\Theta_s\}\)</span>。</p>
+<p><span class="math inline">\(\psi(\cdot;\Theta_t)\)</span>可以用一个<span class="math inline">\(H\)</span>层神经网络来实现： <span class="math display">\[
+\mathrm{q}=\psi(\mathbf{x};\Theta_t)
+\]</span> 其中<span class="math inline">\(\mathbf{x}\in\mathcal{X}\)</span>，<span class="math inline">\(\mathrm{q}\in\mathcal{Q}\)</span>。</p>
+<p><span class="math inline">\(\eta(\cdot;\Theta_s)\)</span>可以用一个单层的神经网络来实现： <span class="math display">\[
+\eta(\mathrm q;\Theta_s)=\sum\limits_{i=1}^M w_i^oq_i+w_{M+1}^o
+\]</span> 其中<span class="math inline">\(\mathrm q\in\mathcal Q\)</span>，<span class="math inline">\(\Theta_s=\{\mathbf{w}^o\}\)</span>。</p>
+<p>所以有： <span class="math display">\[
+\phi(\mathbf{x};\Theta)=\eta(\psi(\mathbf{x};\Theta_t);\Theta_s)
+\]</span></p>
+<h3 id="gaussian-prior-based-reference-scores">Gaussian Prior-based Reference Scores</h3>
+<p>有两种方法来获得<span class="math inline">\(\mu_\mathcal{R}\)</span>，一种是data-driven，一种是prior-driven。如果是data-driven的话则采用另一个神经网络，文中表示为了更好的解释性和计算效率，所以采用的是prior-driven。 <span class="math display">\[
+\begin{align}
+r_1,r_2,\cdots,r_l\sim \mathcal{N}(\mu,\sigma^2),\\
+\mu_\mathcal{R}=\frac{1}{l}\sum\limits_{i=1}^l r_i
+\end{align}
+\]</span> 在文中，采用的prior是标准高斯分布。</p>
+<h2 id="z-score-based-deviation-loss">Z-Score Based Deviation Loss</h2>
+<p><em>anomaly scoring network</em>的优化目标可以定义为Z-Score的方式： <span class="math display">\[
+dev(\boldsymbol x)=\frac{\phi(\boldsymbol x;\Theta)-\mu_{\mathcal{R}}}{\sigma_{\mathcal{R}}}
+\]</span> <span class="math inline">\(dev(\boldsymbol x)\)</span>可以看作是样本偏离标准的程度，而我们肯定希望异常样本偏离标准越大，正常样本越接近标准。文中采用的损失函数是<code>Contrastive Loss</code>： <span class="math display">\[
+L(\phi(\boldsymbol x;\Theta),\mu_\mathcal{R},\sigma_\mathcal{R})=(1-y)|dev(\boldsymbol x)| + y \max(0, a - dev(\boldsymbol x))
+\]</span> <code>Contrastive Loss</code>的直观解释可以看下图：</p>
+<p><img src="https://i.loli.net/2020/06/25/aPbSipCsk2JwNcD.png" srcset="/img/loading.gif" style="zoom: 33%;" /></p>
 <p>对于负例（正常），优化过程将他们尽量向原点靠近，对于正例（异常），优化过程将他们拉向边界。</p>
-<h2 id="The-DevNet-Algorithm"><a href="#The-DevNet-Algorithm" class="headerlink" title="The DevNet Algorithm"></a>The DevNet Algorithm</h2><p><code>DevNet</code>的算法流程图如下：</p>
-<img src="https://i.loli.net/2020/06/25/km9H5DoNRbOQ784.png" srcset="/img/loading.gif" style="zoom:67%;" />
-
-<h2 id="Interpretability-of-Anomaly-Scores"><a href="#Interpretability-of-Anomaly-Scores" class="headerlink" title="Interpretability of Anomaly Scores"></a>Interpretability of Anomaly Scores</h2><p>因为<em>reference score generator</em>选择的是确定的高斯分布，于是可以用概率论给出一些解释性。作者给出了一个结论，</p>
+<h2 id="the-devnet-algorithm">The DevNet Algorithm</h2>
+<p><code>DevNet</code>的算法流程图如下：</p>
+<p><img src="https://i.loli.net/2020/06/25/km9H5DoNRbOQ784.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<h2 id="interpretability-of-anomaly-scores">Interpretability of Anomaly Scores</h2>
+<p>因为<em>reference score generator</em>选择的是确定的高斯分布，于是可以用概率论给出一些解释性。作者给出了一个结论，</p>
 <blockquote>
-<p><strong>PROPOSITION</strong>： 设$\boldsymbol x\in\mathcal{X}$，$z_p$为$\mathcal{N}(\mu,\sigma^2)$的分位数，那么$\phi(\boldsymbol x)$在区间$\mu\pm z_p\sigma$的概率为$2(1-p)$。</p>
+<p><strong>PROPOSITION</strong>： 设<span class="math inline">\(\boldsymbol x\in\mathcal{X}\)</span>，<span class="math inline">\(z_p\)</span>为<span class="math inline">\(\mathcal{N}(\mu,\sigma^2)\)</span>的分位数，那么<span class="math inline">\(\phi(\boldsymbol x)\)</span>在区间<span class="math inline">\(\mu\pm z_p\sigma\)</span>的概率为<span class="math inline">\(2(1-p)\)</span>。</p>
 </blockquote>
-<p>例如，假设$p=0.95$，那么$z_{0.95}=1.96$，表示异常分数高于1.96的样本将以0.95的置信度为异常。</p>
-<h1 id="Experiment"><a href="#Experiment" class="headerlink" title="Experiment"></a>Experiment</h1><p>实验用到了9个数据集，4个Baseline (REPEN，DSVDD，FSNET，iForest)，以及ROC和PR曲线两种评测标准。</p>
-<h2 id="Effectiveness-in-Real-world-Data-Sets"><a href="#Effectiveness-in-Real-world-Data-Sets" class="headerlink" title="Effectiveness in Real-world Data Sets"></a>Effectiveness in Real-world Data Sets</h2><h3 id="Experiment-Settings"><a href="#Experiment-Settings" class="headerlink" title="Experiment Settings"></a>Experiment Settings</h3><p>这一个实验主要是为了验证算法在真实场景下的效果，即大量无标签数据和极少量标签数据。训练集包含两部分，一部分是无标签数据$\mathcal{U}$,包含$2%$的异常样本，另一部分是有标签数据$\mathcal{K}$，由随机采样$0.005%-1%$的训练数据和$0.08%-6%$的异常样本组成。</p>
-<h3 id="Findings"><a href="#Findings" class="headerlink" title="Findings"></a>Findings</h3><p>实验结果如下表所示：</p>
-<img src="https://i.loli.net/2020/06/25/DKqxJROngML8IS2.png" srcset="/img/loading.gif" style="zoom: 50%;" />
-
+<p>例如，假设<span class="math inline">\(p=0.95\)</span>，那么<span class="math inline">\(z_{0.95}=1.96\)</span>，表示异常分数高于1.96的样本将以0.95的置信度为异常。</p>
+<h1 id="experiment">Experiment</h1>
+<p>实验用到了9个数据集，4个Baseline (REPEN，DSVDD，FSNET，iForest)，以及ROC和PR曲线两种评测标准。</p>
+<h2 id="effectiveness-in-real-world-data-sets">Effectiveness in Real-world Data Sets</h2>
+<h3 id="experiment-settings">Experiment Settings</h3>
+<p>这一个实验主要是为了验证算法在真实场景下的效果，即大量无标签数据和极少量标签数据。训练集包含两部分，一部分是无标签数据<span class="math inline">\(\mathcal{U}\)</span>,包含<span class="math inline">\(2\%\)</span>的异常样本，另一部分是有标签数据<span class="math inline">\(\mathcal{K}\)</span>，由随机采样<span class="math inline">\(0.005\%-1\%\)</span>的训练数据和<span class="math inline">\(0.08\%-6\%\)</span>的异常样本组成。</p>
+<h3 id="findings">Findings</h3>
+<p>实验结果如下表所示：</p>
+<p><img src="https://i.loli.net/2020/06/25/DKqxJROngML8IS2.png" srcset="/img/loading.gif" style="zoom: 50%;" /></p>
 <p>从结果上看来，本文提出的方法在所有数据集上都比Baseline好，说明<code>DevNet</code>端到端直接优化<code>Anomaly Score</code>的方式是有效的。</p>
-<h2 id="Data-Efficiency"><a href="#Data-Efficiency" class="headerlink" title="Data Efficiency"></a>Data Efficiency</h2><h3 id="Experiment-Settings-1"><a href="#Experiment-Settings-1" class="headerlink" title="Experiment Settings"></a>Experiment Settings</h3><p>这一个实验主要是为了探究基于深度的异常检测方法的<em>data efficiency</em>。和上一个实验一样，无标签数据集包含$2%$的异常，而有标签的异常数量从$5$到$120$不等。本实验试图回答以下两个问题：</p>
+<h2 id="data-efficiency">Data Efficiency</h2>
+<h3 id="experiment-settings-1">Experiment Settings</h3>
+<p>这一个实验主要是为了探究基于深度的异常检测方法的<em>data efficiency</em>。和上一个实验一样，无标签数据集包含<span class="math inline">\(2\%\)</span>的异常，而有标签的异常数量从<span class="math inline">\(5\)</span>到<span class="math inline">\(120\)</span>不等。本实验试图回答以下两个问题：</p>
 <ul>
 <li><code>DevNet</code>的<em>data efficiency</em>如何？</li>
 <li>基于深度的方法在多大程度上能够利用标签信息？</li>
 </ul>
-<h3 id="Findings-1"><a href="#Findings-1" class="headerlink" title="Findings"></a>Findings</h3><p>在几个基于深度的Baseline中，<code>DevNet</code>的效果是最好的，同时在有标签异常非常有限的情况下，<code>DevNet</code>也能很好的利用标签信息，达到更好的效果。</p>
-<img src="https://i.loli.net/2020/06/25/iIWGBPosKCuxbRF.png" srcset="/img/loading.gif" style="zoom:67%;" />
-
-<h2 id="Robustness-w-r-t-Anomaly-Contamination"><a href="#Robustness-w-r-t-Anomaly-Contamination" class="headerlink" title="Robustness w.r.t. Anomaly Contamination"></a>Robustness w.r.t. Anomaly Contamination</h2><h3 id="Experiment-Settings-2"><a href="#Experiment-Settings-2" class="headerlink" title="Experiment Settings"></a>Experiment Settings</h3><p>在第一个实验中，无标签数据集$\mathcal{U}$包含的是固定的异常比例$2%$，而在这个实验中，作者测试了从$0%$到$20%$之间不同异常比例来测试算法的鲁棒性（即使$\mathcal{U}$中包含异常，由于没有标签，在训练的时候仍然假设都为正常来进行训练）。本实验试图回答以下问题：</p>
+<h3 id="findings-1">Findings</h3>
+<p>在几个基于深度的Baseline中，<code>DevNet</code>的效果是最好的，同时在有标签异常非常有限的情况下，<code>DevNet</code>也能很好的利用标签信息，达到更好的效果。</p>
+<p><img src="https://i.loli.net/2020/06/25/iIWGBPosKCuxbRF.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<h2 id="robustness-w.r.t.-anomaly-contamination">Robustness w.r.t. Anomaly Contamination</h2>
+<h3 id="experiment-settings-2">Experiment Settings</h3>
+<p>在第一个实验中，无标签数据集<span class="math inline">\(\mathcal{U}\)</span>包含的是固定的异常比例<span class="math inline">\(2\%\)</span>，而在这个实验中，作者测试了从<span class="math inline">\(0\%\)</span>到<span class="math inline">\(20\%\)</span>之间不同异常比例来测试算法的鲁棒性（即使<span class="math inline">\(\mathcal{U}\)</span>中包含异常，由于没有标签，在训练的时候仍然假设都为正常来进行训练）。本实验试图回答以下问题：</p>
 <ul>
 <li>基于深度的异常检测方法的鲁棒性如何？</li>
 <li>当训练集中异常污染的比例较高的时候基于深度的方法能否打败无监督的方法？</li>
 </ul>
-<h3 id="Findings-2"><a href="#Findings-2" class="headerlink" title="Findings"></a>Findings</h3><p>下图为实验结果：</p>
-<img src="https://i.loli.net/2020/06/25/JCnIjLOc84RFP2V.png" srcset="/img/loading.gif" style="zoom:67%;" />
-
+<h3 id="findings-2">Findings</h3>
+<p>下图为实验结果：</p>
+<p><img src="https://i.loli.net/2020/06/25/JCnIjLOc84RFP2V.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <p>从结果上来看，<code>DevNet</code>比其他基于深度的方法鲁棒性更好，同时在高异常污染的情况下仍然比纯无监督方法效果要好。</p>
-<h2 id="Ablation-Study"><a href="#Ablation-Study" class="headerlink" title="Ablation Study"></a>Ablation Study</h2><p>本实验设置了<code>DevNet</code>的三个变体（默认的<code>DevNet-Def</code>为单层隐层加上一个输出层）来进行消融实验，分别是：</p>
+<h2 id="ablation-study">Ablation Study</h2>
+<p>本实验设置了<code>DevNet</code>的三个变体（默认的<code>DevNet-Def</code>为单层隐层加上一个输出层）来进行消融实验，分别是：</p>
 <ul>
 <li><code>DevNet-Rep</code>，去掉了<em>anomaly scoring network</em>网络的输出层，对应<em>end-to-end learning of anomaly scores</em>和<em>deviation loss</em>；</li>
 <li><code>DevNet-Linear</code>，去掉了网络中的非线性层，对应<em>learning of non-linear features</em>；</li>
 <li><code>DevNet-3HL</code>，隐层数量为3层。</li>
 </ul>
 <p>对比结果如下：</p>
-<img src="https://i.loli.net/2020/06/25/5LcyAwGMB8gb2UP.png" srcset="/img/loading.gif" style="zoom:67%;" />
-
+<p><img src="https://i.loli.net/2020/06/25/5LcyAwGMB8gb2UP.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <p>通过实验可以发现，<code>DevNet-Rep</code>说明了<em>end-to-end learning of anomaly scores</em>和<em>deviation loss</em>的有效性，而<code>DevNet-Linear</code>说明了<em>learning of non-linear features</em>的重要性。<code>DevNet-3HL</code>说明了加深网络并不总能带来性能的提升。</p>
-<h2 id="Scalability-Test"><a href="#Scalability-Test" class="headerlink" title="Scalability Test"></a>Scalability Test</h2><p>这一个实验使用合成的数据来测试算法对大规模数据的处理能力，分别从<em>Data Size</em>和<em>Data Dimensionality</em>两方面来测试。结果如下：</p>
-<img src="https://i.loli.net/2020/06/25/5gbPdJkB47e3FsV.png" srcset="/img/loading.gif" style="zoom:67%;" />
-
+<h2 id="scalability-test">Scalability Test</h2>
+<p>这一个实验使用合成的数据来测试算法对大规模数据的处理能力，分别从<em>Data Size</em>和<em>Data Dimensionality</em>两方面来测试。结果如下：</p>
+<p><img src="https://i.loli.net/2020/06/25/5gbPdJkB47e3FsV.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <p>可以看出，<code>DevNet</code>对<em>Data Size</em>并不敏感，同时，面对高维数据，<code>DevNet</code>也没有表现出劣势。</p>
 
             </article>
@@ -291,9 +320,9 @@
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/Deep-Learning/">Deep Learning</a>
-                    
                       <a class="hover-with-bg" href="/tags/Anomaly-Detection/">Anomaly Detection</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Deep-Learning/">Deep Learning</a>
                     
                   </div>
                 

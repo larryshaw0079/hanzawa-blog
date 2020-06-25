@@ -197,79 +197,116 @@
           <div class="post-content mx-auto" id="post">
             
             <article class="markdown-body">
-              <h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><h1 id="Preliminaries"><a href="#Preliminaries" class="headerlink" title="Preliminaries"></a>Preliminaries</h1><h2 id="Flow-based-Models-Recap"><a href="#Flow-based-Models-Recap" class="headerlink" title="Flow-based Models Recap"></a>Flow-based Models Recap</h2><h3 id="Jacobian-Matrix-and-Determinant"><a href="#Jacobian-Matrix-and-Determinant" class="headerlink" title="Jacobian Matrix and Determinant"></a>Jacobian Matrix and Determinant</h3><p>设函数$f:\mathbb{R}^n\mapsto\mathbb{R}^m$，由$f$的一阶偏导数组成的矩阵叫做Jacobian矩阵：<br>$$<br>\mathbf J=\left[<br>\begin{matrix}<br>\frac{\partial f_1}{\partial x_1} &amp;\cdots &amp;\frac{\partial f_1}{\partial x_n}\<br>\vdots &amp;\ddots &amp;\vdots\<br>\frac{\partial f_m}{\partial x_1}&amp; \dots&amp; \frac{\partial f_m}{\partial x_n}<br>\end{matrix}<br>\right]<br>$$</p>
-<h3 id="Change-of-Variable-Theorem"><a href="#Change-of-Variable-Theorem" class="headerlink" title="Change of Variable Theorem"></a>Change of Variable Theorem</h3><p>给定已知概率分布的随机变量$z\sim\pi(z)$，新随机变量由可逆映射$f$给出$x=f(z)$，$z=f^{-1}(x)$。由于：<br>$$<br>\int p(x)\mathrm{d}x=\int \pi(z)\mathrm d z=1<br>$$<br>所以$p(x)$可以由下式得到：<br>$$<br>p(x)=\pi(z)\left|\frac{\mathrm d z}{\mathrm d x}\right|=\pi(f^{-1}(x))\left|\frac{\mathrm d f^{-1}}{\mathrm d x}\right|=\pi(f^{-1}(x))|(f^{-1})^\prime(x)|<br>$$<br>$\frac{\mathrm d f^{-1}}{\mathrm d x}$相当于对逆函数$f^{-1}$求导，而$z=f^{-1}(x)$。</p>
-<p>对于多变量的情况：<br>$$<br>\mathbf z\sim \pi(\mathbf z), \mathbf x=f(\mathbf z),\mathbf z = f^{-1}(\mathbf x)\<br>p(\mathbf x) = \pi(\mathbf z)\left|\text{det}\frac{\mathrm d \mathbf z}{\mathrm d \mathbf x}\right|= \pi(f^{-1}(\mathbf x))\left|\text{det}\frac{\mathrm d f^{-1}}{\mathrm d \mathbf x}\right|<br>$$<br>$\left|\text{det}\frac{\mathrm d f^{-1}}{\mathrm d \mathbf x}\right|$为逆函数Jacobian矩阵行列式的绝对值。</p>
-<h2 id="Deep-Generative-Models-as-Manifolds"><a href="#Deep-Generative-Models-as-Manifolds" class="headerlink" title="Deep Generative Models as Manifolds"></a>Deep Generative Models as Manifolds</h2><p>一个深度生成模型可以表示为从低维隐空间$\mathcal Z \subseteq R^d$映射到流形$\mathcal M\subseteq R^D$的嵌入函数$g:\mathcal Z\rightarrow \mathcal X$，$D \ll d$。通常假设$g$为光滑映射，那么$\mathcal M$为一个嵌入流形。$g$在$z\in\mathcal Z$的雅各比矩阵$\mathbf J_g(z)$提供了在$x=g(z)\in\mathcal X$处的切空间，即$\mathbf J_g:T_z\mathcal Z\rightarrow T_x\mathcal X$。这个映射不是满射，并且值域限制在流形$\mathcal M$在$x=g(z)$的切空间，记为$T_x\mathcal M$。$\mathcal M$与真实数据流形接近，即$\mathcal M_{data}$。</p>
-<p>考虑一个定义在隐空间$\mathcal Z$每一点$z$上的Riemannian metric：<br>$$<br>\mathbf M(z)=\mathbf J_g(z)^\top\mathbf J_g(z)<br>$$<br>给定两个切空间向量$u,v\in T_z\in\mathcal Z$，他们的内积定义为$&lt;u,v&gt;=u^\top \mathbf M(z)v$。</p>
-<p>考虑一个光滑曲线$\gamma:t\in[a,b]\rightarrow\mathcal Z$，<br>$$<br>L(\gamma)=\int^b_a\sqrt{\hat{\gamma}(t)^\top M_{\gamma(t)}\hat{\gamma}(t)}\mathrm d t<br>$$</p>
-<h2 id="Change-of-Variable-on-Manifolds"><a href="#Change-of-Variable-on-Manifolds" class="headerlink" title="Change of Variable on Manifolds"></a>Change of Variable on Manifolds</h2><p>在流形上的<strong>Change of Variable Theorem</strong>是类似的：</p>
-<p>$$<br>p_\mathcal{X}(x)=p_\mathcal{Z}(g^{-1}(x))\text{det}(\mathbf J_g(g^{-1}(x))^\top\mathbf J_g(g^{-1}(x)))^{-\frac{1}{2}}<br>$$</p>
-<p>我们假设隐空间分布$p_\mathcal{Z}$服从标准正态先验分布$N(0,\mathbf I_d)$，于是我们可以计算出$x$的似然：</p>
-<p>$$<br>\log(p_\mathcal{X}(g(z)))=\log(p_\mathcal{Z}(z))-\frac{1}{2}\log(\text{det}(\mathbf J_g(z)^\top\mathbf J_g(z)))<br>$$</p>
-<p>通常我们没法知道真实世界中$\mathcal M_{data}$的切空间维度是多少，设定$d=\text{dim}\mathcal Z&gt;T_x\mathcal M_{data}$会导致$\mathbf J_g$不是满秩矩阵，这时$\text{det}(\mathbf J_g(z)^\top\mathbf J_g(z))=0$，即无法应用上式计算似然。</p>
-<h2 id="Density-Estimation-with-Neural-Networks"><a href="#Density-Estimation-with-Neural-Networks" class="headerlink" title="Density Estimation with Neural Networks"></a>Density Estimation with Neural Networks</h2><h2 id="Anomaly-Detection-with-Generative-Models"><a href="#Anomaly-Detection-with-Generative-Models" class="headerlink" title="Anomaly Detection with Generative Models"></a>Anomaly Detection with Generative Models</h2><h1 id="Proposed-Method"><a href="#Proposed-Method" class="headerlink" title="Proposed Method"></a>Proposed Method</h1><p>对于GAN模型，给定隐变量$z$和生成器$g$，我们可以通过公式(8)计算生成样本$g(z)$的对数似然，为了保证Jacobian矩阵为满秩，我们可以选定较低的隐变量维度$d$，不过这样会伤害GAN模型的性能。为了解决这个问题，我们需要使用一个<em>inference network</em>来将$x$映射回$z$，</p>
-<h2 id="The-Variance-Network-of-the-Generator"><a href="#The-Variance-Network-of-the-Generator" class="headerlink" title="The Variance Network of the Generator"></a>The Variance Network of the Generator</h2><p>文中对生成器$g$进行了扩展：</p>
-<p>$$<br>f(z) = g(z) + \sigma(z)\odot\epsilon,\<br>g:\mathcal Z\rightarrow\mathcal X, \sigma:\mathcal Z\rightarrow\mathbb{R},\epsilon\sim N(0,\mathbf I_D)<br>$$</p>
-<p>$g$代表均值，$\sigma$代表方差，实际上$\mathbb E_{\epsilon\sim N(0,\mathbf I_D)}f(z)=g(z)$。为了保证方差在少样本或无样本的区域更大，方差网络采用RBF网络实现。</p>
+              <h1 id="introduction">Introduction</h1>
+<h1 id="preliminaries">Preliminaries</h1>
+<h2 id="flow-based-models-recap">Flow-based Models Recap</h2>
+<h3 id="jacobian-matrix-and-determinant">Jacobian Matrix and Determinant</h3>
+<p>设函数<span class="math inline">\(f:\mathbb{R}^n\mapsto\mathbb{R}^m\)</span>，由<span class="math inline">\(f\)</span>的一阶偏导数组成的矩阵叫做Jacobian矩阵： <span class="math display">\[
+\mathbf J=\left[
+\begin{matrix}
+\frac{\partial f_1}{\partial x_1} &amp;\cdots &amp;\frac{\partial f_1}{\partial x_n}\\
+\vdots &amp;\ddots &amp;\vdots\\
+\frac{\partial f_m}{\partial x_1}&amp; \dots&amp; \frac{\partial f_m}{\partial x_n}
+\end{matrix}
+\right]
+\]</span></p>
+<h3 id="change-of-variable-theorem">Change of Variable Theorem</h3>
+<p>给定已知概率分布的随机变量<span class="math inline">\(z\sim\pi(z)\)</span>，新随机变量由可逆映射<span class="math inline">\(f\)</span>给出<span class="math inline">\(x=f(z)\)</span>，<span class="math inline">\(z=f^{-1}(x)\)</span>。由于： <span class="math display">\[
+\int p(x)\mathrm{d}x=\int \pi(z)\mathrm d z=1
+\]</span> 所以<span class="math inline">\(p(x)\)</span>可以由下式得到： <span class="math display">\[
+p(x)=\pi(z)\left|\frac{\mathrm d z}{\mathrm d x}\right|=\pi(f^{-1}(x))\left|\frac{\mathrm d f^{-1}}{\mathrm d x}\right|=\pi(f^{-1}(x))|(f^{-1})^\prime(x)|
+\]</span> <span class="math inline">\(\frac{\mathrm d f^{-1}}{\mathrm d x}\)</span>相当于对逆函数<span class="math inline">\(f^{-1}\)</span>求导，而<span class="math inline">\(z=f^{-1}(x)\)</span>。</p>
+<p>对于多变量的情况： <span class="math display">\[
+\mathbf z\sim \pi(\mathbf z), \mathbf x=f(\mathbf z),\mathbf z = f^{-1}(\mathbf x)\\
+p(\mathbf x) = \pi(\mathbf z)\left|\text{det}\frac{\mathrm d \mathbf z}{\mathrm d \mathbf x}\right|= \pi(f^{-1}(\mathbf x))\left|\text{det}\frac{\mathrm d f^{-1}}{\mathrm d \mathbf x}\right|
+\]</span> <span class="math inline">\(\left|\text{det}\frac{\mathrm d f^{-1}}{\mathrm d \mathbf x}\right|\)</span>为逆函数Jacobian矩阵行列式的绝对值。</p>
+<h2 id="deep-generative-models-as-manifolds">Deep Generative Models as Manifolds</h2>
+<p>一个深度生成模型可以表示为从低维隐空间<span class="math inline">\(\mathcal Z \subseteq R^d\)</span>映射到流形<span class="math inline">\(\mathcal M\subseteq R^D\)</span>的嵌入函数<span class="math inline">\(g:\mathcal Z\rightarrow \mathcal X\)</span>，<span class="math inline">\(D \ll d\)</span>。通常假设<span class="math inline">\(g\)</span>为光滑映射，那么<span class="math inline">\(\mathcal M\)</span>为一个嵌入流形。<span class="math inline">\(g\)</span>在<span class="math inline">\(z\in\mathcal Z\)</span>的雅各比矩阵<span class="math inline">\(\mathbf J_g(z)\)</span>提供了在<span class="math inline">\(x=g(z)\in\mathcal X\)</span>处的切空间，即<span class="math inline">\(\mathbf J_g:T_z\mathcal Z\rightarrow T_x\mathcal X\)</span>。这个映射不是满射，并且值域限制在流形<span class="math inline">\(\mathcal M\)</span>在<span class="math inline">\(x=g(z)\)</span>的切空间，记为<span class="math inline">\(T_x\mathcal M\)</span>。<span class="math inline">\(\mathcal M\)</span>与真实数据流形接近，即<span class="math inline">\(\mathcal M_{data}\)</span>。</p>
+<p>考虑一个定义在隐空间<span class="math inline">\(\mathcal Z\)</span>每一点<span class="math inline">\(z\)</span>上的Riemannian metric： <span class="math display">\[
+\mathbf M(z)=\mathbf J_g(z)^\top\mathbf J_g(z)
+\]</span> 给定两个切空间向量<span class="math inline">\(u,v\in T_z\in\mathcal Z\)</span>，他们的内积定义为<span class="math inline">\(&lt;u,v&gt;=u^\top \mathbf M(z)v\)</span>。</p>
+<p>考虑一个光滑曲线<span class="math inline">\(\gamma:t\in[a,b]\rightarrow\mathcal Z\)</span>， <span class="math display">\[
+L(\gamma)=\int^b_a\sqrt{\hat{\gamma}(t)^\top M_{\gamma(t)}\hat{\gamma}(t)}\mathrm d t
+\]</span></p>
+<h2 id="change-of-variable-on-manifolds">Change of Variable on Manifolds</h2>
+<p>在流形上的<strong>Change of Variable Theorem</strong>是类似的：</p>
+<p><span class="math display">\[
+p_\mathcal{X}(x)=p_\mathcal{Z}(g^{-1}(x))\text{det}(\mathbf J_g(g^{-1}(x))^\top\mathbf J_g(g^{-1}(x)))^{-\frac{1}{2}}
+\]</span></p>
+<p>我们假设隐空间分布<span class="math inline">\(p_\mathcal{Z}\)</span>服从标准正态先验分布<span class="math inline">\(N(0,\mathbf I_d)\)</span>，于是我们可以计算出<span class="math inline">\(x\)</span>的似然：</p>
+<p><span class="math display">\[
+\log(p_\mathcal{X}(g(z)))=\log(p_\mathcal{Z}(z))-\frac{1}{2}\log(\text{det}(\mathbf J_g(z)^\top\mathbf J_g(z)))
+\]</span></p>
+<p>通常我们没法知道真实世界中<span class="math inline">\(\mathcal M_{data}\)</span>的切空间维度是多少，设定<span class="math inline">\(d=\text{dim}\mathcal Z&gt;T_x\mathcal M_{data}\)</span>会导致<span class="math inline">\(\mathbf J_g\)</span>不是满秩矩阵，这时<span class="math inline">\(\text{det}(\mathbf J_g(z)^\top\mathbf J_g(z))=0\)</span>，即无法应用上式计算似然。</p>
+<h2 id="density-estimation-with-neural-networks">Density Estimation with Neural Networks</h2>
+<h2 id="anomaly-detection-with-generative-models">Anomaly Detection with Generative Models</h2>
+<h1 id="proposed-method">Proposed Method</h1>
+<p>对于GAN模型，给定隐变量<span class="math inline">\(z\)</span>和生成器<span class="math inline">\(g\)</span>，我们可以通过公式(8)计算生成样本<span class="math inline">\(g(z)\)</span>的对数似然，为了保证Jacobian矩阵为满秩，我们可以选定较低的隐变量维度<span class="math inline">\(d\)</span>，不过这样会伤害GAN模型的性能。为了解决这个问题，我们需要使用一个<em>inference network</em>来将<span class="math inline">\(x\)</span>映射回<span class="math inline">\(z\)</span>，</p>
+<h2 id="the-variance-network-of-the-generator">The Variance Network of the Generator</h2>
+<p>文中对生成器<span class="math inline">\(g\)</span>进行了扩展：</p>
+<p><span class="math display">\[
+f(z) = g(z) + \sigma(z)\odot\epsilon,\\
+g:\mathcal Z\rightarrow\mathcal X, \sigma:\mathcal Z\rightarrow\mathbb{R},\epsilon\sim N(0,\mathbf I_D)
+\]</span></p>
+<p><span class="math inline">\(g\)</span>代表均值，<span class="math inline">\(\sigma\)</span>代表方差，实际上<span class="math inline">\(\mathbb E_{\epsilon\sim N(0,\mathbf I_D)}f(z)=g(z)\)</span>。为了保证方差在少样本或无样本的区域更大，方差网络采用RBF网络实现。</p>
 <blockquote>
-<p>RBF网络<br>$$<br>h(x)=\exp\left(-\frac{(x-c)^2}{r^2}\right)<br>$$<br><img src="https://i.loli.net/2020/06/25/ho5FJsOBjxi2G78.png" srcset="/img/loading.gif" style="zoom: 80%;" /></p>
-<img src="https://i.loli.net/2020/06/25/rtRLwyK2VigOvTh.png" srcset="/img/loading.gif" style="zoom: 50%;" />
-
-
+<p>RBF网络 <span class="math display">\[
+h(x)=\exp\left(-\frac{(x-c)^2}{r^2}\right)
+\]</span> <img src="https://i.loli.net/2020/06/25/ho5FJsOBjxi2G78.png" srcset="/img/loading.gif" style="zoom: 80%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/rtRLwyK2VigOvTh.png" srcset="/img/loading.gif" style="zoom: 50%;" /></p>
 </blockquote>
-<p>首先，从隐空间采样大量的样本，之后使用<strong>K-means</strong>算法将其分为$K$个聚簇，$c_k$为第$k$个簇的中心，$C_k$为第$k$个簇的样本数量。对于任何样本$x$，为了计算其对应的方差，需要用一个<em>inference network</em> $h$来将其映射到隐空间，即$z=h(x)$。RBF网络通过输入$z$到每个簇中心的距离来返回$x$对应的方差，RBF函数由下式给出：<br>$$<br>\sigma(z)=(\mathbf W^2\mathbf v(z))^{-\frac{1}{2}},\<br>v_k(z) = \exp(-\lambda_k\parallel z-c_k\parallel^2_2), \space k=1,\cdots,K\<br>\lambda_k=\frac{1}{2}\left(\frac{a}{|C_k|}\sum_{z_j\in C_k}\parallel z_j-c_k\parallel_2\right)^{-2}<br>$$</p>
-<p>其中$\alpha$为核的超参数，$\mathbf W$为模型参数。给定生成器$g$，我们可以通过最小化$f(z)$和$x$之间的距离来优化参数$\mathbf W$。</p>
-<p>$$<br>\begin{align}<br>\bar{\mathbf M}^z_f&amp;=\mathbb E_{\epsilon\sim N(0,\mathbf I_D)}\mathbf J_f^\top(z)\mathbf J_f(z)\<br>&amp;=\mathbf J_g^\top(z)\mathbf J_g(z)+\mathbf J_\sigma^\top(z)\mathbf J_\sigma(z)<br>\end{align}<br>$$</p>
+<p>首先，从隐空间采样大量的样本，之后使用<strong>K-means</strong>算法将其分为<span class="math inline">\(K\)</span>个聚簇，<span class="math inline">\(c_k\)</span>为第<span class="math inline">\(k\)</span>个簇的中心，<span class="math inline">\(C_k\)</span>为第<span class="math inline">\(k\)</span>个簇的样本数量。对于任何样本<span class="math inline">\(x\)</span>，为了计算其对应的方差，需要用一个<em>inference network</em> <span class="math inline">\(h\)</span>来将其映射到隐空间，即<span class="math inline">\(z=h(x)\)</span>。RBF网络通过输入<span class="math inline">\(z\)</span>到每个簇中心的距离来返回<span class="math inline">\(x\)</span>对应的方差，RBF函数由下式给出： <span class="math display">\[
+\sigma(z)=(\mathbf W^2\mathbf v(z))^{-\frac{1}{2}},\\
+v_k(z) = \exp(-\lambda_k\parallel z-c_k\parallel^2_2), \space k=1,\cdots,K\\
+\lambda_k=\frac{1}{2}\left(\frac{a}{|C_k|}\sum_{z_j\in C_k}\parallel z_j-c_k\parallel_2\right)^{-2}
+\]</span></p>
+<p>其中<span class="math inline">\(\alpha\)</span>为核的超参数，<span class="math inline">\(\mathbf W\)</span>为模型参数。给定生成器<span class="math inline">\(g\)</span>，我们可以通过最小化<span class="math inline">\(f(z)\)</span>和<span class="math inline">\(x\)</span>之间的距离来优化参数<span class="math inline">\(\mathbf W\)</span>。</p>
+<p><span class="math display">\[
+\begin{align}
+\bar{\mathbf M}^z_f&amp;=\mathbb E_{\epsilon\sim N(0,\mathbf I_D)}\mathbf J_f^\top(z)\mathbf J_f(z)\\
+&amp;=\mathbf J_g^\top(z)\mathbf J_g(z)+\mathbf J_\sigma^\top(z)\mathbf J_\sigma(z)
+\end{align}
+\]</span></p>
 <blockquote>
-<p>*<em>LEMMA 1. *</em> 对于$K\geq \text{dim}(\mathcal Z)+1$和满秩矩阵$\mathbf W^2$，$\bar{\mathbf M}<em>f^z$为一个满秩矩阵。生成样本的对数似然由下式给出：<br>$$<br>\mathbb E</em>{\epsilon\sim N(0,\mathbf I_D)}\log(p_\mathcal{X}(f(z)))=\log(p_\mathcal{Z}(z))-\frac{1}{2}\log(\text{det}(\bar{\mathbf M}_f^z))<br>$$</p>
+<p><strong>LEMMA 1. </strong> 对于<span class="math inline">\(K\geq \text{dim}(\mathcal Z)+1\)</span>和满秩矩阵<span class="math inline">\(\mathbf W^2\)</span>，<span class="math inline">\(\bar{\mathbf M}_f^z\)</span>为一个满秩矩阵。生成样本的对数似然由下式给出： <span class="math display">\[
+\mathbb E_{\epsilon\sim N(0,\mathbf I_D)}\log(p_\mathcal{X}(f(z)))=\log(p_\mathcal{Z}(z))-\frac{1}{2}\log(\text{det}(\bar{\mathbf M}_f^z))
+\]</span></p>
 </blockquote>
-<h2 id="The-Inference-Network-Learning"><a href="#The-Inference-Network-Learning" class="headerlink" title="The Inference Network Learning"></a>The Inference Network Learning</h2><img src="https://i.loli.net/2020/06/25/AZfIrq2v8RVipj1.png" srcset="/img/loading.gif" style="zoom:67%;" />
-
-<p>$$<br>\max_{h,\sigma}\mathbb E_{x\sim p_{data}(x)}\left[\log(p(x|z))|_{z=h(x)}\right]<br>$$</p>
-<p>$p(x|z)$</p>
-<p>$$<br>\max_{h,\sigma}\mathbb E_{x\sim p_{data}(x), z=h(x)}\left[\log(p(x|z))-\text{KL}\right]<br>$$</p>
+<h2 id="the-inference-network-learning">The Inference Network Learning</h2>
+<p><img src="https://i.loli.net/2020/06/25/AZfIrq2v8RVipj1.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><span class="math display">\[
+\max_{h,\sigma}\mathbb E_{x\sim p_{data}(x)}\left[\log(p(x|z))|_{z=h(x)}\right]
+\]</span></p>
+<p><span class="math inline">\(p(x|z)\)</span></p>
+<p><span class="math display">\[
+\max_{h,\sigma}\mathbb E_{x\sim p_{data}(x), z=h(x)}\left[\log(p(x|z))-\text{KL}\right]
+\]</span></p>
 <blockquote>
-<p>*<em>LEMMA 2. *</em><br>$$<br>f(z)\sim GP(g(z), \Lambda_\sigma)<br>$$</p>
+<p><strong>LEMMA 2. </strong> <span class="math display">\[
+f(z)\sim GP(g(z), \Lambda_\sigma)
+\]</span></p>
 </blockquote>
-<p>$$<br>L_{h,\sigma}=\mathbb E_{x\sim p_{data}}\left[\sum_{i=1}^D[-\frac{1}{2}(g_i(h(x))-x_i)^2/\sigma_i^2(h(x))-\log\sigma_i(h(x))]-\text{KL}(q(z|x)\parallel p(z))\right]<br>$$</p>
-<h2 id="Stabilize-Training"><a href="#Stabilize-Training" class="headerlink" title="Stabilize Training"></a>Stabilize Training</h2><p>$$<br>\min_{g,h}\mathbb E_{z\sim p(z)}[\parallel z-h(g(z))\parallel^2]<br>$$</p>
-<h2 id="Algorithm"><a href="#Algorithm" class="headerlink" title="Algorithm"></a>Algorithm</h2><img src="https://i.loli.net/2020/06/25/PjJF9wBM2XS38TQ.png" srcset="/img/loading.gif" style="zoom: 80%;" />
-
-
-
+<p><span class="math display">\[
+L_{h,\sigma}=\mathbb E_{x\sim p_{data}}\left[\sum_{i=1}^D[-\frac{1}{2}(g_i(h(x))-x_i)^2/\sigma_i^2(h(x))-\log\sigma_i(h(x))]-\text{KL}(q(z|x)\parallel p(z))\right]
+\]</span></p>
+<h2 id="stabilize-training">Stabilize Training</h2>
+<p><span class="math display">\[
+\min_{g,h}\mathbb E_{z\sim p(z)}[\parallel z-h(g(z))\parallel^2]
+\]</span></p>
+<h2 id="algorithm">Algorithm</h2>
+<p><img src="https://i.loli.net/2020/06/25/PjJF9wBM2XS38TQ.png" srcset="/img/loading.gif" style="zoom: 80%;" /></p>
 <blockquote>
-<p>*<em>LEMMA 3. *</em> </p>
+<p><strong>LEMMA 3. </strong></p>
 </blockquote>
-<h1 id="Experiments"><a href="#Experiments" class="headerlink" title="Experiments"></a>Experiments</h1><img src="https://i.loli.net/2020/06/25/GlqvJFOtEnbNoUP.png" srcset="/img/loading.gif" style="zoom:67%;" />
-
-
-
-<img src="https://i.loli.net/2020/06/25/Z8yDQU9McsT5GXI.png" srcset="/img/loading.gif" style="zoom:67%;" />
-
-
-
-<img src="https://i.loli.net/2020/06/25/NmBten8igTUV76L.png" srcset="/img/loading.gif" style="zoom:67%;" />
-
-
-
-<p><img src="https://i.loli.net/2020/06/25/8phKZkiRxdLyBT6.png" srcset="/img/loading.gif" alt=""></p>
-<img src="https://i.loli.net/2020/06/25/noBqN9gWfPuFy8w.png" srcset="/img/loading.gif" style="zoom:67%;" />
-
-
-
-<img src="https://i.loli.net/2020/06/25/sJnwi5RzLAU3D6x.png" srcset="/img/loading.gif" style="zoom:67%;" />
-
-
-
-<img src="https://i.loli.net/2020/06/25/OvtLenWDSEi37lX.png" srcset="/img/loading.gif" style="zoom:67%;" />
-
-
-
-<img src="http://qfxiao.me/img/image-20200506174526203.png" srcset="/img/loading.gif" style="zoom:67%;" />
-
-
-
+<h1 id="experiments">Experiments</h1>
+<p><img src="https://i.loli.net/2020/06/25/GlqvJFOtEnbNoUP.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/Z8yDQU9McsT5GXI.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/NmBten8igTUV76L.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/8phKZkiRxdLyBT6.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/noBqN9gWfPuFy8w.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/sJnwi5RzLAU3D6x.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/OvtLenWDSEi37lX.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="http://qfxiao.me/img/image-20200506174526203.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 
             </article>
             <hr>
