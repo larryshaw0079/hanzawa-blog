@@ -158,7 +158,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    722 字
+                    719 字
                   </span>
                 
 
@@ -197,49 +197,29 @@
           <div class="post-content mx-auto" id="post">
             
             <article class="markdown-body">
-              <h1 id="introduction">Introduction</h1>
-<p>本文主要是对<a href="http://qfxiao.me/2020/06/01/Deep-Anomaly-Detection-Using-Geometric-Transformations/">NIPS18这篇异常检测文章</a>的改进，首先是利用了标签信息来提升算法的表现，其次是将算法扩展到了非图像数据。作者对现有的异常检测算法进行了回顾：</p>
+              <h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>本文主要是对<a href="http://qfxiao.me/2020/06/01/Deep-Anomaly-Detection-Using-Geometric-Transformations/">NIPS18这篇异常检测文章</a>的改进，首先是利用了标签信息来提升算法的表现，其次是将算法扩展到了非图像数据。作者对现有的异常检测算法进行了回顾：</p>
 <ul>
-<li><strong>Reconstruction Methods： </strong>这一部分方法假设异常样本和正常样本能够通过重构任务来进行区分。通过在正常样本上学习重构任务，之后对于正常样本，模型能够很好地进行重构，而异常样本则会有较高的重构误差。</li>
-<li><strong>Distributional Methods： </strong>这一部分方法将异常检测看作是密度估计问题。通过对正常样本的分布进行估计，异常样本在该正常分布下的似然将会很低。</li>
-<li><strong>Classification-based Methods： </strong>这一部分方法主要是指的单分类方法和通过几何变换构造分类任务的方法。本文使用的就是这类方法。</li>
+<li>*<em>Reconstruction Methods： *</em>这一部分方法假设异常样本和正常样本能够通过重构任务来进行区分。通过在正常样本上学习重构任务，之后对于正常样本，模型能够很好地进行重构，而异常样本则会有较高的重构误差。</li>
+<li>*<em>Distributional Methods： *</em>这一部分方法将异常检测看作是密度估计问题。通过对正常样本的分布进行估计，异常样本在该正常分布下的似然将会很低。</li>
+<li>*<em>Classification-based Methods： *</em>这一部分方法主要是指的单分类方法和通过几何变换构造分类任务的方法。本文使用的就是这类方法。</li>
 </ul>
-<h1 id="proposed-method">Proposed Method</h1>
-<h2 id="classification-based-anomaly-detection">Classification-based Anomaly Detection</h2>
-<p>假设所有数据位于空间<span class="math inline">\(R^L\)</span>内，而正常数据位于子空间<span class="math inline">\(X\subset R^L\)</span>内。我们假设所有的异常样本位于<span class="math inline">\(X\)</span>之外。为了检测异常，我们希望学习一个分类器<span class="math inline">\(C\)</span>使得对于所有的<span class="math inline">\(x\in X\)</span>有<span class="math inline">\(C(x)=1\)</span>，而对所有的<span class="math inline">\(x\in R^L\backslash X\)</span>有<span class="math inline">\(C(x)=0\)</span>。</p>
-<p>单分类方法的思想是直接学习<span class="math inline">\(P(x\in X)\)</span>，代表的方法有One-Class SVM，DSVDD等。<em>Geometric-transformation classification</em> (GEOM) 则将数据空间<span class="math inline">\(X\)</span>通过<span class="math inline">\(M\)</span>个几何变换转换到一系列子空间<span class="math inline">\(X_1,\cdots,X_M\)</span>。之后训练一个分类器来预测样本<span class="math inline">\(T(x,m)\)</span>对应的几何变换的种类<span class="math inline">\(m\)</span>。转换后的正常图片空间记为<span class="math inline">\(\cup_m X_m\)</span>，所以该方法尝试估计以下条件概率： <span class="math display">\[
-P(m^\prime|T(x,m))=\frac{P(T(x,m)\in X_{m^\prime})P(m^\prime)}{\sum_{\bar{m}}P(T(x,m)\in X_{\bar{m}})P(\tilde{m})}-\frac{P(T(x,m)\in X_{m^\prime})}{\sum_{\bar{m}}P(T(x,m)\in X_{\bar{m}})}
-\]</span></p>
-<p>对于异常的样本<span class="math inline">\(x\in R^L\backslash X\)</span>，在经过几何变换之后，都不会位于正确的子空间中，即<span class="math inline">\(T(x,m)\in R^L\backslash X_m\)</span>。</p>
-<p>作者认为，这种方法的问题是分类器<span class="math inline">\(P(m^\prime|T(x,m))\)</span>只在</p>
-<h2 id="distance-based-multiple-transformation-classification">Distance-based Multiple Transformation Classification</h2>
-<p><span class="math display">\[
-P(m^\prime|T(x,m))=\frac{e^{-\parallel f(T(x,m))-c_{m^\prime}\parallel^2}}{\sum_{\bar m}e^{-\parallel f(T(x,m))-c_{\bar m}\parallel^2}}
-\]</span></p>
-<p><span class="math display">\[
-L=\sum_i\max(\parallel f(T(x_i,m))-c_m\parallel^2+s-\min_{m^\prime\neq m}\parallel f(T(x_i,m))-c_{m^\prime}\parallel^2,0)
-\]</span></p>
-<p><span class="math display">\[
-\tilde P(m^\prime|T(x,m))=\frac{e^{-\parallel f(T(x,m))-c_{m^\prime}\parallel^2+\epsilon}}{\sum_{\tilde m}e^{-\parallel f(T(x,m))-c_{\tilde m}\parallel^2+M\cdot\epsilon}}
-\]</span></p>
-<p><span class="math display">\[
-Score(x)=-\log P(x\in X)=-\sum_m\log \tilde{P}(T(x,m)\in X_m)=-\sum_m\log\tilde{P}(m|T(x,m))
-\]</span></p>
-<p><img src="https://i.loli.net/2020/06/24/r48h1RJxcXF6YDM.png" srcset="/img/loading.gif" /></p>
-<h2 id="parameterizing-the-set-of-transformations">Parameterizing the Set of Transformations</h2>
-<p><span class="math display">\[
-T(x,m)=W_mx+b_m
-\]</span></p>
-<h1 id="experiments">Experiments</h1>
-<h2 id="image-experiments">Image Experiments</h2>
-<p><img src="https://i.loli.net/2020/06/24/j4Y29tB6k1Aipgo.png" srcset="/img/loading.gif" /></p>
-<p><img src="https://i.loli.net/2020/06/24/D3opwrLnSGmcsyM.png" srcset="/img/loading.gif" /></p>
-<p><img src="https://i.loli.net/2020/06/24/e6PfIDOVwlzrSWi.png" srcset="/img/loading.gif" /></p>
-<p><img src="https://i.loli.net/2020/06/24/wFZcyevtjMVY4gA.png" srcset="/img/loading.gif" /></p>
-<h2 id="tabular-data-experiments">Tabular Data Experiments</h2>
-<p><img src="https://i.loli.net/2020/06/24/EAcTiPvUrdwXMW5.png" srcset="/img/loading.gif" /></p>
-<p><img src="https://i.loli.net/2020/06/24/jZb5NgUhVmJv2fR.png" srcset="/img/loading.gif" /></p>
-<p><img src="https://i.loli.net/2020/06/24/h72L8kNV9wtDyK4.png" srcset="/img/loading.gif" /></p>
+<h1 id="Proposed-Method"><a href="#Proposed-Method" class="headerlink" title="Proposed Method"></a>Proposed Method</h1><h2 id="Classification-based-Anomaly-Detection"><a href="#Classification-based-Anomaly-Detection" class="headerlink" title="Classification-based Anomaly Detection"></a>Classification-based Anomaly Detection</h2><p>假设所有数据位于空间$R^L$内，而正常数据位于子空间$X\subset R^L$内。我们假设所有的异常样本位于$X$之外。为了检测异常，我们希望学习一个分类器$C$使得对于所有的$x\in X$有$C(x)=1$，而对所有的$x\in R^L\backslash X$有$C(x)=0$。</p>
+<p>单分类方法的思想是直接学习$P(x\in X)$，代表的方法有One-Class SVM，DSVDD等。<em>Geometric-transformation classification</em> (GEOM) 则将数据空间$X$通过$M$个几何变换转换到一系列子空间$X_1,\cdots,X_M$。之后训练一个分类器来预测样本$T(x,m)$对应的几何变换的种类$m$。转换后的正常图片空间记为$\cup_m X_m$，所以该方法尝试估计以下条件概率：<br>$$<br>P(m^\prime|T(x,m))=\frac{P(T(x,m)\in X_{m^\prime})P(m^\prime)}{\sum_{\bar{m}}P(T(x,m)\in X_{\bar{m}})P(\tilde{m})}-\frac{P(T(x,m)\in X_{m^\prime})}{\sum_{\bar{m}}P(T(x,m)\in X_{\bar{m}})}<br>$$</p>
+<p>对于异常的样本$x\in R^L\backslash X$，在经过几何变换之后，都不会位于正确的子空间中，即$T(x,m)\in R^L\backslash X_m$。</p>
+<p>作者认为，这种方法的问题是分类器$P(m^\prime|T(x,m))$只在</p>
+<h2 id="Distance-based-Multiple-Transformation-Classification"><a href="#Distance-based-Multiple-Transformation-Classification" class="headerlink" title="Distance-based Multiple Transformation Classification"></a>Distance-based Multiple Transformation Classification</h2><p>$$<br>P(m^\prime|T(x,m))=\frac{e^{-\parallel f(T(x,m))-c_{m^\prime}\parallel^2}}{\sum_{\bar m}e^{-\parallel f(T(x,m))-c_{\bar m}\parallel^2}}<br>$$</p>
+<p>$$<br>L=\sum_i\max(\parallel f(T(x_i,m))-c_m\parallel^2+s-\min_{m^\prime\neq m}\parallel f(T(x_i,m))-c_{m^\prime}\parallel^2,0)<br>$$</p>
+<p>$$<br>\tilde P(m^\prime|T(x,m))=\frac{e^{-\parallel f(T(x,m))-c_{m^\prime}\parallel^2+\epsilon}}{\sum_{\tilde m}e^{-\parallel f(T(x,m))-c_{\tilde m}\parallel^2+M\cdot\epsilon}}<br>$$</p>
+<p>$$<br>Score(x)=-\log P(x\in X)=-\sum_m\log \tilde{P}(T(x,m)\in X_m)=-\sum_m\log\tilde{P}(m|T(x,m))<br>$$</p>
+<p><img src="https://i.loli.net/2020/06/24/r48h1RJxcXF6YDM.png" srcset="/img/loading.gif" alt=""></p>
+<h2 id="Parameterizing-the-Set-of-Transformations"><a href="#Parameterizing-the-Set-of-Transformations" class="headerlink" title="Parameterizing the Set of Transformations"></a>Parameterizing the Set of Transformations</h2><p>$$<br>T(x,m)=W_mx+b_m<br>$$</p>
+<h1 id="Experiments"><a href="#Experiments" class="headerlink" title="Experiments"></a>Experiments</h1><h2 id="Image-Experiments"><a href="#Image-Experiments" class="headerlink" title="Image Experiments"></a>Image Experiments</h2><p><img src="https://i.loli.net/2020/06/24/j4Y29tB6k1Aipgo.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://i.loli.net/2020/06/24/D3opwrLnSGmcsyM.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://i.loli.net/2020/06/24/e6PfIDOVwlzrSWi.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://i.loli.net/2020/06/24/wFZcyevtjMVY4gA.png" srcset="/img/loading.gif" alt=""></p>
+<h2 id="Tabular-Data-Experiments"><a href="#Tabular-Data-Experiments" class="headerlink" title="Tabular Data Experiments"></a>Tabular Data Experiments</h2><p><img src="https://i.loli.net/2020/06/24/EAcTiPvUrdwXMW5.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://i.loli.net/2020/06/24/jZb5NgUhVmJv2fR.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://i.loli.net/2020/06/24/h72L8kNV9wtDyK4.png" srcset="/img/loading.gif" alt=""></p>
 
             </article>
             <hr>
