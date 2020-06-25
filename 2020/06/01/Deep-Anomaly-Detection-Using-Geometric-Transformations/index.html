@@ -158,7 +158,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    2.4k 字
+                    2.8k 字
                   </span>
                 
 
@@ -168,7 +168,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    33
+                    38
                      分钟
                   </span>
                 
@@ -332,9 +332,22 @@ scores += dirichlet_normality_score(mle_alpha_t, x_test_p)</code></pre>
 \]</span> 最终几何变换种数为<span class="math inline">\(2\times3\times3\times4=72\)</span>种。</p>
 <p>分类器模型使用的是<strong>Wide Residual Network</strong>，优化器为Adam，Batch size为128，训练轮数为200。</p>
 <h2 id="results">Results</h2>
+<p>下面是不同方法在不同数据集上的实验结果：</p>
 <p><img src="https://i.loli.net/2020/06/24/gHZohrvz9MGYmxi.png" srcset="/img/loading.gif" /></p>
-<h2 id="identifying-out-of-distribution-samples-in-labeled-multi-class-datasets">Identifying Out-of-distribution Samples in Labeled Multi-class Datasets</h2>
+<p>评测标准使用的是AUROC。作者关于结果的分析主要有以下几点：</p>
+<ol type="1">
+<li>在绝大多数情况下，我们的算法都比Baseline要好，而且是越大的数据集效果越好。CatsVsDogs数据集每张图片的大小比其他几个数据集都要大，而Baseline在这个数据集上的结果都在<span class="math inline">\(50\%\)</span>或不到<span class="math inline">\(50\%\)</span>，这基本等同于瞎猜；</li>
+<li>在CIFAR-100数据集里，由于将这100类聚合为了20类，所以存在类内样本差异大的问题。比如在类<span class="math inline">\(5\)</span>、类<span class="math inline">\(7\)</span>和类<span class="math inline">\(13\)</span>上，模型表现就不够好；</li>
+<li>在Fashion-MNIST数据集上几乎所有方法（除了DAGMM）都表现很好。</li>
+</ol>
 <h2 id="on-the-intuition-for-using-geometric-transformations">On the Intuition for Using Geometric Transformations</h2>
+<p>这里作者对所选用的几何变换做了一些解释。实验中选用的三种基本几何变换都是可逆的线性几何变换（且为双射），作者也试过一些复杂的非线性变换，如高斯模糊、锐化、伽马校正等等，但是效果并不好。</p>
+<p>作者认为分类器能够分辨不同变换的能力与最终性能成正比，为了验证这一点，进行了<span class="math inline">\(3\)</span>个实验。从MNIST数据集选择一个数字作为正常样本，几何变换只采用两个，然后选择另一个数字作为异常样本，结果如下：</p>
+<ul>
+<li><strong>Normal digit: 8，Anomaly: 3，Transformations: Identity and horizontal flip. </strong>由于数字<span class="math inline">\(8\)</span>是对称的，所以要让分类器分辨原始的<span class="math inline">\(8\)</span>和翻转之后的<span class="math inline">\(8\)</span>是很难的，AUROC只有<span class="math inline">\(0.646\)</span>；</li>
+<li><strong>Normal digit: 3，Anomaly: 8，Transformations: Identity and horizontal flip. </strong>这里把<span class="math inline">\(3\)</span>作为正常样本，由于<span class="math inline">\(3\)</span>不是对称的，所以两种变换是可以分辨的，AUROC达到了<span class="math inline">\(0.957\)</span>；</li>
+<li><strong>Normal digit: 8，Anomaly: 3，Transformations: Identity and translation by 7 pixels. </strong>同样是把<span class="math inline">\(8\)</span>作为正常样本，但变换用的是平移，AUROC达到了<span class="math inline">\(0.919\)</span>。</li>
+</ul>
 <p><img src="https://i.loli.net/2020/06/24/8Pi4EKCRuBXrYgp.png" srcset="/img/loading.gif" /></p>
 
             </article>

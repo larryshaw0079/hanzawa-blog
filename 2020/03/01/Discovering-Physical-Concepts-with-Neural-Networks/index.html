@@ -207,10 +207,10 @@
 </ol>
 <h1 id="preliminaries">Preliminaries</h1>
 <p>作者在附录中对神经网络的基础知识进行了介绍，这里不再赘述，只截取了一些相对前沿的内容。</p>
-<p><img src="http://qfxiao.me/img/image-20200301230151518.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/yh5Wj9AQmd6nsFC.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <h2 id="variational-autoencoders">Variational Autoencoders</h2>
 <p>本文用到的模型基础是VAE：</p>
-<p><img src="http://qfxiao.me/img/image-20200301230200451.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/zCnYjVEZHdbqAD3.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <h3 id="representation-learning">Representation Learning</h3>
 <p><em>Representation learning</em>的主要目标是将数据映射到一个隐向量 (encoder)，为了保证隐向量包含了所有相关信息， 那么应该能够从隐向量还原原数据 (decoder)。传统的Autoencoder是这个思想的最简单实现，而VAE则将AE和<em>Variational Inference</em>结合了起来，是一种经典的生成式模型。现在很多研究关注<em>Disentangled Representation Learning</em>，也就是说我们希望模型能够无监督地学习数据，从中学到有意义的表示。</p>
 <h3 id="boldsymbol-beta-vae"><span class="math inline">\(\boldsymbol \beta\)</span>-VAE</h3>
@@ -222,7 +222,7 @@ C_\beta(x)=\parallel \hat{x} - x \parallel^2_2-\frac{\beta}{2}\left(\sum\limits_
 <h1 id="network-structure">Network Structure</h1>
 <h2 id="network-structure-scinet">Network Structure: <em>SciNet</em></h2>
 <p>模仿物理学家建模物理问题的过程，作者提出了<em>SciNet</em>，如下图所示：</p>
-<p><img src="http://qfxiao.me/img/image-20200301225708559.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/uWd1lOUFxXgQJ7f.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <p>物理学家在建模物理问题的时候，往往是从一些实验数据出发，根据物理常识提取更加精练的表示，然后用学到的表示来回答物理问题。</p>
 <p>对于单纯的输入输出问题，<em>SciNet</em>可以看作是一个映射，<span class="math inline">\(F:\mathcal{O}\times\mathcal{Q}\rightarrow\mathcal{A}\)</span>。<span class="math inline">\(\mathcal{O}\)</span>是可能的实验数据集合，<span class="math inline">\(\mathcal{Q}\)</span>是可能的问题集合，<span class="math inline">\(\mathcal{A}\)</span>是可能的答案集合。可以将其分为两个步骤：编码过程<span class="math inline">\(E:\mathcal{O}\rightarrow\mathcal{R}\)</span>从实验数据学到表示，解码过程<span class="math inline">\(D:\mathcal{R}\times \mathcal{Q}\rightarrow \mathcal{A}\)</span>根据给定的问题从表示来回答问题。由此，<span class="math inline">\(F(o,q)=D(E(o),q)\)</span>。在实现方面，<em>SciNet</em>采用的是全连接网络。</p>
 <h2 id="training-and-testing-scinet">Training and Testing <em>SciNet</em></h2>
@@ -237,9 +237,9 @@ C_\beta(x)=\parallel \hat{x} - x \parallel^2_2-\frac{\beta}{2}\left(\sum\limits_
 <li>观测数据：位置时间序列数据<span class="math inline">\(o=[x(t_i)]_{i\in\{1,\cdots,50\}}\in\mathbb{R}^{50}\)</span>，时间间隔相等，质量<span class="math inline">\(m=1\text{kg}\)</span>，振幅<span class="math inline">\(A_0=1\text{m}\)</span>，相位<span class="math inline">\(\delta_0=0\)</span>，弹性模量<span class="math inline">\(k\in[5,10]\text{kg}/\text{s}^2\)</span>，阻尼系数<span class="math inline">\(b\in[0.5,1]\text{kg}/\text{s}\)</span>。</li>
 <li><p>问题：预测<span class="math inline">\(q=t_\text{pred}\in\mathbb{R}\)</span></p></li>
 </ul>
-<p><img src="http://qfxiao.me/img/image-20200301225805576.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/yWGzxo4eFKmABul.png" srcset="/img/loading.gif" /></p>
 <p>隐变量大小设置为3，结果如下图所示：</p>
-<p><img src="http://qfxiao.me/img/image-20200301225838353.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/Q4PKa3pm2htekqd.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <p>(b)中的三幅图分别是学到的三个隐变量和我们感兴趣的参数<span class="math inline">\(k\)</span>和<span class="math inline">\(b\)</span>的关系图。第一幅图中变量<span class="math inline">\(1\)</span>与<span class="math inline">\(b\)</span>几乎完全线性相关，与<span class="math inline">\(k\)</span>基于线性无关，变量<span class="math inline">\(2\)</span>只和<span class="math inline">\(k\)</span>相关。变量<span class="math inline">\(3\)</span>几乎为一个常数，故不提供额外的信息。由此作者认为<em>SciNet</em>学到了我们关心的两个参数的知识。</p>
 <h2 id="conservation-of-angular-momentum">Conservation of Angular Momentum</h2>
 <p>角动量守恒实验：</p>
@@ -254,9 +254,9 @@ J=m_\text{rot}r^2\omega-rm_\text{free}(\mathbf{v}_\text{free})_x=m_\text{rot}r^2
 <li>观测数据：在撞击之前两个质点的位置数据<span class="math inline">\(o=[(t_i^\text{rot},q_\text{rot}(t_i^\text{rot})),(t_i^\text{free},q_\text{free}(t_i^\text{free}))]_{i\in\{1,\cdots,5\}}\)</span>，质量为固定值，半径<span class="math inline">\(r\)</span>也为固定值。数据添加高斯噪声。</li>
 <li>问题：预测撞击之后自由质点在时间<span class="math inline">\(t_\text{pred}^\prime\)</span>的位置</li>
 </ul>
-<p><img src="http://qfxiao.me/img/image-20200301225858626.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/SKfJLxl1QmuzFt9.png" srcset="/img/loading.gif" /></p>
 <p>实验室意图如下：</p>
-<p><img src="http://qfxiao.me/img/image-20200301225917614.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/qimk9ZYBe7UPs3z.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <p>实验结果表明<em>SciNet</em>能够正确预测质点撞击之后的位置，同时对噪音鲁棒。根据(b)，隐变量和角动量存在线性相关关系，作者认为<em>SciNet</em>学到了守恒的动量这一概念。</p>
 <h2 id="representation-of-qubits">Representation of Qubits</h2>
 <p>量子比特实验：</p>
@@ -266,9 +266,9 @@ J=m_\text{rot}r^2\omega-rm_\text{free}(\mathbf{v}_\text{free})_x=m_\text{rot}r^2
 <li>观测数据：状态<span class="math inline">\(\psi: o=[p(\alpha_i,\psi)]_{i\in\{i,\cdots,n_1\}}\)</span>的操作参数化：表示一组固定的随机二元射影测量值<span class="math inline">\(\mathcal{M}_1=\{\alpha_1,\cdots,\alpha_{n_1}\}\)</span>（一个量子位<span class="math inline">\(n_1 = 10\)</span>，两个量子位<span class="math inline">\(n_1 = 30\)</span>）</li>
 <li>问题：对于固定的一组随机二元射影测量<span class="math inline">\(\mathcal{M}_2=\{\beta_1,\cdots,\beta_{n_2}\}\)</span>，测量<span class="math inline">\(\omega:q=[p(\beta_i,\omega)]_{i\in\{1,\cdots,n_2\}}\)</span>的Operational参数化（一个量子位<span class="math inline">\(n_2 = 10\)</span>，两个量子位<span class="math inline">\(n_2 = 30\)</span>）</li>
 </ul>
-<p><img src="http://qfxiao.me/img/image-20200301225929696.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/8lY1LBsQCZUwX2I.png" srcset="/img/loading.gif" /></p>
 <p>实验结果如下：</p>
-<p><img src="http://qfxiao.me/img/image-20200301225958663.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/ZTRKfzb63Jrvk5C.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <p>通过实验发现，<em>SciNet</em>可以在不提供先验物理知识的条件下确定表述状态<span class="math inline">\(\psi\)</span>最小的参数数量。同时，<em>SciNet</em>还能分辨<em>tomographically complete</em>和<em>tomographically incomplete</em>。</p>
 <h2 id="heliocentric-model-of-the-solar-system">Heliocentric Model of the Solar System</h2>
 <p>日心说模型：</p>
@@ -277,11 +277,11 @@ J=m_\text{rot}r^2\omega-rm_\text{free}(\mathbf{v}_\text{free})_x=m_\text{rot}r^2
 <li>物理模型：地球和火星围绕太阳以一定角速度做近似圆周运动</li>
 <li>观测数据：给定初始角度，随机选择周周期的哥白尼的观测数据</li>
 </ul>
-<p><img src="http://qfxiao.me/img/image-20200301230035141.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/vXl3Ae4RpzibrmY.png" srcset="/img/loading.gif" /></p>
 <p>模型的实现稍有变化，如下图所示：</p>
-<p><img src="http://qfxiao.me/img/image-20200301230011495.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/XnsYqcRS6izZGEm.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <p>这样，对于不同时间都对应一个隐变量<span class="math inline">\(r(t_i)\)</span>，而且隐变量是时间依赖的，对于一个隐变量<span class="math inline">\(r(t_i)\)</span>有一个解码器来输出答案。</p>
-<p><img src="http://qfxiao.me/img/image-20200301230101709.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/az3UmkchyFWevP7.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <p>实验结果表示，<em>SciNet</em>不仅正确预测了太阳和火星相对地球的角度，同时隐变量揭示了火星和地球相对太阳的角度。</p>
 
             </article>

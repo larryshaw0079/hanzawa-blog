@@ -210,7 +210,7 @@
 </ul>
 <h1 id="proposed-approach">Proposed Approach</h1>
 <p>为了解决上述挑战，文中提出了一个时间序列异常检测框架ATAD (Active Transfer Anomaly Detection)。该框架结合了迁移学习技术和主动学习技术，示意图如下：</p>
-<p><img src="http://qfxiao.me/img/image-20200313212728223.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/jOB4rC2gnH9VcQW.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <p>未标记数据<span class="math inline">\(T_u\)</span>是我们要检测的目标数据 (target domain)，标记数据<span class="math inline">\(T_l\)</span>是我们的源数据 (source domain)，可以是开源数据或者是其他系统的监控数据。</p>
 <h2 id="transfer-learning-component">Transfer Learning Component</h2>
 <p>在应用迁移学习时，我们需要考虑以下几个因素：</p>
@@ -219,22 +219,22 @@
 <li>时间序列的粒度。粗粒度的迁移学习不利于发现异常，本文采用细粒度，即数据点级别的迁移学习；</li>
 <li>迁移学习需要source domain和target domain具有潜在的相似性，所以我们需要对source domain中的样本进行过滤。</li>
 </ul>
-<p><img src="http://qfxiao.me/img/image-20200313212813264.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/aM7Qvt6DwGXnThm.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <h3 id="feature-identification">Feature Identification</h3>
 <p>这一节描述特征工程中用到的特征。在提取特征之前，文中使用了离散傅里叶变换来识别时间序列的周期<span class="math inline">\(p\)</span>，并为后面滑动窗口的大小原则作参考。</p>
 <h4 id="statistical-features">Statistical Features</h4>
 <p>统计特征包含了一些基本的统计信息，如均值、方差等，用到的特征如下表所示：</p>
-<p><img src="http://qfxiao.me/img/image-20200313212825252.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/jI9EbCy1XueDViw.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <p>表中的统计特征都是基于大小等于周期<span class="math inline">\(p\)</span>的滑动窗口的。</p>
 <h4 id="forecasting-error-features">Forecasting Error Features</h4>
 <p>使用预测特征的理由是如果一个数据点偏离预测值很远，那么它很有可能是异常。文中使用了多种时间序列预测模型，如SARIMA、Holt、Holt-Winters、STL等。最终的预测结果使用下式来加权集成： <span class="math display">\[
 \hat{Y}_t=\sum\limits_{m=1}^{M}\frac{\hat{Y}_{m,t}}{M-1}\left(1-\frac{RMSE_{m,t}}{\sum\limits_{n=1}^M RMSE_{n,t}}\right)
 \]</span> <span class="math inline">\(M\)</span>代表<span class="math inline">\(M\)</span>个不同模型，<span class="math inline">\(RMSE_{m,t}\)</span>代表模型<span class="math inline">\(m\)</span>在时间<span class="math inline">\(t\)</span>的<span class="math inline">\(RMSE\)</span>，<span class="math inline">\(\hat{Y}_t\)</span>是在时间<span class="math inline">\(t\)</span>的最终预测结果。之后，使用下表中的Metrics来计算不同预测特征：</p>
-<p><img src="http://qfxiao.me/img/image-20200313212836275.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/wRmfHj5xFcsLIXp.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <p>同样的，上述特征都是基于窗口的。</p>
 <h4 id="temporal-features">Temporal Features</h4>
 <p>这一部分是一些时间序列相关特征：</p>
-<p><img src="http://qfxiao.me/img/image-20200313212850411.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/mnBrzjfgV716yiR.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <p>最后，总共提取了37个特征，并且每个特征都进行了正则化。</p>
 <h3 id="the-transfer-between-source-domain-and-target-domain">The Transfer between Source Domain and Target Domain</h3>
 <p>本文结合了基于实例的迁移学习(<strong>Instance-based Transfer Learning</strong>)和基于特征的迁移学习(<strong>Feature-based Transfer Learning</strong>)。</p>
@@ -255,9 +255,9 @@ Uncertainty=-|Prob(Normal)-Prob(Anomaly)|
 <p>时间上相邻的样本往往也是相似的。</p>
 <p>具体的来说，我们对所有样本按照<strong>Uncertainty</strong>排序，然后进行一次扫描，如果当前样本在候选集中某个样本的<strong>Context</strong>之中，我们则忽略当前样本，因为这代表当前样本和候选集中的那个样本是相似的。如果不在<strong>Context</strong>之中，我们则将该样本加入候选集中。</p>
 <p>判断是否在某个样本的<strong>Context</strong>中，如下图所示，直接判断是否落在区间<span class="math inline">\([t-\alpha,t+\alpha]\)</span>中就是了。</p>
-<p><img src="http://qfxiao.me/img/image-20200313212905175.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/nci9PvGDEdjky5R.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <p>主动学习模块的算法流程图如下图所示：</p>
-<p><img src="http://qfxiao.me/img/image-20200313212948057.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/RqonKfQS3IWw6Gb.png" srcset="/img/loading.gif" style="zoom: 80%;" /></p>
 <h1 id="experiments">Experiments</h1>
 <p>在实验部分，作者试图回答以下问题：</p>
 <ol type="1">
@@ -268,7 +268,7 @@ Uncertainty=-|Prob(Normal)-Prob(Anomaly)|
 </ol>
 <h2 id="dataset-and-setup">Dataset and Setup</h2>
 <p>下表是用到的数据集的一些基本信息：</p>
-<p><img src="http://qfxiao.me/img/image-20200313213006305.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/HDNGCrYOxezLwaB.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <h2 id="evaluation-metric">Evaluation Metric</h2>
 <p>评测标准使用的是F1-score： <span class="math display">\[
 F1=\frac{2\cdot P\cdot R}{P+R}, \space P=\frac{TP}{TP+FP}, \space R=\frac{TP}{TP+FN}
@@ -277,9 +277,9 @@ F1=\frac{2\cdot P\cdot R}{P+R}, \space P=\frac{TP}{TP+FP}, \space R=\frac{TP}{TP
 <h3 id="rq1-how-effective-is-atad">RQ1: How effective is ATAD?</h3>
 <p>Baseline包括孤立森林、K-Sigma、S-H-ESD和随机森林。</p>
 <p>最终结果如下表所示：</p>
-<p><img src="http://qfxiao.me/img/image-20200313213040896.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/HMneBzlkR7Qg4TN.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <p>为了评测ATAD利用标签的能力，我们比较了RF在达到和ATAD相似F1 score情况下所需标签的数量，如下表所示：</p>
-<p><img src="http://qfxiao.me/img/image-20200313213058084.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/fcoXhCL43yVwYes.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <h3 id="rq2-how-effective-is-the-transfer-learning-component">RQ2: How effective is the Transfer Learning Component?</h3>
 <p>我们从以下两个方面来探究模型迁移知识的能力：</p>
 <ul>
@@ -287,21 +287,21 @@ F1=\frac{2\cdot P\cdot R}{P+R}, \space P=\frac{TP}{TP+FP}, \space R=\frac{TP}{TP
 <li>本模型迁移知识的能力</li>
 </ul>
 <p>对于第一点，作者提出传统的方法一般只提取了统计特征，而本文还提取了多种其他特征。作者对提取不同特征进行了比较试验，结果如下表所示：</p>
-<p><img src="http://qfxiao.me/img/image-20200313213108654.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/QV2eWzoOxGS6qJd.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <p>除此之外，作者还展示了不同数据集下前10有效的特征：</p>
-<p><img src="http://qfxiao.me/img/image-20200313213123043.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/QXYcP9V3xmJeIq5.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <p>对于第二点，作者比较了是否使用文中的领域适应算法CORAL，在达到相似F1 score下所需的标签数，如下表所示：</p>
-<p><img src="http://qfxiao.me/img/image-20200313213132432.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/JKFf4XngPBdGm3V.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <h3 id="rq3-how-effective-is-the-active-learning-component">RQ3: How effective is the Active Learning component?</h3>
 <p>为了验证本文所用的主动学习的有效性，作者进行了对比试验。第一个模型 (Supervised model) 使用全部标签但不使用迁移学习训练，第二个 (Naïve) 为只使用主动学习而不使用迁移学习，第三个为本文提出的模型。结果如下图所示，为了达到相似的性能，不同模型需要的标签数。</p>
-<p><img src="http://qfxiao.me/img/image-20200313213143405.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/jcXphwBmR8J6SeU.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <p>下表展示了使用不同主动学习策略 (U - conventional uncertainty method, UCD - 本文使用的方法, random - 随机选择) 进行标记得到的结果：</p>
-<p><img src="http://qfxiao.me/img/image-20200313213153698.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/pe24P9gFJfQVrKM.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <p>同时作者还对不同<span class="math inline">\(\alpha\)</span>的选择进行了实验：</p>
-<p><img src="http://qfxiao.me/img/image-20200313213208820.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/ifRhv85IqaVw7gx.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <h3 id="rq4-how-effective-is-atad-in-detecting-anomalies-in-a-companys-local-dataset-based-on-public-datasets">RQ4: How effective is ATAD in detecting anomalies in a company’s local dataset based on public datasets?</h3>
 <p>这里作者对比了不同方法在微软内部数据集上的结果：</p>
-<p><img src="http://qfxiao.me/img/image-20200313213219578.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/5oi3rcGugKXmTha.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 
             </article>
             <hr>

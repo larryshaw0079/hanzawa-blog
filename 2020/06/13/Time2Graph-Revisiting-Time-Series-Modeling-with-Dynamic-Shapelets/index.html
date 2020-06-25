@@ -225,7 +225,7 @@ D(s,t)=\min_{1\leq k\leq m} d(s,s_k)
 <p><span class="math inline">\(\mathcal L\)</span>描述了在shapelet <span class="math inline">\(\boldsymbol v\)</span>下正负样本集的相异性。<span class="math inline">\(S_{*}(\boldsymbol v,T)\)</span>表示特定时序集合与<span class="math inline">\(\boldsymbol v\)</span>的距离集合，<span class="math inline">\(g(\cdot,\cdot)\)</span>为接受两个有限集合为输入的可微函数，并且能够度量两个集合的距离。</p>
 <h1 id="framework">Framework</h1>
 <p>本文主要是提出了一种时间序列表示学习方法。基于Shapelet在不同的时间片段上的作用是不同的观察，作者为不同的时间片段赋予了不同的Shapelet，而不是像传统方法一样整个时序对应一个Shapelet。接着基于这些Shapelet作者构造了图，并通过图嵌入得到了嵌入向量，作为时序的表示。</p>
-<p><img src="http://qfxiao.me/img/image-20200311150951240.png" srcset="/img/loading.gif" style="zoom:80%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/mKJH4c2EMAljavG.png" srcset="/img/loading.gif" style="zoom:80%;" /></p>
 <h2 id="time-aware-shapelet-extraction">Time-Aware Shapelet Extraction</h2>
 <p>第一步是捕获Shapelet在时间维度上的动态影响。我们定义了两个参数来定量的测量shapelet在不同时间上的动态性。第一个是局部因子<span class="math inline">\(\boldsymbol w_n\)</span>，用来控制shapelet内部<span class="math inline">\(n\)</span>个元素的权重，那么shapelet <span class="math inline">\(\boldsymbol v\)</span>和片段<span class="math inline">\(\boldsymbol s\)</span>的距离为： <span class="math display">\[
 \begin{align}
@@ -237,13 +237,13 @@ D(s,t)=\min_{1\leq k\leq m} d(s,s_k)
 \hat{D}(\boldsymbol v,\boldsymbol t|\boldsymbol w,\boldsymbol u)=\min_{1\leq k\leq m}\boldsymbol u_k\cdot\hat{d}(\boldsymbol v,\boldsymbol s_k|\boldsymbol w)
 \]</span> 其中<span class="math inline">\(\boldsymbol t\)</span>被分割为<span class="math inline">\(m\)</span>个片段：<span class="math inline">\(\boldsymbol t=\{\boldsymbol s_1,\cdots,\boldsymbol s_m\}\)</span>。对于分类任务，具体的来说，我们先生成一堆Shapelet候选集，然后通过有监督的方法来挑选最佳的Shapelet和对应的参数<span class="math inline">\(\boldsymbol w\)</span>和<span class="math inline">\(\boldsymbol u\)</span>。</p>
 <p>计算shapelet候选集的算法如下：</p>
-<p><img src="http://qfxiao.me/img/image-20200311151332256.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/srW4Shk79XBFL3U.png" srcset="/img/loading.gif" /></p>
 <p>在获取了Shapelet候选集合之后，我们有带有标签的时序集合<span class="math inline">\(T\)</span>，对于每一个Shapelet我们可以优化：</p>
 <p><span class="math display">\[
 \hat{\mathcal L}=-g(S_{pos}(\boldsymbol v,T),S_{neg}(\boldsymbol v,T))+\lambda\parallel \boldsymbol w\parallel+\epsilon\parallel \boldsymbol u\parallel
 \]</span></p>
 <p>来获取最优的<span class="math inline">\(\hat{\boldsymbol w}\)</span>和<span class="math inline">\(\hat{\boldsymbol u}\)</span>。然后，我们可以挑选出使得<span class="math inline">\(\hat{\mathcal L}\)</span>最小的前<span class="math inline">\(K\)</span>个Shapelet。整个过程的算法流程如下：</p>
-<p><img src="http://qfxiao.me/img/image-20200311151346942.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/5b2TcjuBzlIFrPm.png" srcset="/img/loading.gif" /></p>
 <h2 id="shapelet-evolution-graph">Shapelet Evolution Graph</h2>
 <p>在获取了Shapelet之后，为了捕获Shapelet之间的相关性，我们定义了<em>Shapelet Evolution Graph</em>。</p>
 <blockquote>
@@ -255,18 +255,18 @@ D(s,t)=\min_{1\leq k\leq m} d(s,s_k)
 \boldsymbol p_{i,j}=\frac{\max(\hat{d}_{i,*}(\boldsymbol v_{i,*},\boldsymbol s_i))-\hat{d}_{i,j}(\boldsymbol v_{i,j},\boldsymbol s_i)}{\max(\hat{d}_{i,*}(\boldsymbol v_{i,*},\boldsymbol s_i))-\min(\hat{d}_{i,*}(\boldsymbol v_{i,*},\boldsymbol s_i))}
 \]</span></p>
 <p>其中<span class="math inline">\(\hat{d}_{i,*}(\boldsymbol v_{i,*},\boldsymbol s_i)=\boldsymbol u_*[i]*\hat{d}(\boldsymbol v_{i,*},\boldsymbol s_i|\boldsymbol w_*)&lt;\delta\)</span>。对每一对相邻的片段<span class="math inline">\((\boldsymbol s_i,\boldsymbol s_{i+1})\)</span>的Shapelet <span class="math inline">\(\boldsymbol v_{i,j}\)</span>和<span class="math inline">\(\boldsymbol v_{i+1,k}\)</span>，我们创建一条连接<span class="math inline">\(\boldsymbol v_{*,j}\)</span>和<span class="math inline">\(\boldsymbol v_{*,k}\)</span>的边<span class="math inline">\(e_{j,k}\)</span>，权重为<span class="math inline">\(\boldsymbol p_{i,j}\cdot\boldsymbol p_{i+1,k}\)</span>。最后，所有重复的边会被合并。建图的算法流程图如下：</p>
-<p><img src="http://qfxiao.me/img/image-20200311151009386.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/aq9tGuApSbiC67c.png" srcset="/img/loading.gif" /></p>
 <h2 id="representation-learning">Representation Learning</h2>
 <p>之后，我们使用DeepWalk算法来获取获取每个结点（Shapelet）的嵌入表示。对于时序<span class="math inline">\(\boldsymbol t=\{\boldsymbol s_1,\cdots,\boldsymbol s_m\}\)</span>即对应的Shapelet <span class="math inline">\(\{\boldsymbol v_{1,*},\cdots, v_{m,*}\}\)</span>和对应的概率<span class="math inline">\(\{\boldsymbol p_{1,*},\cdots,\boldsymbol p_{m,*}\}\)</span>，每个Shaplet <span class="math inline">\(\boldsymbol v_{i,j}\)</span>的表示记为<span class="math inline">\(\boldsymbol \mu(\boldsymbol v_{i,j})\)</span>。片段<span class="math inline">\(\boldsymbol s_i\)</span>对应的嵌入向量为对应的Shapelet嵌入向量与对应的概率值加权求和：</p>
 <p><span class="math display">\[
 \boldsymbol\Phi_i=\left(\sum_j p_{i,j}\cdot\boldsymbol \mu(\boldsymbol v_{i,j})\right),\space 1\leq i \leq m
 \]</span></p>
 <p>算法流程如下：</p>
-<p><img src="http://qfxiao.me/img/image-20200311151016288.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/O5exTgsVLuRWQ42.png" srcset="/img/loading.gif" /></p>
 <h1 id="experiments">Experiments</h1>
 <h2 id="experimental-setup">Experimental Setup</h2>
 <p>文中用了<em>Earthquakes</em> (EQS)、<em>WormsTwoClass</em> (WTC)、<em>Strawberry</em> (STB)、<em>Electricity Consumption Records</em> (ECR)和<em>Network Traffic Flow</em> (NTF) 这五个数据集，其中后两个为作者自己收集的数据集。五个数据集对应的统计信息如下：</p>
-<p><img src="http://qfxiao.me/img/image-20200311151034549.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/zHjTKkUJB8fGwdi.png" srcset="/img/loading.gif" /></p>
 <p>文中与多个Baseline进行了比较，包括:</p>
 <ul>
 <li><strong>Distance-based Models: </strong>文中使用了不同的距离度量与基于1-NN的模型进行组合，包括Euclidean Distance (ED)、Dynamic Time Warping (DTW)、Weighted DTW (WDTW)、Complexity-Invariant Distance (CID) 和 Derivative DTW (DDTW)；</li>
@@ -276,17 +276,17 @@ D(s,t)=\min_{1\leq k\leq m} d(s,s_k)
 </ul>
 <h2 id="comparison-results">Comparison Results</h2>
 <p>对于前三个公共数据集评测标准采用Accuracy，后两个数据集因为样本类比不均衡，所以采用了Precision、Recall和F1作为评测标准。结果如下：</p>
-<p><img src="http://qfxiao.me/img/image-20200311151044993.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/jxKFpDVXdmc5tbE.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <p>在EQS数据集上，Time2Graph打败了所有Baseline，而在WTC和STB这两个数据集上也达到了较好的效果。在ECR和NTF这两个真实数据集上，Time2Graph在F1上打败了所有Baseline。</p>
 <h2 id="parameter-analysis">Parameter Analysis</h2>
 <p>本节对Shapelet的数量<span class="math inline">\(K\)</span>、嵌入维度<span class="math inline">\(B\)</span>和片段长度<span class="math inline">\(l\)</span>进行了参数分析。结果如下：</p>
-<p><img src="http://qfxiao.me/img/image-20200311151055248.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/hPfqAvNnOlEBQuw.png" srcset="/img/loading.gif" /></p>
 <h2 id="case-study-of-time-aware-shapelets">Case Study of Time-Aware Shapelets</h2>
 <p>本节作者对提出的<em>Time-Aware Shapetlet</em>进行了细致的探究。</p>
-<p><img src="http://qfxiao.me/img/image-20200311151116749.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/ed5PwksC2l3OWE8.png" srcset="/img/loading.gif" /></p>
 <h2 id="case-study-of-the-shapelet-evolution-graph">Case Study of the Shapelet Evolution Graph</h2>
 <p>本节作者对<em>Shapelet Evolution Graph</em>进行了细致的探究。下图分别为一月份和七月份的<em>Shapelet Evolution Graph</em>。在一月，45号Shapelet的度较大，而且对应的时间因素在一月和二月也较大（图中深色部分）。说明45号Shapelet在一月份具有代表性。而在七月，45号Shapelet的重要性降低，而42号Shapelet在七月的重要性很高。</p>
-<p><img src="http://qfxiao.me/img/image-20200311151106395.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/N2Vij8ODQaRuALJ.png" srcset="/img/loading.gif" /></p>
 
             </article>
             <hr>

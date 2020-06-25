@@ -291,7 +291,7 @@ p(\mu|m,l,a,b)\propto\mu^{m+a-1}(1-\mu)^{l+b-1}
 <p>其中<span class="math inline">\(l=N-m\)</span>。乘上标准化因子，就得到： <span class="math display">\[
 p(\mu|m,l,a,b)=\frac{\Gamma(m+a+l+b)}{\Gamma(m+a)\Gamma(l+b)}\mu^{m+a-1}(1-\mu)^{l+b-1}
 \]</span> 得到的仍然是Beta分布，相当于把<span class="math inline">\(a\rightarrow{m+a}\)</span>，<span class="math inline">\(b\rightarrow{l+b}\)</span>。同时不难发现，参数<span class="math inline">\(a\)</span>和<span class="math inline">\(b\)</span>都有比较直观的意义。<span class="math inline">\(a\)</span>可以看作是历史记录中，成功的次数，<span class="math inline">\(b\)</span>可以看作是历史记录中失败的次数，比如<span class="math inline">\(a=2\)</span>，<span class="math inline">\(b=3\)</span>，根据经验成功的概率应该在<span class="math inline">\(\frac{2}{2+3}=0.4\)</span>左右，即我们的先验为成功的概率为<span class="math inline">\(0.4\)</span>（见下图左下角的子图）。如果在实验中，又进行了<span class="math inline">\(7\)</span>次实验，其中<span class="math inline">\(m=6\)</span>，<span class="math inline">\(l=1\)</span>，由于成功的次数变多了，<span class="math inline">\(a=2+6=8\)</span>，<span class="math inline">\(b=3+1=4\)</span>，直觉上来说我们对成功概率的估计应当相应提高，大概为<span class="math inline">\(\frac{8}{8+4}\approx 0.67\)</span>左右。这时的Beta分布如右下角的图的样子，也印证了我们的直觉。</p>
-<p><img src="http://qfxiao.me/img/image-20200509233713635.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/3hcj18ELXl4iWy6.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <p>以下为互动演示：</p>
 <div>
 <iframe width="650px" height="450px" frameborder="0" style="dispaly:block；" src="http://qfxiao.me/html/beta_distribution_vis.html">
@@ -327,12 +327,12 @@ p(\mathcal D|\boldsymbol \mu)=\prod_{n=1}^N\prod_{k=1}^K \mu_k^{x_{nk}}=\prod_{k
 p(\boldsymbol \mu|\boldsymbol \alpha) \propto \prod_{k=1}^{K}\mu_k^{a_{k-1}}
 \]</span></p>
 <p>其中<span class="math inline">\(0\leqslant \mu_k\leqslant 1\)</span>且<span class="math inline">\(\sum_k\mu_k=1\)</span>。和Beta分布不同，由于要满足<span class="math inline">\(\sum\mu_k=1\)</span>，所以<span class="math inline">\(\{\mu_k\}\)</span>的取值会位于<span class="math inline">\(K-1\)</span>的单纯型上，如下图所示：</p>
-<p><img src="http://qfxiao.me/img/image-20200510005021180.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/N8CSMvmlRz91Gqy.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <p>加上标准化因子，我们就得到了所谓的先验分布，称之为<strong>迪利克雷分布 (Dirichlet Distribution)</strong>： <span class="math display">\[
 \text{Dir}(\boldsymbol \mu|\boldsymbol\alpha)=\frac{\Gamma(\alpha_0)}{\Gamma(\alpha_1)\cdots\Gamma(\alpha_K)}\prod_{k=1}^K\mu_k^{a_{k-1}}
 \]</span></p>
 <p>其中<span class="math inline">\(\Gamma(\cdot)\)</span>为Gamma函数，<span class="math inline">\(\alpha_0=\sum\limits_{k=1}^K\alpha_k\)</span>。下图为不同条件下的迪利克雷分布的可视化：</p>
-<p><img src="http://qfxiao.me/img/image-20200510005507729.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/amGtuvPNoOM7kWZ.png" srcset="/img/loading.gif" /></p>
 <p><span class="math inline">\(\boldsymbol \mu\)</span>的后验与先验和似然函数的乘积成正比：</p>
 <p><span class="math display">\[
 p(\boldsymbol\mu|\mathcal D,\boldsymbol\alpha)\propto p(\mathcal D|\boldsymbol\mu)p(\boldsymbol\mu|\boldsymbol\alpha)\propto\prod_{k=1}^K \mu_k^{\alpha_k+m_k-1}

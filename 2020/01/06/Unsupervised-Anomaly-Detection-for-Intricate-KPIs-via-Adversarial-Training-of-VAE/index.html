@@ -206,7 +206,7 @@
 <li>采用<em>Wasserstein</em>距离度量模型建模的分布和真实分布之间的距离；</li>
 <li>建立了基于对抗训练的<em>Buzz</em>的损失函数和VAE之间的关系。</li>
 </ol>
-<p><img src="http://qfxiao.me/img/image-20200106141915707.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/FwHi7y56njz8R4m.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <h1 id="background">Background</h1>
 <h2 id="anomaly-detection">Anomaly Detection</h2>
 <p>对于任意时间<span class="math inline">\(t\)</span>，给定历史观察值<span class="math inline">\(x_{t-T+1},\cdots,x_t\)</span>，确定异常是否发生(记为<span class="math inline">\(y_t=1\)</span>)。通常来收异常检测算法给出的是发生异常的可能性，如<span class="math inline">\(p(y_t=1|x_{t-T+1},\cdots,x_t)\)</span>。</p>
@@ -277,7 +277,7 @@ W(P_r,P_g)=\frac{1}{K}\sup\limits_{\parallel f\parallel_L\leq K}\mathbb{E}_{x\si
 \]</span></p>
 <h1 id="proposed-method">Proposed Method</h1>
 <p>下图为<em>Buzz</em>的总体流程：</p>
-<p><img src="http://qfxiao.me/img/image-20200106141958376.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/aGPdzq8TVS6fetJ.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <p>数据会首先进行一些预处理，之后进行训练。在检测阶段会根据异常分数来判定异常。</p>
 <h2 id="motivation">Motivation</h2>
 <p>在文中，最关键的两个创新点分别是<em>Wasserstein</em>距离和对数据分布进行分区的方法。</p>
@@ -286,10 +286,10 @@ W(P_r,P_g)=\frac{1}{K}\sup\limits_{\parallel f\parallel_L\leq K}\mathbb{E}_{x\si
 <li><p>在分区方法方面，作者认为原始数据过于复杂，所以将数据空间<span class="math inline">\(\mathcal{X}\)</span>进行划分，然后在每个子空间上使用<em>Wasserstein</em>度量距离，而总体的距离由每个分区的距离的期望求得。</p></li>
 </ul>
 <p>作者还发现，当划分地越来越细时，总体距离接近于特定形式的VAE的重构误差项。</p>
-<p><img src="http://qfxiao.me/img/image-20200106142008894.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/knzq4yPaBrXWgeI.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <h2 id="network-structure">Network Structure</h2>
 <p>下图为模型的网络结构：</p>
-<p><img src="http://qfxiao.me/img/image-20200106142018827.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/Qrgpuh4Iw7YTlny.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <h2 id="training">Training</h2>
 <h3 id="objective-function">Objective Function</h3>
 <p>先定义一些符号：</p>
@@ -337,7 +337,7 @@ p_\theta(\mathbf{x}|\mathbf{z})=\frac{1}{Z(\lambda)}\exp\{-\lambda\parallel\math
 \log\frac{1}{L}\sum\limits_{l=1}^L\left[\frac{p_\theta(\mathbf{x}|\mathbf{z^{(l)}})p_\theta(\mathbf{z}^{(l)})}{q_\phi(\mathbf{z}^{(l)}|\bar{\mathbf{x}})}\right]-\log\frac{1}{L}\sum\limits_{l=1}^L\left[\frac{p_\theta(\bar{\mathbf{x}}|\mathbf{z}^{(l)})p_\theta(\mathbf{z}^{(l)})}{q_\phi(\mathbf{z}^{(l)}|\bar{\mathbf{x}})}\right]
 \]</span></p>
 <p>最终算法流程图为：</p>
-<p><img src="http://qfxiao.me/img/image-20200106142053342.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/Y3NLjRiaWO5eHGT.png" srcset="/img/loading.gif" style="zoom:80%;" /></p>
 <h2 id="theoretical-analysis">Theoretical Analysis</h2>
 <p>在理论分析中，作者主要是想建立<span class="math inline">\(\mathcal{L}_{Buzz}\)</span>和VAE的损失函数<span class="math inline">\(\mathcal{L}_{vae}\)</span>之间的联系，损失函数<span class="math inline">\(\mathcal{\hat{L}}_{Buzz}\)</span>为：</p>
 <p><span class="math display">\[
@@ -379,7 +379,7 @@ f(x|\theta,\lambda)=\frac{1}{2\lambda}\exp{\left(-\frac{|x-\theta|}{\lambda}\rig
 <blockquote>
 <p><span class="math inline">\(\max\mathcal{L}_{Buzz}\geq\max{\mathcal{L}_{vae}}\)</span>，同时，当<span class="math inline">\(S\downarrow\text{diag}{\mathcal{X}}\)</span>时<span class="math inline">\(\max\mathcal{L}_{Buzz}\downarrow\max\mathcal{L}_{vae}\)</span></p>
 </blockquote>
-<p><img src="http://qfxiao.me/img/image-20200106183833975.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/XM2xwBbOLzikhoc.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <h3 id="lemma-4">Lemma 4</h3>
 <blockquote>
 <p>令<span class="math inline">\(p^\prime_G(\mathbf{y}|\mathbf{x})\)</span>表示<span class="math inline">\(\mathbb{E}_{q_{\phi^\prime}}\left[p_G(\mathbf{y}|\mathbf{z})\right]\)</span>。如果<span class="math inline">\((G,\phi,\lambda)\)</span>是一个解，那么存在<span class="math inline">\((G,\phi^\prime,\lambda)\)</span>使得： <span class="math display">\[
@@ -406,9 +406,9 @@ f(x|\theta,\lambda)=\frac{1}{2\lambda}\exp{\left(-\frac{|x-\theta|}{\lambda}\rig
 \bar{\mathcal{L}}_{Buzz}=-\lambda\sup\limits_{Lip(F;S)\leq 1}\mathbb{E}_{p(w)}\mathcal{T}(F)-\mathcal{K}-\log Z(\lambda)
 \]</span></p>
 <h1 id="experiment">Experiment</h1>
-<p><img src="http://qfxiao.me/img/image-20200106142131500.png" srcset="/img/loading.gif" /></p>
-<p><img src="http://qfxiao.me/img/image-20200106142155978.png" srcset="/img/loading.gif" /></p>
-<p><img src="http://qfxiao.me/img/image-20200106142212110.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/GEi3zfeAgXVsvBN.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/7EkhRGNvIsSmwn6.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/yTIhoZb1kVOf4Mv.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 
             </article>
             <hr>
@@ -428,15 +428,15 @@ f(x|\theta,\lambda)=\frac{1}{2\lambda}\exp{\left(-\frac{|x-\theta|}{\lambda}\rig
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/VAE/">VAE</a>
-                    
-                      <a class="hover-with-bg" href="/tags/Deep-Learning/">Deep Learning</a>
-                    
                       <a class="hover-with-bg" href="/tags/Time-Series/">Time Series</a>
                     
                       <a class="hover-with-bg" href="/tags/Anomaly-Detection/">Anomaly Detection</a>
                     
                       <a class="hover-with-bg" href="/tags/Machine-Learning/">Machine Learning</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Deep-Learning/">Deep Learning</a>
+                    
+                      <a class="hover-with-bg" href="/tags/VAE/">VAE</a>
                     
                   </div>
                 

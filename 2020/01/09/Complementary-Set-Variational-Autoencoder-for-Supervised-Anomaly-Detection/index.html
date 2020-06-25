@@ -213,7 +213,7 @@
 \mathcal{L}(\boldsymbol{\theta},\boldsymbol{\phi};\boldsymbol{x})\simeq \frac{1}{L}\sum\limits_l\log p(\boldsymbol{x}|\boldsymbol{z}^{(l)};\boldsymbol{\theta})-C(-\frac{1}{2}-\log\sigma+\frac{1}{2}\sigma^2+\frac{1}{2}\mu^2)
 \]</span> 使用VAE来做异常检测通常是在正常数据上进行训练，在检测阶段，如果是异常样本，那么VAE不能很好地重构它，这样会导致较大的重构误差。</p>
 <h2 id="prior-distribution-for-anomalies">Prior Distribution for Anomalies</h2>
-<p><img src="http://qfxiao.me/img/image-20200109102204802.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/vrxAzRVCtaE3oLc.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <p>在原始VAE异常检测中，无论输入样本<span class="math inline">\(\boldsymbol{x}\)</span>是否异常，VAE都会使对应编码的后验<span class="math inline">\(p(\boldsymbol{z}|\boldsymbol{x})\)</span>服从高斯分布，且施加标准高斯分布的约束。在本文中，作者对异常和正常样本对应的隐变量的先验分布做了不同假设。首先，正常先验依然是标准高斯分布，记为<span class="math inline">\(p_n(\boldsymbol{z})\)</span>。而对于异常先验，作者认为异常即为“不正常”，和正常是补集的关系。作者在文中定义异常先验分布<span class="math inline">\(p_a(\boldsymbol{z})\)</span>为： <span class="math display">\[
 p_a(\boldsymbol{z})=\frac{1}{Y^\prime}(\max\limits_{\boldsymbol{z}^\prime}p_n(\boldsymbol{z}^\prime)-p_n(\boldsymbol{z}))
 \]</span></p>
@@ -255,10 +255,10 @@ Y=\int_{-\infty}^{\infty}p_a(\boldsymbol z)\mathrm{d}\boldsymbol z=\frac{1}{\sqr
 \end{align}
 \]</span></p>
 <p>下图为一维时<span class="math inline">\(p_n(\boldsymbol z)\)</span>和<span class="math inline">\(p_a(\boldsymbol z)\)</span>的示例：</p>
-<p><img src="http://qfxiao.me/img/image-20200109102255322.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/QHXo24cKj9uRwzW.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <h3 id="implementation-of-proposed-method">Implementation of proposed method</h3>
 <p>文中使用编码器输出的分布<span class="math inline">\(\mathcal{N}(\boldsymbol z;\boldsymbol \mu, \boldsymbol \sigma^2)\)</span>与标准正态分布之间的KL散度来作为异常分数。在每一轮的训练过程中，加入一轮使用Anomaly Prior的训练。</p>
-<p><img src="http://qfxiao.me/img/image-20200109102309048.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/wrmzADXtsyuJ6EZ.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <h1 id="experiments">Experiments</h1>
 <h2 id="mnist">MNIST</h2>
 <p>作者设计了两个Task：</p>
@@ -267,10 +267,10 @@ Y=\int_{-\infty}^{\infty}p_a(\boldsymbol z)\mathrm{d}\boldsymbol z=\frac{1}{\sqr
 <li>Task 2. 手写数字被分为3组：已知异常，正常，未知异常。</li>
 </ol>
 <p>细节如下表所示：</p>
-<p><img src="http://qfxiao.me/img/image-20200109102402499.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/ifcIxr9zOpEhksA.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <p>在实现上，使用Adam优化器，<code>batch_size</code>为100，<code>epochs</code>为200。<code>Encoder</code>和<code>Decoder</code>都由三层感知机组成，超参数<span class="math inline">\(s^2\)</span>设置为400。评测标准使用AUC (area under the receiver characteristic curve)。</p>
 <p>下表为实验结果：</p>
-<p><img src="http://qfxiao.me/img/image-20200109102343271.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/YTpO98y1ZPmAK3g.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 
             </article>
             <hr>
@@ -290,9 +290,9 @@ Y=\int_{-\infty}^{\infty}p_a(\boldsymbol z)\mathrm{d}\boldsymbol z=\frac{1}{\sqr
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/VAE/">VAE</a>
-                    
                       <a class="hover-with-bg" href="/tags/Anomaly-Detection/">Anomaly Detection</a>
+                    
+                      <a class="hover-with-bg" href="/tags/VAE/">VAE</a>
                     
                   </div>
                 

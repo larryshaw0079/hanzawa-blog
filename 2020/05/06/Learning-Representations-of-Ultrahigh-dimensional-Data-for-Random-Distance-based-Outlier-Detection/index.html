@@ -206,7 +206,7 @@
 <p>我们的目的是为高维数据学习低维表示，同时在学到的低维表示中能够更好地进行异常检测。设有数据集<span class="math inline">\(\mathcal{X}=\{\mathbf x_1,\mathbf x_2,\cdots, \mathbf x_N\}\)</span> (<span class="math inline">\(\mathbf x_i\in \mathbb{R}^D\)</span>) 和一个基于随机距离的异常检测器<span class="math inline">\(\phi:\mathcal{X}\mapsto \mathbb{R}\)</span>，我们的目标是学习一个表示函数<span class="math inline">\(f:\mathcal{X}\mapsto\mathbb{R}^M (M\ll D)\)</span>使得对于所有异常样本<span class="math inline">\(\mathbf x_i\)</span>和正常样本<span class="math inline">\(\mathbf x_j\)</span>都有<span class="math inline">\(\phi(f(\mathbf x_i))&gt;\phi(f(\mathbf x_j))\)</span>。</p>
 <h3 id="ranking-model-based-representation-learning-framework">Ranking Model-based Representation Learning Framework</h3>
 <p><strong>RAMODO</strong>基于<em>pairwise ranking model</em>。第一步是通过一定的预处理算法（原文中称为<em>outlier thresholding</em>）将数据划分为inlier候选集和outlier候选集；第二步通过随机从inlier候选集采样<span class="math inline">\(n\)</span>个样本生成query set <span class="math inline">\((\mathbf x_i,\cdots,\mathbf x_{i+n-1})\)</span>，从inlier候选集采样一个样本生成<em>positive example</em> <span class="math inline">\((\mathbf x^+)\)</span>，从outlier候选集采样一个样本生成<em>negative example</em> <span class="math inline">\((\mathbf x^-)\)</span>，将三者组合生成 <em>metatriplet</em> <span class="math inline">\(T=(&lt;\mathbf x_i,\cdots,\mathbf x_{i+n-1}&gt;,\mathbf x^+,\mathbf x^-)\)</span>；第三步通过神经网络<span class="math inline">\(f\)</span>学习表示；第四步通过<em>outlier score-based ranking loss</em> <span class="math inline">\(L(\phi(f(\mathbf x^+)|&lt;f(\mathbf x_i),\cdots,f(\mathbf x_{i+n-1})&gt;),\phi(f(\mathbf x^-)|&lt;f(\mathbf x_i),\cdots,f(\mathbf x_{i+n-1})&gt;))\)</span>来进行优化，其中<span class="math inline">\(\phi(\cdot|\cdot)\)</span>为基于距离的异常检测器。</p>
-<p><img src="http://qfxiao.me/img/image-20200416151126952.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/4I7fx5ZjBhueUDz.png" srcset="/img/loading.gif" /></p>
 <h2 id="a-ramodo-instance-repen">A <strong>RAMODO</strong> Instance: <strong>REPEN</strong></h2>
 <p><strong>REPEN</strong>为<strong>RAMODO</strong>的实例模型，使用Sp作为异常检测器。</p>
 <h3 id="outlier-thresholding-using-state-of-the-art-detectors-and-cantellis-inequality">Outlier Thresholding Using State-of-the-art Detectors and Cantelli's Inequality</h3>
@@ -250,7 +250,7 @@ J(\Theta;T)=L(\phi(f_\Theta(\mathbf x^+)|\mathcal Q),\phi(f_\Theta(\mathbf x^-)|
 \mathop{\text{arg min}}\limits_{\Theta}\frac{1}{|\mathcal{T}|}\sum\limits_{i=1}^{|\mathcal T|}J(\Theta;T_i)
 \]</span></p>
 <h3 id="the-algorithm-and-its-time-complexity">The Algorithm and Its Time Complexity</h3>
-<p><img src="http://qfxiao.me/img/image-20200416151141351.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/eYtKHBJ7szCgjNa.png" srcset="/img/loading.gif" /></p>
 <h3 id="leveraging-a-few-labeled-outliers-to-improve-triplet-sampling">Leveraging A Few Labeled Outliers to Improve Triplet Sampling</h3>
 <h1 id="experiments">Experiments</h1>
 <h2 id="datasets">Datasets</h2>
@@ -265,7 +265,7 @@ J(\Theta;T)=L(\phi(f_\Theta(\mathbf x^+)|\mathcal Q),\phi(f_\Theta(\mathbf x^-)|
 </ul>
 <h2 id="effectiveness-in-real-world-data-with-thousands-to-millions-of-features">Effectiveness in Real-world Data with Thousands to Millions of Features</h2>
 <p>作者分别使用原始特征和<em>REPEN</em>学到的特征进行异常检测，IMP代表性能提升比例，SU代表加速比例。</p>
-<p><img src="http://qfxiao.me/img/image-20200416151156535.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/mvUiE1NzyTwOgV8.png" srcset="/img/loading.gif" /></p>
 <h2 id="comparing-to-state-of-the-art-representation-learning-competitors">Comparing to State-of-the-art Representation Learning Competitors</h2>
 <ul>
 <li><strong>AE: </strong>自编码器</li>
@@ -273,15 +273,15 @@ J(\Theta;T)=L(\phi(f_\Theta(\mathbf x^+)|\mathcal Q),\phi(f_\Theta(\mathbf x^-)|
 <li><strong>SRP: </strong> <em>Sparse Random Projection</em></li>
 <li><strong>CoP: </strong> <em>Coherent Pursuit</em></li>
 </ul>
-<p><img src="http://qfxiao.me/img/image-20200416151203533.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/yQumCRNrHAheJ34.png" srcset="/img/loading.gif" /></p>
 <h2 id="the-capability-of-leveraging-labeled-outliers-as-prior-knowledge">The Capability of Leveraging Labeled Outliers as Prior Knowledge</h2>
-<p><img src="http://qfxiao.me/img/image-20200416151224069.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/NOLfKQd2u1JMPtp.png" srcset="/img/loading.gif" /></p>
 <h2 id="sensitivity-test-w.r.t.-the-representation-dimension">Sensitivity Test w.r.t. the Representation Dimension</h2>
-<p><img src="http://qfxiao.me/img/image-20200416151212730.png" srcset="/img/loading.gif" /></p>
-<p><img src="http://qfxiao.me/img/image-20200416151234583.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/BoGjY5SEu6vrK3X.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/Rlx7Df9Hvsjp2Eg.png" srcset="/img/loading.gif" /></p>
 <p>文中提到了对于R8、URL、News20这三个数据集在维度<span class="math inline">\(M=1\)</span>的时候表现和其他维度一样好，作者给出的解释是在这几个数据集中异常部分是线性可分的，所以1维就足够了，另一个解释是优化问题。</p>
 <h2 id="scalability-test">Scalability Test</h2>
-<p><img src="http://qfxiao.me/img/image-20200416151241749.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/1JfUclWyFYgLdNp.png" srcset="/img/loading.gif" /></p>
 
             </article>
             <hr>

@@ -205,8 +205,8 @@
 <li><strong>镜像 Images：</strong> 这里的镜像不是指我们安装系统时下载的ISO镜像，Docker镜像就是把你需要的东西（一个系统+需要的服务）集中到一起，相当于做菜的菜谱；</li>
 <li><strong>容器 Containers：</strong> 如果一个Docker镜像启动了，那么就会有一个Docker容器产生，相当于按照菜谱做出来的菜。</li>
 </ul>
-<p><img src="https://i.loli.net/2020/06/24/H2x9mnPwkVQyO6p.png" srcset="/img/loading.gif" alt="img" style="zoom: 50%;" /></p>
-<p><img src="https://i.loli.net/2020/06/24/7k6S3yecX2lbvQY.png" srcset="/img/loading.gif" alt="img" style="zoom:50%;" /></p>
+<p><img src="https://i.loli.net/2020/06/24/H2x9mnPwkVQyO6p.png" srcset="/img/loading.gif" alt="img" style="zoom: 33%;" /></p>
+<p><img src="https://i.loli.net/2020/06/24/7k6S3yecX2lbvQY.png" srcset="/img/loading.gif" alt="img" style="zoom: 33%;" /></p>
 <p>这一节我们先不讨论如何自己写Docker镜像，只是先讨论Docker的基本操作。</p>
 <h2 id="basic-operations">Basic Operations</h2>
 <p>Docker新安装好当然是没有什么镜像的，首先我们使用<code>docker pull hello-world</code>来下载一个测试镜像。</p>
@@ -395,8 +395,8 @@ LD_LIBRARY_PATH=<span class="hljs-regexp">/usr/local</span><span class="hljs-reg
 <h2 id="what-is-openpai">What is OpenPAI</h2>
 <p>OpenPAI是一个分布式深度学习计算资源管理平台，对于我们用户来说，只需要定义好Docker镜像，然后编写好任务设置，提交到平台之后，平台便会自动分配计算资源来运行任务。</p>
 <p>OpenPAI界面：</p>
-<p><img src="https://i.loli.net/2020/06/24/CDrZjgYR7lNcieh.png" srcset="/img/loading.gif" /></p>
-<p><img src="https://i.loli.net/2020/06/24/FGJpVCbls7YP4aM.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/24/CDrZjgYR7lNcieh.png" srcset="/img/loading.gif" style="zoom: 50%;" /></p>
+<p><img src="https://i.loli.net/2020/06/24/FGJpVCbls7YP4aM.png" srcset="/img/loading.gif" style="zoom: 50%;" /></p>
 <p>下面我们来讲讲怎么向OpenPAI平台提交任务。</p>
 <h2 id="submit-jobs-to-openpai">Submit Jobs to OpenPAI</h2>
 <h3 id="pack-code-data-files">Pack Code &amp; Data Files</h3>
@@ -424,12 +424,12 @@ tar -xvf files.tarCopy</code></pre>
 <p>然后是运行代码，假设我这里的任务比较简单，只有一行main.py的调用：</p>
 <pre><code class="hljs css"><span class="hljs-selector-tag">python</span> <span class="hljs-selector-tag">main</span><span class="hljs-selector-class">.pyCopy</span></code></pre>
 <p>如果任务的执行比较复杂，也只需把命令填到Command里即可，OpenPAI会自动执行。接下来是设置配置，可以选GPU的数量，内存大小等等：</p>
-<p><img src="https://i.loli.net/2020/06/24/T7ryOxjpJP4FWYR.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/24/T7ryOxjpJP4FWYR.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <p>然后是镜像的选择：</p>
-<p><img src="https://i.loli.net/2020/06/24/3n7SpNlsLjBRvgE.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/24/3n7SpNlsLjBRvgE.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <p>要注意在本机上构建好镜像之后，需要把镜像重命名为<code>&lt;repository_address&gt;/&lt;image_name&gt;</code>的格式（我们的<code>&lt;repository&gt;</code>是<code>lin-ai-27:5000</code>，假设我的镜像名是<code>xiaoqinfeng/pytorch</code>，那就是改成<code>lin-ai-27:5000/xiaoqinfeng/pytorch</code>），然后执行<code>docker push</code>推送到Docker镜像服务器上才能在OpenPAI上使用。</p>
 <p>提交之后，可以在Jobs界面看到任务的运行情况：</p>
-<p><img src="https://i.loli.net/2020/06/24/ZD4cUgOCIqnyHdB.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/24/ZD4cUgOCIqnyHdB.png" srcset="/img/loading.gif" style="zoom: 50%;" /></p>
 
             </article>
             <hr>

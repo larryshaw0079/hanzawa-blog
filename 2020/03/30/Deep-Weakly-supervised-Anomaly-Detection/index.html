@@ -217,7 +217,7 @@
 <p>在这个Formulation里，作者将关系学习和异常打分统一了起来。首先，输入的数据集不再是原始样本，而是样本对。样本对包含三种：<em>anomaly-anomaly</em>，<em>anomaly-unlabeled</em>，<em>unlabeled-unlabeled</em>，记为<span class="math inline">\(C_{\{\mathbf{a},\mathbf{a}\}}\)</span>，<span class="math inline">\(C_{\{\mathbf{a},\mathbf{u}\}}\)</span>，<span class="math inline">\(C_{\{\mathbf{u},\mathbf{u}\}}\)</span>。每一个样本对包含一个标签<span class="math inline">\(y\)</span>，表示该pair对应的异常分数，整个输入数据集<span class="math inline">\(\mathcal{P}=\{\{\mathbf{x}_i,\mathbf{x}_j,y_{ij}\}|\mathbf{x}_i,\mathbf{x}_j\in\mathcal{X} \space\text{and}\space y_{ij}\in\mathbb{N}\}\)</span>。因为有<span class="math inline">\(y_{\{\mathbf a,\mathbf a\}}&gt;y_{\{\mathbf a,\mathbf u\}}&gt;y_{\{\mathbf u,\mathbf u\}}\)</span>，所以对关系的学习也是对异常打分的学习。</p>
 <h3 id="the-instantiated-model-prenet">The Instantiated Model: PReNET</h3>
 <p>下图为模型示意图，<strong>Data Augmentation</strong>模块负责产生pair数据，<strong>End-to-End Anomaly Score Learner <span class="math inline">\(\phi\)</span></strong> 模块负责关系学习（异常打分）。</p>
-<p><img src="http://qfxiao.me/img/image-20200330001932457.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/6ZF3w9v1Lux5t4Q.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <h4 id="data-argumentation-by-pairing">Data Argumentation by Pairing</h4>
 <p>数据的产生分为两步：</p>
 <ol type="1">
@@ -236,7 +236,7 @@ L\left(\phi((\mathbf x_i,\mathbf x_j);\Theta),y_{ij}\right)=|y_{ij}-\phi((\mathb
 <h3 id="anomaly-detection-using-prenet">Anomaly Detection Using PReNet</h3>
 <h4 id="training-stage">Training Stage</h4>
 <p>训练流程如下图所示：</p>
-<p><img src="http://qfxiao.me/img/image-20200330001945430.png" srcset="/img/loading.gif" style="zoom: 80%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/oR6uTL3c7HMpwD4.png" srcset="/img/loading.gif" style="zoom: 80%;" /></p>
 <p>为了保证训练样本类别的平衡，<span class="math inline">\(\frac{|\mathcal{B}|}{2}\)</span>的样本采样自<span class="math inline">\(C_{\{\mathbf u,\mathbf u\}}\)</span>，采样自<span class="math inline">\(C_{\{\mathbf a,\mathbf u\}}\)</span>和<span class="math display">\[C_{\{\mathbf a,\mathbf a\}}\]</span>的样本都占<span class="math inline">\(\frac{|\mathcal{B}|}{4}\)</span>。</p>
 <h4 id="anomaly-scoring-stage">Anomaly Scoring Stage</h4>
 <p>在测试阶段，给定测试样本<span class="math inline">\(\mathbf{x}_k\)</span>，先分别从<span class="math inline">\(\mathcal{A}\)</span>和<span class="math inline">\(\mathcal{U}\)</span>采样，然后定义以下<em>anomaly score</em>： <span class="math display">\[
@@ -264,18 +264,18 @@ s_{\mathbf{x}_k}=\frac{1}{2E}\left[\sum\limits_{i=1}^E\phi((\mathbf a_i,\mathbf 
 <p>用到的Metrics为AUC-ROC和AUC-PR。</p>
 <h2 id="detection-of-known-anomalies">Detection of Known Anomalies</h2>
 <p>在本实验中，异常污染的比例（2%）和有标记异常样本的数量（60）是固定的，下表为实验结果：</p>
-<p><img src="http://qfxiao.me/img/image-20200330002002763.png" srcset="/img/loading.gif" style="zoom: 80%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/BfhVE9z8DWipAM6.png" srcset="/img/loading.gif" style="zoom: 80%;" /></p>
 <h2 id="detection-of-unknown-anomalies">Detection of Unknown Anomalies</h2>
 <p>在本实验中，异常污染的比例（2%）和有标记异常样本的数量（60）同样是固定的，下表为实验结果：</p>
-<p><img src="http://qfxiao.me/img/image-20200330002045616.png" srcset="/img/loading.gif" style="zoom:80%;" /></p>
-<p><img src="http://qfxiao.me/img/image-20200330002100038.png" srcset="/img/loading.gif" style="zoom:80%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/9GM8XTYiSLUn2Ar.png" srcset="/img/loading.gif" style="zoom:80%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/4RxrGZWLqHNnXco.png" srcset="/img/loading.gif" style="zoom:80%;" /></p>
 <h2 id="availability-of-known-anomalies">Availability of Known Anomalies</h2>
 <p>本实验主要是研究不同数量标注异常样本的条件下，算法的性能如何。异常污染的比例固定（2%），标注异常的数量从15到120变化。实验结果如下：</p>
-<p><img src="http://qfxiao.me/img/image-20200330002114989.png" srcset="/img/loading.gif" style="zoom:80%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/x4Hf3lU5JO71bvo.png" srcset="/img/loading.gif" style="zoom:80%;" /></p>
 <h2 id="further-analysis-of-prenet">Further Analysis of PReNet</h2>
 <h3 id="tolerance-to-anomaly-contamination-in-unlabeled-data">Tolerance to Anomaly Contamination in Unlabeled Data</h3>
 <p>本实验主要研究不同异常污染比例下，算法的性能，即探究算法对异常污染的鲁棒性。标注异常样本的数量恒定（60），异常污染比例在<span class="math inline">\(\{0\%,2\%,5\%,10\%\}\)</span>中变化。实验结果如下所示：</p>
-<p><img src="http://qfxiao.me/img/image-20200330002150378.png" srcset="/img/loading.gif" style="zoom:80%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/TGYCJUs8LlmreNV.png" srcset="/img/loading.gif" style="zoom:80%;" /></p>
 <h3 id="ablation-study">Ablation Study</h3>
 <p>这一节是消融实验，分别设置了四个变体：</p>
 <ul>
@@ -284,7 +284,7 @@ s_{\mathbf{x}_k}=\frac{1}{2E}\left[\sum\limits_{i=1}^E\phi((\mathbf a_i,\mathbf 
 <li><strong>LDM: </strong>将网络中的隐藏层去除；</li>
 <li><strong>A2H: </strong>加入了额外的隐藏层，并且加入了<span class="math inline">\(\ell_2\)</span>-norm防止过拟合。</li>
 </ul>
-<p><img src="http://qfxiao.me/img/image-20200330002158390.png" srcset="/img/loading.gif" style="zoom:80%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/oR7qlZWfepFT8jK.png" srcset="/img/loading.gif" style="zoom:80%;" /></p>
 
             </article>
             <hr>

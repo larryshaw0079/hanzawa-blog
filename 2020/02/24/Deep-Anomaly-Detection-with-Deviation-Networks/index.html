@@ -204,7 +204,7 @@
 <li>提出了一种端到端的异常检测框架，直接学习<code>Anomaly Score</code>并且可以利用已知信息；</li>
 <li>基于提出的框架，文中提出了一种实例方法 (DevNet)。</li>
 </ul>
-<p><img src="http://qfxiao.me/img/image-20200113104938784.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/XT7fqQRWEOuocgy.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <h1 id="proposed-model">Proposed Model</h1>
 <h2 id="end-to-end-anomaly-score-learning">End-To-End Anomaly Score Learning</h2>
 <h3 id="problem-statement">Problem Statement</h3>
@@ -213,7 +213,7 @@
 <h3 id="the-proposed-framework">The Proposed Framework</h3>
 <p>为了解决这个问题，文中提出了一种通用异常检测框架，模型框架如下图所示：</p>
 <p>模型框架如下图所示：</p>
-<p><img src="http://qfxiao.me/img/image-20200113104953902.png" srcset="/img/loading.gif" style="zoom:50%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/ZuE1mb2Ytv6Jdl7.png" srcset="/img/loading.gif" style="zoom:50%;" /></p>
 <p>主要包含三个部分：</p>
 <ol type="1">
 <li><em>anomaly scoring network</em>. 图中左边的部分，一个函数<span class="math inline">\(\phi\)</span>，输入样本<span class="math inline">\(\mathbf{x}\)</span>，输出<code>anomaly score</code></li>
@@ -246,11 +246,11 @@ dev(\boldsymbol x)=\frac{\phi(\boldsymbol x;\Theta)-\mu_{\mathcal{R}}}{\sigma_{\
 \]</span> <span class="math inline">\(dev(\boldsymbol x)\)</span>可以看作是样本偏离标准的程度，而我们肯定希望异常样本偏离标准越大，正常样本越接近标准。文中采用的损失函数是<code>Contrastive Loss</code>： <span class="math display">\[
 L(\phi(\boldsymbol x;\Theta),\mu_\mathcal{R},\sigma_\mathcal{R})=(1-y)|dev(\boldsymbol x)| + y \max(0, a - dev(\boldsymbol x))
 \]</span> <code>Contrastive Loss</code>的直观解释可以看下图：</p>
-<p><img src="http://qfxiao.me/img/contrastive_2020_2_24.png" srcset="/img/loading.gif" style="zoom:50%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/aPbSipCsk2JwNcD.png" srcset="/img/loading.gif" style="zoom: 33%;" /></p>
 <p>对于负例（正常），优化过程将他们尽量向原点靠近，对于正例（异常），优化过程将他们拉向边界。</p>
 <h2 id="the-devnet-algorithm">The DevNet Algorithm</h2>
 <p><code>DevNet</code>的算法流程图如下：</p>
-<p><img src="http://qfxiao.me/img/image-20200113105040134.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/km9H5DoNRbOQ784.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <h2 id="interpretability-of-anomaly-scores">Interpretability of Anomaly Scores</h2>
 <p>因为<em>reference score generator</em>选择的是确定的高斯分布，于是可以用概率论给出一些解释性。作者给出了一个结论，</p>
 <blockquote>
@@ -264,7 +264,7 @@ L(\phi(\boldsymbol x;\Theta),\mu_\mathcal{R},\sigma_\mathcal{R})=(1-y)|dev(\bold
 <p>这一个实验主要是为了验证算法在真实场景下的效果，即大量无标签数据和极少量标签数据。训练集包含两部分，一部分是无标签数据<span class="math inline">\(\mathcal{U}\)</span>,包含<span class="math inline">\(2\%\)</span>的异常样本，另一部分是有标签数据<span class="math inline">\(\mathcal{K}\)</span>，由随机采样<span class="math inline">\(0.005\%-1\%\)</span>的训练数据和<span class="math inline">\(0.08\%-6\%\)</span>的异常样本组成。</p>
 <h3 id="findings">Findings</h3>
 <p>实验结果如下表所示：</p>
-<p><img src="http://qfxiao.me/img/image-20200113110000432.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/DKqxJROngML8IS2.png" srcset="/img/loading.gif" style="zoom: 50%;" /></p>
 <p>从结果上看来，本文提出的方法在所有数据集上都比Baseline好，说明<code>DevNet</code>端到端直接优化<code>Anomaly Score</code>的方式是有效的。</p>
 <h2 id="data-efficiency">Data Efficiency</h2>
 <h3 id="experiment-settings-1">Experiment Settings</h3>
@@ -275,7 +275,7 @@ L(\phi(\boldsymbol x;\Theta),\mu_\mathcal{R},\sigma_\mathcal{R})=(1-y)|dev(\bold
 </ul>
 <h3 id="findings-1">Findings</h3>
 <p>在几个基于深度的Baseline中，<code>DevNet</code>的效果是最好的，同时在有标签异常非常有限的情况下，<code>DevNet</code>也能很好的利用标签信息，达到更好的效果。</p>
-<p><img src="http://qfxiao.me/img/image-20200113110017195.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/iIWGBPosKCuxbRF.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <h2 id="robustness-w.r.t.-anomaly-contamination">Robustness w.r.t. Anomaly Contamination</h2>
 <h3 id="experiment-settings-2">Experiment Settings</h3>
 <p>在第一个实验中，无标签数据集<span class="math inline">\(\mathcal{U}\)</span>包含的是固定的异常比例<span class="math inline">\(2\%\)</span>，而在这个实验中，作者测试了从<span class="math inline">\(0\%\)</span>到<span class="math inline">\(20\%\)</span>之间不同异常比例来测试算法的鲁棒性（即使<span class="math inline">\(\mathcal{U}\)</span>中包含异常，由于没有标签，在训练的时候仍然假设都为正常来进行训练）。本实验试图回答以下问题：</p>
@@ -285,7 +285,7 @@ L(\phi(\boldsymbol x;\Theta),\mu_\mathcal{R},\sigma_\mathcal{R})=(1-y)|dev(\bold
 </ul>
 <h3 id="findings-2">Findings</h3>
 <p>下图为实验结果：</p>
-<p><img src="http://qfxiao.me/img/image-20200113110035878.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/JCnIjLOc84RFP2V.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <p>从结果上来看，<code>DevNet</code>比其他基于深度的方法鲁棒性更好，同时在高异常污染的情况下仍然比纯无监督方法效果要好。</p>
 <h2 id="ablation-study">Ablation Study</h2>
 <p>本实验设置了<code>DevNet</code>的三个变体（默认的<code>DevNet-Def</code>为单层隐层加上一个输出层）来进行消融实验，分别是：</p>
@@ -295,11 +295,11 @@ L(\phi(\boldsymbol x;\Theta),\mu_\mathcal{R},\sigma_\mathcal{R})=(1-y)|dev(\bold
 <li><code>DevNet-3HL</code>，隐层数量为3层。</li>
 </ul>
 <p>对比结果如下：</p>
-<p><img src="http://qfxiao.me/img/image-20200113110048598.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/5LcyAwGMB8gb2UP.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <p>通过实验可以发现，<code>DevNet-Rep</code>说明了<em>end-to-end learning of anomaly scores</em>和<em>deviation loss</em>的有效性，而<code>DevNet-Linear</code>说明了<em>learning of non-linear features</em>的重要性。<code>DevNet-3HL</code>说明了加深网络并不总能带来性能的提升。</p>
 <h2 id="scalability-test">Scalability Test</h2>
 <p>这一个实验使用合成的数据来测试算法对大规模数据的处理能力，分别从<em>Data Size</em>和<em>Data Dimensionality</em>两方面来测试。结果如下：</p>
-<p><img src="http://qfxiao.me/img/image-20200113110113423.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/5gbPdJkB47e3FsV.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <p>可以看出，<code>DevNet</code>对<em>Data Size</em>并不敏感，同时，面对高维数据，<code>DevNet</code>也没有表现出劣势。</p>
 
             </article>
@@ -320,9 +320,9 @@ L(\phi(\boldsymbol x;\Theta),\mu_\mathcal{R},\sigma_\mathcal{R})=(1-y)|dev(\bold
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/Deep-Learning/">Deep Learning</a>
-                    
                       <a class="hover-with-bg" href="/tags/Anomaly-Detection/">Anomaly Detection</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Deep-Learning/">Deep Learning</a>
                     
                   </div>
                 

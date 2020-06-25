@@ -263,7 +263,7 @@ r_\phi(\mathbf{x})=\frac{p^*(\mathbf{x})}{p_\theta(\mathbf{x})}=\frac{p(\mathbf{
 \]</span></p>
 <p>最后模型包含四个网络：生成网络<span class="math inline">\(p_\theta(\mathbf{x}|\mathbf{z})\)</span>、推断网络<span class="math inline">\(q_\eta(\mathbf{z}|\mathbf{x})\)</span>以及两个判别器<span class="math inline">\(\mathcal{C}_{\boldsymbol{\omega}}\)</span>和<span class="math inline">\(\mathcal{D}_\phi\)</span>，作者将其命名为<span class="math inline">\(\alpha\)</span>-GAN。</p>
 <p>算法流程如下：</p>
-<p><img src="http://qfxiao.me/img/image-20191106220923748.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/hkIY9xuDWl4GbLz.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <h3 id="improved-techniques">Improved Techniques</h3>
 <p>作者为了改进模型的稳定性和效率，将生成器的Loss中的<span class="math inline">\(-\log(1-\mathcal{D}_\phi)\)</span>修改为了<span class="math inline">\(\log\mathcal{D}_\phi-\log(1-\mathcal{D}_\phi)\)</span>，并声称这样能提供非饱和（Non-saturating）的梯度：</p>
 <p><span class="math display">\[
@@ -274,8 +274,8 @@ r_\phi(\mathbf{x})=\frac{p^*(\mathbf{x})}{p_\theta(\mathbf{x})}=\frac{p(\mathbf{
 <p>[TODO]</p>
 <h2 id="related-work">Related Work</h2>
 <p>[TODO]</p>
-<p><img src="http://qfxiao.me/img/image-20191102233101258.png" srcset="/img/loading.gif" /></p>
-<p><img src="http://qfxiao.me/img/image-20191102233151987.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/TKt3yUwPDQm4MeV.png" srcset="/img/loading.gif" style="zoom: 50%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/5jg9wNMoXuTzeVY.png" srcset="/img/loading.gif" style="zoom: 50%;" /></p>
 <h1 id="experiments">Experiments</h1>
 <p>[TODO]</p>
 <h2 id="metrics">Metrics</h2>
@@ -286,13 +286,13 @@ r_\phi(\mathbf{x})=\frac{p^*(\mathbf{x})}{p_\theta(\mathbf{x})}=\frac{p(\mathbf{
 <li><strong>Independent Wasserstein Critic: </strong></li>
 </ul>
 <h2 id="results-on-colormnist">Results on ColorMNIST</h2>
-<p><img src="http://qfxiao.me/img/image-20191102233220700.png" srcset="/img/loading.gif" /></p>
-<p><img src="http://qfxiao.me/img/image-20191102233244847.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/QRBKHn51fxO2WUq.png" srcset="/img/loading.gif" style="zoom:50%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/kM4lrsBVSDKaJwW.png" srcset="/img/loading.gif" style="zoom: 50%;" /></p>
 <h2 id="results-on-celeba">Results on CelebA</h2>
-<p><img src="http://qfxiao.me/img/image-20191102233303345.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/mzdjY67uH9pZ1ny.png" srcset="/img/loading.gif" style="zoom:50%;" /></p>
 <h2 id="results-on-cifar-10">Results on CIFAR-10</h2>
-<p><img src="http://qfxiao.me/img/image-20191102233338213.png" srcset="/img/loading.gif" /></p>
-<p><img src="http://qfxiao.me/img/image-20191102233350494.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/nDGgM6AHVyKwIam.png" srcset="/img/loading.gif" style="zoom: 50%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/K1RQdMyj8zbqlCJ.png" srcset="/img/loading.gif" style="zoom:50%;" /></p>
 
             </article>
             <hr>
@@ -312,11 +312,11 @@ r_\phi(\mathbf{x})=\frac{p^*(\mathbf{x})}{p_\theta(\mathbf{x})}=\frac{p(\mathbf{
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
+                      <a class="hover-with-bg" href="/tags/Deep-Learning/">Deep Learning</a>
+                    
                       <a class="hover-with-bg" href="/tags/Variational-Inference/">Variational Inference</a>
                     
                       <a class="hover-with-bg" href="/tags/VAE/">VAE</a>
-                    
-                      <a class="hover-with-bg" href="/tags/Deep-Learning/">Deep Learning</a>
                     
                       <a class="hover-with-bg" href="/tags/GAN/">GAN</a>
                     
