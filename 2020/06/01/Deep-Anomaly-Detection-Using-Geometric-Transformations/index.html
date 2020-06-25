@@ -158,7 +158,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    2.8k 字
+                    3k 字
                   </span>
                 
 
@@ -168,7 +168,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    38
+                    40
                      分钟
                   </span>
                 
@@ -348,7 +348,9 @@ scores += dirichlet_normality_score(mle_alpha_t, x_test_p)</code></pre>
 <li><strong>Normal digit: 3，Anomaly: 8，Transformations: Identity and horizontal flip. </strong>这里把<span class="math inline">\(3\)</span>作为正常样本，由于<span class="math inline">\(3\)</span>不是对称的，所以两种变换是可以分辨的，AUROC达到了<span class="math inline">\(0.957\)</span>；</li>
 <li><strong>Normal digit: 8，Anomaly: 3，Transformations: Identity and translation by 7 pixels. </strong>同样是把<span class="math inline">\(8\)</span>作为正常样本，但变换用的是平移，AUROC达到了<span class="math inline">\(0.919\)</span>。</li>
 </ul>
+<p>除此之外，作者还设计了一个实验，目的是测试什么样的图像会获得较高的分数<span class="math inline">\(n_S(x)\)</span>。在给定训练好的分类器的情况下，优化输入的图像，目标函数是最大化分数<span class="math inline">\(n_S(x)\)</span>。下图为实验结果：</p>
 <p><img src="https://i.loli.net/2020/06/24/8Pi4EKCRuBXrYgp.png" srcset="/img/loading.gif" /></p>
+<p>在左图中，将数字<span class="math inline">\(3\)</span>作为正常样本训练的分类器、原始输入为数字<span class="math inline">\(0\)</span>的图片时，随着优化的进行，图片慢慢地变得像数字<span class="math inline">\(3\)</span>。在右图中，同样是将数字<span class="math inline">\(3\)</span>作为正常样本训练的分类器，不过原始输入也是数字<span class="math inline">\(3\)</span>，这时图像却没有怎么变化。</p>
 
             </article>
             <hr>
