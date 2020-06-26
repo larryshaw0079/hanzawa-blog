@@ -158,7 +158,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    722 字
+                    1.9k 字
                   </span>
                 
 
@@ -168,7 +168,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    9
+                    22
                      分钟
                   </span>
                 
@@ -207,39 +207,55 @@
 <h1 id="proposed-method">Proposed Method</h1>
 <h2 id="classification-based-anomaly-detection">Classification-based Anomaly Detection</h2>
 <p>假设所有数据位于空间<span class="math inline">\(R^L\)</span>内，而正常数据位于子空间<span class="math inline">\(X\subset R^L\)</span>内。我们假设所有的异常样本位于<span class="math inline">\(X\)</span>之外。为了检测异常，我们希望学习一个分类器<span class="math inline">\(C\)</span>使得对于所有的<span class="math inline">\(x\in X\)</span>有<span class="math inline">\(C(x)=1\)</span>，而对所有的<span class="math inline">\(x\in R^L\backslash X\)</span>有<span class="math inline">\(C(x)=0\)</span>。</p>
-<p>单分类方法的思想是直接学习<span class="math inline">\(P(x\in X)\)</span>，代表的方法有One-Class SVM，DSVDD等。<em>Geometric-transformation classification</em> (GEOM) 则将数据空间<span class="math inline">\(X\)</span>通过<span class="math inline">\(M\)</span>个几何变换转换到一系列子空间<span class="math inline">\(X_1,\cdots,X_M\)</span>。之后训练一个分类器来预测样本<span class="math inline">\(T(x,m)\)</span>对应的几何变换的种类<span class="math inline">\(m\)</span>。转换后的正常图片空间记为<span class="math inline">\(\cup_m X_m\)</span>，所以该方法尝试估计以下条件概率： <span class="math display">\[
+<p>单分类方法的思想是直接学习<span class="math inline">\(P(x\in X)\)</span>，代表的方法有One-Class SVM，DSVDD等。传统的OC-SVM直接在原始空间或者核空间学习分类器。比较新的方法，如Deep-SVDD则是先将样本转换到一个特征空间，然后在这个特征空间上学习使得半径<span class="math inline">\(R\)</span>最小的超球体（球心<span class="math inline">\(c_0\)</span>），来覆盖住所有正常样本。异常的判定则通过计算<span class="math inline">\(\parallel f(x)-c_0\parallel^2-R^2\)</span>来实现。不过学习一个好的样本到特征空间的变换并不是一件容易的事情，比如说<span class="math inline">\(f(x)=0, \forall x \in X\)</span>就是一个使得超球体最小的解。所以需要很多trick来避免诸如此类的情况。</p>
+<p><em>Geometric-transformation classification</em> (GEOM) 则将数据空间<span class="math inline">\(X\)</span>通过<span class="math inline">\(M\)</span>个几何变换转换到一系列子空间<span class="math inline">\(X_1,\cdots,X_M\)</span>。之后训练一个分类器来预测样本<span class="math inline">\(T(x,m)\)</span>对应的几何变换的种类<span class="math inline">\(m\)</span>。转换后的正常图片空间记为<span class="math inline">\(\cup_m X_m\)</span>，所以该方法尝试估计以下条件概率： <span class="math display">\[
 P(m^\prime|T(x,m))=\frac{P(T(x,m)\in X_{m^\prime})P(m^\prime)}{\sum_{\bar{m}}P(T(x,m)\in X_{\bar{m}})P(\tilde{m})}-\frac{P(T(x,m)\in X_{m^\prime})}{\sum_{\bar{m}}P(T(x,m)\in X_{\bar{m}})}
 \]</span></p>
-<p>对于异常的样本<span class="math inline">\(x\in R^L\backslash X\)</span>，在经过几何变换之后，都不会位于正确的子空间中，即<span class="math inline">\(T(x,m)\in R^L\backslash X_m\)</span>。</p>
-<p>作者认为，这种方法的问题是分类器<span class="math inline">\(P(m^\prime|T(x,m))\)</span>只在</p>
+<p>对于异常的样本<span class="math inline">\(x\in R^L\backslash X\)</span>，在经过几何变换之后，都不会位于正确的子空间中，即<span class="math inline">\(T(x,m)\in R^L\backslash X_m\)</span>。之后，使用<span class="math inline">\(P(m|T(x,m))\)</span>来判定异常。</p>
+<p>作者认为，这种方法的问题是分类器<span class="math inline">\(P(m^\prime|T(x,m))\)</span>只在正常数据上训练，而对于异常样本的异常分数会出现方差很大的问题。</p>
+<p>一种解决方式是加入异常样本进行训练，但是作者认为在有的任务中标签很难获取，于是作者使用了另外一种方法来解决这个问题。</p>
 <h2 id="distance-based-multiple-transformation-classification">Distance-based Multiple Transformation Classification</h2>
+<p>和GEOM一样，先对每个样本进行<span class="math inline">\(M\)</span>个几何变换，然后学习一个特征提取器<span class="math inline">\(f(x)\)</span>，将<span class="math inline">\(X_m\)</span>映射到特征空间。之后和OC-SVM类似，假设特征<span class="math inline">\(\{f(x)|x\in X_m\}\)</span>为球心为<span class="math inline">\(c_m=\frac{1}{N}\sum_{x\in X} f(T(x,m))\)</span>的超球体。样本属于某一类<span class="math inline">\(m^\prime\)</span>的概率由下式给出：</p>
 <p><span class="math display">\[
 P(m^\prime|T(x,m))=\frac{e^{-\parallel f(T(x,m))-c_{m^\prime}\parallel^2}}{\sum_{\bar m}e^{-\parallel f(T(x,m))-c_{\bar m}\parallel^2}}
 \]</span></p>
+<p>目标函数采用的是Triplet Loss：</p>
 <p><span class="math display">\[
 L=\sum_i\max(\parallel f(T(x_i,m))-c_m\parallel^2+s-\min_{m^\prime\neq m}\parallel f(T(x_i,m))-c_{m^\prime}\parallel^2,0)
 \]</span></p>
+<p><span class="math inline">\(\parallel f(T(x_i,m))-c_m\parallel^2\)</span>相当于最小化了类内距离，<span class="math inline">\(\min_{m^\prime\neq m}\parallel f(T(x_i,m))-c_{m^\prime}\parallel^2\)</span>最大化了每个类对应的集簇间距离。在检测阶段，为了避免一些数值问题，作者做了一些平滑操作：</p>
 <p><span class="math display">\[
 \tilde P(m^\prime|T(x,m))=\frac{e^{-\parallel f(T(x,m))-c_{m^\prime}\parallel^2+\epsilon}}{\sum_{\tilde m}e^{-\parallel f(T(x,m))-c_{\tilde m}\parallel^2+M\cdot\epsilon}}
 \]</span></p>
+<p>最后的评判分数由下式给出：</p>
 <p><span class="math display">\[
 Score(x)=-\log P(x\in X)=-\sum_m\log \tilde{P}(T(x,m)\in X_m)=-\sum_m\log\tilde{P}(m|T(x,m))
 \]</span></p>
-<p><img src="https://i.loli.net/2020/06/24/r48h1RJxcXF6YDM.png" srcset="/img/loading.gif" /></p>
+<p>算法流程图如下：</p>
+<p><img src="https://i.loli.net/2020/06/24/r48h1RJxcXF6YDM.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <h2 id="parameterizing-the-set-of-transformations">Parameterizing the Set of Transformations</h2>
+<p>在GEOM中，由于使用的几何变换都是针对图像的，所以对于其他类型的数据并不适用。本文中作者对非图像数据设计了以下变换：</p>
 <p><span class="math display">\[
 T(x,m)=W_mx+b_m
 \]</span></p>
+<p>不同的参数<span class="math inline">\(W_m\)</span>和<span class="math inline">\(b_m\)</span>即为不同的几何变换，可以考虑采用随机采样的方式。</p>
 <h1 id="experiments">Experiments</h1>
 <h2 id="image-experiments">Image Experiments</h2>
-<p><img src="https://i.loli.net/2020/06/24/j4Y29tB6k1Aipgo.png" srcset="/img/loading.gif" /></p>
-<p><img src="https://i.loli.net/2020/06/24/D3opwrLnSGmcsyM.png" srcset="/img/loading.gif" /></p>
-<p><img src="https://i.loli.net/2020/06/24/e6PfIDOVwlzrSWi.png" srcset="/img/loading.gif" /></p>
-<p><img src="https://i.loli.net/2020/06/24/wFZcyevtjMVY4gA.png" srcset="/img/loading.gif" /></p>
+<p>对于图像数据的异常检测实验，作者采用了CIFAR10、FasionMNIST这两个数据集，实验结果如下：</p>
+<p><img src="https://i.loli.net/2020/06/24/j4Y29tB6k1Aipgo.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/24/D3opwrLnSGmcsyM.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <h2 id="tabular-data-experiments">Tabular Data Experiments</h2>
-<p><img src="https://i.loli.net/2020/06/24/EAcTiPvUrdwXMW5.png" srcset="/img/loading.gif" /></p>
-<p><img src="https://i.loli.net/2020/06/24/jZb5NgUhVmJv2fR.png" srcset="/img/loading.gif" /></p>
-<p><img src="https://i.loli.net/2020/06/24/h72L8kNV9wtDyK4.png" srcset="/img/loading.gif" /></p>
+<p>对于非图像数据，作者采用了几个小的数据集：Arrhythmia、Thyroid、KDD和KDDRev。采用的Baseline包括OC-SVM、E2E-AE、LOF、DAGMM和FB-AE (Feature Bagging Autoencoder)。对于几何变换的参数，采样自标准正态分布。结果如下：</p>
+<p><img src="https://i.loli.net/2020/06/24/e6PfIDOVwlzrSWi.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<h1 id="remark">Remark</h1>
+<p>结合<a href="https://openreview.net/forum?id=H1lK_lBtvS" target="_blank" rel="noopener">OpenReview</a>上的一些讨论，这里提出一些问题和总结：</p>
+<ul>
+<li>KDD数据集太简单了，正常、异常样本能够很容易被分开；</li>
+<li>对于图像数据作者只使用了CIFAR10和FashionMNIST这两个比较小的数据集，而在GEOM中还使用了CIFAR100和CatsVsDogs。并且GEOM原文中提到数据集（指图像大小）越大，GEOM的优势就越明显，所以在本文的实验中只使用这两个数据集说服力略显不够；</li>
+<li>关于评测标准的问题，作者在图像数据中用的是AUROC，而非图像数据用的是F1 score。像AUPR、AUROC这种评测标准往往更加全面，而F1 score依赖于阈值的选取。如果是遍历阈值找到最好的那个F1 score，则无法全面考察模型的鲁棒性，模型有可能只是在特定的阈值下表现很好，而阈值稍微偏差一下性能可能就会大幅下降。我看到的大多数异常检测文章都是使用AUROC或者F1加上AUROC作为评测指标；</li>
+<li>文中在第二节“CLASSIFICATION-BASED ANOMALY DETECTION”的末尾两段关于GEOM方法的缺点说的很模糊。异常分数的方差大到底指的是什么；</li>
+<li>关于作者提出的变换<span class="math inline">\(T(x,m)=W_mx+b_m\)</span>并没有用到图像数据的实验上，而且在实验中<span class="math inline">\(b_m\)</span>这个参数实际上是被忽略掉了的，<span class="math inline">\(b_m\)</span>的作用究竟如何不得而知。而且GEOM中的几何变换的Motivation在原文中是做了实验充分讨论了的，GEOM的作者认为这些几何变换保留了图像的高阶语义信息。而本文中的变换中的参数只是随机采样而来，并不存在说保留原始数据中的结构信息。如果忽略掉这一层变换，那就类似于加了神经网络提取特征的OC-SVM。</li>
+</ul>
 
             </article>
             <hr>
