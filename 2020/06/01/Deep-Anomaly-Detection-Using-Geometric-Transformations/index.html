@@ -158,7 +158,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    3k 字
+                    3.2k 字
                   </span>
                 
 
@@ -168,7 +168,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    40
+                    42
                      分钟
                   </span>
                 
@@ -351,6 +351,11 @@ scores += dirichlet_normality_score(mle_alpha_t, x_test_p)</code></pre>
 <p>除此之外，作者还设计了一个实验，目的是测试什么样的图像会获得较高的分数<span class="math inline">\(n_S(x)\)</span>。在给定训练好的分类器的情况下，优化输入的图像，目标函数是最大化分数<span class="math inline">\(n_S(x)\)</span>。下图为实验结果：</p>
 <p><img src="https://i.loli.net/2020/06/24/8Pi4EKCRuBXrYgp.png" srcset="/img/loading.gif" /></p>
 <p>在左图中，将数字<span class="math inline">\(3\)</span>作为正常样本训练的分类器、原始输入为数字<span class="math inline">\(0\)</span>的图片时，随着优化的进行，图片慢慢地变得像数字<span class="math inline">\(3\)</span>。在右图中，同样是将数字<span class="math inline">\(3\)</span>作为正常样本训练的分类器，不过原始输入也是数字<span class="math inline">\(3\)</span>，这时图像却没有怎么变化。</p>
+<h1 id="remark">Remark</h1>
+<ul>
+<li>文中提到的在CIFAR100数据的实验上，由于类间差异比较大导致效果较差，那么很自然地，不同的变换样本对应的集簇实际上应当足够分开，集簇内的样本要足够进，这样对于分类器来说才能比较好的分类。不过采用的几何变换并没有针对这一点进行特别设计；</li>
+<li>文中强调了所使用的变换为几何变换，其实除此之外，所使用的变换还都是可以用矩阵表示的可逆的变换。</li>
+</ul>
 
             </article>
             <hr>
