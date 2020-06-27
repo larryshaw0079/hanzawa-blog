@@ -158,7 +158,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    2.2k 字
+                    2.3k 字
                   </span>
                 
 
@@ -229,23 +229,6 @@ p(\mathcal D|\mu)=\prod_{n=1}^N p(x_n|\mu)=\prod_{n=1}^N \mu^{x_n}(1-\mu)^{1-x_n
 \text{var}[m]&amp;=N\mu(1-\mu)
 \end{align}
 \]</span></p>
-<h2 id="gamma-function">Gamma Function</h2>
-<p>对于任何实部大于<span class="math inline">\(0\)</span>的复数<span class="math inline">\(x\)</span>，Gamma函数的定义为： <span class="math display">\[
-\Gamma(x)=\int_0^{\infty}s^{x-1}e^{-s}\mathrm d s
-\]</span> Gamma函数有一个性质： <span class="math display">\[
-\Gamma(x+1)=x\Gamma(x)
-\]</span> 证明为： <span class="math display">\[
-\begin{align*}
-\Gamma(x+1) &amp;= \int_{0}^{\infty} {s^{x} e^{-s} ds} \\
-&amp;= \big[s^{x} (-e^{-s})\big] \big|_{0}^{\infty} - \int_{0}^{\infty} {(x s^{x-1}) (-e^{-s}) ds} \\
-&amp;= (0 - 0) + x \int_{0}^{\infty} {s^{x-1} e^{-s} ds} \\
-&amp;= x \Gamma(x)
-\end{align*}
-\]</span></p>
-<p><span class="math display">\[
-\Gamma(1)=1\\
-\Gamma(\frac{1}{2})=\sqrt{\pi}
-\]</span></p>
 <h2 id="beta-distribution">Beta Distribution</h2>
 <p>现在我们来讨论如何解决刚才提到的最大似然估计过拟合问题。为了解决这个问题，我们使用贝叶斯的思路，对<span class="math inline">\(\mu\)</span>引入了先验分布<span class="math inline">\(p(\mu)\)</span>。而这个分布需要具有良好的解释性和数学性质。</p>
 <p>根据贝叶斯定理： <span class="math display">\[
@@ -297,6 +280,7 @@ p(\mu|m,l,a,b)=\frac{\Gamma(m+a+l+b)}{\Gamma(m+a)\Gamma(l+b)}\mu^{m+a-1}(1-\mu)^
 <iframe width="650px" height="450px" frameborder="0" style="dispaly:block；" src="http://qfxiao.me/html/beta_distribution_vis.html">
 </iframe>
 </div>
+<p>最后，Beta还有一个有趣的应用就是，如果我们不断接收到新的观测数据，那么旧的后验分布则可以作为新的先验分布将参数更新下去 。这相当于说，基于已有的观测数据，我们提出一个先验Beta分布，然后根据新得到的一批观测数据，用先验Beta分布计算一个似然函数，将似然函数和先验Beta分布乘起来，归一化后得到了新的后验分布，只要不断有新的观测数据接收到，就可以把后验分布作为新的先验，不断更新下去。这样做的优势是对于大数据集，我们不需要整个数据集，而是只需要一批一批的更新即可。</p>
 <h1 id="probability-distributions-for-multinomial-variables">Probability Distributions for Multinomial Variables</h1>
 <h2 id="intro-1">Intro</h2>
 <p>前面我们讨论了二值随机变量，现在我们将其扩展到多值变量。设一个<span class="math inline">\(K\)</span>维向量<span class="math inline">\(\mathbf x\)</span>，当<span class="math inline">\(x_k\)</span>为<span class="math inline">\(1\)</span>的时候其他元素都为<span class="math inline">\(0\)</span>，如<span class="math inline">\(K=6,x_3=1\)</span>时<span class="math inline">\(\mathbf x\)</span>表示为<span class="math inline">\(\mathbf x=(0,0,1,0,0,0)^\top\)</span>。如果<span class="math inline">\(p(x_k=1)=\mu_k\)</span>，那么<span class="math inline">\(\mathbf x\)</span>的概率分布为： <span class="math display">\[

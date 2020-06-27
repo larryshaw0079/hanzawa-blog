@@ -8,7 +8,7 @@
     <link href="/2020/06/22/PRML-Notes-1-1-Probability-Distributions-Binary-and-Multinomial-Variables/"/>
     <url>/2020/06/22/PRML-Notes-1-1-Probability-Distributions-Binary-and-Multinomial-Variables/</url>
     
-    <content type="html"><![CDATA[<h1 id="overview">Overview</h1><p>这是PRML (Pattern Recognition and Machine Learning) 第二章<code>Probability Distributions</code>笔记的第一部分，主要包括<code>2.1. Binary Variables</code>和<code>2.2. Multinomial Variables</code>这两节。</p><h1 id="probability-distributions-for-binary-variables">Probability Distributions for Binary Variables</h1><h2 id="intro">Intro</h2><p>这一节主要针对二值随机变量的建模，即<span class="math inline">\(x\in\{0,1\}\)</span>。这里可以想象为我们有一个硬币，<span class="math inline">\(x=1\)</span>代表正面朝上，而<span class="math inline">\(x=0\)</span>代表反面朝上，并且正面朝上的概率为<span class="math inline">\(\mu\)</span>，即： <span class="math display">\[p(x=1|\mu)=\mu\]</span> 其中<span class="math inline">\(0\leqslant \mu \leqslant 1\)</span>。<span class="math inline">\(x\)</span>的概率分布可以写为： <span class="math display">\[\text{Bern}(x|\mu)=\mu^x(1-\mu)^{1-x}\]</span> 也就是我们熟知的<strong>伯努利分布 (Bernoulli Distribution)</strong>。其均值和方差分别为： <span class="math display">\[\begin{align}\mathbb E[x]&amp;=\mu\\\text{var}[x] &amp;= \mu(1-\mu)\end{align}\]</span> 现在来考虑参数估计任务。假设我们正在进行一个投硬币的实验，每一次投币都服从伯努利分布且相互独立，我们将每次采集到的观测值组成数据集<span class="math inline">\(\mathcal D=\{x_1,\cdots,x_N\}\)</span>，则似然函数为： <span class="math display">\[p(\mathcal D|\mu)=\prod_{n=1}^N p(x_n|\mu)=\prod_{n=1}^N \mu^{x_n}(1-\mu)^{1-x_n}\]</span> 如果采用极大似然估计的话，我们可以最大化似然函数，这等价于最大化对数似然： <span class="math display">\[\ln p(\mathcal D|\mu)=\sum_{n=1}^{N}\ln p(x_n|\mu)=\sum_{n=1}^N\{x_n\ln\mu+(1-x_n)\ln(1-\mu)\}\]</span> 令其导数为0得到极值点： <span class="math display">\[\mu_{ML}=\frac{1}{N}\sum_{n=1}^N x_n\]</span> 这相当于样本均值，不过这样做会有严重的问题。假设我们的数据集为<span class="math inline">\(\mathcal D=\{1,1,1\}\)</span>，也就是说我们只收集到了三个样本，并且都是正例，我们会得到<span class="math inline">\(\mu_{ML}=1\)</span>，而这显然是严重过拟合的。稍后我们会说说如何应对这种情况（加入先验）。</p><h2 id="binomial-distribution">Binomial Distribution</h2><p>我们同样可以对多次伯努利实验进行概率建模。记<span class="math inline">\(m\)</span>为成功的次数，<span class="math inline">\(N\)</span>为数据集大小，可知这个概率应该与<span class="math inline">\(\mu^m(1-\mu)^{N-m}\)</span>成正比。乘以标准化系数后即我们熟知的<strong>二项分布 (Binomial Distribution)</strong>： <span class="math display">\[\text{Bin}(m|N,\mu)=\binom{N}{m}\mu^m(1-\mu)^{N-m}\]</span></p><p>其中： <span class="math display">\[\binom{N}{m}=\frac{N!}{(N-m)!m!}\]</span> 其均值和方差分别为： <span class="math display">\[\begin{align}\mathbb E[m]&amp;=N\mu\\\text{var}[m]&amp;=N\mu(1-\mu)\end{align}\]</span></p><h2 id="gamma-function">Gamma Function</h2><p>对于任何实部大于<span class="math inline">\(0\)</span>的复数<span class="math inline">\(x\)</span>，Gamma函数的定义为： <span class="math display">\[\Gamma(x)=\int_0^{\infty}s^{x-1}e^{-s}\mathrm d s\]</span> Gamma函数有一个性质： <span class="math display">\[\Gamma(x+1)=x\Gamma(x)\]</span> 证明为： <span class="math display">\[\begin{align*}\Gamma(x+1) &amp;= \int_{0}^{\infty} {s^{x} e^{-s} ds} \\&amp;= \big[s^{x} (-e^{-s})\big] \big|_{0}^{\infty} - \int_{0}^{\infty} {(x s^{x-1}) (-e^{-s}) ds} \\&amp;= (0 - 0) + x \int_{0}^{\infty} {s^{x-1} e^{-s} ds} \\&amp;= x \Gamma(x)\end{align*}\]</span></p><p><span class="math display">\[\Gamma(1)=1\\\Gamma(\frac{1}{2})=\sqrt{\pi}\]</span></p><h2 id="beta-distribution">Beta Distribution</h2><p>现在我们来讨论如何解决刚才提到的最大似然估计过拟合问题。为了解决这个问题，我们使用贝叶斯的思路，对<span class="math inline">\(\mu\)</span>引入了先验分布<span class="math inline">\(p(\mu)\)</span>。而这个分布需要具有良好的解释性和数学性质。</p><p>根据贝叶斯定理： <span class="math display">\[p(\mu|\mathcal D)=\frac{p(\mathcal D|\mu)p(\mu)}{p(\mathcal D)}\]</span> 而<span class="math inline">\(p(\mathcal D)=\int_0^1 p(\mathcal D|\mu)p(\mu)\mathrm d\mu\)</span>只受数据集影响，而数据集是固定的，所以为常数，因此<span class="math inline">\(p(\mu|\mathcal D)\propto p(\mathcal D|\mu)p(\mu)\)</span>。而似然函数为<span class="math inline">\(\mu^x(1-\mu)^{1-x}\)</span>的乘积，如果先验也采用<span class="math inline">\(\mu\)</span>和<span class="math inline">\(1-\mu\)</span>的幂的乘积的形式，那么后验分布也将和先验形式相同，这种性质在统计学中被称为<strong>先验共轭 (conjugacy)</strong>。</p><p>这里我们直接给出这个先验分布，再来分析它的性质。这个分布叫做<strong>Beta分布 (Beta Distribution)</strong><span class="math inline">\(P(\mu|a,b)\sim \text{Beta}(a,b)\)</span>： <span class="math display">\[\begin{align}\text{Beta}(\mu|a,b) &amp;= \frac{\Gamma(a+b)}{\Gamma(a\Gamma(b)}\mu^{a-1}(1-\mu)^{b-1}\\ &amp;= \frac{1}{B(a,b)}\mu^{a-1}(1-\mu)^{b-1}\end{align}\]</span> <span class="math inline">\(B(\boldsymbol \alpha,\beta)\)</span>称为B函数，为一个标准化函数： <span class="math display">\[\begin{align}B(a,b) = \frac{\Gamma(a)\Gamma(b)}{\Gamma(a+b)}\end{align}\]</span> 其目的是为了使整个概率分布积分等于1而存在的。Gamma函数的定义为： <span class="math display">\[\Gamma(x)=\int_0^{\infty}s^{x-1}e^{-s}\mathrm d s\]</span> Gamma函数有一个性质：</p><p><span class="math display">\[\Gamma(x+1)=x\Gamma(x)\]</span> 证明为： <span class="math display">\[\begin{align*}\Gamma(x+1) &amp;= \int_{0}^{\infty} {s^{x} e^{-s} ds} \\&amp;= \big[s^{x} (-e^{-s})\big] \big|_{0}^{\infty} - \int_{0}^{\infty} {(x s^{x-1}) (-e^{-s}) ds} \\&amp;= (0 - 0) + x \int_{0}^{\infty} {s^{x-1} e^{-s} ds} \\&amp;= x \Gamma(x)\end{align*}\]</span></p><p>除此之外：</p><p><span class="math display">\[\Gamma(1)=1\\\Gamma(\frac{1}{2})=\sqrt{\pi}\]</span></p><p>可以验证： <span class="math display">\[\int_0^1\text{Beta}(\mu|a,b)\mathrm d\mu=1\]</span></p><p>Beta分布的均值和方差为：</p><p><span class="math display">\[\mathbb E[\mu]=\frac{a}{a+b}\\\text{var}[\mu]=\frac{ab}{(a+b)^2(a+b+1)}\]</span></p><p>因为后验分布与先验和似然函数的乘积成比例，那么： <span class="math display">\[p(\mu|m,l,a,b)\propto\mu^{m+a-1}(1-\mu)^{l+b-1}\]</span></p><p>其中<span class="math inline">\(l=N-m\)</span>。乘上标准化因子，就得到： <span class="math display">\[p(\mu|m,l,a,b)=\frac{\Gamma(m+a+l+b)}{\Gamma(m+a)\Gamma(l+b)}\mu^{m+a-1}(1-\mu)^{l+b-1}\]</span> 得到的仍然是Beta分布，相当于把<span class="math inline">\(a\rightarrow{m+a}\)</span>，<span class="math inline">\(b\rightarrow{l+b}\)</span>。同时不难发现，参数<span class="math inline">\(a\)</span>和<span class="math inline">\(b\)</span>都有比较直观的意义。<span class="math inline">\(a\)</span>可以看作是历史记录中，成功的次数，<span class="math inline">\(b\)</span>可以看作是历史记录中失败的次数，比如<span class="math inline">\(a=2\)</span>，<span class="math inline">\(b=3\)</span>，根据经验成功的概率应该在<span class="math inline">\(\frac{2}{2+3}=0.4\)</span>左右，即我们的先验为成功的概率为<span class="math inline">\(0.4\)</span>（见下图左下角的子图）。如果在实验中，又进行了<span class="math inline">\(7\)</span>次实验，其中<span class="math inline">\(m=6\)</span>，<span class="math inline">\(l=1\)</span>，由于成功的次数变多了，<span class="math inline">\(a=2+6=8\)</span>，<span class="math inline">\(b=3+1=4\)</span>，直觉上来说我们对成功概率的估计应当相应提高，大概为<span class="math inline">\(\frac{8}{8+4}\approx 0.67\)</span>左右。这时的Beta分布如右下角的图的样子，也印证了我们的直觉。</p><p><img src="https://i.loli.net/2020/06/25/3hcj18ELXl4iWy6.png" srcset="/img/loading.gif" style="zoom:67%;" /></p><p>以下为不同参数对应的Beta分布的互动演示：</p><div><iframe width="650px" height="450px" frameborder="0" style="dispaly:block；" src="http://qfxiao.me/html/beta_distribution_vis.html"></iframe></div><h1 id="probability-distributions-for-multinomial-variables">Probability Distributions for Multinomial Variables</h1><h2 id="intro-1">Intro</h2><p>前面我们讨论了二值随机变量，现在我们将其扩展到多值变量。设一个<span class="math inline">\(K\)</span>维向量<span class="math inline">\(\mathbf x\)</span>，当<span class="math inline">\(x_k\)</span>为<span class="math inline">\(1\)</span>的时候其他元素都为<span class="math inline">\(0\)</span>，如<span class="math inline">\(K=6,x_3=1\)</span>时<span class="math inline">\(\mathbf x\)</span>表示为<span class="math inline">\(\mathbf x=(0,0,1,0,0,0)^\top\)</span>。如果<span class="math inline">\(p(x_k=1)=\mu_k\)</span>，那么<span class="math inline">\(\mathbf x\)</span>的概率分布为： <span class="math display">\[p(\mathbf x|\boldsymbol \mu)=\prod_{k=1}^{K}\mu_k^{x_k}\]</span> <span class="math inline">\(\mu_k\)</span>满足<span class="math inline">\(\sum_k \mu_k=1\)</span>和<span class="math inline">\(\mu_k\geqslant 0\)</span>，该分布被称作是<strong>Categorical Distribution</strong>。易知其均值为： <span class="math display">\[\begin{align}\mathbb E[\mathbf x|\boldsymbol \mu]=\sum_{\mathbf x}p(\mathbf x|\boldsymbol \mu)\mathbf x=\boldsymbol \mu\end{align}\]</span> 假设我们有大小为<span class="math inline">\(N\)</span>的数据集<span class="math inline">\(\mathcal D\)</span>，每个样本服从该分布且相互独立，那么似然函数： <span class="math display">\[p(\mathcal D|\boldsymbol \mu)=\prod_{n=1}^N\prod_{k=1}^K \mu_k^{x_{nk}}=\prod_{k=1}^K \mu_k^{\sum_n x_{nk}}=\prod_{k=1}^K\mu_k^{m_k}\]</span> 其中<span class="math inline">\(m_k=\sum_n x_{nk}\)</span>，即<span class="math inline">\(x_k=1\)</span>的数量。为了最大化对数似然同时保证<span class="math inline">\(\sum_k \mu_k=1\)</span>，我们可以用拉格朗日乘子法： <span class="math display">\[\sum_{k=1}^K m_k\ln \mu_k+\lambda\left(\sum_{k=1}^K\mu_k-1\right)\]</span> 我们得到<span class="math inline">\(\mu_k=-m_k/\lambda\)</span>。通过<span class="math inline">\(\sum_k \mu_k=1\)</span>得出<span class="math inline">\(\lambda=-N\)</span>，故最后我们有： <span class="math display">\[\mu_k^{ML}=\frac{m_k}{N}\]</span></p><p>这相当于是<span class="math inline">\(x_k=1\)</span>的数量除以总数。</p><h2 id="multinomial-distribution">Multinomial Distribution</h2><p>类似的，我们可以对多次实验进行建模，假设进行<span class="math inline">\(N\)</span>次独立实验，概率分布可以写为：</p><p><span class="math display">\[\text{Mult}(m_1,m_2,\cdots,m_K|\boldsymbol\mu,N)=\binom{N}{m_1m_2\cdots m_K}\prod_{k=1}^K\mu_k^{m_k}\]</span></p><p>这也是我们熟知的<strong>多项分布 (Multinomial Distribution)</strong>，其中<span class="math inline">\(\binom{N}{m_1m_2\cdots m_K}\)</span>为正则化因子： <span class="math display">\[\binom{N}{m_1m_2\cdots m_K}=\frac{N!}{m_1!m_2!\cdots m_K!}\]</span> 注意<span class="math inline">\(\sum\limits_{k=1}^K m_k=N\)</span>。</p><h2 id="dirichlet-distribution">Dirichlet Distribution</h2><p>有了前面Beta的启发，我们同样可以对多项分布的参数<span class="math inline">\(\mu_k\)</span>建立共轭先验。首先根据似然函数，我们知道先验应当与<span class="math inline">\(\mu_k\)</span>的幂的乘积成比例：</p><p><span class="math display">\[p(\boldsymbol \mu|\boldsymbol \alpha) \propto \prod_{k=1}^{K}\mu_k^{a_{k-1}}\]</span></p><p>其中<span class="math inline">\(0\leqslant \mu_k\leqslant 1\)</span>且<span class="math inline">\(\sum_k\mu_k=1\)</span>。和Beta分布不同，由于要满足<span class="math inline">\(\sum\mu_k=1\)</span>，所以<span class="math inline">\(\{\mu_k\}\)</span>的取值会位于<span class="math inline">\(K-1\)</span>的单纯型上，如下图所示：</p><p><img src="https://i.loli.net/2020/06/25/N8CSMvmlRz91Gqy.png" srcset="/img/loading.gif" style="zoom:67%;" /></p><p>加上标准化因子，我们就得到了所谓的先验分布，称之为<strong>迪利克雷分布 (Dirichlet Distribution)</strong>： <span class="math display">\[\text{Dir}(\boldsymbol \mu|\boldsymbol\alpha)=\frac{\Gamma(\alpha_0)}{\Gamma(\alpha_1)\cdots\Gamma(\alpha_K)}\prod_{k=1}^K\mu_k^{a_{k-1}}\]</span></p><p>其中<span class="math inline">\(\Gamma(\cdot)\)</span>为Gamma函数，<span class="math inline">\(\alpha_0=\sum\limits_{k=1}^K\alpha_k\)</span>。下图为不同条件下的迪利克雷分布的可视化：</p><p><img src="https://i.loli.net/2020/06/25/amGtuvPNoOM7kWZ.png" srcset="/img/loading.gif" /></p><p><span class="math inline">\(\boldsymbol \mu\)</span>的后验与先验和似然函数的乘积成正比：</p><p><span class="math display">\[p(\boldsymbol\mu|\mathcal D,\boldsymbol\alpha)\propto p(\mathcal D|\boldsymbol\mu)p(\boldsymbol\mu|\boldsymbol\alpha)\propto\prod_{k=1}^K \mu_k^{\alpha_k+m_k-1}\]</span></p><p>不难验证：</p><p><span class="math display">\[\begin{align}p(\boldsymbol\mu|\mathcal D,\boldsymbol\alpha) &amp;= \text{Dir}(\boldsymbol\mu|\boldsymbol\alpha+\mathbf m)\\&amp;=\frac{\Gamma(\alpha_0+N)}{\Gamma(\alpha_1+m_1)\cdots\Gamma(\alpha_K+m_K)}\prod_{k=1}^K\mu_k^{\alpha_k+m_k-1}\end{align}\]</span></p><p>即后验同样为迪利克雷分布。</p>]]></content>
+    <content type="html"><![CDATA[<h1 id="overview">Overview</h1><p>这是PRML (Pattern Recognition and Machine Learning) 第二章<code>Probability Distributions</code>笔记的第一部分，主要包括<code>2.1. Binary Variables</code>和<code>2.2. Multinomial Variables</code>这两节。</p><h1 id="probability-distributions-for-binary-variables">Probability Distributions for Binary Variables</h1><h2 id="intro">Intro</h2><p>这一节主要针对二值随机变量的建模，即<span class="math inline">\(x\in\{0,1\}\)</span>。这里可以想象为我们有一个硬币，<span class="math inline">\(x=1\)</span>代表正面朝上，而<span class="math inline">\(x=0\)</span>代表反面朝上，并且正面朝上的概率为<span class="math inline">\(\mu\)</span>，即： <span class="math display">\[p(x=1|\mu)=\mu\]</span> 其中<span class="math inline">\(0\leqslant \mu \leqslant 1\)</span>。<span class="math inline">\(x\)</span>的概率分布可以写为： <span class="math display">\[\text{Bern}(x|\mu)=\mu^x(1-\mu)^{1-x}\]</span> 也就是我们熟知的<strong>伯努利分布 (Bernoulli Distribution)</strong>。其均值和方差分别为： <span class="math display">\[\begin{align}\mathbb E[x]&amp;=\mu\\\text{var}[x] &amp;= \mu(1-\mu)\end{align}\]</span> 现在来考虑参数估计任务。假设我们正在进行一个投硬币的实验，每一次投币都服从伯努利分布且相互独立，我们将每次采集到的观测值组成数据集<span class="math inline">\(\mathcal D=\{x_1,\cdots,x_N\}\)</span>，则似然函数为： <span class="math display">\[p(\mathcal D|\mu)=\prod_{n=1}^N p(x_n|\mu)=\prod_{n=1}^N \mu^{x_n}(1-\mu)^{1-x_n}\]</span> 如果采用极大似然估计的话，我们可以最大化似然函数，这等价于最大化对数似然： <span class="math display">\[\ln p(\mathcal D|\mu)=\sum_{n=1}^{N}\ln p(x_n|\mu)=\sum_{n=1}^N\{x_n\ln\mu+(1-x_n)\ln(1-\mu)\}\]</span> 令其导数为0得到极值点： <span class="math display">\[\mu_{ML}=\frac{1}{N}\sum_{n=1}^N x_n\]</span> 这相当于样本均值，不过这样做会有严重的问题。假设我们的数据集为<span class="math inline">\(\mathcal D=\{1,1,1\}\)</span>，也就是说我们只收集到了三个样本，并且都是正例，我们会得到<span class="math inline">\(\mu_{ML}=1\)</span>，而这显然是严重过拟合的。稍后我们会说说如何应对这种情况（加入先验）。</p><h2 id="binomial-distribution">Binomial Distribution</h2><p>我们同样可以对多次伯努利实验进行概率建模。记<span class="math inline">\(m\)</span>为成功的次数，<span class="math inline">\(N\)</span>为数据集大小，可知这个概率应该与<span class="math inline">\(\mu^m(1-\mu)^{N-m}\)</span>成正比。乘以标准化系数后即我们熟知的<strong>二项分布 (Binomial Distribution)</strong>： <span class="math display">\[\text{Bin}(m|N,\mu)=\binom{N}{m}\mu^m(1-\mu)^{N-m}\]</span></p><p>其中： <span class="math display">\[\binom{N}{m}=\frac{N!}{(N-m)!m!}\]</span> 其均值和方差分别为： <span class="math display">\[\begin{align}\mathbb E[m]&amp;=N\mu\\\text{var}[m]&amp;=N\mu(1-\mu)\end{align}\]</span></p><h2 id="beta-distribution">Beta Distribution</h2><p>现在我们来讨论如何解决刚才提到的最大似然估计过拟合问题。为了解决这个问题，我们使用贝叶斯的思路，对<span class="math inline">\(\mu\)</span>引入了先验分布<span class="math inline">\(p(\mu)\)</span>。而这个分布需要具有良好的解释性和数学性质。</p><p>根据贝叶斯定理： <span class="math display">\[p(\mu|\mathcal D)=\frac{p(\mathcal D|\mu)p(\mu)}{p(\mathcal D)}\]</span> 而<span class="math inline">\(p(\mathcal D)=\int_0^1 p(\mathcal D|\mu)p(\mu)\mathrm d\mu\)</span>只受数据集影响，而数据集是固定的，所以为常数，因此<span class="math inline">\(p(\mu|\mathcal D)\propto p(\mathcal D|\mu)p(\mu)\)</span>。而似然函数为<span class="math inline">\(\mu^x(1-\mu)^{1-x}\)</span>的乘积，如果先验也采用<span class="math inline">\(\mu\)</span>和<span class="math inline">\(1-\mu\)</span>的幂的乘积的形式，那么后验分布也将和先验形式相同，这种性质在统计学中被称为<strong>先验共轭 (conjugacy)</strong>。</p><p>这里我们直接给出这个先验分布，再来分析它的性质。这个分布叫做<strong>Beta分布 (Beta Distribution)</strong><span class="math inline">\(P(\mu|a,b)\sim \text{Beta}(a,b)\)</span>： <span class="math display">\[\begin{align}\text{Beta}(\mu|a,b) &amp;= \frac{\Gamma(a+b)}{\Gamma(a\Gamma(b)}\mu^{a-1}(1-\mu)^{b-1}\\ &amp;= \frac{1}{B(a,b)}\mu^{a-1}(1-\mu)^{b-1}\end{align}\]</span> <span class="math inline">\(B(\boldsymbol \alpha,\beta)\)</span>称为B函数，为一个标准化函数： <span class="math display">\[\begin{align}B(a,b) = \frac{\Gamma(a)\Gamma(b)}{\Gamma(a+b)}\end{align}\]</span> 其目的是为了使整个概率分布积分等于1而存在的。Gamma函数的定义为： <span class="math display">\[\Gamma(x)=\int_0^{\infty}s^{x-1}e^{-s}\mathrm d s\]</span> Gamma函数有一个性质：</p><p><span class="math display">\[\Gamma(x+1)=x\Gamma(x)\]</span> 证明为： <span class="math display">\[\begin{align*}\Gamma(x+1) &amp;= \int_{0}^{\infty} {s^{x} e^{-s} ds} \\&amp;= \big[s^{x} (-e^{-s})\big] \big|_{0}^{\infty} - \int_{0}^{\infty} {(x s^{x-1}) (-e^{-s}) ds} \\&amp;= (0 - 0) + x \int_{0}^{\infty} {s^{x-1} e^{-s} ds} \\&amp;= x \Gamma(x)\end{align*}\]</span></p><p>除此之外：</p><p><span class="math display">\[\Gamma(1)=1\\\Gamma(\frac{1}{2})=\sqrt{\pi}\]</span></p><p>可以验证： <span class="math display">\[\int_0^1\text{Beta}(\mu|a,b)\mathrm d\mu=1\]</span></p><p>Beta分布的均值和方差为：</p><p><span class="math display">\[\mathbb E[\mu]=\frac{a}{a+b}\\\text{var}[\mu]=\frac{ab}{(a+b)^2(a+b+1)}\]</span></p><p>因为后验分布与先验和似然函数的乘积成比例，那么： <span class="math display">\[p(\mu|m,l,a,b)\propto\mu^{m+a-1}(1-\mu)^{l+b-1}\]</span></p><p>其中<span class="math inline">\(l=N-m\)</span>。乘上标准化因子，就得到： <span class="math display">\[p(\mu|m,l,a,b)=\frac{\Gamma(m+a+l+b)}{\Gamma(m+a)\Gamma(l+b)}\mu^{m+a-1}(1-\mu)^{l+b-1}\]</span> 得到的仍然是Beta分布，相当于把<span class="math inline">\(a\rightarrow{m+a}\)</span>，<span class="math inline">\(b\rightarrow{l+b}\)</span>。同时不难发现，参数<span class="math inline">\(a\)</span>和<span class="math inline">\(b\)</span>都有比较直观的意义。<span class="math inline">\(a\)</span>可以看作是历史记录中，成功的次数，<span class="math inline">\(b\)</span>可以看作是历史记录中失败的次数，比如<span class="math inline">\(a=2\)</span>，<span class="math inline">\(b=3\)</span>，根据经验成功的概率应该在<span class="math inline">\(\frac{2}{2+3}=0.4\)</span>左右，即我们的先验为成功的概率为<span class="math inline">\(0.4\)</span>（见下图左下角的子图）。如果在实验中，又进行了<span class="math inline">\(7\)</span>次实验，其中<span class="math inline">\(m=6\)</span>，<span class="math inline">\(l=1\)</span>，由于成功的次数变多了，<span class="math inline">\(a=2+6=8\)</span>，<span class="math inline">\(b=3+1=4\)</span>，直觉上来说我们对成功概率的估计应当相应提高，大概为<span class="math inline">\(\frac{8}{8+4}\approx 0.67\)</span>左右。这时的Beta分布如右下角的图的样子，也印证了我们的直觉。</p><p><img src="https://i.loli.net/2020/06/25/3hcj18ELXl4iWy6.png" srcset="/img/loading.gif" style="zoom:67%;" /></p><p>以下为不同参数对应的Beta分布的互动演示：</p><div><iframe width="650px" height="450px" frameborder="0" style="dispaly:block；" src="http://qfxiao.me/html/beta_distribution_vis.html"></iframe></div><p>最后，Beta还有一个有趣的应用就是，如果我们不断接收到新的观测数据，那么旧的后验分布则可以作为新的先验分布将参数更新下去 。这相当于说，基于已有的观测数据，我们提出一个先验Beta分布，然后根据新得到的一批观测数据，用先验Beta分布计算一个似然函数，将似然函数和先验Beta分布乘起来，归一化后得到了新的后验分布，只要不断有新的观测数据接收到，就可以把后验分布作为新的先验，不断更新下去。这样做的优势是对于大数据集，我们不需要整个数据集，而是只需要一批一批的更新即可。</p><h1 id="probability-distributions-for-multinomial-variables">Probability Distributions for Multinomial Variables</h1><h2 id="intro-1">Intro</h2><p>前面我们讨论了二值随机变量，现在我们将其扩展到多值变量。设一个<span class="math inline">\(K\)</span>维向量<span class="math inline">\(\mathbf x\)</span>，当<span class="math inline">\(x_k\)</span>为<span class="math inline">\(1\)</span>的时候其他元素都为<span class="math inline">\(0\)</span>，如<span class="math inline">\(K=6,x_3=1\)</span>时<span class="math inline">\(\mathbf x\)</span>表示为<span class="math inline">\(\mathbf x=(0,0,1,0,0,0)^\top\)</span>。如果<span class="math inline">\(p(x_k=1)=\mu_k\)</span>，那么<span class="math inline">\(\mathbf x\)</span>的概率分布为： <span class="math display">\[p(\mathbf x|\boldsymbol \mu)=\prod_{k=1}^{K}\mu_k^{x_k}\]</span> <span class="math inline">\(\mu_k\)</span>满足<span class="math inline">\(\sum_k \mu_k=1\)</span>和<span class="math inline">\(\mu_k\geqslant 0\)</span>，该分布被称作是<strong>Categorical Distribution</strong>。易知其均值为： <span class="math display">\[\begin{align}\mathbb E[\mathbf x|\boldsymbol \mu]=\sum_{\mathbf x}p(\mathbf x|\boldsymbol \mu)\mathbf x=\boldsymbol \mu\end{align}\]</span> 假设我们有大小为<span class="math inline">\(N\)</span>的数据集<span class="math inline">\(\mathcal D\)</span>，每个样本服从该分布且相互独立，那么似然函数： <span class="math display">\[p(\mathcal D|\boldsymbol \mu)=\prod_{n=1}^N\prod_{k=1}^K \mu_k^{x_{nk}}=\prod_{k=1}^K \mu_k^{\sum_n x_{nk}}=\prod_{k=1}^K\mu_k^{m_k}\]</span> 其中<span class="math inline">\(m_k=\sum_n x_{nk}\)</span>，即<span class="math inline">\(x_k=1\)</span>的数量。为了最大化对数似然同时保证<span class="math inline">\(\sum_k \mu_k=1\)</span>，我们可以用拉格朗日乘子法： <span class="math display">\[\sum_{k=1}^K m_k\ln \mu_k+\lambda\left(\sum_{k=1}^K\mu_k-1\right)\]</span> 我们得到<span class="math inline">\(\mu_k=-m_k/\lambda\)</span>。通过<span class="math inline">\(\sum_k \mu_k=1\)</span>得出<span class="math inline">\(\lambda=-N\)</span>，故最后我们有： <span class="math display">\[\mu_k^{ML}=\frac{m_k}{N}\]</span></p><p>这相当于是<span class="math inline">\(x_k=1\)</span>的数量除以总数。</p><h2 id="multinomial-distribution">Multinomial Distribution</h2><p>类似的，我们可以对多次实验进行建模，假设进行<span class="math inline">\(N\)</span>次独立实验，概率分布可以写为：</p><p><span class="math display">\[\text{Mult}(m_1,m_2,\cdots,m_K|\boldsymbol\mu,N)=\binom{N}{m_1m_2\cdots m_K}\prod_{k=1}^K\mu_k^{m_k}\]</span></p><p>这也是我们熟知的<strong>多项分布 (Multinomial Distribution)</strong>，其中<span class="math inline">\(\binom{N}{m_1m_2\cdots m_K}\)</span>为正则化因子： <span class="math display">\[\binom{N}{m_1m_2\cdots m_K}=\frac{N!}{m_1!m_2!\cdots m_K!}\]</span> 注意<span class="math inline">\(\sum\limits_{k=1}^K m_k=N\)</span>。</p><h2 id="dirichlet-distribution">Dirichlet Distribution</h2><p>有了前面Beta的启发，我们同样可以对多项分布的参数<span class="math inline">\(\mu_k\)</span>建立共轭先验。首先根据似然函数，我们知道先验应当与<span class="math inline">\(\mu_k\)</span>的幂的乘积成比例：</p><p><span class="math display">\[p(\boldsymbol \mu|\boldsymbol \alpha) \propto \prod_{k=1}^{K}\mu_k^{a_{k-1}}\]</span></p><p>其中<span class="math inline">\(0\leqslant \mu_k\leqslant 1\)</span>且<span class="math inline">\(\sum_k\mu_k=1\)</span>。和Beta分布不同，由于要满足<span class="math inline">\(\sum\mu_k=1\)</span>，所以<span class="math inline">\(\{\mu_k\}\)</span>的取值会位于<span class="math inline">\(K-1\)</span>的单纯型上，如下图所示：</p><p><img src="https://i.loli.net/2020/06/25/N8CSMvmlRz91Gqy.png" srcset="/img/loading.gif" style="zoom:67%;" /></p><p>加上标准化因子，我们就得到了所谓的先验分布，称之为<strong>迪利克雷分布 (Dirichlet Distribution)</strong>： <span class="math display">\[\text{Dir}(\boldsymbol \mu|\boldsymbol\alpha)=\frac{\Gamma(\alpha_0)}{\Gamma(\alpha_1)\cdots\Gamma(\alpha_K)}\prod_{k=1}^K\mu_k^{a_{k-1}}\]</span></p><p>其中<span class="math inline">\(\Gamma(\cdot)\)</span>为Gamma函数，<span class="math inline">\(\alpha_0=\sum\limits_{k=1}^K\alpha_k\)</span>。下图为不同条件下的迪利克雷分布的可视化：</p><p><img src="https://i.loli.net/2020/06/25/amGtuvPNoOM7kWZ.png" srcset="/img/loading.gif" /></p><p><span class="math inline">\(\boldsymbol \mu\)</span>的后验与先验和似然函数的乘积成正比：</p><p><span class="math display">\[p(\boldsymbol\mu|\mathcal D,\boldsymbol\alpha)\propto p(\mathcal D|\boldsymbol\mu)p(\boldsymbol\mu|\boldsymbol\alpha)\propto\prod_{k=1}^K \mu_k^{\alpha_k+m_k-1}\]</span></p><p>不难验证：</p><p><span class="math display">\[\begin{align}p(\boldsymbol\mu|\mathcal D,\boldsymbol\alpha) &amp;= \text{Dir}(\boldsymbol\mu|\boldsymbol\alpha+\mathbf m)\\&amp;=\frac{\Gamma(\alpha_0+N)}{\Gamma(\alpha_1+m_1)\cdots\Gamma(\alpha_K+m_K)}\prod_{k=1}^K\mu_k^{\alpha_k+m_k-1}\end{align}\]</span></p><p>即后验同样为迪利克雷分布。</p>]]></content>
     
     
     <categories>
@@ -422,9 +422,9 @@
     
     <tags>
       
-      <tag>Deep Learning</tag>
-      
       <tag>Anomaly Detection</tag>
+      
+      <tag>Deep Learning</tag>
       
     </tags>
     
@@ -478,9 +478,9 @@
     
     <tags>
       
-      <tag>VAE</tag>
-      
       <tag>Anomaly Detection</tag>
+      
+      <tag>VAE</tag>
       
     </tags>
     
@@ -507,9 +507,9 @@
     
     <tags>
       
-      <tag>Deep Learning</tag>
-      
       <tag>Time Series</tag>
+      
+      <tag>Deep Learning</tag>
       
     </tags>
     
@@ -536,15 +536,15 @@
     
     <tags>
       
-      <tag>VAE</tag>
-      
-      <tag>Deep Learning</tag>
-      
       <tag>Time Series</tag>
       
       <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
+      
+      <tag>Deep Learning</tag>
+      
+      <tag>VAE</tag>
       
     </tags>
     
@@ -571,11 +571,11 @@
     
     <tags>
       
+      <tag>Deep Learning</tag>
+      
       <tag>Variational Inference</tag>
       
       <tag>VAE</tag>
-      
-      <tag>Deep Learning</tag>
       
       <tag>GAN</tag>
       
@@ -635,11 +635,11 @@
     
     <tags>
       
+      <tag>Deep Learning</tag>
+      
       <tag>Variational Inference</tag>
       
       <tag>VAE</tag>
-      
-      <tag>Deep Learning</tag>
       
     </tags>
     
@@ -666,9 +666,9 @@
     
     <tags>
       
-      <tag>Deep Learning</tag>
-      
       <tag>Time Series</tag>
+      
+      <tag>Deep Learning</tag>
       
       <tag>RNN</tag>
       
@@ -697,15 +697,15 @@
     
     <tags>
       
-      <tag>VAE</tag>
-      
-      <tag>Deep Learning</tag>
-      
       <tag>Time Series</tag>
       
       <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
+      
+      <tag>Deep Learning</tag>
+      
+      <tag>VAE</tag>
       
       <tag>RNN</tag>
       
@@ -736,9 +736,9 @@
     
     <tags>
       
-      <tag>Deep Learning</tag>
-      
       <tag>Time Series</tag>
+      
+      <tag>Deep Learning</tag>
       
       <tag>GAN</tag>
       
@@ -767,13 +767,13 @@
     
     <tags>
       
-      <tag>Deep Learning</tag>
-      
       <tag>Time Series</tag>
       
       <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
+      
+      <tag>Deep Learning</tag>
       
     </tags>
     
@@ -800,13 +800,13 @@
     
     <tags>
       
-      <tag>Deep Learning</tag>
-      
       <tag>Time Series</tag>
       
       <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
+      
+      <tag>Deep Learning</tag>
       
     </tags>
     
@@ -833,15 +833,15 @@
     
     <tags>
       
-      <tag>VAE</tag>
-      
-      <tag>Deep Learning</tag>
-      
       <tag>Time Series</tag>
       
       <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
+      
+      <tag>Deep Learning</tag>
+      
+      <tag>VAE</tag>
       
     </tags>
     
@@ -868,13 +868,13 @@
     
     <tags>
       
-      <tag>Deep Learning</tag>
-      
       <tag>Time Series</tag>
       
       <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
+      
+      <tag>Deep Learning</tag>
       
       <tag>Spectral</tag>
       
