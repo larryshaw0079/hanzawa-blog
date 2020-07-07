@@ -210,7 +210,7 @@ a_k(n+1)-a_k(n)\leq 1,\\
 \]</span></p>
 </blockquote>
 <p>上述公式可能比较抽象，其实看了下图就不难理解：</p>
-<p><img src="https://upload.wikimedia.org/wikipedia/commons/a/ab/Dynamic_time_warping.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/07/07/UE2GtoYK1vhDpLi.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <p>片段<span class="math inline">\(s_i\)</span>中的某个点<span class="math inline">\(a\)</span>，与片段<span class="math inline">\(s_j\)</span>中的某个点<span class="math inline">\(b\)</span>形成对应，然后在<span class="math inline">\(a\)</span>和<span class="math inline">\(b\)</span>之间连一条虚拟的线（不能与已有的线交叉），一直这么做直到短的那个片段中的每个点都找到对应，就是一个合理的<em>alignment</em>。对于两个长度不一样的片段<span class="math inline">\(s_i\)</span>和<span class="math inline">\(s_j\)</span>，会有很多种<em>alignment</em>。我们把<span class="math inline">\(s_i\)</span>和<span class="math inline">\(s_j\)</span>所有可能的<em>alignment</em>记为<span class="math inline">\(\mathcal{A}(s_i,s_j)\)</span>。在定义了<em>alignment</em>之后就可以定义DTW了。DTW (<em>Dynamic Time Warping</em>) 定义为在给定一个预定义的距离度量<span class="math inline">\(\tau\)</span>和所有可能的<em>alignment</em> <span class="math inline">\(\mathcal{A}(s_i,s_j)\)</span>的情况下，最小的距离<span class="math inline">\(\tau\)</span>： <span class="math display">\[
 d_\text{DTW}(s_i,s_j)=\min_{a\in\mathcal{A}(s_i,s_j)}\tau(s_i,s_j|a)
 \]</span></p>
@@ -256,7 +256,7 @@ D(s,t)=\min_{1\leq k\leq m} d(s,s_k)
 \boldsymbol p_{i,j}=\frac{\max(\hat{d}_{i,*}(\boldsymbol v_{i,*},\boldsymbol s_i))-\hat{d}_{i,j}(\boldsymbol v_{i,j},\boldsymbol s_i)}{\max(\hat{d}_{i,*}(\boldsymbol v_{i,*},\boldsymbol s_i))-\min(\hat{d}_{i,*}(\boldsymbol v_{i,*},\boldsymbol s_i))}
 \]</span></p>
 <p>其中<span class="math inline">\(\hat{d}_{i,*}(\boldsymbol v_{i,*},\boldsymbol s_i)=\boldsymbol u_*[i]*\hat{d}(\boldsymbol v_{i,*},\boldsymbol s_i|\boldsymbol w_*)&lt;\delta\)</span>。这样对于每个片段<span class="math inline">\(\boldsymbol s_i\)</span>所分配的Shapelet对应的<span class="math inline">\(\boldsymbol p\)</span>之和会等于<span class="math inline">\(1\)</span>。对每一对相邻的片段<span class="math inline">\((\boldsymbol s_i,\boldsymbol s_{i+1})\)</span>的Shapelet <span class="math inline">\(\boldsymbol v_{i,j}\)</span>和<span class="math inline">\(\boldsymbol v_{i+1,k}\)</span>，我们创建一条连接<span class="math inline">\(\boldsymbol v_{*,j}\)</span>和<span class="math inline">\(\boldsymbol v_{*,k}\)</span>的边<span class="math inline">\(e_{j,k}\)</span>，权重为<span class="math inline">\(\boldsymbol p_{i,j}\cdot\boldsymbol p_{i+1,k}\)</span>。最后，所有重复的边会被合并。</p>
-<p><img src="http://qfxiao.me/img/image-20200706205238117.png" srcset="/img/loading.gif" style="zoom: 67%;" /></p>
+<p><img src="https://i.loli.net/2020/07/07/FzGEbWJflHmQa9R.png" srcset="/img/loading.gif" style="zoom: 33%;" /></p>
 <p>如上图所示，假设有两个片段，每个片段分配了<span class="math inline">\(3\)</span>个Shapelet，Shapelet <span class="math inline">\(B\)</span>在片段<span class="math inline">\(1\)</span>对应的概率是<span class="math inline">\(p_{12}\)</span>，Shapelet <span class="math inline">\(C\)</span>在片段<span class="math inline">\(2\)</span>对应的概率是<span class="math inline">\(p_{23}\)</span>，那么由于片段<span class="math inline">\(1\)</span>和<span class="math inline">\(2\)</span>是相邻片段，会在<span class="math inline">\(B\)</span>和<span class="math inline">\(C\)</span>之间连一条边，边的权重为<span class="math inline">\(p_{12}*p_{23}\)</span>。</p>
 <p>建图的算法流程图如下：</p>
 <p><img src="https://i.loli.net/2020/06/25/aq9tGuApSbiC67c.png" srcset="/img/loading.gif" /></p>
