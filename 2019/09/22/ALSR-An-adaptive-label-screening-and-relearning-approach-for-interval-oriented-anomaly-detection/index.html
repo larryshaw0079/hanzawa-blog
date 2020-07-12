@@ -197,72 +197,110 @@
           <div class="post-content mx-auto" id="post">
             
             <article class="markdown-body">
-              <h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>本文针对面向区间的KPI异常检测提出了Label Screening方法和Relearning Algorithm.</p>
+              <h1 id="introduction">Introduction</h1>
+<p>本文针对面向区间的KPI异常检测提出了Label Screening方法和Relearning Algorithm.</p>
 <p><a href="https://www.sciencedirect.com/science/article/pii/S0957417419304282" target="_blank" rel="noopener">原文</a></p>
-<h2 id="Contribution"><a href="#Contribution" class="headerlink" title="Contribution"></a>Contribution</h2><ol>
+<h2 id="contribution">Contribution</h2>
+<ol type="1">
 <li>提出了一种Label Screening方法来对区间内不同重要性进行过滤</li>
 <li>提出了一种Relearning Algorithm来对FP和TP进行Relearning，在不减少Recall的条件下增大Precision</li>
 </ol>
-<h2 id="Methodology"><a href="#Methodology" class="headerlink" title="Methodology"></a>Methodology</h2><h3 id="Overall-Structure"><a href="#Overall-Structure" class="headerlink" title="Overall Structure"></a>Overall Structure</h3><p>算法的整体框架如下：</p>
-<p><img src="https://i.loli.net/2020/06/24/yGMWzdgTf43qImp.png" srcset="/img/loading.gif" alt=""></p>
-<h3 id="Label-Screening-Model"><a href="#Label-Screening-Model" class="headerlink" title="Label Screening Model"></a>Label Screening Model</h3><p>预训练的结果被分为$TP_{po},FP_{po},TN_{po},FN_{po}$四类，$TP_{po}$和$FN_{po}$可以被细分如下：<br>$$<br>\begin{align}TP_{po}&amp;=TP_{po,withinT}+TP_{po,afterT}\&amp;=TP_{po,withinT}+TP_{po,afterT,tpl}+TP_{po,after,fnl}\end{align}<br>$$</p>
-<p>$$<br>\begin{align}FN_{po}&amp;=FN_{po,withinT}+FN_{po,afterT}\&amp;=FN_{po,withinT,tpl}+FN_{po,,withinT,fnl}+FN_{po,afterT,tpl}+FN_{po,afterT,fnl}\end{align}<br>$$</p>
-<p>其中下标${}<em>{withinT}$代表在异常片段第一个点$T$距离内的所有点，下标${}</em>{afterT}$代表$T$距离之后。下标${}<em>{tpl}$和${}</em>{fnl}$分别代表在异常片段中，包含和不包含$TP_{po,withinT}$的点。</p>
-<p>以TP为例，Point-based的TP包含了在T范围之内的（即在Interval-based的标准中也会被认为是TP的点）和T范围之外的点（即在Interval-based的标准中不认为是TP的点）。而在T范围之外的点又可以细分为该异常片段是否包含$TP_{po,withinT}$的点（即该点在Interval-based的标准中不会被判定为TP，但该异常片段有其点会被判定为TP）。</p>
-<p>类似的，$TP_{io}$和$FN_{io}$可以被分解为：<br>$$<br>\begin{align}TP_{io}&amp;=TP_{po,withinT}+TP_{po,afterT,tpl}+FN_{po,withinT,tpl}+FN_{po,afterT,tpl}\&amp;=TP_{po}+FN_{po,withinT,tpl}+FN_{po,afterT,tpl}-TP_{po,afterT,fnl}\end{align}<br>$$</p>
-<p>$$<br>\begin{align}FN_{io}&amp;=FN_{po,withinT,fnl}+FN_{po,afterT,fnl}+TP_{po,afterT,fnl}\&amp;=FN_{po}+TP_{po,afterT,fnl}-FN_{po,withinT,tpl}-FN_{po,afterT,tpl}\end{align}<br>$$</p>
+<h2 id="methodology">Methodology</h2>
+<h3 id="overall-structure">Overall Structure</h3>
+<p>算法的整体框架如下：</p>
+<p><img src="https://i.loli.net/2020/06/24/yGMWzdgTf43qImp.png" srcset="/img/loading.gif" /></p>
+<h3 id="label-screening-model">Label Screening Model</h3>
+<p>预训练的结果被分为<span class="math inline">\(TP_{po},FP_{po},TN_{po},FN_{po}\)</span>四类，<span class="math inline">\(TP_{po}\)</span>和<span class="math inline">\(FN_{po}\)</span>可以被细分如下： <span class="math display">\[
+\begin{align}TP_{po}&amp;=TP_{po,withinT}+TP_{po,afterT}\\&amp;=TP_{po,withinT}+TP_{po,afterT,tpl}+TP_{po,after,fnl}\end{align}
+\]</span></p>
+<p><span class="math display">\[
+\begin{align}FN_{po}&amp;=FN_{po,withinT}+FN_{po,afterT}\\&amp;=FN_{po,withinT,tpl}+FN_{po,,withinT,fnl}+FN_{po,afterT,tpl}+FN_{po,afterT,fnl}\end{align}
+\]</span></p>
+<p>其中下标<span class="math inline">\({}_{withinT}\)</span>代表在异常片段第一个点<span class="math inline">\(T\)</span>距离内的所有点，下标<span class="math inline">\({}_{afterT}\)</span>代表<span class="math inline">\(T\)</span>距离之后。下标<span class="math inline">\({}_{tpl}\)</span>和<span class="math inline">\({}_{fnl}\)</span>分别代表在异常片段中，包含和不包含<span class="math inline">\(TP_{po,withinT}\)</span>的点。</p>
+<p>以TP为例，Point-based的TP包含了在T范围之内的（即在Interval-based的标准中也会被认为是TP的点）和T范围之外的点（即在Interval-based的标准中不认为是TP的点）。而在T范围之外的点又可以细分为该异常片段是否包含<span class="math inline">\(TP_{po,withinT}\)</span>的点（即该点在Interval-based的标准中不会被判定为TP，但该异常片段有其点会被判定为TP）。</p>
+<p>类似的，<span class="math inline">\(TP_{io}\)</span>和<span class="math inline">\(FN_{io}\)</span>可以被分解为： <span class="math display">\[
+\begin{align}TP_{io}&amp;=TP_{po,withinT}+TP_{po,afterT,tpl}+FN_{po,withinT,tpl}+FN_{po,afterT,tpl}\\&amp;=TP_{po}+FN_{po,withinT,tpl}+FN_{po,afterT,tpl}-TP_{po,afterT,fnl}\end{align}
+\]</span></p>
+<p><span class="math display">\[
+\begin{align}FN_{io}&amp;=FN_{po,withinT,fnl}+FN_{po,afterT,fnl}+TP_{po,afterT,fnl}\\&amp;=FN_{po}+TP_{po,afterT,fnl}-FN_{po,withinT,tpl}-FN_{po,afterT,tpl}\end{align}
+\]</span></p>
 <p>文中对该部分的分析可以分为以下几点：</p>
-<ol>
-<li>在Interval-oriented的标准中，$FN_{po,tpl}$的点仍会被认为是$TP_{io}$，而$TP_{po,afterT}$（不带${}<em>{tpl}$）不会被认为是$TP</em>{io}$，所以最终$TP_{io}$由所有$TP_{po}$加上那些会被认为是$TP_{io}$的$FN_{po,tpl}$再去掉不带${}<em>{tpl}$的$TP</em>{po,afterT}$组成，即公式(6)</li>
-<li>同时，根据公式(6)，如果$TP_{po}$变为$FN_{po,tpl}$，也不会对最终结果造成影响。但是根据公式(5)和公式(7)，$TP_{po,withinT}$变成$FN_{po,withinT,fnl}$会减小$TP_{io}$同时增大$FN_{io}$</li>
-<li>文章指出，虽然$FN_{po,withinT,tpl}$和$FN_{po,afterT,tpl}$最后都会被认为是$TP_{io}$，但作者假设$FN_{po,withinT,tpl}$更难检测，所以应该保留，而$FN_{po,afterT,tpl}$应该削减</li>
-<li>Label Screening方法去除了$FN_{po,afterT}$的点</li>
+<ol type="1">
+<li>在Interval-oriented的标准中，<span class="math inline">\(FN_{po,tpl}\)</span>的点仍会被认为是<span class="math inline">\(TP_{io}\)</span>，而<span class="math inline">\(TP_{po,afterT}\)</span>（不带<span class="math inline">\({}_{tpl}\)</span>）不会被认为是<span class="math inline">\(TP_{io}\)</span>，所以最终<span class="math inline">\(TP_{io}\)</span>由所有<span class="math inline">\(TP_{po}\)</span>加上那些会被认为是<span class="math inline">\(TP_{io}\)</span>的<span class="math inline">\(FN_{po,tpl}\)</span>再去掉不带<span class="math inline">\({}_{tpl}\)</span>的<span class="math inline">\(TP_{po,afterT}\)</span>组成，即公式(6)</li>
+<li>同时，根据公式(6)，如果<span class="math inline">\(TP_{po}\)</span>变为<span class="math inline">\(FN_{po,tpl}\)</span>，也不会对最终结果造成影响。但是根据公式(5)和公式(7)，<span class="math inline">\(TP_{po,withinT}\)</span>变成<span class="math inline">\(FN_{po,withinT,fnl}\)</span>会减小<span class="math inline">\(TP_{io}\)</span>同时增大<span class="math inline">\(FN_{io}\)</span></li>
+<li>文章指出，虽然<span class="math inline">\(FN_{po,withinT,tpl}\)</span>和<span class="math inline">\(FN_{po,afterT,tpl}\)</span>最后都会被认为是<span class="math inline">\(TP_{io}\)</span>，但作者假设<span class="math inline">\(FN_{po,withinT,tpl}\)</span>更难检测，所以应该保留，而<span class="math inline">\(FN_{po,afterT,tpl}\)</span>应该削减</li>
+<li>Label Screening方法去除了<span class="math inline">\(FN_{po,afterT}\)</span>的点</li>
 <li>Screened之后的训练集被用来训练DNN主模型，但Label Screening的预测结果也会被保留，和DNN主模型的结果进行组合</li>
 </ol>
 <p>算法流程如下：</p>
-<p><img src="https://i.loli.net/2020/06/24/ZDT5fQNojsXm84q.png" srcset="/img/loading.gif" alt=""></p>
-<h3 id="Relearning-Algorithm"><a href="#Relearning-Algorithm" class="headerlink" title="Relearning Algorithm"></a>Relearning Algorithm</h3><p>Relearning Model的输入是DNN主模型预测出来的异常，其中包括TP和FP。Relearning Model采用的是随机森林，其输入的样本通过采样得到：<br>$$<br>\begin{align}<br>\text{relearning}\space&amp;\text{training set}=\&amp; shuffle{4C\ast\text{randomof}(TP_{po})\&amp;+C\cdot\text{randomof}(FP_{po})+C\cdot\text{randomof}(TN_{po})}<br>\end{align}<br>$$<br>其中$C$为常数。TN和FP都看作是负例(正常样本)，TP看作是正例。</p>
-<p><img src="https://i.loli.net/2020/06/24/qgvINaFu9JLfM4j.png" srcset="/img/loading.gif" alt=""></p>
-<h3 id="Detection"><a href="#Detection" class="headerlink" title="Detection"></a>Detection</h3><p>对于一个滑动窗口$x_t={x_{t-w+1},\cdots,x_t}$，异常检测算法的目标是输出检测结果$y_t\in{0,1}$来表示时间$t$是否发生异常。实际上算法输出的是$p_{y_t}\in[0,1]$概率值来表示在时间$t$发生异常的概率。文中三个模型会得到三个输出：$y_{t,ls},y_{t,main},y_{t,re}$。最终结果为：<br>$$<br>y_t=y_{t,ls}\space&amp;\space y_{t,main}\space&amp; \space y_{t,re}<br>$$<br>在绘制PR曲线时，采用的公式为：<br>$$<br>\begin{align}<br>p_{y_t}(th)=&amp;(1-sig(p_{y_t,ls},th))\cdot(p_{y_t,ls})\<br>&amp;+sig(p_{y_t,ls},th)\cdot(1-sig(p_{y_t,main},th))\cdot p_{y_t,main}\<br>&amp;+sig(p_{y_t,ls},th)\cdot sig(p_{y_t,main},th)\cdot p_{y_t,re}\<br>\end{align}<br>$$</p>
-<p>$$<br>y_t(th)=sig(p_{y_t}(th),th)<br>$$</p>
+<p><img src="https://i.loli.net/2020/06/24/ZDT5fQNojsXm84q.png" srcset="/img/loading.gif" /></p>
+<h3 id="relearning-algorithm">Relearning Algorithm</h3>
+<p>Relearning Model的输入是DNN主模型预测出来的异常，其中包括TP和FP。Relearning Model采用的是随机森林，其输入的样本通过采样得到： <span class="math display">\[
+\begin{align}
+\text{relearning}\space&amp;\text{training set}=\\&amp; shuffle\{4C\ast\text{randomof}(TP_{po})\\&amp;+C\cdot\text{randomof}(FP_{po})+C\cdot\text{randomof}(TN_{po})\}
+\end{align}
+\]</span> 其中<span class="math inline">\(C\)</span>为常数。TN和FP都看作是负例(正常样本)，TP看作是正例。</p>
+<p><img src="https://i.loli.net/2020/06/24/qgvINaFu9JLfM4j.png" srcset="/img/loading.gif" /></p>
+<h3 id="detection">Detection</h3>
+<p>对于一个滑动窗口<span class="math inline">\(x_t=\{x_{t-w+1},\cdots,x_t\}\)</span>，异常检测算法的目标是输出检测结果<span class="math inline">\(y_t\in\{0,1\}\)</span>来表示时间<span class="math inline">\(t\)</span>是否发生异常。实际上算法输出的是<span class="math inline">\(p_{y_t}\in[0,1]\)</span>概率值来表示在时间<span class="math inline">\(t\)</span>发生异常的概率。文中三个模型会得到三个输出：<span class="math inline">\(y_{t,ls},y_{t,main},y_{t,re}\)</span>。最终结果为： <span class="math display">\[
+y_t=y_{t,ls}\space\&amp;\space y_{t,main}\space\&amp; \space y_{t,re}
+\]</span> 在绘制PR曲线时，采用的公式为： <span class="math display">\[
+\begin{align}
+p_{y_t}(th)=&amp;(1-sig(p_{y_t,ls},th))\cdot(p_{y_t,ls})\\
+&amp;+sig(p_{y_t,ls},th)\cdot(1-sig(p_{y_t,main},th))\cdot p_{y_t,main}\\
+&amp;+sig(p_{y_t,ls},th)\cdot sig(p_{y_t,main},th)\cdot p_{y_t,re}\\
+\end{align}
+\]</span></p>
+<p><span class="math display">\[
+y_t(th)=sig(p_{y_t}(th),th)
+\]</span></p>
 <p>算法流程如下：</p>
-<p><img src="https://i.loli.net/2020/06/24/LBT59eugKEPymO8.png" srcset="/img/loading.gif" alt=""></p>
-<h2 id="Experiments"><a href="#Experiments" class="headerlink" title="Experiments"></a>Experiments</h2><h3 id="Datasets"><a href="#Datasets" class="headerlink" title="Datasets"></a>Datasets</h3><p>清华AIOps数据集，选取了25条KPI。</p>
-<h3 id="Preprocessing"><a href="#Preprocessing" class="headerlink" title="Preprocessing"></a>Preprocessing</h3><ol>
+<p><img src="https://i.loli.net/2020/06/24/LBT59eugKEPymO8.png" srcset="/img/loading.gif" /></p>
+<h2 id="experiments">Experiments</h2>
+<h3 id="datasets">Datasets</h3>
+<p>清华AIOps数据集，选取了25条KPI。</p>
+<h3 id="preprocessing">Preprocessing</h3>
+<ol type="1">
 <li><strong>Missing Data.</strong> 去除。</li>
 <li><strong>Standardization.</strong> Minmax Standardization，Feature Extraction使用的是Standardization后的数据。</li>
 <li><strong>Feature Extraction.</strong> 使用了12种特征。</li>
 </ol>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Group</th>
 <th>Feature Name</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr class="odd">
 <td>Values</td>
 <td>The original values standardized</td>
 </tr>
-<tr>
+<tr class="even">
 <td>Statistical Features</td>
-<td>Mean,  Standard Deviation, Range, Difference…</td>
+<td>Mean, Standard Deviation, Range, Difference...</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>Fitting Features</td>
 <td>EWMA, AR</td>
 </tr>
-<tr>
+<tr class="even">
 <td>Wavelet Features</td>
 <td>Db2 wavelet decomposition</td>
 </tr>
-</tbody></table>
-<h2 id="Results"><a href="#Results" class="headerlink" title="Results"></a>Results</h2><h3 id="AUCPR"><a href="#AUCPR" class="headerlink" title="AUCPR"></a>AUCPR</h3><p><img src="https://i.loli.net/2020/06/24/LAqNMW1zvs8eP7X.png" srcset="/img/loading.gif" alt=""></p>
-<p><img src="https://i.loli.net/2020/06/24/YgRwavDIn7izLPX.png" srcset="/img/loading.gif" alt=""></p>
-<h3 id="F1"><a href="#F1" class="headerlink" title="F1"></a>F1</h3><p><img src="https://i.loli.net/2020/06/24/FM3BUhQXtpo7aiu.png" srcset="/img/loading.gif" alt=""></p>
-<h2 id="Remark"><a href="#Remark" class="headerlink" title="Remark"></a>Remark</h2><ol>
+</tbody>
+</table>
+<h2 id="results">Results</h2>
+<h3 id="aucpr">AUCPR</h3>
+<p><img src="https://i.loli.net/2020/06/24/LAqNMW1zvs8eP7X.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/24/YgRwavDIn7izLPX.png" srcset="/img/loading.gif" /></p>
+<h3 id="f1">F1</h3>
+<p><img src="https://i.loli.net/2020/06/24/FM3BUhQXtpo7aiu.png" srcset="/img/loading.gif" /></p>
+<h2 id="remark">Remark</h2>
+<ol type="1">
 <li>这篇文章的Label Screening方法实际上是在处理样本分类难易度的问题，将异常区间内容易的样本去除了</li>
-<li>对于时间序列的异常检测问题，我们的目标一般是Point-based的异常标签，一个时间点的特征是有限的。如果用窗口的方式，以${x_{t-w+1},\cdots,x_t}$作为时间$t$的输入（当然每个$x_t$可以有多个Channel），然后把预测结果作为时间$t$的输出</li>
+<li>对于时间序列的异常检测问题，我们的目标一般是Point-based的异常标签，一个时间点的特征是有限的。如果用窗口的方式，以<span class="math inline">\(\{x_{t-w+1},\cdots,x_t\}\)</span>作为时间<span class="math inline">\(t\)</span>的输入（当然每个<span class="math inline">\(x_t\)</span>可以有多个Channel），然后把预测结果作为时间<span class="math inline">\(t\)</span>的输出</li>
 </ol>
 
             </article>
@@ -283,13 +321,13 @@
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
+                      <a class="hover-with-bg" href="/tags/Deep-Learning/">Deep Learning</a>
+                    
                       <a class="hover-with-bg" href="/tags/Time-Series/">Time Series</a>
                     
                       <a class="hover-with-bg" href="/tags/Anomaly-Detection/">Anomaly Detection</a>
                     
                       <a class="hover-with-bg" href="/tags/Machine-Learning/">Machine Learning</a>
-                    
-                      <a class="hover-with-bg" href="/tags/Deep-Learning/">Deep Learning</a>
                     
                   </div>
                 
