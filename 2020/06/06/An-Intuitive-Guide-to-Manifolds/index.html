@@ -170,7 +170,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    33
+                    34
                      分钟
                   </span>
                 
@@ -199,49 +199,177 @@
           <div class="post-content mx-auto" id="post">
             
             <article class="markdown-body">
-              <h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>最近看的一些基于密度估计的异常检测文章用到了流形的知识，以前只是知道个大概，但没有系统地学习，所以这里把流形相关的一些基础知识介绍一下。</p>
-<h1 id="Manifold"><a href="#Manifold" class="headerlink" title="Manifold"></a>Manifold</h1><p>流形从直观上还是比较好理解的，比如说地球球面可以看作一个流形，对一个站在地球上的人来说，他感受到的“邻域”可能是他周围的一片二维平面空间，但地球“流形”却是嵌入在三维空间中的。下图是一些流形的示例：</p>
-<img src="https://i.loli.net/2020/06/24/nWIgzBa8pke1qh4.gif" srcset="/img/loading.gif" alt="Some examples of 2d manifolds" style="zoom:80%;" />
-
+              <h1 id="introduction">Introduction</h1>
+<p>最近看的一些基于密度估计的异常检测文章用到了流形的知识，以前只是知道个大概，但没有系统地学习，所以这里把流形相关的一些基础知识介绍一下。</p>
+<h1 id="manifold">Manifold</h1>
+<p>流形从直观上还是比较好理解的，比如说地球球面可以看作一个流形，对一个站在地球上的人来说，他感受到的“邻域”可能是他周围的一片二维平面空间，但地球“流形”却是嵌入在三维空间中的。下图是一些流形的示例：</p>
+<p><img src="https://i.loli.net/2020/06/24/nWIgzBa8pke1qh4.gif" srcset="/img/loading.gif" alt="Some examples of 2d manifolds" style="zoom:80%;" /></p>
 <p>流形的（稍微）形式化定义为：</p>
 <blockquote>
-<p>一个$n$维拓扑流形（<strong>Topological Manifold</strong>）$\mathcal{M}$是一个带有和$n$维实空间$\mathbb{R}^n$同胚（Homeomorphic）的可数基（Countable Base）的拓扑豪斯道夫空间（Topological Hausdorff Space）。即对于$\mathcal{M}$上的任意一个点$p$都有一个开邻域（Open Neighborhood）$U$和一个同胚映射$\varphi:U\mapsto V$将$U$映射到开集$V\in\mathbb{R}^n$。同时：</p>
+<p>一个<span class="math inline">\(n\)</span>维拓扑流形（<strong>Topological Manifold</strong>）<span class="math inline">\(\mathcal{M}\)</span>是一个带有和<span class="math inline">\(n\)</span>维实空间<span class="math inline">\(\mathbb{R}^n\)</span>同胚（Homeomorphic）的可数基（Countable Base）的拓扑豪斯道夫空间（Topological Hausdorff Space）。即对于<span class="math inline">\(\mathcal{M}\)</span>上的任意一个点<span class="math inline">\(p\)</span>都有一个开邻域（Open Neighborhood）<span class="math inline">\(U\)</span>和一个同胚映射<span class="math inline">\(\varphi:U\mapsto V\)</span>将<span class="math inline">\(U\)</span>映射到开集<span class="math inline">\(V\in\mathbb{R}^n\)</span>。同时：</p>
 <ul>
-<li>映射$\varphi:U\mapsto V$被称为<strong>Chart</strong>或<strong>Coordinate System</strong>（中文：坐标卡）</li>
-<li>集合$U$为该Chart的<strong>Domain</strong>或<strong>Local Coordinate Neighborhood</strong></li>
-<li>点$p\in U$的像（Image)记为$\varphi(p)\in\mathbb{R}^n$，被称为$p$在Chart中的<strong>Coordinates</strong>或<strong>Local Coordinates</strong></li>
-<li>Chart的集合${\varphi_\alpha|\alpha\in\mathbb{N}}$，其中定义域$U_\alpha$，被称为$\mathcal{M}$的<strong>Atlas</strong>，如果$\mathop{\cup}\limits_{\alpha\in\mathbb{N}}U_\alpha=\mathcal{M}$（中文：图册）</li>
+<li>映射<span class="math inline">\(\varphi:U\mapsto V\)</span>被称为<strong>Chart</strong>或<strong>Coordinate System</strong>（中文：坐标卡）</li>
+<li>集合<span class="math inline">\(U\)</span>为该Chart的<strong>Domain</strong>或<strong>Local Coordinate Neighborhood</strong></li>
+<li>点<span class="math inline">\(p\in U\)</span>的像（Image)记为<span class="math inline">\(\varphi(p)\in\mathbb{R}^n\)</span>，被称为<span class="math inline">\(p\)</span>在Chart中的<strong>Coordinates</strong>或<strong>Local Coordinates</strong></li>
+<li>Chart的集合<span class="math inline">\(\{\varphi_\alpha|\alpha\in\mathbb{N}\}\)</span>，其中定义域<span class="math inline">\(U_\alpha\)</span>，被称为<span class="math inline">\(\mathcal{M}\)</span>的<strong>Atlas</strong>，如果<span class="math inline">\(\mathop{\cup}\limits_{\alpha\in\mathbb{N}}U_\alpha=\mathcal{M}\)</span>（中文：图册）</li>
 </ul>
 </blockquote>
-<p>豪斯道夫空间的具体定义在这里不重要，只要知道他是一个拓扑空间即可。坐标卡是一个很重要的概念，它提供了流形上的点$p$对应的开集到欧氏空间$\mathbb R^n$的一个映射。下图是两个坐标卡的示意图：</p>
-<img src="https://i.loli.net/2020/06/24/CHtb1xu65cyJjPZ.png" srcset="/img/loading.gif" style="zoom:80%;" />
-
-<p>可以看到坐标卡$\varphi_\alpha$和$\varphi_\beta$分别为$U_\alpha$和$U_\beta$到$\mathbb R^n$的映射。</p>
-<h1 id="Tangent-Spaces"><a href="#Tangent-Spaces" class="headerlink" title="Tangent Spaces"></a>Tangent Spaces</h1><p>切空间是流形中一个非常重要的概念。流形$\mathcal{M}$在点$x$的切空间（<strong>Tangent Space</strong>）$\mathcal{T}_x\mathcal{M}$，切空间由所有可能的切向量组成。而切向量可以理解为你在一个流形上沿着一条曲线运动，然后在某一个时刻时的速度对应的向量。下图展示了一个嵌入在三维欧氏空间中的二维流形及其在点$x$上的切空间。</p>
-<img src="https://i.loli.net/2020/06/24/GCn7aiyfUc3t4EO.png" srcset="/img/loading.gif" alt="A tangent space example" style="zoom: 50%;" />
-
-<h2 id="Tangent-Spaces-as-the-Velocity-of-Curves"><a href="#Tangent-Spaces-as-the-Velocity-of-Curves" class="headerlink" title="Tangent Spaces as the Velocity of Curves"></a>Tangent Spaces as the Velocity of Curves</h2><p>假设我们有一个光滑流形$M$及点$p\in M$，坐标卡$\varphi:U\rightarrow \mathbb R^n$，其中$U$为$M$的包含$p$的开集。设$\gamma:t\rightarrow M$，$t\in[a,b]$为经过$p$的光滑曲线。通过叠加$\gamma$和$\varphi$，我们就得到了$t$到$\mathbb R^n$的映射$\varphi\circ\gamma:t\rightarrow \mathbb R^n$。</p>
-<p>记$\mathbf x=\varphi\circ\gamma(t)$，这可以解释为在时间$t$时我们在流形$M$上的位置或者坐标，于是$t=t_0$时的速度$\mathbf v_p=\frac{\mathrm d\varphi\circ\gamma(t)}{\mathrm d t}|<em>{t=t_0}=\left[\frac{\mathrm d x^1(t)}{\mathrm d t},\cdots,\frac{\mathrm d x^n(t)}{\mathrm d t}\right]|</em>{t=t_0}$，其中$x^i(t)$为坐标$\mathbf x$的第$i$个分量。在点$p$的切向量（Tangent Vector）即为$\mathbf v_p$。如果我们把所有可能的曲线$\gamma$对应的切向量组合到一起，就得到了切空间（Tangent Space），记为$T_pM$。</p>
-<h2 id="Basis-of-the-Tangent-Space"><a href="#Basis-of-the-Tangent-Space" class="headerlink" title="Basis of the Tangent Space"></a>Basis of the Tangent Space</h2><p>对于上面的切空间的定义，我们还有很多不知道的东西。实际上光有上面的定义我们几乎什么都做不了。这里，我们来定义切空间的基。</p>
-<p>假设一个任意函数$f:M\rightarrow \mathbb R$和参数曲线$\gamma:t\rightarrow M$，在时间$t=t_0$，$f$的变化率为：<br>$$<br>\begin{align}<br>\frac{\mathrm d f\circ\gamma(t)}{\mathrm d t}|<em>{t=t_0}&amp;=\frac{\mathrm d(f\circ\varphi^{-1}\circ\varphi\circ\gamma)(t)}{\mathrm d t}|</em>{t=t_0}\<br>&amp;=\frac{\mathrm d((f\circ \varphi^{-1})\circ(\varphi\circ\gamma))(t)}{\mathrm d t}|<em>{t=t_0}\<br>&amp;=\sum_i\frac{\partial(f\circ\varphi^{-1})(x)}{\partial x_i}|</em>{x=\varphi\circ\gamma(t_0)}\frac{\mathrm d(\varphi\circ\gamma)^i(t)}{\mathrm d t}|<em>{t=t_0}\<br>&amp;=\sum_i\frac{\partial(f\circ\varphi^{-1})(x)}{\partial x_i}|</em>{x=\varphi(p)}\frac{\mathrm d(\varphi\circ\gamma)^i(t)}{\mathrm d t}|_{t=t_0}\<br>&amp;=\sum_i (\text{basis for component }i)(\text{velocity of component }i\text{ w.r.t. to }\varphi)<br>\end{align}<br>$$</p>
-<p>第二步到第三步为链式法则的应用，第三步的第二项就是我们前面定义的切向量的第$i$项，而第一项$\frac{\partial(f\circ\varphi^{-1})(x)}{\partial x_i}$的自变量已经从流形上的点变成了$\mathbb R^n$空间上的点。先将$\frac{\partial(f\circ\varphi^{-1})(x)}{\partial x_i}$简写为：</p>
-<p>$$<br>\left(\frac{\partial}{\partial x^i}\right)_p(f)=\frac{\partial(f\circ\varphi^{-1})(\varphi(p))}{\partial x_i}<br>$$</p>
-<p>公式的左端省略了坐标卡$\varphi$，因为我们假设在点$p$，默认存在一个坐标卡。这时$\left(\frac{\partial}{\partial x^i}\right)_p(f)$可以立即为一个Operator，给定任意一个函数$f$，我们会得到一个输出。</p>
-<p>对于每一个切向量$v\in T_pM$我们有：<br>$$<br>\begin{align}<br>\mathbf v &amp;= \sum_{i=1}^n v(x^i)\cdot\left(\frac{\partial}{\partial x^i}\right)<em>p\<br>&amp; =\sum</em>{i=1}^n\frac{\mathrm d(\varphi\circ\gamma)^i(t)}{\mathrm d t}|_{t=t_0}\cdot\left(\frac{\partial}{\partial x^i}\right)_p<br>\end{align}<br>$$</p>
+<p>豪斯道夫空间的具体定义在这里不重要，只要知道他是一个拓扑空间即可。坐标卡是一个很重要的概念，它提供了流形上的点<span class="math inline">\(p\)</span>对应的开集到欧氏空间<span class="math inline">\(\mathbb R^n\)</span>的一个映射。下图是两个坐标卡的示意图：</p>
+<p><img src="https://i.loli.net/2020/06/24/CHtb1xu65cyJjPZ.png" srcset="/img/loading.gif" style="zoom:80%;" /></p>
+<p>可以看到坐标卡<span class="math inline">\(\varphi_\alpha\)</span>和<span class="math inline">\(\varphi_\beta\)</span>分别为<span class="math inline">\(U_\alpha\)</span>和<span class="math inline">\(U_\beta\)</span>到<span class="math inline">\(\mathbb R^n\)</span>的映射。</p>
+<h1 id="tangent-spaces">Tangent Spaces</h1>
+<p>切空间是流形中一个非常重要的概念。流形<span class="math inline">\(\mathcal{M}\)</span>在点<span class="math inline">\(x\)</span>的切空间（<strong>Tangent Space</strong>）<span class="math inline">\(\mathcal{T}_x\mathcal{M}\)</span>，切空间由所有可能的切向量组成。而切向量可以理解为你在一个流形上沿着一条曲线运动，然后在某一个时刻时的速度对应的向量。下图展示了一个嵌入在三维欧氏空间中的二维流形及其在点<span class="math inline">\(x\)</span>上的切空间。</p>
+<p><img src="https://i.loli.net/2020/06/24/GCn7aiyfUc3t4EO.png" srcset="/img/loading.gif" alt="A tangent space example" style="zoom: 50%;" /></p>
+<h2 id="tangent-spaces-as-the-velocity-of-curves">Tangent Spaces as the Velocity of Curves</h2>
+<p>假设我们有一个光滑流形<span class="math inline">\(M\)</span>及点<span class="math inline">\(p\in M\)</span>，坐标卡<span class="math inline">\(\varphi:U\rightarrow \mathbb R^n\)</span>，其中<span class="math inline">\(U\)</span>为<span class="math inline">\(M\)</span>的包含<span class="math inline">\(p\)</span>的开集。设<span class="math inline">\(\gamma:t\rightarrow M\)</span>，<span class="math inline">\(t\in[a,b]\)</span>为经过<span class="math inline">\(p\)</span>的光滑曲线。通过叠加<span class="math inline">\(\gamma\)</span>和<span class="math inline">\(\varphi\)</span>，我们就得到了<span class="math inline">\(t\)</span>到<span class="math inline">\(\mathbb R^n\)</span>的映射<span class="math inline">\(\varphi\circ\gamma:t\rightarrow \mathbb R^n\)</span>。</p>
+<p>记<span class="math inline">\(\mathbf x=\varphi\circ\gamma(t)\)</span>，这可以解释为在时间<span class="math inline">\(t\)</span>时我们在流形<span class="math inline">\(M\)</span>上的位置或者坐标，于是<span class="math inline">\(t=t_0\)</span>时的速度<span class="math inline">\(\mathbf v_p=\frac{\mathrm d\varphi\circ\gamma(t)}{\mathrm d t}|_{t=t_0}=\left[\frac{\mathrm d x^1(t)}{\mathrm d t},\cdots,\frac{\mathrm d x^n(t)}{\mathrm d t}\right]|_{t=t_0}\)</span>，其中<span class="math inline">\(x^i(t)\)</span>为坐标<span class="math inline">\(\mathbf x\)</span>的第<span class="math inline">\(i\)</span>个分量。在点<span class="math inline">\(p\)</span>的切向量（Tangent Vector）即为<span class="math inline">\(\mathbf v_p\)</span>。如果我们把所有可能的曲线<span class="math inline">\(\gamma\)</span>对应的切向量组合到一起，就得到了切空间（Tangent Space），记为<span class="math inline">\(T_pM\)</span>。</p>
+<h2 id="basis-of-the-tangent-space">Basis of the Tangent Space</h2>
+<p>对于上面的切空间的定义，我们还有很多不知道的东西。实际上光有上面的定义我们几乎什么都做不了。这里，我们来定义切空间的基。</p>
+<p>假设一个任意函数<span class="math inline">\(f:M\rightarrow \mathbb R\)</span>和参数曲线<span class="math inline">\(\gamma:t\rightarrow M\)</span>，在时间<span class="math inline">\(t=t_0\)</span>，<span class="math inline">\(f\)</span>的变化率为： <span class="math display">\[
+\begin{align}
+\frac{\mathrm d f\circ\gamma(t)}{\mathrm d t}|_{t=t_0}&amp;=\frac{\mathrm d(f\circ\varphi^{-1}\circ\varphi\circ\gamma)(t)}{\mathrm d t}|_{t=t_0}\\
+&amp;=\frac{\mathrm d((f\circ \varphi^{-1})\circ(\varphi\circ\gamma))(t)}{\mathrm d t}|_{t=t_0}\\
+&amp;=\sum_i\frac{\partial(f\circ\varphi^{-1})(x)}{\partial x_i}|_{x=\varphi\circ\gamma(t_0)}\frac{\mathrm d(\varphi\circ\gamma)^i(t)}{\mathrm d t}|_{t=t_0}\\
+&amp;=\sum_i\frac{\partial(f\circ\varphi^{-1})(x)}{\partial x_i}|_{x=\varphi(p)}\frac{\mathrm d(\varphi\circ\gamma)^i(t)}{\mathrm d t}|_{t=t_0}\\
+&amp;=\sum_i (\text{basis for component }i)(\text{velocity of component }i\text{ w.r.t. to }\varphi)
+\end{align}
+\]</span></p>
+<p>第二步到第三步为链式法则的应用，第三步的第二项就是我们前面定义的切向量的第<span class="math inline">\(i\)</span>项，而第一项<span class="math inline">\(\frac{\partial(f\circ\varphi^{-1})(x)}{\partial x_i}\)</span>的自变量已经从流形上的点变成了<span class="math inline">\(\mathbb R^n\)</span>空间上的点。先将<span class="math inline">\(\frac{\partial(f\circ\varphi^{-1})(x)}{\partial x_i}\)</span>简写为：</p>
+<p><span class="math display">\[
+\left(\frac{\partial}{\partial x^i}\right)_p(f)=\frac{\partial(f\circ\varphi^{-1})(\varphi(p))}{\partial x_i}
+\]</span></p>
+<p>公式的左端省略了坐标卡<span class="math inline">\(\varphi\)</span>，因为我们假设在点<span class="math inline">\(p\)</span>，默认存在一个坐标卡。这时<span class="math inline">\(\left(\frac{\partial}{\partial x^i}\right)_p(f)\)</span>可以立即为一个Operator，给定任意一个函数<span class="math inline">\(f\)</span>，我们会得到一个输出。</p>
+<p>对于每一个切向量<span class="math inline">\(v\in T_pM\)</span>我们有： <span class="math display">\[
+\begin{align}
+\mathbf v &amp;= \sum_{i=1}^n v(x^i)\cdot\left(\frac{\partial}{\partial x^i}\right)_p\\
+&amp; =\sum_{i=1}^n\frac{\mathrm d(\varphi\circ\gamma)^i(t)}{\mathrm d t}|_{t=t_0}\cdot\left(\frac{\partial}{\partial x^i}\right)_p
+\end{align}
+\]</span></p>
 <p>这说明切空间的就是一组微分符号</p>
-<h2 id="Change-of-Basis-for-Tangent-Vector"><a href="#Change-of-Basis-for-Tangent-Vector" class="headerlink" title="Change of Basis for Tangent Vector"></a>Change of Basis for Tangent Vector</h2><p>$$<br>\varphi(p)=(x^1(p),\cdots,x^d(p))\<br>\vartheta(p)=(y^1(p),\cdots,y^d(p))<br>$$</p>
-<p>假设$p$为两个坐标卡定义域的重叠部分</p>
-<p>$\partial_xf=\frac{\partial f}{\partial x}$<br>$$<br>\begin{align<em>}<br>{\bf v} f &amp;= v(x^i) \cdot \Big(\frac{\partial}{\partial x^i}\Big)<em>p f \<br>  &amp;= v(x^i) \cdot \partial</em>{x^i} (f \circ \varphi^{-1})(\varphi(p)) &amp;&amp; \text{by definition} \<br>  &amp;= v(x^i) \cdot \partial_{x^i} (f \circ \vartheta^{-1} \circ \vartheta \circ \varphi^{-1})(\varphi(p)) &amp;&amp; \text{introduce } \vartheta \text{ with identity trick}\<br>  &amp;= v(x^i) \cdot \partial_{x^i} ((f \circ \vartheta^{-1}) \circ (\vartheta \circ \varphi^{-1}))(\varphi(p)) \<br>  &amp;= v(x^i) \cdot<br>    \partial_{x^i} (\vartheta \circ \varphi^{-1})^j(\varphi(p))<br>    \cdot<br>    \partial_{y^j} (f \circ \vartheta^{-1})(\vartheta \circ \varphi^{-1}(\varphi(p)))<br>    &amp;&amp; \text{chain rule} \<br>  &amp;= v(x^i) \cdot<br>    \partial_{x^i} (\vartheta \circ \varphi^{-1})^j(\varphi(p))<br>    \cdot<br>    \partial_{y^j} (f \circ \vartheta^{-1})(\vartheta(p))<br>    &amp;&amp; \text{simplifying} \<br>  &amp;= v(x^i) \cdot<br>    \partial_{x^i} (\vartheta \circ \varphi^{-1})^j(\varphi(p))<br>    \cdot<br>    \Big(\frac{\partial}{\partial y^j}\Big)<em>p f<br>    &amp;&amp; \text{by definition} \<br>  &amp;= v(x^i) \cdot<br>    \frac{\partial y^j}{\partial x^i}\big|</em>{x=\varphi(p)}<br>    \cdot<br>    \Big(\frac{\partial}{\partial y^j}\Big)_p f<br>    &amp;&amp; \text{since }y^j(x) = y^j(\varphi^{-1}(\varphi(x))) \<br>  &amp;= v(y^j) \cdot \Big(\frac{\partial}{\partial y^j}\Big)_p f \<br>\tag{12}<br>\end{align</em>}<br>$$<br>矩阵表示<br>$$<br>\begin{align<em>}<br>{\bf v(y)}<br>= \begin{bmatrix} v(y^1) \ \ldots \ v(y^d) \end{bmatrix}<br>= {\bf J_y} {\bf v(x)}<br>= \begin{bmatrix}<br>    \frac{\partial y^1}{\partial x^1}\big|<em>{x=\varphi(p)}<br>      &amp; \cdots<br>      &amp; \frac{\partial y^1}{\partial x^d}\big|</em>{x=\varphi(p)} \<br>    \vdots &amp; \ddots &amp; \vdots \<br>    \frac{\partial y^d}{\partial x^1}\big|<em>{x=\varphi(p)}<br>      &amp; \cdots<br>      &amp; \frac{\partial y^d}{\partial x^d}\big|</em>{x=\varphi(p)}<br>  \end{bmatrix}<br>  \begin{bmatrix} v(x^1) \ \ldots \ v(x^d) \end{bmatrix}\<br>\tag{13}<br>\end{align</em>}<br>$$</p>
-<h2 id="An-Example-of-Tangent-Space"><a href="#An-Example-of-Tangent-Space" class="headerlink" title="An Example of Tangent Space"></a>An Example of Tangent Space</h2><img src="https://i.loli.net/2020/06/24/OmCZaENuQYeiw5k.png" srcset="/img/loading.gif" style="zoom: 33%;" />
-
-<h1 id="Riemannian-Manifolds"><a href="#Riemannian-Manifolds" class="headerlink" title="Riemannian Manifolds"></a>Riemannian Manifolds</h1><h3 id="Riemannian-Metric"><a href="#Riemannian-Metric" class="headerlink" title="Riemannian Metric"></a>Riemannian Metric</h3><p><strong>Riemannian metric</strong><br>$$<br>g_p:T_p M\times T_pM\rightarrow\mathbb R, \space p\in M<br>$$</p>
-<h3 id="Induced-Metric-Tensors"><a href="#Induced-Metric-Tensors" class="headerlink" title="Induced Metric Tensors"></a>Induced Metric Tensors</h3><p>流形<br>$$<br>\begin{align<em>}<br>{\bf v} &amp;= v(y^i) \cdot \Big(\frac{\partial}{\partial y^i}\Big)<em>p \<br>        &amp;= v(y^i) \cdot<br>            \frac{\partial (□ \circ \varphi^{-1})}{\partial y_i}\Big|</em>{y=\varphi(p)} \<br>        &amp;= v(y^i) \cdot<br>            \frac{\partial x^j}{\partial y^i}\Big|<em>{y=\varphi(p)}<br>            \frac{\partial □}{\partial x^j}\Big|</em>{x=p} \<br>        &amp;= v(y^i) \cdot<br>            \frac{\partial x^j}{\partial y^i}\Big|_{y=\varphi(p)}<br>            \Big(\frac{\partial}{\partial x^j}\Big)_p \<br>        &amp;= \frac{d \gamma^j(t)}{dt} \cdot {\bf e^j} \<br>        \tag{23}<br>\end{align</em>}<br>$$<br>向量<br>$$<br>\begin{align<em>}<br>g_M({\bf v_M},{\bf w_M}) &amp;= {\bf v_M} \cdot {\bf w_M} &amp;&amp; \text{Euclidean inner product}\<br>&amp;= \begin{bmatrix}<br>      \sum_{i=1}^d v(y^i) \cdot \frac{\partial x^1}{\partial y^i}\Big|<em>{y=\varphi(p)}<br>    &amp; \ldots<br>    &amp; \sum</em>{i=1}^d v(y^i) \cdot \frac{\partial x^n}{\partial y^i}\Big|<em>{y=\varphi(p)}<br>\end{bmatrix}\cdot\<br>&amp;\space\space\space\space\begin{bmatrix}<br>      \sum</em>{i=1}^d w(y^i) \cdot \frac{\partial x^1}{\partial y^i}\Big|<em>{y=\varphi(p)} \<br>    \ldots \<br>    \sum</em>{i=1}^d w(y^i) \cdot \frac{\partial x^n}{\partial y^i}\Big|<em>{y=\varphi(p)}<br>\end{bmatrix} &amp;&amp; \text{Subbing in Equation 23} \<br>&amp;=  \begin{bmatrix} v(y^1) &amp; \ldots &amp; v(y^d) \end{bmatrix}<br>    \begin{bmatrix}<br>        \frac{\partial x^1}{\partial y^1}\Big|</em>{y=\varphi(p)}<br>        &amp; \ldots<br>        &amp; \frac{\partial x^n}{\partial y^1}\Big|<em>{y=\varphi(p)} \<br>        \cdots<br>        &amp; \ddots<br>        &amp; \cdots \<br>        \frac{\partial x^1}{\partial y^d}\Big|</em>{y=\varphi(p)}<br>        &amp; \ldots<br>        &amp; \frac{\partial x^n}{\partial y^d}\Big|<em>{y=\varphi(p)} \<br>    \end{bmatrix}\cdot\<br>    &amp;\space\space\space\space\begin{bmatrix}<br>        \frac{\partial x^1}{\partial y^1}\Big|</em>{y=\varphi(p)}<br>        &amp; \ldots<br>        &amp; \frac{\partial x^1}{\partial y^d}\Big|<em>{y=\varphi(p)} \<br>        \cdots<br>        &amp; \ddots<br>        &amp; \cdots \<br>        \frac{\partial x^n}{\partial y^1}\Big|</em>{y=\varphi(p)}<br>        &amp; \ldots<br>        &amp; \frac{\partial x^n}{\partial y^d}\Big|<em>{y=\varphi(p)} \<br>    \end{bmatrix}<br>   \begin{bmatrix} w(y^1) \ \ldots \ w(y^d) \end{bmatrix} \<br>\tag{24}<br>&amp;= {\bf v_U}^T{\bf J</em>{x}}^T{\bf J_{x}}{\bf w_U} \<br>&amp;= g({\bf v_U}, {\bf w_U})<br>\end{align</em>}<br>$$</p>
-<p>$$<br>g_U = {\bf J_{x}}^T{\bf J_{x}}<br>$$</p>
-<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><ul>
-<li><p>Manifolds: A Gentle Introduction <a href="http://bjlkeng.github.io/posts/manifolds/" target="_blank" rel="noopener">Link</a></p>
-</li>
-<li><p>Wikipedia: Manifold <a href="https://en.wikipedia.org/wiki/Manifold" target="_blank" rel="noopener">Link</a></p>
-</li>
+<h2 id="change-of-basis-for-tangent-vector">Change of Basis for Tangent Vector</h2>
+<p><span class="math display">\[
+\varphi(p)=(x^1(p),\cdots,x^d(p))\\
+\vartheta(p)=(y^1(p),\cdots,y^d(p))
+\]</span></p>
+<p>假设<span class="math inline">\(p\)</span>为两个坐标卡定义域的重叠部分</p>
+<p><span class="math inline">\(\partial_xf=\frac{\partial f}{\partial x}\)</span> <span class="math display">\[
+\begin{align*}
+{\bf v} f &amp;= v(x^i) \cdot \Big(\frac{\partial}{\partial x^i}\Big)_p f \\
+  &amp;= v(x^i) \cdot \partial_{x^i} (f \circ \varphi^{-1})(\varphi(p)) &amp;&amp; \text{by definition} \\
+  &amp;= v(x^i) \cdot \partial_{x^i} (f \circ \vartheta^{-1} \circ \vartheta \circ \varphi^{-1})(\varphi(p)) &amp;&amp; \text{introduce } \vartheta \text{ with identity trick}\\
+  &amp;= v(x^i) \cdot \partial_{x^i} ((f \circ \vartheta^{-1}) \circ (\vartheta \circ \varphi^{-1}))(\varphi(p)) \\
+  &amp;= v(x^i) \cdot
+    \partial_{x^i} (\vartheta \circ \varphi^{-1})^j(\varphi(p))
+    \cdot
+    \partial_{y^j} (f \circ \vartheta^{-1})(\vartheta \circ \varphi^{-1}(\varphi(p)))
+    &amp;&amp; \text{chain rule} \\
+  &amp;= v(x^i) \cdot
+    \partial_{x^i} (\vartheta \circ \varphi^{-1})^j(\varphi(p))
+    \cdot
+    \partial_{y^j} (f \circ \vartheta^{-1})(\vartheta(p))
+    &amp;&amp; \text{simplifying} \\
+  &amp;= v(x^i) \cdot
+    \partial_{x^i} (\vartheta \circ \varphi^{-1})^j(\varphi(p))
+    \cdot
+    \Big(\frac{\partial}{\partial y^j}\Big)_p f
+    &amp;&amp; \text{by definition} \\
+  &amp;= v(x^i) \cdot
+    \frac{\partial y^j}{\partial x^i}\big|_{x=\varphi(p)}
+    \cdot
+    \Big(\frac{\partial}{\partial y^j}\Big)_p f
+    &amp;&amp; \text{since }y^j(x) = y^j(\varphi^{-1}(\varphi(x))) \\
+  &amp;= v(y^j) \cdot \Big(\frac{\partial}{\partial y^j}\Big)_p f \\
+\tag{12}
+\end{align*}
+\]</span> 矩阵表示 <span class="math display">\[
+\begin{align*}
+{\bf v(y)}
+= \begin{bmatrix} v(y^1) \\ \ldots \\ v(y^d) \end{bmatrix}
+= {\bf J_y} {\bf v(x)}
+= \begin{bmatrix}
+    \frac{\partial y^1}{\partial x^1}\big|_{x=\varphi(p)}
+      &amp; \cdots
+      &amp; \frac{\partial y^1}{\partial x^d}\big|_{x=\varphi(p)} \\
+    \vdots &amp; \ddots &amp; \vdots \\
+    \frac{\partial y^d}{\partial x^1}\big|_{x=\varphi(p)}
+      &amp; \cdots
+      &amp; \frac{\partial y^d}{\partial x^d}\big|_{x=\varphi(p)}
+  \end{bmatrix}
+  \begin{bmatrix} v(x^1) \\ \ldots \\ v(x^d) \end{bmatrix}\\
+\tag{13}
+\end{align*}
+\]</span></p>
+<h2 id="an-example-of-tangent-space">An Example of Tangent Space</h2>
+<p><img src="https://i.loli.net/2020/06/24/OmCZaENuQYeiw5k.png" srcset="/img/loading.gif" style="zoom: 33%;" /></p>
+<h1 id="riemannian-manifolds">Riemannian Manifolds</h1>
+<h3 id="riemannian-metric">Riemannian Metric</h3>
+<p><strong>Riemannian metric</strong> <span class="math display">\[
+g_p:T_p M\times T_pM\rightarrow\mathbb R, \space p\in M
+\]</span></p>
+<h3 id="induced-metric-tensors">Induced Metric Tensors</h3>
+<p>流形 <span class="math display">\[
+\begin{align*}
+{\bf v} &amp;= v(y^i) \cdot \Big(\frac{\partial}{\partial y^i}\Big)_p \\
+        &amp;= v(y^i) \cdot
+            \frac{\partial (□ \circ \varphi^{-1})}{\partial y_i}\Big|_{y=\varphi(p)} \\
+        &amp;= v(y^i) \cdot
+            \frac{\partial x^j}{\partial y^i}\Big|_{y=\varphi(p)}
+            \frac{\partial □}{\partial x^j}\Big|_{x=p} \\
+        &amp;= v(y^i) \cdot
+            \frac{\partial x^j}{\partial y^i}\Big|_{y=\varphi(p)}
+            \Big(\frac{\partial}{\partial x^j}\Big)_p \\
+        &amp;= \frac{d \gamma^j(t)}{dt} \cdot {\bf e^j} \\
+        \tag{23}
+\end{align*}
+\]</span> 向量 <span class="math display">\[
+\begin{align*}
+g_M({\bf v_M},{\bf w_M}) &amp;= {\bf v_M} \cdot {\bf w_M} &amp;&amp; \text{Euclidean inner product}\\
+&amp;= \begin{bmatrix}
+      \sum_{i=1}^d v(y^i) \cdot \frac{\partial x^1}{\partial y^i}\Big|_{y=\varphi(p)}
+    &amp; \ldots
+    &amp; \sum_{i=1}^d v(y^i) \cdot \frac{\partial x^n}{\partial y^i}\Big|_{y=\varphi(p)}
+\end{bmatrix}\cdot\\
+&amp;\space\space\space\space\begin{bmatrix}
+      \sum_{i=1}^d w(y^i) \cdot \frac{\partial x^1}{\partial y^i}\Big|_{y=\varphi(p)} \\
+    \ldots \\
+    \sum_{i=1}^d w(y^i) \cdot \frac{\partial x^n}{\partial y^i}\Big|_{y=\varphi(p)}
+\end{bmatrix} &amp;&amp; \text{Subbing in Equation 23} \\
+&amp;=  \begin{bmatrix} v(y^1) &amp; \ldots &amp; v(y^d) \end{bmatrix}
+    \begin{bmatrix}
+        \frac{\partial x^1}{\partial y^1}\Big|_{y=\varphi(p)}
+        &amp; \ldots
+        &amp; \frac{\partial x^n}{\partial y^1}\Big|_{y=\varphi(p)} \\
+        \cdots
+        &amp; \ddots
+        &amp; \cdots \\
+        \frac{\partial x^1}{\partial y^d}\Big|_{y=\varphi(p)}
+        &amp; \ldots
+        &amp; \frac{\partial x^n}{\partial y^d}\Big|_{y=\varphi(p)} \\
+    \end{bmatrix}\cdot\\
+    &amp;\space\space\space\space\begin{bmatrix}
+        \frac{\partial x^1}{\partial y^1}\Big|_{y=\varphi(p)}
+        &amp; \ldots
+        &amp; \frac{\partial x^1}{\partial y^d}\Big|_{y=\varphi(p)} \\
+        \cdots
+        &amp; \ddots
+        &amp; \cdots \\
+        \frac{\partial x^n}{\partial y^1}\Big|_{y=\varphi(p)}
+        &amp; \ldots
+        &amp; \frac{\partial x^n}{\partial y^d}\Big|_{y=\varphi(p)} \\
+    \end{bmatrix}
+   \begin{bmatrix} w(y^1) \\ \ldots \\ w(y^d) \end{bmatrix} \\
+\tag{24}
+&amp;= {\bf v_U}^T{\bf J_{x}}^T{\bf J_{x}}{\bf w_U} \\
+&amp;= g({\bf v_U}, {\bf w_U}) 
+\end{align*}
+\]</span></p>
+<p><span class="math display">\[
+g_U = {\bf J_{x}}^T{\bf J_{x}}
+\]</span></p>
+<h1 id="reference">Reference</h1>
+<ul>
+<li><p>Manifolds: A Gentle Introduction <a href="http://bjlkeng.github.io/posts/manifolds/" target="_blank" rel="noopener">Link</a></p></li>
+<li><p>Wikipedia: Manifold <a href="https://en.wikipedia.org/wiki/Manifold" target="_blank" rel="noopener">Link</a></p></li>
 </ul>
 
             </article>
