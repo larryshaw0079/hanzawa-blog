@@ -23,7 +23,7 @@
 <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
 
 
-  <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css" />
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/tomorrow.min.css" />
 
 
 <!-- 主题依赖的图标库，不要自行修改 -->
@@ -141,6 +141,8 @@
           <div class="container text-center white-text fadeInUp">
             <span class="h2" id="subtitle">
               
+                Learning Deep Representations by Mutual Information Estimation and Maximization
+              
             </span>
 
             
@@ -158,7 +160,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    352 字
+                    344 字
                   </span>
                 
 
@@ -168,7 +170,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    6
+                    5
                      分钟
                   </span>
                 
@@ -197,34 +199,19 @@
           <div class="post-content mx-auto" id="post">
             
             <article class="markdown-body">
-              <h1 id="introduction">Introduction</h1>
-<h1 id="preliminaries">Preliminaries</h1>
-<h1 id="methodology">Methodology</h1>
-<p>设<span class="math inline">\(\mathcal X\)</span>和<span class="math inline">\(\mathcal Y\)</span>分别为一个连续函数的定义域和值域，<span class="math inline">\(E_\psi:\mathcal X\mapsto \mathcal Y\)</span>为带参函数（如神经网络），不同的参数组合定义了一个函数族<span class="math inline">\(\mathcal E_\Phi=\{E_\psi\}_{\psi\in\boldsymbol\psi}\)</span>。设给定训练样本组成的输入空间<span class="math inline">\(\mathcal X:\mathbf X:=\{x^{(i)}\in\mathcal X\}_{i=1}^N\)</span>，其分布记为<span class="math inline">\(\mathbb P\)</span>。<span class="math inline">\(\mathbb U_{\psi,\mathbb P}\)</span>定义为函数输出的边缘分布。</p>
+              <h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><h1 id="Preliminaries"><a href="#Preliminaries" class="headerlink" title="Preliminaries"></a>Preliminaries</h1><h1 id="Methodology"><a href="#Methodology" class="headerlink" title="Methodology"></a>Methodology</h1><p>设$\mathcal X$和$\mathcal Y$分别为一个连续函数的定义域和值域，$E_\psi:\mathcal X\mapsto \mathcal Y$为带参函数（如神经网络），不同的参数组合定义了一个函数族$\mathcal E_\Phi={E_\psi}<em>{\psi\in\boldsymbol\psi}$。设给定训练样本组成的输入空间$\mathcal X:\mathbf X:={x^{(i)}\in\mathcal X}</em>{i=1}^N$，其分布记为$\mathbb P$。$\mathbb U_{\psi,\mathbb P}$定义为函数输出的边缘分布。</p>
 <ul>
-<li><strong>Mutual information maximization: </strong><span class="math inline">\(\mathcal I(X;E_\psi(X))\)</span>最大化</li>
-<li><strong>Statistical constraints: </strong><span class="math inline">\(\mathbb U_{\psi,\mathbb P}\)</span>应当接近一个先验分布<span class="math inline">\(\mathbb V\)</span></li>
+<li>*<em>Mutual information maximization: *</em>$\mathcal I(X;E_\psi(X))$最大化</li>
+<li>*<em>Statistical constraints: *</em>$\mathbb U_{\psi,\mathbb P}$应当接近一个先验分布$\mathbb V$</li>
 </ul>
-<p><img src="https://i.loli.net/2020/07/18/1whCS4EJ3PusIyi.png" srcset="/img/loading.gif" /></p>
-<p><img src="https://i.loli.net/2020/07/18/RZyb4c7O2oaASBh.png" srcset="/img/loading.gif" /></p>
-<p><img src="https://i.loli.net/2020/07/18/WVKFSCmI8vlBEap.png" srcset="/img/loading.gif" /></p>
-<h2 id="mutual-information-estimation-and-maximization">Mutual Information Estimation and Maximization</h2>
-<p>文中用到了 Mutual Information Neural Estimation (MINE)： <span class="math display">\[
-\mathcal I(X;Y)=\mathcal D_{KL}(\mathbb J\parallel \mathbb M)\geq \hat{\mathcal I}_w^{(DV)}(X;Y)=\mathbb E_\mathbb J[T_w(x,y)]-\log\mathbb E_\mathbb M[e^{T_w (x,y)}]
-\]</span> 其中<span class="math inline">\(T_w:\mathcal X\times \mathcal Y\rightarrow \mathbb R\)</span>为</p>
-<p><span class="math display">\[
-(\hat w,\hat \psi)_G=\mathop{\text{arg}\space\text{max}}\limits_{w,\psi}\hat{\mathcal I}_w(X;E_\psi(X))
-\]</span> <span class="math inline">\(E_\psi=f_\psi\circ C_\psi\)</span>和<span class="math inline">\(T_{\psi,w}=D_w\circ g\circ (C_\psi,E_\psi)\)</span></p>
-<p><span class="math display">\[
-\hat{\mathcal I}_{w,\psi}^{(JSD)}(X;E_\psi(X))=\mathbb E_\mathbb P [-\text{sp}(-T_{\psi,w}(x,E_\psi(x)))]-\mathbb E_{\mathbb P\times\tilde{\mathbb P}}[\text{sp}(T_{\psi,w}(x^\prime,E_\psi(x)))]
-\]</span></p>
-<p><span class="math display">\[
-\hat{\mathcal I}_{w,\psi}^{(\text{infoNCE})}(X;E_\psi(X))=\mathbb E_\mathbb P\left[T_{\psi,w}(x,E_\psi(x))-\mathbb E_{\tilde{\mathbb P}}\left[\log\sum\limits_{x^\prime}e^{T_{\psi,w}(x^\prime,E_\psi(x))}\right]\right]
-\]</span></p>
-<h2 id="local-mutual-information-maximization">Local Mutual Information Maximization</h2>
-<h2 id="matching-representations-to-a-prior-distribution">Matching Representations to a Prior Distribution</h2>
-<h1 id="experiments">Experiments</h1>
-
+<p><img src="https://i.loli.net/2020/07/18/1whCS4EJ3PusIyi.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://i.loli.net/2020/07/18/RZyb4c7O2oaASBh.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://i.loli.net/2020/07/18/WVKFSCmI8vlBEap.png" srcset="/img/loading.gif" alt=""></p>
+<h2 id="Mutual-Information-Estimation-and-Maximization"><a href="#Mutual-Information-Estimation-and-Maximization" class="headerlink" title="Mutual Information Estimation and Maximization"></a>Mutual Information Estimation and Maximization</h2><p>文中用到了 Mutual Information Neural Estimation (MINE)：<br>$$<br>\mathcal I(X;Y)=\mathcal D_{KL}(\mathbb J\parallel \mathbb M)\geq \hat{\mathcal I}_w^{(DV)}(X;Y)=\mathbb E_\mathbb J[T_w(x,y)]-\log\mathbb E_\mathbb M[e^{T_w (x,y)}]<br>$$<br>其中$T_w:\mathcal X\times \mathcal Y\rightarrow \mathbb R$为</p>
+<p>$$<br>(\hat w,\hat \psi)<em>G=\mathop{\text{arg}\space\text{max}}\limits</em>{w,\psi}\hat{\mathcal I}<em>w(X;E_\psi(X))<br>$$<br>$E_\psi=f_\psi\circ C_\psi$和$T</em>{\psi,w}=D_w\circ g\circ (C_\psi,E_\psi)$</p>
+<p>$$<br>\hat{\mathcal I}<em>{w,\psi}^{(JSD)}(X;E_\psi(X))=\mathbb E_\mathbb P [-\text{sp}(-T</em>{\psi,w}(x,E_\psi(x)))]-\mathbb E_{\mathbb P\times\tilde{\mathbb P}}[\text{sp}(T_{\psi,w}(x^\prime,E_\psi(x)))]<br>$$</p>
+<p>$$<br>\hat{\mathcal I}<em>{w,\psi}^{(\text{infoNCE})}(X;E_\psi(X))=\mathbb E_\mathbb P\left[T</em>{\psi,w}(x,E_\psi(x))-\mathbb E_{\tilde{\mathbb P}}\left[\log\sum\limits_{x^\prime}e^{T_{\psi,w}(x^\prime,E_\psi(x))}\right]\right]<br>$$</p>
+<h2 id="Local-Mutual-Information-Maximization"><a href="#Local-Mutual-Information-Maximization" class="headerlink" title="Local Mutual Information Maximization"></a>Local Mutual Information Maximization</h2><h2 id="Matching-Representations-to-a-Prior-Distribution"><a href="#Matching-Representations-to-a-Prior-Distribution" class="headerlink" title="Matching Representations to a Prior Distribution"></a>Matching Representations to a Prior Distribution</h2><h1 id="Experiments"><a href="#Experiments" class="headerlink" title="Experiments"></a>Experiments</h1>
             </article>
             <hr>
             <div>
@@ -243,9 +230,9 @@
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/Self-supervised-Learning/">Self-supervised Learning</a>
-                    
                       <a class="hover-with-bg" href="/tags/Representation-Learning/">Representation Learning</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Self-supervised-Learning/">Self-supervised Learning</a>
                     
                   </div>
                 
@@ -368,6 +355,23 @@
         <span>Fluid</span></a>
     </div>
     
+  <div>
+    
+      <!-- 不蒜子统计PV -->
+      
+      <span id="busuanzi_container_site_pv" style="display: none">
+      总访问量 <span id="busuanzi_value_site_pv"></span> 次
+    </span>
+    
+    
+      <!-- 不蒜子统计UV -->
+      
+      <span id="busuanzi_container_site_uv" style="display: none">
+      总访客数 <span id="busuanzi_value_site_uv"></span> 人
+    </span>
+    
+  </div>
+
 
     
 
@@ -421,30 +425,14 @@
 
 
 
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
 
 
 
 <!-- Plugins -->
 
 
-
-  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
-  <script>
-    var typed = new Typed('#subtitle', {
-      strings: [
-        '  ',
-        "Learning Deep Representations by Mutual Information Estimation and Maximization&nbsp;",
-      ],
-      cursorChar: "_",
-      typeSpeed: 70,
-      loop: false,
-    });
-    typed.stop();
-    $(document).ready(function () {
-      $(".typed-cursor").addClass("h2");
-      typed.start();
-    });
-  </script>
 
 
 

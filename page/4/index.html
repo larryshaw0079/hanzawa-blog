@@ -23,7 +23,7 @@
 <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
 
 
-  <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css" />
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/tomorrow.min.css" />
 
 
 <!-- 主题依赖的图标库，不要自行修改 -->
@@ -141,6 +141,8 @@
           <div class="container text-center white-text fadeInUp">
             <span class="h2" id="subtitle">
               
+                Machine Learning, Deep Learning, Python and etc.
+              
             </span>
 
             
@@ -181,18 +183,16 @@
         
           
         
-        <div>Abstract
-本文提出了Donut，一个基于VAE的无监督时间序列异常检测系统。
+        <div>Abstract本文提出了Donut，一个基于VAE的无监督时间序列异常检测系统。
 原文
 
-Contribution
 
+Contribution
 Donut中使用到了三个技巧，包括改进后的ELBO、缺失数据注入和MCMC插值；
 提出基于VAE的异常检测训练既需要正常样本也需要异常样本；
 对Donut提出了在z-空间中基于KDE的理论解释。
 
-Background
-Anomaly Detection</div>
+BackgroundAnomaly Detection对于任意时间$t$，给定历史</div>
       </a>
 
       <div class="index-btm post-metas">
@@ -248,13 +248,12 @@ Anomaly Detection</div>
         
           
         
-        <div>Abstract
-本文借鉴计算机视觉中的显著性检测，提出了一种基于Spectral Residual的时间序列异常检测算法。
+        <div>Abstract本文借鉴计算机视觉中的显著性检测，提出了一种基于Spectral Residual的时间序列异常检测算法。
 原文
 这篇文章还提出了几个时间序列异常检测落地的难点：
 
 Lack of Labels. 在实际生产环境中会产生大量的KPI，而很难对每个KPI进行人工标注。
-Generalization. 不同KPI所表现出来的模式也不尽相同，如Figure 1所示。现有方法</div>
+Generalization. 不同KPI所表现出来的模式也不尽相同，如Figure 1所示。现有方法很难在所有模式</div>
       </a>
 
       <div class="index-btm post-metas">
@@ -360,6 +359,23 @@ Generalization. 不同KPI所表现出来的模式也不尽相同，如Figure 1�
         <span>Fluid</span></a>
     </div>
     
+  <div>
+    
+      <!-- 不蒜子统计PV -->
+      
+      <span id="busuanzi_container_site_pv" style="display: none">
+      总访问量 <span id="busuanzi_value_site_pv"></span> 次
+    </span>
+    
+    
+      <!-- 不蒜子统计UV -->
+      
+      <span id="busuanzi_container_site_uv" style="display: none">
+      总访客数 <span id="busuanzi_value_site_uv"></span> 人
+    </span>
+    
+  </div>
+
 
     
 
@@ -385,30 +401,14 @@ Generalization. 不同KPI所表现出来的模式也不尽相同，如Figure 1�
 
 
 
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
 
 
 
 <!-- Plugins -->
 
 
-
-  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
-  <script>
-    var typed = new Typed('#subtitle', {
-      strings: [
-        '  ',
-        "Machine Learning, Deep Learning, Python and etc.&nbsp;",
-      ],
-      cursorChar: "_",
-      typeSpeed: 70,
-      loop: false,
-    });
-    typed.stop();
-    $(document).ready(function () {
-      $(".typed-cursor").addClass("h2");
-      typed.start();
-    });
-  </script>
 
 
 
