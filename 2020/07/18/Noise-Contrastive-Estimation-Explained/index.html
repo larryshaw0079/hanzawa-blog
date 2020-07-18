@@ -158,7 +158,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    770 字
+                    764 字
                   </span>
                 
 
@@ -197,13 +197,15 @@
           <div class="post-content mx-auto" id="post">
             
             <article class="markdown-body">
-              <p>Noise Contrastive Estimation（NCE）的算法细节及详细推导见[原文](http://proceedings.mlr.press/v9/gutmann10a/gutmann10a.pdf）。</p>
+              <h1 id="introduction">Introduction</h1>
+<p>Noise Contrastive Estimation（NCE）的算法细节及详细推导见<a href="http://proceedings.mlr.press/v9/gutmann10a/gutmann10a.pdf" target="_blank" rel="noopener">原文</a>。</p>
 <p>先说下大背景，虽然NCE在NLP中应用广泛，网上很多文章也是在NLP的背景下讲的，不过NCE其实是一个通用的算法，如果和NLP揉在一起说反而会妨碍理解，这里就从High-Level的角度来讲。在很多情况下（如<code>Softmax</code>）我们需要计算类似下式： <span class="math display">\[
 p(x)=\frac{e^{f(x)}}{Z}
 \]</span> <span class="math inline">\(f(\cdot)\)</span>为任意函数，分母<span class="math inline">\(Z=\sum_x e^{f(x)}\)</span>为归一化因子，也被称作是配分函数。其中当<span class="math inline">\(N\)</span>特别大的时候，<span class="math inline">\(Z\)</span>将难以计算（NLP中<span class="math inline">\(N\)</span>可能是几十万甚至几百万），或者没法计算。</p>
 <p>一般情况下我们会使用极大似然估计来估计分布<span class="math inline">\(p(x)\)</span>，而<span class="math inline">\(f(\cdot)\)</span>一般是带参的，我们把<span class="math inline">\(p(x)\)</span>的公式重写为： <span class="math display">\[
 p(x;\theta)=\frac{e^{f_\theta(x)}}{Z}
 \]</span> 所以我们的优化目标变成了找到最合适的参数<span class="math inline">\(\theta\)</span>使得估计的分布<span class="math inline">\(p(x;\theta)\)</span>最符合数据分布。不过由于计算<span class="math inline">\(Z\)</span>的困难，优化也难以进行。而NCE通过将问题转化为二分类问题从而规避了<span class="math inline">\(Z\)</span>的计算。原文中也说了NCE的Motivation是“learning by comparison”。</p>
+<h1 id="methodology">Methodology</h1>
 <p>我们引入一个新的随机变量<span class="math inline">\(y\in\{0,1\}\)</span>和一个噪声分布（与方法名称中的“Noise”对应），这里使用均匀分布<span class="math inline">\(U(x)\)</span>，也可以采用其他容易采样的分布。<span class="math inline">\(y\)</span>表示输入的样本<span class="math inline">\(x\)</span>来自真实分布<span class="math inline">\(p(x)\)</span>还是噪声分布， <span class="math display">\[
 p(y=1|x)=\sigma(f(x;\theta)-\gamma)=\frac{1}{1+e^{-f(x;\theta)+\gamma}}
 \]</span> 损失函数 <span class="math display">\[

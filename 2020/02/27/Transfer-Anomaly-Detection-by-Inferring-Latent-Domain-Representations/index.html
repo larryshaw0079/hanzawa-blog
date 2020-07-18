@@ -168,7 +168,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    23
+                    24
                      分钟
                   </span>
                 
@@ -197,41 +197,57 @@
           <div class="post-content mx-auto" id="post">
             
             <article class="markdown-body">
-              <h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>作者提出了一种利用迁移学习提升target domain异常检测性能的算法。文中指出现有的基于迁移学习的异常检测算法需要对每个 target domain 进行单独训练，这样做会带来很大的计算开销。本文通过<em>latent domain vectors</em>来实现无需重新训练的异常检测。<em>latent domain vectors</em>是domain的一种隐含表示，通过该domain中的正常样本得到。在本文中，<em>anomaly score function</em>通过Auto-encoder得到。</p>
-<h1 id="Proposed-Method"><a href="#Proposed-Method" class="headerlink" title="Proposed Method"></a>Proposed Method</h1><h2 id="Task"><a href="#Task" class="headerlink" title="Task"></a>Task</h2><p>令$\mathbf{X}<em>d^+:={\mathbf{x}^+</em>{dn}}^{N^+<em>d}</em>{n=1}$为第$d$个domain的异常样本集，$\mathbf{x}_{dn}^+\in\mathbb{R}^M$为其中第$n$个样本的$M$维特征向量，$N^+_d$为第$d$个domain异常样本的数量。</p>
-<p>类似的，令$\mathbf{X}<em>d^-:={\mathbf{x}^-</em>{dn}}^{N^-<em>d}</em>{n=1}$为第$d$个domain的正常样本集。我们假设对于每个domain都有$N^+_d\ll N^-_d$，且特征向量维度都为$M$。</p>
-<p>假设在 source domain $D_S$都有正常样本和异常样本，记为${\mathbf{X}^+<em>d\cup\mathbf{X}_d^-}^{D_S}</em>{d=1}$，在 target domain $D_T$只有正常样本${\mathbf{X}<em>d^-}^{D_S+D_T}</em>{d=D_S+1}$。我们的目标是得到一个对于 target domain 合适的 domain-specific 的异常打分函数。</p>
-<img src="https://i.loli.net/2020/06/25/KW2YgScfVZN7Fjz.png" srcset="/img/loading.gif" style="zoom:67%;" />
-
-<h2 id="Domain-specific-Anomaly-Score-Function"><a href="#Domain-specific-Anomaly-Score-Function" class="headerlink" title="Domain-specific Anomaly Score Function"></a>Domain-specific Anomaly Score Function</h2><p>我们基于Auto-encoder定义异常打分函数。对于每个domain，我们假设存在一个$K$维的隐变量$\mathbf{z}<em>d\in\mathbb{R}^K$。对于第$d$个 domain，异常打分函数定义如下：<br>$$<br>s_\theta(\mathbf{x}</em>{dn}|\mathbf{z}<em>d):=\parallel\mathbf{x}</em>{dn}-G_{\theta_G}(F_{\theta_F}(\mathbf{x}_{dn},\mathbf{z}_d))\parallel^2<br>$$<br>其中参数$\theta:=(\theta_G,\theta_F)$在所有 domain 之间共享。</p>
-<h2 id="Models-for-Latent-Domain-Vectors"><a href="#Models-for-Latent-Domain-Vectors" class="headerlink" title="Models for Latent Domain Vectors"></a>Models for Latent Domain Vectors</h2><p>隐变量$\mathbf{z}_d$是无法观测到的，只能通过数据来估计。首先$\mathbf{z}_d$在$\mathbf{X}_d^-$条件下的条件分布假设为高斯分布：</p>
-<p>$$<br>q_\theta(\mathbf{z}<em>d|\mathbf{X}_d^-):=\mathcal{N}(\mathbf{z}_d|\mu_\phi(\mathbf{X}_d^-),\text{diag}(\sigma_\phi^2(\mathbf{X}_d^-)))<br>$$<br>其中均值$\mu_\phi(\mathbf{X}_d^-)\in\mathbb{R}^K$和方差$\sigma^2_\phi(\mathbf{X}_d^-)\in\mathbb{R}^K</em>+$由神经网络建模，且在所有 domain 之间共享。在$\mathbf{X}_d^-$给定的时候，我们便能够推断出该 domain 对应的隐变量，</p>
-<p>$q_\phi$的输入为正常样本的集合，故神经网络需要满足<em>permutation invariant</em>。$\tau(\mathbf{X}<em>d^-)=\rho(\sum</em>{n=1}^{N_d^-}\eta(\mathbf{x}_{dn}^-))$，其中$\tau(\mathbf{X}_d^-)$表示$\mu_\phi(\mathbf{X_d^-})$或$\ln\sigma_\phi^2(\mathbf{X}_d^-)$，$\rho$和$\eta$为神经网络，</p>
-<h2 id="Objective-Function"><a href="#Objective-Function" class="headerlink" title="Objective Function"></a>Objective Function</h2><p>目标函数由anomaly score函数和隐变量组成。第$d$个domain在对应的隐变量$\mathbf{z}_d$条件下的目标函数为：</p>
-<p>$$<br>L_d(\theta|\mathbf{z}<em>d):=\frac{1}{N_d^-}\sum\limits</em>{n=1}^{N_d^-}s_\theta(\mathbf{x}<em>{dn}^-|\mathbf{z}_d)-\frac{\lambda}{N_d^-N_d^+}\sum\limits</em>{n,m=1}^{N_d^-,N_d^+}f(s_\theta(\mathbf{x}<em>{dm}^+|\mathbf{z}_d)-s_\theta(\mathbf{x}</em>{dn}^-|\mathbf{z}_d))<br>$$</p>
-<p>其中$\lambda\geq 0$为超参数，$f$为sigmoid函数。公式的第一项表示第$d$个domain正常样本对应的<em>anomaly score</em>。第二项为可微分的AUC。异常样本的<em>anomaly score</em>应当大于正常样本，所以对任何$\mathbf x_{dm}^+\in\mathbf X_d^+, \mathbf x_{dn}^-\in\mathbf X_d^-$有$s_\theta(\mathbf x_{dm}^+|\mathbf z_d)&gt;s_\theta(\mathbf x_{dn}^-|\mathbf z_d)$。第二项$\frac{\lambda}{N_d^-N_d^+}\sum\limits_{n,m=1}^{N_d^-,N_d^+}f(s_\theta(\mathbf{x}<em>{dm}^+|\mathbf{z}_d)-s_\theta(\mathbf{x}</em>{dn}^-|\mathbf{z}<em>d))$的取值范围是$[0,1]$，当所有的$s_\theta(\mathbf{x}</em>{dm}^+|\mathbf{z}<em>d)\gg s_\theta(\mathbf{x}</em>{dm}^-|\mathbf{z}<em>d)$时该项为1，当所有的$s_\theta(\mathbf{x}</em>{dm}^+|\mathbf{z}<em>d)\ll s_\theta(\mathbf{x}</em>{dm}^-|\mathbf{z}<em>d)$时该项为0，所以最小化该项的相反数相当于鼓励$s_\theta(\mathbf{x}</em>{dm}^+|\mathbf{z}<em>d)\gg s_\theta(\mathbf{x}</em>{dm}^-|\mathbf{z}_d)$。</p>
-<p>因为隐变量$\mathbf z_d$包含不确定性，我们应该在目标函数里考虑这一点：<br>$$<br>\mathcal{L}<em>d(\theta,\phi):=\mathbb{E}</em>{q_\phi(\mathbf{z}_d|\mathbf{X}_d^-)}\left[L_d(\theta|\mathbf{z}_d)\right]+\beta D_\text{KL}(q_\phi(\mathbf{z}_d|\mathbf{X}_d^-)\parallel p(\mathbf{z_d}))<br>$$</p>
-<p>第一项是$L_d(\theta|\mathbf z_d)$关于$q_\phi(\mathbf z_d|\mathbf X_d^-)$的期望，第二项是$q_\phi(\mathbf z_d|\mathbf X_d^-)$和$p(\mathbf z_d):=\mathcal{N}(\boldsymbol 0,\boldsymbol I)$的KL散度。第一项可以用<em>monte carlo</em>估计$\mathbb{E}<em>{q_\phi(\mathbf{z}_d|\mathbf{X}_d^-)}\left[L_d(\theta|\mathbf{z}_d)\right]\approx\frac{1}{L}\sum</em>{\ell=1}^L L_d(\theta|\mathbf z_d^{(\ell)})$，除此之外还需要用到<em>reparametrization trick</em>。</p>
-<p>对于第$d$个target domain，因为没有异常样本（假设），所以$L_d(\theta|\mathbf{z}<em>d):=\frac{1}{N_d^-}\sum\limits</em>{n=1}^{N_d^-}s_\theta(\mathbf{x}<em>{dn}^-|\mathbf{z}_d)$，有：<br>$$<br>\mathcal{L}_d(\theta,\phi):=\mathbb{E}</em>{q_\phi(\mathbf{z}<em>d|\mathbf{X}_d^-)}\left[\frac{1}{N_d^-}\sum\limits</em>{n=1}^{N_d^-}s_\theta(\mathbf{x}_{dn}^-|\mathbf{z}_d)\right]+\beta D_\text{KL}(q_\phi(\mathbf{z}_d|\mathbf{X}_d^-)\parallel p(\mathbf{z}_d))<br>$$</p>
-<p>所以总的损失函数为各domain对应的损失函数之和$\mathcal{L}(\theta,\phi):=\sum_{d=1}^{D_S+D_T}\alpha_d\mathcal{L}_d(\theta,\phi)$。</p>
-<h2 id="Inference"><a href="#Inference" class="headerlink" title="Inference"></a>Inference</h2><p>训练好之后，domain-specific的<em>anomaly score</em>可以由下式计算出：</p>
-<p>$$<br>s(\mathbf{x}<em>{d^\prime}):=\int s</em>{\theta_<em>}(\mathbf{x_{d^\prime}}|\mathbf{z}<em>{d^\prime})q</em>{\phi_</em>}(\mathbf{z}<em>{d^\prime}|\mathbf{X}</em>{d^\prime}^-)\mathrm{d}\mathbf{z}<em>{d^\prime}\approx\frac{1}{L}\sum\limits</em>{\ell=1}^L s_{\theta_*}(\mathbf{x}<em>{d^\prime}|\mathbf{z}</em>{d^\prime}^{(\ell)})<br>$$</p>
-<h1 id="Experiments"><a href="#Experiments" class="headerlink" title="Experiments"></a>Experiments</h1><h2 id="Data"><a href="#Data" class="headerlink" title="Data"></a>Data</h2><p>实验包含五个数据集，第一个是合成数据集。如下图(a)所示，围绕$(0,0)$有$8$个圈，每个圈包含了一个内圈作为异常样本，第$7$个圈被选为target domain，其余的为source domain。第二个是MNIST-r，是加入旋转的MNIST，包含6个domain，其中数字“4”被选为异常样本，其余为正常。第三个为Anuran Calls，包含5个domain。第四个是Landmine，主要用在多任务学习中。第五个是IoT，网络流量数据，包含8个domain。</p>
-<img src="https://i.loli.net/2020/06/25/6WLAfMwJPuN5Ov9.png" srcset="/img/loading.gif" style="zoom:50%;" />
-
-<h2 id="Comparison-Methods"><a href="#Comparison-Methods" class="headerlink" title="Comparison Methods"></a>Comparison Methods</h2><p>对比的baseline包括NN（普通多层神经网络），NNAUC（加入可微分AUC作为损失函数），AE（普通Autoencoer），AEAUC（加入可微分AUC的AE），OSVM（单类支持向量机），CCSA，TOSVM和OTL。</p>
-<h2 id="Results"><a href="#Results" class="headerlink" title="Results"></a>Results</h2><p>4个真实数据集的结果如下：</p>
-<img src="https://i.loli.net/2020/06/25/nfkwTVexRNqyFMY.png" srcset="/img/loading.gif" style="zoom:50%;" />
-
-<img src="https://i.loli.net/2020/06/25/QaMskTZALyeiFI1.png" srcset="/img/loading.gif" style="zoom:50%;" />
-
-<img src="https://i.loli.net/2020/06/25/F7VTyeHMz8mK2uJ.png" srcset="/img/loading.gif" style="zoom:50%;" />
-
-<img src="https://i.loli.net/2020/06/25/B32UmgXcwGhZYk1.png" srcset="/img/loading.gif" style="zoom:50%;" />
-
-<p>表5为考虑隐变量不确定性的ablation study。将原来的公式$\mathcal{L}<em>d(\theta,\phi):=\mathbb{E}</em>{q_\phi(\mathbf{z}_d|\mathbf{X}_d^-)}\left[L_d(\theta|\mathbf{z}_d)\right]+\beta D_\text{KL}(q_\phi(\mathbf{z}_d|\mathbf{X}_d^-)\parallel p(\mathbf{z_d}))$中$q_\phi(\mathbf z_d|\mathbf X_d^-)$用迪利克雷分布$q_\phi(\mathbf z_d|\mathbf X_d^-)=\delta(\mathbf z_d-\mu_\phi(\mathbf X_d^-))$代替并且去掉KL散度。</p>
-<img src="https://i.loli.net/2020/06/25/yUHcTBzixsMlY7f.png" srcset="/img/loading.gif" style="zoom: 50%;" />
-
+              <h1 id="introduction">Introduction</h1>
+<p>作者提出了一种利用迁移学习提升target domain异常检测性能的算法。文中指出现有的基于迁移学习的异常检测算法需要对每个 target domain 进行单独训练，这样做会带来很大的计算开销。本文通过<em>latent domain vectors</em>来实现无需重新训练的异常检测。<em>latent domain vectors</em>是domain的一种隐含表示，通过该domain中的正常样本得到。在本文中，<em>anomaly score function</em>通过Auto-encoder得到。</p>
+<h1 id="proposed-method">Proposed Method</h1>
+<h2 id="task">Task</h2>
+<p>令<span class="math inline">\(\mathbf{X}_d^+:=\{\mathbf{x}^+_{dn}\}^{N^+_d}_{n=1}\)</span>为第<span class="math inline">\(d\)</span>个domain的异常样本集，<span class="math inline">\(\mathbf{x}_{dn}^+\in\mathbb{R}^M\)</span>为其中第<span class="math inline">\(n\)</span>个样本的<span class="math inline">\(M\)</span>维特征向量，<span class="math inline">\(N^+_d\)</span>为第<span class="math inline">\(d\)</span>个domain异常样本的数量。</p>
+<p>类似的，令<span class="math inline">\(\mathbf{X}_d^-:=\{\mathbf{x}^-_{dn}\}^{N^-_d}_{n=1}\)</span>为第<span class="math inline">\(d\)</span>个domain的正常样本集。我们假设对于每个domain都有<span class="math inline">\(N^+_d\ll N^-_d\)</span>，且特征向量维度都为<span class="math inline">\(M\)</span>。</p>
+<p>假设在 source domain <span class="math inline">\(D_S\)</span>都有正常样本和异常样本，记为<span class="math inline">\(\{\mathbf{X}^+_d\cup\mathbf{X}_d^-\}^{D_S}_{d=1}\)</span>，在 target domain <span class="math inline">\(D_T\)</span>只有正常样本<span class="math inline">\(\{\mathbf{X}_d^-\}^{D_S+D_T}_{d=D_S+1}\)</span>。我们的目标是得到一个对于 target domain 合适的 domain-specific 的异常打分函数。</p>
+<p><img src="https://i.loli.net/2020/06/25/KW2YgScfVZN7Fjz.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<h2 id="domain-specific-anomaly-score-function">Domain-specific Anomaly Score Function</h2>
+<p>我们基于Auto-encoder定义异常打分函数。对于每个domain，我们假设存在一个<span class="math inline">\(K\)</span>维的隐变量<span class="math inline">\(\mathbf{z}_d\in\mathbb{R}^K\)</span>。对于第<span class="math inline">\(d\)</span>个 domain，异常打分函数定义如下： <span class="math display">\[
+s_\theta(\mathbf{x}_{dn}|\mathbf{z}_d):=\parallel\mathbf{x}_{dn}-G_{\theta_G}(F_{\theta_F}(\mathbf{x}_{dn},\mathbf{z}_d))\parallel^2
+\]</span> 其中参数<span class="math inline">\(\theta:=(\theta_G,\theta_F)\)</span>在所有 domain 之间共享。</p>
+<h2 id="models-for-latent-domain-vectors">Models for Latent Domain Vectors</h2>
+<p>隐变量<span class="math inline">\(\mathbf{z}_d\)</span>是无法观测到的，只能通过数据来估计。首先<span class="math inline">\(\mathbf{z}_d\)</span>在<span class="math inline">\(\mathbf{X}_d^-\)</span>条件下的条件分布假设为高斯分布：</p>
+<p><span class="math display">\[
+q_\theta(\mathbf{z}_d|\mathbf{X}_d^-):=\mathcal{N}(\mathbf{z}_d|\mu_\phi(\mathbf{X}_d^-),\text{diag}(\sigma_\phi^2(\mathbf{X}_d^-)))
+\]</span> 其中均值<span class="math inline">\(\mu_\phi(\mathbf{X}_d^-)\in\mathbb{R}^K\)</span>和方差<span class="math inline">\(\sigma^2_\phi(\mathbf{X}_d^-)\in\mathbb{R}^K_+\)</span>由神经网络建模，且在所有 domain 之间共享。在<span class="math inline">\(\mathbf{X}_d^-\)</span>给定的时候，我们便能够推断出该 domain 对应的隐变量，</p>
+<p><span class="math inline">\(q_\phi\)</span>的输入为正常样本的集合，故神经网络需要满足<em>permutation invariant</em>。<span class="math inline">\(\tau(\mathbf{X}_d^-)=\rho(\sum_{n=1}^{N_d^-}\eta(\mathbf{x}_{dn}^-))\)</span>，其中<span class="math inline">\(\tau(\mathbf{X}_d^-)\)</span>表示<span class="math inline">\(\mu_\phi(\mathbf{X_d^-})\)</span>或<span class="math inline">\(\ln\sigma_\phi^2(\mathbf{X}_d^-)\)</span>，<span class="math inline">\(\rho\)</span>和<span class="math inline">\(\eta\)</span>为神经网络，</p>
+<h2 id="objective-function">Objective Function</h2>
+<p>目标函数由anomaly score函数和隐变量组成。第<span class="math inline">\(d\)</span>个domain在对应的隐变量<span class="math inline">\(\mathbf{z}_d\)</span>条件下的目标函数为：</p>
+<p><span class="math display">\[
+L_d(\theta|\mathbf{z}_d):=\frac{1}{N_d^-}\sum\limits_{n=1}^{N_d^-}s_\theta(\mathbf{x}_{dn}^-|\mathbf{z}_d)-\frac{\lambda}{N_d^-N_d^+}\sum\limits_{n,m=1}^{N_d^-,N_d^+}f(s_\theta(\mathbf{x}_{dm}^+|\mathbf{z}_d)-s_\theta(\mathbf{x}_{dn}^-|\mathbf{z}_d))
+\]</span></p>
+<p>其中<span class="math inline">\(\lambda\geq 0\)</span>为超参数，<span class="math inline">\(f\)</span>为sigmoid函数。公式的第一项表示第<span class="math inline">\(d\)</span>个domain正常样本对应的<em>anomaly score</em>。第二项为可微分的AUC。异常样本的<em>anomaly score</em>应当大于正常样本，所以对任何<span class="math inline">\(\mathbf x_{dm}^+\in\mathbf X_d^+, \mathbf x_{dn}^-\in\mathbf X_d^-\)</span>有<span class="math inline">\(s_\theta(\mathbf x_{dm}^+|\mathbf z_d)&gt;s_\theta(\mathbf x_{dn}^-|\mathbf z_d)\)</span>。第二项<span class="math inline">\(\frac{\lambda}{N_d^-N_d^+}\sum\limits_{n,m=1}^{N_d^-,N_d^+}f(s_\theta(\mathbf{x}_{dm}^+|\mathbf{z}_d)-s_\theta(\mathbf{x}_{dn}^-|\mathbf{z}_d))\)</span>的取值范围是<span class="math inline">\([0,1]\)</span>，当所有的<span class="math inline">\(s_\theta(\mathbf{x}_{dm}^+|\mathbf{z}_d)\gg s_\theta(\mathbf{x}_{dm}^-|\mathbf{z}_d)\)</span>时该项为1，当所有的<span class="math inline">\(s_\theta(\mathbf{x}_{dm}^+|\mathbf{z}_d)\ll s_\theta(\mathbf{x}_{dm}^-|\mathbf{z}_d)\)</span>时该项为0，所以最小化该项的相反数相当于鼓励<span class="math inline">\(s_\theta(\mathbf{x}_{dm}^+|\mathbf{z}_d)\gg s_\theta(\mathbf{x}_{dm}^-|\mathbf{z}_d)\)</span>。</p>
+<p>因为隐变量<span class="math inline">\(\mathbf z_d\)</span>包含不确定性，我们应该在目标函数里考虑这一点： <span class="math display">\[
+\mathcal{L}_d(\theta,\phi):=\mathbb{E}_{q_\phi(\mathbf{z}_d|\mathbf{X}_d^-)}\left[L_d(\theta|\mathbf{z}_d)\right]+\beta D_\text{KL}(q_\phi(\mathbf{z}_d|\mathbf{X}_d^-)\parallel p(\mathbf{z_d}))
+\]</span></p>
+<p>第一项是<span class="math inline">\(L_d(\theta|\mathbf z_d)\)</span>关于<span class="math inline">\(q_\phi(\mathbf z_d|\mathbf X_d^-)\)</span>的期望，第二项是<span class="math inline">\(q_\phi(\mathbf z_d|\mathbf X_d^-)\)</span>和<span class="math inline">\(p(\mathbf z_d):=\mathcal{N}(\boldsymbol 0,\boldsymbol I)\)</span>的KL散度。第一项可以用<em>monte carlo</em>估计<span class="math inline">\(\mathbb{E}_{q_\phi(\mathbf{z}_d|\mathbf{X}_d^-)}\left[L_d(\theta|\mathbf{z}_d)\right]\approx\frac{1}{L}\sum_{\ell=1}^L L_d(\theta|\mathbf z_d^{(\ell)})\)</span>，除此之外还需要用到<em>reparametrization trick</em>。</p>
+<p>对于第<span class="math inline">\(d\)</span>个target domain，因为没有异常样本（假设），所以<span class="math inline">\(L_d(\theta|\mathbf{z}_d):=\frac{1}{N_d^-}\sum\limits_{n=1}^{N_d^-}s_\theta(\mathbf{x}_{dn}^-|\mathbf{z}_d)\)</span>，有： <span class="math display">\[
+\mathcal{L}_d(\theta,\phi):=\mathbb{E}_{q_\phi(\mathbf{z}_d|\mathbf{X}_d^-)}\left[\frac{1}{N_d^-}\sum\limits_{n=1}^{N_d^-}s_\theta(\mathbf{x}_{dn}^-|\mathbf{z}_d)\right]+\beta D_\text{KL}(q_\phi(\mathbf{z}_d|\mathbf{X}_d^-)\parallel p(\mathbf{z}_d))
+\]</span></p>
+<p>所以总的损失函数为各domain对应的损失函数之和<span class="math inline">\(\mathcal{L}(\theta,\phi):=\sum_{d=1}^{D_S+D_T}\alpha_d\mathcal{L}_d(\theta,\phi)\)</span>。</p>
+<h2 id="inference">Inference</h2>
+<p>训练好之后，domain-specific的<em>anomaly score</em>可以由下式计算出：</p>
+<p><span class="math display">\[
+s(\mathbf{x}_{d^\prime}):=\int s_{\theta_*}(\mathbf{x_{d^\prime}}|\mathbf{z}_{d^\prime})q_{\phi_*}(\mathbf{z}_{d^\prime}|\mathbf{X}_{d^\prime}^-)\mathrm{d}\mathbf{z}_{d^\prime}\approx\frac{1}{L}\sum\limits_{\ell=1}^L s_{\theta_*}(\mathbf{x}_{d^\prime}|\mathbf{z}_{d^\prime}^{(\ell)})
+\]</span></p>
+<h1 id="experiments">Experiments</h1>
+<h2 id="data">Data</h2>
+<p>实验包含五个数据集，第一个是合成数据集。如下图(a)所示，围绕<span class="math inline">\((0,0)\)</span>有<span class="math inline">\(8\)</span>个圈，每个圈包含了一个内圈作为异常样本，第<span class="math inline">\(7\)</span>个圈被选为target domain，其余的为source domain。第二个是MNIST-r，是加入旋转的MNIST，包含6个domain，其中数字“4”被选为异常样本，其余为正常。第三个为Anuran Calls，包含5个domain。第四个是Landmine，主要用在多任务学习中。第五个是IoT，网络流量数据，包含8个domain。</p>
+<p><img src="https://i.loli.net/2020/06/25/6WLAfMwJPuN5Ov9.png" srcset="/img/loading.gif" style="zoom:50%;" /></p>
+<h2 id="comparison-methods">Comparison Methods</h2>
+<p>对比的baseline包括NN（普通多层神经网络），NNAUC（加入可微分AUC作为损失函数），AE（普通Autoencoer），AEAUC（加入可微分AUC的AE），OSVM（单类支持向量机），CCSA，TOSVM和OTL。</p>
+<h2 id="results">Results</h2>
+<p>4个真实数据集的结果如下：</p>
+<p><img src="https://i.loli.net/2020/06/25/nfkwTVexRNqyFMY.png" srcset="/img/loading.gif" style="zoom:50%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/QaMskTZALyeiFI1.png" srcset="/img/loading.gif" style="zoom:50%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/F7VTyeHMz8mK2uJ.png" srcset="/img/loading.gif" style="zoom:50%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/B32UmgXcwGhZYk1.png" srcset="/img/loading.gif" style="zoom:50%;" /></p>
+<p>表5为考虑隐变量不确定性的ablation study。将原来的公式<span class="math inline">\(\mathcal{L}_d(\theta,\phi):=\mathbb{E}_{q_\phi(\mathbf{z}_d|\mathbf{X}_d^-)}\left[L_d(\theta|\mathbf{z}_d)\right]+\beta D_\text{KL}(q_\phi(\mathbf{z}_d|\mathbf{X}_d^-)\parallel p(\mathbf{z_d}))\)</span>中<span class="math inline">\(q_\phi(\mathbf z_d|\mathbf X_d^-)\)</span>用迪利克雷分布<span class="math inline">\(q_\phi(\mathbf z_d|\mathbf X_d^-)=\delta(\mathbf z_d-\mu_\phi(\mathbf X_d^-))\)</span>代替并且去掉KL散度。</p>
+<p><img src="https://i.loli.net/2020/06/25/yUHcTBzixsMlY7f.png" srcset="/img/loading.gif" style="zoom: 50%;" /></p>
 <p>表6展示了不同异常比例对效果的影响。</p>
 
             </article>
