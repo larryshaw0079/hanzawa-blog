@@ -160,7 +160,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    352 字
+                    434 字
                   </span>
                 
 
@@ -170,7 +170,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    6
+                    7
                      分钟
                   </span>
                 
@@ -200,6 +200,7 @@
             
             <article class="markdown-body">
               <h1 id="introduction">Introduction</h1>
+<p>本文提出了表示学习框架Deep InfoMax（DIM），</p>
 <h1 id="preliminaries">Preliminaries</h1>
 <h1 id="methodology">Methodology</h1>
 <p>设<span class="math inline">\(\mathcal X\)</span>和<span class="math inline">\(\mathcal Y\)</span>分别为一个连续函数的定义域和值域，<span class="math inline">\(E_\psi:\mathcal X\mapsto \mathcal Y\)</span>为带参函数（如神经网络），不同的参数组合定义了一个函数族<span class="math inline">\(\mathcal E_\Phi=\{E_\psi\}_{\psi\in\boldsymbol\psi}\)</span>。设给定训练样本组成的输入空间<span class="math inline">\(\mathcal X:\mathbf X:=\{x^{(i)}\in\mathcal X\}_{i=1}^N\)</span>，其分布记为<span class="math inline">\(\mathbb P\)</span>。<span class="math inline">\(\mathbb U_{\psi,\mathbb P}\)</span>定义为函数输出的边缘分布。</p>
@@ -207,10 +208,16 @@
 <li><strong>Mutual information maximization: </strong><span class="math inline">\(\mathcal I(X;E_\psi(X))\)</span>最大化</li>
 <li><strong>Statistical constraints: </strong><span class="math inline">\(\mathbb U_{\psi,\mathbb P}\)</span>应当接近一个先验分布<span class="math inline">\(\mathbb V\)</span></li>
 </ul>
+<p>总的来说，DIM包括三个部分：</p>
+<ol type="1">
+<li><strong>Global Mutual Information Maximization</strong></li>
+<li><strong>Local Mutual Information Maximization</strong></li>
+<li><strong>Prior Constraint</strong></li>
+</ol>
+<p>最后的损失函数也是由这三部分组成，下面我们来分别进行阐述。</p>
 <p><img src="https://i.loli.net/2020/07/18/1whCS4EJ3PusIyi.png" srcset="/img/loading.gif" /></p>
-<p><img src="https://i.loli.net/2020/07/18/RZyb4c7O2oaASBh.png" srcset="/img/loading.gif" /></p>
-<p><img src="https://i.loli.net/2020/07/18/WVKFSCmI8vlBEap.png" srcset="/img/loading.gif" /></p>
 <h2 id="mutual-information-estimation-and-maximization">Mutual Information Estimation and Maximization</h2>
+<p><img src="https://i.loli.net/2020/07/18/RZyb4c7O2oaASBh.png" srcset="/img/loading.gif" /></p>
 <p>文中用到了 Mutual Information Neural Estimation (MINE)： <span class="math display">\[
 \mathcal I(X;Y)=\mathcal D_{KL}(\mathbb J\parallel \mathbb M)\geq \hat{\mathcal I}_w^{(DV)}(X;Y)=\mathbb E_\mathbb J[T_w(x,y)]-\log\mathbb E_\mathbb M[e^{T_w (x,y)}]
 \]</span> 其中<span class="math inline">\(T_w:\mathcal X\times \mathcal Y\rightarrow \mathbb R\)</span>为</p>
@@ -224,8 +231,18 @@
 \hat{\mathcal I}_{w,\psi}^{(\text{infoNCE})}(X;E_\psi(X))=\mathbb E_\mathbb P\left[T_{\psi,w}(x,E_\psi(x))-\mathbb E_{\tilde{\mathbb P}}\left[\log\sum\limits_{x^\prime}e^{T_{\psi,w}(x^\prime,E_\psi(x))}\right]\right]
 \]</span></p>
 <h2 id="local-mutual-information-maximization">Local Mutual Information Maximization</h2>
+<p><img src="https://i.loli.net/2020/07/18/WVKFSCmI8vlBEap.png" srcset="/img/loading.gif" /></p>
 <h2 id="matching-representations-to-a-prior-distribution">Matching Representations to a Prior Distribution</h2>
 <h1 id="experiments">Experiments</h1>
+<h2 id="setup">Setup</h2>
+<h2 id="how-do-we-evaluate-the-quality-of-a-representation">How Do We Evaluate the Quality of a Representation?</h2>
+<h2 id="representation-learning-comparison-across-models">Representation Learning Comparison Across Models</h2>
+<p><img src="https://i.loli.net/2020/07/18/Ds1dVNmwXJc3klI.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/07/18/sanUVQ37YM8C6Hg.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/07/18/uhNW9olsKbxEA3O.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/07/18/YBdL9PNGhg8QS2E.png" srcset="/img/loading.gif" /></p>
+<h2 id="adding-coordinate-information-and-occlusions">Adding Coordinate Information and Occlusions</h2>
+<p><img src="https://i.loli.net/2020/07/18/u7pKXJ8x5YUsL4M.png" srcset="/img/loading.gif" /></p>
 
             </article>
             <hr>
@@ -245,9 +262,9 @@
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/Representation-Learning/">Representation Learning</a>
-                    
                       <a class="hover-with-bg" href="/tags/Self-supervised-Learning/">Self-supervised Learning</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Representation-Learning/">Representation Learning</a>
                     
                   </div>
                 

@@ -8,7 +8,7 @@
     <link href="/2020/07/18/Learning-Deep-Representations-by-Mutual-Information-Estimation-and-Maximization/"/>
     <url>/2020/07/18/Learning-Deep-Representations-by-Mutual-Information-Estimation-and-Maximization/</url>
     
-    <content type="html"><![CDATA[<h1 id="introduction">Introduction</h1><h1 id="preliminaries">Preliminaries</h1><h1 id="methodology">Methodology</h1><p>设<span class="math inline">\(\mathcal X\)</span>和<span class="math inline">\(\mathcal Y\)</span>分别为一个连续函数的定义域和值域，<span class="math inline">\(E_\psi:\mathcal X\mapsto \mathcal Y\)</span>为带参函数（如神经网络），不同的参数组合定义了一个函数族<span class="math inline">\(\mathcal E_\Phi=\{E_\psi\}_{\psi\in\boldsymbol\psi}\)</span>。设给定训练样本组成的输入空间<span class="math inline">\(\mathcal X:\mathbf X:=\{x^{(i)}\in\mathcal X\}_{i=1}^N\)</span>，其分布记为<span class="math inline">\(\mathbb P\)</span>。<span class="math inline">\(\mathbb U_{\psi,\mathbb P}\)</span>定义为函数输出的边缘分布。</p><ul><li><strong>Mutual information maximization: </strong><span class="math inline">\(\mathcal I(X;E_\psi(X))\)</span>最大化</li><li><strong>Statistical constraints: </strong><span class="math inline">\(\mathbb U_{\psi,\mathbb P}\)</span>应当接近一个先验分布<span class="math inline">\(\mathbb V\)</span></li></ul><p><img src="https://i.loli.net/2020/07/18/1whCS4EJ3PusIyi.png" srcset="/img/loading.gif" /></p><p><img src="https://i.loli.net/2020/07/18/RZyb4c7O2oaASBh.png" srcset="/img/loading.gif" /></p><p><img src="https://i.loli.net/2020/07/18/WVKFSCmI8vlBEap.png" srcset="/img/loading.gif" /></p><h2 id="mutual-information-estimation-and-maximization">Mutual Information Estimation and Maximization</h2><p>文中用到了 Mutual Information Neural Estimation (MINE)： <span class="math display">\[\mathcal I(X;Y)=\mathcal D_{KL}(\mathbb J\parallel \mathbb M)\geq \hat{\mathcal I}_w^{(DV)}(X;Y)=\mathbb E_\mathbb J[T_w(x,y)]-\log\mathbb E_\mathbb M[e^{T_w (x,y)}]\]</span> 其中<span class="math inline">\(T_w:\mathcal X\times \mathcal Y\rightarrow \mathbb R\)</span>为</p><p><span class="math display">\[(\hat w,\hat \psi)_G=\mathop{\text{arg}\space\text{max}}\limits_{w,\psi}\hat{\mathcal I}_w(X;E_\psi(X))\]</span> <span class="math inline">\(E_\psi=f_\psi\circ C_\psi\)</span>和<span class="math inline">\(T_{\psi,w}=D_w\circ g\circ (C_\psi,E_\psi)\)</span></p><p><span class="math display">\[\hat{\mathcal I}_{w,\psi}^{(JSD)}(X;E_\psi(X))=\mathbb E_\mathbb P [-\text{sp}(-T_{\psi,w}(x,E_\psi(x)))]-\mathbb E_{\mathbb P\times\tilde{\mathbb P}}[\text{sp}(T_{\psi,w}(x^\prime,E_\psi(x)))]\]</span></p><p><span class="math display">\[\hat{\mathcal I}_{w,\psi}^{(\text{infoNCE})}(X;E_\psi(X))=\mathbb E_\mathbb P\left[T_{\psi,w}(x,E_\psi(x))-\mathbb E_{\tilde{\mathbb P}}\left[\log\sum\limits_{x^\prime}e^{T_{\psi,w}(x^\prime,E_\psi(x))}\right]\right]\]</span></p><h2 id="local-mutual-information-maximization">Local Mutual Information Maximization</h2><h2 id="matching-representations-to-a-prior-distribution">Matching Representations to a Prior Distribution</h2><h1 id="experiments">Experiments</h1>]]></content>
+    <content type="html"><![CDATA[<h1 id="introduction">Introduction</h1><p>本文提出了表示学习框架Deep InfoMax（DIM），</p><h1 id="preliminaries">Preliminaries</h1><h1 id="methodology">Methodology</h1><p>设<span class="math inline">\(\mathcal X\)</span>和<span class="math inline">\(\mathcal Y\)</span>分别为一个连续函数的定义域和值域，<span class="math inline">\(E_\psi:\mathcal X\mapsto \mathcal Y\)</span>为带参函数（如神经网络），不同的参数组合定义了一个函数族<span class="math inline">\(\mathcal E_\Phi=\{E_\psi\}_{\psi\in\boldsymbol\psi}\)</span>。设给定训练样本组成的输入空间<span class="math inline">\(\mathcal X:\mathbf X:=\{x^{(i)}\in\mathcal X\}_{i=1}^N\)</span>，其分布记为<span class="math inline">\(\mathbb P\)</span>。<span class="math inline">\(\mathbb U_{\psi,\mathbb P}\)</span>定义为函数输出的边缘分布。</p><ul><li><strong>Mutual information maximization: </strong><span class="math inline">\(\mathcal I(X;E_\psi(X))\)</span>最大化</li><li><strong>Statistical constraints: </strong><span class="math inline">\(\mathbb U_{\psi,\mathbb P}\)</span>应当接近一个先验分布<span class="math inline">\(\mathbb V\)</span></li></ul><p>总的来说，DIM包括三个部分：</p><ol type="1"><li><strong>Global Mutual Information Maximization</strong></li><li><strong>Local Mutual Information Maximization</strong></li><li><strong>Prior Constraint</strong></li></ol><p>最后的损失函数也是由这三部分组成，下面我们来分别进行阐述。</p><p><img src="https://i.loli.net/2020/07/18/1whCS4EJ3PusIyi.png" srcset="/img/loading.gif" /></p><h2 id="mutual-information-estimation-and-maximization">Mutual Information Estimation and Maximization</h2><p><img src="https://i.loli.net/2020/07/18/RZyb4c7O2oaASBh.png" srcset="/img/loading.gif" /></p><p>文中用到了 Mutual Information Neural Estimation (MINE)： <span class="math display">\[\mathcal I(X;Y)=\mathcal D_{KL}(\mathbb J\parallel \mathbb M)\geq \hat{\mathcal I}_w^{(DV)}(X;Y)=\mathbb E_\mathbb J[T_w(x,y)]-\log\mathbb E_\mathbb M[e^{T_w (x,y)}]\]</span> 其中<span class="math inline">\(T_w:\mathcal X\times \mathcal Y\rightarrow \mathbb R\)</span>为</p><p><span class="math display">\[(\hat w,\hat \psi)_G=\mathop{\text{arg}\space\text{max}}\limits_{w,\psi}\hat{\mathcal I}_w(X;E_\psi(X))\]</span> <span class="math inline">\(E_\psi=f_\psi\circ C_\psi\)</span>和<span class="math inline">\(T_{\psi,w}=D_w\circ g\circ (C_\psi,E_\psi)\)</span></p><p><span class="math display">\[\hat{\mathcal I}_{w,\psi}^{(JSD)}(X;E_\psi(X))=\mathbb E_\mathbb P [-\text{sp}(-T_{\psi,w}(x,E_\psi(x)))]-\mathbb E_{\mathbb P\times\tilde{\mathbb P}}[\text{sp}(T_{\psi,w}(x^\prime,E_\psi(x)))]\]</span></p><p><span class="math display">\[\hat{\mathcal I}_{w,\psi}^{(\text{infoNCE})}(X;E_\psi(X))=\mathbb E_\mathbb P\left[T_{\psi,w}(x,E_\psi(x))-\mathbb E_{\tilde{\mathbb P}}\left[\log\sum\limits_{x^\prime}e^{T_{\psi,w}(x^\prime,E_\psi(x))}\right]\right]\]</span></p><h2 id="local-mutual-information-maximization">Local Mutual Information Maximization</h2><p><img src="https://i.loli.net/2020/07/18/WVKFSCmI8vlBEap.png" srcset="/img/loading.gif" /></p><h2 id="matching-representations-to-a-prior-distribution">Matching Representations to a Prior Distribution</h2><h1 id="experiments">Experiments</h1><h2 id="setup">Setup</h2><h2 id="how-do-we-evaluate-the-quality-of-a-representation">How Do We Evaluate the Quality of a Representation?</h2><h2 id="representation-learning-comparison-across-models">Representation Learning Comparison Across Models</h2><p><img src="https://i.loli.net/2020/07/18/Ds1dVNmwXJc3klI.png" srcset="/img/loading.gif" /></p><p><img src="https://i.loli.net/2020/07/18/sanUVQ37YM8C6Hg.png" srcset="/img/loading.gif" /></p><p><img src="https://i.loli.net/2020/07/18/uhNW9olsKbxEA3O.png" srcset="/img/loading.gif" /></p><p><img src="https://i.loli.net/2020/07/18/YBdL9PNGhg8QS2E.png" srcset="/img/loading.gif" /></p><h2 id="adding-coordinate-information-and-occlusions">Adding Coordinate Information and Occlusions</h2><p><img src="https://i.loli.net/2020/07/18/u7pKXJ8x5YUsL4M.png" srcset="/img/loading.gif" /></p>]]></content>
     
     
     <categories>
@@ -22,9 +22,9 @@
     
     <tags>
       
-      <tag>Representation Learning</tag>
-      
       <tag>Self-supervised Learning</tag>
+      
+      <tag>Representation Learning</tag>
       
     </tags>
     
@@ -66,7 +66,7 @@
     <link href="/2020/07/18/Noise-Contrastive-Estimation-Explained/"/>
     <url>/2020/07/18/Noise-Contrastive-Estimation-Explained/</url>
     
-    <content type="html"><![CDATA[<h1 id="introduction">Introduction</h1><p>Noise Contrastive Estimation（NCE）的算法细节及详细推导见<a href="http://proceedings.mlr.press/v9/gutmann10a/gutmann10a.pdf" target="_blank" rel="noopener">原文</a>。</p><p>先说下大背景，虽然NCE在NLP中应用广泛，网上很多文章也是在NLP的背景下讲的，不过NCE其实是一个通用的算法，如果和NLP揉在一起说反而会妨碍理解，这里就从High-Level的角度来讲。在很多情况下（如<code>Softmax</code>）我们需要计算类似下式： <span class="math display">\[p_m(x;\theta)=\frac{e^{f_\theta(x)}}{Z}\]</span> <span class="math inline">\(f_\theta(\cdot)\)</span>为任意函数，分母<span class="math inline">\(Z=\sum_x e^{f_\theta(x)}\)</span>为归一化因子，也被称作是配分函数。其中当<span class="math inline">\(N\)</span>特别大的时候，<span class="math inline">\(Z\)</span>将难以计算（NLP中<span class="math inline">\(N\)</span>可能是几十万甚至几百万），或者没法计算。</p><p>这里的<span class="math inline">\(p_m(x;\theta)\)</span>称为模型分布，而真实数据的分布记为<span class="math inline">\(p_d(x)\)</span>。常见的应用场景是我们需要使用极大似然估计，来找到最合适的参数<span class="math inline">\(\theta\)</span>使得模型分布<span class="math inline">\(p_m(x;\theta)\)</span>最符合真实数据分布。不过由于计算<span class="math inline">\(Z\)</span>的困难，优化也难以进行。下面介绍NCE算法的细节，来看看NCE是如何处理这个问题的。</p><h1 id="methodology">Methodology</h1><p>NCE通过将问题转化为二分类问题从而规避了<span class="math inline">\(Z\)</span>的计算，原文中也说了NCE的Motivation是“learning by comparison”。这里的比较指的是模型分布和噪声分布之间的比较。噪声分布，记为<span class="math inline">\(p_z(x)\)</span>，是我们人为引入一个分布，可以采用任意容易采样的分布，常常使用的是均匀分布。我们可以从模型分布中采样若干样本，同时从噪声分布中采样若干样本，这时我们可以将模型分布的样本和噪声分布的样本分别称之为正例和负例，这时相当于构造了一个有监督二分类任务。我们将标签分布记为<span class="math inline">\(p(c)\)</span>，取值<span class="math inline">\(c\in\{0,1\}\)</span>，先验<span class="math inline">\(p(c=0)=p(c=1)=\frac{1}{2}\)</span>。</p><p>如果认为<span class="math inline">\(c=1\)</span>时表示样本来自于模型分布，则有： <span class="math display">\[p(x|c=1)=p_m(x;\theta)\\p(x|c=0)=p_z(x)\]</span> 根据贝叶斯公式，我们有： <span class="math display">\[\begin{align}p(c=1|x;\theta)&amp;=\frac{p_m(x;\theta)}{p_m(x;\theta)+p_z(x)}\\&amp;=h(x;\theta)\\p(c=0|x;\theta)&amp;=\frac{p_z(x)}{p_m(x;\theta)+p_z(x)}\\&amp;=1-h(x;\theta)\end{align}\]</span> 其中： <span class="math display">\[h(x;\theta)=\frac{1}{1+e^{-g(x;\theta)}}\\g(x;\theta)=\log p_m(x;\theta)-\log p_z(x)\]</span> 假设我们的数据集<span class="math inline">\(X=\{x_1,x_2,\cdots,x_N\}\)</span>，还有从噪声分布采样来的若干样本<span class="math inline">\(\{z_1,z_2,\cdots,z_N\}\)</span>。根据交叉熵损失函数（也可以理解为Logistic回归）有： <span class="math display">\[\begin{align}\mathcal L(\theta)&amp;=\sum_i \left(p(c_i=1)\log p(c_i=1|x_i;\theta)+p(c_i=0)\log p(c_i=0|z_i;\theta)\right)\\&amp;=\sum_i\left(\log[h(x_i;\theta)]+\log[1-h(z_i;\theta)]\right)\end{align}\]</span></p><p>那么 <span class="math display">\[\begin{align}\mathcal L(\theta) &amp;= \sum_i \left(\log p(c^{(i)}=1|x^{(i)};\theta)+\log p(c^{(i)}=0|x^{(i)};\theta)\right)\\&amp;=\end{align}\]</span></p>]]></content>
+    <content type="html"><![CDATA[<h1 id="introduction">Introduction</h1><p>Noise Contrastive Estimation（NCE）的算法细节及详细推导见<a href="http://proceedings.mlr.press/v9/gutmann10a/gutmann10a.pdf" target="_blank" rel="noopener">原文</a>。</p><p>先说下大背景，虽然NCE在NLP中应用广泛，网上很多文章也是在NLP的背景下讲的，不过NCE其实是一个通用的算法，如果和NLP揉在一起说反而会妨碍理解，这里就从High-Level的角度来讲。在很多情况下（如<code>Softmax</code>）我们需要计算类似下式： <span class="math display">\[p_m(x;\alpha)=\frac{e^{f_\alpha(x)}}{Z(\alpha)}\]</span> <span class="math inline">\(f_\alpha(\cdot)\)</span>为带参函数，<span class="math inline">\(\alpha\)</span>为模型参数，分母<span class="math inline">\(Z(\alpha)=\sum_x e^{f_\alpha(x)}\)</span>为归一化因子，也被称作是配分函数。其中当<span class="math inline">\(N\)</span>特别大的时候，<span class="math inline">\(Z\)</span>将难以计算（NLP中<span class="math inline">\(N\)</span>可能是几十万甚至几百万），或者没法计算。</p><p>这里的<span class="math inline">\(p_m(x;\alpha)\)</span>称为模型分布，而真实数据的分布记为<span class="math inline">\(p_d(x)\)</span>。常见的应用场景是我们需要使用极大似然估计，来找到最合适的参数<span class="math inline">\(\theta\)</span>使得模型分布<span class="math inline">\(p_m(x;\alpha)\)</span>最符合真实数据分布。不过由于计算<span class="math inline">\(Z\)</span>的困难，优化也难以进行。一个思路是将<span class="math inline">\(Z(\alpha)\)</span>作为要优化的参数来同时进行优化，不过我们发现如果这么做的话，对数似然<span class="math inline">\(\log p_m(x;\theta)=f_\alpha(x)-\log Z(\alpha)=f_\alpha(x)-\beta\)</span>（令<span class="math inline">\(\beta=\log Z(\alpha)\)</span>，<span class="math inline">\(\theta=\{\alpha,\beta\}\)</span>）是可以无限大的。下面介绍NCE算法的细节，来看看NCE是如何处理这个问题的。</p><h1 id="methodology">Methodology</h1><p>NCE通过将问题转化为二分类问题从而规避了<span class="math inline">\(Z\)</span>的计算，原文中也说了NCE的Motivation是“learning by comparison”。这里的比较指的是模型分布和噪声分布之间的比较。噪声分布，记为<span class="math inline">\(p_z(x)\)</span>，是我们人为引入一个分布，可以采用任意容易采样的分布，常常使用的是均匀分布。我们可以从模型分布中采样若干样本，同时从噪声分布中采样若干样本，这时我们可以将模型分布的样本和噪声分布的样本分别称之为正例和负例，这时相当于构造了一个有监督二分类任务。我们将标签分布记为<span class="math inline">\(p(c)\)</span>，取值<span class="math inline">\(c\in\{0,1\}\)</span>，先验<span class="math inline">\(p(c=0)=p(c=1)=\frac{1}{2}\)</span>。</p><p>如果认为<span class="math inline">\(c=1\)</span>时表示样本来自于模型分布，则有： <span class="math display">\[p(x|c=1)=p_m(x;\theta)\\p(x|c=0)=p_z(x)\]</span> 根据贝叶斯公式，我们有： <span class="math display">\[\begin{align}p(c=1|x;\theta)&amp;=\frac{p_m(x;\theta)}{p_m(x;\theta)+p_z(x)}\\&amp;=h(x;\theta)\\p(c=0|x;\theta)&amp;=\frac{p_z(x)}{p_m(x;\theta)+p_z(x)}\\&amp;=1-h(x;\theta)\end{align}\]</span> 其中： <span class="math display">\[h(x;\theta)=\frac{1}{1+e^{-g(x;\theta)}}\\g(x;\theta)=\log p_m(x;\theta)-\log p_z(x)\]</span> 从真实数据分布<span class="math inline">\(p_d(x)\)</span>采样得来的数据集<span class="math inline">\(X=\{x_1,x_2,\cdots,x_N\}\)</span>，还有从噪声分布采样来的若干样本<span class="math inline">\(\{z_1,z_2,\cdots,z_N\}\)</span>。根据交叉熵损失函数（也可以理解为Logistic回归）有： <span class="math display">\[\begin{align}\mathcal L(\theta)&amp;=\sum_i \left(p(c_i=1)\log p(c_i=1|x_i;\theta)+p(c_i=0)\log p(c_i=0|z_i;\theta)\right)\\&amp;=\sum_i\left(\log[h(x_i;\theta)]+\log[1-h(z_i;\theta)]\right)\end{align}\]</span></p>]]></content>
     
     
     <categories>
@@ -501,9 +501,9 @@
     
     <tags>
       
-      <tag>Anomaly Detection</tag>
-      
       <tag>Deep Learning</tag>
+      
+      <tag>Anomaly Detection</tag>
       
     </tags>
     
@@ -557,9 +557,9 @@
     
     <tags>
       
-      <tag>Anomaly Detection</tag>
-      
       <tag>VAE</tag>
+      
+      <tag>Anomaly Detection</tag>
       
     </tags>
     
@@ -586,9 +586,9 @@
     
     <tags>
       
-      <tag>Time Series</tag>
-      
       <tag>Deep Learning</tag>
+      
+      <tag>Time Series</tag>
       
     </tags>
     
@@ -615,15 +615,15 @@
     
     <tags>
       
+      <tag>VAE</tag>
+      
+      <tag>Deep Learning</tag>
+      
       <tag>Time Series</tag>
       
       <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
-      
-      <tag>Deep Learning</tag>
-      
-      <tag>VAE</tag>
       
     </tags>
     
@@ -650,11 +650,11 @@
     
     <tags>
       
-      <tag>Deep Learning</tag>
-      
       <tag>Variational Inference</tag>
       
       <tag>VAE</tag>
+      
+      <tag>Deep Learning</tag>
       
       <tag>GAN</tag>
       
@@ -714,11 +714,11 @@
     
     <tags>
       
-      <tag>Deep Learning</tag>
-      
       <tag>Variational Inference</tag>
       
       <tag>VAE</tag>
+      
+      <tag>Deep Learning</tag>
       
     </tags>
     
@@ -745,9 +745,9 @@
     
     <tags>
       
-      <tag>Time Series</tag>
-      
       <tag>Deep Learning</tag>
+      
+      <tag>Time Series</tag>
       
       <tag>RNN</tag>
       
@@ -776,15 +776,15 @@
     
     <tags>
       
+      <tag>VAE</tag>
+      
+      <tag>Deep Learning</tag>
+      
       <tag>Time Series</tag>
       
       <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
-      
-      <tag>Deep Learning</tag>
-      
-      <tag>VAE</tag>
       
       <tag>RNN</tag>
       
@@ -815,9 +815,9 @@
     
     <tags>
       
-      <tag>Time Series</tag>
-      
       <tag>Deep Learning</tag>
+      
+      <tag>Time Series</tag>
       
       <tag>GAN</tag>
       
@@ -846,13 +846,13 @@
     
     <tags>
       
+      <tag>Deep Learning</tag>
+      
       <tag>Time Series</tag>
       
       <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
-      
-      <tag>Deep Learning</tag>
       
     </tags>
     
@@ -879,13 +879,13 @@
     
     <tags>
       
+      <tag>Deep Learning</tag>
+      
       <tag>Time Series</tag>
       
       <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
-      
-      <tag>Deep Learning</tag>
       
     </tags>
     
@@ -912,15 +912,15 @@
     
     <tags>
       
+      <tag>VAE</tag>
+      
+      <tag>Deep Learning</tag>
+      
       <tag>Time Series</tag>
       
       <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
-      
-      <tag>Deep Learning</tag>
-      
-      <tag>VAE</tag>
       
     </tags>
     
@@ -947,13 +947,13 @@
     
     <tags>
       
+      <tag>Deep Learning</tag>
+      
       <tag>Time Series</tag>
       
       <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
-      
-      <tag>Deep Learning</tag>
       
       <tag>Spectral</tag>
       
