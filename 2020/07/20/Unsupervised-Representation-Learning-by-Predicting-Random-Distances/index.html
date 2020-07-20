@@ -160,7 +160,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    747 字
+                    1.1k 字
                   </span>
                 
 
@@ -170,7 +170,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    11
+                    15
                      分钟
                   </span>
                 
@@ -238,22 +238,32 @@
 \text{Pr}(|\hat{\mathbf x}_i\cdot\hat{\mathbf x}_j-f(\hat{\mathbf x}_i)\cdot f(\hat{\mathbf x}_j)|\geq\epsilon)\leq 4e^{\frac{-(\epsilon^2-\epsilon^3)\cdot K}{4}}
 \]</span></p>
 <h3 id="using-non-linear-projection">Using Non-Linear Projection</h3>
+<p>这里作者试图说明，在某些条件下，非线性随机映射的作用和核函数接近。对于一个确定的随机映射函数<span class="math inline">\(g:\mathbb R^D\mapsto\mathbb R^K\)</span>，在映射之后</p>
 <p><span class="math display">\[
 k(\mathbf x_i,\mathbf x_j)=\langle\psi(\mathbf x_i),\psi(\mathbf x_j)\rangle\approx g(\mathbf x_i)\cdot g(\mathbf x_j)
 \]</span></p>
+<p>设<span class="math inline">\(\mathbf A\)</span>为映射矩阵，为了满足上式，</p>
 <h3 id="learning-class-structure-by-random-distance-prediction">Learning Class Structure by Random Distance Prediction</h3>
+<p>这一节主要解释为什么神经网络<span class="math inline">\(\phi(\cdot)\)</span>学到的要比随机映射<span class="math inline">\(\eta(\cdot)\)</span>要好。模型的优化目标可以写成如下的形式：</p>
 <p><span class="math display">\[
 \mathop{\arg\min}_{\Theta}\sum_{\mathbf x_i,\mathbf x_j\in\mathcal X}(\phi(\mathbf x_i;\Theta)\cdot\phi(\mathbf x_j;\Theta)-y_{ij})^2
 \]</span></p>
+<p>其中<span class="math inline">\(y_{ij}=\eta(\mathbf x_i)\cdot\eta(\mathbf x_j)\)</span>。设<span class="math inline">\(\mathbf Y_\eta\in\mathbb R^{N\times N}\)</span>为距离矩阵。这个目标函数是在最小化每一对样本在经过<span class="math inline">\(\phi(\cdot)\)</span>和<span class="math inline">\(\eta(\cdot)\)</span>映射后之间的距离的差距。通过公式(7)和公式(8)我们知道，在合适的条件下，随机映射<span class="math inline">\(\eta(\cdot)\)</span>能够保留原始空间的距离信息（即原始空间相近的样本在映射后也相近）。不过，上述公式的成立都依赖于对数据分布的一定假设，当真实的数据不满足条件时，结论就会有所偏差。</p>
 <h1 id="experiments">Experiments</h1>
+<h2 id="performance-evaluation-in-anomaly-detection">Performance Evaluation in Anomaly Detection</h2>
+<h3 id="experimental-settings">Experimental Settings</h3>
 <p><img src="https://i.loli.net/2020/07/20/3G7DNKjwfQkiIz4.png" srcset="/img/loading.gif" /></p>
+<p>异常分数定义为<span class="math inline">\(\mathcal S(\mathbf x)=(\phi(\mathbf x;\Theta)-\eta(\mathbf x))^2\)</span>。</p>
+<h3 id="comparison-to-the-state-of-the-art-competing-methods">Comparison to the State-of-the-art Competing Methods</h3>
 <p><img src="https://i.loli.net/2020/07/20/8Ie2Q3mpdPHtrYF.png" srcset="/img/loading.gif" /></p>
 <p><img src="https://i.loli.net/2020/07/20/OEcQSvZmfBz1ACt.png" srcset="/img/loading.gif" /></p>
+<h3 id="ablation-study">Ablation Study</h3>
 <p><img src="https://i.loli.net/2020/07/20/7GtKlN8q5Mvygre.png" srcset="/img/loading.gif" /></p>
+<h2 id="performance-evaluation-in-clustering">Performance Evaluation in Clustering</h2>
+<h3 id="experimental-settings-1">Experimental Settings</h3>
 <p><img src="https://i.loli.net/2020/07/20/9xW12MVkoXgFZ6J.png" srcset="/img/loading.gif" /></p>
-<figure>
-<img src="https://i.loli.net/2020/07/20/pUZ64aX1xWiLf2q.png" srcset="/img/loading.gif" alt="image-20200720013953914" /><figcaption>image-20200720013953914</figcaption>
-</figure>
+<h3 id="comparison-to-the-state-of-the-art-competing-methods-1">Comparison to the State-of-the-art Competing Methods</h3>
+<p><img src="https://i.loli.net/2020/07/20/pUZ64aX1xWiLf2q.png" srcset="/img/loading.gif" /></p>
 <figure>
 <img src="https://i.loli.net/2020/07/20/VrnXuJsymiMItUf.png" srcset="/img/loading.gif" alt="image-20200720014002063" /><figcaption>image-20200720014002063</figcaption>
 </figure>
