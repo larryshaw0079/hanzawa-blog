@@ -170,7 +170,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    20
+                    21
                      分钟
                   </span>
                 
@@ -239,7 +239,7 @@ f_k(\mathbf x_{t+k},\mathbf c_t)=\exp\left(\mathbf z_{t+k}^T \mathbf W_k\mathbf 
 <p>上式有点难以理解，实际上预测值<span class="math inline">\(\hat{\mathbf z}_{t+k}=\mathbf W_k\mathbf c_t\)</span>，而<span class="math inline">\(\mathbf z_{t+k}\hat{\mathbf z}_{t+k}\)</span>相当于计算两者的距离，即相似性。所以<span class="math inline">\(f_k(\cdot,\cdot)\)</span>其实是在计算预测值和真实值的相似性。现在大家先接受这个<span class="math inline">\(f(\cdot,\cdot)\)</span>的定义，因为后面会证明优化这个<span class="math inline">\(f(\cdot,\cdot)\)</span>就相当于在优化Density Ratio <span class="math inline">\(\frac{p(x_{t+k}|c_t)}{p(x_{t+k})}\)</span>。</p>
 <h2 id="infonce-loss-and-mutual-information-estimation">InfoNCE Loss and Mutual Information Estimation</h2>
 <p>现在回到公式<span class="math inline">\(I(x;c)=\sum_{x,c}p(x,c)\log\frac{p(x|c)}{p(x)}\)</span>，</p>
-<p><span class="math inline">\(\mathbf X=\{x_1,x_2,\cdots,x_N\}\)</span>，一个来自<span class="math inline">\(p(x_{t+k}|c_t)\)</span>的正例和<span class="math inline">\(N-1\)</span>个来自<span class="math inline">\(p(x_{t+k})\)</span>的负例</p>
+<p><span class="math inline">\(\mathbf X=\{x_1,x_2,\cdots,x_N\}\)</span>，一个来自<span class="math inline">\(p(x_{t+k}|c_t)\)</span>的正例和<span class="math inline">\(N-1\)</span>个来自<span class="math inline">\(p(x_{t+k})\)</span>的负例，目标函数（文中称为CPC Loss）为：</p>
 <p><span class="math display">\[
 \mathcal L_N=-\mathop{\mathbb E}\limits_X\left[\log\frac{f_k(x_{t+k},c_t)}{\sum_{x_j\in X}f_k(x_j,c_t)}\right]
 \]</span></p>
@@ -251,7 +251,7 @@ H(p,q) = -\sum_{x\in\mathcal X}p(x)\log q(x)
 \mathcal L=-\log\left(\frac{\exp(\hat y_i)}{\sum_j\exp(\hat y_j)}\right)
 \]</span></p>
 </blockquote>
-<p>这里的<span class="math inline">\(p(\mathbf x_{t+k}|\mathbf c_t)\)</span>。<span class="math inline">\(d=i\)</span>代表<span class="math inline">\(x_i\)</span>为正例， <span class="math display">\[
+<p>接下来作者证明优化<span class="math inline">\(\mathcal L_N\)</span>会使得<span class="math inline">\(f_k(\mathbf x_{t+k},\mathbf c_t)\)</span>和互信息接近。这里的<span class="math inline">\(p(\mathbf x_{t+k}|\mathbf c_t)\)</span>。<span class="math inline">\(d=i\)</span>代表<span class="math inline">\(x_i\)</span>为正例， <span class="math display">\[
 \begin{align}
 p(d=i|X,c_t)&amp;=\frac{p(x_i|c_t)\prod_{l\neq i}p(x_l)}{\sum^N_{j=1} p(x_j|c_t)\prod_{l\neq j}p(x_l)}\\
 &amp;=\frac{\frac{p(x_i|c_t)}{p(x_i)}}{\sum^N_{j=1}\frac{p(x_j|c_t)}{p(x_j)}}
@@ -262,15 +262,19 @@ I(x_{t+k},c_t)\geq \log(N)-\mathcal L_N
 \]</span></p>
 <p>可以说<span class="math inline">\(\mathcal L_N\)</span>作为互信息<span class="math inline">\(I(x_{t+k},c_t)\)</span>的一个下界。</p>
 <h1 id="experiments">Experiments</h1>
+<h2 id="audio">Audio</h2>
 <p><img src="https://i.loli.net/2020/07/07/kWectjL27MKy1dA.png" srcset="/img/loading.gif" /></p>
 <p><img src="https://i.loli.net/2020/07/07/vhBRmpntw2Xx6J9.png" srcset="/img/loading.gif" /></p>
 <p><img src="https://i.loli.net/2020/07/07/5QaDOCFvxLE6wqT.png" srcset="/img/loading.gif" /></p>
 <p><img src="https://i.loli.net/2020/07/07/nA49kE1WP73oGQJ.png" srcset="/img/loading.gif" /></p>
+<h2 id="vision">Vision</h2>
 <p><img src="https://i.loli.net/2020/07/07/gkNnWo4zyUeBRCa.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <p><img src="https://i.loli.net/2020/07/07/qH6BAJnhMcP9bKy.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <p><img src="https://i.loli.net/2020/07/07/ezO1IibwvC5Mus8.png" srcset="/img/loading.gif" /></p>
 <p><img src="https://i.loli.net/2020/07/07/sWNGXqv1n38kgcf.png" srcset="/img/loading.gif" /></p>
+<h2 id="natural-language">Natural Language</h2>
 <p><img src="https://i.loli.net/2020/07/07/Ly86Xu9n4KSOJge.png" srcset="/img/loading.gif" /></p>
+<h2 id="reinforcement-learning">Reinforcement Learning</h2>
 <p><img src="https://i.loli.net/2020/07/07/92XzLqltMUfCgTs.png" srcset="/img/loading.gif" /></p>
 
             </article>
