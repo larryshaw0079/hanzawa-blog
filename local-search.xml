@@ -449,9 +449,9 @@
     
     <tags>
       
-      <tag>Deep Learning</tag>
-      
       <tag>Anomaly Detection</tag>
+      
+      <tag>Deep Learning</tag>
       
     </tags>
     
@@ -505,9 +505,9 @@
     
     <tags>
       
-      <tag>VAE</tag>
-      
       <tag>Anomaly Detection</tag>
+      
+      <tag>VAE</tag>
       
     </tags>
     
@@ -534,9 +534,9 @@
     
     <tags>
       
-      <tag>Deep Learning</tag>
-      
       <tag>Time Series</tag>
+      
+      <tag>Deep Learning</tag>
       
     </tags>
     
@@ -563,15 +563,15 @@
     
     <tags>
       
-      <tag>VAE</tag>
-      
-      <tag>Deep Learning</tag>
-      
       <tag>Time Series</tag>
       
       <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
+      
+      <tag>Deep Learning</tag>
+      
+      <tag>VAE</tag>
       
     </tags>
     
@@ -598,11 +598,11 @@
     
     <tags>
       
+      <tag>Deep Learning</tag>
+      
       <tag>Variational Inference</tag>
       
       <tag>VAE</tag>
-      
-      <tag>Deep Learning</tag>
       
       <tag>GAN</tag>
       
@@ -662,11 +662,11 @@
     
     <tags>
       
+      <tag>Deep Learning</tag>
+      
       <tag>Variational Inference</tag>
       
       <tag>VAE</tag>
-      
-      <tag>Deep Learning</tag>
       
     </tags>
     
@@ -693,9 +693,9 @@
     
     <tags>
       
-      <tag>Deep Learning</tag>
-      
       <tag>Time Series</tag>
+      
+      <tag>Deep Learning</tag>
       
       <tag>RNN</tag>
       
@@ -724,15 +724,15 @@
     
     <tags>
       
-      <tag>VAE</tag>
-      
-      <tag>Deep Learning</tag>
-      
       <tag>Time Series</tag>
       
       <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
+      
+      <tag>Deep Learning</tag>
+      
+      <tag>VAE</tag>
       
       <tag>RNN</tag>
       
@@ -763,9 +763,9 @@
     
     <tags>
       
-      <tag>Deep Learning</tag>
-      
       <tag>Time Series</tag>
+      
+      <tag>Deep Learning</tag>
       
       <tag>GAN</tag>
       
@@ -794,13 +794,13 @@
     
     <tags>
       
-      <tag>Deep Learning</tag>
-      
       <tag>Time Series</tag>
       
       <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
+      
+      <tag>Deep Learning</tag>
       
     </tags>
     
@@ -827,13 +827,13 @@
     
     <tags>
       
-      <tag>Deep Learning</tag>
-      
       <tag>Time Series</tag>
       
       <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
+      
+      <tag>Deep Learning</tag>
       
     </tags>
     
@@ -860,15 +860,15 @@
     
     <tags>
       
-      <tag>VAE</tag>
-      
-      <tag>Deep Learning</tag>
-      
       <tag>Time Series</tag>
       
       <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
+      
+      <tag>Deep Learning</tag>
+      
+      <tag>VAE</tag>
       
     </tags>
     
@@ -895,13 +895,13 @@
     
     <tags>
       
-      <tag>Deep Learning</tag>
-      
       <tag>Time Series</tag>
       
       <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
+      
+      <tag>Deep Learning</tag>
       
       <tag>Spectral</tag>
       
