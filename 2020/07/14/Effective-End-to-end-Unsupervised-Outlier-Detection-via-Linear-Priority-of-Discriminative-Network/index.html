@@ -160,7 +160,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    1.9k 字
+                    2k 字
                   </span>
                 
 
@@ -170,7 +170,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    24
+                    25
                      分钟
                   </span>
                 
@@ -207,7 +207,7 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：2020年7月21日 下午
+                  本文最后更新于：2020年7月21日 晚上
                 
               </p>
             
@@ -269,15 +269,14 @@ S_{ne}(\mathbf x)=-\frac{1}{K}\sum_{y=1}^K H(P(\mathbf x^{(y)}|\boldsymbol\theta
 </ol>
 <h1 id="experiments">Experiments</h1>
 <h2 id="experiment-setup">Experiment Setup</h2>
-<p>异常的比例<span class="math inline">\(\rho\)</span>从<span class="math inline">\(5\%\)</span>到<span class="math inline">\(25\%\)</span>以<span class="math inline">\(5\%\)</span>的步长递增。</p>
+<p>数据集用到了MNIST, Fashion-MNIST (F-MNIST) , CIFAR10, SVHN和CIFAR100。为了模拟无监督异常检测的环境，人为在训练集中加入异常样本，异常的比例<span class="math inline">\(\rho\)</span>从<span class="math inline">\(5\%\)</span>到<span class="math inline">\(25\%\)</span>以<span class="math inline">\(5\%\)</span>的步长递增。评测标准采用AUPR和AUROC。</p>
 <h2 id="uod-performance-comparison-and-discussion">UOD Performance Comparison and Discussion</h2>
+<p>下表展示了模型性能对比结果：</p>
 <p><img src="https://i.loli.net/2020/07/16/G3agKPuJBowFmIW.png" srcset="/img/loading.gif" /></p>
+<p>下图展示了在不同的Outlier Ratio下的性能对比：</p>
 <p><img src="https://i.loli.net/2020/07/16/h6iYjBkrwQdFvMJ.png" srcset="/img/loading.gif" /></p>
+<p>下图展示了在不同的变换集合，网络结构，异常分数的条件下的性能：</p>
 <p><img src="https://i.loli.net/2020/07/16/waWAi7zI3QpOcf6.png" srcset="/img/loading.gif" /></p>
-<h1 id="remark">Remark</h1>
-<ul>
-<li>在本文中所使用的变换集合包含了非线性变换</li>
-</ul>
 
             </article>
             <hr>
