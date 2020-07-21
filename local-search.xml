@@ -4,35 +4,6 @@
   
   
   <entry>
-    <title>基于Density Ratio的视频异常检测小结</title>
-    <link href="/2020/07/20/%E5%9F%BA%E4%BA%8EDensity%20Ratio%E7%9A%84%E8%A7%86%E9%A2%91%E5%BC%82%E5%B8%B8%E6%A3%80%E6%B5%8B%E5%B0%8F%E7%BB%93/"/>
-    <url>/2020/07/20/%E5%9F%BA%E4%BA%8EDensity%20Ratio%E7%9A%84%E8%A7%86%E9%A2%91%E5%BC%82%E5%B8%B8%E6%A3%80%E6%B5%8B%E5%B0%8F%E7%BB%93/</url>
-    
-    <content type="html"><![CDATA[<h1 id="overview">Overview</h1><p>实际上并没有“基于Density Ratio的异常检测”这种说法</p><h1 id="a-discriminative-framework-for-anomaly-detection-in-large-videos">A Discriminative Framework for Anomaly Detection in Large Videos</h1><p>来自ECCV 2016的<a href="https://arxiv.org/abs/1609.08938" target="_blank" rel="noopener">文章</a></p><p><img src="https://i.loli.net/2020/07/14/MjE8vZGBaVywFKc.png" srcset="/img/loading.gif" style="zoom:50%;" /></p><h2 id="a-motivating-example">A Motivating Example</h2><p><img src="https://i.loli.net/2020/07/19/jHU1m3uN6WetQSp.png" srcset="/img/loading.gif" /></p><h1 id="unmasking-the-abnormal-events-in-video">Unmasking the Abnormal Events in Video</h1><p>来自ICCV 2017的<a href="https://openaccess.thecvf.com/content_ICCV_2017/papers/Ionescu_Unmasking_the_Abnormal_ICCV_2017_paper.pdf" target="_blank" rel="noopener">文章</a></p><p><img src="https://i.loli.net/2020/07/13/rjKcEHuPZt9AOyd.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>]]></content>
-    
-    
-    <categories>
-      
-      <category>Research</category>
-      
-      <category>Anomaly Detection</category>
-      
-    </categories>
-    
-    
-    <tags>
-      
-      <tag>Anomaly Detection</tag>
-      
-      <tag>Video Anomaly Detection</tag>
-      
-    </tags>
-    
-  </entry>
-  
-  
-  
-  <entry>
     <title>PRML Notes 1.1: Probability Distributions - Binary and Multinomial Variables</title>
     <link href="/2020/06/22/PRML-Notes-1-1-Probability-Distributions-Binary-and-Multinomial-Variables/"/>
     <url>/2020/06/22/PRML-Notes-1-1-Probability-Distributions-Binary-and-Multinomial-Variables/</url>
