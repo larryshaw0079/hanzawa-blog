@@ -4,6 +4,33 @@
   
   
   <entry>
+    <title>Effective End-to-end Unsupervised Outlier Detection via Linear Priority of Discriminative Network</title>
+    <link href="/2020/07/14/Effective-End-to-end-Unsupervised-Outlier-Detection-via-Linear-Priority-of-Discriminative-Network/"/>
+    <url>/2020/07/14/Effective-End-to-end-Unsupervised-Outlier-Detection-via-Linear-Priority-of-Discriminative-Network/</url>
+    
+    <content type="html"><![CDATA[<h1 id="introduction">Introduction</h1><p>本文针对无监督异常检测提出了<span class="math inline">\(E^3\space{Outlier}\)</span>。作者使用自监督学习的方法，通过构建有监督任务在没有标签的情况下学习高层语义特征。PS：这篇文章的方法和NIPS18上的<em>Deep Anomaly Detection Using Geometric Transformations</em>（后面简称GEOM）颇为相似，但是不知为啥没有在实验中进行比较。后面我会分析一些两篇文章方法上的异同。</p><h1 id="proposed-method">Proposed Method</h1><h2 id="surrogate-supervision-based-effective-representation-learning-for-uod">Surrogate Supervision Based Effective Representation Learning for UOD</h2><p>这里作者提到了使用重构的模型来进行异常检测的不足：重构模型采用像素级别的损失函数（如mean square error），而这太过于严格和细节，并不能学到高层语义特征。</p><p>为此，作者提出了<em>surrogate supervision based discriminative network</em> (SSD)。具体操作和GEOM类似，首先预定义大小为<span class="math inline">\(K\)</span>的几何变换集合<span class="math inline">\(\mathcal O=\{O(\cdot|y)\}_{y=1}^K\)</span>。对每一个样本<span class="math inline">\(\mathbf x\)</span>，在经过<span class="math inline">\(K\)</span>个集合变换之后会得到<span class="math inline">\(K\)</span>个变换后的样本（第<span class="math inline">\(y\)</span>个变换产生的样本即记为<span class="math inline">\(\mathbf x^{(y)}=O(\mathbf x|y)\)</span>），每个样本对应的pseudo label即为变换的序号或者说种类。之后在新的数据集上（大小为原来的<span class="math inline">\(K\)</span>倍）训练<span class="math inline">\(K\)</span>分类网络。网络的输出为<span class="math inline">\(P(\mathbf x^{(y^\prime)}|\boldsymbol\theta)=[P^{(y)}(\mathbf x^{(y^\prime)}|\boldsymbol\theta)]_{y=1}^K\)</span>，每个维度代表输入样本对应的变换的概率。总的损失函数为： <span class="math display">\[\min_\theta\frac{1}{N}\sum_{i=1}^{N}\]</span></p><p><span class="math display">\[\mathcal L_{SS}(\mathbf x_i|\boldsymbol\theta)=-\frac{1}{K}\sum_{y=1}^K\log(P^{(y)}(\mathbf x_i^{(y)}|\boldsymbol\theta))=-\frac{1}{K}\sum_{y=1}^K\log(P^{(y)}(O(\mathbf x_i|y)|\boldsymbol\theta))\]</span> <img src="https://i.loli.net/2020/07/14/ULAdYpzsoGfFwtD.png" srcset="/img/loading.gif" /></p><h2 id="inlier-priority-the-foundation-of-end-to-end-uod">Inlier Priority: The Foundation of End-to-end UOD</h2><blockquote><p><em>Inlier Priority</em>:</p></blockquote><h3 id="priority-by-gradient-magnitude">Priority by Gradient Magnitude</h3><p>对于第<span class="math inline">\(c\)</span>个类来说，设<code>softmax</code>层和倒数第二层之间的权重矩阵为<span class="math inline">\(\mathbf w_c=[w_{s,c}]^{(L+1)}_{s=1}\)</span>，损失函数记为<span class="math inline">\(\mathcal L\)</span>，</p><p>梯度<span class="math inline">\(\nabla_{\mathbf w_c}\mathcal L=[\nabla_{w_{s,c}}\mathcal L]^{(L+1)}_{s=1}\)</span>，</p><p>设训练集<span class="math inline">\(X^{(c)}\)</span>包含<span class="math inline">\(N_{in}\)</span>个正常样本，<span class="math inline">\(N_{out}\)</span>个异常样本。记正常样本和异常样本对应的梯度分别为<span class="math inline">\(\parallel\nabla^{(in)}_{\mathbf w_c}\mathcal L\parallel\)</span>和<span class="math inline">\(\parallel\nabla^{(out)}_{\mathbf w_c}\mathcal L\parallel\)</span>， <span class="math display">\[\frac{E(\parallel\nabla^{(in)}_{\mathbf w_c}\mathcal L\parallel^2)}{E(\parallel\nabla^{(out)}_{\mathbf w_c}\mathcal L\parallel^2)}\approx\frac{N^2_{in}}{N^2_{out}}\]</span> <img src="https://i.loli.net/2020/07/16/iPa7h9HWqrnZvgx.png" srcset="/img/loading.gif" /></p><h3 id="priority-by-network-updating-direction">Priority by Network Updating Direction</h3><p><img src="https://i.loli.net/2020/07/16/U5fVk8YOEGPx3Q7.png" srcset="/img/loading.gif" /></p><h2 id="scoring-strategies-for-uod">Scoring Strategies for UOD</h2><h3 id="pseudo-label-based-score-pl">Pseudo Label based Score (PL)</h3><p><span class="math display">\[S_{pl}(\mathbf x)=\frac{1}{K}\sum_{y=1}^K P^{(y)}(\mathbf x^{(y)}|\boldsymbol\theta)\]</span></p><h3 id="maximum-probability-based-score-mp">Maximum Probability based Score (MP)</h3><p><span class="math display">\[S_{mp}(\mathbf x)=\frac{1}{K}\sum_{y=1}^K\max_t P^{(t)}(\mathbf x^{(y)}|\boldsymbol\theta)\]</span></p><h3 id="negative-entropy-based-score-ne">Negative Entropy based Score (NE)</h3><p>作者认为，标签为One-Hot向量，分类器的输出分布越“尖峰”就越接近于正常样本，而越“平均”就越接近于异常样本，所以作者提出使用熵来描述分类器输出的“尖锐度”： <span class="math display">\[S_{ne}(\mathbf x)=-\frac{1}{K}\sum_{y=1}^K H(P(\mathbf x^{(y)}|\boldsymbol\theta))=\frac{1}{K}\sum_{y=1}^K\sum_{t=1}^K P^{(t)}(\mathbf x^{(y)}|\boldsymbol\theta)\log(P^{(t)}(\mathbf x^{(y)}|\boldsymbol\theta))\]</span> <img src="https://i.loli.net/2020/07/16/PgzqXIdJ67s3BtG.png" srcset="/img/loading.gif" /></p><p>对比NIPS18 的Dirichlet Normality Score</p><ol type="1"><li>也用到了全部<span class="math inline">\(K\)</span>个维度的信息</li><li>相当于对分类器的输出做了迪利克雷分布的先验假设，然后通过训练集的输出估计分布参数。因为直觉上对于正常分布来说，分类器的输出分布形状上都类似一个尖峰，但对于不同的数据集来说具体形状还是会有所差异</li></ol><h1 id="experiments">Experiments</h1><h2 id="experiment-setup">Experiment Setup</h2><p>异常的比例<span class="math inline">\(\rho\)</span>从<span class="math inline">\(5\%\)</span>到<span class="math inline">\(25\%\)</span>以<span class="math inline">\(5\%\)</span>的步长递增。</p><h2 id="uod-performance-comparison-and-discussion">UOD Performance Comparison and Discussion</h2><p><img src="https://i.loli.net/2020/07/16/G3agKPuJBowFmIW.png" srcset="/img/loading.gif" /></p><p><img src="https://i.loli.net/2020/07/16/h6iYjBkrwQdFvMJ.png" srcset="/img/loading.gif" /></p><p><img src="https://i.loli.net/2020/07/16/waWAi7zI3QpOcf6.png" srcset="/img/loading.gif" /></p><h1 id="remark">Remark</h1><ul><li>在本文中所使用的变换集合包含了非线性变换</li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>Research</category>
+      
+      <category>Anomaly Detection</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Self-Supervised Learning</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>PRML Notes 1.1: Probability Distributions - Binary and Multinomial Variables</title>
     <link href="/2020/06/22/PRML-Notes-1-1-Probability-Distributions-Binary-and-Multinomial-Variables/"/>
     <url>/2020/06/22/PRML-Notes-1-1-Probability-Distributions-Binary-and-Multinomial-Variables/</url>
