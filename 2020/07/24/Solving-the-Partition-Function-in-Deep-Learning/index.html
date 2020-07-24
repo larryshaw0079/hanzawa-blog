@@ -160,7 +160,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    704 字
+                    906 字
                   </span>
                 
 
@@ -170,7 +170,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    9
+                    13
                      分钟
                   </span>
                 
@@ -232,26 +232,27 @@ p(\mathbf x;\theta)=\frac{\tilde{p}(\mathbf x;\theta)}{Z(\theta)}
 <p>TODO</p>
 <h1 id="noise-contrastive-estimation">Noise Contrastive Estimation</h1>
 <p>Noise Contrastive Estimation（NCE）的算法细节及详细推导见<a href="http://proceedings.mlr.press/v9/gutmann10a/gutmann10a.pdf" target="_blank" rel="noopener">原文</a>。</p>
-<p>NCE通过将问题转化为二分类问题从而规避了<span class="math inline">\(Z\)</span>的计算，原文中也说了NCE的Motivation是“learning by comparison”。这里的比较指的是模型分布和噪声分布之间的比较。噪声分布，记为<span class="math inline">\(p_z(x)\)</span>，是我们人为引入一个分布，可以采用任意容易采样的分布，常常使用的是均匀分布。我们可以从模型分布中采样若干样本，同时从噪声分布中采样若干样本，这时我们可以将模型分布的样本和噪声分布的样本分别称之为正例和负例，这时相当于构造了一个有监督二分类任务。我们将标签分布记为<span class="math inline">\(p(c)\)</span>，取值<span class="math inline">\(c\in\{0,1\}\)</span>，先验<span class="math inline">\(p(c=0)=p(c=1)=\frac{1}{2}\)</span>。</p>
-<p>如果认为<span class="math inline">\(c=1\)</span>时表示样本来自于模型分布，则有： <span class="math display">\[
-p(x|c=1)=p_m(x;\theta)\\
-p(x|c=0)=p_z(x)
-\]</span> 根据贝叶斯公式，我们有： <span class="math display">\[
+<p>我们将公式(1)两边取对数得到<span class="math inline">\(\log p(\mathbf x)=\log\tilde{p}(\mathbf x)-\log Z(\theta)\)</span>，我们令<span class="math inline">\(c=-\log Z(\theta)\)</span>，同时为了便于区分数据分布和模型分布加上了“model”标识： <span class="math display">\[
+\log p_\text{model}(\mathbf x)=\log\tilde{p}_\text{model}(\mathbf x;\theta)+c
+\]</span> 也就是说，我们不仅是在优化<span class="math inline">\(\theta\)</span>，同时也加入了一个新的参数<span class="math inline">\(c\)</span>。需要注意的是上述式子无法直接用极大似然估计来优化，因为最大化上式没有上界，会导致结果无限大。</p>
+<p>一句话概括NCE的主要思想就是通过将估计<span class="math inline">\(p(\mathbf x)\)</span>这个无监督问题转化为了一个有监督问题，而在优化这个有监督问题的时候等价于优化原来的问题。</p>
+<p>具体的来说，首先我们引入一个新的分布<span class="math inline">\(p_\text{noise}(\mathbf x)\)</span>，称作是“噪声分布”。理论上<span class="math inline">\(p_\text{noise}(\mathbf x)\)</span>可以采用任何易于采样的分布。之后我们引入一个新的随机变量<span class="math inline">\(y\)</span>，表示样本是否来自模型分布： <span class="math display">\[
+p_\text{joint}(y=1)=\frac{1}{2}\\
+p_\text{joint}(\mathbf x|y=1)=p_\text{model}(\mathbf x)\\
+p_\text{joint}(\mathbf x|y=0)=p_\text{noise}(\mathbf x)\\
+p_\text{joint}(y=1|\mathbf x)=\frac{p_\text{model}(\mathbf x)}{p_\text{model}(\mathbf x)+p_\text{noise}(\mathbf x)}
+\]</span> 接着我们分别从真实数据和噪声分布中采样样本<span class="math inline">\(\mathbf x\)</span>，两者数量一样（因为先验<span class="math inline">\(p_\text{joint}(y=1)=\frac{1}{2}\)</span>），同时对应的<span class="math inline">\(y\)</span>我们也是知道的。于是采用极大似然估计，最大化训练样本在我们的模型<span class="math inline">\(p_\text{joint}\)</span>的似然： <span class="math display">\[
+\theta^*,c^*=\mathop{\arg\max}_{\theta,c}\mathbb E_{\mathbf x,y\sim p_\text{train}}\log p_\text{joint}(y|\mathbf x)
+\]</span> 这里<span class="math inline">\(p_\text{joint}(y|\mathbf x)\)</span>相当于Logistic回归： <span class="math display">\[
 \begin{align}
-p(c=1|x;\theta)&amp;=\frac{p_m(x;\theta)}{p_m(x;\theta)+p_z(x)}\\
-&amp;=h(x;\theta)\\
-p(c=0|x;\theta)&amp;=\frac{p_z(x)}{p_m(x;\theta)+p_z(x)}\\
-&amp;=1-h(x;\theta)
+p_\text{joint}(y=1|\mathbf x)&amp;=\frac{p_\text{model}(\mathbf x)}{p_\text{model}(\mathbf x)+p_\text{noise}(\mathbf x)}\\
+&amp;=\frac{1}{1+\frac{p_\text{noise}(\mathbf x)}{p_\text{model}(\mathbf x)}}\\
+&amp;=\frac{1}{1+\exp\left(\log\frac{p_\text{noise}(\mathbf x)}{p_\text{model}(\mathbf x)}\right)}\\
+&amp;=\sigma\left(-\log\frac{p_\text{noise}(\mathbf x)}{p_\text{model}(\mathbf x)}\right)\\
+&amp;=\sigma(\log p_\text{model}(\mathbf x)-\log p_\text{noise}(\mathbf x))
 \end{align}
-\]</span> 其中： <span class="math display">\[
-h(x;\theta)=\frac{1}{1+e^{-g(x;\theta)}}\\
-g(x;\theta)=\log p_m(x;\theta)-\log p_z(x)
-\]</span> 从真实数据分布<span class="math inline">\(p_d(x)\)</span>采样得来的数据集<span class="math inline">\(X=\{x_1,x_2,\cdots,x_N\}\)</span>，还有从噪声分布采样来的若干样本<span class="math inline">\(\{z_1,z_2,\cdots,z_N\}\)</span>。根据交叉熵损失函数（也可以理解为Logistic回归）有： <span class="math display">\[
-\begin{align}
-\mathcal L(\theta)&amp;=\sum_i \left(p(c_i=1)\log p(c_i=1|x_i;\theta)+p(c_i=0)\log p(c_i=0|z_i;\theta)\right)\\
-&amp;=\sum_i\left(\log[h(x_i;\theta)]+\log[1-h(z_i;\theta)]\right)
-\end{align}
-\]</span></p>
+\]</span> 如果样本<span class="math inline">\(\mathbf x\)</span>是真实数据中采样而来，那么优化会试图最大化<span class="math inline">\(\sigma(\log p_\text{model}(\mathbf x)-\log p_\text{noise}(\mathbf x))\)</span>，即最大化<span class="math inline">\(\log p_\text{model}(\mathbf x)-\log p_\text{noise}(\mathbf x)=\log\tilde{p}_\text{model}(\mathbf x;\theta)+c-p_\text{noise}(\mathbf x)\)</span>，</p>
+<p><img src="https://i.loli.net/2020/07/24/8fVZkN2TrRtM7l1.png" srcset="/img/loading.gif" style="zoom: 33%;" /></p>
 
             </article>
             <hr>

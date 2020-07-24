@@ -8,7 +8,7 @@
     <link href="/2020/07/24/Solving-the-Partition-Function-in-Deep-Learning/"/>
     <url>/2020/07/24/Solving-the-Partition-Function-in-Deep-Learning/</url>
     
-    <content type="html"><![CDATA[<h1 id="introduction">Introduction</h1><p>很多情况下我们需要计算下式： <span class="math display">\[p(\mathbf x;\theta)=\frac{\tilde{p}(\mathbf x;\theta)}{Z(\theta)}\]</span> 其中<span class="math inline">\(\tilde{p}(\mathbf x;\theta)\)</span>是Unnormalized的概率，<span class="math inline">\(Z(\theta)\)</span>为正则化项，在离散的情况下<span class="math inline">\(Z(\theta)=\sum_x\tilde{p}(x)\)</span>，在连续的情况下<span class="math inline">\(Z(\theta)=\int\tilde{p}(x)\mathrm d x\)</span>。在很多情况下<span class="math inline">\(Z(\theta)\)</span>是不可解的。</p><p>一个比较常见的场景是<code>Softmax</code>，比如对于NLP任务，神经网络的最后一层是<code>Softmax</code>，这时<span class="math inline">\(\tilde{p}(\mathbf x;\theta)=e^{s(\mathbf x|\mathbf c_t,\theta)}\)</span>可以理解为一个“打分函数”：在给定Context的情况下，下一个词<span class="math inline">\(\mathbf x\)</span>的概率分布。而<span class="math inline">\(Z(\theta)=\sum_{x\in X} e^{s(x|\mathbf x_t,\theta)}\)</span>，最后在使用极大似然估计最大化整个训练集的似然，不过困难在于词表太大，<span class="math inline">\(Z(\theta)\)</span>计算效率很低。</p><p>下面我们介绍处理这种情况的几个方法。</p><h1 id="the-log-likelihood-gradient-and-stochastic-maximum-likelihood">The Log-Likelihood Gradient and Stochastic Maximum Likelihood</h1><p>TODO</p><p><span class="math display">\[\nabla_\theta\log Z=\mathbb E_{\mathbf x\sim p_d(\mathbf x)}\nabla_\theta\log p(x)\]</span></p><p><img src="https://i.loli.net/2020/07/20/O4Xvm3AUQJhCSgd.png" srcset="/img/loading.gif" style="zoom:67%;" /></p><h1 id="contrastive-divergence">Contrastive Divergence</h1><p>TODO</p><h1 id="pseudo-likelihood">Pseudo-Likelihood</h1><p>TODO</p><h1 id="score-matching-and-ratio-matching">Score Matching and Ratio Matching</h1><p>TODO</p><h1 id="noise-contrastive-estimation">Noise Contrastive Estimation</h1><p>Noise Contrastive Estimation（NCE）的算法细节及详细推导见<a href="http://proceedings.mlr.press/v9/gutmann10a/gutmann10a.pdf" target="_blank" rel="noopener">原文</a>。</p><p>NCE通过将问题转化为二分类问题从而规避了<span class="math inline">\(Z\)</span>的计算，原文中也说了NCE的Motivation是“learning by comparison”。这里的比较指的是模型分布和噪声分布之间的比较。噪声分布，记为<span class="math inline">\(p_z(x)\)</span>，是我们人为引入一个分布，可以采用任意容易采样的分布，常常使用的是均匀分布。我们可以从模型分布中采样若干样本，同时从噪声分布中采样若干样本，这时我们可以将模型分布的样本和噪声分布的样本分别称之为正例和负例，这时相当于构造了一个有监督二分类任务。我们将标签分布记为<span class="math inline">\(p(c)\)</span>，取值<span class="math inline">\(c\in\{0,1\}\)</span>，先验<span class="math inline">\(p(c=0)=p(c=1)=\frac{1}{2}\)</span>。</p><p>如果认为<span class="math inline">\(c=1\)</span>时表示样本来自于模型分布，则有： <span class="math display">\[p(x|c=1)=p_m(x;\theta)\\p(x|c=0)=p_z(x)\]</span> 根据贝叶斯公式，我们有： <span class="math display">\[\begin{align}p(c=1|x;\theta)&amp;=\frac{p_m(x;\theta)}{p_m(x;\theta)+p_z(x)}\\&amp;=h(x;\theta)\\p(c=0|x;\theta)&amp;=\frac{p_z(x)}{p_m(x;\theta)+p_z(x)}\\&amp;=1-h(x;\theta)\end{align}\]</span> 其中： <span class="math display">\[h(x;\theta)=\frac{1}{1+e^{-g(x;\theta)}}\\g(x;\theta)=\log p_m(x;\theta)-\log p_z(x)\]</span> 从真实数据分布<span class="math inline">\(p_d(x)\)</span>采样得来的数据集<span class="math inline">\(X=\{x_1,x_2,\cdots,x_N\}\)</span>，还有从噪声分布采样来的若干样本<span class="math inline">\(\{z_1,z_2,\cdots,z_N\}\)</span>。根据交叉熵损失函数（也可以理解为Logistic回归）有： <span class="math display">\[\begin{align}\mathcal L(\theta)&amp;=\sum_i \left(p(c_i=1)\log p(c_i=1|x_i;\theta)+p(c_i=0)\log p(c_i=0|z_i;\theta)\right)\\&amp;=\sum_i\left(\log[h(x_i;\theta)]+\log[1-h(z_i;\theta)]\right)\end{align}\]</span></p>]]></content>
+    <content type="html"><![CDATA[<h1 id="introduction">Introduction</h1><p>很多情况下我们需要计算下式： <span class="math display">\[p(\mathbf x;\theta)=\frac{\tilde{p}(\mathbf x;\theta)}{Z(\theta)}\]</span> 其中<span class="math inline">\(\tilde{p}(\mathbf x;\theta)\)</span>是Unnormalized的概率，<span class="math inline">\(Z(\theta)\)</span>为正则化项，在离散的情况下<span class="math inline">\(Z(\theta)=\sum_x\tilde{p}(x)\)</span>，在连续的情况下<span class="math inline">\(Z(\theta)=\int\tilde{p}(x)\mathrm d x\)</span>。在很多情况下<span class="math inline">\(Z(\theta)\)</span>是不可解的。</p><p>一个比较常见的场景是<code>Softmax</code>，比如对于NLP任务，神经网络的最后一层是<code>Softmax</code>，这时<span class="math inline">\(\tilde{p}(\mathbf x;\theta)=e^{s(\mathbf x|\mathbf c_t,\theta)}\)</span>可以理解为一个“打分函数”：在给定Context的情况下，下一个词<span class="math inline">\(\mathbf x\)</span>的概率分布。而<span class="math inline">\(Z(\theta)=\sum_{x\in X} e^{s(x|\mathbf x_t,\theta)}\)</span>，最后在使用极大似然估计最大化整个训练集的似然，不过困难在于词表太大，<span class="math inline">\(Z(\theta)\)</span>计算效率很低。</p><p>下面我们介绍处理这种情况的几个方法。</p><h1 id="the-log-likelihood-gradient-and-stochastic-maximum-likelihood">The Log-Likelihood Gradient and Stochastic Maximum Likelihood</h1><p>TODO</p><p><span class="math display">\[\nabla_\theta\log Z=\mathbb E_{\mathbf x\sim p_d(\mathbf x)}\nabla_\theta\log p(x)\]</span></p><p><img src="https://i.loli.net/2020/07/20/O4Xvm3AUQJhCSgd.png" srcset="/img/loading.gif" style="zoom:67%;" /></p><h1 id="contrastive-divergence">Contrastive Divergence</h1><p>TODO</p><h1 id="pseudo-likelihood">Pseudo-Likelihood</h1><p>TODO</p><h1 id="score-matching-and-ratio-matching">Score Matching and Ratio Matching</h1><p>TODO</p><h1 id="noise-contrastive-estimation">Noise Contrastive Estimation</h1><p>Noise Contrastive Estimation（NCE）的算法细节及详细推导见<a href="http://proceedings.mlr.press/v9/gutmann10a/gutmann10a.pdf" target="_blank" rel="noopener">原文</a>。</p><p>我们将公式(1)两边取对数得到<span class="math inline">\(\log p(\mathbf x)=\log\tilde{p}(\mathbf x)-\log Z(\theta)\)</span>，我们令<span class="math inline">\(c=-\log Z(\theta)\)</span>，同时为了便于区分数据分布和模型分布加上了“model”标识： <span class="math display">\[\log p_\text{model}(\mathbf x)=\log\tilde{p}_\text{model}(\mathbf x;\theta)+c\]</span> 也就是说，我们不仅是在优化<span class="math inline">\(\theta\)</span>，同时也加入了一个新的参数<span class="math inline">\(c\)</span>。需要注意的是上述式子无法直接用极大似然估计来优化，因为最大化上式没有上界，会导致结果无限大。</p><p>一句话概括NCE的主要思想就是通过将估计<span class="math inline">\(p(\mathbf x)\)</span>这个无监督问题转化为了一个有监督问题，而在优化这个有监督问题的时候等价于优化原来的问题。</p><p>具体的来说，首先我们引入一个新的分布<span class="math inline">\(p_\text{noise}(\mathbf x)\)</span>，称作是“噪声分布”。理论上<span class="math inline">\(p_\text{noise}(\mathbf x)\)</span>可以采用任何易于采样的分布。之后我们引入一个新的随机变量<span class="math inline">\(y\)</span>，表示样本是否来自模型分布： <span class="math display">\[p_\text{joint}(y=1)=\frac{1}{2}\\p_\text{joint}(\mathbf x|y=1)=p_\text{model}(\mathbf x)\\p_\text{joint}(\mathbf x|y=0)=p_\text{noise}(\mathbf x)\\p_\text{joint}(y=1|\mathbf x)=\frac{p_\text{model}(\mathbf x)}{p_\text{model}(\mathbf x)+p_\text{noise}(\mathbf x)}\]</span> 接着我们分别从真实数据和噪声分布中采样样本<span class="math inline">\(\mathbf x\)</span>，两者数量一样（因为先验<span class="math inline">\(p_\text{joint}(y=1)=\frac{1}{2}\)</span>），同时对应的<span class="math inline">\(y\)</span>我们也是知道的。于是采用极大似然估计，最大化训练样本在我们的模型<span class="math inline">\(p_\text{joint}\)</span>的似然： <span class="math display">\[\theta^*,c^*=\mathop{\arg\max}_{\theta,c}\mathbb E_{\mathbf x,y\sim p_\text{train}}\log p_\text{joint}(y|\mathbf x)\]</span> 这里<span class="math inline">\(p_\text{joint}(y|\mathbf x)\)</span>相当于Logistic回归： <span class="math display">\[\begin{align}p_\text{joint}(y=1|\mathbf x)&amp;=\frac{p_\text{model}(\mathbf x)}{p_\text{model}(\mathbf x)+p_\text{noise}(\mathbf x)}\\&amp;=\frac{1}{1+\frac{p_\text{noise}(\mathbf x)}{p_\text{model}(\mathbf x)}}\\&amp;=\frac{1}{1+\exp\left(\log\frac{p_\text{noise}(\mathbf x)}{p_\text{model}(\mathbf x)}\right)}\\&amp;=\sigma\left(-\log\frac{p_\text{noise}(\mathbf x)}{p_\text{model}(\mathbf x)}\right)\\&amp;=\sigma(\log p_\text{model}(\mathbf x)-\log p_\text{noise}(\mathbf x))\end{align}\]</span> 如果样本<span class="math inline">\(\mathbf x\)</span>是真实数据中采样而来，那么优化会试图最大化<span class="math inline">\(\sigma(\log p_\text{model}(\mathbf x)-\log p_\text{noise}(\mathbf x))\)</span>，即最大化<span class="math inline">\(\log p_\text{model}(\mathbf x)-\log p_\text{noise}(\mathbf x)=\log\tilde{p}_\text{model}(\mathbf x;\theta)+c-p_\text{noise}(\mathbf x)\)</span>，</p><p><img src="https://i.loli.net/2020/07/24/8fVZkN2TrRtM7l1.png" srcset="/img/loading.gif" style="zoom: 33%;" /></p>]]></content>
     
     
     <categories>
@@ -532,9 +532,9 @@
     
     <tags>
       
-      <tag>Deep Learning</tag>
-      
       <tag>Anomaly Detection</tag>
+      
+      <tag>Deep Learning</tag>
       
     </tags>
     
@@ -588,9 +588,9 @@
     
     <tags>
       
-      <tag>VAE</tag>
-      
       <tag>Anomaly Detection</tag>
+      
+      <tag>VAE</tag>
       
     </tags>
     
@@ -617,15 +617,15 @@
     
     <tags>
       
-      <tag>VAE</tag>
-      
-      <tag>Deep Learning</tag>
-      
       <tag>Time Series</tag>
       
       <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
+      
+      <tag>Deep Learning</tag>
+      
+      <tag>VAE</tag>
       
     </tags>
     
@@ -652,11 +652,11 @@
     
     <tags>
       
+      <tag>Deep Learning</tag>
+      
       <tag>Variational Inference</tag>
       
       <tag>VAE</tag>
-      
-      <tag>Deep Learning</tag>
       
       <tag>GAN</tag>
       
@@ -716,11 +716,11 @@
     
     <tags>
       
+      <tag>Deep Learning</tag>
+      
       <tag>Variational Inference</tag>
       
       <tag>VAE</tag>
-      
-      <tag>Deep Learning</tag>
       
     </tags>
     
@@ -747,9 +747,9 @@
     
     <tags>
       
-      <tag>Deep Learning</tag>
-      
       <tag>Time Series</tag>
+      
+      <tag>Deep Learning</tag>
       
       <tag>RNN</tag>
       
@@ -778,15 +778,15 @@
     
     <tags>
       
-      <tag>VAE</tag>
-      
-      <tag>Deep Learning</tag>
-      
       <tag>Time Series</tag>
       
       <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
+      
+      <tag>Deep Learning</tag>
+      
+      <tag>VAE</tag>
       
       <tag>RNN</tag>
       
@@ -817,9 +817,9 @@
     
     <tags>
       
-      <tag>Deep Learning</tag>
-      
       <tag>Time Series</tag>
+      
+      <tag>Deep Learning</tag>
       
       <tag>GAN</tag>
       
@@ -848,13 +848,13 @@
     
     <tags>
       
-      <tag>Deep Learning</tag>
-      
       <tag>Time Series</tag>
       
       <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
+      
+      <tag>Deep Learning</tag>
       
     </tags>
     
@@ -881,13 +881,13 @@
     
     <tags>
       
-      <tag>Deep Learning</tag>
-      
       <tag>Time Series</tag>
       
       <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
+      
+      <tag>Deep Learning</tag>
       
     </tags>
     
@@ -914,15 +914,15 @@
     
     <tags>
       
-      <tag>VAE</tag>
-      
-      <tag>Deep Learning</tag>
-      
       <tag>Time Series</tag>
       
       <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
+      
+      <tag>Deep Learning</tag>
+      
+      <tag>VAE</tag>
       
     </tags>
     
@@ -949,13 +949,13 @@
     
     <tags>
       
-      <tag>Deep Learning</tag>
-      
       <tag>Time Series</tag>
       
       <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
+      
+      <tag>Deep Learning</tag>
       
       <tag>Spectral</tag>
       
