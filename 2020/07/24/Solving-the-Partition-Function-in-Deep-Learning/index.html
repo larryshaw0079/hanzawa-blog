@@ -160,7 +160,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    906 字
+                    865 字
                   </span>
                 
 
@@ -170,7 +170,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    13
+                    12
                      分钟
                   </span>
                 
@@ -207,7 +207,7 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：2020年7月24日 上午
+                  本文最后更新于：2020年7月24日 中午
                 
               </p>
             
@@ -243,7 +243,8 @@ p_\text{joint}(\mathbf x|y=0)=p_\text{noise}(\mathbf x)\\
 p_\text{joint}(y=1|\mathbf x)=\frac{p_\text{model}(\mathbf x)}{p_\text{model}(\mathbf x)+p_\text{noise}(\mathbf x)}
 \]</span> 接着我们分别从真实数据和噪声分布中采样样本<span class="math inline">\(\mathbf x\)</span>，两者数量一样（因为先验<span class="math inline">\(p_\text{joint}(y=1)=\frac{1}{2}\)</span>），同时对应的<span class="math inline">\(y\)</span>我们也是知道的。于是采用极大似然估计，最大化训练样本在我们的模型<span class="math inline">\(p_\text{joint}\)</span>的似然： <span class="math display">\[
 \theta^*,c^*=\mathop{\arg\max}_{\theta,c}\mathbb E_{\mathbf x,y\sim p_\text{train}}\log p_\text{joint}(y|\mathbf x)
-\]</span> 这里<span class="math inline">\(p_\text{joint}(y|\mathbf x)\)</span>相当于Logistic回归： <span class="math display">\[
+\]</span> <img src="https://i.loli.net/2020/07/24/8fVZkN2TrRtM7l1.png" srcset="/img/loading.gif" style="zoom: 33%;" /></p>
+<p>这里<span class="math inline">\(p_\text{joint}(y|\mathbf x)\)</span>相当于Logistic回归： <span class="math display">\[
 \begin{align}
 p_\text{joint}(y=1|\mathbf x)&amp;=\frac{p_\text{model}(\mathbf x)}{p_\text{model}(\mathbf x)+p_\text{noise}(\mathbf x)}\\
 &amp;=\frac{1}{1+\frac{p_\text{noise}(\mathbf x)}{p_\text{model}(\mathbf x)}}\\
@@ -251,8 +252,7 @@ p_\text{joint}(y=1|\mathbf x)&amp;=\frac{p_\text{model}(\mathbf x)}{p_\text{mode
 &amp;=\sigma\left(-\log\frac{p_\text{noise}(\mathbf x)}{p_\text{model}(\mathbf x)}\right)\\
 &amp;=\sigma(\log p_\text{model}(\mathbf x)-\log p_\text{noise}(\mathbf x))
 \end{align}
-\]</span> 如果样本<span class="math inline">\(\mathbf x\)</span>是真实数据中采样而来，那么优化会试图最大化<span class="math inline">\(\sigma(\log p_\text{model}(\mathbf x)-\log p_\text{noise}(\mathbf x))\)</span>，即最大化<span class="math inline">\(\log p_\text{model}(\mathbf x)-\log p_\text{noise}(\mathbf x)=\log\tilde{p}_\text{model}(\mathbf x;\theta)+c-p_\text{noise}(\mathbf x)\)</span>，</p>
-<p><img src="https://i.loli.net/2020/07/24/8fVZkN2TrRtM7l1.png" srcset="/img/loading.gif" style="zoom: 33%;" /></p>
+\]</span> 在原文中作者证明了优化达到最优时有<span class="math inline">\(\log p_\text{model}(\mathbf x)=\log p_\text{data}(\mathbf x)\)</span>。</p>
 
             </article>
             <hr>
