@@ -4,19 +4,6 @@
   
   
   <entry>
-    <title>Unsupervised Feature Learning via Non-Parametric Instance Discrimination</title>
-    <link href="/2020/07/26/Unsupervised-Feature-Learning-via-Non-Parametric-Instance-Discrimination/"/>
-    <url>/2020/07/26/Unsupervised-Feature-Learning-via-Non-Parametric-Instance-Discrimination/</url>
-    
-    <content type="html"><![CDATA[<h1 id="introduction">Introduction</h1><p>本文基于样本分类和噪声对比估计提出了一个无监督表示学习算法。下图展示了一个Intuition Example：</p><p><img src="https://i.loli.net/2020/07/28/AimfJM7gtuDsPGQ.png" srcset="/img/loading.gif" style="zoom: 67%;" /></p><p>对于一个有监督的分类器，输入一张图片，作者观察到分类器的Softmax Response中较高的那些类都是在视觉上看起来比较接近的（美洲豹Leopard，美洲虎Jaguar，印度豹Cheetah），也就是说网络捕捉到了类间的视觉相似性，不过这是在有标签的情况下。对于无监督表示学习任务，作者将这个观察推广到了一个极端情况，就是把每一个样本都视作不同的类，然后让分类器来学习样本（类）间的视觉相似性。不过直接这么做会有严重的效率问题，所以作者还利用了Memory Bank机制和噪声对比估计来提高效率。</p><h1 id="proposed-method">Proposed Method</h1><p>学习一个嵌入表示函数<span class="math inline">\(\mathbf v=f_\theta(x)\)</span>。在表示空间中<span class="math inline">\(d_\theta(x,y)=\parallel f_\theta(x)-f_\theta(y)\parallel\)</span></p><p><img src="https://i.loli.net/2020/07/26/WICKVkhrBu6Mci5.png" srcset="/img/loading.gif" /></p><h2 id="non-parametric-softmax-classifier">Non-Parametric Softmax Classifier</h2><h3 id="parametric-classifier">Parametric Classifier</h3><p>在经过嵌入表示函数之后，得到表示向量<span class="math inline">\(\mathbf v_i=f_\theta(\mathbf x_i)\)</span>。要基于这个向量进行分类， <span class="math display">\[P(i|\mathbf v)=\frac{\exp(\mathbf w_i^\top\mathbf v)}{\sum_j\exp(\mathbf w_j^\top\mathbf v)}\]</span> ### Non-Parametric Classifier</p><p><span class="math display">\[P(i|\mathbf v)=\frac{\exp(\mathbf v_i^\top\mathbf v/\tau)}{\sum_j\exp(\mathbf v_j^\top\mathbf v/\tau)}\]</span></p><p>最后的损失函数为： <span class="math display">\[J(\theta)=-\sum_{i=1}^n\log P(i|f_\theta(x_i))\]</span></p><h3 id="learning-with-a-memory-bank">Learning with A Memory Bank</h3><h2 id="noise-contrastive-estimation">Noise Contrastive Estimation</h2><p><span class="math display">\[P(i|\mathbf v)=\frac{\exp(\mathbf v^\top\mathbf f_i/\tau)}{Z_i}\\Z_i=\sum_{j=1}^n\exp(\mathbf v^\top_j\mathbf f_i/\tau)\]</span></p><p>最后 <span class="math display">\[h(i,\mathbf v)=P(D=1|i,\mathbf v)=\frac{P(i|\mathbf v)}{P(i|\mathbf v)+mP_n(i)}\]</span> 损失函数 <span class="math display">\[J_{NCE}(\theta)=-E_{P_d}[\log h(i,\mathbf v)]-m\cdot E_{P_n}[\log(1-h(i,\mathbf v^\prime))]\]</span> 为了计算<span class="math inline">\(Z_i\)</span> <span class="math display">\[Z\simeq Z_i\simeq nE_j[\exp(\mathbf v_j^\top\mathbf f_i/\tau)]=\frac{n}{m}\sum_{k=1}^m\exp(\mathbf v_{j_k}^\top\mathbf f_i/\tau)\]</span></p><p><span class="math display">\[-\log h(i,\mathbf v_i^{(t-1)})+\lambda\parallel\mathbf v_i^{(i)}-\mathbf v_i^{(i-1)}\parallel^2_2\]</span></p><p><span class="math display">\[J_{NCE}(\theta)=-E_{P_d}\left[\log h(i,\mathbf v_i^{(t-1)})-\lambda\parallel\mathbf v_i^{(t)}-\mathbf v_i^{(t-1)}\parallel^2_2\right]\\-m\cdot E_{P_n}\left[\log(1-h(i,\mathbf v^{\prime(t-1)}))\right]\]</span></p><h2 id="weighted-k-nearest-neighbor-classifier">Weighted k-Nearest Neighbor Classifier</h2><p><img src="https://i.loli.net/2020/07/29/Cl8xHeFZzXpvosL.png" srcset="/img/loading.gif" style="zoom:67%;" /></p><h1 id="experiments">Experiments</h1>]]></content>
-    
-    
-    
-  </entry>
-  
-  
-  
-  <entry>
     <title>Effective End-to-end Unsupervised Outlier Detection via Linear Priority of Discriminative Network</title>
     <link href="/2020/07/14/Effective-End-to-end-Unsupervised-Outlier-Detection-via-Linear-Priority-of-Discriminative-Network/"/>
     <url>/2020/07/14/Effective-End-to-end-Unsupervised-Outlier-Detection-via-Linear-Priority-of-Discriminative-Network/</url>
@@ -462,9 +449,9 @@
     
     <tags>
       
-      <tag>Anomaly Detection</tag>
-      
       <tag>Deep Learning</tag>
+      
+      <tag>Anomaly Detection</tag>
       
     </tags>
     
@@ -518,9 +505,9 @@
     
     <tags>
       
-      <tag>Anomaly Detection</tag>
-      
       <tag>VAE</tag>
+      
+      <tag>Anomaly Detection</tag>
       
     </tags>
     
@@ -547,15 +534,15 @@
     
     <tags>
       
-      <tag>Time Series</tag>
-      
-      <tag>Anomaly Detection</tag>
-      
-      <tag>Machine Learning</tag>
+      <tag>VAE</tag>
       
       <tag>Deep Learning</tag>
       
-      <tag>VAE</tag>
+      <tag>Time Series</tag>
+      
+      <tag>Machine Learning</tag>
+      
+      <tag>Anomaly Detection</tag>
       
     </tags>
     
@@ -582,11 +569,11 @@
     
     <tags>
       
-      <tag>Deep Learning</tag>
+      <tag>Variational Inference</tag>
       
       <tag>VAE</tag>
       
-      <tag>Variational Inference</tag>
+      <tag>Deep Learning</tag>
       
       <tag>GAN</tag>
       
@@ -617,9 +604,9 @@
       
       <tag>Time Series</tag>
       
-      <tag>Machine Learning</tag>
-      
       <tag>Statistics</tag>
+      
+      <tag>Machine Learning</tag>
       
     </tags>
     
@@ -646,11 +633,11 @@
     
     <tags>
       
-      <tag>Deep Learning</tag>
+      <tag>Variational Inference</tag>
       
       <tag>VAE</tag>
       
-      <tag>Variational Inference</tag>
+      <tag>Deep Learning</tag>
       
     </tags>
     
@@ -677,9 +664,9 @@
     
     <tags>
       
-      <tag>Time Series</tag>
-      
       <tag>Deep Learning</tag>
+      
+      <tag>Time Series</tag>
       
       <tag>RNN</tag>
       
@@ -708,15 +695,15 @@
     
     <tags>
       
-      <tag>Time Series</tag>
-      
-      <tag>Anomaly Detection</tag>
-      
-      <tag>Machine Learning</tag>
+      <tag>VAE</tag>
       
       <tag>Deep Learning</tag>
       
-      <tag>VAE</tag>
+      <tag>Time Series</tag>
+      
+      <tag>Machine Learning</tag>
+      
+      <tag>Anomaly Detection</tag>
       
       <tag>RNN</tag>
       
@@ -747,9 +734,9 @@
     
     <tags>
       
-      <tag>Time Series</tag>
-      
       <tag>Deep Learning</tag>
+      
+      <tag>Time Series</tag>
       
       <tag>GAN</tag>
       
@@ -778,13 +765,13 @@
     
     <tags>
       
-      <tag>Time Series</tag>
+      <tag>Deep Learning</tag>
       
-      <tag>Anomaly Detection</tag>
+      <tag>Time Series</tag>
       
       <tag>Machine Learning</tag>
       
-      <tag>Deep Learning</tag>
+      <tag>Anomaly Detection</tag>
       
     </tags>
     
@@ -811,13 +798,13 @@
     
     <tags>
       
-      <tag>Time Series</tag>
+      <tag>Deep Learning</tag>
       
-      <tag>Anomaly Detection</tag>
+      <tag>Time Series</tag>
       
       <tag>Machine Learning</tag>
       
-      <tag>Deep Learning</tag>
+      <tag>Anomaly Detection</tag>
       
     </tags>
     
@@ -844,15 +831,15 @@
     
     <tags>
       
-      <tag>Time Series</tag>
-      
-      <tag>Anomaly Detection</tag>
-      
-      <tag>Machine Learning</tag>
+      <tag>VAE</tag>
       
       <tag>Deep Learning</tag>
       
-      <tag>VAE</tag>
+      <tag>Time Series</tag>
+      
+      <tag>Machine Learning</tag>
+      
+      <tag>Anomaly Detection</tag>
       
     </tags>
     
@@ -879,13 +866,13 @@
     
     <tags>
       
-      <tag>Time Series</tag>
+      <tag>Deep Learning</tag>
       
-      <tag>Anomaly Detection</tag>
+      <tag>Time Series</tag>
       
       <tag>Machine Learning</tag>
       
-      <tag>Deep Learning</tag>
+      <tag>Anomaly Detection</tag>
       
       <tag>Spectral</tag>
       
