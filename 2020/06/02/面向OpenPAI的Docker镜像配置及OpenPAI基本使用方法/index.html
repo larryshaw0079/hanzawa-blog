@@ -160,7 +160,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    4k 字
+                    4.3k 字
                   </span>
                 
 
@@ -170,7 +170,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    51
+                    53
                      分钟
                   </span>
                 
@@ -207,13 +207,16 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：2020年6月25日 下午
+                  本文最后更新于：2020年8月1日 中午
                 
               </p>
             
             <article class="markdown-body">
               <h1 id="introduction">Introduction</h1>
 <p>实验室服务器集群采用OpenPAI来进行GPU资源的管理，而OpenPAI采用了Docker作为基础，即代码都放在Docker容器中运行。由于Docker的使用、Docker镜像的配置都有一定的门槛，所以这里写一篇Tutorial来进行介绍。本文不是网上资料的拼凑，而是经过本人走弯路踩坑形成的&quot;Best practice&quot;。主要内容包括Docker的介绍、Docker的基本使用、如何配置自己的Docker镜像以及OpenPAI平台的基本使用，但不包括Docker和OpenPAI的安装。</p>
+<blockquote>
+<p>2020.8.1 Update: 加入通过HDFS读取容器保存的文件的方法</p>
+</blockquote>
 <h1 id="docker-from-scratch">Docker from Scratch</h1>
 <p>要理解Docker是什么，从虚拟机开始讲可能会比较好理解。虚拟机大家可能都很熟悉了，比如说我用的系统是Windows，但我需要Linux系统来作为一个Flask编写的网站的服务器，但是又不想单独安装Linux系统，于是可以使用虚拟机来解决这个问题。安装VMWare Workstation，去官网下载Ubuntu系统镜像，然后在VMWare中安装好系统，然后从头配置Flask相关环境。实际上我需要的仅仅是一个Flask运行环境而已，而使用虚拟机却需要如此“大费周章”，这时Docker出现了，网上有大量现成的Flask Docker镜像，配置好了你所需的Flask环境，你只需要下载这些镜像，然后运行它，你就得到了一个Flask运行环境，而与你当前使用的系统无关。如果你需要一个Tomcat的运行环境，那么去找一个Tomcat的Docker镜像就行。Docker将需求或者说服务绑定在了Docker镜像中（<strong>轻量化</strong>，一个需求对应一个Docker镜像，每个镜像都很小），你有什么需求，去找相应的镜像即可（或者自己写一个），镜像的运行是以虚拟机的形式存在，所以他们之间也是互不干扰的。同时，你在写好一个Docker镜像之后，你还可以<strong>分享</strong>给别人，这样其他人就不用重新配置，直接运行你给他的镜像即可。Docker有两个比较关键的概念：</p>
 <ul>
@@ -445,6 +448,11 @@ tar -xvf files.tarCopy</code></pre>
 <p>要注意在本机上构建好镜像之后，需要把镜像重命名为<code>&lt;repository_address&gt;/&lt;image_name&gt;</code>的格式（我们的<code>&lt;repository&gt;</code>是<code>lin-ai-27:5000</code>，假设我的镜像名是<code>xiaoqinfeng/pytorch</code>，那就是改成<code>lin-ai-27:5000/xiaoqinfeng/pytorch</code>），然后执行<code>docker push</code>推送到Docker镜像服务器上才能在OpenPAI上使用。</p>
 <p>提交之后，可以在Jobs界面看到任务的运行情况：</p>
 <p><img src="https://i.loli.net/2020/06/24/ZD4cUgOCIqnyHdB.png" srcset="/img/loading.gif" style="zoom: 50%;" /></p>
+<h1 id="misc">Misc</h1>
+<h2 id="store-files-in-containers">Store Files in Containers</h2>
+<p>我们往往需要在程序运行的时候保存文件，如checkpoints等。在OpenPAI上执行程序的话文件是保存在程序中的，如果我们想要在运行完之后把文件复制到本地电脑上呢？这个时候就需要在任务的配置文件里加上复制文件到HDFS的语句。首先确认你的HDFS的URL：如<code>hdfs://172.31.246.52:9000/你的OpenPAI用户名/</code>。</p>
+<p>如果要创建文件夹，则可以使用<code>hdfs dfs -mkdir -p &lt;HDFS URL&gt;+&lt;New Folder&gt;</code>。这里<code>&lt;New Folder&gt;</code>是你要创建的的文件夹的路径，用起来和Linux的<code>mkdir</code>命令其实是差不多的。</p>
+<p>要复制文件（夹）则使用<code>hdfs dfs -cp &lt;Source Dir&gt; &lt;Dest Dir&gt;</code>。</p>
 
             </article>
             <hr>
