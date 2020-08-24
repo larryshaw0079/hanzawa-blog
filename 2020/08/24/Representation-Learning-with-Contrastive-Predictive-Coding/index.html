@@ -212,47 +212,88 @@
               </p>
             
             <article class="markdown-body">
-              <h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>本文提出了一种表示学习框架：Contrastive Predictive Coding（CPC）。</p>
-<h1 id="Preliminaries"><a href="#Preliminaries" class="headerlink" title="Preliminaries"></a>Preliminaries</h1><h2 id="Multual-Information"><a href="#Multual-Information" class="headerlink" title="Multual Information"></a>Multual Information</h2><p>互信息是衡量已知一个变量时，另一个变量不确定性的减少程度的度量。对于离散随机变量，互信息的定义为：<br>$$<br>I(X,Y)=\sum_{y\in\mathcal Y}\sum_{x\in\mathcal X}p(x,y)\log\frac{p(x,y)}{p(x)p(y)}=\sum_{y\in\mathcal Y}\sum_{x\in\mathcal X}p(x,y)\log\frac{p(y|x)}{p(y)}<br>$$<br>对于连续随机变量，互信息的定义为：<br>$$<br>I(X,Y)=\int_{\mathcal Y}\int_{\mathcal X}p(x,y)\log\frac{p(x,y)}{p(x)p(y)}\mathrm dx\mathrm d y=\int_{\mathcal Y}\int_{\mathcal X}p(x,y)\log\frac{p(y|x)}{p(y)}\mathrm dx\mathrm d y<br>$$<br>互信息与熵之间的关系：<br>$$<br>\begin{align}<br>I(X,Y)&amp;=H(X)-H(X|Y)\<br>&amp;=H(Y)-H(Y|X)\<br>&amp;=H(X)+H(Y)-H(X,Y)\<br>&amp;=H(X,Y)-H(X|Y)-H(Y|X)<br>\end{align}<br>$$<br>互信息与KL散之间的关系：<br>$$<br>I(X,Y)=\mathbb E_Y[D_{KL}(p(x|y)\parallel p(x))]<br>$$<br>从图中可以很容易看出互信息相当于$X$和$Y$两者的熵的“重叠”的部分：</p>
-<img src="https://i.loli.net/2020/07/17/orRXnpugEzsZDwq.png" srcset="/img/loading.gif" style="zoom:67%;" />
-
-<p>在表示学习中，互信息的应用越来越广泛。对于输入的数据$X$，表示学习的目的是尽可能学到“好“的表示$Z$，保留原始数据尽可能多的重要信息。如果使用基于重构的模型，我们就会要求最小化重构误差$\parallel X-\hat{X}\parallel^2_2$，但是这种”逐像素“式的损失函数过于严苛，不利于模型学习高层语义信息。如果加入一个判别器来自动学习一个度量，首先增大了计算开销，同时GAN本身也有诸多问题。</p>
-<p>现阶段很多工作使用互信息来判定学到的表示$Z$的好坏，即最大化原始数据$X$与表示$Z$之间的互信息：<br>$$<br>Z^*=\mathop{\arg\max}_{p(z|x)}I(X,Z)<br>$$<br>互信息越大意味着$\log\frac{p(z|x)}{p(z)}$越大，即$p(z|x)$要大于$p(z)$。$p(z)$可以看作是$Z$的先验，而$p(z|x)\gg p(z)$可以理解为在得知输入$X$之后，我们能找到专属$X$的那个编码$Z$。</p>
-<h1 id="Proposed-Method"><a href="#Proposed-Method" class="headerlink" title="Proposed Method"></a>Proposed Method</h1><h2 id="Motivation-and-Intuitions"><a href="#Motivation-and-Intuitions" class="headerlink" title="Motivation and Intuitions"></a>Motivation and Intuitions</h2><p>$$<br>I(x;c)=\sum_{x,c}p(x,c)\log\frac{p(x|c)}{p(x)}<br>$$</p>
-<h2 id="Contrastive-Predictive-Coding"><a href="#Contrastive-Predictive-Coding" class="headerlink" title="Contrastive Predictive Coding"></a>Contrastive Predictive Coding</h2><p>下图展示了Contrastive Predictive Coding的结构：</p>
-<img src="https://i.loli.net/2020/07/07/mcFYnVGasjkHrw5.png" srcset="/img/loading.gif" style="zoom:67%;" />
-
-<p>编码器$g_{enc}$将观测值$\boldsymbol x_t$编码到隐变量$\boldsymbol z_t=g_\text{enc}(\boldsymbol x_t)$（对应于局部信息），之后自回归模型$g_{ar}$将所有$t$之前的（包括$t$）隐变量$z_{\leq t}$压缩到一个上下文隐变量$\boldsymbol c_t=g_\text{ar}(\boldsymbol z_{\leq  t})$（希望具有预测性质，捕获了长时依赖性）。不过本文并不是基于$\boldsymbol c_t$来预测未来的观测值$\boldsymbol x_{t+k}$，即估计分布$p_k(\boldsymbol x_{t+k}|\boldsymbol c_t)$，而这样的话又要用到MSE之类的Loss。文中利用的是最大化$\boldsymbol c_t$和$\boldsymbol x_{t+k}$之间的互信息$\log \frac{p(x_{t+k}|c_t)}{p(x_{t+k})}$（这种形式的互信息被称为是点互信息，详见<a href="https://en.wikipedia.org/wiki/Pointwise_mutual_information" target="_blank" rel="noopener">维基</a>）。定义一个度量函数$f(\cdot,\cdot)$，要求其具有与$\frac{p(x_{t+k}|c_t)}{p(x_{t+k})}$成比例的性质：<br>$$<br>f_k(x_{t+k},c_t)\propto\frac{p(x_{t+k}|c_t)}{p(x_{t+k})}<br>$$<br>这时最大化$f(\cdot,\cdot)$就相当于最大化两者的互信息。</p>
-<p>至于$f(\cdot,\cdot)$的具体形式，其实$\frac{p(x_{t+k}|c_t)}{p(x_{t+k})}$这个式子我们也是没法直接优化的，因为这个Density Ratio无法直接算出来。在这里，作者使用了一个替代的办法，就是用$\mathbf c_t$来预测未来的隐变量$\hat{\mathbf z}<em>{t+1},\hat{\mathbf z}</em>{t+2},\cdots$，而真实的隐变量$\mathbf z_{t+1},\mathbf z_{t+2},\cdots$我们是知道的。这里预测直接使用权重矩阵和$\mathbf c_t$相乘：<br>$$<br>f_k(\mathbf x_{t+k},\mathbf c_t)=\exp\left(\mathbf z_{t+k}^T \mathbf W_k\mathbf c_t\right)<br>$$</p>
-<p>上式有点难以理解，实际上预测值$\hat{\mathbf z}<em>{t+k}=\mathbf W_k\mathbf c_t$，而$\mathbf z</em>{t+k}\hat{\mathbf z}<em>{t+k}$相当于计算两者的距离，即相似性。所以$f_k(\cdot,\cdot)$其实是在计算预测值和真实值的相似性。现在大家先接受这个$f(\cdot,\cdot)$的定义，因为后面会证明优化这个$f(\cdot,\cdot)$就相当于在优化Density Ratio $\frac{p(x</em>{t+k}|c_t)}{p(x_{t+k})}$。</p>
-<h2 id="InfoNCE-Loss-and-Mutual-Information-Estimation"><a href="#InfoNCE-Loss-and-Mutual-Information-Estimation" class="headerlink" title="InfoNCE Loss and Mutual Information Estimation"></a>InfoNCE Loss and Mutual Information Estimation</h2><p>现在回到公式$I(x;c)=\sum_{x,c}p(x,c)\log\frac{p(x|c)}{p(x)}$，</p>
-<p>$\mathbf X={x_1,x_2,\cdots,x_N}$，一个来自$p(x_{t+k}|c_t)$的正例和$N-1$个来自$p(x_{t+k})$的负例，目标函数（文中称为CPC Loss）为：</p>
-<p>$$<br>\mathcal L_N=-\mathop{\mathbb E}\limits_X\left[\log\frac{f_k(x_{t+k},c_t)}{\sum_{x_j\in X}f_k(x_j,c_t)}\right]<br>$$</p>
-<p>这里相当于做了个$N$分类，因为这里损失函数等价于$N$分类交叉熵损失函数。</p>
+              <h1 id="introduction">Introduction</h1>
+<p>本文提出了一种表示学习框架：Contrastive Predictive Coding（CPC）。</p>
+<h1 id="preliminaries">Preliminaries</h1>
+<h2 id="multual-information">Multual Information</h2>
+<p>互信息是衡量已知一个变量时，另一个变量不确定性的减少程度的度量。对于离散随机变量，互信息的定义为： <span class="math display">\[
+I(X,Y)=\sum_{y\in\mathcal Y}\sum_{x\in\mathcal X}p(x,y)\log\frac{p(x,y)}{p(x)p(y)}=\sum_{y\in\mathcal Y}\sum_{x\in\mathcal X}p(x,y)\log\frac{p(y|x)}{p(y)}
+\]</span> 对于连续随机变量，互信息的定义为： <span class="math display">\[
+I(X,Y)=\int_{\mathcal Y}\int_{\mathcal X}p(x,y)\log\frac{p(x,y)}{p(x)p(y)}\mathrm dx\mathrm d y=\int_{\mathcal Y}\int_{\mathcal X}p(x,y)\log\frac{p(y|x)}{p(y)}\mathrm dx\mathrm d y
+\]</span> 互信息与熵之间的关系： <span class="math display">\[
+\begin{align}
+I(X,Y)&amp;=H(X)-H(X|Y)\\
+&amp;=H(Y)-H(Y|X)\\
+&amp;=H(X)+H(Y)-H(X,Y)\\
+&amp;=H(X,Y)-H(X|Y)-H(Y|X)
+\end{align}
+\]</span> 互信息与KL散之间的关系： <span class="math display">\[
+I(X,Y)=\mathbb E_Y[D_{KL}(p(x|y)\parallel p(x))]
+\]</span> 从图中可以很容易看出互信息相当于<span class="math inline">\(X\)</span>和<span class="math inline">\(Y\)</span>两者的熵的“重叠”的部分：</p>
+<p><img src="https://i.loli.net/2020/07/17/orRXnpugEzsZDwq.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p>在表示学习中，互信息的应用越来越广泛。对于输入的数据<span class="math inline">\(X\)</span>，表示学习的目的是尽可能学到“好“的表示<span class="math inline">\(Z\)</span>，保留原始数据尽可能多的重要信息。如果使用基于重构的模型，我们就会要求最小化重构误差<span class="math inline">\(\parallel X-\hat{X}\parallel^2_2\)</span>，但是这种”逐像素“式的损失函数过于严苛，不利于模型学习高层语义信息。如果加入一个判别器来自动学习一个度量，首先增大了计算开销，同时GAN本身也有诸多问题。</p>
+<p>现阶段很多工作使用互信息来判定学到的表示<span class="math inline">\(Z\)</span>的好坏，即最大化原始数据<span class="math inline">\(X\)</span>与表示<span class="math inline">\(Z\)</span>之间的互信息： <span class="math display">\[
+Z^*=\mathop{\arg\max}_{p(z|x)}I(X,Z)
+\]</span> 互信息越大意味着<span class="math inline">\(\log\frac{p(z|x)}{p(z)}\)</span>越大，即<span class="math inline">\(p(z|x)\)</span>要大于<span class="math inline">\(p(z)\)</span>。<span class="math inline">\(p(z)\)</span>可以看作是<span class="math inline">\(Z\)</span>的先验，而<span class="math inline">\(p(z|x)\gg p(z)\)</span>可以理解为在得知输入<span class="math inline">\(X\)</span>之后，我们能找到专属<span class="math inline">\(X\)</span>的那个编码<span class="math inline">\(Z\)</span>。</p>
+<h1 id="proposed-method">Proposed Method</h1>
+<h2 id="motivation-and-intuitions">Motivation and Intuitions</h2>
+<p><span class="math display">\[
+I(x;c)=\sum_{x,c}p(x,c)\log\frac{p(x|c)}{p(x)}
+\]</span></p>
+<h2 id="contrastive-predictive-coding">Contrastive Predictive Coding</h2>
+<p>下图展示了Contrastive Predictive Coding的结构：</p>
+<p><img src="https://i.loli.net/2020/07/07/mcFYnVGasjkHrw5.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p>编码器<span class="math inline">\(g_{enc}\)</span>将观测值<span class="math inline">\(\boldsymbol x_t\)</span>编码到隐变量<span class="math inline">\(\boldsymbol z_t=g_\text{enc}(\boldsymbol x_t)\)</span>（对应于局部信息），之后自回归模型<span class="math inline">\(g_{ar}\)</span>将所有<span class="math inline">\(t\)</span>之前的（包括<span class="math inline">\(t\)</span>）隐变量<span class="math inline">\(z_{\leq t}\)</span>压缩到一个上下文隐变量<span class="math inline">\(\boldsymbol c_t=g_\text{ar}(\boldsymbol z_{\leq t})\)</span>（希望具有预测性质，捕获了长时依赖性）。不过本文并不是基于<span class="math inline">\(\boldsymbol c_t\)</span>来预测未来的观测值<span class="math inline">\(\boldsymbol x_{t+k}\)</span>，即估计分布<span class="math inline">\(p_k(\boldsymbol x_{t+k}|\boldsymbol c_t)\)</span>，而这样的话又要用到MSE之类的Loss。文中利用的是最大化<span class="math inline">\(\boldsymbol c_t\)</span>和<span class="math inline">\(\boldsymbol x_{t+k}\)</span>之间的互信息<span class="math inline">\(\log \frac{p(x_{t+k}|c_t)}{p(x_{t+k})}\)</span>（这种形式的互信息被称为是点互信息，详见<a href="https://en.wikipedia.org/wiki/Pointwise_mutual_information" target="_blank" rel="noopener">维基</a>）。定义一个度量函数<span class="math inline">\(f(\cdot,\cdot)\)</span>，要求其具有与<span class="math inline">\(\frac{p(x_{t+k}|c_t)}{p(x_{t+k})}\)</span>成比例的性质： <span class="math display">\[
+f_k(x_{t+k},c_t)\propto\frac{p(x_{t+k}|c_t)}{p(x_{t+k})}
+\]</span> 这时最大化<span class="math inline">\(f(\cdot,\cdot)\)</span>就相当于最大化两者的互信息。</p>
+<p>至于<span class="math inline">\(f(\cdot,\cdot)\)</span>的具体形式，其实<span class="math inline">\(\frac{p(x_{t+k}|c_t)}{p(x_{t+k})}\)</span>这个式子我们也是没法直接优化的，因为这个Density Ratio无法直接算出来。在这里，作者使用了一个替代的办法，就是用<span class="math inline">\(\mathbf c_t\)</span>来预测未来的隐变量<span class="math inline">\(\hat{\mathbf z}_{t+1},\hat{\mathbf z}_{t+2},\cdots\)</span>，而真实的隐变量<span class="math inline">\(\mathbf z_{t+1},\mathbf z_{t+2},\cdots\)</span>我们是知道的。这里预测直接使用权重矩阵和<span class="math inline">\(\mathbf c_t\)</span>相乘： <span class="math display">\[
+f_k(\mathbf x_{t+k},\mathbf c_t)=\exp\left(\mathbf z_{t+k}^T \mathbf W_k\mathbf c_t\right)
+\]</span></p>
+<p>上式有点难以理解，实际上预测值<span class="math inline">\(\hat{\mathbf z}_{t+k}=\mathbf W_k\mathbf c_t\)</span>，而<span class="math inline">\(\mathbf z_{t+k}\hat{\mathbf z}_{t+k}\)</span>相当于计算两者的距离，即相似性。所以<span class="math inline">\(f_k(\cdot,\cdot)\)</span>其实是在计算预测值和真实值的相似性。现在大家先接受这个<span class="math inline">\(f(\cdot,\cdot)\)</span>的定义，因为后面会证明优化这个<span class="math inline">\(f(\cdot,\cdot)\)</span>就相当于在优化Density Ratio <span class="math inline">\(\frac{p(x_{t+k}|c_t)}{p(x_{t+k})}\)</span>。</p>
+<h2 id="infonce-loss-and-mutual-information-estimation">InfoNCE Loss and Mutual Information Estimation</h2>
+<p>现在回到公式<span class="math inline">\(I(x;c)=\sum_{x,c}p(x,c)\log\frac{p(x|c)}{p(x)}\)</span>，</p>
+<p><span class="math inline">\(\mathbf X=\{x_1,x_2,\cdots,x_N\}\)</span>，一个来自<span class="math inline">\(p(x_{t+k}|c_t)\)</span>的正例和<span class="math inline">\(N-1\)</span>个来自<span class="math inline">\(p(x_{t+k})\)</span>的负例，目标函数（文中称为CPC Loss）为：</p>
+<p><span class="math display">\[
+\mathcal L_N=-\mathop{\mathbb E}\limits_X\left[\log\frac{f_k(x_{t+k},c_t)}{\sum_{x_j\in X}f_k(x_j,c_t)}\right]
+\]</span></p>
+<p>这里相当于做了个<span class="math inline">\(N\)</span>分类，因为这里损失函数等价于<span class="math inline">\(N\)</span>分类交叉熵损失函数。</p>
 <blockquote>
-<p>两个离散随机变量的交叉熵的定义为：<br>$$<br>H(p,q) = -\sum_{x\in\mathcal X}p(x)\log q(x)<br>$$<br>对于交叉熵损失函数，设$i$为真实标签，$\hat{\boldsymbol y}$为分类器的输出。$\frac{\exp(\hat y_i)}{\sum_j\exp(\hat y_j)}$为经过<code>Softmax</code>归一化之后的输出，其每个分量$\hat y_j$相当于输入样本$x$的预测类别为$j$的概率。不过由于对于真实标签$y$来说，只有$y_i=1$，其他的分量都为$0$，所以最后交叉熵只剩下一项：<br>$$<br>\mathcal L=-\log\left(\frac{\exp(\hat y_i)}{\sum_j\exp(\hat y_j)}\right)<br>$$</p>
+<p>两个离散随机变量的交叉熵的定义为： <span class="math display">\[
+H(p,q) = -\sum_{x\in\mathcal X}p(x)\log q(x)
+\]</span> 对于交叉熵损失函数，设<span class="math inline">\(i\)</span>为真实标签，<span class="math inline">\(\hat{\boldsymbol y}\)</span>为分类器的输出。<span class="math inline">\(\frac{\exp(\hat y_i)}{\sum_j\exp(\hat y_j)}\)</span>为经过<code>Softmax</code>归一化之后的输出，其每个分量<span class="math inline">\(\hat y_j\)</span>相当于输入样本<span class="math inline">\(x\)</span>的预测类别为<span class="math inline">\(j\)</span>的概率。不过由于对于真实标签<span class="math inline">\(y\)</span>来说，只有<span class="math inline">\(y_i=1\)</span>，其他的分量都为<span class="math inline">\(0\)</span>，所以最后交叉熵只剩下一项： <span class="math display">\[
+\mathcal L=-\log\left(\frac{\exp(\hat y_i)}{\sum_j\exp(\hat y_j)}\right)
+\]</span></p>
 </blockquote>
-<p>接下来作者证明优化$\mathcal L_N$会使得$f_k(\mathbf x_{t+k},\mathbf c_t)$和互信息接近。这里的$p(\mathbf x_{t+k}|\mathbf c_t)$。设$p(d=i|X,c_t)$为给定数据集（或者Batch）$X$和context向量$c_t$的条件下，样本$x_i$为正样本的概率，有：<br>$$<br>\begin{align}<br>p(d=i|X,c_t)&amp;=\frac{p(x_i|c_t)\prod_{l\neq i}p(x_l)}{\sum^N_{j=1} p(x_j|c_t)\prod_{l\neq j}p(x_l)}\<br>&amp;=\frac{\frac{p(x_i|c_t)}{p(x_i)}}{\sum^N_{j=1}\frac{p(x_j|c_t)}{p(x_j)}}<br>\end{align}<br>$$</p>
-<p>$$<br>\begin{align}<br>\mathcal L_\text{N}^\text{opt}&amp;=-\mathop{\mathbb E}\limits_X\log\left[\frac{\frac{p(x_{t+k}|c_t)}{p(x_{t+k})}}{\frac{p(x_{t+k}|c_t)}{p(x_{t+k})}+\sum_{x_j\in X_\text{neg}}\frac{p(x_j|c_t)}{x_j}}\right]\</p>
-<p>\end{align}<br>$$</p>
-<p>$$<br>I(x_{t+k},c_t)\geq \log(N)-\mathcal L_N<br>$$</p>
-<p>可以说$\mathcal L_N$作为互信息$I(x_{t+k},c_t)$的一个下界。</p>
-<h2 id="Implementation"><a href="#Implementation" class="headerlink" title="Implementation"></a>Implementation</h2><h1 id="Experiments"><a href="#Experiments" class="headerlink" title="Experiments"></a>Experiments</h1><h2 id="Audio"><a href="#Audio" class="headerlink" title="Audio"></a>Audio</h2><p><img src="https://i.loli.net/2020/07/07/kWectjL27MKy1dA.png" srcset="/img/loading.gif" alt=""></p>
-<p><img src="https://i.loli.net/2020/07/07/vhBRmpntw2Xx6J9.png" srcset="/img/loading.gif" alt=""></p>
-<p><img src="https://i.loli.net/2020/07/07/5QaDOCFvxLE6wqT.png" srcset="/img/loading.gif" alt=""></p>
-<p><img src="https://i.loli.net/2020/07/07/nA49kE1WP73oGQJ.png" srcset="/img/loading.gif" alt=""></p>
-<h2 id="Vision"><a href="#Vision" class="headerlink" title="Vision"></a>Vision</h2><img src="https://i.loli.net/2020/07/07/gkNnWo4zyUeBRCa.png" srcset="/img/loading.gif" style="zoom:67%;" />
+<p>接下来作者证明优化<span class="math inline">\(\mathcal L_N\)</span>会使得<span class="math inline">\(f_k(\mathbf x_{t+k},\mathbf c_t)\)</span>和互信息接近。这里的<span class="math inline">\(p(\mathbf x_{t+k}|\mathbf c_t)\)</span>。设<span class="math inline">\(p(d=i|X,c_t)\)</span>为给定数据集（或者Batch）<span class="math inline">\(X\)</span>和context向量<span class="math inline">\(c_t\)</span>的条件下，样本<span class="math inline">\(x_i\)</span>为正样本的概率，有： <span class="math display">\[
+\begin{align}
+p(d=i|X,c_t)&amp;=\frac{p(x_i|c_t)\prod_{l\neq i}p(x_l)}{\sum^N_{j=1} p(x_j|c_t)\prod_{l\neq j}p(x_l)}\\
+&amp;=\frac{\frac{p(x_i|c_t)}{p(x_i)}}{\sum^N_{j=1}\frac{p(x_j|c_t)}{p(x_j)}}
+\end{align}
+\]</span></p>
+<p>$$ <span class="math display">\[\begin{align}
+\mathcal L_\text{N}^\text{opt}&amp;=-\mathop{\mathbb E}\limits_X\log\left[\frac{\frac{p(x_{t+k}|c_t)}{p(x_{t+k})}}{\frac{p(x_{t+k}|c_t)}{p(x_{t+k})}+\sum_{x_j\in X_\text{neg}}\frac{p(x_j|c_t)}{x_j}}\right]\\
 
-
-
-<img src="https://i.loli.net/2020/07/07/qH6BAJnhMcP9bKy.png" srcset="/img/loading.gif" style="zoom:67%;" />
-
-
-
-<p><img src="https://i.loli.net/2020/07/07/ezO1IibwvC5Mus8.png" srcset="/img/loading.gif" alt=""></p>
-<p><img src="https://i.loli.net/2020/07/07/sWNGXqv1n38kgcf.png" srcset="/img/loading.gif" alt=""></p>
-<h2 id="Natural-Language"><a href="#Natural-Language" class="headerlink" title="Natural Language"></a>Natural Language</h2><p><img src="https://i.loli.net/2020/07/07/Ly86Xu9n4KSOJge.png" srcset="/img/loading.gif" alt=""></p>
-<h2 id="Reinforcement-Learning"><a href="#Reinforcement-Learning" class="headerlink" title="Reinforcement Learning"></a>Reinforcement Learning</h2><p><img src="https://i.loli.net/2020/07/07/92XzLqltMUfCgTs.png" srcset="/img/loading.gif" alt=""></p>
+\end{align}\]</span> $$</p>
+<p><span class="math display">\[
+I(x_{t+k},c_t)\geq \log(N)-\mathcal L_N
+\]</span></p>
+<p>可以说<span class="math inline">\(\mathcal L_N\)</span>作为互信息<span class="math inline">\(I(x_{t+k},c_t)\)</span>的一个下界。</p>
+<h2 id="implementation">Implementation</h2>
+<h1 id="experiments">Experiments</h1>
+<h2 id="audio">Audio</h2>
+<p><img src="https://i.loli.net/2020/07/07/kWectjL27MKy1dA.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/07/07/vhBRmpntw2Xx6J9.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/07/07/5QaDOCFvxLE6wqT.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/07/07/nA49kE1WP73oGQJ.png" srcset="/img/loading.gif" /></p>
+<h2 id="vision">Vision</h2>
+<p><img src="https://i.loli.net/2020/07/07/gkNnWo4zyUeBRCa.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/07/07/qH6BAJnhMcP9bKy.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/07/07/ezO1IibwvC5Mus8.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/07/07/sWNGXqv1n38kgcf.png" srcset="/img/loading.gif" /></p>
+<h2 id="natural-language">Natural Language</h2>
+<p><img src="https://i.loli.net/2020/07/07/Ly86Xu9n4KSOJge.png" srcset="/img/loading.gif" /></p>
+<h2 id="reinforcement-learning">Reinforcement Learning</h2>
+<p><img src="https://i.loli.net/2020/07/07/92XzLqltMUfCgTs.png" srcset="/img/loading.gif" /></p>
 
             </article>
             <hr>
