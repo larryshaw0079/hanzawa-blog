@@ -17,7 +17,7 @@
   <meta name="description" content="">
   <meta name="author" content="Hanzawa">
   <meta name="keywords" content="">
-  <title>Geant4 安装教程与调试环境配置 - Hanzawa の 部屋</title>
+  <title>Unsupervised Representation Learning by Predicting Random Distances - Hanzawa の 部屋</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
@@ -141,7 +141,7 @@
           <div class="container text-center white-text fadeInUp">
             <span class="h2" id="subtitle">
               
-                Geant4 安装教程与调试环境配置
+                Unsupervised Representation Learning by Predicting Random Distances
               
             </span>
 
@@ -149,8 +149,8 @@
               
                 <div class="mt-3 post-meta">
                   <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-                  <time datetime="2020-01-31 11:25">
-                    2020年1月31日 上午
+                  <time datetime="2020-08-24 16:17">
+                    2020年8月24日 下午
                   </time>
                 </div>
               
@@ -160,7 +160,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    558 字
+                    1.1k 字
                   </span>
                 
 
@@ -170,7 +170,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    7
+                    15
                      分钟
                   </span>
                 
@@ -207,62 +207,81 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：2020年6月25日 下午
+                  本文最后更新于：2020年8月24日 下午
                 
               </p>
             
             <article class="markdown-body">
               <h1 id="introduction">Introduction</h1>
-<p>Geant4安装的教程很多，版本都很旧了，这里写一个新版本（10.6）基于Ubuntu的安装教程，并且开启CLion IDE调试。</p>
-<h1 id="step-1-download-packages">Step 1: Download Packages</h1>
-<p>首先进入官网(<a href="http://geant4.web.cern.ch/support/download" target="_blank" rel="noopener">http://geant4.web.cern.ch/support/download</a>)下载源代码（推荐tar.gz格式）及数据文件，解压。新建一个文件夹专门用来放<code>Geant4</code>相关文件，新建data，source，build文件夹，将Geant4的文件复制进来并按如下结构组织：</p>
-<pre><code class="hljs bash">.
-├── build
-├── data
-│   ├── G4ABLA3.1
-│   ├── G4EMLOW7.9
-│   ├── G4ENSDFSTATE2.2
-│   ├── G4INCL1.0
-│   ├── G4NDL4.6
-│   ├── G4PARTICLEXS2.1
-│   ├── G4PII1.3
-│   ├── G4SAIDDATA2.0
-│   ├── G4TENDL1.3.2
-│   ├── PhotonEvaporation5.5
-│   ├── RadioactiveDecay5.4
-│   └── RealSurface2.1.1
-└── <span class="hljs-built_in">source</span>
-    └── geant4.10.06</code></pre>
-<p><img src="https://i.loli.net/2020/06/25/OuZaAJ3WyEYwsG7.png" srcset="/img/loading.gif" /></p>
-<p><img src="https://i.loli.net/2020/06/25/R5Tmk68AhPbaDHY.png" srcset="/img/loading.gif" /></p>
-<h1 id="step-2-install-dependencies">Step 2: Install Dependencies</h1>
-<p>安装编译所需环境：</p>
-<pre><code class="hljs bash">sudo apt-get install build-essential cmake</code></pre>
-<p>安装相关依赖：</p>
-<pre><code class="hljs bash">sudo apt-get install libgl1-mesa-dev libglu1-mesa-dev libxt-dev libxmu-dev libxi-dev zlib1g-dev libgl2ps-dev libexpat1-dev libxerces-c-dev</code></pre>
-<p>如果要用到QT需要单独安装QT。</p>
-<h1 id="step-3-compile">Step 3: Compile</h1>
-<p>进入build文件夹，用cmake命令：</p>
-<pre><code class="hljs bash">cmake ../<span class="hljs-built_in">source</span>/geant4.10.06/ -DCMAKE_BUILD_TYPE=DEBUG -DGEANT4_USE_GDML=ON -DGEANT4_USE_OPENGL_X11=ON -DGEANT4_USE_RAYTRACER_X11=ON -DGEANT4_BUILD_MULTITHREADED=ON</code></pre>
-<p>其中<code>../source/geant4.10.06/</code>替换成换成（如果版本不一样）你自己的Geant4源代码所在目录，需要QT则加上<code>-DGEANT4_USE_QT=ON</code>。如果不需要调试则把<code>-DCMAKE_BUILD_TYPE=DEBUG</code>改成<code>-DCMAKE_BUILD_TYPE=RELEASE</code>。<code>-DGEANT4_BUILD_MULTITHREADED=ON</code>是多线程，视情况开启。</p>
-<p>完成之后开始编译：</p>
-<pre><code class="hljs bash">make -jX</code></pre>
-<p><code>-jX</code>为多线程编译，如<code>-j8</code>。</p>
-<p>编译完成之后进行安装：</p>
-<pre><code class="hljs bash">sudo make install</code></pre>
-<h1 id="step-4-configure">Step 4: Configure</h1>
-<p>安装的默认路径在<code>/usr/local/share/Geant4-10.6.0</code>，将下载的数据文件复制到该文件夹：</p>
-<pre><code class="hljs bash">sudo cp -r ./data/ /usr/<span class="hljs-built_in">local</span>/share/Geant4-10.6.0/</code></pre>
-<p>之后，在<code>~/.bashrc</code>里添加<code>/usr/local/share/Geant4-10.6.0/geant4make/geant4make.sh</code>，如果你的版本和我的不一样，相应修改即可。</p>
-<h1 id="step-5-clion-configuration">Step 5: CLion Configuration</h1>
-<p>最后我们来配置CLion环境，配好之后可以在IDE中编写<code>Geant4</code>代码，还可以断点调试，非常方便。安装CLion的过程这里省略，打开一个<code>Geant4</code>自带的例子或者自己新建一个项目，打开<code>Edit Configurations</code>。</p>
-<p><img src="https://i.loli.net/2020/06/25/W1xXHUqIvofyKQk.png" srcset="/img/loading.gif" /></p>
-<p>随便打开一个终端，输入一下命令获取环境变量：</p>
-<pre><code class="hljs bash">env | grep G4</code></pre>
-<p>在<code>Environment variables</code>填入刚才获取的环境变量（复制之后按一下粘贴就可以了），然后把<code>Working directory</code>设置成当前文件夹。</p>
-<p><img src="https://i.loli.net/2020/06/25/HrslFTOau51y8tX.png" srcset="/img/loading.gif" /></p>
-<p><img src="https://i.loli.net/2020/06/25/5UKaCgvnWjYmNTG.png" srcset="/img/loading.gif" /></p>
-<p>现在就大功告成了！</p>
+<p>本文对于高维表格数据提出了基于预测预计变换后的距离的无监督表示学习框架RDP，并进行了理论上的讨论。</p>
+<h1 id="proposed-method">Proposed Method</h1>
+<h2 id="random-distance-prediction-model">Random Distance Prediction Model</h2>
+<p>通过学习预测样本在经过随机映射后的距离，通过学习给定的距离，模型能够学到样本潜在的结构。模型额框架如下图：</p>
+<p><img src="https://i.loli.net/2020/07/19/vRV32EgLiYkWaQN.png" srcset="/img/loading.gif" style="zoom: 67%;" /></p>
+<p>其中<span class="math inline">\(\phi(\mathbf x;\Theta):\mathbb R^D\mapsto\mathbb R^M\)</span>为孪生神经网络（Siamese Neural Network），将数据映射到<span class="math inline">\(M\)</span>的新空间。损失函数为：</p>
+<p><span class="math display">\[
+\mathcal L_{rdp}(\mathbf x_i,\mathbf x_j)=l(\langle \phi(\mathbf x_i;\Theta),\phi(\mathbf x_j;\Theta)\rangle,\langle\eta(\mathbf x_i),\eta(\mathbf x_j)\rangle)
+\]</span></p>
+<p>其中<span class="math inline">\(\eta(\cdot)\)</span>为已知的映射，<span class="math inline">\(l(\cdot)\)</span>为衡量两个输入相似程度的度量。具体的来说，文中选取了简单的实现方案，即采用内积作为映射后的样本的距离度量：</p>
+<p><span class="math display">\[
+\mathcal L_{rdp}(\mathbf x_i,\mathbf x_j)=\left(\phi(\mathbf x_i;\Theta)\cdot\phi(\mathbf x_j;\Theta)-\eta(\mathbf x_i)\cdot\eta(\mathbf x_j)\right)^2
+\]</span></p>
+<p><span class="math inline">\(\eta(\cdot)\)</span>为现成的映射。</p>
+<h2 id="incorporating-task-dependent-complementary-auxiliary-loss">Incorporating Task-Dependent Complementary Auxiliary Loss</h2>
+<p>对于特定的下游任务，作者提出可以整合额外的误差函数来提高模型行性能。比如说针对聚类任务可以使用重构误差：</p>
+<p><span class="math display">\[
+\mathcal L_{aux}^{clu}(\mathbf x)=(\mathbf x-\phi^\prime(\phi(\mathbf x;\Theta); \Theta^\prime))^2
+\]</span></p>
+<p>其中<span class="math inline">\(\phi(\cdot)\)</span>和<span class="math inline">\(\phi^\prime(\cdot):\mathbb R^M\mapsto\mathbb R^D\)</span>分别为编码器和解码器。</p>
+<p>对于异常检测任务，可以使用下式： <span class="math display">\[
+\mathcal L_{aux}^{ad}(\mathbf x)=(\phi(\mathbf x;\Theta)-\eta(\mathbf x))^2
+\]</span></p>
+<p>这一个Loss本来是出现在强化学习的论文中，用来检测一个状态<span class="math inline">\(\mathbf x\)</span>出现的频率，如果预测误差较小，说明这个样本之前见过或见过类似的，否则没怎么见过，可以认为是异常。</p>
+<h2 id="theoretical-analysis">Theoretical Analysis</h2>
+<h3 id="using-linear-projection">Using Linear Projection</h3>
+<p>这里讨论使用线性映射的情况，设数据集<span class="math inline">\(\mathcal X\subset\mathbb R^{N\times D}\)</span>，映射矩阵<span class="math inline">\(\mathbf A\subset\mathbb R^{K\times D}\)</span>为一随机矩阵，映射之后的数据为<span class="math inline">\(\mathbf A\mathcal X^\top\)</span>。对于<span class="math inline">\(\epsilon\in(0,\frac{1}{2})\)</span>和<span class="math inline">\(K=\frac{20\log n}{\epsilon^2}\)</span>，存在<span class="math inline">\(f:\mathbb R^D\mapsto\mathbb R^K\)</span>使得对于所有的<span class="math inline">\(\mathbf x_i,\mathbf x_j\in\mathcal X\)</span>有：</p>
+<p><span class="math display">\[
+(1-\epsilon)\parallel\mathbf x_i-\mathbf x_j \parallel^2\leq \parallel f(\mathbf x_i)-f(\mathbf x_j)\parallel^2\leq (1+\epsilon)\parallel\mathbf x_i-\mathbf x_j\parallel^2
+\]</span></p>
+<p>如果<span class="math inline">\(\mathbf A\)</span>的每个元素独立采样自标准正态分布那么有：</p>
+<p><span class="math display">\[
+\text{Pr}\left((1-\epsilon)\parallel\mathbf x\parallel^2\leq\parallel\frac{1}{\sqrt{K}}\mathbf A\mathbf x\parallel^2\leq(1+\epsilon)\parallel\mathbf x\parallel^2\right)\geq 1-2e^{\frac{-(\epsilon^2-\epsilon^3)K}{4}}
+\]</span></p>
+<p>在该随机映射下</p>
+<p><span class="math display">\[
+\text{Pr}(|\hat{\mathbf x}_i\cdot\hat{\mathbf x}_j-f(\hat{\mathbf x}_i)\cdot f(\hat{\mathbf x}_j)|\geq\epsilon)\leq 4e^{\frac{-(\epsilon^2-\epsilon^3)\cdot K}{4}}
+\]</span></p>
+<p>说明在随机映射下</p>
+<h3 id="using-non-linear-projection">Using Non-Linear Projection</h3>
+<p>这里作者试图说明，在某些条件下，非线性随机映射的作用和核函数接近。对于一个确定的随机映射函数<span class="math inline">\(g:\mathbb R^D\mapsto\mathbb R^K\)</span>，在映射之后</p>
+<p><span class="math display">\[
+k(\mathbf x_i,\mathbf x_j)=\langle\psi(\mathbf x_i),\psi(\mathbf x_j)\rangle\approx g(\mathbf x_i)\cdot g(\mathbf x_j)
+\]</span></p>
+<p>设<span class="math inline">\(\mathbf A\)</span>为映射矩阵，为了满足上式，</p>
+<h3 id="learning-class-structure-by-random-distance-prediction">Learning Class Structure by Random Distance Prediction</h3>
+<p>这一节主要解释为什么神经网络<span class="math inline">\(\phi(\cdot)\)</span>学到的要比随机映射<span class="math inline">\(\eta(\cdot)\)</span>要好。模型的优化目标可以写成如下的形式：</p>
+<p><span class="math display">\[
+\mathop{\arg\min}_{\Theta}\sum_{\mathbf x_i,\mathbf x_j\in\mathcal X}(\phi(\mathbf x_i;\Theta)\cdot\phi(\mathbf x_j;\Theta)-y_{ij})^2
+\]</span></p>
+<p>其中<span class="math inline">\(y_{ij}=\eta(\mathbf x_i)\cdot\eta(\mathbf x_j)\)</span>。设<span class="math inline">\(\mathbf Y_\eta\in\mathbb R^{N\times N}\)</span>为距离矩阵。这个目标函数是在最小化每一对样本在经过<span class="math inline">\(\phi(\cdot)\)</span>和<span class="math inline">\(\eta(\cdot)\)</span>映射后之间的距离的差距。通过公式(7)和公式(8)我们知道，在合适的条件下，随机映射<span class="math inline">\(\eta(\cdot)\)</span>能够保留原始空间的距离信息（即原始空间相近的样本在映射后也相近）。不过，上述公式的成立都依赖于对数据分布的一定假设，当真实的数据不满足条件时，结论就会有所偏差。</p>
+<h1 id="experiments">Experiments</h1>
+<h2 id="performance-evaluation-in-anomaly-detection">Performance Evaluation in Anomaly Detection</h2>
+<h3 id="experimental-settings">Experimental Settings</h3>
+<p><img src="https://i.loli.net/2020/07/20/3G7DNKjwfQkiIz4.png" srcset="/img/loading.gif" /></p>
+<p>异常分数定义为<span class="math inline">\(\mathcal S(\mathbf x)=(\phi(\mathbf x;\Theta)-\eta(\mathbf x))^2\)</span>。</p>
+<h3 id="comparison-to-the-state-of-the-art-competing-methods">Comparison to the State-of-the-art Competing Methods</h3>
+<p><img src="https://i.loli.net/2020/07/20/8Ie2Q3mpdPHtrYF.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/07/20/OEcQSvZmfBz1ACt.png" srcset="/img/loading.gif" /></p>
+<h3 id="ablation-study">Ablation Study</h3>
+<p><img src="https://i.loli.net/2020/07/20/7GtKlN8q5Mvygre.png" srcset="/img/loading.gif" /></p>
+<h2 id="performance-evaluation-in-clustering">Performance Evaluation in Clustering</h2>
+<h3 id="experimental-settings-1">Experimental Settings</h3>
+<p><img src="https://i.loli.net/2020/07/20/9xW12MVkoXgFZ6J.png" srcset="/img/loading.gif" /></p>
+<h3 id="comparison-to-the-state-of-the-art-competing-methods-1">Comparison to the State-of-the-art Competing Methods</h3>
+<p><img src="https://i.loli.net/2020/07/20/pUZ64aX1xWiLf2q.png" srcset="/img/loading.gif" /></p>
+<figure>
+<img src="https://i.loli.net/2020/07/20/VrnXuJsymiMItUf.png" srcset="/img/loading.gif" alt="" /><figcaption>image-20200720014002063</figcaption>
+</figure>
 
             </article>
             <hr>
@@ -272,9 +291,9 @@
                   <div class="post-meta mr-3">
                     <i class="iconfont icon-category"></i>
                     
-                      <a class="hover-with-bg" href="/categories/Technical-Notes/">Technical Notes</a>
+                      <a class="hover-with-bg" href="/categories/Research/">Research</a>
                     
-                      <a class="hover-with-bg" href="/categories/Technical-Notes/Misc/">Misc</a>
+                      <a class="hover-with-bg" href="/categories/Research/Representation-Learning/">Representation Learning</a>
                     
                   </div>
                 
@@ -282,7 +301,9 @@
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/Geant4/">Geant4</a>
+                      <a class="hover-with-bg" href="/tags/Anomaly-Detection/">Anomaly Detection</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Representation-Learning/">Representation Learning</a>
                     
                   </div>
                 
@@ -295,18 +316,12 @@
                   <div class="post-prev col-6">
                     
                     
-                      <a href="/2020/02/24/Deep-Anomaly-Detection-with-Deviation-Networks/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Deep Anomaly Detection with Deviation Networks</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </div>
                   <div class="post-next col-6">
                     
                     
-                      <a href="/2020/01/09/Complementary-Set-Variational-Autoencoder-for-Supervised-Anomaly-Detection/">
-                        <span class="hidden-mobile">Complementary Set Variational Autoencoder for Supervised Anomaly Detection</span>
+                      <a href="/2020/07/14/Effective-End-to-end-Unsupervised-Outlier-Detection-via-Linear-Priority-of-Discriminative-Network/">
+                        <span class="hidden-mobile">Effective End-to-end Unsupervised Outlier Detection via Linear Priority of Discriminative Network</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -325,8 +340,8 @@
     <div id="disqus_thread"></div>
     <script type="text/javascript">
       var disqus_config = function () {
-        this.page.url = 'http://qfxiao.me/2020/01/31/Geant4-安装教程/';
-        this.page.identifier = '/2020/01/31/Geant4-安装教程/';
+        this.page.url = 'http://qfxiao.me/2020/08/24/Unsupervised-Representation-Learning-by-Predicting-Random-Distances/';
+        this.page.identifier = '/2020/08/24/Unsupervised-Representation-Learning-by-Predicting-Random-Distances/';
       };
       var oldLoadDq = window.onload;
       window.onload = function () {

@@ -293,7 +293,7 @@ x^*_{\text{max}}=2\frac{\bar{Y}-Y^m}{(Y^m)^2}
 <p><img src="https://i.loli.net/2020/06/24/AEQpnZPiW3C4mr7.png" srcset="/img/loading.gif" /></p>
 <p><span class="math inline">\(Y_t\)</span>代表大于<span class="math inline">\(t\)</span>的观测值的集合，GPD分布的拟合使用了前文提到的Grimshaw's Trick。</p>
 <h2 id="finding-anomalies-in-a-stream">Finding Anomalies in a Stream</h2>
-<p>通过Initialization Step使用POT算法得到的<span class="math inline">\(z_q\)</span>，我们定义其为&quot;Normality Bound&quot;，用于后面的检测。在后面的步骤中，我们会根据新得到的观测值来更新<span class="math inline">\(z_q\)</span>。</p>
+<p>通过Initialization Step使用POT算法得到的<span class="math inline">\(z_q\)</span>，我们定义其为"Normality Bound"，用于后面的检测。在后面的步骤中，我们会根据新得到的观测值来更新<span class="math inline">\(z_q\)</span>。</p>
 <h3 id="stationary-case">Stationary Case</h3>
 <p>我们首先来讨论时间序列没有时间依赖性的情况（<span class="math inline">\(X_1,\cdots,X_n\)</span>之间独立同分布）。通过POT算法对所有观测值得到<span class="math inline">\(z_q\)</span>之后，Streaming POT (SPOT) 算法会检查<span class="math inline">\(X_n\)</span>之后的值（数据流场景，<span class="math inline">\(X_1,\cdots,X_n\)</span>是历史数据，还会有新的数据进来），如果大于<span class="math inline">\(z_q\)</span>，则将<span class="math inline">\(X_i\)</span>加入异常点集合中；如果大于<span class="math inline">\(t\)</span>但小于<span class="math inline">\(z_q\)</span>，则将<span class="math inline">\(X_i\)</span>加入观测值集合中，更新<span class="math inline">\(z_q\)</span>；其他情况我们<span class="math inline">\(X_i\)</span>是正常情况。算法流程图如下：</p>
 <p><img src="https://i.loli.net/2020/06/24/h5yKnlCAYxbHu2R.png" srcset="/img/loading.gif" /></p>
@@ -345,7 +345,7 @@ x^*\leq 0 \text{ or } x^*\geq 2\frac{\bar{Y}-Y^m}{\bar{Y}Y^m}
 <h2 id="performances">Performances</h2>
 <p>作者还验证了算法的时间效率。</p>
 <p><img src="https://i.loli.net/2020/06/25/Egh7CxsU2TtL6az.png" srcset="/img/loading.gif" /></p>
-<p>表中T代表的是每个Iteration的时间，M代表的是Peaks的比例，&quot;bi-&quot;前缀代表的是同时计算上界和下界。</p>
+<p>表中T代表的是每个Iteration的时间，M代表的是Peaks的比例，"bi-"前缀代表的是同时计算上界和下界。</p>
 
             </article>
             <hr>
