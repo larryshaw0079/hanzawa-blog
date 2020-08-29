@@ -160,7 +160,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    1.4k 字
+                    1.8k 字
                   </span>
                 
 
@@ -170,7 +170,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    23
+                    29
                      分钟
                   </span>
                 
@@ -223,7 +223,7 @@
 <p>Still working on it😀...</p>
 <h1 id="sorting-arrays">Sorting &amp; Arrays</h1>
 <h2 id="basic-sorting">Basic Sorting</h2>
-<p><a href="https://leetcode-cn.com/problems/sort-an-array/" target="_blank" rel="noopener">🐱‍💻Leetcode 912</a></p>
+<p><a href="https://leetcode-cn.com/problems/sort-an-array/" target="_blank" rel="noopener">🐱‍💻Leetcode 912 Medium</a></p>
 <p>不多说了，都是基础，几个<span class="math inline">\(O(N^2)\)</span>的算法实现起来没什么问题，主要是下面两个注意不要写错：</p>
 <ul>
 <li>快速排序</li>
@@ -270,8 +270,24 @@
 <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">HeapSort</span><span class="hljs-params">(<span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;&amp; arr)</span> </span>&#123;
     
 &#125;</code></pre>
+<h2 id="stock-series-股票系列问题">Stock Series 股票系列问题</h2>
+<h3 id="买卖股票的最佳时机">买卖股票的最佳时机</h3>
+<p><a href="https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock/" target="_blank" rel="noopener">🐱‍💻Leetcode 121 Easy</a></p>
+<p>暴力的解法就不说了，这里给的是一次遍历的做法，假设当前是第<span class="math inline">\(K\)</span>天，如果要在当天卖出，那么最后价格肯定是第<span class="math inline">\(K\)</span>天的价格减去前<span class="math inline">\(K-1\)</span>天的最低价，同时前<span class="math inline">\(K-1\)</span>天的最低价是可以边遍历边更新的，所以最终只需要一次遍历即可：</p>
+<pre><code class="hljs cpp"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Solution</span> &#123;</span>
+ <span class="hljs-keyword">public</span>:
+  <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">maxProfit</span><span class="hljs-params">(<span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;&amp; prices)</span> </span>&#123;
+    <span class="hljs-keyword">int</span> min_price = INT_MAX, max_profit = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span> price : prices) &#123;
+      max_profit = max_profit &gt; price - min_price ? max_profit : price - min_price;
+      <span class="hljs-comment">// min_price一定要后更新，因为min_price代表的是当前天以前的最低价格</span>
+      min_price = price &lt; min_price ? price : min_price;
+    &#125;
+    <span class="hljs-keyword">return</span> max_profit;
+  &#125;
+&#125;;</code></pre>
 <h2 id="top-k-element-第k大小元素">Top K Element 第K大/小元素</h2>
-<p><a href="https://leetcode-cn.com/problems/kth-largest-element-in-an-array/" target="_blank" rel="noopener">🐱‍💻Leetcode 215</a> （同类题：<a href="https://leetcode-cn.com/problems/zui-xiao-de-kge-shu-lcof/" target="_blank" rel="noopener">🐱‍💻剑指Offer 40</a>）</p>
+<p><a href="https://leetcode-cn.com/problems/kth-largest-element-in-an-array/" target="_blank" rel="noopener">🐱‍💻Leetcode 215 Medium</a> （同类题：<a href="https://leetcode-cn.com/problems/zui-xiao-de-kge-shu-lcof/" target="_blank" rel="noopener">🐱‍💻剑指Offer 40 Easy</a>）</p>
 <p><strong>题目中说了给定的<span class="math inline">\(K\)</span>是合法的，所以下面的代码没有检查<span class="math inline">\(K\)</span>的合法性</strong></p>
 <ul>
 <li>先排序再求解 <span class="math inline">\(O(N\log N)\)</span> （⭐）</li>
@@ -351,11 +367,24 @@
         <span class="hljs-keyword">return</span> TopK(nums, nums.size()-k);
     &#125;
 &#125;;</code></pre>
+<h2 id="inversions-数组中的逆序对">Inversions 数组中的逆序对</h2>
+<p><a href="https://leetcode-cn.com/problems/shu-zu-zhong-de-ni-xu-dui-lcof/" target="_blank" rel="noopener">🐱‍💻剑指Offer 51 Hard</a></p>
+<ul>
+<li>对并排序 <span class="math inline">\(O(n\log n)\)</span> （⭐⭐）</li>
+</ul>
+<pre><code class="hljs cpp">
+</code></pre>
+<ul>
+<li>树状数组 <span class="math inline">\(O(n\log n)\)</span> （⭐⭐⭐）</li>
+</ul>
+<p><img src="https://i.loli.net/2020/08/29/9M3wtaYEJvDWdn4.png" srcset="/img/loading.gif" /></p>
+<pre><code class="hljs cpp">
+</code></pre>
 <h1 id="list">List</h1>
 <h2 id="add-two-numbers-链表相加">Add Two Numbers 链表相加</h2>
-<p><a href="https://leetcode-cn.com/problems/add-two-numbers/" target="_blank" rel="noopener">🐱‍💻Leetcode 2</a></p>
+<p><a href="https://leetcode-cn.com/problems/add-two-numbers/" target="_blank" rel="noopener">🐱‍💻Leetcode 2 Medium</a></p>
 <h2 id="intersection-of-two-lists-链表相交节点">Intersection of Two Lists 链表相交节点</h2>
-<p><a href="https://leetcode-cn.com/problems/intersection-of-two-linked-lists/" target="_blank" rel="noopener">🐱‍💻Leetcode 160</a></p>
+<p><a href="https://leetcode-cn.com/problems/intersection-of-two-linked-lists/" target="_blank" rel="noopener">🐱‍💻Leetcode 160 Easy</a></p>
 <ul>
 <li>HashTable法 <span class="math inline">\(O(M+N)\)</span>（⭐⭐）</li>
 </ul>
@@ -416,7 +445,7 @@
     &#125;
 &#125;;</code></pre>
 <h2 id="reverse-the-list-翻转链表">Reverse the List 翻转链表</h2>
-<p><a href="https://leetcode-cn.com/problems/reverse-linked-list/" target="_blank" rel="noopener">🐱‍💻Leetcode 206</a></p>
+<p><a href="https://leetcode-cn.com/problems/reverse-linked-list/" target="_blank" rel="noopener">🐱‍💻Leetcode 206 Easy</a></p>
 <p>面试中出现频率还挺高的</p>
 <pre><code class="hljs cpp"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Solution</span> &#123;</span>
 <span class="hljs-keyword">public</span>:
@@ -443,7 +472,7 @@
     &#125;
 &#125;;</code></pre>
 <h2 id="merge-lists-合并2或k个链表">Merge Lists 合并（2或K个）链表</h2>
-<p><a href="https://leetcode-cn.com/problems/merge-k-sorted-lists/" target="_blank" rel="noopener">🐱‍💻Leetcode 23</a></p>
+<p><a href="https://leetcode-cn.com/problems/merge-k-sorted-lists/" target="_blank" rel="noopener">🐱‍💻Leetcode 23 Hard</a></p>
 <p>最简单的hard题🤣？？？优先队列法写起来是最舒服的，效率也是最高的，时间复杂度<span class="math inline">\(O(nk\times\log nk)\)</span></p>
 <pre><code class="hljs cpp"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Solution</span> &#123;</span>
     <span class="hljs-built_in">std</span>::priority_queue&lt;<span class="hljs-built_in">std</span>::pair&lt;<span class="hljs-keyword">int</span>, ListNode*&gt;, <span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-built_in">std</span>::pair&lt;<span class="hljs-keyword">int</span>, ListNode*&gt;&gt;, <span class="hljs-built_in">std</span>::greater&lt;<span class="hljs-built_in">std</span>::pair&lt;<span class="hljs-keyword">int</span>, ListNode*&gt;&gt;&gt; q;
@@ -475,10 +504,48 @@
     &#125;
 &#125;;</code></pre>
 <h2 id="sort-list-排序链表">Sort List 排序链表</h2>
-<p><a href="https://leetcode-cn.com/problems/sort-list/" target="_blank" rel="noopener">🐱‍💻Leetcode 148</a></p>
+<p><a href="https://leetcode-cn.com/problems/sort-list/" target="_blank" rel="noopener">🐱‍💻Leetcode 148 Medium</a></p>
+<h1 id="string">String</h1>
+<h2 id="palindrome-number-回文数">Palindrome Number 回文数</h2>
+<p><a href="https://leetcode-cn.com/problems/palindrome-number/" target="_blank" rel="noopener">🐱‍💻Leetcode 9 Easy</a></p>
+<h1 id="data-structure">Data Structure</h1>
+<h2 id="find-median-from-data-stream-找到数据流的中位数">Find Median from Data Stream 找到数据流的中位数</h2>
+<p><a href="https://leetcode-cn.com/problems/find-median-from-data-stream/" target="_blank" rel="noopener">🐱‍💻Leetcode 295 Hard</a></p>
+<p>双堆做法：</p>
+<pre><code class="hljs cpp"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MedianFinder</span> &#123;</span>
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-built_in">std</span>::priority_queue&lt;<span class="hljs-keyword">int</span>, <span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;, <span class="hljs-built_in">std</span>::less&lt;<span class="hljs-keyword">int</span>&gt;&gt; big_root;
+    <span class="hljs-built_in">std</span>::priority_queue&lt;<span class="hljs-keyword">int</span>, <span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;, <span class="hljs-built_in">std</span>::greater&lt;<span class="hljs-keyword">int</span>&gt;&gt; small_root;
+    
+    <span class="hljs-comment">/** initialize your data structure here. */</span>
+    MedianFinder() &#123;
+        
+    &#125;
+    
+    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">addNum</span><span class="hljs-params">(<span class="hljs-keyword">int</span> num)</span> </span>&#123;
+        big_root.push(num);
+        <span class="hljs-keyword">int</span> tmp = big_root.top();
+        big_root.pop();
+        small_root.push(tmp);
+
+        <span class="hljs-keyword">if</span> (small_root.size() &gt; big_root.size()) &#123;
+            tmp = small_root.top();
+            small_root.pop();
+            big_root.push(tmp);
+        &#125;
+    &#125;
+    
+    <span class="hljs-function"><span class="hljs-keyword">double</span> <span class="hljs-title">findMedian</span><span class="hljs-params">()</span> </span>&#123;
+        <span class="hljs-keyword">if</span> (big_root.size() == small_root.size()) &#123;
+            <span class="hljs-keyword">return</span> (<span class="hljs-keyword">static_cast</span>&lt;<span class="hljs-keyword">double</span>&gt;(big_root.top()) + small_root.top())/<span class="hljs-number">2.0</span>;
+        &#125; <span class="hljs-keyword">else</span> &#123;
+            <span class="hljs-keyword">return</span> <span class="hljs-keyword">static_cast</span>&lt;<span class="hljs-keyword">double</span>&gt;(big_root.top());
+        &#125;
+    &#125;
+&#125;;</code></pre>
 <h1 id="mathematics">Mathematics</h1>
 <h2 id="power-of-two-判断2的幂">Power of Two 判断<span class="math inline">\(2\)</span>的幂</h2>
-<p><a href="https://leetcode-cn.com/problems/power-of-two/" target="_blank" rel="noopener">🐱‍💻Leetcode 231</a></p>
+<p><a href="https://leetcode-cn.com/problems/power-of-two/" target="_blank" rel="noopener">🐱‍💻Leetcode 231 Easy</a></p>
 <p><span class="math inline">\(n\)</span>为<span class="math inline">\(2\)</span>的幂只需检查<span class="math inline">\(n\)</span>与<span class="math inline">\(n-1\)</span>的与是否为<span class="math inline">\(0\)</span>即可，如<span class="math inline">\(8\)</span>的二进制表示（假设只有<span class="math inline">\(8\)</span>位）为<code>[0001000]</code>，<span class="math inline">\(7\)</span>的二进制为<code>[0000111]</code>。</p>
 <p>一行解决。记得判断大于<span class="math inline">\(0\)</span>。</p>
 <pre><code class="hljs cpp"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Solution</span> &#123;</span>
@@ -488,9 +555,11 @@
     &#125;
 &#125;;</code></pre>
 <h1 id="graph">Graph</h1>
+<h2 id="network-delay-time-网络延迟时间">Network Delay Time 网络延迟时间</h2>
+<p><a href="https://leetcode-cn.com/problems/network-delay-time/" target="_blank" rel="noopener">🐱‍💻Leetcode 743 Medium</a></p>
 <h1 id="misc">Misc</h1>
 <h2 id="single-number-只出现过一次的数字">Single Number 只出现过一次的数字</h2>
-<p><a href="https://leetcode-cn.com/problems/single-number/" target="_blank" rel="noopener">🐱‍💻Leetcode 136</a></p>
+<p><a href="https://leetcode-cn.com/problems/single-number/" target="_blank" rel="noopener">🐱‍💻Leetcode 136 Easy</a></p>
 <p>运用位运算的性质</p>
 <pre><code class="hljs cpp"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Solution</span> &#123;</span>
 <span class="hljs-keyword">public</span>:
@@ -538,8 +607,8 @@
                   <div class="post-next col-6">
                     
                     
-                      <a href="/2020/08/24/Unsupervised-Representation-Learning-by-Predicting-Random-Distances/">
-                        <span class="hidden-mobile">Unsupervised Representation Learning by Predicting Random Distances</span>
+                      <a href="/2020/08/26/Machine-Learning-Classification-Algorithms-3-Support-Vector-Machine/">
+                        <span class="hidden-mobile">Machine Learning Classification Algorithms (3): Support Vector Machine</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

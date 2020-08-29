@@ -17,7 +17,7 @@
   <meta name="description" content="">
   <meta name="author" content="Hanzawa">
   <meta name="keywords" content="">
-  <title>Unsupervised Representation Learning by Predicting Random Distances - Hanzawa の 部屋</title>
+  <title>Machine Learning Classification Algorithms (3): Support Vector Machine - Hanzawa の 部屋</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
@@ -141,7 +141,7 @@
           <div class="container text-center white-text fadeInUp">
             <span class="h2" id="subtitle">
               
-                Unsupervised Representation Learning by Predicting Random Distances
+                Machine Learning Classification Algorithms (3): Support Vector Machine
               
             </span>
 
@@ -149,8 +149,8 @@
               
                 <div class="mt-3 post-meta">
                   <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-                  <time datetime="2020-08-24 16:17">
-                    2020年8月24日 下午
+                  <time datetime="2020-08-26 02:09">
+                    2020年8月26日 凌晨
                   </time>
                 </div>
               
@@ -160,7 +160,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    1.5k 字
+                    140 字
                   </span>
                 
 
@@ -170,7 +170,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    19
+                    2
                      分钟
                   </span>
                 
@@ -207,85 +207,33 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：2020年8月24日 晚上
+                  本文最后更新于：2020年8月29日 下午
                 
               </p>
             
             <article class="markdown-body">
               <h1 id="introduction">Introduction</h1>
-<p>针对高维表格数据的表示学习，作者提出了基于预测预计变换后的距离的无监督表示学习框架RDP，并进行了理论上的讨论。To be finished...</p>
-<p><a href="https://arxiv.org/abs/1912.12186" target="_blank" rel="noopener">论文地址</a> <a href="https://github.com/billhhh/RDP" target="_blank" rel="noopener">代码地址</a></p>
-<h1 id="proposed-method">Proposed Method</h1>
-<h2 id="random-distance-prediction-model">Random Distance Prediction Model</h2>
-<p>对于很多下游任务来说，高维数据对模型效率和性能都很大，所以学习低维的有意义（能够最大限度保存原始空间的信息）的表示十分重要。本文的大致思想是给定一个确定的随机映射将样本映射到一个新的空间，然后构造数据集，输入时任意一对样本，标签是两个样本在新的空间的距离，之后训练一个模型来学习这个距离。作者认为通过该任务的训练，模型能够学到有意义的低维表示。模型的框架如下图：</p>
-<p><img src="https://i.loli.net/2020/07/19/vRV32EgLiYkWaQN.png" srcset="/img/loading.gif" style="zoom: 50%;" /></p>
-<p>其中<span class="math inline">\(\phi(\mathbf x;\Theta):\mathbb R^D\mapsto\mathbb R^M\)</span>为孪生神经网络（Siamese Neural Network），将数据映射到<span class="math inline">\(M\)</span>的新空间。损失函数为：</p>
-<p><span class="math display">\[
-\mathcal L_{rdp}(\mathbf x_i,\mathbf x_j)=l(\langle \phi(\mathbf x_i;\Theta),\phi(\mathbf x_j;\Theta)\rangle,\langle\eta(\mathbf x_i),\eta(\mathbf x_j)\rangle)
+<p>Still working on it😅...</p>
+<p><a href="http://blog.pluskid.org/?page_id=683" target="_blank" rel="noopener">blog</a></p>
+<h1 id="maximum-margin-classifier">Maximum Margin Classifier</h1>
+<p><img src="https://i.loli.net/2020/08/26/vjuyCGXMr4msaUK.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p>函数间隔<span class="math inline">\(\hat \gamma=y(w^\top x+b)\)</span></p>
+<p>令其在超平面上的投影为<span class="math inline">\(x_0\)</span>，设<span class="math inline">\(w\)</span>为法向量， <span class="math display">\[
+x=x_0+\gamma\frac{w}{\parallel w\parallel}
+\]</span> 其中<span class="math inline">\(\gamma\)</span>为点<span class="math inline">\(x\)</span>到超平面的几何距离。将上式带入到超平面方程可以得到 <span class="math display">\[
+\gamma=\frac{w^\top}{\parallel w\parallel}x+\frac{b}{\parallel w\parallel}
+\]</span> <img src="https://i.loli.net/2020/08/26/b6qLJWzHwFAPDne.png" srcset="/img/loading.gif" /></p>
+<p>于是我们有关系 <span class="math display">\[
+\gamma = \frac{\hat \gamma}{\parallel w\parallel}
+\]</span> 优化函数 <span class="math display">\[
+\begin{align}
+\max &amp; \space \frac{1}{\parallel w\parallel},\\ s.t. &amp; y_i(w^\top x_i+b)\geq 1, i=1,\cdots,n
+\end{align}
 \]</span></p>
-<p>其中<span class="math inline">\(\eta(\cdot)\)</span>为已知的映射，<span class="math inline">\(l(\cdot)\)</span>为衡量两个输入相似程度的度量。具体的来说，文中选取了简单的实现方案，即采用内积作为映射后的样本的距离度量：</p>
-<p><span class="math display">\[
-\mathcal L_{rdp}(\mathbf x_i,\mathbf x_j)=\left(\phi(\mathbf x_i;\Theta)\cdot\phi(\mathbf x_j;\Theta)-\eta(\mathbf x_i)\cdot\eta(\mathbf x_j)\right)^2
-\]</span></p>
-<p><span class="math inline">\(\eta(\cdot)\)</span>为现成的映射。至于为什么要这么做，可以先接着看下面原文给出的理论分析，然后我再说说我自己的理解。</p>
-<h2 id="incorporating-task-dependent-complementary-auxiliary-loss">Incorporating Task-Dependent Complementary Auxiliary Loss</h2>
-<p>对于特定的下游任务，作者提出可以整合额外的误差函数来提高模型行性能。比如说针对聚类任务可以使用重构误差：</p>
-<p><span class="math display">\[
-\mathcal L_{aux}^{clu}(\mathbf x)=(\mathbf x-\phi^\prime(\phi(\mathbf x;\Theta); \Theta^\prime))^2
-\]</span></p>
-<p>其中<span class="math inline">\(\phi(\cdot)\)</span>和<span class="math inline">\(\phi^\prime(\cdot):\mathbb R^M\mapsto\mathbb R^D\)</span>分别为编码器和解码器。</p>
-<p>对于异常检测任务，可以使用下式： <span class="math display">\[
-\mathcal L_{aux}^{ad}(\mathbf x)=(\phi(\mathbf x;\Theta)-\eta(\mathbf x))^2
-\]</span></p>
-<p>这一个Loss本来是出现在强化学习的论文中，用来检测一个状态<span class="math inline">\(\mathbf x\)</span>出现的频率，如果预测误差较小，说明这个样本之前见过或见过类似的，否则没怎么见过，可以认为是异常。由于本文的目的主要是降维加保留原始空间信息，可以认为使用线性变换的话此目的已经达到了。</p>
-<h2 id="theoretical-analysis">Theoretical Analysis</h2>
-<h3 id="using-linear-projection">Using Linear Projection</h3>
-<p>这里讨论使用线性映射的情况，设数据集<span class="math inline">\(\mathcal X\subset\mathbb R^{N\times D}\)</span>，映射矩阵<span class="math inline">\(\mathbf A\subset\mathbb R^{K\times D}\)</span>为一随机矩阵，映射之后的数据为<span class="math inline">\(\mathbf A\mathcal X^\top\)</span>。对于<span class="math inline">\(\epsilon\in(0,\frac{1}{2})\)</span>和<span class="math inline">\(K=\frac{20\log n}{\epsilon^2}\)</span>，存在<span class="math inline">\(f:\mathbb R^D\mapsto\mathbb R^K\)</span>使得对于所有的<span class="math inline">\(\mathbf x_i,\mathbf x_j\in\mathcal X\)</span>有：</p>
-<p><span class="math display">\[
-(1-\epsilon)\parallel\mathbf x_i-\mathbf x_j \parallel^2\leq \parallel f(\mathbf x_i)-f(\mathbf x_j)\parallel^2\leq (1+\epsilon)\parallel\mathbf x_i-\mathbf x_j\parallel^2
-\]</span></p>
-<p>如果<span class="math inline">\(\mathbf A\)</span>的每个元素独立采样自标准正态分布那么有：</p>
-<p><span class="math display">\[
-\text{Pr}\left((1-\epsilon)\parallel\mathbf x\parallel^2\leq\parallel\frac{1}{\sqrt{K}}\mathbf A\mathbf x\parallel^2\leq(1+\epsilon)\parallel\mathbf x\parallel^2\right)\geq 1-2e^{\frac{-(\epsilon^2-\epsilon^3)K}{4}}
-\]</span></p>
-<p>在该随机映射下有：</p>
-<p><span class="math display">\[
-\text{Pr}(|\hat{\mathbf x}_i\cdot\hat{\mathbf x}_j-f(\hat{\mathbf x}_i)\cdot f(\hat{\mathbf x}_j)|\geq\epsilon)\leq 4e^{\frac{-(\epsilon^2-\epsilon^3)\cdot K}{4}}
-\]</span></p>
-<p>直观的解释就是说使用线性映射的情况下，只要使用的变换矩阵采样自标准正态分布，那么变换之后样本对之间的距离信息能够以一定的概率保留。</p>
-<h3 id="using-non-linear-projection">Using Non-Linear Projection</h3>
-<p>这里作者试图说明，在某些条件下，非线性随机映射的作用和核函数接近。对于一个确定的随机映射函数<span class="math inline">\(g:\mathbb R^D\mapsto\mathbb R^K\)</span>，在某些特定的条件下，函数<span class="math inline">\(g\)</span>和核函数存在下列关系：</p>
-<p><span class="math display">\[
-k(\mathbf x_i,\mathbf x_j)=\langle\psi(\mathbf x_i),\psi(\mathbf x_j)\rangle\approx g(\mathbf x_i)\cdot g(\mathbf x_j)
-\]</span></p>
-<p>这个条件是函数<span class="math inline">\(g\)</span>为一个乘以一个线性矩阵<span class="math inline">\(\mathbf A\)</span>然后在经过一个具备平移不变性的傅里叶基函数（如cosine）。由于核函数能够保留原始空间的信息，所以作者认为使用非线性函数也能保留原始空间的信息。</p>
-<blockquote>
-<p>PS: 感觉作者在理论部分的讨论还是有点模糊，因为把一个随机的映射作为（伪）监督信息来进行学习，神经网络学到的不也就是随机噪声信息吗？对于这个方法work的原因，我在这里不负责任的分析一下。</p>
-</blockquote>
-<h3 id="learning-class-structure-by-random-distance-prediction">Learning Class Structure by Random Distance Prediction</h3>
-<p>这一节主要解释为什么神经网络<span class="math inline">\(\phi(\cdot)\)</span>学到的要比随机映射<span class="math inline">\(\eta(\cdot)\)</span>要好。模型的优化目标可以写成如下的形式：</p>
-<p><span class="math display">\[
-\mathop{\arg\min}_{\Theta}\sum_{\mathbf x_i,\mathbf x_j\in\mathcal X}(\phi(\mathbf x_i;\Theta)\cdot\phi(\mathbf x_j;\Theta)-y_{ij})^2
-\]</span></p>
-<p>其中<span class="math inline">\(y_{ij}=\eta(\mathbf x_i)\cdot\eta(\mathbf x_j)\)</span>。设<span class="math inline">\(\mathbf Y_\eta\in\mathbb R^{N\times N}\)</span>为距离矩阵。这个目标函数是在最小化每一对样本在经过<span class="math inline">\(\phi(\cdot)\)</span>和<span class="math inline">\(\eta(\cdot)\)</span>映射后之间的距离的差距。通过公式(7)和公式(8)我们知道，在合适的条件下，随机映射<span class="math inline">\(\eta(\cdot)\)</span>能够保留原始空间的距离信息（即原始空间相近的样本在映射后也相近）。不过，上述公式的成立都依赖于对数据分布的一定假设，当真实的数据不满足条件时，结论就会有所偏差。</p>
-<h1 id="experiments">Experiments</h1>
-<h2 id="performance-evaluation-in-anomaly-detection">Performance Evaluation in Anomaly Detection</h2>
-<h3 id="experimental-settings">Experimental Settings</h3>
-<p><img src="https://i.loli.net/2020/07/20/3G7DNKjwfQkiIz4.png" srcset="/img/loading.gif" /></p>
-<p>异常分数定义为<span class="math inline">\(\mathcal S(\mathbf x)=(\phi(\mathbf x;\Theta)-\eta(\mathbf x))^2\)</span>。</p>
-<h3 id="comparison-to-the-state-of-the-art-competing-methods">Comparison to the State-of-the-art Competing Methods</h3>
-<p><img src="https://i.loli.net/2020/07/20/8Ie2Q3mpdPHtrYF.png" srcset="/img/loading.gif" /></p>
-<p><img src="https://i.loli.net/2020/07/20/OEcQSvZmfBz1ACt.png" srcset="/img/loading.gif" /></p>
-<h3 id="ablation-study">Ablation Study</h3>
-<p><img src="https://i.loli.net/2020/07/20/7GtKlN8q5Mvygre.png" srcset="/img/loading.gif" /></p>
-<h2 id="performance-evaluation-in-clustering">Performance Evaluation in Clustering</h2>
-<h3 id="experimental-settings-1">Experimental Settings</h3>
-<p><img src="https://i.loli.net/2020/07/20/9xW12MVkoXgFZ6J.png" srcset="/img/loading.gif" /></p>
-<h3 id="comparison-to-the-state-of-the-art-competing-methods-1">Comparison to the State-of-the-art Competing Methods</h3>
-<p><img src="https://i.loli.net/2020/07/20/pUZ64aX1xWiLf2q.png" srcset="/img/loading.gif" /></p>
-<figure>
-<img src="https://i.loli.net/2020/07/20/VrnXuJsymiMItUf.png" srcset="/img/loading.gif" alt="" /><figcaption>image-20200720014002063</figcaption>
-</figure>
+<h1 id="dual-problem">Dual Problem</h1>
+<h1 id="kernel">Kernel</h1>
+<h1 id="soft-margin">Soft Margin</h1>
+<h1 id="numerical-optimization">Numerical Optimization</h1>
 
             </article>
             <hr>
@@ -295,9 +243,9 @@ k(\mathbf x_i,\mathbf x_j)=\langle\psi(\mathbf x_i),\psi(\mathbf x_j)\rangle\app
                   <div class="post-meta mr-3">
                     <i class="iconfont icon-category"></i>
                     
-                      <a class="hover-with-bg" href="/categories/Research/">Research</a>
+                      <a class="hover-with-bg" href="/categories/Technical-Notes/">Technical Notes</a>
                     
-                      <a class="hover-with-bg" href="/categories/Research/Representation-Learning/">Representation Learning</a>
+                      <a class="hover-with-bg" href="/categories/Technical-Notes/Machine-Learning/">Machine Learning</a>
                     
                   </div>
                 
@@ -305,9 +253,7 @@ k(\mathbf x_i,\mathbf x_j)=\langle\psi(\mathbf x_i),\psi(\mathbf x_j)\rangle\app
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/Anomaly-Detection/">Anomaly Detection</a>
-                    
-                      <a class="hover-with-bg" href="/tags/Representation-Learning/">Representation Learning</a>
+                      <a class="hover-with-bg" href="/tags/SVM/">SVM</a>
                     
                   </div>
                 
@@ -320,9 +266,9 @@ k(\mathbf x_i,\mathbf x_j)=\langle\psi(\mathbf x_i),\psi(\mathbf x_j)\rangle\app
                   <div class="post-prev col-6">
                     
                     
-                      <a href="/2020/08/26/Machine-Learning-Ensemble-Algorithms-2-GBDT-and-XGBoost/">
+                      <a href="/2020/08/29/Grokking-the-Interview-Coding-Questions/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Machine Learning Ensemble Algorithms (2): GBDT and XGBoost</span>
+                        <span class="hidden-mobile">Grokking the Interview Coding Questions: High Frequency Problems</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -330,8 +276,8 @@ k(\mathbf x_i,\mathbf x_j)=\langle\psi(\mathbf x_i),\psi(\mathbf x_j)\rangle\app
                   <div class="post-next col-6">
                     
                     
-                      <a href="/2020/07/14/Effective-End-to-end-Unsupervised-Outlier-Detection-via-Linear-Priority-of-Discriminative-Network/">
-                        <span class="hidden-mobile">Effective End-to-end Unsupervised Outlier Detection via Linear Priority of Discriminative Network</span>
+                      <a href="/2020/08/26/Machine-Learning-Classification-Algorithms-2-Logisitic-Regression/">
+                        <span class="hidden-mobile">Machine Learning Classification Algorithms (2): Logisitic Regression</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -350,8 +296,8 @@ k(\mathbf x_i,\mathbf x_j)=\langle\psi(\mathbf x_i),\psi(\mathbf x_j)\rangle\app
     <div id="disqus_thread"></div>
     <script type="text/javascript">
       var disqus_config = function () {
-        this.page.url = 'http://qfxiao.me/2020/08/24/Unsupervised-Representation-Learning-by-Predicting-Random-Distances/';
-        this.page.identifier = '/2020/08/24/Unsupervised-Representation-Learning-by-Predicting-Random-Distances/';
+        this.page.url = 'http://qfxiao.me/2020/08/26/Machine-Learning-Classification-Algorithms-3-Support-Vector-Machine/';
+        this.page.identifier = '/2020/08/26/Machine-Learning-Classification-Algorithms-3-Support-Vector-Machine/';
       };
       var oldLoadDq = window.onload;
       window.onload = function () {
