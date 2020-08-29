@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2D5BA6">
+  <meta name="description" content="">
+  <meta name="author" content="Hanzawa">
+  <meta name="keywords" content="">
+  <title>Grokking the Interview Coding Questions: High Frequency Problems - Hanzawa の 部屋</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+<link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/tomorrow.min.css" />
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_yg9cfy8wd6.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Hanzawa</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/img/bg/coffe_bear.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+                Grokking the Interview Coding Questions: High Frequency Problems
+              
+            </span>
+
+            
+              
+                <div class="mt-3 post-meta">
+                  <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+                  <time datetime="2020-08-29 13:26">
+                    2020年8月29日 下午
+                  </time>
+                </div>
+              
+
+              <div class="mt-1">
+                
+                  
+                  <span class="post-meta mr-2">
+                    <i class="iconfont icon-chart"></i>
+                    1.4k 字
+                  </span>
+                
+
+                
+                  
+                  <span class="post-meta mr-2">
+                      <i class="iconfont icon-clock-fill"></i>
+                    
+                    
+                    23
+                     分钟
+                  </span>
+                
+
+                
+                  <!-- 不蒜子统计文章PV -->
+                  
+                  <span id="busuanzi_container_page_pv" class="post-meta" style="display: none">
+                    <i class="iconfont icon-eye" aria-hidden="true"></i>
+                    <span id="busuanzi_value_page_pv"></span> 次
+                  </span>
+                
+              </div>
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：2020年8月29日 下午
+                
+              </p>
+            
+            <article class="markdown-body">
+              <h1 id="introduction">Introduction</h1>
+<p>本文不会对算法的原理做过多的讲解，主要是记录常见问题的思路。。。</p>
+<p>PS：本文代码皆通过LeetCode提交通过。。。</p>
+<p>推荐两个网站：</p>
+<ul>
+<li><p><a href="https://oi-wiki.org/" target="_blank" rel="noopener">🐱‍🏍OI WIKI</a></p></li>
+<li><p><a href="https://en.cppreference.com/w/" target="_blank" rel="noopener">📓C++文档</a> 也有中文版</p></li>
+</ul>
+<p>Still working on it😀...</p>
+<h1 id="sorting-arrays">Sorting &amp; Arrays</h1>
+<h2 id="basic-sorting">Basic Sorting</h2>
+<p><a href="https://leetcode-cn.com/problems/sort-an-array/" target="_blank" rel="noopener">🐱‍💻Leetcode 912</a></p>
+<p>不多说了，都是基础，几个<span class="math inline">\(O(N^2)\)</span>的算法实现起来没什么问题，主要是下面两个注意不要写错：</p>
+<ul>
+<li>快速排序</li>
+</ul>
+<pre><code class="hljs cpp"><span class="hljs-comment">// 要修改原数组的内容，引用&amp;是必须的</span>
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">QuickSort</span><span class="hljs-params">(<span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; &amp;arr)</span> </span>&#123;
+    <span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-built_in">std</span>::pair&lt;<span class="hljs-keyword">int</span>, <span class="hljs-keyword">int</span>&gt;&gt; ranges; <span class="hljs-comment">// 用来保存需要迭代的范围</span>
+    ranges.push_back(<span class="hljs-built_in">std</span>::make_pair(<span class="hljs-number">0</span>, arr.size()<span class="hljs-number">-1</span>)); <span class="hljs-comment">// 初始化，闭区间</span>
+    
+    <span class="hljs-keyword">while</span> (!ranges.empty()) &#123;
+        <span class="hljs-keyword">auto</span> range = ranges.back(); <span class="hljs-comment">// 取出栈顶</span>
+        ranges.pop_back();
+        
+        <span class="hljs-keyword">if</span> (range.first &gt;= range.second) <span class="hljs-keyword">continue</span>; <span class="hljs-comment">// 只有一个数的情况直接跳过</span>
+        
+        <span class="hljs-keyword">int</span> mid_val = arr[range.second]; <span class="hljs-comment">// 最后一个数作为anchor</span>
+        <span class="hljs-keyword">int</span> left = range.first, right = range.second<span class="hljs-number">-1</span>;
+        
+        <span class="hljs-keyword">while</span> (left &lt; right) &#123;
+            <span class="hljs-keyword">while</span> (left &lt; right &amp;&amp; arr[left] &lt; mid_val) left++;
+            <span class="hljs-keyword">while</span> (left &lt; right &amp;&amp; arr[right] &gt;= mid_val) right--;
+            <span class="hljs-built_in">std</span>::swap(arr[left], arr[right]);
+        &#125;
+        
+        <span class="hljs-comment">// 处理特殊情况</span>
+        <span class="hljs-keyword">if</span> (arr[left] &gt;= arr[range.second]) <span class="hljs-built_in">std</span>::swap(arr[left], arr[range.second]);
+        <span class="hljs-keyword">else</span> left++;
+        
+        ranges.push_back(<span class="hljs-built_in">std</span>::make_pair(range.first, left<span class="hljs-number">-1</span>));
+        ranges.push_back(<span class="hljs-built_in">std</span>::make_pair(left+<span class="hljs-number">1</span>, range.second));
+    &#125;
+&#125;</code></pre>
+<ul>
+<li>堆排序</li>
+</ul>
+<pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">HeadAdjust</span><span class="hljs-params">(<span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;&amp; arr, <span class="hljs-keyword">int</span> start, <span class="hljs-keyword">int</span> end)</span> </span>&#123;
+    <span class="hljs-keyword">int</span> dad = start;
+    <span class="hljs-keyword">int</span> son = dad*<span class="hljs-number">2</span>+<span class="hljs-number">1</span>;
+    <span class="hljs-keyword">while</span> (son &lt;= end) &#123;
+        
+    &#125;
+&#125;
+
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">HeapSort</span><span class="hljs-params">(<span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;&amp; arr)</span> </span>&#123;
+    
+&#125;</code></pre>
+<h2 id="top-k-element-第k大小元素">Top K Element 第K大/小元素</h2>
+<p><a href="https://leetcode-cn.com/problems/kth-largest-element-in-an-array/" target="_blank" rel="noopener">🐱‍💻Leetcode 215</a> （同类题：<a href="https://leetcode-cn.com/problems/zui-xiao-de-kge-shu-lcof/" target="_blank" rel="noopener">🐱‍💻剑指Offer 40</a>）</p>
+<p><strong>题目中说了给定的<span class="math inline">\(K\)</span>是合法的，所以下面的代码没有检查<span class="math inline">\(K\)</span>的合法性</strong></p>
+<ul>
+<li>先排序再求解 <span class="math inline">\(O(N\log N)\)</span> （⭐）</li>
+</ul>
+<pre><code class="hljs cpp"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Solution</span> &#123;</span>
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">findKthLargest</span><span class="hljs-params">(<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;&amp; nums, <span class="hljs-keyword">int</span> k)</span> </span>&#123;
+        <span class="hljs-built_in">std</span>::sort(nums.begin(), nums.end());
+        <span class="hljs-keyword">return</span> nums[nums.size()-k];
+    &#125;
+&#125;;</code></pre>
+<ul>
+<li>堆 <span class="math inline">\(O(N\log K)\)</span> （⭐⭐）</li>
+</ul>
+<p>注意求最小的<span class="math inline">\(K\)</span>个数的话用大顶堆，不然把全部数push到堆中然后一个一个弹出的话复杂度是<span class="math inline">\(O(N\log N)\)</span>，和排序没什么区别了。</p>
+<p>使用<code>C++</code>自带<code>priority_queue</code>的版本：</p>
+<pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">TopK</span><span class="hljs-params">(<span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;&amp; arr, <span class="hljs-keyword">int</span> k)</span> </span>&#123;
+    <span class="hljs-built_in">std</span>::priority_queue&lt;<span class="hljs-keyword">int</span>, <span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;, <span class="hljs-built_in">std</span>::greater&lt;<span class="hljs-keyword">int</span>&gt;&gt; pq; <span class="hljs-comment">// greater是小顶堆，less是大顶堆</span>
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span> num : arr) &#123;
+        <span class="hljs-keyword">if</span> (pq.size() &lt; k) &#123;
+            pq.push(num);
+        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (num &gt; pq.top()) &#123;
+            <span class="hljs-comment">// 如果栈顶元素大于当前元素</span>
+            pq.pop();
+            pq.push(num);
+        &#125;
+    &#125;
+    
+    <span class="hljs-keyword">return</span> pq.top();
+&#125;
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Solution</span> &#123;</span>
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">findKthLargest</span><span class="hljs-params">(<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;&amp; nums, <span class="hljs-keyword">int</span> k)</span> </span>&#123;
+        <span class="hljs-keyword">return</span> TopK(nums, k);
+    &#125;
+&#125;;</code></pre>
+<ul>
+<li>快排变体 <span class="math inline">\(O(N)\)</span> （⭐⭐⭐）</li>
+</ul>
+<pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">TopK</span><span class="hljs-params">(<span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;&amp; arr, <span class="hljs-keyword">int</span> k)</span> </span>&#123;
+  <span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-built_in">std</span>::pair&lt;<span class="hljs-keyword">int</span>, <span class="hljs-keyword">int</span>&gt;&gt; ranges;
+  ranges.push_back(<span class="hljs-built_in">std</span>::make_pair(<span class="hljs-number">0</span>, arr.size()<span class="hljs-number">-1</span>));
+
+  <span class="hljs-keyword">while</span> (!ranges.empty()) &#123;
+    <span class="hljs-keyword">auto</span> range = ranges.back();
+    ranges.pop_back();
+
+    <span class="hljs-keyword">if</span> (range.first &gt;= range.second) &#123;
+      <span class="hljs-keyword">if</span> (range.first == k || range.second == k) &#123;
+        <span class="hljs-keyword">return</span> arr[k];
+      &#125;
+      <span class="hljs-keyword">continue</span>;
+    &#125;
+    <span class="hljs-keyword">int</span> mid_val = arr[range.second];
+    <span class="hljs-keyword">int</span> left = range.first, right = range.second<span class="hljs-number">-1</span>;
+    <span class="hljs-keyword">while</span> (left &lt; right) &#123;
+      <span class="hljs-keyword">while</span> (left &lt; right &amp;&amp; arr[left] &lt; mid_val) left++;
+      <span class="hljs-keyword">while</span> (left &lt; right &amp;&amp; arr[right] &gt;= mid_val) right--;
+      <span class="hljs-built_in">std</span>::swap(arr[left], arr[right]);
+    &#125;
+
+    <span class="hljs-keyword">if</span> (arr[left] &gt;= arr[range.second]) <span class="hljs-built_in">std</span>::swap(arr[left], arr[range.second]);
+    <span class="hljs-keyword">else</span> left++;
+
+    <span class="hljs-keyword">if</span> (left == k) <span class="hljs-keyword">return</span> arr[left];
+
+    ranges.push_back(<span class="hljs-built_in">std</span>::make_pair(range.first, left<span class="hljs-number">-1</span>));
+    ranges.push_back(<span class="hljs-built_in">std</span>::make_pair(left+<span class="hljs-number">1</span>, range.second));
+  &#125;
+  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+&#125;
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Solution</span> &#123;</span>
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">findKthLargest</span><span class="hljs-params">(<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;&amp; nums, <span class="hljs-keyword">int</span> k)</span> </span>&#123;
+        <span class="hljs-keyword">return</span> TopK(nums, nums.size()-k);
+    &#125;
+&#125;;</code></pre>
+<h1 id="list">List</h1>
+<h2 id="add-two-numbers-链表相加">Add Two Numbers 链表相加</h2>
+<p><a href="https://leetcode-cn.com/problems/add-two-numbers/" target="_blank" rel="noopener">🐱‍💻Leetcode 2</a></p>
+<h2 id="intersection-of-two-lists-链表相交节点">Intersection of Two Lists 链表相交节点</h2>
+<p><a href="https://leetcode-cn.com/problems/intersection-of-two-linked-lists/" target="_blank" rel="noopener">🐱‍💻Leetcode 160</a></p>
+<ul>
+<li>HashTable法 <span class="math inline">\(O(M+N)\)</span>（⭐⭐）</li>
+</ul>
+<p>空间复杂度<span class="math inline">\(O(M)\)</span>或<span class="math inline">\(O(N)\)</span>，这里使用<code>unordered_set</code>实现：</p>
+<pre><code class="hljs cpp"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Solution</span> &#123;</span>
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function">ListNode *<span class="hljs-title">getIntersectionNode</span><span class="hljs-params">(ListNode *headA, ListNode *headB)</span> </span>&#123;
+        <span class="hljs-keyword">if</span> (headA == <span class="hljs-literal">nullptr</span> || headB == <span class="hljs-literal">nullptr</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">nullptr</span>;
+
+        <span class="hljs-built_in">std</span>::<span class="hljs-built_in">unordered_set</span>&lt;ListNode*&gt; us;
+        
+        ListNode* current = headA;
+        <span class="hljs-keyword">while</span> (current) &#123;
+            us.insert(current);
+            current = current-&gt;next;
+        &#125;
+
+        ListNode* res = <span class="hljs-literal">nullptr</span>;
+
+        current = headB;
+        <span class="hljs-keyword">while</span> (current) &#123;
+            <span class="hljs-keyword">if</span> (us.find(current) != us.end()) &#123;
+                res = current;
+                <span class="hljs-keyword">break</span>;
+            &#125;
+            current = current-&gt;next;
+        &#125;
+
+        <span class="hljs-keyword">return</span> res;
+    &#125;
+&#125;;</code></pre>
+<ul>
+<li>双指针法 <span class="math inline">\(O(M+N)\)</span>（⭐⭐⭐）</li>
+</ul>
+<p>空间复杂度<span class="math inline">\(O(1)\)</span></p>
+<pre><code class="hljs cpp"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Solution</span> &#123;</span>
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function">ListNode *<span class="hljs-title">getIntersectionNode</span><span class="hljs-params">(ListNode *headA, ListNode *headB)</span> </span>&#123;
+        <span class="hljs-keyword">if</span> (headA == <span class="hljs-literal">nullptr</span> || headB == <span class="hljs-literal">nullptr</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">nullptr</span>;
+
+        ListNode* a = headA, *b = headB;
+
+        <span class="hljs-keyword">while</span> (a != b) &#123;
+            <span class="hljs-keyword">if</span> (a == <span class="hljs-literal">nullptr</span>) &#123;
+                a = headB;
+            &#125; <span class="hljs-keyword">else</span> &#123;
+                a = a-&gt;next;
+            &#125;
+
+            <span class="hljs-keyword">if</span> (b == <span class="hljs-literal">nullptr</span>) &#123;
+                b = headA;
+            &#125; <span class="hljs-keyword">else</span> &#123;
+                b = b-&gt;next;
+            &#125;
+        &#125;
+
+        <span class="hljs-keyword">return</span> a;
+    &#125;
+&#125;;</code></pre>
+<h2 id="reverse-the-list-翻转链表">Reverse the List 翻转链表</h2>
+<p><a href="https://leetcode-cn.com/problems/reverse-linked-list/" target="_blank" rel="noopener">🐱‍💻Leetcode 206</a></p>
+<p>面试中出现频率还挺高的</p>
+<pre><code class="hljs cpp"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Solution</span> &#123;</span>
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function">ListNode* <span class="hljs-title">enumerate</span><span class="hljs-params">(ListNode* head)</span> </span>&#123;
+        <span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; buffer;
+        <span class="hljs-keyword">while</span> (head != <span class="hljs-literal">nullptr</span>) &#123;
+            buffer.push_back(head-&gt;val);
+            head = head-&gt;next;
+        &#125;
+        ListNode* res = <span class="hljs-keyword">new</span> ListNode(buffer.back());
+        ListNode* current = res;
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = buffer.size()<span class="hljs-number">-2</span>; i &gt;= <span class="hljs-number">0</span>; i--) &#123;
+            current-&gt;next = <span class="hljs-keyword">new</span> ListNode(buffer[i]);
+            current = current-&gt;next;
+        &#125;
+
+        <span class="hljs-keyword">return</span> res;
+    &#125;
+
+    <span class="hljs-function">ListNode* <span class="hljs-title">reverseList</span><span class="hljs-params">(ListNode* head)</span> </span>&#123;
+        <span class="hljs-keyword">if</span> (head == <span class="hljs-literal">nullptr</span>) <span class="hljs-keyword">return</span> head;
+
+        <span class="hljs-keyword">return</span> enumerate(head);
+    &#125;
+&#125;;</code></pre>
+<h2 id="merge-lists-合并2或k个链表">Merge Lists 合并（2或K个）链表</h2>
+<p><a href="https://leetcode-cn.com/problems/merge-k-sorted-lists/" target="_blank" rel="noopener">🐱‍💻Leetcode 23</a></p>
+<p>最简单的hard题🤣？？？优先队列法写起来是最舒服的，效率也是最高的，时间复杂度<span class="math inline">\(O(nk\times\log nk)\)</span></p>
+<pre><code class="hljs cpp"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Solution</span> &#123;</span>
+    <span class="hljs-built_in">std</span>::priority_queue&lt;<span class="hljs-built_in">std</span>::pair&lt;<span class="hljs-keyword">int</span>, ListNode*&gt;, <span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-built_in">std</span>::pair&lt;<span class="hljs-keyword">int</span>, ListNode*&gt;&gt;, <span class="hljs-built_in">std</span>::greater&lt;<span class="hljs-built_in">std</span>::pair&lt;<span class="hljs-keyword">int</span>, ListNode*&gt;&gt;&gt; q;
+
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function">ListNode* <span class="hljs-title">mergeKLists</span><span class="hljs-params">(<span class="hljs-built_in">vector</span>&lt;ListNode*&gt;&amp; lists)</span> </span>&#123;
+        <span class="hljs-keyword">if</span> (lists.empty()) <span class="hljs-keyword">return</span> <span class="hljs-literal">nullptr</span>;
+
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span> <span class="hljs-built_in">list</span> : lists) &#123;
+            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">list</span> != <span class="hljs-literal">nullptr</span>) &#123;
+                q.push(<span class="hljs-built_in">std</span>::make_pair(<span class="hljs-built_in">list</span>-&gt;val, <span class="hljs-built_in">list</span>));
+            &#125;
+        &#125;
+
+        <span class="hljs-keyword">auto</span>* dummy = <span class="hljs-keyword">new</span> ListNode(<span class="hljs-number">-1</span>);
+        <span class="hljs-keyword">auto</span>* current = dummy;
+
+        <span class="hljs-keyword">while</span> (q.size()) &#123;
+            <span class="hljs-keyword">auto</span> pair = q.top();
+            <span class="hljs-keyword">auto</span>* p = pair.second;
+            q.pop();
+
+            current-&gt;next = p;
+            <span class="hljs-keyword">if</span> (p-&gt;next) q.push(<span class="hljs-built_in">std</span>::make_pair(p-&gt;next-&gt;val, p-&gt;next));
+            current = current-&gt;next;
+        &#125;
+
+        <span class="hljs-keyword">return</span> dummy-&gt;next;
+    &#125;
+&#125;;</code></pre>
+<h2 id="sort-list-排序链表">Sort List 排序链表</h2>
+<p><a href="https://leetcode-cn.com/problems/sort-list/" target="_blank" rel="noopener">🐱‍💻Leetcode 148</a></p>
+<h1 id="mathematics">Mathematics</h1>
+<h2 id="power-of-two-判断2的幂">Power of Two 判断<span class="math inline">\(2\)</span>的幂</h2>
+<p><a href="https://leetcode-cn.com/problems/power-of-two/" target="_blank" rel="noopener">🐱‍💻Leetcode 231</a></p>
+<p><span class="math inline">\(n\)</span>为<span class="math inline">\(2\)</span>的幂只需检查<span class="math inline">\(n\)</span>与<span class="math inline">\(n-1\)</span>的与是否为<span class="math inline">\(0\)</span>即可，如<span class="math inline">\(8\)</span>的二进制表示（假设只有<span class="math inline">\(8\)</span>位）为<code>[0001000]</code>，<span class="math inline">\(7\)</span>的二进制为<code>[0000111]</code>。</p>
+<p>一行解决。记得判断大于<span class="math inline">\(0\)</span>。</p>
+<pre><code class="hljs cpp"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Solution</span> &#123;</span>
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function"><span class="hljs-keyword">bool</span> <span class="hljs-title">isPowerOfTwo</span><span class="hljs-params">(<span class="hljs-keyword">int</span> n)</span> </span>&#123;
+        <span class="hljs-keyword">return</span> n &gt; <span class="hljs-number">0</span> &amp;&amp; (n&amp;(n<span class="hljs-number">-1</span>))==<span class="hljs-number">0</span>;
+    &#125;
+&#125;;</code></pre>
+<h1 id="graph">Graph</h1>
+<h1 id="misc">Misc</h1>
+<h2 id="single-number-只出现过一次的数字">Single Number 只出现过一次的数字</h2>
+<p><a href="https://leetcode-cn.com/problems/single-number/" target="_blank" rel="noopener">🐱‍💻Leetcode 136</a></p>
+<p>运用位运算的性质</p>
+<pre><code class="hljs cpp"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Solution</span> &#123;</span>
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">singleNumber</span><span class="hljs-params">(<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;&amp; nums)</span> </span>&#123;
+        <span class="hljs-keyword">int</span> res = <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span> i : nums) res ^= i;
+        <span class="hljs-keyword">return</span> res;
+    &#125;
+&#125;;</code></pre>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Technical-Notes/">Technical Notes</a>
+                    
+                      <a class="hover-with-bg" href="/categories/Technical-Notes/Interview/">Interview</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Algorithm/">Algorithm</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Data-Structure/">Data Structure</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/2020/08/24/Unsupervised-Representation-Learning-by-Predicting-Random-Distances/">
+                        <span class="hidden-mobile">Unsupervised Representation Learning by Predicting Random Distances</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+  <div class="disqus" style="width:100%">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_config = function () {
+        this.page.url = 'http://qfxiao.me/2020/08/29/Grokking-the-Interview-Coding-Questions/';
+        this.page.identifier = '/2020/08/29/Grokking-the-Interview-Coding-Questions/';
+      };
+      var oldLoadDq = window.onload;
+      window.onload = function () {
+        oldLoadDq && oldLoadDq();
+
+        var d = document, s = d.createElement('script');
+        s.type = 'text/javascript';
+        s.src = '//' + 'http-larryshaw0079-coding-me-blog' + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+      };
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" target="_blank" rel="nofollow noopener noopener">comments
+        powered by Disqus.</a></noscript>
+  </div>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    
+  <div>
+    
+      <!-- 不蒜子统计PV -->
+      
+      <span id="busuanzi_container_site_pv" style="display: none">
+      总访问量 <span id="busuanzi_value_site_pv"></span> 次
+    </span>
+    
+    
+      <!-- 不蒜子统计UV -->
+      
+      <span id="busuanzi_container_site_uv" style="display: none">
+      总访客数 <span id="busuanzi_value_site_uv"></span> 人
+    </span>
+    
+  </div>
+
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/main.js" ></script>
+
+
+  <script  src="/js/lazyload.js" ></script>
+
+
+
+  
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '.post-content',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+<!-- Plugins -->
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.staticfile.org/mathjax/3.0.5/es5/tex-svg.js" ></script>
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
