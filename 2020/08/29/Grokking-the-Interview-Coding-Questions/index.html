@@ -160,7 +160,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    1.8k 字
+                    2.6k 字
                   </span>
                 
 
@@ -170,7 +170,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    29
+                    40
                      分钟
                   </span>
                 
@@ -207,7 +207,7 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：2020年8月29日 下午
+                  本文最后更新于：2020年8月31日 下午
                 
               </p>
             
@@ -220,14 +220,14 @@
 <li><p><a href="https://oi-wiki.org/" target="_blank" rel="noopener">🐱‍🏍OI WIKI</a></p></li>
 <li><p><a href="https://en.cppreference.com/w/" target="_blank" rel="noopener">📓C++文档</a> 也有中文版</p></li>
 </ul>
-<p>Still working on it😀...</p>
+<p>会不断更新😀...</p>
 <h1 id="sorting-arrays">Sorting &amp; Arrays</h1>
-<h2 id="basic-sorting">Basic Sorting</h2>
+<h2 id="sorting-basics">Sorting Basics</h2>
+<p>LeetCode上有一道题可供练习：</p>
 <p><a href="https://leetcode-cn.com/problems/sort-an-array/" target="_blank" rel="noopener">🐱‍💻Leetcode 912 Medium</a></p>
 <p>不多说了，都是基础，几个<span class="math inline">\(O(N^2)\)</span>的算法实现起来没什么问题，主要是下面两个注意不要写错：</p>
-<ul>
-<li>快速排序</li>
-</ul>
+<h3 id="快速排序">快速排序</h3>
+<p><code>std::sort</code>内部就是快速排序（准确的来说是内省排序，标准规定最坏时间复杂度<span class="math inline">\(O(N\log N)\)</span>，在递归深的情况下会转为堆排序）。</p>
 <pre><code class="hljs cpp"><span class="hljs-comment">// 要修改原数组的内容，引用&amp;是必须的</span>
 <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">QuickSort</span><span class="hljs-params">(<span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; &amp;arr)</span> </span>&#123;
     <span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-built_in">std</span>::pair&lt;<span class="hljs-keyword">int</span>, <span class="hljs-keyword">int</span>&gt;&gt; ranges; <span class="hljs-comment">// 用来保存需要迭代的范围</span>
@@ -256,9 +256,8 @@
         ranges.push_back(<span class="hljs-built_in">std</span>::make_pair(left+<span class="hljs-number">1</span>, range.second));
     &#125;
 &#125;</code></pre>
-<ul>
-<li>堆排序</li>
-</ul>
+<p><strong>应用：找K大数</strong></p>
+<h3 id="堆排序">堆排序</h3>
 <pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">HeadAdjust</span><span class="hljs-params">(<span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;&amp; arr, <span class="hljs-keyword">int</span> start, <span class="hljs-keyword">int</span> end)</span> </span>&#123;
     <span class="hljs-keyword">int</span> dad = start;
     <span class="hljs-keyword">int</span> son = dad*<span class="hljs-number">2</span>+<span class="hljs-number">1</span>;
@@ -270,6 +269,97 @@
 <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">HeapSort</span><span class="hljs-params">(<span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt;&amp; arr)</span> </span>&#123;
     
 &#125;</code></pre>
+<p><code>STL</code>也内置了堆相关的算法，在包含头文件<code>#include &lt;algorithm&gt;</code>之后，</p>
+<ul>
+<li><code>std::make_heap</code>：指定头尾迭代器，可选Compare函数，构造堆；</li>
+<li><code>std::push_heap</code>：指定头尾迭代器，可选Compare函数，将最后一个元素插入到已构造好的堆中（如给定的迭代器范围为<code>[first, last)</code>，需要保证<code>[first,last-1)</code>已经形成一个堆，该函数做的就是将<code>last-1</code>这个元素插入到堆中）；</li>
+<li><code>std::pop_heap</code>：指定头尾迭代器，可选Compare函数，将<code>first</code>和<code>(last-1)</code>的元素交换，并将<code>[first, last-1)</code>调整成堆；</li>
+<li><code>std::sort_heap</code>：指定头尾迭代器，可选Compare函数，将范围<code>[first, last)</code>的元素进行排序（排序之后就不构成堆了）；</li>
+<li><code>std::is_heap</code>：判断是否为堆。</li>
+</ul>
+<h3 id="归并排序">归并排序</h3>
+<pre><code class="hljs cpp">
+</code></pre>
+<p><strong>应用：逆序对</strong></p>
+<h3 id="stl-相关">STL 相关</h3>
+<ul>
+<li><code>std::sort</code>：最常用的排序接口，标准规定该算法的最坏时间复杂度<span class="math inline">\(O(N\log N)\)</span>；</li>
+<li><code>std::nth_element</code>：返回第<span class="math inline">\(K\)</span>大的数，并且所有比它小的数在左边，所有比它大的数在右边，采用的是快速排序的思想，时间复杂度<span class="math inline">\(O(N)\)</span>；</li>
+<li><code>std::stable_sort</code>：稳定<span class="math inline">\(O(N\log N)\)</span>排序，内部实现似乎是归并排序？</li>
+</ul>
+<h3 id="summary">Summary</h3>
+<p>主要排序算法的特点：</p>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th>主要思想</th>
+<th>期望时间复杂度</th>
+<th>最坏时间复杂度</th>
+<th>稳定排序</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>冒泡排序</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>插入排序</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>选择排序</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>基数排序</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>快速排序</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>堆排序</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>归并排序</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>希尔排序</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="merge-intervals-合并区间">Merge Intervals 合并区间</h2>
+<p><a href="https://leetcode-cn.com/problems/merge-intervals/" target="_blank" rel="noopener">🐱‍💻Leetcode 56 Medium</a></p>
 <h2 id="stock-series-股票系列问题">Stock Series 股票系列问题</h2>
 <h3 id="买卖股票的最佳时机">买卖股票的最佳时机</h3>
 <p><a href="https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock/" target="_blank" rel="noopener">🐱‍💻Leetcode 121 Easy</a></p>
@@ -286,6 +376,9 @@
     <span class="hljs-keyword">return</span> max_profit;
   &#125;
 &#125;;</code></pre>
+<h2 id="二分查找">二分查找</h2>
+<h3 id="缺失数字">缺失数字</h3>
+<p><a href="https://leetcode-cn.com/problems/que-shi-de-shu-zi-lcof/" target="_blank" rel="noopener">🐱‍💻剑指Offer 53 Easy</a></p>
 <h2 id="top-k-element-第k大小元素">Top K Element 第K大/小元素</h2>
 <p><a href="https://leetcode-cn.com/problems/kth-largest-element-in-an-array/" target="_blank" rel="noopener">🐱‍💻Leetcode 215 Medium</a> （同类题：<a href="https://leetcode-cn.com/problems/zui-xiao-de-kge-shu-lcof/" target="_blank" rel="noopener">🐱‍💻剑指Offer 40 Easy</a>）</p>
 <p><strong>题目中说了给定的<span class="math inline">\(K\)</span>是合法的，所以下面的代码没有检查<span class="math inline">\(K\)</span>的合法性</strong></p>
@@ -370,7 +463,7 @@
 <h2 id="inversions-数组中的逆序对">Inversions 数组中的逆序对</h2>
 <p><a href="https://leetcode-cn.com/problems/shu-zu-zhong-de-ni-xu-dui-lcof/" target="_blank" rel="noopener">🐱‍💻剑指Offer 51 Hard</a></p>
 <ul>
-<li>对并排序 <span class="math inline">\(O(n\log n)\)</span> （⭐⭐）</li>
+<li>归并排序 <span class="math inline">\(O(n\log n)\)</span> （⭐⭐）</li>
 </ul>
 <pre><code class="hljs cpp">
 </code></pre>
@@ -505,10 +598,17 @@
 &#125;;</code></pre>
 <h2 id="sort-list-排序链表">Sort List 排序链表</h2>
 <p><a href="https://leetcode-cn.com/problems/sort-list/" target="_blank" rel="noopener">🐱‍💻Leetcode 148 Medium</a></p>
+<h1 id="tree">Tree</h1>
+<h2 id="binary-tree-in-order-traversal-二叉树中序遍历">Binary Tree In-order Traversal 二叉树中序遍历</h2>
+<p><a href="https://leetcode-cn.com/problems/binary-tree-inorder-traversal/" target="_blank" rel="noopener">🐱‍💻Leetcode 94 Medium</a></p>
+<h2 id="binary-tree-level-order-traversal-二叉树层序遍历">Binary Tree Level Order Traversal 二叉树层序遍历</h2>
+<p><a href="https://leetcode-cn.com/problems/binary-tree-level-order-traversal/" target="_blank" rel="noopener">🐱‍💻Leetcode 102 Medium</a></p>
 <h1 id="string">String</h1>
 <h2 id="palindrome-number-回文数">Palindrome Number 回文数</h2>
 <p><a href="https://leetcode-cn.com/problems/palindrome-number/" target="_blank" rel="noopener">🐱‍💻Leetcode 9 Easy</a></p>
 <h1 id="data-structure">Data Structure</h1>
+<h2 id="lru-cache-lru缓存机制">LRU Cache LRU缓存机制</h2>
+<p><a href="https://leetcode-cn.com/problems/lru-cache/" target="_blank" rel="noopener">🐱‍💻Leetcode 146 Medium</a></p>
 <h2 id="find-median-from-data-stream-找到数据流的中位数">Find Median from Data Stream 找到数据流的中位数</h2>
 <p><a href="https://leetcode-cn.com/problems/find-median-from-data-stream/" target="_blank" rel="noopener">🐱‍💻Leetcode 295 Hard</a></p>
 <p>双堆做法：</p>
@@ -543,6 +643,20 @@
         &#125;
     &#125;
 &#125;;</code></pre>
+<h1 id="dynamic-programming">Dynamic Programming</h1>
+<h2 id="打家劫舍系列">打家劫舍系列</h2>
+<h3 id="house-robber-i-打家劫舍-i">House Robber I 打家劫舍 I</h3>
+<p><a href="https://leetcode-cn.com/problems/house-robber/" target="_blank" rel="noopener">🐱‍💻Leetcode 198 Easy</a></p>
+<h3 id="house-robber-ii-打家劫舍-ii">House Robber II 打家劫舍 II</h3>
+<p><a href="https://leetcode-cn.com/problems/house-robber-ii/" target="_blank" rel="noopener">🐱‍💻Leetcode 213 Medium</a></p>
+<h3 id="house-robber-iii-打家劫舍-iii">House Robber III 打家劫舍 III</h3>
+<p><a href="https://leetcode-cn.com/problems/house-robber-iii/" target="_blank" rel="noopener">🐱‍💻Leetcode 337 Medium</a></p>
+<h2 id="maximum-subarray-最大子序列和">Maximum Subarray 最大子序列和</h2>
+<p><a href="https://leetcode-cn.com/problems/maximum-subarray/" target="_blank" rel="noopener">🐱‍💻Leetcode 53 Easy</a></p>
+<h2 id="longest-increasing-subsequence-最长上升子序列">Longest Increasing Subsequence 最长上升子序列</h2>
+<p><a href="https://leetcode-cn.com/problems/longest-increasing-subsequence/" target="_blank" rel="noopener">🐱‍💻Leetcode 300 Medium</a></p>
+<h2 id="edit-distance-编辑距离">Edit Distance 编辑距离</h2>
+<p><a href="https://leetcode-cn.com/problems/edit-distance/" target="_blank" rel="noopener">🐱‍💻Leetcode 72 Hard</a></p>
 <h1 id="mathematics">Mathematics</h1>
 <h2 id="power-of-two-判断2的幂">Power of Two 判断<span class="math inline">\(2\)</span>的幂</h2>
 <p><a href="https://leetcode-cn.com/problems/power-of-two/" target="_blank" rel="noopener">🐱‍💻Leetcode 231 Easy</a></p>
@@ -555,6 +669,86 @@
     &#125;
 &#125;;</code></pre>
 <h1 id="graph">Graph</h1>
+<pre><code class="hljs cpp"><span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">100</span> + <span class="hljs-number">5</span>;
+<span class="hljs-keyword">int</span> graph[maxn][maxn];
+<span class="hljs-keyword">int</span> min_dis[maxn][maxn];
+<span class="hljs-keyword">int</span> INF = <span class="hljs-number">100000</span>;</code></pre>
+<ul>
+<li>Floyd</li>
+</ul>
+<p><span class="math display">\[
+f(0, x, y)=\begin{cases}
+\text{edge}(x, y)\\
+0\\
++\infty
+\end{cases}
+\]</span></p>
+<p>状态 <span class="math display">\[
+f(k,x,y) = \min\{f(k-1, x, y), f(k-1, x, k) + f(k-1, k, y)\}
+\]</span> 时间复杂度<span class="math inline">\(O(N^3)\)</span>，空间复杂度<span class="math inline">\(O(N^2)\)</span></p>
+<pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">Floyd</span><span class="hljs-params">(<span class="hljs-keyword">int</span> N)</span> </span>&#123;
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= N; i++) &#123;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">1</span>; j &lt;= N; j++) &#123;
+      <span class="hljs-keyword">if</span> (i == j) &#123;
+        min_dis[i][j] = <span class="hljs-number">0</span>;
+      &#125; <span class="hljs-keyword">else</span> &#123;
+        <span class="hljs-keyword">if</span> (graph[i][j] == <span class="hljs-number">-1</span>) &#123;
+          min_dis[i][j] = INF;
+        &#125; <span class="hljs-keyword">else</span> &#123;
+          min_dis[i][j] = graph[i][j];
+        &#125;
+      &#125;
+    &#125;
+  &#125;
+
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> k = <span class="hljs-number">1</span>; k &lt;= N; k++) &#123;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt;= N; i++) &#123;
+      <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">1</span>; j &lt;= N; j++) &#123;
+        min_dis[i][j] = <span class="hljs-built_in">std</span>::min(min_dis[i][j], min_dis[i][k] + min_dis[k][j]);
+      &#125;
+    &#125;
+  &#125;
+&#125;</code></pre>
+<ul>
+<li>Bellman-Ford</li>
+</ul>
+<pre><code class="hljs cpp">
+</code></pre>
+<ul>
+<li>Dijkstra</li>
+</ul>
+<pre><code class="hljs cpp">
+</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th>Floyd</th>
+<th>Bellman-Ford</th>
+<th>Dijkstra</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>适用场景</td>
+<td>每对结点之间的最短路</td>
+<td>单源最短路</td>
+<td>单源最短路</td>
+</tr>
+<tr class="even">
+<td>适用数据</td>
+<td>没有负环的图</td>
+<td>任意图（可以判定负环是否存在）</td>
+<td>非负权图</td>
+</tr>
+<tr class="odd">
+<td>时间复杂度</td>
+<td><span class="math inline">\(O(N^3)\)</span></td>
+<td><span class="math inline">\(O(NM)\)</span></td>
+<td><span class="math inline">\(O(M\log M)\)</span></td>
+</tr>
+</tbody>
+</table>
 <h2 id="network-delay-time-网络延迟时间">Network Delay Time 网络延迟时间</h2>
 <p><a href="https://leetcode-cn.com/problems/network-delay-time/" target="_blank" rel="noopener">🐱‍💻Leetcode 743 Medium</a></p>
 <h1 id="misc">Misc</h1>
