@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2D5BA6">
+  <meta name="description" content="">
+  <meta name="author" content="Hanzawa">
+  <meta name="keywords" content="">
+  <title>Machine Learning Classification Algorithms (3): Decision Tree - Hanzawa の 部屋</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+<link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/tomorrow.min.css" />
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_yg9cfy8wd6.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Hanzawa</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/img/bg/coffe_bear.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+                Machine Learning Classification Algorithms (3): Decision Tree
+              
+            </span>
+
+            
+              
+                <div class="mt-3 post-meta">
+                  <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+                  <time datetime="2020-09-02 18:47">
+                    2020年9月2日 晚上
+                  </time>
+                </div>
+              
+
+              <div class="mt-1">
+                
+                  
+                  <span class="post-meta mr-2">
+                    <i class="iconfont icon-chart"></i>
+                    1.6k 字
+                  </span>
+                
+
+                
+                  
+                  <span class="post-meta mr-2">
+                      <i class="iconfont icon-clock-fill"></i>
+                    
+                    
+                    19
+                     分钟
+                  </span>
+                
+
+                
+                  <!-- 不蒜子统计文章PV -->
+                  
+                  <span id="busuanzi_container_page_pv" class="post-meta" style="display: none">
+                    <i class="iconfont icon-eye" aria-hidden="true"></i>
+                    <span id="busuanzi_value_page_pv"></span> 次
+                  </span>
+                
+              </div>
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：2020年9月4日 晚上
+                
+              </p>
+            
+            <article class="markdown-body">
+              <h1 id="introduction">Introduction</h1>
+<p>决策树（Decision Tree）是一种<strong>有监督分类模型</strong>（稍加改造可进行回归任务），</p>
+<p>本文内容是学习高级树模型（GBDT，XGBoost）的基础，强烈建议在看那些内容之前先了解本文的内容！</p>
+<p>比如对于以下数据集，</p>
+<table>
+<thead>
+<tr class="header">
+<th>ID</th>
+<th>色泽</th>
+<th>根蒂</th>
+<th>敲声</th>
+<th>纹理</th>
+<th>脐部</th>
+<th>触感</th>
+<th>好瓜</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>青绿</td>
+<td>蜷缩</td>
+<td>浊响</td>
+<td>清晰</td>
+<td>凹陷</td>
+<td>硬滑</td>
+<td>是</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>乌黑</td>
+<td>蜷缩</td>
+<td>沉闷</td>
+<td>清晰</td>
+<td>凹陷</td>
+<td>硬滑</td>
+<td>是</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>乌黑</td>
+<td>蜷缩</td>
+<td>浊响</td>
+<td>清晰</td>
+<td>凹陷</td>
+<td>硬滑</td>
+<td>是</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>青绿</td>
+<td>蜷缩</td>
+<td>沉闷</td>
+<td>清晰</td>
+<td>凹陷</td>
+<td>硬滑</td>
+<td>是</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>浅白</td>
+<td>蜷缩</td>
+<td>浊响</td>
+<td>清晰</td>
+<td>凹陷</td>
+<td>硬滑</td>
+<td>是</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td>青绿</td>
+<td>稍缩</td>
+<td>浊响</td>
+<td>清晰</td>
+<td>稍凹</td>
+<td>软黏</td>
+<td>是</td>
+</tr>
+<tr class="odd">
+<td>7</td>
+<td>乌黑</td>
+<td>稍缩</td>
+<td>浊响</td>
+<td>稍糊</td>
+<td>稍凹</td>
+<td>软黏</td>
+<td>是</td>
+</tr>
+<tr class="even">
+<td>8</td>
+<td>乌黑</td>
+<td>稍缩</td>
+<td>浊响</td>
+<td>清晰</td>
+<td>稍凹</td>
+<td>硬滑</td>
+<td>是</td>
+</tr>
+<tr class="odd">
+<td>9</td>
+<td>乌黑</td>
+<td>稍缩</td>
+<td>沉闷</td>
+<td>稍糊</td>
+<td>稍凹</td>
+<td>硬滑</td>
+<td>否</td>
+</tr>
+<tr class="even">
+<td>10</td>
+<td>青绿</td>
+<td>硬挺</td>
+<td>清脆</td>
+<td>清晰</td>
+<td>平坦</td>
+<td>软黏</td>
+<td>否</td>
+</tr>
+</tbody>
+</table>
+<p>对于人来说，</p>
+<p><img src="https://i.loli.net/2020/09/02/WuGQ79g4NcHqJDh.png" srcset="/img/loading.gif" style="zoom:50%;" /></p>
+<p>停止条件</p>
+<ol type="1">
+<li>每个叶子节点的样本都属于同一个类别</li>
+<li>没有可供划分的特征，或者集合中每个样本所有特征取值都相同</li>
+<li>决策树达到预先指定的最大深度</li>
+</ol>
+<p>下列算法的不同主要是在于划分选择的方法不同</p>
+<h1 id="id3">ID3</h1>
+<p>信息熵是衡量一个随机变量信息量的度量，如果把数据集的标签<span class="math inline">\(y\)</span>看作是随机变量，那么<span class="math inline">\(y\)</span>的熵越小代表不确定性越小（集合里几乎都是一种类别的样本），熵越大代表不确定性越大（集合包含不同类别的样本），其公式为： <span class="math display">\[
+Ent(D)=-\sum_{k=1}^{|\mathcal Y|}p_k\log p_k
+\]</span> <span class="math inline">\(Ent(D)\)</span>代表集合<span class="math inline">\(D\)</span>对应的熵，<span class="math inline">\(|\mathcal Y|\)</span>是类别数量，二分类就是<span class="math inline">\(|\mathcal Y|=2\)</span>，<span class="math inline">\(p_k\)</span>为第<span class="math inline">\(k\)</span>个类别对应的概率（频率）。很自然的，我们可以根据划分前后熵的变化来确定划分特征的选择，如果划分之后熵减小的最多，那么这个特征也是最好的。假设我们选定特征<span class="math inline">\(a\)</span>来对集合进行划分，特征<span class="math inline">\(a\)</span>共有<span class="math inline">\(V\)</span>个离散取值，那么划分之后将会产生<span class="math inline">\(V\)</span>个子集，我们记每个子集为<span class="math inline">\(D^v, v=1,\cdots, V\)</span>。那么，信息增益可以写为： <span class="math display">\[
+Gain(D,a)=Ent(D)-\sum_{v=1}^V \frac{|D^v|}{|D|}Ent(D^v)
+\]</span> 不过，ID3存在两个致命的缺点：</p>
+<ol type="1">
+<li>无法对连续取值的特征进行计算</li>
+<li>对取值较多的特征具有很大的偏向性（极端的情况，把样本编号作为特征，由于每个样本的编号都不同，分裂之后每个自己只有一个样本/类别，熵是最小的）</li>
+</ol>
+<h1 id="c4.5">C4.5</h1>
+<p>C4.5解决了ID3对于取值数目较多的特征的偏向性问题，其采用的方案很直观，即对信息增益除以一个系数，特征取值数目越多的特征系数越大，该划分标准被称作是信息增益率： <span class="math display">\[
+Gain\_ratio(D,a)=\frac{Gain(D,a)}{IV(a)}
+\]</span> 其中<span class="math inline">\(IV(a)=-\sum_{v=1}^V\frac{|D^v|}{|D|}\log \frac{|D^v|}{|D|}\)</span>。其实<span class="math inline">\(IV(a)\)</span>可以看作是“划分之后每个样本属于集合<span class="math inline">\(v\)</span>的概率”这个随机变量的熵，划分的子集越多，划分之后属于哪个集合就越不确定，所以熵就越大。</p>
+<p>不过信息增益率反而会对特征取值数目少的特征有所偏好，所以C4.5算法是先计算信息增益，确定信息增益高于平均值的候选集，再从中选择信息增益率最高的特征。</p>
+<p>除此之外，C4.5还能处理连续取值的特征，其做法是“离散化”。</p>
+<h1 id="cart-classification">CART Classification</h1>
+<p>基尼值 <span class="math display">\[
+\begin{align}
+Gini(D)&amp;=1-\sum_{k=1}^{|\mathcal Y|}p_k^2
+\end{align}
+\]</span> 直观上来说，基尼值表示随机抽取两个样本，其类别不一致的概率</p>
+<p>如果说一个特征越好，那么划分之后其每个子集对应的基尼值应该越小越好。基尼系数 <span class="math display">\[
+Gini_index(D,a)
+\]</span></p>
+<h1 id="cart-regression">CART Regression</h1>
+<p>在分类问题中，CART是一棵二叉树，选择基尼系数作为划分的准则，且同一个叶子节点的样本对应的输出是相同的。在回归问题中类似，不过CART回归树将划分准则换成了MSE。 <span class="math display">\[
+\frac{1}{N}\sum_{i=1}^N (f(x_i)-y_i)^2
+\]</span> 如果CART有<span class="math inline">\(M\)</span>片叶子，那么相当于CART将输入划分成了<span class="math inline">\(M\)</span>个单元<span class="math inline">\(R_m, m=1,\cdots,M\)</span>，也即有<span class="math inline">\(M\)</span>个输出，那么该CART在数据集上的MSE为： <span class="math display">\[
+\frac{1}{N}\sum_{m=1}^M\sum_{x_i\in R_m} (c_m-y_i)^2
+\]</span> 这里<span class="math inline">\(c_j\)</span>为叶子节点<span class="math inline">\(j\)</span>的输出，一般选为对应样本的均值<span class="math inline">\(c_m=\text{avg}(y_i|x_i\in R_m)\)</span>。这样，剩下的问题就是如何确定每次的切分特征和切分点了，假设选择的特征是<span class="math inline">\(j\)</span>，切分点<span class="math inline">\(s\)</span>，那么 <span class="math display">\[
+\min_{j,s}\left[\min_{c_1}\sum_{x_i\in R_1\{j,s\}}(y_i-c_1)^2+\min_{c_2}\sum_{x_i\in R_2\{j,s\}}(y_i-c_2)^2\right]
+\]</span></p>
+<p>CART回归树采用了一种启发式算法</p>
+<p>算法流程大致如下：</p>
+<blockquote>
+<p><strong>CART Decision Tree Algorithm</strong></p>
+<p>INPUT: 数据集 <span class="math inline">\(D=\{(x_1,y_1),\cdots,(x_N,y_N)\}\)</span></p>
+<p>OUTPUT: 预测值<span class="math inline">\(\{\hat y_1,\cdots,\hat y_N\}\)</span></p>
+<p>PROCEDURE:</p>
+<p><strong>1. 选取当前最优切分特征变量<span class="math inline">\(j^*\)</span>与最优切分点<span class="math inline">\(s^*\)</span></strong></p>
+<p>设当前选择的切分变量为<span class="math inline">\(j\)</span>，切分点为<span class="math inline">\(s\)</span>那么可以根据切分点将数据集分为两个子集，一个是<span class="math inline">\(R_1(j,s)=\left\{x|x^{(j)}\leq s\right\}\)</span>，另一个是<span class="math inline">\(R_2(j,s)=\left\{x|x^{(j)}&gt; s\right\}\)</span>。 遍历所有的<span class="math inline">\(j\)</span>，求解 <span class="math display">\[
+\min_{j,s}\left[\min_{c_1}\sum\limits_{x_i\in R_1(j,s)}(y_i-c_1)^2+\min\limits_{c_2}\sum\limits_{x_i\in R_2(j,s)}(y_i-c_2)^2\right]
+\]</span> 注意<span class="math inline">\(\hat c_1=\frac{1}{N_1}\sum\limits_{x_i\in R_1(j,s)}y_i\)</span> <strong>2. 用选定的<span class="math inline">\((j^*,s^*)\)</span>来划分区域并计算输出值</strong></p>
+<p>此时，我们还需要确定这两个区域（划分到同一个区域的样本对应的输出是相同的）的输出值<span class="math inline">\(c_1\)</span>和<span class="math inline">\(c_2\)</span>，其确定方式是使得对应区域上的均方误差最小。这样我们相当于得到了给定<span class="math inline">\(j,s\)</span>下的损失，所以只要找出使得损失最小的<span class="math inline">\(j^*,s^*\)</span>即可：</p>
+<p><strong>3. 递归地对划分出来的两个区域重复步骤1和步骤2，直到满足停止条件</strong></p>
+<p><strong>4. 最后将输入空间划分为<span class="math inline">\(M\)</span>，输出<span class="math inline">\(f(x)=\sum_{m=1}^M \hat c_m I(x\in R_m)\)</span></strong></p>
+</blockquote>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Technical-Notes/">Technical Notes</a>
+                    
+                      <a class="hover-with-bg" href="/categories/Technical-Notes/Machine-Learning/">Machine Learning</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/ID3/">ID3</a>
+                    
+                      <a class="hover-with-bg" href="/tags/C4-5/">C4.5</a>
+                    
+                      <a class="hover-with-bg" href="/tags/CART/">CART</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/2020/09/01/PyTorch-Practice-Guide-Distributed-Training-Automatic-Mixed-Precision-and-etc/">
+                        <span class="hidden-mobile">PyTorch Practice Guide: Distributed Training, Automatic Mixed Precision and etc.</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+  <div class="disqus" style="width:100%">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_config = function () {
+        this.page.url = 'http://qfxiao.me/2020/09/02/Machine-Learning-Classification-Algorithms-3-Decision-Tree/';
+        this.page.identifier = '/2020/09/02/Machine-Learning-Classification-Algorithms-3-Decision-Tree/';
+      };
+      var oldLoadDq = window.onload;
+      window.onload = function () {
+        oldLoadDq && oldLoadDq();
+
+        var d = document, s = d.createElement('script');
+        s.type = 'text/javascript';
+        s.src = '//' + 'http-larryshaw0079-coding-me-blog' + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+      };
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" target="_blank" rel="nofollow noopener noopener">comments
+        powered by Disqus.</a></noscript>
+  </div>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    
+  <div>
+    
+      <!-- 不蒜子统计PV -->
+      
+      <span id="busuanzi_container_site_pv" style="display: none">
+      总访问量 <span id="busuanzi_value_site_pv"></span> 次
+    </span>
+    
+    
+      <!-- 不蒜子统计UV -->
+      
+      <span id="busuanzi_container_site_uv" style="display: none">
+      总访客数 <span id="busuanzi_value_site_uv"></span> 人
+    </span>
+    
+  </div>
+
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/main.js" ></script>
+
+
+  <script  src="/js/lazyload.js" ></script>
+
+
+
+  
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '.post-content',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+<!-- Plugins -->
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.staticfile.org/mathjax/3.0.5/es5/tex-svg.js" ></script>
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

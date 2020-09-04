@@ -160,7 +160,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    784 字
+                    473 字
                   </span>
                 
 
@@ -170,7 +170,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    10
+                    6
                      分钟
                   </span>
                 
@@ -207,7 +207,7 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：2020年8月29日 下午
+                  本文最后更新于：2020年9月3日 凌晨
                 
               </p>
             
@@ -222,24 +222,10 @@
 <p><a href="https://snaildove.github.io/2018/10/01/8.Booting-Methods_LiHang-Statistical-Learning-Methods/" target="_blank" rel="noopener">blog</a></p>
 <p><a href="https://snaildove.github.io/2018/10/02/get-started-XGBoost/" target="_blank" rel="noopener">blog</a></p>
 <h2 id="additive-training">Additive Training</h2>
-<h1 id="cart-decision-tree">CART Decision Tree</h1>
-<p><img src="https://i.loli.net/2020/08/26/EPSjeTfHMrBWRN1.png" srcset="/img/loading.gif" /></p>
-<p><img src="https://i.loli.net/2020/08/26/5QFWdMZoEqIKCbT.png" srcset="/img/loading.gif" /></p>
-<blockquote>
-<p><strong>CART Decision Tree Algorithm</strong></p>
-<p>INPUT: 数据集 <span class="math inline">\(D=\{(x_1,y_1),\cdots,(x_N,y_N)\}\)</span></p>
-<p>OUTPUT: 预测值<span class="math inline">\(\{\hat y_1,\cdots,\hat y_N\}\)</span></p>
-<ol type="1">
-<li>选取最优切分特征变量<span class="math inline">\(j^*\)</span>与最优切分点<span class="math inline">\(s^*\)</span></li>
-<li>用选定的<span class="math inline">\((j^*,s^*)\)</span>来划分区域并计算输出值</li>
-<li>递归地对划分出来的两个区域重复步骤1和步骤2，直到满足停止条件</li>
-<li>将输入空间划分为<span class="math inline">\(M\)</span>，输出<span class="math inline">\(f(x)=\sum_{m=1}^M \hat c_m I(x\in R_m)\)</span></li>
-</ol>
-<p>设当前选择的切分变量为<span class="math inline">\(j\)</span>，切分点为<span class="math inline">\(s\)</span>那么可以根据切分点将数据集分为两个子集，一个是<span class="math inline">\(R_1(j,s)=\left\{x|x^{(j)}\leq s\right\}\)</span>，另一个是<span class="math inline">\(R_2(j,s)=\left\{x|x^{(j)}&gt; s\right\}\)</span>。此时，我们还需要确定这两个区域（划分到同一个区域的样本对应的输出是相同的）的输出值<span class="math inline">\(c_1\)</span>和<span class="math inline">\(c_2\)</span>，其确定方式是使得对应区域上的均方误差最小。这样我们相当于得到了给定<span class="math inline">\(j,s\)</span>下的损失，所以只要找出使得损失最小的<span class="math inline">\(j^*,s^*\)</span>即可： <span class="math display">\[
-\min_{j,s}\left[\min_{c_1}\sum\limits_{x_i\in R_1(j,s)}(y_i-c_1)^2+\min\limits_{c_2}\sum\limits_{x_i\in R_2(j,s)}(y_i-c_2)^2\right]
-\]</span> 注意<span class="math inline">\(\hat c_1=\frac{1}{N_1}\sum\limits_{x_i\in R_1(j,s)}y_i\)</span></p>
-</blockquote>
-<h1 id="gbdt">GBDT</h1>
+<h1 id="cart-recall">CART: Recall</h1>
+<p><img src="https://i.loli.net/2020/08/26/EPSjeTfHMrBWRN1.png" srcset="/img/loading.gif" style="zoom:50%;" /></p>
+<p><img src="https://i.loli.net/2020/08/26/5QFWdMZoEqIKCbT.png" srcset="/img/loading.gif" style="zoom:50%;" /></p>
+<h1 id="gradient-boosting-decision-tree-gbdt">Gradient Boosting Decision Tree (GBDT)</h1>
 <h2 id="fitting-negative-gradient">Fitting Negative Gradient</h2>
 <p><img src="https://i.loli.net/2020/08/26/Ycus6hHIrioAnO5.png" srcset="/img/loading.gif" /></p>
 <p>设当前为第<span class="math inline">\(t\)</span>轮，这时已经得到了<span class="math inline">\(t-1\)</span>个基模型，第<span class="math inline">\(i\)</span>个样本损失函数的负梯度为： <span class="math display">\[
@@ -323,9 +309,9 @@ f_t(x)=f_{t-1}(x)+\sum\limits_{j=1}^J c_{tj}\mathrm{I}(x\in R_{tj})
                   <div class="post-prev col-6">
                     
                     
-                      <a href="/2020/08/26/Machine-Learning-Classification-Algorithms-2-Logisitic-Regression/">
+                      <a href="/2020/08/26/Machine-Learning-Ensemble-Algorithms-1-Boosting-and-AdaBoost/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Machine Learning Classification Algorithms (2): Logisitic Regression</span>
+                        <span class="hidden-mobile">Machine Learning Ensemble Algorithms (1): Boosting and AdaBoost</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
