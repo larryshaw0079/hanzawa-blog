@@ -17,7 +17,7 @@
   <meta name="description" content="">
   <meta name="author" content="Hanzawa">
   <meta name="keywords" content="">
-  <title>Machine Learning Classification Algorithms (2): Support Vector Machine - Hanzawa の 部屋</title>
+  <title>Decision Tree: Machine Learning Classification Algorithms 3 - Hanzawa の 部屋</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
@@ -141,7 +141,7 @@
           <div class="container text-center white-text fadeInUp">
             <span class="h2" id="subtitle">
               
-                Machine Learning Classification Algorithms (2): Support Vector Machine
+                Decision Tree: Machine Learning Classification Algorithms 3
               
             </span>
 
@@ -149,8 +149,8 @@
               
                 <div class="mt-3 post-meta">
                   <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-                  <time datetime="2020-08-26 02:09">
-                    2020年8月26日 凌晨
+                  <time datetime="2020-09-02 18:47">
+                    2020年9月2日 晚上
                   </time>
                 </div>
               
@@ -160,7 +160,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    140 字
+                    1.6k 字
                   </span>
                 
 
@@ -170,7 +170,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    2
+                    19
                      分钟
                   </span>
                 
@@ -212,28 +212,158 @@
               </p>
             
             <article class="markdown-body">
-              <h1 id="introduction">Introduction</h1>
-<p>Still working on it😅...</p>
-<p><a href="http://blog.pluskid.org/?page_id=683" target="_blank" rel="noopener">blog</a></p>
-<h1 id="maximum-margin-classifier">Maximum Margin Classifier</h1>
-<p><img src="https://i.loli.net/2020/08/26/vjuyCGXMr4msaUK.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
-<p>函数间隔<span class="math inline">\(\hat \gamma=y(w^\top x+b)\)</span></p>
-<p>令其在超平面上的投影为<span class="math inline">\(x_0\)</span>，设<span class="math inline">\(w\)</span>为法向量， <span class="math display">\[
-x=x_0+\gamma\frac{w}{\parallel w\parallel}
-\]</span> 其中<span class="math inline">\(\gamma\)</span>为点<span class="math inline">\(x\)</span>到超平面的几何距离。将上式带入到超平面方程可以得到 <span class="math display">\[
-\gamma=\frac{w^\top}{\parallel w\parallel}x+\frac{b}{\parallel w\parallel}
-\]</span> <img src="https://i.loli.net/2020/08/26/b6qLJWzHwFAPDne.png" srcset="/img/loading.gif" /></p>
-<p>于是我们有关系 <span class="math display">\[
-\gamma = \frac{\hat \gamma}{\parallel w\parallel}
-\]</span> 优化函数 <span class="math display">\[
-\begin{align}
-\max &amp; \space \frac{1}{\parallel w\parallel},\\ s.t. &amp; y_i(w^\top x_i+b)\geq 1, i=1,\cdots,n
-\end{align}
-\]</span></p>
-<h1 id="dual-problem">Dual Problem</h1>
-<h1 id="kernel">Kernel</h1>
-<h1 id="soft-margin">Soft Margin</h1>
-<h1 id="numerical-optimization">Numerical Optimization</h1>
+              <h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>Still working on it…</p>
+<p>决策树（Decision Tree）是一种<strong>有监督分类模型</strong>（稍加改造可进行回归任务），</p>
+<p>本文内容是学习高级树模型（GBDT，XGBoost）的基础，强烈建议在看那些内容之前先了解本文的内容！</p>
+<p>比如对于以下数据集，</p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>色泽</th>
+<th>根蒂</th>
+<th>敲声</th>
+<th>纹理</th>
+<th>脐部</th>
+<th>触感</th>
+<th>好瓜</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>青绿</td>
+<td>蜷缩</td>
+<td>浊响</td>
+<td>清晰</td>
+<td>凹陷</td>
+<td>硬滑</td>
+<td>是</td>
+</tr>
+<tr>
+<td>2</td>
+<td>乌黑</td>
+<td>蜷缩</td>
+<td>沉闷</td>
+<td>清晰</td>
+<td>凹陷</td>
+<td>硬滑</td>
+<td>是</td>
+</tr>
+<tr>
+<td>3</td>
+<td>乌黑</td>
+<td>蜷缩</td>
+<td>浊响</td>
+<td>清晰</td>
+<td>凹陷</td>
+<td>硬滑</td>
+<td>是</td>
+</tr>
+<tr>
+<td>4</td>
+<td>青绿</td>
+<td>蜷缩</td>
+<td>沉闷</td>
+<td>清晰</td>
+<td>凹陷</td>
+<td>硬滑</td>
+<td>是</td>
+</tr>
+<tr>
+<td>5</td>
+<td>浅白</td>
+<td>蜷缩</td>
+<td>浊响</td>
+<td>清晰</td>
+<td>凹陷</td>
+<td>硬滑</td>
+<td>是</td>
+</tr>
+<tr>
+<td>6</td>
+<td>青绿</td>
+<td>稍缩</td>
+<td>浊响</td>
+<td>清晰</td>
+<td>稍凹</td>
+<td>软黏</td>
+<td>是</td>
+</tr>
+<tr>
+<td>7</td>
+<td>乌黑</td>
+<td>稍缩</td>
+<td>浊响</td>
+<td>稍糊</td>
+<td>稍凹</td>
+<td>软黏</td>
+<td>是</td>
+</tr>
+<tr>
+<td>8</td>
+<td>乌黑</td>
+<td>稍缩</td>
+<td>浊响</td>
+<td>清晰</td>
+<td>稍凹</td>
+<td>硬滑</td>
+<td>是</td>
+</tr>
+<tr>
+<td>9</td>
+<td>乌黑</td>
+<td>稍缩</td>
+<td>沉闷</td>
+<td>稍糊</td>
+<td>稍凹</td>
+<td>硬滑</td>
+<td>否</td>
+</tr>
+<tr>
+<td>10</td>
+<td>青绿</td>
+<td>硬挺</td>
+<td>清脆</td>
+<td>清晰</td>
+<td>平坦</td>
+<td>软黏</td>
+<td>否</td>
+</tr>
+</tbody></table>
+<p>对于人来说，</p>
+<img src="https://i.loli.net/2020/09/02/WuGQ79g4NcHqJDh.png" srcset="/img/loading.gif" style="zoom:50%;" />
+
+<p>停止条件</p>
+<ol>
+<li>每个叶子节点的样本都属于同一个类别</li>
+<li>没有可供划分的特征，或者集合中每个样本所有特征取值都相同</li>
+<li>决策树达到预先指定的最大深度</li>
+</ol>
+<p>下列算法的不同主要是在于划分选择的方法不同</p>
+<h1 id="ID3"><a href="#ID3" class="headerlink" title="ID3"></a>ID3</h1><p>信息熵是衡量一个随机变量信息量的度量，如果把数据集的标签$y$看作是随机变量，那么$y$的熵越小代表不确定性越小（集合里几乎都是一种类别的样本），熵越大代表不确定性越大（集合包含不同类别的样本），其公式为：<br>$$<br>Ent(D)=-\sum_{k=1}^{|\mathcal Y|}p_k\log p_k<br>$$<br>$Ent(D)$代表集合$D$对应的熵，$|\mathcal Y|$是类别数量，二分类就是$|\mathcal Y|=2$，$p_k$为第$k$个类别对应的概率（频率）。很自然的，我们可以根据划分前后熵的变化来确定划分特征的选择，如果划分之后熵减小的最多，那么这个特征也是最好的。假设我们选定特征$a$来对集合进行划分，特征$a$共有$V$个离散取值，那么划分之后将会产生$V$个子集，我们记每个子集为$D^v, v=1,\cdots, V$。那么，信息增益可以写为：<br>$$<br>Gain(D,a)=Ent(D)-\sum_{v=1}^V \frac{|D^v|}{|D|}Ent(D^v)<br>$$<br>不过，ID3存在两个致命的缺点：</p>
+<ol>
+<li>无法对连续取值的特征进行计算</li>
+<li>对取值较多的特征具有很大的偏向性（极端的情况，把样本编号作为特征，由于每个样本的编号都不同，分裂之后每个自己只有一个样本/类别，熵是最小的）</li>
+</ol>
+<h1 id="C4-5"><a href="#C4-5" class="headerlink" title="C4.5"></a>C4.5</h1><p>C4.5解决了ID3对于取值数目较多的特征的偏向性问题，其采用的方案很直观，即对信息增益除以一个系数，特征取值数目越多的特征系数越大，该划分标准被称作是信息增益率：<br>$$<br>Gain_ratio(D,a)=\frac{Gain(D,a)}{IV(a)}<br>$$<br>其中$IV(a)=-\sum_{v=1}^V\frac{|D^v|}{|D|}\log \frac{|D^v|}{|D|}$。其实$IV(a)$可以看作是“划分之后每个样本属于集合$v$的概率”这个随机变量的熵，划分的子集越多，划分之后属于哪个集合就越不确定，所以熵就越大。</p>
+<p>不过信息增益率反而会对特征取值数目少的特征有所偏好，所以C4.5算法是先计算信息增益，确定信息增益高于平均值的候选集，再从中选择信息增益率最高的特征。</p>
+<p>除此之外，C4.5还能处理连续取值的特征，其做法是“离散化”。</p>
+<h1 id="CART-Classification"><a href="#CART-Classification" class="headerlink" title="CART Classification"></a>CART Classification</h1><p>基尼值<br>$$<br>\begin{align}<br>Gini(D)&amp;=1-\sum_{k=1}^{|\mathcal Y|}p_k^2<br>\end{align}<br>$$<br>直观上来说，基尼值表示随机抽取两个样本，其类别不一致的概率</p>
+<p>如果说一个特征越好，那么划分之后其每个子集对应的基尼值应该越小越好。基尼系数<br>$$<br>Gini_index(D,a)<br>$$</p>
+<h1 id="CART-Regression"><a href="#CART-Regression" class="headerlink" title="CART Regression"></a>CART Regression</h1><p>在分类问题中，CART是一棵二叉树，选择基尼系数作为划分的准则，且同一个叶子节点的样本对应的输出是相同的。在回归问题中类似，不过CART回归树将划分准则换成了MSE。<br>$$<br>\frac{1}{N}\sum_{i=1}^N (f(x_i)-y_i)^2<br>$$<br>如果CART有$M$片叶子，那么相当于CART将输入划分成了$M$个单元$R_m, m=1,\cdots,M$，也即有$M$个输出，那么该CART在数据集上的MSE为：<br>$$<br>\frac{1}{N}\sum_{m=1}^M\sum_{x_i\in R_m} (c_m-y_i)^2<br>$$<br>这里$c_j$为叶子节点$j$的输出，一般选为对应样本的均值$c_m=\text{avg}(y_i|x_i\in R_m)$。这样，剩下的问题就是如何确定每次的切分特征和切分点了，假设选择的特征是$j$，切分点$s$，那么<br>$$<br>\min_{j,s}\left[\min_{c_1}\sum_{x_i\in R_1{j,s}}(y_i-c_1)^2+\min_{c_2}\sum_{x_i\in R_2{j,s}}(y_i-c_2)^2\right]<br>$$</p>
+<p>CART回归树采用了一种启发式算法</p>
+<p>算法流程大致如下：</p>
+<blockquote>
+<p><strong>CART Decision Tree Algorithm</strong></p>
+<p>INPUT: 数据集 $D={(x_1,y_1),\cdots,(x_N,y_N)}$</p>
+<p>OUTPUT: 预测值${\hat y_1,\cdots,\hat y_N}$</p>
+<p>PROCEDURE:</p>
+<p><strong>1. 选取当前最优切分特征变量$j^<em>$与最优切分点$s^</em>$</strong></p>
+<p>设当前选择的切分变量为$j$，切分点为$s$那么可以根据切分点将数据集分为两个子集，一个是$R_1(j,s)=\left{x|x^{(j)}\leq s\right}$，另一个是$R_2(j,s)=\left{x|x^{(j)}&gt; s\right}$。<br>遍历所有的$j$，求解<br>$$<br>\min_{j,s}\left[\min_{c_1}\sum\limits_{x_i\in R_1(j,s)}(y_i-c_1)^2+\min\limits_{c_2}\sum\limits_{x_i\in R_2(j,s)}(y_i-c_2)^2\right]<br>$$<br>注意$\hat c_1=\frac{1}{N_1}\sum\limits_{x_i\in R_1(j,s)}y_i$<br><strong>2. 用选定的$(j^<em>,s^</em>)$来划分区域并计算输出值</strong></p>
+<p>此时，我们还需要确定这两个区域（划分到同一个区域的样本对应的输出是相同的）的输出值$c_1$和$c_2$，其确定方式是使得对应区域上的均方误差最小。这样我们相当于得到了给定$j,s$下的损失，所以只要找出使得损失最小的$j^<em>,s^</em>$即可：</p>
+<p><strong>3. 递归地对划分出来的两个区域重复步骤1和步骤2，直到满足停止条件</strong></p>
+<p><strong>4. 最后将输入空间划分为$M$，输出$f(x)=\sum_{m=1}^M \hat c_m I(x\in R_m)$</strong></p>
+</blockquote>
 
             </article>
             <hr>
@@ -253,7 +383,11 @@ x=x_0+\gamma\frac{w}{\parallel w\parallel}
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/SVM/">SVM</a>
+                      <a class="hover-with-bg" href="/tags/ID3/">ID3</a>
+                    
+                      <a class="hover-with-bg" href="/tags/C4-5/">C4.5</a>
+                    
+                      <a class="hover-with-bg" href="/tags/CART/">CART</a>
                     
                   </div>
                 
@@ -266,18 +400,12 @@ x=x_0+\gamma\frac{w}{\parallel w\parallel}
                   <div class="post-prev col-6">
                     
                     
-                      <a href="/2020/08/29/Grokking-the-Interview-Coding-Questions/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Grokking the Interview Coding Questions: High Frequency Problems</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </div>
                   <div class="post-next col-6">
                     
                     
-                      <a href="/2020/08/26/Machine-Learning-Classification-Algorithms-1-Linear-Regression-and-Logistic-Regression/">
-                        <span class="hidden-mobile">Machine Learning Classification Algorithms (1): Linear Regression and Logistic Regression</span>
+                      <a href="/2020/09/01/PyTorch-Practice-Guide-Distributed-Training-Automatic-Mixed-Precision-and-etc/">
+                        <span class="hidden-mobile">PyTorch Practice Guide: Distributed Training, Automatic Mixed Precision and etc.</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -296,8 +424,8 @@ x=x_0+\gamma\frac{w}{\parallel w\parallel}
     <div id="disqus_thread"></div>
     <script type="text/javascript">
       var disqus_config = function () {
-        this.page.url = 'http://qfxiao.me/2020/08/26/Machine-Learning-Classification-Algorithms-2-Support-Vector-Machine/';
-        this.page.identifier = '/2020/08/26/Machine-Learning-Classification-Algorithms-2-Support-Vector-Machine/';
+        this.page.url = 'http://qfxiao.me/2020/09/02/Decision-Tree-Machine-Learning-Classification-Algorithms-3/';
+        this.page.identifier = '/2020/09/02/Decision-Tree-Machine-Learning-Classification-Algorithms-3/';
       };
       var oldLoadDq = window.onload;
       window.onload = function () {

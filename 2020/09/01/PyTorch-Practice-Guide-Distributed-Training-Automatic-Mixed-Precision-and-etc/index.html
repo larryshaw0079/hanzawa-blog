@@ -160,7 +160,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    39 字
+                    348 字
                   </span>
                 
 
@@ -170,7 +170,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    1
+                    4
                      分钟
                   </span>
                 
@@ -207,25 +207,43 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：2020年9月1日 下午
+                  本文最后更新于：2020年9月4日 晚上
                 
               </p>
             
             <article class="markdown-body">
-              <h1 id="overview">Overview</h1>
-<p>still working on it...</p>
-<h1 id="adjust-learning-rate">Adjust Learning Rate</h1>
-<p><a href="https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate" target="_blank" rel="noopener">官方教程</a></p>
-<h1 id="distributed-training">Distributed Training</h1>
-<p><a href="https://zhuanlan.zhihu.com/p/86441879" target="_blank" rel="noopener">blog</a></p>
+              <h1 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h1><p>still working on it…</p>
+<p>本文主要是对<code>PyTorch</code>实际应用中会用到的经验、技巧的总结。</p>
+<h1 id="Adjust-Learning-Rate"><a href="#Adjust-Learning-Rate" class="headerlink" title="Adjust Learning Rate"></a>Adjust Learning Rate</h1><p>学习率调节是模型训练中的常用技巧，其主要思想是随着训练的进行，通过调节学习率来促使模型进行进一步的学习。<code>PyTorch</code>内置了很多调节学习率的方案，可以参考<a href="https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate" target="_blank" rel="noopener">官方教程</a>。学习率调节的伪代码大概如下：</p>
+<pre><code class="hljs python"><span class="hljs-meta">&gt;&gt;&gt; </span>scheduler = ...
+<span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">for</span> epoch <span class="hljs-keyword">in</span> range(<span class="hljs-number">100</span>):
+<span class="hljs-meta">&gt;&gt;&gt; </span>    train(...)
+<span class="hljs-meta">&gt;&gt;&gt; </span>    validate(...)
+<span class="hljs-meta">&gt;&gt;&gt; </span>    scheduler.step()</code></pre>
+
+<p>下面介绍几种常见的学习率调节方案。</p>
+<h2 id="StepLR"><a href="#StepLR" class="headerlink" title="StepLR"></a>StepLR</h2><p><code>StepLR</code>就是每经过一定的epoch（参数<code>step_size</code>），就将学习率乘以一个衰减系数（参数<code>gamma</code>），注意每一个epoch的结束都要调用<code>scheduler.step()</code>。</p>
+<pre><code class="hljs python"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-comment"># Assuming optimizer uses lr = 0.05 for all groups</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-comment"># lr = 0.05     if epoch &lt; 30</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-comment"># lr = 0.005    if 30 &lt;= epoch &lt; 60</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-comment"># lr = 0.0005   if 60 &lt;= epoch &lt; 90</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-comment"># ...</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span>scheduler = StepLR(optimizer, step_size=<span class="hljs-number">30</span>, gamma=<span class="hljs-number">0.1</span>)
+<span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">for</span> epoch <span class="hljs-keyword">in</span> range(<span class="hljs-number">100</span>):
+<span class="hljs-meta">&gt;&gt;&gt; </span>    train(...)
+<span class="hljs-meta">&gt;&gt;&gt; </span>    validate(...)
+<span class="hljs-meta">&gt;&gt;&gt; </span>    scheduler.step()</code></pre>
+
+<h2 id="CosineAnnealingLR"><a href="#CosineAnnealingLR" class="headerlink" title="CosineAnnealingLR"></a>CosineAnnealingLR</h2><p>大名鼎鼎的余弦退火。</p>
+<img src="https://i.loli.net/2020/09/04/IjRElrHS1xLFcDM.png" srcset="/img/loading.gif" style="zoom: 33%;" />
+
+<h2 id="ReduceLROnPlateau"><a href="#ReduceLROnPlateau" class="headerlink" title="ReduceLROnPlateau"></a>ReduceLROnPlateau</h2><p><code>ReduceLROnPlateau</code>，顾名思义，就是在某一指标处于基本不变的时候调整学习率，这样做也很符合直觉。</p>
+<h1 id="Distributed-Training"><a href="#Distributed-Training" class="headerlink" title="Distributed Training"></a>Distributed Training</h1><p><a href="https://zhuanlan.zhihu.com/p/86441879" target="_blank" rel="noopener">blog</a></p>
 <p><a href="https://zhuanlan.zhihu.com/p/98535650" target="_blank" rel="noopener">blog</a></p>
 <p><a href="https://zhuanlan.zhihu.com/p/145427849" target="_blank" rel="noopener">blog</a></p>
 <p>可以参考<a href="https://pytorch.org/tutorials/intermediate/ddp_tutorial.html" target="_blank" rel="noopener">官方示例</a></p>
-<h1 id="automatic-mixed-precision">Automatic Mixed Precision</h1>
-<p>可以参考<a href="https://pytorch.org/docs/stable/notes/amp_examples.html" target="_blank" rel="noopener">官方示例</a></p>
-<h1 id="onnx">ONNX</h1>
-<h1 id="tensorrt">TensorRT</h1>
-<p>[blog](</p>
+<h1 id="Automatic-Mixed-Precision"><a href="#Automatic-Mixed-Precision" class="headerlink" title="Automatic Mixed Precision"></a>Automatic Mixed Precision</h1><p>可以参考<a href="https://pytorch.org/docs/stable/notes/amp_examples.html" target="_blank" rel="noopener">官方示例</a></p>
+<h1 id="ONNX"><a href="#ONNX" class="headerlink" title="ONNX"></a>ONNX</h1><h1 id="TensorRT"><a href="#TensorRT" class="headerlink" title="TensorRT"></a>TensorRT</h1><p>[blog](</p>
 
             </article>
             <hr>
@@ -266,9 +284,9 @@
                   <div class="post-prev col-6">
                     
                     
-                      <a href="/2020/09/02/Machine-Learning-Classification-Algorithms-3-Decision-Tree/">
+                      <a href="/2020/09/02/Decision-Tree-Machine-Learning-Classification-Algorithms-3/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Machine Learning Classification Algorithms (3): Decision Tree</span>
+                        <span class="hidden-mobile">Decision Tree: Machine Learning Classification Algorithms 3</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     

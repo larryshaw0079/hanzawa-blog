@@ -160,7 +160,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    473 字
+                    467 字
                   </span>
                 
 
@@ -212,8 +212,7 @@
               </p>
             
             <article class="markdown-body">
-              <h1 id="introduction">Introduction</h1>
-<p>Still working on it😅...</p>
+              <h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>Still working on it😅…</p>
 <p><a href="https://xgboost.readthedocs.io/en/latest/tutorials/model.html" target="_blank" rel="noopener">XGBoost Documentation</a></p>
 <p><a href="https://www.cnblogs.com/pinard/p/6133937.html" target="_blank" rel="noopener">AdaBoost blog</a></p>
 <p><a href="https://www.cnblogs.com/pinard/p/6140514.html" target="_blank" rel="noopener">GBDT blog</a></p>
@@ -221,61 +220,44 @@
 <p><a href="https://homes.cs.washington.edu/~tqchen/pdf/BoostedTree.pdf" target="_blank" rel="noopener">陈天奇slide</a></p>
 <p><a href="https://snaildove.github.io/2018/10/01/8.Booting-Methods_LiHang-Statistical-Learning-Methods/" target="_blank" rel="noopener">blog</a></p>
 <p><a href="https://snaildove.github.io/2018/10/02/get-started-XGBoost/" target="_blank" rel="noopener">blog</a></p>
-<h2 id="additive-training">Additive Training</h2>
-<h1 id="cart-recall">CART: Recall</h1>
-<p><img src="https://i.loli.net/2020/08/26/EPSjeTfHMrBWRN1.png" srcset="/img/loading.gif" style="zoom:50%;" /></p>
-<p><img src="https://i.loli.net/2020/08/26/5QFWdMZoEqIKCbT.png" srcset="/img/loading.gif" style="zoom:50%;" /></p>
-<h1 id="gradient-boosting-decision-tree-gbdt">Gradient Boosting Decision Tree (GBDT)</h1>
-<h2 id="fitting-negative-gradient">Fitting Negative Gradient</h2>
-<p><img src="https://i.loli.net/2020/08/26/Ycus6hHIrioAnO5.png" srcset="/img/loading.gif" /></p>
-<p>设当前为第<span class="math inline">\(t\)</span>轮，这时已经得到了<span class="math inline">\(t-1\)</span>个基模型，第<span class="math inline">\(i\)</span>个样本损失函数的负梯度为： <span class="math display">\[
-r_{ti}=-\left[\frac{\partial L(y_i,f(x_i))}{\partial f(x_i)}\right]_{f(x)=f_{t-1}(x)}
-\]</span> 如果在<span class="math inline">\((x_i,r_{ti})\)</span>上训练CART，得到训练好的回归树，设回归树中有<span class="math inline">\(J\)</span>个叶子节点</p>
-<p>每个叶子节点对应了一个子区域<span class="math inline">\(R_{tj}\)</span>，这个子区域里的样本 <span class="math display">\[
-c_{tj}^*=\min\limits_{c_{tj}}\sum\limits_{x_i\in R_{tj}}L(y_i,f_{t-1}(x_i)+c_{tj})
-\]</span> 最后对于所有叶子节点（子区域） <span class="math display">\[
-h_t(x)=\sum_{j=1}^J c_{tj}\mathrm{I}(x\in R_{tj})
-\]</span> 最终得到本轮的强学习器： <span class="math display">\[
-f_t(x)=f_{t-1}(x)+\sum\limits_{j=1}^J c_{tj}\mathrm{I}(x\in R_{tj})
-\]</span></p>
-<p><img src="https://i.loli.net/2020/08/26/Vxr2KpJAlu8GEOy.png" srcset="/img/loading.gif" /></p>
-<h2 id="gradient-boosting-tree-for-regression">Gradient Boosting Tree for Regression</h2>
-<blockquote>
+<h2 id="Additive-Training"><a href="#Additive-Training" class="headerlink" title="Additive Training"></a>Additive Training</h2><h1 id="CART-Recall"><a href="#CART-Recall" class="headerlink" title="CART: Recall"></a>CART: Recall</h1><img src="https://i.loli.net/2020/08/26/EPSjeTfHMrBWRN1.png" srcset="/img/loading.gif" style="zoom:50%;" />
+
+
+
+<img src="https://i.loli.net/2020/08/26/5QFWdMZoEqIKCbT.png" srcset="/img/loading.gif" style="zoom:50%;" />
+
+<h1 id="Gradient-Boosting-Decision-Tree-GBDT"><a href="#Gradient-Boosting-Decision-Tree-GBDT" class="headerlink" title="Gradient Boosting Decision Tree (GBDT)"></a>Gradient Boosting Decision Tree (GBDT)</h1><h2 id="Fitting-Negative-Gradient"><a href="#Fitting-Negative-Gradient" class="headerlink" title="Fitting Negative Gradient"></a>Fitting Negative Gradient</h2><p><img src="https://i.loli.net/2020/08/26/Ycus6hHIrioAnO5.png" srcset="/img/loading.gif" alt=""></p>
+<p>设当前为第$t$轮，这时已经得到了$t-1$个基模型，第$i$个样本损失函数的负梯度为：<br>$$<br>r_{ti}=-\left[\frac{\partial L(y_i,f(x_i))}{\partial f(x_i)}\right]<em>{f(x)=f</em>{t-1}(x)}<br>$$<br>如果在$(x_i,r_{ti})$上训练CART，得到训练好的回归树，设回归树中有$J$个叶子节点</p>
+<p>每个叶子节点对应了一个子区域$R_{tj}$，这个子区域里的样本<br>$$<br>c_{tj}^*=\min\limits_{c_{tj}}\sum\limits_{x_i\in R_{tj}}L(y_i,f_{t-1}(x_i)+c_{tj})<br>$$<br>最后对于所有叶子节点（子区域）<br>$$<br>h_t(x)=\sum_{j=1}^J c_{tj}\mathrm{I}(x\in R_{tj})<br>$$<br>最终得到本轮的强学习器：<br>$$<br>f_t(x)=f_{t-1}(x)+\sum\limits_{j=1}^J c_{tj}\mathrm{I}(x\in R_{tj})<br>$$</p>
+<img src="https://i.loli.net/2020/08/26/Vxr2KpJAlu8GEOy.png" srcset="/img/loading.gif" />
+
+<h2 id="Gradient-Boosting-Tree-for-Regression"><a href="#Gradient-Boosting-Tree-for-Regression" class="headerlink" title="Gradient Boosting Tree for Regression"></a>Gradient Boosting Tree for Regression</h2><blockquote>
 <p><strong>Gradient Boosting Tree Algorithm</strong></p>
 <p>INPUT:</p>
 <p>OUTPUT:</p>
-<ol type="1">
+<ol>
 <li>初始化弱学习器（即使用CART直接在数据集上训练）：</li>
 <li>计算负梯度</li>
-<li>在<span class="math inline">\((x_i,r_{ti})\)</span>上训练得到一个CART回归树，</li>
+<li>在$(x_i,r_{ti})$上训练得到一个CART回归树，</li>
 <li>对叶子节点计算最佳输出值</li>
 <li>更新强学习器，回到步骤2直到达到迭代轮数</li>
-<li>得到强学习器的表达式：<span class="math inline">\(f(x)=f_0(x)+\sum\limits_{t=1}^T\sum\limits_{j=1}^J c_{tj}\mathrm I(x\in R_{tj})\)</span></li>
+<li>得到强学习器的表达式：$f(x)=f_0(x)+\sum\limits_{t=1}^T\sum\limits_{j=1}^J c_{tj}\mathrm I(x\in R_{tj})$</li>
 </ol>
 </blockquote>
-<h2 id="gradient-boosting-tree-for-classification">Gradient Boosting Tree for Classification</h2>
-<p>在处理分类任务时，由于输出是离散的值</p>
+<h2 id="Gradient-Boosting-Tree-for-Classification"><a href="#Gradient-Boosting-Tree-for-Classification" class="headerlink" title="Gradient Boosting Tree for Classification"></a>Gradient Boosting Tree for Classification</h2><p>在处理分类任务时，由于输出是离散的值</p>
 <p>一种方法是使用指数损失函数，此时GBDT退化为AdaBoost；另一种方法是借鉴逻辑回归的方法，去建模真实值的概率</p>
-<h3 id="binary-classification">Binary Classification</h3>
-<h3 id="multi-class-classfication">Multi-class Classfication</h3>
-<h2 id="gbdt-sumarry">GBDT Sumarry</h2>
-<p>优点：</p>
-<ol type="1">
+<h3 id="Binary-Classification"><a href="#Binary-Classification" class="headerlink" title="Binary Classification"></a>Binary Classification</h3><h3 id="Multi-class-Classfication"><a href="#Multi-class-Classfication" class="headerlink" title="Multi-class Classfication"></a>Multi-class Classfication</h3><h2 id="GBDT-Sumarry"><a href="#GBDT-Sumarry" class="headerlink" title="GBDT Sumarry"></a>GBDT Sumarry</h2><p>优点：</p>
+<ol>
 <li>可以灵活处理</li>
 <li>相对SVM，调参较少</li>
 <li>使用某些损失函数对异常值的鲁棒性高</li>
 </ol>
 <p>缺点：</p>
-<ol type="1">
+<ol>
 <li>难以并行训练</li>
 </ol>
-<h1 id="xgboost">XGBoost</h1>
-<h2 id="regularization">Regularization</h2>
-<p>叶子节点的个数<span class="math inline">\(T\)</span>，叶子节点分数<span class="math inline">\(w\)</span> <span class="math display">\[
-\Omega(f)=\gamma T+\frac{1}{2}\lambda\parallel w\parallel^2
-\]</span></p>
-<h1 id="lightgbm">LightGBM</h1>
-
+<h1 id="XGBoost"><a href="#XGBoost" class="headerlink" title="XGBoost"></a>XGBoost</h1><h2 id="Regularization"><a href="#Regularization" class="headerlink" title="Regularization"></a>Regularization</h2><p>叶子节点的个数$T$，叶子节点分数$w$<br>$$<br>\Omega(f)=\gamma T+\frac{1}{2}\lambda\parallel w\parallel^2<br>$$</p>
+<h1 id="LightGBM"><a href="#LightGBM" class="headerlink" title="LightGBM"></a>LightGBM</h1>
             </article>
             <hr>
             <div>

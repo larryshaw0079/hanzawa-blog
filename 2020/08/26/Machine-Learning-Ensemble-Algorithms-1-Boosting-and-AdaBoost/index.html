@@ -160,7 +160,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    220 字
+                    218 字
                   </span>
                 
 
@@ -212,17 +212,14 @@
               </p>
             
             <article class="markdown-body">
-              <h1 id="introduction">Introduction</h1>
-<h1 id="boosting">Boosting</h1>
-<h1 id="adaboost-algorithm">AdaBoost Algorithm</h1>
-<p>给定数据集<span class="math inline">\(X=\{(x_1,y_1),\cdots,(x_N,y_N)\}\)</span>，AdaBoost的思想是通过训练一系列弱分类器，并通过线性相加将这些弱分类器组合成强分类器。</p>
-<ol type="1">
-<li>初始化数据的权重分布<span class="math inline">\(D_1\)</span></li>
-<li>在训练数据上使用权重分布<span class="math inline">\(D_m\)</span>进行训练，得到基分类器<span class="math inline">\(G_m(x)\)</span></li>
-<li>计算基分类器<span class="math inline">\(G(x)\)</span>在训练数据上的误差<span class="math inline">\(e_m\)</span></li>
-<li>计算基分类器<span class="math inline">\(G(x)\)</span>的权重<span class="math inline">\(\alpha_m\)</span>，可以看出这个权重是与误差<span class="math inline">\(e_m\)</span>成反比的，即误差越大，权重越低</li>
-<li>更新训练数据的权重分布<span class="math inline">\(D_{m+1}\)</span>，可以看到这个权重是和误差成正比的，即误差大的样本会受到更高的关注</li>
-<li>回到步骤2，直到得到<span class="math inline">\(M\)</span>个分类器</li>
+              <h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><h1 id="Boosting"><a href="#Boosting" class="headerlink" title="Boosting"></a>Boosting</h1><h1 id="AdaBoost-Algorithm"><a href="#AdaBoost-Algorithm" class="headerlink" title="AdaBoost Algorithm"></a>AdaBoost Algorithm</h1><p>给定数据集$X={(x_1,y_1),\cdots,(x_N,y_N)}$，AdaBoost的思想是通过训练一系列弱分类器，并通过线性相加将这些弱分类器组合成强分类器。</p>
+<ol>
+<li>初始化数据的权重分布$D_1$</li>
+<li>在训练数据上使用权重分布$D_m$进行训练，得到基分类器$G_m(x)$</li>
+<li>计算基分类器$G(x)$在训练数据上的误差$e_m$</li>
+<li>计算基分类器$G(x)$的权重$\alpha_m$，可以看出这个权重是与误差$e_m$成反比的，即误差越大，权重越低</li>
+<li>更新训练数据的权重分布$D_{m+1}$，可以看到这个权重是和误差成正比的，即误差大的样本会受到更高的关注</li>
+<li>回到步骤2，直到得到$M$个分类器</li>
 <li>将分类器进行线性组合得到最终分类器</li>
 </ol>
 
