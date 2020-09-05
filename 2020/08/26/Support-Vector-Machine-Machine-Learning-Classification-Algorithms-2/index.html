@@ -160,7 +160,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    136 字
+                    140 字
                   </span>
                 
 
@@ -212,16 +212,29 @@
               </p>
             
             <article class="markdown-body">
-              <h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>Still working on it😅…</p>
+              <h1 id="introduction">Introduction</h1>
+<p>Still working on it😅...</p>
 <p><a href="http://blog.pluskid.org/?page_id=683" target="_blank" rel="noopener">blog</a></p>
-<h1 id="Maximum-Margin-Classifier"><a href="#Maximum-Margin-Classifier" class="headerlink" title="Maximum Margin Classifier"></a>Maximum Margin Classifier</h1><img src="https://i.loli.net/2020/08/26/vjuyCGXMr4msaUK.png" srcset="/img/loading.gif" style="zoom:67%;" />
+<h1 id="maximum-margin-classifier">Maximum Margin Classifier</h1>
+<p><img src="https://i.loli.net/2020/08/26/vjuyCGXMr4msaUK.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p>函数间隔<span class="math inline">\(\hat \gamma=y(w^\top x+b)\)</span></p>
+<p>令其在超平面上的投影为<span class="math inline">\(x_0\)</span>，设<span class="math inline">\(w\)</span>为法向量， <span class="math display">\[
+x=x_0+\gamma\frac{w}{\parallel w\parallel}
+\]</span> 其中<span class="math inline">\(\gamma\)</span>为点<span class="math inline">\(x\)</span>到超平面的几何距离。将上式带入到超平面方程可以得到 <span class="math display">\[
+\gamma=\frac{w^\top}{\parallel w\parallel}x+\frac{b}{\parallel w\parallel}
+\]</span> <img src="https://i.loli.net/2020/08/26/b6qLJWzHwFAPDne.png" srcset="/img/loading.gif" /></p>
+<p>于是我们有关系 <span class="math display">\[
+\gamma = \frac{\hat \gamma}{\parallel w\parallel}
+\]</span> 优化函数 <span class="math display">\[
+\begin{align}
+\max &amp; \space \frac{1}{\parallel w\parallel},\\ s.t. &amp; y_i(w^\top x_i+b)\geq 1, i=1,\cdots,n
+\end{align}
+\]</span></p>
+<h1 id="dual-problem">Dual Problem</h1>
+<h1 id="kernel">Kernel</h1>
+<h1 id="soft-margin">Soft Margin</h1>
+<h1 id="numerical-optimization">Numerical Optimization</h1>
 
-
-
-<p>函数间隔$\hat \gamma=y(w^\top x+b)$</p>
-<p>令其在超平面上的投影为$x_0$，设$w$为法向量，<br>$$<br>x=x_0+\gamma\frac{w}{\parallel w\parallel}<br>$$<br>其中$\gamma$为点$x$到超平面的几何距离。将上式带入到超平面方程可以得到<br>$$<br>\gamma=\frac{w^\top}{\parallel w\parallel}x+\frac{b}{\parallel w\parallel}<br>$$<br><img src="https://i.loli.net/2020/08/26/b6qLJWzHwFAPDne.png" srcset="/img/loading.gif" alt=""></p>
-<p>于是我们有关系<br>$$<br>\gamma = \frac{\hat \gamma}{\parallel w\parallel}<br>$$<br>优化函数<br>$$<br>\begin{align}<br>\max &amp; \space \frac{1}{\parallel w\parallel},\ s.t. &amp; y_i(w^\top x_i+b)\geq 1, i=1,\cdots,n<br>\end{align}<br>$$</p>
-<h1 id="Dual-Problem"><a href="#Dual-Problem" class="headerlink" title="Dual Problem"></a>Dual Problem</h1><h1 id="Kernel"><a href="#Kernel" class="headerlink" title="Kernel"></a>Kernel</h1><h1 id="Soft-Margin"><a href="#Soft-Margin" class="headerlink" title="Soft Margin"></a>Soft Margin</h1><h1 id="Numerical-Optimization"><a href="#Numerical-Optimization" class="headerlink" title="Numerical Optimization"></a>Numerical Optimization</h1>
             </article>
             <hr>
             <div>

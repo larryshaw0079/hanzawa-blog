@@ -160,7 +160,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    412 字
+                    416 字
                   </span>
                 
 
@@ -212,18 +212,49 @@
               </p>
             
             <article class="markdown-body">
-              <h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>Still working on it…</p>
-<h1 id="Linear-Regression"><a href="#Linear-Regression" class="headerlink" title="Linear Regression"></a>Linear Regression</h1><h2 id="The-Model"><a href="#The-Model" class="headerlink" title="The Model"></a>The Model</h2><p><img src="https://i.loli.net/2020/09/04/Ji14CNOLADmysah.png" srcset="/img/loading.gif" alt=""></p>
-<h2 id="Optimization"><a href="#Optimization" class="headerlink" title="Optimization"></a>Optimization</h2><h1 id="Logistic-Regression"><a href="#Logistic-Regression" class="headerlink" title="Logistic Regression"></a>Logistic Regression</h1><h2 id="The-Model-1"><a href="#The-Model-1" class="headerlink" title="The Model"></a>The Model</h2><p>输出$w^\top x+b$</p>
-<p>$\frac{1}{1+e^{-(w^\top x+b)}}$</p>
-<p><img src="https://i.loli.net/2020/09/04/ztrBE9FQwuKxCOh.png" srcset="/img/loading.gif" alt=""></p>
-<h2 id="Loss-Function"><a href="#Loss-Function" class="headerlink" title="Loss Function"></a>Loss Function</h2><p>损失函数<br>$$<br>\ell (\beta) = \sum_{i=1}^m(-y_i\beta^\top\hat x_i+\ln(1+e^{\beta^\top\hat x_i}))<br>$$</p>
-<h2 id="Optimization-1"><a href="#Optimization-1" class="headerlink" title="Optimization"></a>Optimization</h2><p>这里讨论逻辑回归的优化方法，并顺带浅谈一下梯度下降和牛顿法这两种优化方法</p>
-<h3 id="Taylor-Formulation"><a href="#Taylor-Formulation" class="headerlink" title="Taylor Formulation"></a>Taylor Formulation</h3><p>函数$f(x)$在点$x_0$处的泰勒展开为：<br>$$<br>f(x)=\sum_{n=0}^\infty\frac{f^{(n)}(x_0)}{n!}(x-x_0)^n<br>$$<br>特别的，一阶展开为：<br>$$<br>f(x)\approx f(x_0)+f^\prime(x_0)(x-x_0)<br>$$<br>二阶展开为：<br>$$<br>f(x)\approx f(x_0)+f^\prime(x_0)(x-x_0) + f^{\prime\prime}(x_0)\frac{(x-x_0)^2}{2}<br>$$<br>假设$x^t=x^{t-1}+\Delta x$，将$f(x)$在$x^{t-1}$处进行泰勒展开<br>$$<br>\begin{align}<br>f(x^t) &amp;= f(x^{t-1}+\Delta x)\<br>&amp;\approx f(x^{t-1})+f^\prime(x^{t-1})\Delta x + f^{\prime\prime}(x^{t-1})\frac{\Delta x^2}{2}<br>\end{align}<br>$$</p>
-<h3 id="Gradient-Descend-Method"><a href="#Gradient-Descend-Method" class="headerlink" title="Gradient Descend Method"></a>Gradient Descend Method</h3><p>设参数$\theta$，那么参数对应的损失函数为$L(\theta)$，</p>
-<p>设当前步数为$t$，那么$t-1$步时的参数为$\theta^{t-1}$，将$L(\theta^t)$在$\theta^{t-1}$处展开：</p>
-<h3 id="Newton’s-Method"><a href="#Newton’s-Method" class="headerlink" title="Newton’s Method"></a>Newton’s Method</h3><p>将$L(\theta^t)$在$\theta^{t-1}$处进行二阶泰勒展开<br>$$<br>\begin{align}<br>L(\theta^t) &amp;= L(\theta^{t-1}+\Delta \theta)\<br>&amp;\approx L(\theta^{t-1})+L^\prime(\theta^{t-1})\Delta \theta + L^{\prime\prime}(\theta^{t-1})\frac{\Delta \theta^2}{2}<br>\end{align}<br>$$<br>记一阶导数和二阶导数分别为$g$和$H$，那么<br>$$<br>L(\theta^t)=L(\theta^{t-1})+g\Delta \theta + H\frac{\Delta \theta^2}{2}<br>$$<br>要使得迭代后的结果尽量小，即$g\Delta \theta + H\frac{\Delta \theta^2}{2}$尽量小，那么有$\frac{\left(g\Delta \theta + H\frac{\Delta \theta^2}{2}\right)}{\partial\Delta\theta}=0$</p>
-<p>求得$\Delta \theta=H^{-1}g$</p>
+              <h1 id="introduction">Introduction</h1>
+<p>Still working on it...</p>
+<h1 id="linear-regression">Linear Regression</h1>
+<h2 id="the-model">The Model</h2>
+<p><img src="https://i.loli.net/2020/09/04/Ji14CNOLADmysah.png" srcset="/img/loading.gif" /></p>
+<h2 id="optimization">Optimization</h2>
+<h1 id="logistic-regression">Logistic Regression</h1>
+<h2 id="the-model-1">The Model</h2>
+<p>输出<span class="math inline">\(w^\top x+b\)</span></p>
+<p><span class="math inline">\(\frac{1}{1+e^{-(w^\top x+b)}}\)</span></p>
+<p><img src="https://i.loli.net/2020/09/04/ztrBE9FQwuKxCOh.png" srcset="/img/loading.gif" /></p>
+<h2 id="loss-function">Loss Function</h2>
+<p>损失函数 <span class="math display">\[
+\ell (\beta) = \sum_{i=1}^m(-y_i\beta^\top\hat x_i+\ln(1+e^{\beta^\top\hat x_i}))
+\]</span></p>
+<h2 id="optimization-1">Optimization</h2>
+<p>这里讨论逻辑回归的优化方法，并顺带浅谈一下梯度下降和牛顿法这两种优化方法</p>
+<h3 id="taylor-formulation">Taylor Formulation</h3>
+<p>函数<span class="math inline">\(f(x)\)</span>在点<span class="math inline">\(x_0\)</span>处的泰勒展开为： <span class="math display">\[
+f(x)=\sum_{n=0}^\infty\frac{f^{(n)}(x_0)}{n!}(x-x_0)^n
+\]</span> 特别的，一阶展开为： <span class="math display">\[
+f(x)\approx f(x_0)+f^\prime(x_0)(x-x_0)
+\]</span> 二阶展开为： <span class="math display">\[
+f(x)\approx f(x_0)+f^\prime(x_0)(x-x_0) + f^{\prime\prime}(x_0)\frac{(x-x_0)^2}{2}
+\]</span> 假设<span class="math inline">\(x^t=x^{t-1}+\Delta x\)</span>，将<span class="math inline">\(f(x)\)</span>在<span class="math inline">\(x^{t-1}\)</span>处进行泰勒展开 <span class="math display">\[
+\begin{align}
+f(x^t) &amp;= f(x^{t-1}+\Delta x)\\
+&amp;\approx f(x^{t-1})+f^\prime(x^{t-1})\Delta x + f^{\prime\prime}(x^{t-1})\frac{\Delta x^2}{2}
+\end{align}
+\]</span></p>
+<h3 id="gradient-descend-method">Gradient Descend Method</h3>
+<p>设参数<span class="math inline">\(\theta\)</span>，那么参数对应的损失函数为<span class="math inline">\(L(\theta)\)</span>，</p>
+<p>设当前步数为<span class="math inline">\(t\)</span>，那么<span class="math inline">\(t-1\)</span>步时的参数为<span class="math inline">\(\theta^{t-1}\)</span>，将<span class="math inline">\(L(\theta^t)\)</span>在<span class="math inline">\(\theta^{t-1}\)</span>处展开：</p>
+<h3 id="newtons-method">Newton's Method</h3>
+<p>将<span class="math inline">\(L(\theta^t)\)</span>在<span class="math inline">\(\theta^{t-1}\)</span>处进行二阶泰勒展开 <span class="math display">\[
+\begin{align}
+L(\theta^t) &amp;= L(\theta^{t-1}+\Delta \theta)\\
+&amp;\approx L(\theta^{t-1})+L^\prime(\theta^{t-1})\Delta \theta + L^{\prime\prime}(\theta^{t-1})\frac{\Delta \theta^2}{2}
+\end{align}
+\]</span> 记一阶导数和二阶导数分别为<span class="math inline">\(g\)</span>和<span class="math inline">\(H\)</span>，那么 <span class="math display">\[
+L(\theta^t)=L(\theta^{t-1})+g\Delta \theta + H\frac{\Delta \theta^2}{2}
+\]</span> 要使得迭代后的结果尽量小，即<span class="math inline">\(g\Delta \theta + H\frac{\Delta \theta^2}{2}\)</span>尽量小，那么有<span class="math inline">\(\frac{\left(g\Delta \theta + H\frac{\Delta \theta^2}{2}\right)}{\partial\Delta\theta}=0\)</span></p>
+<p>求得<span class="math inline">\(\Delta \theta=H^{-1}g\)</span></p>
 
             </article>
             <hr>
