@@ -160,7 +160,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    140 字
+                    1.2k 字
                   </span>
                 
 
@@ -170,7 +170,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    2
+                    16
                      分钟
                   </span>
                 
@@ -207,7 +207,7 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：2020年9月4日 晚上
+                  本文最后更新于：2020年9月6日 下午
                 
               </p>
             
@@ -217,20 +217,72 @@
 <p><a href="http://blog.pluskid.org/?page_id=683" target="_blank" rel="noopener">blog</a></p>
 <h1 id="maximum-margin-classifier">Maximum Margin Classifier</h1>
 <p><img src="https://i.loli.net/2020/08/26/vjuyCGXMr4msaUK.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
-<p>函数间隔<span class="math inline">\(\hat \gamma=y(w^\top x+b)\)</span></p>
-<p>令其在超平面上的投影为<span class="math inline">\(x_0\)</span>，设<span class="math inline">\(w\)</span>为法向量， <span class="math display">\[
+<p>要谈SVM就得先谈线性分类器，其设置是这样的。对于<span class="math inline">\(D\)</span>维空间，我们有一堆数据<span class="math inline">\(X\)</span>，进行二分类任务，标签记为<span class="math inline">\(y\)</span>，其中<span class="math inline">\(y=-1\)</span>和<span class="math inline">\(y=1\)</span>分别代表不同的类别。我们的任务就是找到一个超平面，将正负例切分开来（先假设数据是线性可分的），这个超平面的方程可以表示为： <span class="math display">\[
+w^\top x+b=0
+\]</span> 我们令<span class="math inline">\(f(x)=w^\top x+b\)</span>，对于<span class="math inline">\(f(x)&lt;0\)</span>的样本，我们赋予其类别<span class="math inline">\(-1\)</span>，对于<span class="math inline">\(f(x)&gt;0\)</span>的样本，我们可以赋予其类别<span class="math inline">\(1\)</span>。对于相同的分类结果，我们可以找出无限种超平面。不过，对于那些样本特别靠近超平面的情况，鲁棒性并不好。为什么呢？因为这时只要超平面有轻微的变化，样本的分类结果就会发生变化。直观上来说，我们希望样本到超平面的距离越大越好。</p>
+<p>我们先定义函数间隔的概念，函数间隔<span class="math inline">\(\hat \gamma=y(w^\top x+b)\)</span>，乘以<span class="math inline">\(y\)</span>的目的主要是保持非负性，表示起来方便。可见函数间隔的大小并不能表示样本距离，因为同一个超平面，法向量<span class="math inline">\(w\)</span>可以任意增大，函数间隔也会相应增大。</p>
+<p>下面来推导点<span class="math inline">\(x\)</span>到超平面的距离。设<span class="math inline">\(x\)</span>在超平面上的投影为<span class="math inline">\(x_0\)</span>，到超平面的距离为<span class="math inline">\(\gamma\)</span>，<span class="math inline">\(w\)</span>为法向量，那么有： <span class="math display">\[
 x=x_0+\gamma\frac{w}{\parallel w\parallel}
-\]</span> 其中<span class="math inline">\(\gamma\)</span>为点<span class="math inline">\(x\)</span>到超平面的几何距离。将上式带入到超平面方程可以得到 <span class="math display">\[
+\]</span> 将上式带入到超平面方程可以得到 <span class="math display">\[
 \gamma=\frac{w^\top}{\parallel w\parallel}x+\frac{b}{\parallel w\parallel}
-\]</span> <img src="https://i.loli.net/2020/08/26/b6qLJWzHwFAPDne.png" srcset="/img/loading.gif" /></p>
-<p>于是我们有关系 <span class="math display">\[
+\]</span> 我们称<span class="math inline">\(\gamma\)</span>为几何间隔。</p>
+<p><img src="https://i.loli.net/2020/08/26/b6qLJWzHwFAPDne.png" srcset="/img/loading.gif" /></p>
+<p>可以很容易看出函数间隔和几何间隔的关系： <span class="math display">\[
 \gamma = \frac{\hat \gamma}{\parallel w\parallel}
-\]</span> 优化函数 <span class="math display">\[
+\]</span> 前面提到我们希望几何间隔越大越好，于是可以直接最大化<span class="math inline">\(\gamma\)</span>，得到： <span class="math display">\[
 \begin{align}
-\max &amp; \space \frac{1}{\parallel w\parallel},\\ s.t. &amp; y_i(w^\top x_i+b)\geq 1, i=1,\cdots,n
+\max \space &amp;\gamma\\
+s.t. \space &amp; y_i(w^\top x_i+b)=\hat\gamma_i\geq\hat\gamma, \space i=1,\cdots,n
+\end{align}
+\]</span> 这里<span class="math inline">\(\hat \gamma=\gamma \parallel w\parallel\)</span>，根据前面的分析我们知道，对于同一个超平面，函数间隔<span class="math inline">\(\hat\gamma\)</span>可以随着<span class="math inline">\(\parallel w\parallel\)</span>的变化而变化，所以为了找到最优的<span class="math inline">\(\gamma\)</span>，我们可以考虑固定<span class="math inline">\(\parallel w\parallel\)</span>或者<span class="math inline">\(\hat\gamma\)</span>，这里我们固定<span class="math inline">\(\hat \gamma=1\)</span>，所以有： <span class="math display">\[
+\begin{align}
+\max &amp; \space \frac{1}{\parallel w\parallel},\\ s.t. \space&amp; y_i(w^\top x_i+b)\geq 1, \space i=1,\cdots,n
 \end{align}
 \]</span></p>
+<p>下面的约束条件代表前提是所有样本分类正确，而<span class="math inline">\(\max\frac{1}{\parallel w\parallel}\)</span>代表最大化间隔。为了方便，我们将其化为等价的最小化形式： <span class="math display">\[
+\begin{align}
+\min &amp; \space \frac{1}{2}\parallel w\parallel^2,\\ s.t. &amp; y_i(w^\top x_i+b)\geq 1, \space i=1,\cdots,n
+\end{align}
+\]</span> 其中那些<span class="math inline">\(y_i(w^\top x_i+b)=1\)</span>的样本就是“支持向量”。这个优化问题是典型的二次凸优化问题，可以调用现成的算法去解决。不过我们可以使用拉格朗日乘子法来更高效的解决。</p>
 <h1 id="dual-problem">Dual Problem</h1>
+<p>拉格朗日乘子法可以将有<span class="math inline">\(d\)</span>个变量和<span class="math inline">\(k\)</span>个约束条件的最优化问题转化成有<span class="math inline">\(d+k\)</span>个变量的无约束最优化问题求解。</p>
+<blockquote>
+<p><strong>Lagrange Multipliers</strong></p>
+<p>对于以下优化问题： <span class="math display">\[
+\begin{align}
+\min_x \space &amp; f(x)\\
+\text{s.t.} \space &amp; h_i(x)=0 \space (i=1,\cdots,m),\\
+&amp;g_j(x) \leq 0 \space (j=1,\cdots,n)
+\end{align}
+\]</span> 引入拉格朗日乘子<span class="math inline">\(\boldsymbol\lambda = (\lambda_1,\lambda_2,\cdots,\lambda_m)^\top\)</span>和<span class="math inline">\(\boldsymbol\mu=(\mu_1,\mu_2,\cdots,\mu_n)^\top\)</span>，相应的拉格朗日函数为： <span class="math display">\[
+L(\boldsymbol x,\boldsymbol\lambda,\boldsymbol\mu)=f(\boldsymbol x)+\sum_{i=1}^m \lambda_i h_i(\boldsymbol x)+\sum_{j=1}^n \mu_jg_j(\boldsymbol x)
+\]</span> 由不等式引入的KKT条件为： <span class="math display">\[
+\begin{cases}
+g_j(\boldsymbol x)\leq 0;\\
+\mu_j \geq 0;\\
+\mu_j g_j(\boldsymbol x)=0
+\end{cases}
+\]</span></p>
+</blockquote>
+<p>支持向量机优化的对偶问题可以写为： <span class="math display">\[
+L(w,b,\alpha)=\frac{1}{2}\parallel w\parallel^2-\sum_{i=1}^n \alpha_i(y_i(w^\top x_i+b)-1)
+\]</span> 我们先令： <span class="math display">\[
+\begin{align}
+\frac{\partial L}{\partial w}=0&amp;\Rightarrow w=\sum_{i=1}^n\alpha_i y_i x_i\\
+\frac{\partial L}{\partial b}=0&amp;\Rightarrow \sum_{i=1}^n\alpha_i y_i =0
+\end{align}
+\]</span> 带回到<span class="math inline">\(L\)</span>得到： <span class="math display">\[
+\begin{align}
+L(w,b,\alpha)&amp;=\frac{1}{2}\sum_{i,j=1}^n\alpha_i\alpha_j y_i y_j x^\top_i x_j-\sum_{i,j=1}^n \alpha_i\alpha_jy_iy_jx^\top_ix_j-b\sum_{i=1}^n\alpha_iy_i+\sum_{i=1}^n\alpha_i\\
+&amp;=\sum_{i=1}^n \alpha_i - \frac{1}{2}\sum_{i,j=1}^n \alpha_i\alpha_j y_i y_j x^\top_i x_j
+\end{align}
+\]</span> 于是得到对偶问题： <span class="math display">\[
+\begin{align}
+\max_\alpha &amp;\sum_{i=1}^n \alpha_i - \frac{1}{2}\sum_{i,j=1}^n \alpha_i\alpha_j y_i y_j x^\top_i x_j\\
+\text{s.t. }&amp; \alpha_i\geq 0, i=1,\cdots,n\\
+&amp; \sum_{i=1}^n \alpha_i y_i = 0
+\end{align}
+\]</span></p>
 <h1 id="kernel">Kernel</h1>
 <h1 id="soft-margin">Soft Margin</h1>
 <h1 id="numerical-optimization">Numerical Optimization</h1>
@@ -276,8 +328,8 @@ x=x_0+\gamma\frac{w}{\parallel w\parallel}
                   <div class="post-next col-6">
                     
                     
-                      <a href="/2020/08/26/Machine-Learning-Classification-Algorithms-1-Linear-Regression-and-Logistic-Regression/">
-                        <span class="hidden-mobile">Machine Learning Classification Algorithms (1): Linear Regression and Logistic Regression</span>
+                      <a href="/2020/08/26/Linear-Regression-and-Logistic-Regression-Machine-Learning-Classification-Algorithms-1/">
+                        <span class="hidden-mobile">Linear Regression and Logistic Regression - Machine Learning Classification Algorithms 1</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

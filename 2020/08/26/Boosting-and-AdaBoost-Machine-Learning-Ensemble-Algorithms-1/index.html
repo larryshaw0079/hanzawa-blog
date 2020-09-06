@@ -17,7 +17,7 @@
   <meta name="description" content="">
   <meta name="author" content="Hanzawa">
   <meta name="keywords" content="">
-  <title>Machine Learning Ensemble Algorithms (2): GBDT and XGBoost - Hanzawa の 部屋</title>
+  <title>Boosting and AdaBoost: Machine Learning Ensemble Algorithms 1 - Hanzawa の 部屋</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
@@ -141,7 +141,7 @@
           <div class="container text-center white-text fadeInUp">
             <span class="h2" id="subtitle">
               
-                Machine Learning Ensemble Algorithms (2): GBDT and XGBoost
+                Boosting and AdaBoost: Machine Learning Ensemble Algorithms 1
               
             </span>
 
@@ -160,7 +160,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    473 字
+                    220 字
                   </span>
                 
 
@@ -170,7 +170,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    6
+                    2
                      分钟
                   </span>
                 
@@ -207,74 +207,24 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：2020年9月3日 凌晨
+                  本文最后更新于：2020年9月6日 下午
                 
               </p>
             
             <article class="markdown-body">
               <h1 id="introduction">Introduction</h1>
-<p>Still working on it😅...</p>
-<p><a href="https://xgboost.readthedocs.io/en/latest/tutorials/model.html" target="_blank" rel="noopener">XGBoost Documentation</a></p>
-<p><a href="https://www.cnblogs.com/pinard/p/6133937.html" target="_blank" rel="noopener">AdaBoost blog</a></p>
-<p><a href="https://www.cnblogs.com/pinard/p/6140514.html" target="_blank" rel="noopener">GBDT blog</a></p>
-<p><a href="http://wepon.me//files//gbdt.pdf" target="_blank" rel="noopener">slide</a></p>
-<p><a href="https://homes.cs.washington.edu/~tqchen/pdf/BoostedTree.pdf" target="_blank" rel="noopener">陈天奇slide</a></p>
-<p><a href="https://snaildove.github.io/2018/10/01/8.Booting-Methods_LiHang-Statistical-Learning-Methods/" target="_blank" rel="noopener">blog</a></p>
-<p><a href="https://snaildove.github.io/2018/10/02/get-started-XGBoost/" target="_blank" rel="noopener">blog</a></p>
-<h2 id="additive-training">Additive Training</h2>
-<h1 id="cart-recall">CART: Recall</h1>
-<p><img src="https://i.loli.net/2020/08/26/EPSjeTfHMrBWRN1.png" srcset="/img/loading.gif" style="zoom:50%;" /></p>
-<p><img src="https://i.loli.net/2020/08/26/5QFWdMZoEqIKCbT.png" srcset="/img/loading.gif" style="zoom:50%;" /></p>
-<h1 id="gradient-boosting-decision-tree-gbdt">Gradient Boosting Decision Tree (GBDT)</h1>
-<h2 id="fitting-negative-gradient">Fitting Negative Gradient</h2>
-<p><img src="https://i.loli.net/2020/08/26/Ycus6hHIrioAnO5.png" srcset="/img/loading.gif" /></p>
-<p>设当前为第<span class="math inline">\(t\)</span>轮，这时已经得到了<span class="math inline">\(t-1\)</span>个基模型，第<span class="math inline">\(i\)</span>个样本损失函数的负梯度为： <span class="math display">\[
-r_{ti}=-\left[\frac{\partial L(y_i,f(x_i))}{\partial f(x_i)}\right]_{f(x)=f_{t-1}(x)}
-\]</span> 如果在<span class="math inline">\((x_i,r_{ti})\)</span>上训练CART，得到训练好的回归树，设回归树中有<span class="math inline">\(J\)</span>个叶子节点</p>
-<p>每个叶子节点对应了一个子区域<span class="math inline">\(R_{tj}\)</span>，这个子区域里的样本 <span class="math display">\[
-c_{tj}^*=\min\limits_{c_{tj}}\sum\limits_{x_i\in R_{tj}}L(y_i,f_{t-1}(x_i)+c_{tj})
-\]</span> 最后对于所有叶子节点（子区域） <span class="math display">\[
-h_t(x)=\sum_{j=1}^J c_{tj}\mathrm{I}(x\in R_{tj})
-\]</span> 最终得到本轮的强学习器： <span class="math display">\[
-f_t(x)=f_{t-1}(x)+\sum\limits_{j=1}^J c_{tj}\mathrm{I}(x\in R_{tj})
-\]</span></p>
-<p><img src="https://i.loli.net/2020/08/26/Vxr2KpJAlu8GEOy.png" srcset="/img/loading.gif" /></p>
-<h2 id="gradient-boosting-tree-for-regression">Gradient Boosting Tree for Regression</h2>
-<blockquote>
-<p><strong>Gradient Boosting Tree Algorithm</strong></p>
-<p>INPUT:</p>
-<p>OUTPUT:</p>
+<h1 id="boosting">Boosting</h1>
+<h1 id="adaboost-algorithm">AdaBoost Algorithm</h1>
+<p>给定数据集<span class="math inline">\(X=\{(x_1,y_1),\cdots,(x_N,y_N)\}\)</span>，AdaBoost的思想是通过训练一系列弱分类器，并通过线性相加将这些弱分类器组合成强分类器。</p>
 <ol type="1">
-<li>初始化弱学习器（即使用CART直接在数据集上训练）：</li>
-<li>计算负梯度</li>
-<li>在<span class="math inline">\((x_i,r_{ti})\)</span>上训练得到一个CART回归树，</li>
-<li>对叶子节点计算最佳输出值</li>
-<li>更新强学习器，回到步骤2直到达到迭代轮数</li>
-<li>得到强学习器的表达式：<span class="math inline">\(f(x)=f_0(x)+\sum\limits_{t=1}^T\sum\limits_{j=1}^J c_{tj}\mathrm I(x\in R_{tj})\)</span></li>
+<li>初始化数据的权重分布<span class="math inline">\(D_1\)</span></li>
+<li>在训练数据上使用权重分布<span class="math inline">\(D_m\)</span>进行训练，得到基分类器<span class="math inline">\(G_m(x)\)</span></li>
+<li>计算基分类器<span class="math inline">\(G(x)\)</span>在训练数据上的误差<span class="math inline">\(e_m\)</span></li>
+<li>计算基分类器<span class="math inline">\(G(x)\)</span>的权重<span class="math inline">\(\alpha_m\)</span>，可以看出这个权重是与误差<span class="math inline">\(e_m\)</span>成反比的，即误差越大，权重越低</li>
+<li>更新训练数据的权重分布<span class="math inline">\(D_{m+1}\)</span>，可以看到这个权重是和误差成正比的，即误差大的样本会受到更高的关注</li>
+<li>回到步骤2，直到得到<span class="math inline">\(M\)</span>个分类器</li>
+<li>将分类器进行线性组合得到最终分类器</li>
 </ol>
-</blockquote>
-<h2 id="gradient-boosting-tree-for-classification">Gradient Boosting Tree for Classification</h2>
-<p>在处理分类任务时，由于输出是离散的值</p>
-<p>一种方法是使用指数损失函数，此时GBDT退化为AdaBoost；另一种方法是借鉴逻辑回归的方法，去建模真实值的概率</p>
-<h3 id="binary-classification">Binary Classification</h3>
-<h3 id="multi-class-classfication">Multi-class Classfication</h3>
-<h2 id="gbdt-sumarry">GBDT Sumarry</h2>
-<p>优点：</p>
-<ol type="1">
-<li>可以灵活处理</li>
-<li>相对SVM，调参较少</li>
-<li>使用某些损失函数对异常值的鲁棒性高</li>
-</ol>
-<p>缺点：</p>
-<ol type="1">
-<li>难以并行训练</li>
-</ol>
-<h1 id="xgboost">XGBoost</h1>
-<h2 id="regularization">Regularization</h2>
-<p>叶子节点的个数<span class="math inline">\(T\)</span>，叶子节点分数<span class="math inline">\(w\)</span> <span class="math display">\[
-\Omega(f)=\gamma T+\frac{1}{2}\lambda\parallel w\parallel^2
-\]</span></p>
-<h1 id="lightgbm">LightGBM</h1>
 
             </article>
             <hr>
@@ -294,9 +244,9 @@ f_t(x)=f_{t-1}(x)+\sum\limits_{j=1}^J c_{tj}\mathrm{I}(x\in R_{tj})
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/GBDT/">GBDT</a>
+                      <a class="hover-with-bg" href="/tags/Boosting/">Boosting</a>
                     
-                      <a class="hover-with-bg" href="/tags/XGBoost/">XGBoost</a>
+                      <a class="hover-with-bg" href="/tags/Adaboost/">Adaboost</a>
                     
                   </div>
                 
@@ -309,9 +259,9 @@ f_t(x)=f_{t-1}(x)+\sum\limits_{j=1}^J c_{tj}\mathrm{I}(x\in R_{tj})
                   <div class="post-prev col-6">
                     
                     
-                      <a href="/2020/08/26/Machine-Learning-Ensemble-Algorithms-1-Boosting-and-AdaBoost/">
+                      <a href="/2020/08/26/Linear-Regression-and-Logistic-Regression-Machine-Learning-Classification-Algorithms-1/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Machine Learning Ensemble Algorithms (1): Boosting and AdaBoost</span>
+                        <span class="hidden-mobile">Linear Regression and Logistic Regression - Machine Learning Classification Algorithms 1</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -319,8 +269,8 @@ f_t(x)=f_{t-1}(x)+\sum\limits_{j=1}^J c_{tj}\mathrm{I}(x\in R_{tj})
                   <div class="post-next col-6">
                     
                     
-                      <a href="/2020/08/24/Unsupervised-Representation-Learning-by-Predicting-Random-Distances/">
-                        <span class="hidden-mobile">Unsupervised Representation Learning by Predicting Random Distances</span>
+                      <a href="/2020/08/26/GBDT-and-XGBoost-Machine-Learning-Ensemble-Algorithms-2/">
+                        <span class="hidden-mobile">GBDT and XGBoost: Machine Learning Ensemble Algorithms 2</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -339,8 +289,8 @@ f_t(x)=f_{t-1}(x)+\sum\limits_{j=1}^J c_{tj}\mathrm{I}(x\in R_{tj})
     <div id="disqus_thread"></div>
     <script type="text/javascript">
       var disqus_config = function () {
-        this.page.url = 'http://qfxiao.me/2020/08/26/Machine-Learning-Ensemble-Algorithms-2-GBDT-and-XGBoost/';
-        this.page.identifier = '/2020/08/26/Machine-Learning-Ensemble-Algorithms-2-GBDT-and-XGBoost/';
+        this.page.url = 'http://qfxiao.me/2020/08/26/Boosting-and-AdaBoost-Machine-Learning-Ensemble-Algorithms-1/';
+        this.page.identifier = '/2020/08/26/Boosting-and-AdaBoost-Machine-Learning-Ensemble-Algorithms-1/';
       };
       var oldLoadDq = window.onload;
       window.onload = function () {

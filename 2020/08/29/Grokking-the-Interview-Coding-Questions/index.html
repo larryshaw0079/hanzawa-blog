@@ -160,7 +160,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    2.6k 字
+                    2.8k 字
                   </span>
                 
 
@@ -170,7 +170,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    40
+                    43
                      分钟
                   </span>
                 
@@ -207,7 +207,7 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：2020年8月31日 下午
+                  本文最后更新于：2020年9月5日 晚上
                 
               </p>
             
@@ -653,6 +653,25 @@
 <p><a href="https://leetcode-cn.com/problems/house-robber-iii/" target="_blank" rel="noopener">🐱‍💻Leetcode 337 Medium</a></p>
 <h2 id="maximum-subarray-最大子序列和">Maximum Subarray 最大子序列和</h2>
 <p><a href="https://leetcode-cn.com/problems/maximum-subarray/" target="_blank" rel="noopener">🐱‍💻Leetcode 53 Easy</a></p>
+<p>定义<span class="math inline">\(dp(i)\)</span>为以第<span class="math inline">\(i\)</span>元素结尾的最大子序列和，由于子序列是连续的，所以状态转移只有两种情况：选择第<span class="math inline">\(i-1\)</span>个元素和不选第<span class="math inline">\(i-1\)</span>个元素。如果选第<span class="math inline">\(i-1\)</span>个元素，相当于把第<span class="math inline">\(i\)</span>个元素接在<span class="math inline">\(dp(i-1)\)</span>对应的最优子序列后面，如果不选第<span class="math inline">\(i-1\)</span>个元素，那么意味着只有<span class="math inline">\(i\)</span>一个元素，所以状态转移方程为： <span class="math display">\[
+dp(i) = \max\{dp(i-1)+a(i),a(i)\}
+\]</span> 代码也比较简单：</p>
+<pre><code class="hljs python">class Solution &#123;
+public:
+    int maxSubArray(vector&lt;int&gt;&amp; nums) &#123;
+        std::vector&lt;int&gt; dp(nums.size());
+        dp[<span class="hljs-number">0</span>] = nums[<span class="hljs-number">0</span>];
+
+        int res = dp[<span class="hljs-number">0</span>];
+        <span class="hljs-keyword">for</span> (int i = <span class="hljs-number">1</span>; i &lt; nums.size(); i++) &#123;
+            dp[i] = std::max(nums[i] + dp[i<span class="hljs-number">-1</span>], nums[i]);
+
+            res = dp[i] &gt; res ? dp[i] : res;
+        &#125;
+
+        <span class="hljs-keyword">return</span> res;
+    &#125;
+&#125;;</code></pre>
 <h2 id="longest-increasing-subsequence-最长上升子序列">Longest Increasing Subsequence 最长上升子序列</h2>
 <p><a href="https://leetcode-cn.com/problems/longest-increasing-subsequence/" target="_blank" rel="noopener">🐱‍💻Leetcode 300 Medium</a></p>
 <h2 id="edit-distance-编辑距离">Edit Distance 编辑距离</h2>
