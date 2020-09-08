@@ -160,7 +160,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    472 字
+                    512 字
                   </span>
                 
 
@@ -170,7 +170,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    6
+                    7
                      分钟
                   </span>
                 
@@ -207,7 +207,7 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：2020年9月5日 下午
+                  本文最后更新于：2020年9月8日 晚上
                 
               </p>
             
@@ -254,15 +254,21 @@
 <p>其中</p>
 <ul>
 <li><code>module</code></li>
-<li><code>device_ids</code></li>
-<li><code>output_device</code></li>
+<li><code>device_ids</code>：指定用到的GPU，默认会全部使用</li>
+<li><code>output_device</code>：指定汇总梯度的GPU，默认为GPU 0</li>
 </ul>
 <h3 id="shortage">Shortage</h3>
 <p>当然，这个做法最为简单，效率也是最低的，这个方法官方也不推荐使用了。</p>
 <h2 id="a-better-way-nn.parallel.distributeddataparallel">A Better Way: <code>nn.parallel.DistributedDataParallel</code></h2>
 <p><a href="https://pytorch.org/docs/stable/generated/torch.nn.parallel.DistributedDataParallel.html#torch.nn.parallel.DistributedDataParallel" target="_blank" rel="noopener">doc</a></p>
+<p><a href="https://pytorch.org/docs/stable/notes/ddp.html" target="_blank" rel="noopener">note</a></p>
+<p><a href="https://pytorch.org/tutorials/intermediate/ddp_tutorial.html" target="_blank" rel="noopener">tutorial</a></p>
 <h3 id="usage-1">Usage</h3>
 <pre><code class="hljs python">torch.nn.parallel.DistributedDataParallel(module, device_ids=<span class="hljs-literal">None</span>, output_device=<span class="hljs-literal">None</span>, dim=<span class="hljs-number">0</span>, broadcast_buffers=<span class="hljs-literal">True</span>, process_group=<span class="hljs-literal">None</span>, bucket_cap_mb=<span class="hljs-number">25</span>, find_unused_parameters=<span class="hljs-literal">False</span>, check_reduction=<span class="hljs-literal">False</span>)</code></pre>
+<p>需要注意的几点：</p>
+<ul>
+<li>无法使用shuffle</li>
+</ul>
 <h2 id="sync-batch-normalization">Sync Batch Normalization</h2>
 <p><a href="https://pytorch.org/docs/stable/generated/torch.nn.SyncBatchNorm.html" target="_blank" rel="noopener">doc</a></p>
 <pre><code class="hljs python">torch.nn.SyncBatchNorm(num_features: int, eps: float = <span class="hljs-number">1e-05</span>, momentum: float = <span class="hljs-number">0.1</span>, affine: bool = <span class="hljs-literal">True</span>, track_running_stats: bool = <span class="hljs-literal">True</span>, process_group: Optional[Any] = <span class="hljs-literal">None</span>)</code></pre>

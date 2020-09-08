@@ -160,7 +160,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    1.2k 字
+                    2.1k 字
                   </span>
                 
 
@@ -170,7 +170,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    16
+                    28
                      分钟
                   </span>
                 
@@ -207,7 +207,7 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：2020年9月6日 下午
+                  本文最后更新于：2020年9月8日 晚上
                 
               </p>
             
@@ -215,6 +215,12 @@
               <h1 id="introduction">Introduction</h1>
 <p>Still working on it😅...</p>
 <p><a href="http://blog.pluskid.org/?page_id=683" target="_blank" rel="noopener">blog</a></p>
+<h1 id="hyperplane">Hyperplane</h1>
+<p>超平面可以从代数和几何两方面来理解。超平面的代数定义可以看作是方程： <span class="math display">\[
+a_1x_1+\cdots+a_nx_n=d
+\]</span> 的所有解形成的集合，其中<span class="math inline">\(a_1,\cdots,a_n\)</span>为不全为<span class="math inline">\(0\)</span>的实数，<span class="math inline">\(d\)</span>也是实数。</p>
+<p>从几何上来说，超平面可以看作是除空间<span class="math inline">\(R^n\)</span>自身外维度最大的仿射空间。</p>
+<p><img src="https://i.loli.net/2020/09/07/WiMJQSe7lN8upfw.jpg" srcset="/img/loading.gif" /></p>
 <h1 id="maximum-margin-classifier">Maximum Margin Classifier</h1>
 <p><img src="https://i.loli.net/2020/08/26/vjuyCGXMr4msaUK.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <p>要谈SVM就得先谈线性分类器，其设置是这样的。对于<span class="math inline">\(D\)</span>维空间，我们有一堆数据<span class="math inline">\(X\)</span>，进行二分类任务，标签记为<span class="math inline">\(y\)</span>，其中<span class="math inline">\(y=-1\)</span>和<span class="math inline">\(y=1\)</span>分别代表不同的类别。我们的任务就是找到一个超平面，将正负例切分开来（先假设数据是线性可分的），这个超平面的方程可以表示为： <span class="math display">\[
@@ -276,16 +282,91 @@ L(w,b,\alpha)=\frac{1}{2}\parallel w\parallel^2-\sum_{i=1}^n \alpha_i(y_i(w^\top
 L(w,b,\alpha)&amp;=\frac{1}{2}\sum_{i,j=1}^n\alpha_i\alpha_j y_i y_j x^\top_i x_j-\sum_{i,j=1}^n \alpha_i\alpha_jy_iy_jx^\top_ix_j-b\sum_{i=1}^n\alpha_iy_i+\sum_{i=1}^n\alpha_i\\
 &amp;=\sum_{i=1}^n \alpha_i - \frac{1}{2}\sum_{i,j=1}^n \alpha_i\alpha_j y_i y_j x^\top_i x_j
 \end{align}
-\]</span> 于是得到对偶问题： <span class="math display">\[
+\]</span> 于是得到关于<span class="math inline">\(\alpha\)</span>的对偶优化问题： <span class="math display">\[
 \begin{align}
 \max_\alpha &amp;\sum_{i=1}^n \alpha_i - \frac{1}{2}\sum_{i,j=1}^n \alpha_i\alpha_j y_i y_j x^\top_i x_j\\
 \text{s.t. }&amp; \alpha_i\geq 0, i=1,\cdots,n\\
 &amp; \sum_{i=1}^n \alpha_i y_i = 0
 \end{align}
 \]</span></p>
+<p>前面有提到我们根据<span class="math inline">\(f(x)=w^\top x + b\)</span>的输出来判定样本类别，而刚才得到<span class="math inline">\(w=\sum_{i=1}^n\alpha_i y_i x_i\)</span>，于是： <span class="math display">\[
+\begin{align}
+f(x) &amp;= (\sum_{i=1}^n \alpha_iy_ix_i)^\top x+b\\
+&amp;= \sum_{i=1}^n \alpha_i y_i \langle x_i, x\rangle + b
+\end{align}
+\]</span> 最后的<span class="math inline">\(\sum_{i=1}^n \alpha_i y_i \langle x_i, x\rangle + b\)</span>值得特别注意，这意味着我们对于测试样本<span class="math inline">\(x\)</span>的预测，只需要计算它与训练集的内积即可，同时由于所有非支持向量对应的<span class="math inline">\(\alpha\)</span>都是<span class="math inline">\(0\)</span>，我们只需要求一小部分内积。同时这个内积计算也是后面核方法应用的前提。</p>
 <h1 id="kernel">Kernel</h1>
+<p>到目前为止，我们的讨论都是在数据是线性可分的前提下进行讨论的，那么对于线性不可分的情况呢？答案是使用核方法。</p>
+<p><img src="https://i.loli.net/2020/09/08/kSTVgelDjWqtu8v.png" srcset="/img/loading.gif" /></p>
+<p>核方法的思想是，对于原始不可分的数据，我们假设原始数据通过一个映射<span class="math inline">\(\phi(\cdot)\)</span>就变得线性可分了。核方法相当于对数据找到了一种新的表示，如上图没法用一个超平面直接分割，但通过<span class="math inline">\(\phi(\cdot)\)</span>映射之后就变得可分了。原始的分类函数为： <span class="math display">\[
+f(x)= \sum_{i=1}^n \alpha_i y_i \langle x_i, x\rangle + b
+\]</span> 加上映射之后变为： <span class="math display">\[
+f(x)= \sum_{i=1}^n \alpha_i y_i \langle \phi(x_i), \phi(x)\rangle + b
+\]</span> 优化问题也变为： <span class="math display">\[
+\begin{align}
+\max_\alpha &amp;\sum_{i=1}^n \alpha_i - \frac{1}{2}\sum_{i,j=1}^n \alpha_i\alpha_j y_i y_j \langle\phi(x_i), \phi(x_j)\rangle\\
+\text{s.t. }&amp; \alpha_i\geq 0, i=1,\cdots,n\\
+&amp; \sum_{i=1}^n \alpha_i y_i = 0
+\end{align}
+\]</span> 我们把计算两个向量在映射后的空间中的内积的函数叫做核函数 <span class="math display">\[
+f(x)= \sum_{i=1}^n \alpha_i y_i k(x_i, x) + b
+\]</span> 优化问题改为： <span class="math display">\[
+\begin{align}
+\max_\alpha &amp;\sum_{i=1}^n \alpha_i - \frac{1}{2}\sum_{i,j=1}^n \alpha_i\alpha_j y_i y_j k(\phi(x_i), \phi(x_j))\\
+\text{s.t. }&amp; \alpha_i\geq 0, i=1,\cdots,n\\
+&amp; \sum_{i=1}^n \alpha_i y_i = 0
+\end{align}
+\]</span> 实际上，通过核函数，我们隐式地定义了一个映射<span class="math inline">\(\phi(\cdot)\)</span></p>
+<p>常用核函数</p>
+<table>
+<thead>
+<tr class="header">
+<th>名称</th>
+<th>表达式</th>
+<th>参数</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>线性核</td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>多项式核</td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>RBF核</td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>拉普拉斯核</td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>Sigmoid核</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
 <h1 id="soft-margin">Soft Margin</h1>
+<p>数据线性不可分的情况，除了数据本身结构非线性的原因之外（核方法），还有可能是因为噪声或者离群点。为了处理这种情况，我们可以允许一部分点在一定程度上偏离超平面，具体来说就是原来的约束条件<span class="math inline">\(y_i(w^\top x_i+b)\geq 1, \space i=1,\cdots,n\)</span>变成了： <span class="math display">\[
+y_i(w^\top x_i+b)\geq 1-\xi_i, \space i=1,\cdots,n
+\]</span> 其中<span class="math inline">\(\xi_i\geq 0\)</span>称作是松弛变量，代表样本<span class="math inline">\(i\)</span>允许的偏离程度。当然松弛变量不可能无限大，所以我们需要将<span class="math inline">\(\xi_i\)</span>加入到优化目标函数中使其尽量小，于是有： <span class="math display">\[
+\begin{align}
+\min &amp; \space \frac{1}{2}\parallel w\parallel^2+C\sum_{i=1}^n \xi_i,\\ s.t. &amp; y_i(w^\top x_i+b)\geq 1-\xi_i, \space i=1,\cdots,n
+\end{align}
+\]</span> 其中<span class="math inline">\(C\)</span>为控制最优化<span class="math inline">\(\parallel w\parallel\)</span>和松弛变量这两项的权重。这里的优化函数还是对偶问题之前的形式，我们马上会讨论对偶问题。</p>
 <h1 id="numerical-optimization">Numerical Optimization</h1>
+<p>这里讨论SVM高效求解的Sequential Minimal Optimization (SMO)算法。</p>
+<p>坐标下降法是一种非梯度优化算法，</p>
+<p><img src="https://i.loli.net/2020/09/08/I6AonzFRHGVBU3t.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/09/08/Hmr79nMlK4C8GeJ.png" srcset="/img/loading.gif" /></p>
 
             </article>
             <hr>
