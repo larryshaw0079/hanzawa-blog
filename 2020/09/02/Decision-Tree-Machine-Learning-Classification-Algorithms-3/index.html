@@ -160,7 +160,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    1.6k 字
+                    1.8k 字
                   </span>
                 
 
@@ -170,7 +170,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    19
+                    21
                      分钟
                   </span>
                 
@@ -207,16 +207,14 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：2020年9月9日 上午
+                  本文最后更新于：2020年9月10日 下午
                 
               </p>
             
             <article class="markdown-body">
               <h1 id="introduction">Introduction</h1>
-<p>Still working on it...</p>
-<p>决策树（Decision Tree）是一种<strong>有监督分类模型</strong>（稍加改造可进行回归任务），</p>
-<p>本文内容是学习高级树模型（GBDT，XGBoost）的基础，强烈建议在看那些内容之前先了解本文的内容！</p>
-<p>比如对于以下数据集，</p>
+<p>本文主要是介绍常用的三种决策树模型：ID3、C4.5和CART。决策树（Decision Tree）是一种<strong>有监督分类模型</strong>（稍加改造可进行回归任务），本文内容是学习高级树模型（GBDT，XGBoost）的基础，强烈建议在看那些内容之前先了解本文的内容！</p>
+<p>比如对于以下数据集，我们要判断一个瓜是不是好瓜：</p>
 <table>
 <thead>
 <tr class="header">
@@ -333,17 +331,17 @@
 </tr>
 </tbody>
 </table>
-<p>对于人来说，</p>
+<p>对于人来说，要判断一个瓜是不是好瓜，可能会先去看看色泽，然后看看根蒂，然后再敲一敲听听声音，这样经过一系列的决策过程。</p>
 <p><img src="https://i.loli.net/2020/09/02/WuGQ79g4NcHqJDh.png" srcset="/img/loading.gif" style="zoom:50%;" /></p>
-<p>停止条件</p>
+<p>决策树正是模拟了这样的过程。给定数据集，决策树会不断地选择最佳的特征将数据集进行切分（如选择色泽，然后将数据分为青绿、乌黑、浅白这几个子集），然后递归地进行下去，直到达到停止条件：</p>
 <ol type="1">
 <li>每个叶子节点的样本都属于同一个类别</li>
 <li>没有可供划分的特征，或者集合中每个样本所有特征取值都相同</li>
 <li>决策树达到预先指定的最大深度</li>
 </ol>
-<p>下列算法的不同主要是在于划分选择的方法不同</p>
+<p>所以决策树算法要解决的关键问题就是如何去选择当前最好的划分特征。</p>
 <h1 id="id3">ID3</h1>
-<p>信息熵是衡量一个随机变量信息量的度量，如果把数据集的标签<span class="math inline">\(y\)</span>看作是随机变量，那么<span class="math inline">\(y\)</span>的熵越小代表不确定性越小（集合里几乎都是一种类别的样本），熵越大代表不确定性越大（集合包含不同类别的样本），其公式为： <span class="math display">\[
+<p>ID3算法根据信息熵来进行特征的划分。信息熵是衡量一个随机变量信息量的度量，如果把数据集的标签<span class="math inline">\(y\)</span>看作是随机变量，那么<span class="math inline">\(y\)</span>的熵越小代表不确定性越小（集合里几乎都是一种类别的样本），熵越大代表不确定性越大（集合包含不同类别的样本），其公式为： <span class="math display">\[
 Ent(D)=-\sum_{k=1}^{|\mathcal Y|}p_k\log p_k
 \]</span> <span class="math inline">\(Ent(D)\)</span>代表集合<span class="math inline">\(D\)</span>对应的熵，<span class="math inline">\(|\mathcal Y|\)</span>是类别数量，二分类就是<span class="math inline">\(|\mathcal Y|=2\)</span>，<span class="math inline">\(p_k\)</span>为第<span class="math inline">\(k\)</span>个类别对应的概率（频率）。很自然的，我们可以根据划分前后熵的变化来确定划分特征的选择，如果划分之后熵减小的最多，那么这个特征也是最好的。假设我们选定特征<span class="math inline">\(a\)</span>来对集合进行划分，特征<span class="math inline">\(a\)</span>共有<span class="math inline">\(V\)</span>个离散取值，那么划分之后将会产生<span class="math inline">\(V\)</span>个子集，我们记每个子集为<span class="math inline">\(D^v, v=1,\cdots, V\)</span>。那么，信息增益可以写为： <span class="math display">\[
 Gain(D,a)=Ent(D)-\sum_{v=1}^V \frac{|D^v|}{|D|}Ent(D^v)
@@ -358,7 +356,8 @@ Gain\_ratio(D,a)=\frac{Gain(D,a)}{IV(a)}
 \]</span> 其中<span class="math inline">\(IV(a)=-\sum_{v=1}^V\frac{|D^v|}{|D|}\log \frac{|D^v|}{|D|}\)</span>。其实<span class="math inline">\(IV(a)\)</span>可以看作是“划分之后每个样本属于集合<span class="math inline">\(v\)</span>的概率”这个随机变量的熵，划分的子集越多，划分之后属于哪个集合就越不确定，所以熵就越大。</p>
 <p>不过信息增益率反而会对特征取值数目少的特征有所偏好，所以C4.5算法是先计算信息增益，确定信息增益高于平均值的候选集，再从中选择信息增益率最高的特征。</p>
 <p>除此之外，C4.5还能处理连续取值的特征，其做法是“离散化”。</p>
-<p><img src="https://i.loli.net/2020/09/09/rZRVUsPXd6HxQ7v.png" srcset="/img/loading.gif" /></p>
+<p>图片太大了，可以点开放大🔍看</p>
+<p><img src="https://i.loli.net/2020/09/10/HR9WepIOvNsU2wm.png" srcset="/img/loading.gif" /></p>
 <h1 id="cart-classification">CART Classification</h1>
 <p>基尼值 <span class="math display">\[
 \begin{align}
@@ -368,7 +367,8 @@ Gini(D)&amp;=1-\sum_{k=1}^{|\mathcal Y|}p_k^2
 <p>如果说一个特征越好，那么划分之后其每个子集对应的基尼值应该越小越好。基尼系数 <span class="math display">\[
 Gini_index(D,a)
 \]</span></p>
-<p><img src="https://i.loli.net/2020/09/09/ZnKouSFUR6PhVGD.png" srcset="/img/loading.gif" /></p>
+<p>图片太大了，可以点开放大🔍看</p>
+<p><img src="https://i.loli.net/2020/09/10/SieOVYIsUwAklJ5.png" srcset="/img/loading.gif" /></p>
 <h1 id="cart-regression">CART Regression</h1>
 <p>在分类问题中，CART是一棵二叉树，选择基尼系数作为划分的准则，且同一个叶子节点的样本对应的输出是相同的。在回归问题中类似，不过CART回归树将划分准则换成了MSE。 <span class="math display">\[
 \frac{1}{N}\sum_{i=1}^N (f(x_i)-y_i)^2
