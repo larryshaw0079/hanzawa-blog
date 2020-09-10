@@ -160,7 +160,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    2.5k 字
+                    3k 字
                   </span>
                 
 
@@ -170,7 +170,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    28
+                    33
                      分钟
                   </span>
                 
@@ -207,7 +207,7 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：2020年9月9日 下午
+                  本文最后更新于：2020年9月10日 下午
                 
               </p>
             
@@ -237,7 +237,7 @@
 <p>对于分类任务，最简单的想法是使用模型分类正确的比例来作为评测标准，我们称之为<strong>准确率 (Accuracy)</strong>： <span class="math display">\[
 \text{ACC}(f;D)=\frac{1}{m}\sum_{i=1}^m \mathbb{I}(f(x_i)=y_i)
 \]</span> 但准确率并不能满足我们的所有要求，比如说对于新冠病毒的分类任务，我们可能会更关注于对于所有患有新冠的病人，模型到底查出来了多少，而对于模型误把正常病人当作是患病的情况没有那么关注。对于二分类问题，我们可以将样例根据其真实类别与模型预测的类别划分为真正例 (true positive, TP)、假正例 (false positive, FP)、真反例 (true negative, TN) 和假反例 (false negative, FN) 四种，形成<strong>混淆矩阵 (Confusion Matrix)</strong>：</p>
-<p><img src="https://i.loli.net/2020/09/09/aRDbKnm6pP24uUl.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/09/09/xY8KAldMZSRwHnB.jpg" srcset="/img/loading.gif" /></p>
 <p>下面给一个具体的例子：</p>
 <p><img src="https://i.loli.net/2020/09/09/tCLxvZfNoEgqWID.png" srcset="/img/loading.gif" /></p>
 <p>比如我们的任务是预测一张手写数字图片是不是<span class="math inline">\(5\)</span>，根据上图，右下角就是我们正确预测的是<span class="math inline">\(5\)</span>的图片，左下角就是本来是<span class="math inline">\(5\)</span>，但被预测成不是<span class="math inline">\(5\)</span>的图片；左上角是本来不是<span class="math inline">\(5\)</span>，我们也正确地预测出其不是<span class="math inline">\(5\)</span>的，右上角是本来不是<span class="math inline">\(5\)</span>却被预测成是<span class="math inline">\(5\)</span>的。是不是有点被绕晕了😀，只要记住T和F代表的是预测结果对还是不对，P和N代表的是模型预测当前样本是正例还是负例。</p>
@@ -268,9 +268,47 @@
 \]</span> 其中TPR就是查全率，而FPR是所有负例中没有检测出来的比例，这一项是越低越好。</p>
 <p><img src="https://i.loli.net/2020/09/09/CdHrDaKAns4EN93.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <p>模型性能越好，曲线就会越接近左上角的点，我们可以把ROC曲线的曲线下面积 (ROC-AUC) 作为评测标准。</p>
+<p>下面来总结一下PR曲线和ROC曲线之间的优缺点。</p>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th>纵轴</th>
+<th>横轴</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>PR</strong></td>
+<td><span class="math inline">\(\text{Precision}=\frac{TP}{TP+FP}\)</span></td>
+<td><span class="math inline">\(\text{Recall} = \frac{TP}{TP+FN}\)</span></td>
+</tr>
+<tr class="even">
+<td><strong>ROC</strong></td>
+<td><span class="math inline">\(\text{TPR}=\frac{TP}{TP+FN}\)</span></td>
+<td><span class="math inline">\(\text{FPR}=\frac{FP}{TN+FP}\)</span></td>
+</tr>
+</tbody>
+</table>
+<p><img src="https://i.loli.net/2020/09/09/xY8KAldMZSRwHnB.jpg" srcset="/img/loading.gif" /></p>
+<p>ROC的优点：</p>
+<ul>
+<li>相比PR仅关注正例，ROC同时关注正例和负例</li>
+<li>相比PR不易受到正负例相对数量的影响，ROC的两个指标的计算都只涉及到P、N中的一列，正例或负例增加对总体影响不大。而PR曲线就不一样，两个指标的计算都涉及到了P、N两列，那么正例或负例样本数量的变化会造成较大影响。如负例突然增大，那么FP也会增大，这样Precision会降低，而Recall却不变。</li>
+</ul>
+<p>ROC的缺点：</p>
+<ul>
+<li>对于类别不平衡问题，存在大量负例，这样会带来大量的FP，而ROC的FPR却不会因为FP的大幅增长而剧烈改变，结果是这一类错误很难在ROC曲线中体现出来。所以ROC会呈现出一个过于乐观的评价。</li>
+</ul>
+<p>我们来尝试下是否如此，下面是用随机森林分类器，测试样本正负例数量比为1:1的情况下的ROC曲线和PR曲线：</p>
+<p><img src="https://i.loli.net/2020/09/10/yqMDQh5oTs96SJm.png" srcset="/img/loading.gif" style="zoom:50%;" /></p>
+<p><img src="https://i.loli.net/2020/09/10/zFW941YTMl8yxiP.png" srcset="/img/loading.gif" style="zoom:50%;" /></p>
+<p>在我们将正负例数量比调整为1:9之后（总数量相同），可以看到ROC曲线比较稳定，没出现较大变化，而PR曲线则出现了剧烈变化：</p>
+<p><img src="https://i.loli.net/2020/09/10/HbnLtfGsiVc17q5.png" srcset="/img/loading.gif" style="zoom:50%;" /></p>
+<p><img src="https://i.loli.net/2020/09/10/FfYrb3SnkeZ9JTv.png" srcset="/img/loading.gif" alt="4" style="zoom:50%;" /></p>
 <h1 id="bias-and-variance">Bias and Variance</h1>
-<p>在机器学习中，偏差-方差分解是解释学习算法泛化性能的重要工具。假设我们要预测某一个地区的房子的房价，每一套房子都是一个样本，我们认为每个样本都是从总体分布<span class="math inline">\(P(X)\)</span>独立同分布采样得来的。不过我们不可能得到所有的样本，我们采样得到的训练集只是其中一个子集。那么，即使对于样本数量相同的不同训练集来说，训练出来的模型也是不一样的，我们将这一部分模型自身的不稳定性用<strong>方差 (Variance) </strong>来描述：<span class="math inline">\(\text{Var}(X)=E\left[(\hat f(X)-E[\hat f(X)])^2\right]\)</span>。模型输出的期望与真实值之间的差距我们用<strong>偏差 (Bias) </strong>来描述：<span class="math inline">\(\text{Bias}(X)=E[\hat f(X)]-f(X)\)</span>。</p>
-<p>泛化误差与方差、偏差有下列关系 <span class="math display">\[
+<p>在机器学习中，偏差-方差分解是解释学习算法泛化性能的重要工具。假设我们要预测某一个地区的房子的房价，每一套房子都是一个样本，我们认为每个样本都是从总体分布<span class="math inline">\(P(X)\)</span>独立同分布采样得来的。不过我们不可能得到所有的样本，我们采样得到的训练集只是其中一个子集。那么，即使对于同样的测试样本，使用不同的训练集（训练集大小相同）训练出来的模型对测试样本的预测也是不一样的，我们将这一部分模型自身的不稳定性用<strong>方差 (Variance) </strong>来描述：<span class="math inline">\(\text{Var}(X)=E_D\left[(\hat f(X)-E[\hat f(X)])^2\right]\)</span>，方差越小代表模型稳定性越强。模型输出的期望与真实值之间的差距我们用<strong>偏差 (Bias) </strong>来描述：<span class="math inline">\(\text{Bias}(X)=E[\hat f(X)]-f(X)\)</span>。</p>
+<p>泛化误差与方差、偏差有下列关系： <span class="math display">\[
 \begin{align}
 \text{Err}(X)&amp;=E\left[(y-\hat f(X))^2\right]\\
 &amp;=E\left[(f(X)+\varepsilon-\hat f(X))^2\right]\\
@@ -278,8 +316,10 @@
 &amp;=\text{Bias}^2 + \text{Variance} + \text{Random Error}
 \end{align}
 \]</span> 也就是说泛化误差可以分解为方差、偏差和随机噪声之和。偏差刻画了模型的期望预测与真实值之间的偏离程度，方差刻画了不同训练集对模型性能的影响，他们之间的关系如下图所示：</p>
-<p><img src="https://i.loli.net/2020/09/09/2IpmrwJGfqORU3z.png" srcset="/img/loading.gif" style="zoom: 50%;" /></p>
-<p>图中左上角的部分是比较理想的情况，即方差和偏差都较小。但实际上</p>
+<p><img src="https://i.loli.net/2020/09/09/2IpmrwJGfqORU3z.png" srcset="/img/loading.gif" style="zoom: 33%;" /></p>
+<p>图中左上角的部分是比较理想的情况，即方差和偏差都较小。但实际上方差和偏差往往是相互冲突的，如下图所示：</p>
+<p><img src="https://i.loli.net/2020/09/09/GsREiklKYfuX3Ub.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p>模型复杂度不足的时候，模型的拟合能力不够强，偏差主导了泛化误差，而随着模型复杂度的提高，模型的拟合能力逐渐提高，训练数据的扰动会造成模型发生显著变化，这时方差逐渐主导了泛化误差。</p>
 
             </article>
             <hr>
