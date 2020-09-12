@@ -207,7 +207,7 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：2020年6月25日 晚上
+                  本文最后更新于：2020年9月12日 上午
                 
               </p>
             
@@ -313,7 +313,7 @@ d_t&amp;=(1-c_t^d)\circ\text{tanh}(w^dz_t+u^d(r_t^d\circ d_{t-1})+b^d)+c_t^d\cir
 <h2 id="offline-model-training">Offline Model Training</h2>
 <p>和传统VAE类似，模型的训练可以通过优化ELBO来完成。记长度为<span class="math inline">\(T+1\)</span>的输入序列为<span class="math inline">\(\mathbf{x}_{t-T:t}\)</span>，隐空间变量采样次数为<span class="math inline">\(L\)</span>，第<span class="math inline">\(l\)</span>个隐空间变量为<span class="math inline">\(\mathbf{l}^{(l)}_{t-T:t}\)</span>，损失函数可以写成如下形式：</p>
 <p><span class="math display">\[
-\tilde{\mathcal{L}}(\mathbf{x}_{t-T:t})\approx\frac{1}{L}\sum_{t=1}^L[\log(p_\theta(\mathbf{x}_{t-T:t}|\mathbf{z}_{t-T:t}^{(l)}))+\log(p_\theta(\mathbf{z}_{t-T:t}^{(l)}))-\log(q_\phi(\mathbf{z}_{t-T:t}^|\mathbf{x}_{t-T:t}))]
+\tilde{\mathcal{L}}(\mathbf{x}_{t-T:t})\approx\frac{1}{L}\sum_{t=1}^L[\log(p_\theta(\mathbf{x}_{t-T:t}|\mathbf{z}_{t-T:t}^{(l)}))+\log(p_\theta(\mathbf{z}_{t-T:t}^{(l)}))-\log(q_\phi(\mathbf{z}_{t-T:t}^{(l)}|\mathbf{x}_{t-T:t}))]
 \]</span></p>
 <p>第一项<span class="math inline">\(\log(p_\theta(\mathbf{x}_{t-T:t}|\mathbf{z}_{t-T:t}^{(l)}))\)</span>可以看作是重构误差；第二项<span class="math inline">\(\log(p_\theta(\mathbf{z}_{t-T:t}))=\sum_{i=t-T}^t \log(p_\theta(\mathbf{z}_i|\mathbf{z}_{i-1}))\)</span>通过Linear Gaussian State Space Model计算；第三项<span class="math inline">\(-\log(q_\phi(\mathbf{z}_{t-T:t}|\mathbf{x}_{t-T:t}))=-\sum_{i=t-T}^t\log(q_\phi(\mathbf{z}_i|\mathbf{z}_{i-1},\mathbf{x}_{t-T:i}))\)</span>为隐变量<span class="math inline">\(\mathbf{z}\)</span>后验分布的估计，同时<span class="math inline">\(\mathbf{z}_i\)</span>是经Planar Normalizing Flow转换过的。</p>
 <h2 id="online-detection">Online Detection</h2>
