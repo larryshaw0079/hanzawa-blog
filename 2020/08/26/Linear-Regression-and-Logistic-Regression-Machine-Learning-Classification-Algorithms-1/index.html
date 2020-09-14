@@ -160,7 +160,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    83 字
+                    913 字
                   </span>
                 
 
@@ -170,7 +170,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    1
+                    13
                      分钟
                   </span>
                 
@@ -207,7 +207,7 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：2020年9月10日 下午
+                  本文最后更新于：2020年9月14日 下午
                 
               </p>
             
@@ -218,22 +218,80 @@
 <h2 id="the-model">The Model</h2>
 <p><img src="https://i.loli.net/2020/09/04/Ji14CNOLADmysah.png" srcset="/img/loading.gif" /></p>
 <h2 id="optimization">Optimization</h2>
+<p>设训练集包含<span class="math inline">\(M\)</span>个样本，<span class="math inline">\(N\)</span>个特征，为了方便后续推导，我们添加一列全是<span class="math inline">\(1\)</span>的向量： <span class="math display">\[
+\mathbf X=\left(
+\begin{matrix}
+x_{11} &amp; x_{12} &amp; \cdots &amp; x_{1N} &amp; 1\\
+x_{21} &amp; x_{22} &amp; \cdots &amp; x_{2N} &amp; 1\\
+\vdots &amp; \vdots &amp; \ddots &amp; \vdots &amp; \vdots\\
+x_{M1} &amp; x_{M2} &amp; \cdots &amp; x_{MN} &amp; 1 
+\end{matrix}
+\right)
+\]</span> 我们的模型 <span class="math display">\[
+\boldsymbol{\hat y} = \mathbf X \hat{\boldsymbol w}
+\]</span> 最终得到 <span class="math display">\[
+\hat{\boldsymbol w}^* = (\mathbf X^\top \mathbf X)^{-1}\mathbf X^\top\boldsymbol y
+\]</span></p>
 <h1 id="regularization">Regularization</h1>
 <h2 id="l1-norm-and-l2-norm">L1 Norm and L2 Norm</h2>
 <h2 id="lasso-regression">LASSO Regression</h2>
 <p>LASSO (Least Absolute Shrinkage and Selection Operator)</p>
 <h2 id="ridge-regression">Ridge Regression</h2>
 <h1 id="logistic-regression">Logistic Regression</h1>
+<p>假设我们线性回归的对象不是标签，而是关于标签的一个函数<span class="math inline">\(g(y)\)</span>， <span class="math display">\[
+g(y)=w^\top x+b
+\]</span> 取反函数得到 <span class="math display">\[
+y=g^{-1}(w^\top x+b)
+\]</span> 我们就得到了广义线性模型，可以将线性回归适用到更广的情形</p>
 <h2 id="the-model-1">The Model</h2>
-<p>输出<span class="math inline">\(w^\top x+b\)</span></p>
-<p><span class="math inline">\(\frac{1}{1+e^{-(w^\top x+b)}}\)</span></p>
-<p><img src="https://i.loli.net/2020/09/04/ztrBE9FQwuKxCOh.png" srcset="/img/loading.gif" /></p>
+<p>将线性回归的输出值与标签<span class="math inline">\(y\)</span>联系起来，最直观的想法是使用一个单位阶跃函数： <span class="math display">\[
+y=\begin{cases}0, &amp;z&lt;0\\
+0.5, &amp;z=0\\
+1, &amp;z&gt;0\end{cases}
+\]</span> 这样，对于线性回归输出大于<span class="math inline">\(0\)</span>的认为是正样本，小于<span class="math inline">\(0\)</span>的认为是负样本。不过这样的函数是不可导的，我们可以使用一个替代函数： <span class="math display">\[
+\sigma(z)=\sigma(w^\top x+b)=\frac{1}{1+e^{-(w^\top x+b)}}
+\]</span> 其函数图像如下图所示：</p>
+<p><img src="https://i.loli.net/2020/09/14/xa6QIhbGi4eCog1.png" srcset="/img/loading.gif" /></p>
+<p>该函数被称为是Sigmoid函数，其导数具有以下性质： <span class="math display">\[
+\sigma^\prime(x)=\sigma(x)(1-\sigma(x))
+\]</span> 其输出在<span class="math inline">\(0-1\)</span>之间，可以用作概率解释。</p>
+<p>这样我们就有 <span class="math display">\[
+y=\frac{1}{1+e^{-(w^\top x+b)}}
+\]</span> 我们可以通过变换将其写成广义线性模型的形式，即： <span class="math display">\[
+\log \frac{y}{1-y}=w^\top x+b
+\]</span> 从这一层面上可以认为逻辑回归是以“对数几率”为对象的线性回归</p>
 <h2 id="loss-function">Loss Function</h2>
-<p>损失函数 <span class="math display">\[
-\ell (\beta) = \sum_{i=1}^m(-y_i\beta^\top\hat x_i+\ln(1+e^{\beta^\top\hat x_i}))
+<p>前面我们说过Sigmoid函数的输出在<span class="math inline">\(0-1\)</span>之间，可以从概率分布的角度来解释。我们设定Sigmoid为<span class="math inline">\(x\)</span>为负例的概率： <span class="math display">\[
+p_w(y=0|x) = \frac{1}{1+e^{-(w^\top x+b)}}
+\]</span> 那么 <span class="math display">\[
+p_w(y=1|x)=\frac{e^{-(w^\top x + b)}}{1+e^{-(w^\top x+b)}}
+\]</span> 这样我们实际上是认为<span class="math inline">\(p(y|x)\)</span>服从伯努利分布。我们当然是希望参数<span class="math inline">\(w\)</span>得到的模型与真实数据的拟合程度越高越好，可以使用极大似然估计来解决。</p>
+<p>似然 <span class="math display">\[
+L(w,b) = \prod_{i=1}^N (p_w(y=1|x_i))^{y_i} (1-p_w(y=1|x_i))^{1-y_i}
+\]</span> 对数似然为 <span class="math display">\[
+\begin{align}
+\log L(w,b) &amp;= \log \prod_{i=1}^N (p_w(y=1|x_i))^{y_i} (1-p_w(y=1|x_i))^{1-y_i}
+\end{align}
+\]</span> 为了方便推导，我们将偏置项<span class="math inline">\(b\)</span>与<span class="math inline">\(w\)</span>合并起来： <span class="math display">\[
+w^\top x+b\Rightarrow \beta x
+\]</span> 于是 <span class="math display">\[
+\begin{align}
+\log L(\beta) &amp;=\sum_{i=1}^N y_i\log p_\beta(y=1|x_i)+(1-y_i)\log(1-p_\beta(y=1|x_i))\\
+&amp;=\sum_{i=1}^N y_i \log \frac{e^{-\beta x_i}}{1+e^{-\beta x_i}} +(1-y_i)\log \frac{1}{1+e^{-\beta x_i}}\\
+&amp;=\sum_{i=1}^N y_i\log (e^{-\beta x_i} \cdot \frac{1}{1+e^{-\beta x}})+(1-y_i)\log \frac{1}{1+e^{-\beta x}}\\
+&amp; = \sum_{i=1}^N -y_i\beta x_i+y_i \log \frac{1}{1+e^{-\beta x_i}}+\log \frac{1}{1+e^{-\beta x_i}}-y_i \log \frac{1}{1+e^{-\beta x_i}}\\
+&amp;=\sum_{i=1}^N -y_i\beta x_i + \log \frac{1}{1+ e^{-\beta x_i}}\\
+&amp;=\sum_{i=1}^N -y_i\beta x_i - \log(1+ e^{-\beta x_i})
+\end{align}
+\]</span> 损失函数相当于最小化<span class="math inline">\(\log L(\beta)\)</span>的负数： <span class="math display">\[
+\ell (\beta) = \sum_{i=1}^N y_i\beta x_i + \log(1+ e^{-\beta x_i})
+\]</span></p>
+<p>损失函数的导数 <span class="math display">\[
+\frac{\partial \ell(\beta)}{\partial \beta}=\sum_{i=1}^N x_i(y_i-p_\beta(y=1|x_i))
+\]</span> 二阶导数为 <span class="math display">\[
+\frac{\partial^2\ell(\beta)}{\partial\beta\partial\beta^\top}=\sum_{i=1}^N x_ix_i^\top p_\beta(y=0|x)p_\beta(y=1|x)
 \]</span></p>
 <h2 id="optimization-1">Optimization</h2>
-<p>这里讨论逻辑回归的优化方法</p>
 
             </article>
             <hr>
