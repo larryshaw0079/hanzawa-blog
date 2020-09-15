@@ -212,37 +212,36 @@
               </p>
             
             <article class="markdown-body">
-              <h1 id="introduction">Introduction</h1>
-<p>实验室服务器集群采用OpenPAI来进行GPU资源的管理，而OpenPAI采用了Docker作为基础，即代码都放在Docker容器中运行。由于Docker的使用、Docker镜像的配置都有一定的门槛，所以这里写一篇Tutorial来进行介绍。本文不是网上资料的拼凑，而是经过本人走弯路踩坑形成的"Best practice"。主要内容包括Docker的介绍、Docker的基本使用、如何配置自己的Docker镜像以及OpenPAI平台的基本使用，但不包括Docker和OpenPAI的安装。</p>
+              <h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>实验室服务器集群采用OpenPAI来进行GPU资源的管理，而OpenPAI采用了Docker作为基础，即代码都放在Docker容器中运行。由于Docker的使用、Docker镜像的配置都有一定的门槛，所以这里写一篇Tutorial来进行介绍。本文不是网上资料的拼凑，而是经过本人走弯路踩坑形成的”Best practice”。主要内容包括Docker的介绍、Docker的基本使用、如何配置自己的Docker镜像以及OpenPAI平台的基本使用，但不包括Docker和OpenPAI的安装。</p>
 <blockquote>
 <p>2020.8.1 Update: 加入通过HDFS读取容器保存的文件的方法</p>
 </blockquote>
-<h1 id="docker-from-scratch">Docker from Scratch</h1>
-<p>要理解Docker是什么，从虚拟机开始讲可能会比较好理解。虚拟机大家可能都很熟悉了，比如说我用的系统是Windows，但我需要Linux系统来作为一个Flask编写的网站的服务器，但是又不想单独安装Linux系统，于是可以使用虚拟机来解决这个问题。安装VMWare Workstation，去官网下载Ubuntu系统镜像，然后在VMWare中安装好系统，然后从头配置Flask相关环境。实际上我需要的仅仅是一个Flask运行环境而已，而使用虚拟机却需要如此“大费周章”，这时Docker出现了，网上有大量现成的Flask Docker镜像，配置好了你所需的Flask环境，你只需要下载这些镜像，然后运行它，你就得到了一个Flask运行环境，而与你当前使用的系统无关。如果你需要一个Tomcat的运行环境，那么去找一个Tomcat的Docker镜像就行。Docker将需求或者说服务绑定在了Docker镜像中（<strong>轻量化</strong>，一个需求对应一个Docker镜像，每个镜像都很小），你有什么需求，去找相应的镜像即可（或者自己写一个），镜像的运行是以虚拟机的形式存在，所以他们之间也是互不干扰的。同时，你在写好一个Docker镜像之后，你还可以<strong>分享</strong>给别人，这样其他人就不用重新配置，直接运行你给他的镜像即可。Docker有两个比较关键的概念：</p>
+<h1 id="Docker-from-Scratch"><a href="#Docker-from-Scratch" class="headerlink" title="Docker from Scratch"></a>Docker from Scratch</h1><p>要理解Docker是什么，从虚拟机开始讲可能会比较好理解。虚拟机大家可能都很熟悉了，比如说我用的系统是Windows，但我需要Linux系统来作为一个Flask编写的网站的服务器，但是又不想单独安装Linux系统，于是可以使用虚拟机来解决这个问题。安装VMWare Workstation，去官网下载Ubuntu系统镜像，然后在VMWare中安装好系统，然后从头配置Flask相关环境。实际上我需要的仅仅是一个Flask运行环境而已，而使用虚拟机却需要如此“大费周章”，这时Docker出现了，网上有大量现成的Flask Docker镜像，配置好了你所需的Flask环境，你只需要下载这些镜像，然后运行它，你就得到了一个Flask运行环境，而与你当前使用的系统无关。如果你需要一个Tomcat的运行环境，那么去找一个Tomcat的Docker镜像就行。Docker将需求或者说服务绑定在了Docker镜像中（<strong>轻量化</strong>，一个需求对应一个Docker镜像，每个镜像都很小），你有什么需求，去找相应的镜像即可（或者自己写一个），镜像的运行是以虚拟机的形式存在，所以他们之间也是互不干扰的。同时，你在写好一个Docker镜像之后，你还可以<strong>分享</strong>给别人，这样其他人就不用重新配置，直接运行你给他的镜像即可。Docker有两个比较关键的概念：</p>
 <ul>
 <li><strong>镜像 Images：</strong> 这里的镜像不是指我们安装系统时下载的ISO镜像，Docker镜像就是把你需要的东西（一个系统+需要的服务）集中到一起，相当于做菜的菜谱；</li>
 <li><strong>容器 Containers：</strong> 如果一个Docker镜像启动了，那么就会有一个Docker容器产生，相当于按照菜谱做出来的菜。</li>
 </ul>
-<p><img src="https://i.loli.net/2020/06/24/H2x9mnPwkVQyO6p.png" srcset="/img/loading.gif" alt="img" style="zoom: 33%;" /></p>
-<p><img src="https://i.loli.net/2020/06/24/7k6S3yecX2lbvQY.png" srcset="/img/loading.gif" alt="img" style="zoom: 33%;" /></p>
+<img src="https://i.loli.net/2020/06/24/H2x9mnPwkVQyO6p.png" srcset="/img/loading.gif" alt="img" style="zoom: 33%;" />
+
+<img src="https://i.loli.net/2020/06/24/7k6S3yecX2lbvQY.png" srcset="/img/loading.gif" alt="img" style="zoom: 33%;" />
+
 <p>这一节我们先不讨论如何自己写Docker镜像，只是先讨论Docker的基本操作。</p>
-<h2 id="basic-operations">Basic Operations</h2>
-<p>Docker新安装好当然是没有什么镜像的，首先我们使用<code>docker pull hello-world</code>来下载一个测试镜像。</p>
+<h2 id="Basic-Operations"><a href="#Basic-Operations" class="headerlink" title="Basic Operations"></a>Basic Operations</h2><p>Docker新安装好当然是没有什么镜像的，首先我们使用<code>docker pull hello-world</code>来下载一个测试镜像。</p>
 <blockquote>
 <p>拉取镜像 <code>docker pull &lt;image_name&gt;</code></p>
 </blockquote>
 <p>在输入之后，Docker会自动在远程服务器上查找对应的镜像进行下载。由于我的电脑上已经有这个镜像了，所以显示是下面的样子：</p>
-<p><img src="https://i.loli.net/2020/06/24/rvqcAwzOYJtF6T8.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/24/rvqcAwzOYJtF6T8.png" srcset="/img/loading.gif" alt=""></p>
 <p>接下来，我们输入<code>docker run hello-world</code>运行这个镜像。</p>
 <blockquote>
 <p>运行镜像<code>docker run &lt;image_name&gt;</code></p>
 </blockquote>
 <p>可以看到，Docker输出了一些信息就自己退出了，这和我们理解的虚拟机不太一样。在Docker里面，我们既可以创建一个完整的系统，用户在运行之后就可以正常使用这个操作系统，也可以创建一个简单的服务，默认运行完一些指令就退出了。这里的<code>hello-world</code>镜像这是输出了一些信息后就自动退出了，因为这就是这个镜像的全部内容。</p>
-<p><img src="https://i.loli.net/2020/06/24/Zb1VKjFyMh8gHf2.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/24/Zb1VKjFyMh8gHf2.png" srcset="/img/loading.gif" alt=""></p>
 <p>我们尝试来运行一个完整的系统，先用<code>docker pull ubuntu</code>拉取Ubuntu Docker镜像：</p>
-<p><img src="https://i.loli.net/2020/06/24/zEerb2gPwYWX8O7.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/24/zEerb2gPwYWX8O7.png" srcset="/img/loading.gif" alt=""></p>
 <p>接下来我们使用：</p>
-<p><img src="https://i.loli.net/2020/06/24/6cMz1WGH4fgpBsS.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/24/6cMz1WGH4fgpBsS.png" srcset="/img/loading.gif" alt=""></p>
 <blockquote>
 <p><code>-it</code>的意思是什么？根据<code>docker run --help</code>：</p>
 <pre><code class="hljs routeros">-i, --interactive                    Keep STDIN open even <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> attached
@@ -254,12 +253,12 @@
 -t, --tty                            Allocate a pseudo-TTY
     --ulimit ulimit                  Ulimit options (default [])
 Copy</code></pre>
+
 <p>其实<code>-it</code>是<code>-i</code>和<code>-t</code>的合并写法，意思是运行后进入这个容器并且启用shell，不然运行之后就会放到后台而不会进入容器中。而<code>--rm</code>则代表容器退出之后会被删除（镜像不会被删除），每次运行实际上会创建一个新的容器，如果不加<code>--rm</code>或退出之后不手动删除的话会看到一堆停止运行的容器。</p>
 </blockquote>
 <p>输入<code>cat /etc/issue</code>可以看到默认拉取的是最新的Ubuntu 20.04 LTS：</p>
-<p><img src="https://i.loli.net/2020/06/24/wldBMFtx3eIk98C.png" srcset="/img/loading.gif" /></p>
-<h1 id="build-customized-docker-images">Build Customized Docker Images</h1>
-<p>如果没有现成的Docker镜像能满足我们的需求，我们可以考虑自己写一个。要自定义一个Docker镜像需要两步，第一步是编写Dockerfile，第二步是使用<code>docker build</code>命令构建镜像。Dockerfile可以看作是一个脚本，描述了我们构建镜像所需要的全部命令，比如要构建一个用于Python科学计算的Docker镜像，我们需要在Dockerfile中编写安装Python的命令，安装Numpy、Scipy等常用包的命令等等。我们先来上手编写Dockerfile，这里我准备写一个包含<a href="https://hexo.io/" target="_blank" rel="noopener">hexo博客框架</a>的镜像，这个框架需要node作为基础环境，不过我们不需要在Dockerfile里写安装node的命令。因为类似于<code>C++</code>或<code>Python</code>中的对象的继承，Dockerfile也可以“继承”，这意味着我们不必从头写起。我们先来看一下完整的Dockfile和效果，再来一一解释。</p>
+<p><img src="https://i.loli.net/2020/06/24/wldBMFtx3eIk98C.png" srcset="/img/loading.gif" alt=""></p>
+<h1 id="Build-Customized-Docker-Images"><a href="#Build-Customized-Docker-Images" class="headerlink" title="Build Customized Docker Images"></a>Build Customized Docker Images</h1><p>如果没有现成的Docker镜像能满足我们的需求，我们可以考虑自己写一个。要自定义一个Docker镜像需要两步，第一步是编写Dockerfile，第二步是使用<code>docker build</code>命令构建镜像。Dockerfile可以看作是一个脚本，描述了我们构建镜像所需要的全部命令，比如要构建一个用于Python科学计算的Docker镜像，我们需要在Dockerfile中编写安装Python的命令，安装Numpy、Scipy等常用包的命令等等。我们先来上手编写Dockerfile，这里我准备写一个包含<a href="https://hexo.io/" target="_blank" rel="noopener">hexo博客框架</a>的镜像，这个框架需要node作为基础环境，不过我们不需要在Dockerfile里写安装node的命令。因为类似于<code>C++</code>或<code>Python</code>中的对象的继承，Dockerfile也可以“继承”，这意味着我们不必从头写起。我们先来看一下完整的Dockfile和效果，再来一一解释。</p>
 <pre><code class="hljs dockerfile"><span class="hljs-keyword">FROM</span> node
 
 --------------------------------------------------------------
@@ -267,48 +266,48 @@ Copy</code></pre>
 <span class="hljs-keyword">RUN</span><span class="bash"> npm install -g hexo-cli</span>
 <span class="hljs-keyword">EXPOSE</span> <span class="hljs-number">4000</span>
 <span class="hljs-keyword">CMD</span><span class="bash"> hexo init blog &amp;&amp; <span class="hljs-built_in">cd</span> blog &amp;&amp; hexo generate &amp;&amp; hexo serverCopy</span></code></pre>
+
 <p>运行结果如下所示，可以看到Docker按照我们写的Dockerfile一行一行的进行镜像的构建：</p>
-<p><img src="https://i.loli.net/2020/06/24/tZ3JW4SPNhxUwEn.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/24/tZ3JW4SPNhxUwEn.png" srcset="/img/loading.gif" alt=""></p>
 <p>现在来解释Docerfile里的内容。<code>FROM &lt;docker image&gt;</code>表示继承其他的镜像，这里我们使用node官方的镜像。接下来是安装hexo，<code>RUN &lt;command&gt;</code>表示执行命令，这里我们直接用<code>npm install -g hexo-cli</code>进行安装。由于要浏览博客网页需要开放端口，而Docker容器运行的时候和外部主机是完全隔断的，要使外部主机访问Docker容器端口，需要暴露端口。<code>EXPOSE &lt;port&gt;</code>代表暴露端口，这里用的是4000端口。之后是创建博客和启动本地服务，<code>CMD &lt;command&gt;</code>和<code>RUN &lt;command&gt;</code>的区别是RUN会在构建的时候执行，而CMD是在容器启动之后才会执行。<code>hexo init blog &amp;&amp; cd blog &amp;&amp; hexo generate &amp;&amp; hexo server</code>分别代表初始化博客、进入博客所在文件夹、生成博客网站、启动本地服务器。更多指令可以参考<a href="https://docs.docker.com/engine/reference/builder/" target="_blank" rel="noopener">官方文档</a>。</p>
 <p>然后我们使用<code>docker build -t test_hexo .</code>命令构建镜像。</p>
 <blockquote>
 <p>构建镜像 <code>docker build -t &lt;image_name&gt; &lt;direcotry&gt;</code></p>
 </blockquote>
 <p>运行镜像：</p>
-<p><img src="https://i.loli.net/2020/06/24/m4FSe15kMIDCHXy.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/24/m4FSe15kMIDCHXy.png" srcset="/img/loading.gif" alt=""></p>
 <p>可以看到容器启动后开始执行博客初始化。</p>
-<p><img src="https://i.loli.net/2020/06/24/BEdibvgPTMz4sn8.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/24/BEdibvgPTMz4sn8.png" srcset="/img/loading.gif" alt=""></p>
 <p>最后在<code>locahost:4000</code>上启动了一个本地服务器，在浏览器中输入这个地址，可以看到刚刚构建好的博客：</p>
-<p><img src="https://i.loli.net/2020/06/24/vmSUb5QH6l4afzF.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/24/vmSUb5QH6l4afzF.png" srcset="/img/loading.gif" alt=""></p>
 <p>值得注意的是，在Dockerfile中我们暴露了4000端口，使用<code>-p</code>标签可以达到同样的效果：<code>docker run -p &lt;docker_port&gt;:&lt;local_port&gt; &lt;image_name&gt;</code>。比如<code>docker run -p 9999:8888 xxxx</code>代表将Docker容器中的9999端口转发到外部主机的8888端口。如果你是在远程服务器上使用的Docker，那么端口只是被转发到了远程服务器上，还得手动将远程服务器再转发到你本机上才能直接在本机浏览器上看到页面。</p>
-<h2 id="build-docker-images-with-aliyun-container-registry">Build Docker Images with Aliyun Container Registry</h2>
-<p>因为某些原因，如果在构建镜像的时候需要通过<code>apt-get update</code>更新源，会发现无论如何都会卡住。这个时候可以使用<a href="https://cr.console.aliyun.com/" target="_blank" rel="noopener">阿里云容器镜像服务</a>，在阿里的服务器上构建好镜像，再拉取到自己的机器上。注册好帐号之后，点击创建镜像仓库：</p>
-<p><img src="https://i.loli.net/2020/06/24/u4DGHv3En1iLI5z.png" srcset="/img/loading.gif" /></p>
+<h2 id="Build-Docker-Images-with-Aliyun-Container-Registry"><a href="#Build-Docker-Images-with-Aliyun-Container-Registry" class="headerlink" title="Build Docker Images with Aliyun Container Registry"></a>Build Docker Images with Aliyun Container Registry</h2><p>因为某些原因，如果在构建镜像的时候需要通过<code>apt-get update</code>更新源，会发现无论如何都会卡住。这个时候可以使用<a href="https://cr.console.aliyun.com/" target="_blank" rel="noopener">阿里云容器镜像服务</a>，在阿里的服务器上构建好镜像，再拉取到自己的机器上。注册好帐号之后，点击创建镜像仓库：</p>
+<p><img src="https://i.loli.net/2020/06/24/u4DGHv3En1iLI5z.png" srcset="/img/loading.gif" alt=""></p>
 <p>这里仓库类型如果没有特殊需求建议使用公开，然后填写一些基本信息：</p>
-<p><img src="https://i.loli.net/2020/06/24/Qipw5hAg136afnL.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/24/Qipw5hAg136afnL.png" srcset="/img/loading.gif" alt=""></p>
 <p>之后设置代码源，其实就是告诉阿里云从哪儿获取Dockerfile，我这里用的是Github，所以需要先在阿里云中关联Github账号，然后在Github中创建一个用来放Dockerfile的仓库。构建设置里有一个“海外机器构建”，这正是我们使用阿里云容器服务的主要目的，勾选。</p>
-<p><img src="https://i.loli.net/2020/06/24/ksvZJG9lKfdh6aR.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/24/ksvZJG9lKfdh6aR.png" srcset="/img/loading.gif" alt=""></p>
 <p>镜像仓库创建好之后，点进去，在构建页面点击添加规则：</p>
-<p><img src="https://i.loli.net/2020/06/24/irBm3QcqjVhGMsv.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/24/irBm3QcqjVhGMsv.png" srcset="/img/loading.gif" alt=""></p>
 <p>按下图进行设置即可，镜像版本就是你想要的镜像名字：</p>
-<p><img src="https://i.loli.net/2020/06/24/7pAFvM8CJQbq6mU.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/24/7pAFvM8CJQbq6mU.png" srcset="/img/loading.gif" alt=""></p>
 <p>点击“立即构建”：</p>
-<p><img src="https://i.loli.net/2020/06/24/GlMwqDInL7zVOpf.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/24/GlMwqDInL7zVOpf.png" srcset="/img/loading.gif" alt=""></p>
 <p>等待一段时间后，如果构建成功，便可以进行拉取了，在镜像仓库的基本信息页面可以看到地址：</p>
-<p><img src="https://i.loli.net/2020/06/24/57jmEv8PYkr2nQG.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/24/57jmEv8PYkr2nQG.png" srcset="/img/loading.gif" alt=""></p>
 <p>将阿里云上的镜像拉取到本机之后一般会想要对镜像改名，可以使用<code>docker tag &lt;old_name&gt; &lt;new_name&gt;</code>。</p>
-<h1 id="build-docker-images-for-deep-learning">Build Docker Images for Deep Learning</h1>
-<h2 id="startup">Startup</h2>
-<p>在Docker中配置适用于OpenPAI的深度学习镜像不是一件容易的事，会有很多的坑，这里专门说一下如何配置。推荐在阿里云容器镜像服务中进行构建，会少很多麻烦。</p>
+<h1 id="Build-Docker-Images-for-Deep-Learning"><a href="#Build-Docker-Images-for-Deep-Learning" class="headerlink" title="Build Docker Images for Deep Learning"></a>Build Docker Images for Deep Learning</h1><h2 id="Startup"><a href="#Startup" class="headerlink" title="Startup"></a>Startup</h2><p>在Docker中配置适用于OpenPAI的深度学习镜像不是一件容易的事，会有很多的坑，这里专门说一下如何配置。推荐在阿里云容器镜像服务中进行构建，会少很多麻烦。</p>
 <p>第一步是初始镜像，由于需要用到CUDA，这里可以根据自己的需求（比如不同CUDA版本支持的GPU驱动版本不一样，还有Tensorflow不同版本对CUDA和cuDNN要求也不一样）从Nvidia的Dockerhub<a href="https://hub.docker.com/r/nvidia/cuda" target="_blank" rel="noopener">官方页面</a>选择合适的CUDA和cuDNN版本：</p>
-<p><img src="https://i.loli.net/2020/06/24/pftdhmHiWkTq8Fj.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/24/pftdhmHiWkTq8Fj.png" srcset="/img/loading.gif" alt=""></p>
 <p>这里我们选择CUDA10.1 + cuDNN7：</p>
 <pre><code class="hljs angelscript">FROM nvidia/cuda:<span class="hljs-number">10.1</span>-cudnn7-devel-ubuntu18<span class="hljs-number">.04</span>Copy</code></pre>
+
 <p>这一条主要是解决乱码问题以及定义用到的软件包的版本，这里Miniconda版本设置为4.5.4的原因是这是最后一个自带Python3.6的版本，我在这儿为了稳定所以用了Python3.6，大家也可以安装最新版的Miniconda：</p>
 <pre><code class="hljs routeros">ENV <span class="hljs-attribute">LANG</span>=C.UTF-8 <span class="hljs-attribute">LC_ALL</span>=C.UTF-8
 ENV <span class="hljs-attribute">HADOOP_VERSION</span>=2.7.2
 LABEL <span class="hljs-attribute">HADOOP_VERSION</span>=2.7.2
 ENV <span class="hljs-attribute">MINICONDA_VERSION</span>=4.5.4Copy</code></pre>
+
 <p>接下来安装必须的包，大家可以根据需求自行调整，<code>-y</code>标签代表Yes，即自动同意安装：</p>
 <pre><code class="hljs livescript">RUN DEBIAN_FRONTEND=noninteractive &amp;&amp; <span class="hljs-string">\</span>
     apt-get -y update &amp;&amp; <span class="hljs-string">\</span>
@@ -325,14 +324,17 @@ ENV <span class="hljs-attribute">MINICONDA_VERSION</span>=4.5.4Copy</code></pre>
         libcupti-dev &amp;&amp; <span class="hljs-string">\</span>
     apt-get clean &amp;&amp; <span class="hljs-string">\</span>
     rm -rf <span class="hljs-regexp">/var/lib/apt/lists/</span>*Copy</code></pre>
+
 <p>安装Miniconda并设置环境变量，<code>-b</code>标签可以让Miniconda无交互自动安装：</p>
 <pre><code class="hljs awk">RUN wget --quiet https:<span class="hljs-regexp">//</span>repo.anaconda.com<span class="hljs-regexp">/miniconda/</span>Miniconda3-<span class="hljs-variable">$&#123;MINICONDA_VERSION&#125;</span>-Linux-x86_64.sh &amp;&amp; <span class="hljs-regexp">/bin/</span>bash Miniconda3-<span class="hljs-variable">$&#123;MINICONDA_VERSION&#125;</span>-Linux-x86_64.sh -b -p <span class="hljs-regexp">/opt/mi</span>niconda \
 &amp;&amp; rm Miniconda3-<span class="hljs-variable">$&#123;MINICONDA_VERSION&#125;</span>-Linux-x86_64.sh
 ENV PATH <span class="hljs-regexp">/opt/mi</span>niconda<span class="hljs-regexp">/bin:$PATHCopy</span></code></pre>
+
 <p>安装Hadoop，OpenPAI平台会用到：</p>
 <pre><code class="hljs awk">RUN wget -qO- http:<span class="hljs-regexp">//</span>archive.apache.org<span class="hljs-regexp">/dist/</span>hadoop<span class="hljs-regexp">/common/</span>hadoop-<span class="hljs-variable">$&#123;HADOOP_VERSION&#125;</span><span class="hljs-regexp">/hadoop-$&#123;HADOOP_VERSION&#125;.tar.gz | \</span>
 <span class="hljs-regexp">    tar xz -C /u</span>sr<span class="hljs-regexp">/local &amp;&amp; \</span>
 <span class="hljs-regexp">    mv /u</span>sr<span class="hljs-regexp">/local/</span>hadoop-<span class="hljs-variable">$&#123;HADOOP_VERSION&#125;</span> <span class="hljs-regexp">/usr/</span>local<span class="hljs-regexp">/hadoopCopy</span></code></pre>
+
 <p><code>ENV</code>的作用是配置环境变量。配置JAVA和Hadoop环境变量：</p>
 <pre><code class="hljs routeros">ENV <span class="hljs-attribute">JAVA_HOME</span>=/usr/lib/jvm/java-8-openjdk-amd64 \
     <span class="hljs-attribute">HADOOP_INSTALL</span>=/usr/local/hadoop \
@@ -344,9 +346,11 @@ ENV <span class="hljs-attribute">HADOOP_PREFIX</span>=<span class="hljs-variable
     <span class="hljs-attribute">HADOOP_HDFS_HOME</span>=<span class="hljs-variable">$&#123;HADOOP_INSTALL&#125;</span> \
     <span class="hljs-attribute">HADOOP_COMMON_LIB_NATIVE_DIR</span>=<span class="hljs-variable">$&#123;HADOOP_INSTALL&#125;</span>/lib/native \
     <span class="hljs-attribute">HADOOP_OPTS</span>=<span class="hljs-string">"-Djava.library.path=<span class="hljs-variable">$&#123;HADOOP_INSTALL&#125;</span>/lib/native"</span>Copy</code></pre>
+
 <p>设置PATH环境变量：</p>
 <pre><code class="hljs elixir">ENV PATH=<span class="hljs-regexp">/usr/local</span><span class="hljs-regexp">/nvidia/bin</span><span class="hljs-symbol">:/usr/local/cuda/bin</span><span class="hljs-symbol">:/usr/local/sbin</span><span class="hljs-symbol">:/usr/local/bin</span><span class="hljs-symbol">:/usr/sbin</span><span class="hljs-symbol">:/usr/bin</span><span class="hljs-symbol">:/sbin</span><span class="hljs-symbol">:/bin</span><span class="hljs-symbol">:</span><span class="hljs-variable">$&#123;</span>HADOOP_BIN_DIR&#125;<span class="hljs-symbol">:</span><span class="hljs-variable">$&#123;</span>HADOOP_SBIN_DIR&#125; \
 LD_LIBRARY_PATH=<span class="hljs-regexp">/usr/local</span><span class="hljs-regexp">/cuda/extras</span><span class="hljs-regexp">/CUPTI/lib</span><span class="hljs-symbol">:/usr/local/cuda/extras/CUPTI/lib64</span><span class="hljs-symbol">:/usr/local/nvidia/lib</span><span class="hljs-symbol">:/usr/local/nvidia/lib64</span><span class="hljs-symbol">:/usr/local/cuda/lib64</span><span class="hljs-symbol">:/usr/local/cuda/targets/x86_64-linux/lib/stubs</span><span class="hljs-symbol">:</span><span class="hljs-variable">$&#123;</span>JAVA_HOME&#125;/jre/lib/amd64/serverCopy</code></pre>
+
 <p>完整的Dockerfile如下：</p>
 <pre><code class="hljs crystal">FROM nvidia/<span class="hljs-symbol">cuda:</span><span class="hljs-number">10.1</span>-cudnn7-devel-ubuntu18.<span class="hljs-number">0</span>4
 
@@ -392,33 +396,32 @@ ENV JAVA_HOME=<span class="hljs-regexp">/usr/lib</span><span class="hljs-regexp"
 
 ENV PATH=<span class="hljs-regexp">/usr/local</span><span class="hljs-regexp">/nvidia/bin</span>:<span class="hljs-regexp">/usr/local</span><span class="hljs-regexp">/cuda/bin</span>:<span class="hljs-regexp">/usr/local</span><span class="hljs-regexp">/sbin:/usr</span><span class="hljs-regexp">/local/bin</span>:<span class="hljs-regexp">/usr/sbin</span>:<span class="hljs-regexp">/usr/bin</span>:<span class="hljs-regexp">/sbin:/bin</span>:$&#123;HADOOP_BIN_DIR&#125;:$&#123;HADOOP_SBIN_DIR&#125;:$PATH \
 LD_LIBRARY_PATH=<span class="hljs-regexp">/usr/local</span><span class="hljs-regexp">/cuda/extras</span><span class="hljs-regexp">/CUPTI/lib</span>:<span class="hljs-regexp">/usr/local</span><span class="hljs-regexp">/cuda/extras</span><span class="hljs-regexp">/CUPTI/lib</span>64:<span class="hljs-regexp">/usr/local</span><span class="hljs-regexp">/nvidia/lib</span>:<span class="hljs-regexp">/usr/local</span><span class="hljs-regexp">/nvidia/lib</span>64:<span class="hljs-regexp">/usr/local</span><span class="hljs-regexp">/cuda/lib</span>64:<span class="hljs-regexp">/usr/local</span><span class="hljs-regexp">/cuda/targets</span><span class="hljs-regexp">/x86_64-linux/lib</span><span class="hljs-regexp">/stubs:$&#123;JAVA_HOME&#125;/jre</span><span class="hljs-regexp">/lib/amd</span>64/serverCopy</code></pre>
+
 <p>建议先把这一部分进行构建，作为基础镜像，后面要配置其他环境（如安装Pytorch框架登），就不用重复构建这部分，还减少了出错的可能性。这里说一下，启动带CUDA的Docker镜像需要在<code>docker run</code>加上额外的参数<code>--runtime nvidia</code>。</p>
 <p>接下来安装深度学习框架。</p>
-<h2 id="configure-pytorch">Configure PyTorch</h2>
-<p>假设上面的镜像我们命名为xiaoqinfeng/base，那么构建PyTorch的Dockerfile可以像下面这么写：</p>
+<h2 id="Configure-PyTorch"><a href="#Configure-PyTorch" class="headerlink" title="Configure PyTorch"></a>Configure PyTorch</h2><p>假设上面的镜像我们命名为xiaoqinfeng/base，那么构建PyTorch的Dockerfile可以像下面这么写：</p>
 <pre><code class="hljs dockerfile"><span class="hljs-keyword">FROM</span> xiaoqinfeng/base
 
 <span class="hljs-keyword">RUN</span><span class="bash"> pip install -U pip</span>
 <span class="hljs-keyword">RUN</span><span class="bash"> pip install numpy scipy pandas matplotlib tqdm</span>
 <span class="hljs-keyword">RUN</span><span class="bash"> pip install torch==1.5.0+cu101 torchvision==0.6.0+cu101 -f https://download.pytorch.org/whl/torch_stable.htmlCopy</span></code></pre>
+
 <p>因为这里我用的CUDA10.1，其他版本的CUDA安装指令可能不太一样，具体可以参考<a href="https://pytorch.org/get-started/locally/" target="_blank" rel="noopener">官网</a>。</p>
-<h2 id="configure-tensorflow">Configure Tensorflow</h2>
-<p>如果是安装Tensorflow，那么构建Tensorflow的Dockerfile可以像下面这么写：</p>
+<h2 id="Configure-Tensorflow"><a href="#Configure-Tensorflow" class="headerlink" title="Configure Tensorflow"></a>Configure Tensorflow</h2><p>如果是安装Tensorflow，那么构建Tensorflow的Dockerfile可以像下面这么写：</p>
 <pre><code class="hljs dockerfile"><span class="hljs-keyword">FROM</span> xiaoqinfeng/base
 
 <span class="hljs-keyword">RUN</span><span class="bash"> pip install -U pip</span>
 <span class="hljs-keyword">RUN</span><span class="bash"> pip install numpy scipy pandas matplotlib tqdm tensorflow-gpuCopy</span></code></pre>
+
 <p>这里会自动安装最新版本的Tensorflow2。Tensorflow不同版本对CUDA和cuDNN版本甚至Python版本的支持都不太一样，可以参考<a href="https://www.tensorflow.org/install/source#linux" target="_blank" rel="noopener">官网</a>的说明。</p>
-<h1 id="deep-learning-with-openpai">Deep Learning with OpenPAI</h1>
-<h2 id="what-is-openpai">What is OpenPAI</h2>
-<p>OpenPAI是一个分布式深度学习计算资源管理平台，对于我们用户来说，只需要定义好Docker镜像，然后编写好任务设置，提交到平台之后，平台便会自动分配计算资源来运行任务。</p>
+<h1 id="Deep-Learning-with-OpenPAI"><a href="#Deep-Learning-with-OpenPAI" class="headerlink" title="Deep Learning with OpenPAI"></a>Deep Learning with OpenPAI</h1><h2 id="What-is-OpenPAI"><a href="#What-is-OpenPAI" class="headerlink" title="What is OpenPAI"></a>What is OpenPAI</h2><p>OpenPAI是一个分布式深度学习计算资源管理平台，对于我们用户来说，只需要定义好Docker镜像，然后编写好任务设置，提交到平台之后，平台便会自动分配计算资源来运行任务。</p>
 <p>OpenPAI界面：</p>
-<p><img src="https://i.loli.net/2020/06/24/CDrZjgYR7lNcieh.png" srcset="/img/loading.gif" style="zoom: 50%;" /></p>
-<p><img src="https://i.loli.net/2020/06/24/FGJpVCbls7YP4aM.png" srcset="/img/loading.gif" style="zoom: 50%;" /></p>
+<img src="https://i.loli.net/2020/06/24/CDrZjgYR7lNcieh.png" srcset="/img/loading.gif" style="zoom: 50%;" />
+
+<img src="https://i.loli.net/2020/06/24/FGJpVCbls7YP4aM.png" srcset="/img/loading.gif" style="zoom: 50%;" />
+
 <p>下面我们来讲讲怎么向OpenPAI平台提交任务。</p>
-<h2 id="submit-jobs-to-openpai">Submit Jobs to OpenPAI</h2>
-<h3 id="pack-code-data-files">Pack Code &amp; Data Files</h3>
-<p>假设你已经完成了代码的编写和测试，你的目录结构可能看起来是这样：</p>
+<h2 id="Submit-Jobs-to-OpenPAI"><a href="#Submit-Jobs-to-OpenPAI" class="headerlink" title="Submit Jobs to OpenPAI"></a>Submit Jobs to OpenPAI</h2><h3 id="Pack-Code-amp-Data-Files"><a href="#Pack-Code-amp-Data-Files" class="headerlink" title="Pack Code &amp; Data Files"></a>Pack Code &amp; Data Files</h3><p>假设你已经完成了代码的编写和测试，你的目录结构可能看起来是这样：</p>
 <pre><code class="hljs css">.
 ├── <span class="hljs-selector-tag">README</span><span class="hljs-selector-class">.md</span>
 ├── <span class="hljs-selector-tag">data</span>
@@ -427,30 +430,33 @@ LD_LIBRARY_PATH=<span class="hljs-regexp">/usr/local</span><span class="hljs-reg
 └── <span class="hljs-selector-tag">src</span>
     ├── <span class="hljs-selector-tag">data</span><span class="hljs-selector-class">.py</span>
     └── <span class="hljs-selector-tag">net</span><span class="hljs-selector-class">.pyCopy</span></code></pre>
+
 <p>因为OpenPAI会创建一个虚拟容器来运行你的代码，所以你的数据和代码必须要以某种方式传送到OpenPAI上的虚拟容器中。我们先来打包，在代码目录下执行<code>tar -cvf files.tar ./</code>。之后，运行<code>python -m http.server &lt;port&gt;</code>。打开浏览器输入<code>&lt;server_ip&gt;:&lt;port&gt;</code>应该就能看到你的文件了：</p>
-<p><img src="https://i.loli.net/2020/06/24/Cbgiw3XKnGYsNHp.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/24/Cbgiw3XKnGYsNHp.png" srcset="/img/loading.gif" alt=""></p>
 <p>由于这个http进程需要一直运行，所以建议使用<code>screen</code>放到后台执行。</p>
-<h3 id="configure-tasks">Configure Tasks</h3>
-<p>像OpenPAI提交任务可以采用网页提交也可以使用VSCode插件，这里我们采用网页提交。登入OpenPAI界面，点击Submit Job：</p>
-<p><img src="https://i.loli.net/2020/06/24/bhXAcJfOmo8RtT2.png" srcset="/img/loading.gif" /></p>
+<h3 id="Configure-Tasks"><a href="#Configure-Tasks" class="headerlink" title="Configure Tasks"></a>Configure Tasks</h3><p>像OpenPAI提交任务可以采用网页提交也可以使用VSCode插件，这里我们采用网页提交。登入OpenPAI界面，点击Submit Job：</p>
+<p><img src="https://i.loli.net/2020/06/24/bhXAcJfOmo8RtT2.png" srcset="/img/loading.gif" alt=""></p>
 <p>可以看到提交任务的界面：</p>
-<p><img src="https://i.loli.net/2020/06/24/KME8GuN49gyY1ph.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/24/KME8GuN49gyY1ph.png" srcset="/img/loading.gif" alt=""></p>
 <p>Job name大家可以自己设置。在Command一栏，是执行任务所需的全部命令，首先我们要做的就是将代码数据压缩包下载到容器中并解压：</p>
 <pre><code class="hljs elixir">wget &lt;server_ip&gt;<span class="hljs-symbol">:&lt;port&gt;/files</span>.tar
 
 tar -xvf files.tarCopy</code></pre>
+
 <p>然后是运行代码，假设我这里的任务比较简单，只有一行main.py的调用：</p>
 <pre><code class="hljs css"><span class="hljs-selector-tag">python</span> <span class="hljs-selector-tag">main</span><span class="hljs-selector-class">.pyCopy</span></code></pre>
+
 <p>如果任务的执行比较复杂，也只需把命令填到Command里即可，OpenPAI会自动执行。接下来是设置配置，可以选GPU的数量，内存大小等等：</p>
-<p><img src="https://i.loli.net/2020/06/24/T7ryOxjpJP4FWYR.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<img src="https://i.loli.net/2020/06/24/T7ryOxjpJP4FWYR.png" srcset="/img/loading.gif" style="zoom:67%;" />
+
 <p>然后是镜像的选择：</p>
-<p><img src="https://i.loli.net/2020/06/24/3n7SpNlsLjBRvgE.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<img src="https://i.loli.net/2020/06/24/3n7SpNlsLjBRvgE.png" srcset="/img/loading.gif" style="zoom:67%;" />
+
 <p>要注意在本机上构建好镜像之后，需要把镜像重命名为<code>&lt;repository_address&gt;/&lt;image_name&gt;</code>的格式（我们的<code>&lt;repository&gt;</code>是<code>lin-ai-27:5000</code>，假设我的镜像名是<code>xiaoqinfeng/pytorch</code>，那就是改成<code>lin-ai-27:5000/xiaoqinfeng/pytorch</code>），然后执行<code>docker push</code>推送到Docker镜像服务器上才能在OpenPAI上使用。</p>
 <p>提交之后，可以在Jobs界面看到任务的运行情况：</p>
-<p><img src="https://i.loli.net/2020/06/24/ZD4cUgOCIqnyHdB.png" srcset="/img/loading.gif" style="zoom: 50%;" /></p>
-<h1 id="misc">Misc</h1>
-<h2 id="store-files-in-containers">Store Files in Containers</h2>
-<p>我们往往需要在程序运行的时候保存文件，如checkpoints等。在OpenPAI上执行程序的话文件是保存在程序中的，如果我们想要在运行完之后把文件复制到本地电脑上呢？这个时候就需要在任务的配置文件里加上复制文件到HDFS的语句。首先确认你的HDFS的URL：如<code>hdfs://172.31.246.52:9000/你的OpenPAI用户名/</code>。</p>
+<img src="https://i.loli.net/2020/06/24/ZD4cUgOCIqnyHdB.png" srcset="/img/loading.gif" style="zoom: 50%;" />
+
+<h1 id="Misc"><a href="#Misc" class="headerlink" title="Misc"></a>Misc</h1><h2 id="Store-Files-in-Containers"><a href="#Store-Files-in-Containers" class="headerlink" title="Store Files in Containers"></a>Store Files in Containers</h2><p>我们往往需要在程序运行的时候保存文件，如checkpoints等。在OpenPAI上执行程序的话文件是保存在程序中的，如果我们想要在运行完之后把文件复制到本地电脑上呢？这个时候就需要在任务的配置文件里加上复制文件到HDFS的语句。首先确认你的HDFS的URL：如<code>hdfs://172.31.246.52:9000/你的OpenPAI用户名/</code>。</p>
 <p>如果要创建文件夹，则可以使用<code>hdfs dfs -mkdir -p &lt;HDFS URL&gt;+&lt;New Folder&gt;</code>。这里<code>&lt;New Folder&gt;</code>是你要创建的的文件夹的路径，用起来和Linux的<code>mkdir</code>命令其实是差不多的。</p>
 <p>要复制文件（夹）则使用<code>hdfs dfs -cp &lt;Source Dir&gt; &lt;Dest Dir&gt;</code>。</p>
 
