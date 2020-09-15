@@ -160,7 +160,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    1.9k 字
+                    2.5k 字
                   </span>
                 
 
@@ -170,7 +170,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    27
+                    33
                      分钟
                   </span>
                 
@@ -207,7 +207,7 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：2020年9月10日 晚上
+                  本文最后更新于：2020年9月15日 下午
                 
               </p>
             
@@ -218,7 +218,7 @@
 <p><a href="https://xgboost.readthedocs.io/en/latest/tutorials/model.html" target="_blank" rel="noopener">XGBoost Documentation</a></p>
 <p><a href="https://www.cnblogs.com/pinard/p/6133937.html" target="_blank" rel="noopener">AdaBoost blog</a></p>
 <p><a href="https://www.cnblogs.com/pinard/p/6140514.html" target="_blank" rel="noopener">GBDT blog</a></p>
-<p><a href="http://wepon.me//files//gbdt.pdf" target="_blank" rel="noopener">slide</a></p>
+<p><a href="http://wepon.me/files/gbdt.pdf" target="_blank" rel="noopener">slide</a></p>
 <p><a href="https://homes.cs.washington.edu/~tqchen/pdf/BoostedTree.pdf" target="_blank" rel="noopener">陈天奇slide</a></p>
 <p><a href="https://snaildove.github.io/2018/10/01/8.Booting-Methods_LiHang-Statistical-Learning-Methods/" target="_blank" rel="noopener">blog</a></p>
 <p><a href="https://snaildove.github.io/2018/10/02/get-started-XGBoost/" target="_blank" rel="noopener">blog</a></p>
@@ -254,15 +254,16 @@ L(\theta^t)=L(\theta^{t-1})+g\Delta \theta + H\frac{\Delta \theta^2}{2}
 \]</span> 要使得迭代后的结果尽量小，即<span class="math inline">\(g\Delta \theta + H\frac{\Delta \theta^2}{2}\)</span>尽量小，那么有<span class="math inline">\(\frac{\left(g\Delta \theta + H\frac{\Delta \theta^2}{2}\right)}{\partial\Delta\theta}=0\)</span></p>
 <p>求得<span class="math inline">\(\Delta \theta=H^{-1}g\)</span>，故<span class="math inline">\(\theta^{t}=\theta^{t-1}+\Delta \theta=\theta^{t-1}-\frac{g}{h}\)</span>。如果<span class="math inline">\(\theta\)</span>是一个向量，那么<span class="math inline">\(\theta^{t}=\theta^{t-1}-H^{-1}g\)</span>，这里<span class="math inline">\(H\)</span>为海森矩阵。</p>
 <h1 id="gradient-boosting-decision-tree-gbdt">Gradient Boosting Decision Tree (GBDT)</h1>
-<p>梯度提升树</p>
+<p>我们首先来看基于树的Boosting模型中，非常经典的梯度提升树 (Gradient Boosting Decision Tree)。</p>
 <h2 id="the-additive-model">The Additive Model</h2>
 <p>首先GBDT是一个加法模型，即最终模型由一系列树模型乘以对应权重相加得来： <span class="math display">\[
-F(x;w)=\sum_{t=0}^T\alpha_t h_t(x;w_t)=\sum_{t=0}^T f_t(x;w_t)
+F_T(x;w)=\sum_{t=0}^T\alpha_t h_t(x;w_t)=\sum_{t=0}^T f_t(x;w_t)
 \]</span> 我们的目标是使得<span class="math inline">\(F\)</span>的损失函数最小化： <span class="math display">\[
-F^*=\mathop{\arg\min}\limits_{F}\sum_{i=1}^N L(y_i, F(x_i;w))
+F_T^*=\mathop{\arg\min}\limits_{F}\sum_{i=1}^N L(y_i, F_T(x_i;w))
 \]</span></p>
 <p>直接优化这个损失函数复杂度是很高的，GBDT实际上运用了一种类似贪心的策略来优化这个函数，将优化过程分解成了迭代的步骤。</p>
-<p>设当前进行到第<span class="math inline">\(t\)</span>步，当前的模型为<span class="math inline">\(F_t=F_{t-1}+f_t\)</span>，即我们已经优化好了前<span class="math inline">\(t-1\)</span>个树模型，将他们加起来得到<span class="math inline">\(F_{t-1}\)</span>，现在我们需要去优化第<span class="math inline">\(t\)</span>棵树<span class="math inline">\(f_t\)</span>。实际上，如果我们把<span class="math inline">\(F_t\)</span>看作是一个参数（对于输入<span class="math inline">\(x\)</span>，其输出就可以看作是参数），那么当前的树<span class="math inline">\(f_t\)</span>就是参数的增量。而损失函数<span class="math inline">\(L\)</span>也确实是关于<span class="math inline">\(F_t\)</span>的函数，GBDT的优化过程也可看作是梯度下降的过程。</p>
+<p>回想梯度下降算法进行优化的步骤，我们有参数<span class="math inline">\(\theta\)</span>，损失函数<span class="math inline">\(L(\theta)\)</span>是<span class="math inline">\(\theta\)</span>的函数，我们希望找到最优的<span class="math inline">\(\theta^*\)</span>使得<span class="math inline">\(L(\theta^*)\)</span>最小，于是我们使用了迭代优化的步骤。假设迭代执行到第<span class="math inline">\(t\)</span>步，也就是说我们现在的参数<span class="math inline">\(\theta^{t-1}\)</span>为前面<span class="math inline">\(t-1\)</span>步增量之和：<span class="math inline">\(\theta^{t-1}=\sum_{j=1}^{t-1}\Delta \theta_j\)</span>，每一步的增量记为<span class="math inline">\(\Delta \theta_t\)</span>。当前的增量<span class="math inline">\(\Delta \theta_{t}\)</span>是怎么计算得到的呢？大家都知道是采用的损失函数在<span class="math inline">\(\theta^{t-1}\)</span>的负梯度乘以一个步长，即<span class="math inline">\(\Delta \theta_t=-\alpha_t \frac{\partial L(\theta)}{\partial \theta^{t-1}}\)</span>。</p>
+<p>梯度下降相当于是在参数空间<span class="math inline">\(\theta\)</span>找到最合适的参数<span class="math inline">\(\theta^*\)</span>使得损失函数<span class="math inline">\(L(\theta)\)</span>最小化，如果我们把模型<span class="math inline">\(F_T\)</span>看作是函数空间，我们的目的是在函数空间中找到最优的<span class="math inline">\(F_T^*\)</span>使得损失函数最小化，在这一个角度上GBDT和梯度下降就统一起来了。每一步的基模型<span class="math inline">\(f_t\)</span>就相当于梯度下降中的增量<span class="math inline">\(\Delta \theta\)</span>，所以我们就得到了GBDT每一的优化目标，即损失函数<span class="math inline">\(L\)</span>对于<span class="math inline">\(F_{t-1}\)</span>的负梯度。</p>
 <table>
 <thead>
 <tr class="header">
@@ -284,7 +285,7 @@ F^*=\mathop{\arg\min}\limits_{F}\sum_{i=1}^N L(y_i, F(x_i;w))
 </tr>
 <tr class="odd">
 <td>增量</td>
-<td><span class="math inline">\(\theta_t=-\alpha_t g_t\)</span></td>
+<td><span class="math inline">\(\Delta \theta_t=-\alpha_t g_t\)</span></td>
 <td><span class="math inline">\(f_t=-\alpha_t g_t\)</span></td>
 </tr>
 <tr class="even">
@@ -299,48 +300,22 @@ F^*=\mathop{\arg\min}\limits_{F}\sum_{i=1}^N L(y_i, F(x_i;w))
 </tr>
 </tbody>
 </table>
-<blockquote>
-<p><strong>INPUT: </strong></p>
-<p><strong>PROCEDURE: </strong></p>
-<ol type="1">
-<li>初始化第一棵树<span class="math inline">\(f_0\)</span></li>
-<li>对于步骤<span class="math inline">\(t \text{ in } [1,\cdots,T]\)</span>：</li>
-<li>计算负梯度：<span class="math inline">\(\tilde{y}_i=-\left[\frac{\partial L(y_i,F(x_i))}{\partial F(x_i)}\right]_{F(x)=F_{t-1}(x)}\)</span></li>
-<li>学习第<span class="math inline">\(t\)</span>棵树：<span class="math inline">\(w^*=\mathop{\arg\min}\limits_w \sum_{i=1}^N(\tilde{y}_i)-h_t(x_i;w))^2\)</span></li>
-<li>计算第<span class="math inline">\(t\)</span>棵树的权重（步长）：<span class="math inline">\(\alpha^*_t=\mathop{\arg\min}\limits_{\alpha_t}\sum_{i=1}^N L(y_i,F_{t-1}(x_i)+\alpha_t h_t(x_i;w^*))\)</span></li>
-<li>令第<span class="math inline">\(t\)</span>步的模型为<span class="math inline">\(f_t=\alpha_t^* h_t(x;w^*)\)</span></li>
-<li>更新模型<span class="math inline">\(F_t=F_{t-1}+f_t\)</span></li>
-<li>只要循环未结束，回到步骤2，继续循环</li>
-<li>输出<span class="math inline">\(F_T\)</span></li>
-</ol>
-</blockquote>
-<h2 id="fitting-negative-gradient">Fitting Negative Gradient</h2>
-<p><img src="https://i.loli.net/2020/08/26/Ycus6hHIrioAnO5.png" srcset="/img/loading.gif" /></p>
-<p>设当前为第<span class="math inline">\(t\)</span>轮，这时已经得到了<span class="math inline">\(t-1\)</span>个基模型，第<span class="math inline">\(i\)</span>个样本损失函数的负梯度为： <span class="math display">\[
-r_{ti}=-\left[\frac{\partial L(y_i,f(x_i))}{\partial f(x_i)}\right]_{f(x)=f_{t-1}(x)}
-\]</span> 如果在<span class="math inline">\((x_i,r_{ti})\)</span>上训练CART，得到训练好的回归树，设回归树中有<span class="math inline">\(J\)</span>个叶子节点</p>
-<p>每个叶子节点对应了一个子区域<span class="math inline">\(R_{tj}\)</span>，这个子区域里的样本 <span class="math display">\[
-c_{tj}^*=\min\limits_{c_{tj}}\sum\limits_{x_i\in R_{tj}}L(y_i,f_{t-1}(x_i)+c_{tj})
-\]</span> 最后对于所有叶子节点（子区域） <span class="math display">\[
-h_t(x)=\sum_{j=1}^J c_{tj}\mathrm{I}(x\in R_{tj})
-\]</span> 最终得到本轮的强学习器： <span class="math display">\[
-f_t(x)=f_{t-1}(x)+\sum\limits_{j=1}^J c_{tj}\mathrm{I}(x\in R_{tj})
-\]</span></p>
-<p><img src="https://i.loli.net/2020/08/26/Vxr2KpJAlu8GEOy.png" srcset="/img/loading.gif" /></p>
 <h2 id="gradient-boosting-tree-for-regression">Gradient Boosting Tree for Regression</h2>
+<p>我们先来讨论GBDT解决回归问题的算法。前面我们已经讨论过，在每一步GBDT的优化目标是损失函数的负梯度，那么现在的问题就是如何求得每一步最优的基模型（GBDT的基模型选用的是CART）。GBDT的算法步骤如下：</p>
 <blockquote>
 <p><strong>Gradient Boosting Tree Algorithm</strong></p>
-<p>INPUT:</p>
-<p>OUTPUT:</p>
+<p>INPUT: 训练样本<span class="math inline">\(\{(x_1,y_1),\cdots,(x_m,y_m)\}\)</span>，迭代轮数<span class="math inline">\(T\)</span>，损失函数<span class="math inline">\(L\)</span></p>
+<p>OUTPUT: 强模型<span class="math inline">\(F_T\)</span></p>
 <ol type="1">
-<li>初始化弱学习器（即使用CART直接在数据集上训练）：</li>
-<li>计算负梯度</li>
-<li>在<span class="math inline">\((x_i,r_{ti})\)</span>上训练得到一个CART回归树，</li>
-<li>对叶子节点计算最佳输出值</li>
-<li>更新强学习器，回到步骤2直到达到迭代轮数</li>
-<li>得到强学习器的表达式：<span class="math inline">\(f(x)=f_0(x)+\sum\limits_{t=1}^T\sum\limits_{j=1}^J c_{tj}\mathrm I(x\in R_{tj})\)</span></li>
+<li>初始化弱学习器<span class="math inline">\(f_0\)</span>，直接使用一个基模型在训练集上进行训练</li>
+<li>在步骤<span class="math inline">\(t=1...T\)</span>，对于每个样本计算负梯度<span class="math inline">\(r_{ti}=\left[\frac{\partial L(y_i,F_{t-1}(x_i))}{\partial F_{t-1}}\right]\)</span></li>
+<li>在<span class="math inline">\((x_i,r_{ti})\)</span>上训练得到一个CART回归树，确定树的结构</li>
+<li>假设一共有<span class="math inline">\(J\)</span>个叶子节点，那么对每个叶子节点计算最佳输出值<span class="math inline">\(c_{tj}=\mathop{\arg\min}\limits_{c_{tj}}\sum_{x_i\in R_{tj}} L(y_i,F_{t-1}(x_i)+c_{tj})\)</span>（其中<span class="math inline">\(c_{tj}\)</span>代表第<span class="math inline">\(j\)</span>个叶子的输出，<span class="math inline">\(R_{tj}\)</span>代表第<span class="math inline">\(j\)</span>个叶子对应的样本集合），确定每个叶子节点的输出</li>
+<li>更新强学习器<span class="math inline">\(F_t=F_{t-1}+f_t\)</span>，回到步骤2直到达到迭代轮数</li>
+<li>最终得到强学习器的表达式：<span class="math inline">\(f(x)=f_0(x)+\sum\limits_{t=1}^T\sum\limits_{j=1}^J c_{tj}\mathrm I(x\in R_{tj})\)</span></li>
 </ol>
 </blockquote>
+<p>于是我们就得到了最终模型<span class="math inline">\(F_T\)</span>。</p>
 <h2 id="gradient-boosting-tree-for-classification">Gradient Boosting Tree for Classification</h2>
 <p>在处理分类任务时，由于输出是离散的值</p>
 <p>一种方法是使用指数损失函数，此时GBDT退化为AdaBoost；另一种方法是借鉴逻辑回归的方法，去建模真实值的概率</p>
@@ -358,6 +333,7 @@ f_t(x)=f_{t-1}(x)+\sum\limits_{j=1}^J c_{tj}\mathrm{I}(x\in R_{tj})
 <li>难以并行训练</li>
 </ol>
 <h1 id="xgboost">XGBoost</h1>
+<p>前面我们讲了梯度下降和牛顿法，刚才又讨论了GBDT和梯度下降的关系，那么XGBoost是否和牛顿法有什么关系呢？答案是肯定的。GBDT利用了损失函数在<span class="math inline">\(F_{t-1}\)</span>的一阶展开（即一阶导数信息），而XGBoost则利用了损失函数在<span class="math inline">\(F_{t-1}\)</span>的二阶展开，这也是XGBoost和GBDT最根本的区别。下面我们将详细讲解XGBoost算法。</p>
 <table>
 <thead>
 <tr class="header">
@@ -368,65 +344,67 @@ f_t(x)=f_{t-1}(x)+\sum\limits_{j=1}^J c_{tj}\mathrm{I}(x\in R_{tj})
 </thead>
 <tbody>
 <tr class="odd">
-<td></td>
-<td></td>
-<td></td>
+<td>损失函数</td>
+<td><span class="math inline">\(L(\theta)\)</span></td>
+<td><span class="math inline">\(L(F_t)\)</span></td>
 </tr>
 <tr class="even">
-<td></td>
-<td></td>
-<td></td>
+<td>参数</td>
+<td><span class="math inline">\(\theta^t\)</span></td>
+<td><span class="math inline">\(F_t\)</span></td>
 </tr>
 <tr class="odd">
-<td></td>
-<td></td>
-<td></td>
+<td>增量</td>
+<td><span class="math inline">\(\Delta \theta_t=-\alpha_t H^{-1}_tg_t\)</span></td>
+<td><span class="math inline">\(f_t=-\alpha_t H^{-1}_tg_t\)</span></td>
 </tr>
 <tr class="even">
-<td></td>
-<td></td>
-<td></td>
+<td>步长</td>
+<td><span class="math inline">\(\alpha_t\)</span></td>
+<td><span class="math inline">\(\alpha_t\)</span></td>
 </tr>
 <tr class="odd">
-<td></td>
-<td></td>
-<td></td>
+<td>初始值</td>
+<td><span class="math inline">\(\theta_0\)</span></td>
+<td><span class="math inline">\(f_0\)</span></td>
 </tr>
 </tbody>
 </table>
 <h2 id="regularization">Regularization</h2>
-<p>叶子节点的个数<span class="math inline">\(T\)</span>，叶子节点分数<span class="math inline">\(w\)</span> <span class="math display">\[
+<p>XGBoost相比GBDT的另一大改进是加入了正则化项，即控制每个树的复杂度。衡量树的复杂度的度量有很多，XGBoost采用的是每棵树叶子节点的个数<span class="math inline">\(T\)</span>和每个叶子节点输出<span class="math inline">\(w\)</span>的平方和： <span class="math display">\[
 \Omega(f)=\gamma T+\frac{1}{2}\lambda\parallel w\parallel^2
 \]</span></p>
+<p>这一步主要是为了进一步降低每个弱学习器的方差。</p>
 <h2 id="objective-function">Objective Function</h2>
-<p>总的损失函数 <span class="math display">\[
+<p>加上正则项之后总的损失函数变为： <span class="math display">\[
 L=\sum_{i=1}^N \ell(y_i, F_T(x_i))+\Omega(F_T)
-\]</span> 对于第<span class="math inline">\(t\)</span>步 <span class="math display">\[
+\]</span> 和GBDT类似，我们来推导第<span class="math inline">\(t\)</span>步的优化公式，对于第<span class="math inline">\(t\)</span>步，我们的损失函数为： <span class="math display">\[
 \begin{align}
 L_t&amp;=\sum_{i=1}^N \ell(y_i,F_t(x_i))+\Omega(F_t)\\
 &amp;=\sum_{i=1}^N \ell(y_i, F_{t-1}(x_i) + f_t(x_i))+\Omega(F_t)
 \end{align}
 \]</span> 将损失函数在<span class="math inline">\(F_{t-1}\)</span>处进行二阶泰勒展开，得到 <span class="math display">\[
 L_t \approx \left[\sum_{i=1}^N \ell(y_i, F_{t-1}) + g_i f_t(x_i) + \frac{1}{2}h_i f_t^2(x_i) \right] + \Omega(F_t)
-\]</span> 其中<span class="math inline">\(g_i=\frac{\partial \ell(y_i, F_{t-1})}{\partial F_{t-1}}\)</span>，<span class="math inline">\(h_i=\frac{\partial \ell(y_i, F_{t-1}) ^2}{\partial^2 F_{t-1}}\)</span>。</p>
-<p>把常数项去掉，得到： <span class="math display">\[
+\]</span> 其中<span class="math inline">\(g_i=\frac{\partial \ell(y_i, F_{t-1})}{\partial F_{t-1}}\)</span>，<span class="math inline">\(h_i=\frac{\partial \ell(y_i, F_{t-1}) ^2}{\partial^2 F_{t-1}}\)</span>，分别代表损失函数对<span class="math inline">\(F_{t-1}\)</span>的一阶导和二阶导。</p>
+<p>由于我们要优化的是本轮的基模型<span class="math inline">\(f_t\)</span>，<span class="math inline">\(\ell(y_i, F_{t-1})\)</span>已经是固定的了，相当于常数，把常数项去掉，得到： <span class="math display">\[
 \begin{align}
 \tilde L_t &amp;= \left[\sum_{i=1}^N  g_i f_t(x_i) + \frac{1}{2}h_i f_t^2(x_i) \right] + \Omega(f_t)\\
 &amp;=\left[\sum_{i=1}^N  g_i f_t(x_i) + \frac{1}{2}h_i f_t^2(x_i) \right] + \gamma T + \frac{1}{2}\lambda \parallel w \parallel^2
 \end{align}
-\]</span> 假设树<span class="math inline">\(f_t\)</span>一共有<span class="math inline">\(J\)</span>个叶节点，记<span class="math inline">\(q(x_i)=j\)</span>代表样本<span class="math inline">\(x_i\)</span>经过决策树对应的叶节点是<span class="math inline">\(j\)</span>，<span class="math inline">\(I_j\)</span>代表叶子节点<span class="math inline">\(j\)</span>的所有样本下标，<span class="math inline">\(w_j\)</span>代表叶子节点<span class="math inline">\(j\)</span>的输出，我们可以将损失函数改写为： <span class="math display">\[
+\]</span> 我们都知道样本<span class="math inline">\(x_i\)</span>在树<span class="math inline">\(f_t\)</span>上的输出取决于<span class="math inline">\(x_i\)</span>在哪个叶子节点。假设树<span class="math inline">\(f_t\)</span>一共有<span class="math inline">\(J\)</span>个叶节点，记<span class="math inline">\(q(x_i)=j\)</span>代表样本<span class="math inline">\(x_i\)</span>经过决策树对应的叶节点是<span class="math inline">\(j\)</span>，<span class="math inline">\(I_j\)</span>代表叶子节点<span class="math inline">\(j\)</span>的所有样本下标集合，<span class="math inline">\(w_j\)</span>代表叶子节点<span class="math inline">\(j\)</span>的输出，我们可以将损失函数改写为： <span class="math display">\[
 \begin{align}
 \tilde L_t &amp;= \sum_{j=1}^J\left[\sum_{i\in I_j}g_i w_j+\frac{1}{2}(\sum_{i\in I_j}h_i +\lambda)w_j^2\right]+\gamma T\\
 &amp;= \sum_{j=1}^J\left[G_j w_j + \frac{1}{2}(H_j+\lambda)w_j^2 \right] + \gamma T
 \end{align}
-\]</span> 其中<span class="math inline">\(G_j=\sum_{i\in I_j}g_i\)</span>，<span class="math inline">\(H_j=\sum_{i\in I_j}h_i\)</span>。</p>
-<p>和牛顿法的推导类似，为了使损失函数下降的最快，我们可以令</p>
-<p><span class="math inline">\(w_j^*=-\frac{G_j}{H_j + \lambda}\)</span></p>
-<p>加上正则项， <span class="math display">\[
+\]</span> 其中<span class="math inline">\(G_j=\sum_{i\in I_j}g_i\)</span>和<span class="math inline">\(H_j=\sum_{i\in I_j}h_i\)</span>为简记，分别代表损失函数在叶子节点<span class="math inline">\(j\)</span>对应的所有样本上的一阶导之和与二阶导之和。</p>
+<p>到现在，我们还剩两个问题需要解决，一个是确定树<span class="math inline">\(f_t\)</span>的最优结构，也就是怎么去分裂节点，另一个是确定每个叶子节点的最优输出。我们可以先确定下一个问题，找到另一个问题的最优答案，再来确定剩下的问题。</p>
+<p>这里先去寻找树<span class="math inline">\(f_t\)</span>每一个叶子节点对应的最优输出。和牛顿法的推导类似，为了使损失函数下降的最快，我们令<span class="math inline">\(G_j w_j + \frac{1}{2}(H_j+\lambda)w_j^2\)</span>的导数为<span class="math inline">\(0\)</span>，得到： <span class="math display">\[
+w_j^*=-\frac{G_j}{H_j + \lambda}
+\]</span> 加上正则项有： <span class="math display">\[
 \tilde L_t^*=-\frac{1}{2}\sum_{j=1}^J\frac{G_j^2}{H_j+\lambda}+\gamma T
 \]</span></p>
-<h2 id="splitting">Splitting</h2>
-<p>要优化<span class="math inline">\(\tilde L_t^*\)</span>，我们会希望<span class="math inline">\(\frac{G_j^2}{H_j+\lambda}\)</span>越大越好，而这一项受树的结构影响 <span class="math display">\[
+<h2 id="splitting-strategy">Splitting Strategy</h2>
+<p>现在来确定树<span class="math inline">\(f_t\)</span>的最优结构。要优化<span class="math inline">\(\tilde L_t^*\)</span>，我们会希望<span class="math inline">\(\frac{G_j^2}{H_j+\lambda}\)</span>越大越好，而这一项受树的结构影响 <span class="math display">\[
 Gain = \frac{G_L^2}{H_L+\lambda} + \frac{G_R^2}{H_R+\lambda} - \frac{(G_L+G_R)^2}{H_L+H_R+\lambda} - \gamma
 \]</span></p>
 <h3 id="bexact-greedy-algorithm-for-split-finding">BExact Greedy Algorithm for Split Finding</h3>
