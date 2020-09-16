@@ -170,6 +170,59 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2020/09/15/Factorization-Machines-Machine-Learning-Algorithms-Extra-1/" target="_self">
+          <img src="https://i.loli.net/2020/09/15/gFTpNIsBa7W6hil.png" srcset="/img/loading.gif" alt="Factorization Machines: Machine Learning Algorithms Extra 1">
+        </a>
+      </div>
+    
+    <div class="col-12 col-md-8 mx-auto index-info">
+      <a class="index-header" href="/2020/09/15/Factorization-Machines-Machine-Learning-Algorithms-Extra-1/">Factorization Machines: Machine Learning Algorithms Extra 1</a>
+
+      <a href="/2020/09/15/Factorization-Machines-Machine-Learning-Algorithms-Extra-1/" class="index-excerpt">
+        
+        
+          
+        
+        <div>Introduction
+对于一般的线性模型或者广义线性模型，我们的模型是\(\hat y = w_0 + \sum_{i=1}^n w_i x_i\)或者\(g^{-1}(\hat y)=w_0+\sum_{i=1}^n w_i x_i\)的形式。在推荐的场景下，我们希望考虑特征之间的关系，比如特征“男性”往往和“运动”之类的特征有关系，实践中这种特征组合往往能带来很好的模型效果提升。由于推荐</div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>&nbsp;2020-09-15
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/Technical-Notes/">Technical Notes</a>
+            
+              <a href="/categories/Technical-Notes/Machine-Learning/">Machine Learning</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/FM/">FM</a>
+            
+              <a href="/tags/FFM/">FFM</a>
+            
+              <a href="/tags/DeepFM/">DeepFM</a>
+            
+          </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2020/09/15/Bagging-and-Random-Forest-Machine-Learning-Ensemble-Algorithms-3/" target="_self">
           <img src="https://i.loli.net/2020/09/15/AmoYRSCPZdJhkBq.png" srcset="/img/loading.gif" alt="Bagging and Random Forest: Machine Learning Ensemble Algorithms 3">
         </a>
@@ -183,12 +236,13 @@
         
           
         
-        <div>IntroductionBaggingBagging的步骤如下图所示：
-
+        <div>Introduction
+Bagging
+Bagging的步骤如下图所示：
 
 分为几个步骤
 
-随机采样 (Bootstrap)，按照固定的数目对数据集做有放回采样，一般情况下采样集的数目和训练集一样，设为$N$，那么每个样本被采到的机率就是$\frac{1}{N}$，采样$N$次都没采到的机率是$(1-\frac{1}{N})^N$，当采样数目$N$比较大的时候，即$N\rightarrow \in</div>
+随机采样 (Bootstrap)，按照固定的数目对数据集做有放回采样，一般情况下采样集的数目和训练集一样，设为\(N\)，那么每个样本被采到的机率就是\(\frac{1}{N}\)，采样\(N\)次都没采到的机率是\((1-\frac{1}{N})^N\)，当采样数目\(N\)比较大的时候，即</div>
       </a>
 
       <div class="index-btm post-metas">
@@ -236,8 +290,12 @@
         
           
         
-        <div>IntroductionLOFOne-Class SVMIsolation Forest
-孤立森林 (Isolation Forest) 的思路和随机森林有异曲同工之妙（随机森林可以参考我的另一篇博文），孤立森林本身也是一种树模型。孤立森林要解决的是无监督异常检测问题，即给定无标签的训练集，把其中的异常值挑选出来。孤立森林的基本假设是我不断选择特征进行分裂，达到停止条件后，每个叶子节点就对应一个/</div>
+        <div>Introduction
+LOF
+One-Class SVM
+Isolation Forest
+
+孤立森林 (Isolation Forest) 的思路和随机森林有异曲同工之妙（随机森林可以参考我的另一篇博文），孤立森林本身也是一种树模型。孤立森林要解决的是无监督异常检测问题，即给定无标签的训练集，把其中的异常值挑选出来。孤立森林的基本假设是我不断选择特征进行分裂，达到停止条件后，每个叶</div>
       </a>
 
       <div class="index-btm post-metas">
@@ -289,7 +347,9 @@
         
           
         
-        <div>IntroductionOverfitting我们将模型输出与真实值之间的差异称为误差，如对于分类问题，我们可以使用模型分类错误的样本数量占总样本数的比例。模型在训练集（我们收集到的数据）上的误差称作是训练误差 (training error)，而在新样本（这里指的是新的样本而不是测试集，训练集测试集是从我们收集到的数据上人为划分出来的）上的误差称作是泛化误差 (generalization er</div>
+        <div>Introduction
+Overfitting
+我们将模型输出与真实值之间的差异称为误差，如对于分类问题，我们可以使用模型分类错误的样本数量占总样本数的比例。模型在训练集（我们收集到的数据）上的误差称作是训练误差 (training error)，而在新样本（这里指的是新的样本而不是测试集，训练集测试集是从我们收集到的数据上人为划分出来的）上的误差称作是泛化误差 (generalizatio</div>
       </a>
 
       <div class="index-btm post-metas">
@@ -341,9 +401,10 @@
         
           
         
-        <div>Introduction（PS：本文内容是学习高级树模型（GBDT，XGBoost）的基础，强烈建议在看那些内容之前先了解本文的内容！）
+        <div>Introduction
+（PS：本文内容是学习高级树模型（GBDT，XGBoost）的基础，强烈建议在看那些内容之前先了解本文的内容！）
 本文主要是介绍常用的三种决策树模型：ID3、C4.5和CART。决策树（Decision Tree）是一种有监督分类模型（稍加改造可进行回归任务）。
-比如我们要判断一个瓜是不是好瓜，对于人来说，要判断一个瓜是不是好瓜，可能会先去看看色泽，然后看看根蒂，然后再敲一</div>
+比如我们要判断一个瓜是不是好瓜，对于人来说，要判断一个瓜是不是好瓜，可能会先去看看色泽，然后看看根蒂，然</div>
       </a>
 
       <div class="index-btm post-metas">
@@ -395,10 +456,12 @@
         
           
         
-        <div>Overviewstill working on it…
+        <div>Overview
+still working on it...
 本文主要是对PyTorch实际应用中会用到的经验、技巧的总结。
-Adjust Learning Rate学习率调节是模型训练中的常用技巧，其主要思想是随着训练的进行，通过调节学习率来促使模型进行进一步的学习。PyTorch内置了很多调节学习率的方案，可以参考官方教程。学习率调节的伪代码大概如下：
-&gt;&gt;&gt; scheduler</div>
+Adjust Learning Rate
+学习率调节是模型训练中的常用技巧，其主要思想是随着训练的进行，通过调节学习率来促使模型进行进一步的学习。PyTorch内置了很多调节学习率的方案，可以参考官方教程。学习率调节的伪代码大概如下：
+&gt;&gt;&gt; </div>
       </a>
 
       <div class="index-btm post-metas">
@@ -454,19 +517,20 @@ Adjust Learning Rate学习率调节是模型训练中的常用技巧，其主要
         
           
         
-        <div>Introduction[TOC]
+        <div>Introduction
+[TOC]
 本文不会对算法的原理做过多的讲解，主要是记录常见问题的思路。。。
 PS：本文代码皆通过LeetCode提交通过。。。
 推荐两个网站：
 
 🐱‍🏍OI WIKI
+📓C++文档 也有中文版
 
-📓C++文档   也有中文版
-
-
-会不断更新😀…
-Sorting &amp; ArraysSorting BasicsLeetCode上有一道题可供练习：
-🐱‍💻Leetcode 912 Me</div>
+会不断更新😀...
+Sorting &amp; Arrays
+Sorting Basics
+LeetCode上有一道题可供练习：
+🐱‍💻L</div>
       </a>
 
       <div class="index-btm post-metas">
@@ -516,12 +580,14 @@ Sorting &amp; ArraysSorting BasicsLeetCode上有一道题可供练习：
         
           
         
-        <div>IntroductionStill working on it😅…
+        <div>Introduction
+Still working on it😅...
 blog
-Hyperplane超平面可以从代数和几何两方面来理解。超平面的代数定义可以看作是方程：$$a_1x_1+\cdots+a_nx_n=d$$的所有解形成的集合，其中$a_1,\cdots,a_n$为不全为$0$的实数，$d$也是实数。
-从几何上来说，超平面可以看作是除空间$R^n$自身外维度最大的仿射空间。
-
-Maxi</div>
+Hyperplane
+超平面可以从代数和几何两方面来理解。超平面的代数定义可以看作是方程： \[
+a_1x_1+\cdots+a_nx_n=d
+\] 的所有解形成的集合，其中\(a_1,\cdots,a_n\)为不全为\(0\)的实数，\(d\)也是实数。
+从几何上来说，超平面可以看作是除空间\(R</div>
       </a>
 
       <div class="index-btm post-metas">
@@ -569,9 +635,16 @@ Maxi</div>
         
           
         
-        <div>IntroductionStill working on it…
-Linear RegressionThe Model
-Optimization设训练集包含$M$个样本，$N$个特征，为了方便后续推导，我们添加一列全是$1$的向量：$$\mathbf X=\left(\begin{matrix}x_{11} &amp; x_{12} &amp; \cdots &amp; x_{1N} &amp; </div>
+        <div>Introduction
+Still working on it...
+Linear Regression
+The Model
+
+Optimization
+设训练集包含\(M\)个样本，\(N\)个特征，为了方便后续推导，我们添加一列全是\(1\)的向量： \[
+\mathbf X=\left(
+\begin{matrix}
+x_{11} &amp; x_{12} &amp; \</div>
       </a>
 
       <div class="index-btm post-metas">
@@ -619,11 +692,14 @@ Optimization设训练集包含$M$个样本，$N$个特征，为了方便后续�
         
           
         
-        <div>IntroductionBoostingAdaBoost Algorithm给定数据集$X={(x_1,y_1),\cdots,(x_N,y_N)}$，AdaBoost的思想是通过训练一系列弱分类器，并通过线性相加将这些弱分类器组合成强分类器。
+        <div>Introduction
+Boosting
+AdaBoost Algorithm
+给定数据集\(X=\{(x_1,y_1),\cdots,(x_N,y_N)\}\)，AdaBoost的思想是通过训练一系列弱分类器，并通过线性相加将这些弱分类器组合成强分类器。
 
-初始化数据的权重分布$D_1$
-在训练数据上使用权重分布$D_m$进行训练，得到基分类器$G_m(x)$
-计算基分类器$G(x)$在训练数据上的误差$e</div>
+初始化数据的权重分布\(D_1\)
+在训练数据上使用权重分布\(D_m\)进行训练，得到基分类器\(G_m(x)\)
+计算基</div>
       </a>
 
       <div class="index-btm post-metas">
@@ -649,65 +725,6 @@ Optimization设训练集包含$M$个样本，$N$个特征，为了方便后续�
               <a href="/tags/Boosting/">Boosting</a>
             
               <a href="/tags/Adaboost/">Adaboost</a>
-            
-          </div>
-        
-      </div>
-    </div>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2020/08/26/GBDT-and-XGBoost-Machine-Learning-Ensemble-Algorithms-2/" target="_self">
-          <img src="https://i.loli.net/2020/08/29/AVTDIrz23bhECgk.png" srcset="/img/loading.gif" alt="GBDT and XGBoost: Machine Learning Ensemble Algorithms 2">
-        </a>
-      </div>
-    
-    <div class="col-12 col-md-8 mx-auto index-info">
-      <a class="index-header" href="/2020/08/26/GBDT-and-XGBoost-Machine-Learning-Ensemble-Algorithms-2/">GBDT and XGBoost: Machine Learning Ensemble Algorithms 2</a>
-
-      <a href="/2020/08/26/GBDT-and-XGBoost-Machine-Learning-Ensemble-Algorithms-2/" class="index-excerpt">
-        
-        
-          
-        
-        <div>Introduction在学习本文内容之前建议先学习决策树相关内容。
-Still working on it😅…
-XGBoost Documentation
-AdaBoost blog
-GBDT blog
-slide
-陈天奇slide
-blog
-blog
-Preliminaries实际上，GBDT和梯度下降、XGBoost和牛顿法之间是存在密切关系的，这里我们先回顾一下梯度下降算法和牛顿法的基础</div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-08-26
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/Technical-Notes/">Technical Notes</a>
-            
-              <a href="/categories/Technical-Notes/Machine-Learning/">Machine Learning</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/GBDT/">GBDT</a>
-            
-              <a href="/tags/XGBoost/">XGBoost</a>
             
           </div>
         
