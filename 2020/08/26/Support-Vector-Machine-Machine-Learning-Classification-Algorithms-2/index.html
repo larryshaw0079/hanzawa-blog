@@ -212,68 +212,165 @@
               </p>
             
             <article class="markdown-body">
-              <h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>Still working on it😅…</p>
+              <h1 id="introduction">Introduction</h1>
+<p>Still working on it😅...</p>
 <p><a href="http://blog.pluskid.org/?page_id=683" target="_blank" rel="noopener">blog</a></p>
-<h1 id="Hyperplane"><a href="#Hyperplane" class="headerlink" title="Hyperplane"></a>Hyperplane</h1><p>超平面可以从代数和几何两方面来理解。超平面的代数定义可以看作是方程：<br>$$<br>a_1x_1+\cdots+a_nx_n=d<br>$$<br>的所有解形成的集合，其中$a_1,\cdots,a_n$为不全为$0$的实数，$d$也是实数。</p>
-<p>从几何上来说，超平面可以看作是除空间$R^n$自身外维度最大的仿射空间。</p>
-<p><img src="https://i.loli.net/2020/09/07/WiMJQSe7lN8upfw.jpg" srcset="/img/loading.gif" alt=""></p>
-<h1 id="Maximum-Margin-Classifier"><a href="#Maximum-Margin-Classifier" class="headerlink" title="Maximum Margin Classifier"></a>Maximum Margin Classifier</h1><img src="https://i.loli.net/2020/08/26/vjuyCGXMr4msaUK.png" srcset="/img/loading.gif" style="zoom:67%;" />
-
-<p>要谈SVM就得先谈线性分类器，其设置是这样的。对于$D$维空间，我们有一堆数据$X$，进行二分类任务，标签记为$y$，其中$y=-1$和$y=1$分别代表不同的类别。我们的任务就是找到一个超平面，将正负例切分开来（先假设数据是线性可分的），这个超平面的方程可以表示为：<br>$$<br>w^\top x+b=0<br>$$<br>我们令$f(x)=w^\top x+b$，对于$f(x)&lt;0$的样本，我们赋予其类别$-1$，对于$f(x)&gt;0$的样本，我们可以赋予其类别$1$。对于相同的分类结果，我们可以找出无限种超平面。不过，对于那些样本特别靠近超平面的情况，鲁棒性并不好。为什么呢？因为这时只要超平面有轻微的变化，样本的分类结果就会发生变化。直观上来说，我们希望样本到超平面的距离越大越好。</p>
-<p>我们先定义函数间隔的概念，函数间隔$\hat \gamma=y(w^\top x+b)$，乘以$y$的目的主要是保持非负性，表示起来方便。可见函数间隔的大小并不能表示样本距离，因为同一个超平面，法向量$w$可以任意增大，函数间隔也会相应增大。</p>
-<p>下面来推导点$x$到超平面的距离。设$x$在超平面上的投影为$x_0$，到超平面的距离为$\gamma$，$w$为法向量，那么有：<br>$$<br>x=x_0+\gamma\frac{w}{\parallel w\parallel}<br>$$<br>将上式带入到超平面方程可以得到<br>$$<br>\gamma=\frac{w^\top}{\parallel w\parallel}x+\frac{b}{\parallel w\parallel}<br>$$<br>我们称$\gamma$为几何间隔。</p>
-<p><img src="https://i.loli.net/2020/08/26/b6qLJWzHwFAPDne.png" srcset="/img/loading.gif" alt=""></p>
-<p>可以很容易看出函数间隔和几何间隔的关系：<br>$$<br>\gamma = \frac{\hat \gamma}{\parallel w\parallel}<br>$$<br>前面提到我们希望几何间隔越大越好，于是可以直接最大化$\gamma$，得到：<br>$$<br>\begin{align}<br>\max \space &amp;\gamma\<br>s.t. \space &amp; y_i(w^\top x_i+b)=\hat\gamma_i\geq\hat\gamma, \space i=1,\cdots,n<br>\end{align}<br>$$<br>这里$\hat \gamma=\gamma \parallel w\parallel$，根据前面的分析我们知道，对于同一个超平面，函数间隔$\hat\gamma$可以随着$\parallel w\parallel$的变化而变化，所以为了找到最优的$\gamma$，我们可以考虑固定$\parallel w\parallel$或者$\hat\gamma$，这里我们固定$\hat \gamma=1$，所以有：<br>$$<br>\begin{align}<br>\max &amp; \space \frac{1}{\parallel w\parallel},\ s.t. \space&amp; y_i(w^\top x_i+b)\geq 1, \space i=1,\cdots,n<br>\end{align}<br>$$</p>
-<p>下面的约束条件代表前提是所有样本分类正确，而$\max\frac{1}{\parallel w\parallel}$代表最大化间隔。为了方便，我们将其化为等价的最小化形式：<br>$$<br>\begin{align}<br>\min &amp; \space \frac{1}{2}\parallel w\parallel^2,\ s.t. &amp; y_i(w^\top x_i+b)\geq 1, \space i=1,\cdots,n<br>\end{align}<br>$$<br>其中那些$y_i(w^\top x_i+b)=1$的样本就是“支持向量”。这个优化问题是典型的二次凸优化问题，可以调用现成的算法去解决。不过我们可以使用拉格朗日乘子法来更高效的解决。</p>
-<h1 id="Dual-Problem"><a href="#Dual-Problem" class="headerlink" title="Dual Problem"></a>Dual Problem</h1><p>拉格朗日乘子法可以将有$d$个变量和$k$个约束条件的最优化问题转化成有$d+k$个变量的无约束最优化问题求解。</p>
-<h2 id="Lagrange-Multiplier"><a href="#Lagrange-Multiplier" class="headerlink" title="Lagrange Multiplier"></a>Lagrange Multiplier</h2><p>对于以下有约束优化问题：<br>$$<br>\begin{align}<br>\min_x \space &amp; f(x)\<br>\text{s.t.} \space &amp; h_i(x)=0 \space (i=1,\cdots,m),\<br>&amp;g_j(x) \leq 0 \space (j=1,\cdots,n)<br>\end{align}<br>$$</p>
-<p>引入拉格朗日乘子$\boldsymbol\lambda = (\lambda_1,\lambda_2,\cdots,\lambda_m)^\top$和$\boldsymbol\mu=(\mu_1,\mu_2,\cdots,\mu_n)^\top$，相应的拉格朗日函数为：<br>$$<br>L(\boldsymbol x,\boldsymbol\lambda,\boldsymbol\mu)=f(\boldsymbol x)+\sum_{i=1}^m \lambda_i h_i(\boldsymbol x)+\sum_{j=1}^n \mu_jg_j(\boldsymbol x)<br>$$</p>
-<h3 id="Primal-Problem"><a href="#Primal-Problem" class="headerlink" title="Primal Problem"></a>Primal Problem</h3><h3 id="Dual-Problem-1"><a href="#Dual-Problem-1" class="headerlink" title="Dual Problem"></a>Dual Problem</h3><h3 id="KKT-Condition"><a href="#KKT-Condition" class="headerlink" title="KKT Condition"></a>KKT Condition</h3><p>由不等式引入的KKT条件为：<br>$$<br>\begin{cases}<br>g_j(\boldsymbol x)\leq 0;\<br>\mu_j \geq 0;\<br>\mu_j g_j(\boldsymbol x)=0<br>\end{cases}<br>$$</p>
-<h2 id="Dual-Form-of-SVM-Optimization"><a href="#Dual-Form-of-SVM-Optimization" class="headerlink" title="Dual Form of SVM Optimization"></a>Dual Form of SVM Optimization</h2><p>支持向量机优化的对偶问题可以写为：<br>$$<br>L(w,b,\alpha)=\frac{1}{2}\parallel w\parallel^2-\sum_{i=1}^n \alpha_i(y_i(w^\top x_i+b)-1)<br>$$<br>我们先令：<br>$$<br>\begin{align}<br>\frac{\partial L}{\partial w}=0&amp;\Rightarrow w=\sum_{i=1}^n\alpha_i y_i x_i\<br>\frac{\partial L}{\partial b}=0&amp;\Rightarrow \sum_{i=1}^n\alpha_i y_i =0<br>\end{align}<br>$$<br>带回到$L$得到：<br>$$<br>\begin{align}<br>L(w,b,\alpha)&amp;=\frac{1}{2}\sum_{i,j=1}^n\alpha_i\alpha_j y_i y_j x^\top_i x_j-\sum_{i,j=1}^n \alpha_i\alpha_jy_iy_jx^\top_ix_j-b\sum_{i=1}^n\alpha_iy_i+\sum_{i=1}^n\alpha_i\<br>&amp;=\sum_{i=1}^n \alpha_i - \frac{1}{2}\sum_{i,j=1}^n \alpha_i\alpha_j y_i y_j x^\top_i x_j<br>\end{align}<br>$$<br>于是得到关于$\alpha$的对偶优化问题：<br>$$<br>\begin{align}<br>\max_\alpha &amp;\sum_{i=1}^n \alpha_i - \frac{1}{2}\sum_{i,j=1}^n \alpha_i\alpha_j y_i y_j x^\top_i x_j\<br>\text{s.t. }&amp; \alpha_i\geq 0, i=1,\cdots,n\<br>&amp; \sum_{i=1}^n \alpha_i y_i = 0<br>\end{align}<br>$$</p>
-<p>前面有提到我们根据$f(x)=w^\top x + b$的输出来判定样本类别，而刚才得到$w=\sum_{i=1}^n\alpha_i y_i x_i$，于是：<br>$$<br>\begin{align}<br>f(x) &amp;= (\sum_{i=1}^n \alpha_iy_ix_i)^\top x+b\<br>&amp;= \sum_{i=1}^n \alpha_i y_i \langle x_i, x\rangle + b<br>\end{align}<br>$$<br>最后的$\sum_{i=1}^n \alpha_i y_i \langle x_i, x\rangle + b$值得特别注意，这意味着我们对于测试样本$x$的预测，只需要计算它与训练集的内积即可，同时由于所有非支持向量对应的$\alpha$都是$0$，我们只需要求一小部分内积。同时这个内积计算也是后面核方法应用的前提。</p>
-<h1 id="Kernel"><a href="#Kernel" class="headerlink" title="Kernel"></a>Kernel</h1><p>到目前为止，我们的讨论都是在数据是线性可分的前提下进行讨论的，那么对于线性不可分的情况呢？答案是使用核方法。</p>
-<p><img src="https://i.loli.net/2020/09/08/kSTVgelDjWqtu8v.png" srcset="/img/loading.gif" alt=""></p>
-<p>核方法的思想是，对于原始不可分的数据，我们假设原始数据通过一个映射$\phi(\cdot)$就变得线性可分了。核方法相当于对数据找到了一种新的表示，如上图没法用一个超平面直接分割，但通过$\phi(\cdot)$映射之后就变得可分了。原始的分类函数为：<br>$$<br>f(x)= \sum_{i=1}^n \alpha_i y_i \langle x_i, x\rangle + b<br>$$<br>加上映射之后变为：<br>$$<br>f(x)= \sum_{i=1}^n \alpha_i y_i \langle \phi(x_i), \phi(x)\rangle + b<br>$$<br>优化问题也变为：<br>$$<br>\begin{align}<br>\max_\alpha &amp;\sum_{i=1}^n \alpha_i - \frac{1}{2}\sum_{i,j=1}^n \alpha_i\alpha_j y_i y_j \langle\phi(x_i), \phi(x_j)\rangle\<br>\text{s.t. }&amp; \alpha_i\geq 0, i=1,\cdots,n\<br>&amp; \sum_{i=1}^n \alpha_i y_i = 0<br>\end{align}<br>$$<br>我们把计算两个向量在映射后的空间中的内积的函数叫做核函数<br>$$<br>f(x)= \sum_{i=1}^n \alpha_i y_i k(x_i, x) + b<br>$$<br>优化问题改为：<br>$$<br>\begin{align}<br>\max_\alpha &amp;\sum_{i=1}^n \alpha_i - \frac{1}{2}\sum_{i,j=1}^n \alpha_i\alpha_j y_i y_j k(\phi(x_i), \phi(x_j))\<br>\text{s.t. }&amp; \alpha_i\geq 0, i=1,\cdots,n\<br>&amp; \sum_{i=1}^n \alpha_i y_i = 0<br>\end{align}<br>$$<br>实际上，通过核函数，我们隐式地定义了一个映射$\phi(\cdot)$</p>
+<h1 id="hyperplane">Hyperplane</h1>
+<p>超平面可以从代数和几何两方面来理解。超平面的代数定义可以看作是方程： <span class="math display">\[
+a_1x_1+\cdots+a_nx_n=d
+\]</span> 的所有解形成的集合，其中<span class="math inline">\(a_1,\cdots,a_n\)</span>为不全为<span class="math inline">\(0\)</span>的实数，<span class="math inline">\(d\)</span>也是实数。</p>
+<p>从几何上来说，超平面可以看作是除空间<span class="math inline">\(R^n\)</span>自身外维度最大的仿射空间。</p>
+<p><img src="https://i.loli.net/2020/09/07/WiMJQSe7lN8upfw.jpg" srcset="/img/loading.gif" /></p>
+<h1 id="maximum-margin-classifier">Maximum Margin Classifier</h1>
+<p><img src="https://i.loli.net/2020/08/26/vjuyCGXMr4msaUK.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p>要谈SVM就得先谈线性分类器，其设置是这样的。对于<span class="math inline">\(D\)</span>维空间，我们有一堆数据<span class="math inline">\(X\)</span>，进行二分类任务，标签记为<span class="math inline">\(y\)</span>，其中<span class="math inline">\(y=-1\)</span>和<span class="math inline">\(y=1\)</span>分别代表不同的类别。我们的任务就是找到一个超平面，将正负例切分开来（先假设数据是线性可分的），这个超平面的方程可以表示为： <span class="math display">\[
+w^\top x+b=0
+\]</span> 我们令<span class="math inline">\(f(x)=w^\top x+b\)</span>，对于<span class="math inline">\(f(x)&lt;0\)</span>的样本，我们赋予其类别<span class="math inline">\(-1\)</span>，对于<span class="math inline">\(f(x)&gt;0\)</span>的样本，我们可以赋予其类别<span class="math inline">\(1\)</span>。对于相同的分类结果，我们可以找出无限种超平面。不过，对于那些样本特别靠近超平面的情况，鲁棒性并不好。为什么呢？因为这时只要超平面有轻微的变化，样本的分类结果就会发生变化。直观上来说，我们希望样本到超平面的距离越大越好。</p>
+<p>我们先定义函数间隔的概念，函数间隔<span class="math inline">\(\hat \gamma=y(w^\top x+b)\)</span>，乘以<span class="math inline">\(y\)</span>的目的主要是保持非负性，表示起来方便。可见函数间隔的大小并不能表示样本距离，因为同一个超平面，法向量<span class="math inline">\(w\)</span>可以任意增大，函数间隔也会相应增大。</p>
+<p>下面来推导点<span class="math inline">\(x\)</span>到超平面的距离。设<span class="math inline">\(x\)</span>在超平面上的投影为<span class="math inline">\(x_0\)</span>，到超平面的距离为<span class="math inline">\(\gamma\)</span>，<span class="math inline">\(w\)</span>为法向量，那么有： <span class="math display">\[
+x=x_0+\gamma\frac{w}{\parallel w\parallel}
+\]</span> 将上式带入到超平面方程可以得到 <span class="math display">\[
+\gamma=\frac{w^\top}{\parallel w\parallel}x+\frac{b}{\parallel w\parallel}
+\]</span> 我们称<span class="math inline">\(\gamma\)</span>为几何间隔。</p>
+<p><img src="https://i.loli.net/2020/08/26/b6qLJWzHwFAPDne.png" srcset="/img/loading.gif" /></p>
+<p>可以很容易看出函数间隔和几何间隔的关系： <span class="math display">\[
+\gamma = \frac{\hat \gamma}{\parallel w\parallel}
+\]</span> 前面提到我们希望几何间隔越大越好，于是可以直接最大化<span class="math inline">\(\gamma\)</span>，得到： <span class="math display">\[
+\begin{align}
+\max \space &amp;\gamma\\
+s.t. \space &amp; y_i(w^\top x_i+b)=\hat\gamma_i\geq\hat\gamma, \space i=1,\cdots,n
+\end{align}
+\]</span> 这里<span class="math inline">\(\hat \gamma=\gamma \parallel w\parallel\)</span>，根据前面的分析我们知道，对于同一个超平面，函数间隔<span class="math inline">\(\hat\gamma\)</span>可以随着<span class="math inline">\(\parallel w\parallel\)</span>的变化而变化，所以为了找到最优的<span class="math inline">\(\gamma\)</span>，我们可以考虑固定<span class="math inline">\(\parallel w\parallel\)</span>或者<span class="math inline">\(\hat\gamma\)</span>，这里我们固定<span class="math inline">\(\hat \gamma=1\)</span>，所以有： <span class="math display">\[
+\begin{align}
+\max &amp; \space \frac{1}{\parallel w\parallel},\\ s.t. \space&amp; y_i(w^\top x_i+b)\geq 1, \space i=1,\cdots,n
+\end{align}
+\]</span></p>
+<p>下面的约束条件代表前提是所有样本分类正确，而<span class="math inline">\(\max\frac{1}{\parallel w\parallel}\)</span>代表最大化间隔。为了方便，我们将其化为等价的最小化形式： <span class="math display">\[
+\begin{align}
+\min &amp; \space \frac{1}{2}\parallel w\parallel^2,\\ s.t. &amp; y_i(w^\top x_i+b)\geq 1, \space i=1,\cdots,n
+\end{align}
+\]</span> 其中那些<span class="math inline">\(y_i(w^\top x_i+b)=1\)</span>的样本就是“支持向量”。这个优化问题是典型的二次凸优化问题，可以调用现成的算法去解决。不过我们可以使用拉格朗日乘子法来更高效的解决。</p>
+<h1 id="dual-problem">Dual Problem</h1>
+<p>拉格朗日乘子法可以将有<span class="math inline">\(d\)</span>个变量和<span class="math inline">\(k\)</span>个约束条件的最优化问题转化成有<span class="math inline">\(d+k\)</span>个变量的无约束最优化问题求解。</p>
+<h2 id="lagrange-multiplier">Lagrange Multiplier</h2>
+<p>对于以下有约束优化问题： <span class="math display">\[
+\begin{align}
+\min_x \space &amp; f(x)\\
+\text{s.t.} \space &amp; h_i(x)=0 \space (i=1,\cdots,m),\\
+&amp;g_j(x) \leq 0 \space (j=1,\cdots,n)
+\end{align}
+\]</span></p>
+<p>引入拉格朗日乘子<span class="math inline">\(\boldsymbol\lambda = (\lambda_1,\lambda_2,\cdots,\lambda_m)^\top\)</span>和<span class="math inline">\(\boldsymbol\mu=(\mu_1,\mu_2,\cdots,\mu_n)^\top\)</span>，相应的拉格朗日函数为： <span class="math display">\[
+L(\boldsymbol x,\boldsymbol\lambda,\boldsymbol\mu)=f(\boldsymbol x)+\sum_{i=1}^m \lambda_i h_i(\boldsymbol x)+\sum_{j=1}^n \mu_jg_j(\boldsymbol x)
+\]</span></p>
+<h3 id="primal-problem">Primal Problem</h3>
+<h3 id="dual-problem-1">Dual Problem</h3>
+<h3 id="kkt-condition">KKT Condition</h3>
+<p>由不等式引入的KKT条件为： <span class="math display">\[
+\begin{cases}
+g_j(\boldsymbol x)\leq 0;\\
+\mu_j \geq 0;\\
+\mu_j g_j(\boldsymbol x)=0
+\end{cases}
+\]</span></p>
+<h2 id="dual-form-of-svm-optimization">Dual Form of SVM Optimization</h2>
+<p>支持向量机优化的对偶问题可以写为： <span class="math display">\[
+L(w,b,\alpha)=\frac{1}{2}\parallel w\parallel^2-\sum_{i=1}^n \alpha_i(y_i(w^\top x_i+b)-1)
+\]</span> 我们先令： <span class="math display">\[
+\begin{align}
+\frac{\partial L}{\partial w}=0&amp;\Rightarrow w=\sum_{i=1}^n\alpha_i y_i x_i\\
+\frac{\partial L}{\partial b}=0&amp;\Rightarrow \sum_{i=1}^n\alpha_i y_i =0
+\end{align}
+\]</span> 带回到<span class="math inline">\(L\)</span>得到： <span class="math display">\[
+\begin{align}
+L(w,b,\alpha)&amp;=\frac{1}{2}\sum_{i,j=1}^n\alpha_i\alpha_j y_i y_j x^\top_i x_j-\sum_{i,j=1}^n \alpha_i\alpha_jy_iy_jx^\top_ix_j-b\sum_{i=1}^n\alpha_iy_i+\sum_{i=1}^n\alpha_i\\
+&amp;=\sum_{i=1}^n \alpha_i - \frac{1}{2}\sum_{i,j=1}^n \alpha_i\alpha_j y_i y_j x^\top_i x_j
+\end{align}
+\]</span> 于是得到关于<span class="math inline">\(\alpha\)</span>的对偶优化问题： <span class="math display">\[
+\begin{align}
+\max_\alpha &amp;\sum_{i=1}^n \alpha_i - \frac{1}{2}\sum_{i,j=1}^n \alpha_i\alpha_j y_i y_j x^\top_i x_j\\
+\text{s.t. }&amp; \alpha_i\geq 0, i=1,\cdots,n\\
+&amp; \sum_{i=1}^n \alpha_i y_i = 0
+\end{align}
+\]</span></p>
+<p>前面有提到我们根据<span class="math inline">\(f(x)=w^\top x + b\)</span>的输出来判定样本类别，而刚才得到<span class="math inline">\(w=\sum_{i=1}^n\alpha_i y_i x_i\)</span>，于是： <span class="math display">\[
+\begin{align}
+f(x) &amp;= (\sum_{i=1}^n \alpha_iy_ix_i)^\top x+b\\
+&amp;= \sum_{i=1}^n \alpha_i y_i \langle x_i, x\rangle + b
+\end{align}
+\]</span> 最后的<span class="math inline">\(\sum_{i=1}^n \alpha_i y_i \langle x_i, x\rangle + b\)</span>值得特别注意，这意味着我们对于测试样本<span class="math inline">\(x\)</span>的预测，只需要计算它与训练集的内积即可，同时由于所有非支持向量对应的<span class="math inline">\(\alpha\)</span>都是<span class="math inline">\(0\)</span>，我们只需要求一小部分内积。同时这个内积计算也是后面核方法应用的前提。</p>
+<h1 id="kernel">Kernel</h1>
+<p>到目前为止，我们的讨论都是在数据是线性可分的前提下进行讨论的，那么对于线性不可分的情况呢？答案是使用核方法。</p>
+<p><img src="https://i.loli.net/2020/09/08/kSTVgelDjWqtu8v.png" srcset="/img/loading.gif" /></p>
+<p>核方法的思想是，对于原始不可分的数据，我们假设原始数据通过一个映射<span class="math inline">\(\phi(\cdot)\)</span>就变得线性可分了。核方法相当于对数据找到了一种新的表示，如上图没法用一个超平面直接分割，但通过<span class="math inline">\(\phi(\cdot)\)</span>映射之后就变得可分了。原始的分类函数为： <span class="math display">\[
+f(x)= \sum_{i=1}^n \alpha_i y_i \langle x_i, x\rangle + b
+\]</span> 加上映射之后变为： <span class="math display">\[
+f(x)= \sum_{i=1}^n \alpha_i y_i \langle \phi(x_i), \phi(x)\rangle + b
+\]</span> 优化问题也变为： <span class="math display">\[
+\begin{align}
+\max_\alpha &amp;\sum_{i=1}^n \alpha_i - \frac{1}{2}\sum_{i,j=1}^n \alpha_i\alpha_j y_i y_j \langle\phi(x_i), \phi(x_j)\rangle\\
+\text{s.t. }&amp; \alpha_i\geq 0, i=1,\cdots,n\\
+&amp; \sum_{i=1}^n \alpha_i y_i = 0
+\end{align}
+\]</span> 我们把计算两个向量在映射后的空间中的内积的函数叫做核函数 <span class="math display">\[
+f(x)= \sum_{i=1}^n \alpha_i y_i k(x_i, x) + b
+\]</span> 优化问题改为： <span class="math display">\[
+\begin{align}
+\max_\alpha &amp;\sum_{i=1}^n \alpha_i - \frac{1}{2}\sum_{i,j=1}^n \alpha_i\alpha_j y_i y_j k(\phi(x_i), \phi(x_j))\\
+\text{s.t. }&amp; \alpha_i\geq 0, i=1,\cdots,n\\
+&amp; \sum_{i=1}^n \alpha_i y_i = 0
+\end{align}
+\]</span> 实际上，通过核函数，我们隐式地定义了一个映射<span class="math inline">\(\phi(\cdot)\)</span></p>
 <p>常用核函数</p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>名称</th>
 <th>表达式</th>
 <th>参数</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr class="odd">
 <td>线性核</td>
 <td></td>
 <td></td>
 </tr>
-<tr>
+<tr class="even">
 <td>多项式核</td>
 <td></td>
 <td></td>
 </tr>
-<tr>
+<tr class="odd">
 <td>RBF核</td>
 <td></td>
 <td></td>
 </tr>
-<tr>
+<tr class="even">
 <td>拉普拉斯核</td>
 <td></td>
 <td></td>
 </tr>
-<tr>
+<tr class="odd">
 <td>Sigmoid核</td>
 <td></td>
 <td></td>
 </tr>
-</tbody></table>
-<h1 id="Soft-Margin"><a href="#Soft-Margin" class="headerlink" title="Soft Margin"></a>Soft Margin</h1><p>数据线性不可分的情况，除了数据本身结构非线性的原因之外（核方法），还有可能是因为噪声或者离群点。为了处理这种情况，我们可以允许一部分点在一定程度上偏离超平面，具体来说就是原来的约束条件$y_i(w^\top x_i+b)\geq 1, \space i=1,\cdots,n$变成了：<br>$$<br>y_i(w^\top x_i+b)\geq 1-\xi_i, \space i=1,\cdots,n<br>$$<br>其中$\xi_i\geq 0$称作是松弛变量，代表样本$i$允许的偏离程度。当然松弛变量不可能无限大，所以我们需要将$\xi_i$加入到优化目标函数中使其尽量小，于是有：<br>$$<br>\begin{align}<br>\min &amp; \space \frac{1}{2}\parallel w\parallel^2+C\sum_{i=1}^n \xi_i,\ s.t. &amp; y_i(w^\top x_i+b)\geq 1-\xi_i, \space i=1,\cdots,n<br>\end{align}<br>$$<br>其中$C$为控制最优化$\parallel w\parallel$和松弛变量这两项的权重。这里的优化函数还是对偶问题之前的形式，我们马上会讨论对偶问题。</p>
-<h1 id="Numerical-Optimization"><a href="#Numerical-Optimization" class="headerlink" title="Numerical Optimization"></a>Numerical Optimization</h1><p>这里讨论SVM高效求解的Sequential Minimal Optimization (SMO)算法。</p>
+</tbody>
+</table>
+<h1 id="soft-margin">Soft Margin</h1>
+<p>数据线性不可分的情况，除了数据本身结构非线性的原因之外（核方法），还有可能是因为噪声或者离群点。为了处理这种情况，我们可以允许一部分点在一定程度上偏离超平面，具体来说就是原来的约束条件<span class="math inline">\(y_i(w^\top x_i+b)\geq 1, \space i=1,\cdots,n\)</span>变成了： <span class="math display">\[
+y_i(w^\top x_i+b)\geq 1-\xi_i, \space i=1,\cdots,n
+\]</span> 其中<span class="math inline">\(\xi_i\geq 0\)</span>称作是松弛变量，代表样本<span class="math inline">\(i\)</span>允许的偏离程度。当然松弛变量不可能无限大，所以我们需要将<span class="math inline">\(\xi_i\)</span>加入到优化目标函数中使其尽量小，于是有： <span class="math display">\[
+\begin{align}
+\min &amp; \space \frac{1}{2}\parallel w\parallel^2+C\sum_{i=1}^n \xi_i,\\ s.t. &amp; y_i(w^\top x_i+b)\geq 1-\xi_i, \space i=1,\cdots,n
+\end{align}
+\]</span> 其中<span class="math inline">\(C\)</span>为控制最优化<span class="math inline">\(\parallel w\parallel\)</span>和松弛变量这两项的权重。这里的优化函数还是对偶问题之前的形式，我们马上会讨论对偶问题。</p>
+<h1 id="numerical-optimization">Numerical Optimization</h1>
+<p>这里讨论SVM高效求解的Sequential Minimal Optimization (SMO)算法。</p>
 <p>坐标下降法是一种非梯度优化算法，</p>
-<p><img src="https://i.loli.net/2020/09/08/I6AonzFRHGVBU3t.png" srcset="/img/loading.gif" alt=""></p>
-<p><img src="https://i.loli.net/2020/09/08/Hmr79nMlK4C8GeJ.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://i.loli.net/2020/09/08/I6AonzFRHGVBU3t.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/09/08/Hmr79nMlK4C8GeJ.png" srcset="/img/loading.gif" /></p>
 
             </article>
             <hr>

@@ -160,7 +160,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    572 字
+                    575 字
                   </span>
                 
 
@@ -212,14 +212,24 @@
               </p>
             
             <article class="markdown-body">
-              <h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><h1 id="LOF"><a href="#LOF" class="headerlink" title="LOF"></a>LOF</h1><h1 id="One-Class-SVM"><a href="#One-Class-SVM" class="headerlink" title="One-Class SVM"></a>One-Class SVM</h1><h1 id="Isolation-Forest"><a href="#Isolation-Forest" class="headerlink" title="Isolation Forest"></a>Isolation Forest</h1><p><img src="https://i.loli.net/2020/09/15/hSrG3W1JzbByEkH.png" srcset="/img/loading.gif" alt=""></p>
+              <h1 id="introduction">Introduction</h1>
+<h1 id="lof">LOF</h1>
+<h1 id="one-class-svm">One-Class SVM</h1>
+<h1 id="isolation-forest">Isolation Forest</h1>
+<p><img src="https://i.loli.net/2020/09/15/hSrG3W1JzbByEkH.png" srcset="/img/loading.gif" /></p>
 <p>孤立森林 (Isolation Forest) 的思路和随机森林有异曲同工之妙（随机森林可以参考我的<a href="http://qfxiao.me/2020/09/15/Bagging-and-Random-Forest-Machine-Learning-Ensemble-Algorithms-3/">另一篇博文</a>），孤立森林本身也是一种树模型。孤立森林要解决的是无监督异常检测问题，即给定无标签的训练集，把其中的异常值挑选出来。孤立森林的基本假设是我不断选择特征进行分裂，达到停止条件后，每个叶子节点就对应一个/多个样本，正常样本由于比较集中，往往处于比较深的叶子节点，而异常样本由于偏离正常范围，所以往往处于比较浅的叶子节点。在此基础之上，孤立森林和随机森林类似，采用了集成的方法，即采样多个采样集，分别在采样集上训练，最后集成结果。孤立森林的主要特征如下：</p>
-<ol>
+<ol type="1">
 <li>首先，和随机森林一样，孤立森林也需要对数据集进行采样，不过采样集的数量往往比较小；</li>
 <li>对于每一棵树的建立，孤立森林采用的是随机选择特征进行划分，划分点也是随机选取（所以孤立森林的每棵树都是二叉树），这样做的原因可能是我们的数据没有标签，孤立森林对数据分布没有做特定假设，所以采用随机的方式</li>
 </ol>
-<p>对于异常点的判断，孤立森林根据的是该样本在树上的深度。对于样本$x$在树$T$上的异常分数，使用下面的公式进行计算：<br>$$<br>h(x) = e + C(N_T)<br>$$<br>其中$e$为该样本在树上的深度，$C(N_T)$为用$N_T$个样本构建二叉树的一个平均深度的估计值，可以由下式计算：<br>$$<br>C(n)=2H(n-1)-\frac{2(n-1)}{n}<br>$$<br>其中$H(n-1)$可以由$\ln (n-1)+\gamma$估算，$\gamma$为欧拉常数。</p>
-<p>最后的异常分数采用集成的方式：<br>$$<br>\mathcal S(x) = 2^{-\frac{E(h(x))}{C(\psi)}}<br>$$<br>$E(h(x))$代表样本$x$在不同树上分数的均值，$C(\psi)$代表主要用来做归一化，$\psi$代表用来建树的采样集的样本数。</p>
+<p>对于异常点的判断，孤立森林根据的是该样本在树上的深度。对于样本<span class="math inline">\(x\)</span>在树<span class="math inline">\(T\)</span>上的异常分数，使用下面的公式进行计算： <span class="math display">\[
+h(x) = e + C(N_T)
+\]</span> 其中<span class="math inline">\(e\)</span>为该样本在树上的深度，<span class="math inline">\(C(N_T)\)</span>为用<span class="math inline">\(N_T\)</span>个样本构建二叉树的一个平均深度的估计值，可以由下式计算： <span class="math display">\[
+C(n)=2H(n-1)-\frac{2(n-1)}{n}
+\]</span> 其中<span class="math inline">\(H(n-1)\)</span>可以由<span class="math inline">\(\ln (n-1)+\gamma\)</span>估算，<span class="math inline">\(\gamma\)</span>为欧拉常数。</p>
+<p>最后的异常分数采用集成的方式： <span class="math display">\[
+\mathcal S(x) = 2^{-\frac{E(h(x))}{C(\psi)}}
+\]</span> <span class="math inline">\(E(h(x))\)</span>代表样本<span class="math inline">\(x\)</span>在不同树上分数的均值，<span class="math inline">\(C(\psi)\)</span>代表主要用来做归一化，<span class="math inline">\(\psi\)</span>代表用来建树的采样集的样本数。</p>
 
             </article>
             <hr>

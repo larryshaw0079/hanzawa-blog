@@ -160,7 +160,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    1.4k 字
+                    1.7k 字
                   </span>
                 
 
@@ -170,7 +170,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    18
+                    24
                      分钟
                   </span>
                 
@@ -212,33 +212,76 @@
               </p>
             
             <article class="markdown-body">
-              <h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>对于一般的线性模型或者广义线性模型，我们的模型是$\hat y = w_0 + \sum_{i=1}^n w_i x_i$或者$g^{-1}(\hat y)=w_0+\sum_{i=1}^n w_i x_i$的形式。在推荐的场景下，我们希望考虑特征之间的关系，比如特征“男性”往往和“运动”之类的特征有关系，实践中这种特征组合往往能带来很好的模型效果提升。由于推荐场景下特征往往是Categorical的，在One-hot编码之后有很高的稀疏性，这会为我们训练考虑特征组合的模型带来很大的问题（后面会说明）。</p>
-<h1 id="Factorization-Machine"><a href="#Factorization-Machine" class="headerlink" title="Factorization Machine"></a>Factorization Machine</h1><p>Factorization Machine （简称FM），是一种</p>
+              <h1 id="introduction">Introduction</h1>
+<p>对于一般的线性模型或者广义线性模型，我们的模型是<span class="math inline">\(\hat y = w_0 + \sum_{i=1}^n w_i x_i\)</span>或者<span class="math inline">\(g^{-1}(\hat y)=w_0+\sum_{i=1}^n w_i x_i\)</span>的形式。在推荐的场景下，我们希望考虑特征之间的关系，比如特征“男性”往往和“运动”之类的特征有关系，实践中这种特征组合往往能带来很好的模型效果提升。由于推荐场景下特征往往是Categorical的，在One-hot编码之后有很高的稀疏性，这会为我们训练考虑特征组合的模型带来很大的问题（后面会说明）。</p>
+<h1 id="factorization-machine">Factorization Machine</h1>
+<p>Factorization Machine （简称FM），是一种</p>
 <p><a href="https://zhuanlan.zhihu.com/p/89639306" target="_blank" rel="noopener">blog</a></p>
-<img src="https://i.loli.net/2020/09/15/sADWeTi62dhqu5f.jpg" srcset="/img/loading.gif" style="zoom:67%;" />
-
-<h2 id="Feature-Crossing"><a href="#Feature-Crossing" class="headerlink" title="Feature Crossing"></a>Feature Crossing</h2><p>考虑特征组合的初始模型<br>$$<br>\hat y(x) = w_0 + \color{blue}{\boxed{\sum_{i=1}^n w_i x_i}} + \sum_{i=1}^{n-1} \sum_{j=i+1}^n w_{ij} x_i x_j<br>$$<br>不过这会有一些问题，比如$x_i$是用户B，$x_j$是电影TI，而我们想知道用户B和电影TI之间的关系，而训练集中不存在$x_i=1$且$x_j=1$的样本让我们学习，这样会导致$w_{ij}$永远等于$0$，但实际上用户B和电影TI之间的关系可能是存在的，我们只是没有训练样本来推断它而已。</p>
-<p>FM的做法是对于这种$w_{ij}$，我们想办法去估计它。首先对于每个特征$x_i$，FM假设其存在一个$k$维的隐向量$\mathbf v_i$与之对应（也可以理解为特征的一个embedding）。如下图展示了用户特征与电影特征之间的特征组合（$k=2$）：</p>
-<img src="https://i.loli.net/2020/09/16/8Ihz6OBKkZDpVsw.png" srcset="/img/loading.gif" style="zoom:67%;" />
-
-<p>任意两个特征之间的关系可以通过隐向量之间的内积来体现，如果两个特征之间相关度越高，那么他们之间的内积也会越大。不过FM是如何解决刚才所说的，用户B和电影TI之间的关系没有样本来体现，我们要如何学习用户B和电影TI这两个特征之间的关系的问题呢？大家可以想想，虽然没有用户B和电影TI都为$1$的样本，但这两个特征对应的隐向量是不为$0$的，我们依然可以通过两个向量的内积来反应用户B和电影TI的相关性（这里其实和自监督对比学习很相似😄）。</p>
-<p>于是我们的模型变为：<br>$$<br>\hat y(x) = w_0 + \sum_{i=1}^n w_i x_i + \sum_{i=1}^{n-1} \sum_{j=i+1}^n \langle \mathbf v_i, \mathbf v_j\rangle x_i x_j<br>$$<br>其中$\langle\cdot,\cdot\rangle$代表两个向量的内积。每个参数$w_{ij}=\langle \mathbf v_i,\mathbf v_j\rangle$，$\mathbf v_i$代表第$i$特征的隐向量，隐向量长度$k\ll n$。</p>
-<p>以前$w_{ij}$和$w_{ik}$之间无关，但现在$w_{ij}=\langle \mathbf v_i,\mathbf v_j\rangle$，$w_{ik}=\langle \mathbf v_i, \mathbf v_k\rangle$，两者之间有共同的$\mathbf v_i$，也就是说所有包含特征$x_i$和$x_j$的非零特征组合都可用来学习隐向量$\mathbf v_i$</p>
-<h2 id="An-Efficient-Optimization-Criterion"><a href="#An-Efficient-Optimization-Criterion" class="headerlink" title="An Efficient Optimization Criterion"></a>An Efficient Optimization Criterion</h2><p>其实公式的第二项$\sum_{i=1}^n\sum_{i=1}^n \langle \mathbf v_i, \mathbf v_j\rangle x_i x_j$，我们可以进行一些等价变换使得其计算更加高效，毕竟上线的场景中模型推断的速度也是十分重要的。<br>$$<br>\begin{align}<br>\sum_{i=1}^{n-1} \sum_{j=i+1}^n \langle \mathbf v_i, \mathbf v_j\rangle x_i x_j &amp;= \frac{1}{2}\cdot \sum_{f=1}^k\left{\left(\sum_{i=1}^n v_{if} x_i\right)^2-\sum_{i=1}^n v_{if}^2 x_i^2\right}<br>\end{align}<br>$$<br>综合起来我们可以得到<br>$$<br>\begin{align}<br>\hat y(x) &amp;= w_0 + \sum_{i=1}^n w_i x_i + \sum_{i=1}^{n-1} \sum_{j=i+1}^n \langle \mathbf v_i, \mathbf v_j\rangle x_i x_j\<br>&amp;= w_0 + \sum_{i=1}^n w_i x_i +\frac{1}{2}\cdot \sum_{f=1}^k\left{\left(\sum_{i=1}^n v_{if} x_i\right)^2-\sum_{i=1}^n v_{if}^2 x_i^2\right}<br>\end{align}<br>$$<br>之前，计算$\hat y$的复杂度是$O(kn^2)$，改写后复杂度降低为$O(kn)$。</p>
-<h2 id="Optimization"><a href="#Optimization" class="headerlink" title="Optimization"></a>Optimization</h2><p>FM可以用梯度下降来解决</p>
-<p>首先对$w_0$求导：<br>$$<br>\frac{\partial y}{\partial w_0} = 1<br>$$<br>对$w_i$求导也很简单：<br>$$<br>\frac{\partial y}{\partial w_i} = x_i<br>$$<br>接下来是对$\mathbf v_{if}$求导：<br>$$<br>\frac{\partial y}{\partial \mathbf v_{if}} = x_i \sum_{j=1}^n v_{jf}x_j-x_i^2 v_{if}<br>$$</p>
-<h2 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h2><p>优点：</p>
+<p><img src="https://i.loli.net/2020/09/15/sADWeTi62dhqu5f.jpg" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<h2 id="feature-crossing">Feature Crossing</h2>
+<p>考虑特征组合的初始模型 <span class="math display">\[
+\hat y(x) = w_0 + \color{blue}{\boxed{\sum_{i=1}^n w_i x_i}} + \sum_{i=1}^{n-1} \sum_{j=i+1}^n w_{ij} x_i x_j
+\]</span> 不过这会有一些问题，比如<span class="math inline">\(x_i\)</span>是用户B，<span class="math inline">\(x_j\)</span>是电影TI，而我们想知道用户B和电影TI之间的关系，而训练集中不存在<span class="math inline">\(x_i=1\)</span>且<span class="math inline">\(x_j=1\)</span>的样本让我们学习，这样会导致<span class="math inline">\(w_{ij}\)</span>永远等于<span class="math inline">\(0\)</span>，但实际上用户B和电影TI之间的关系可能是存在的，我们只是没有训练样本来推断它而已。</p>
+<p>FM的做法是对于这种<span class="math inline">\(w_{ij}\)</span>，我们想办法去估计它。首先对于每个特征<span class="math inline">\(x_i\)</span>，FM假设其存在一个<span class="math inline">\(k\)</span>维的隐向量<span class="math inline">\(\mathbf v_i\)</span>与之对应（也可以理解为特征的一个embedding）。如下图展示了用户特征与电影特征之间的特征组合（<span class="math inline">\(k=2\)</span>）：</p>
+<p><img src="https://i.loli.net/2020/09/16/8Ihz6OBKkZDpVsw.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p>任意两个特征之间的关系可以通过隐向量之间的内积来体现，如果两个特征之间相关度越高，那么他们之间的内积也会越大。不过FM是如何解决刚才所说的，用户B和电影TI之间的关系没有样本来体现，我们要如何学习用户B和电影TI这两个特征之间的关系的问题呢？大家可以想想，虽然没有用户B和电影TI都为<span class="math inline">\(1\)</span>的样本，但这两个特征对应的隐向量是不为<span class="math inline">\(0\)</span>的，我们依然可以通过两个向量的内积来反应用户B和电影TI的相关性（这里其实和自监督对比学习很相似😄）。</p>
+<p>于是我们的模型变为： <span class="math display">\[
+\hat y(x) = w_0 + \sum_{i=1}^n w_i x_i + \sum_{i=1}^{n-1} \sum_{j=i+1}^n \langle \mathbf v_i, \mathbf v_j\rangle x_i x_j
+\]</span> 其中<span class="math inline">\(\langle\cdot,\cdot\rangle\)</span>代表两个向量的内积。每个参数<span class="math inline">\(w_{ij}=\langle \mathbf v_i,\mathbf v_j\rangle\)</span>，<span class="math inline">\(\mathbf v_i\)</span>代表第<span class="math inline">\(i\)</span>特征的隐向量，隐向量长度<span class="math inline">\(k\ll n\)</span>。</p>
+<p>以前<span class="math inline">\(w_{ij}\)</span>和<span class="math inline">\(w_{ik}\)</span>之间无关，但现在<span class="math inline">\(w_{ij}=\langle \mathbf v_i,\mathbf v_j\rangle\)</span>，<span class="math inline">\(w_{ik}=\langle \mathbf v_i, \mathbf v_k\rangle\)</span>，两者之间有共同的<span class="math inline">\(\mathbf v_i\)</span>，也就是说所有包含特征<span class="math inline">\(x_i\)</span>和<span class="math inline">\(x_j\)</span>的非零特征组合都可用来学习隐向量<span class="math inline">\(\mathbf v_i\)</span></p>
+<h2 id="an-efficient-optimization-criterion">An Efficient Optimization Criterion</h2>
+<p>其实公式的第二项<span class="math inline">\(\sum_{i=1}^n\sum_{i=1}^n \langle \mathbf v_i, \mathbf v_j\rangle x_i x_j\)</span>，我们可以进行一些等价变换使得其计算更加高效，毕竟上线的场景中模型推断的速度也是十分重要的。 <span class="math display">\[
+\begin{align}
+\sum_{i=1}^{n-1} \sum_{j=i+1}^n \langle \mathbf v_i, \mathbf v_j\rangle x_i x_j 
+&amp;= \frac{1}{2}\cdot \left\{\sum_{i=1}^n\sum_{j=1}^n\langle\mathbf v_i,\mathbf v_j\rangle x_i x_j-\sum_{i=1}^n\langle\mathbf v_i,\mathbf v_j\rangle x_i x_i\right\} \\
+&amp;= \frac{1}{2}\cdot \left\{\sum_{i=1}^n\sum_{j=1}^n\sum_{f=1}^k\mathbf v_{if}\mathbf v_{jf} x_i x_j-\sum_{i=1}^n\sum_{f=1}^k\mathbf v_{if}\mathbf v_{jf}x_i x_i\right\}\\
+&amp;= \frac{1}{2}\cdot\sum_{f=1}^k\left\{\sum_{i=1}^n\sum_{j=1}^n\mathbf v_{if}\mathbf v_{jf} x_i x_j-\sum_{i=1}^n\mathbf v_{if}\mathbf v_{jf}x_i x_i\right\}\\
+&amp;= \frac{1}{2}\cdot\sum_{f=1}^k\left\{\left(\sum_{i=1}^n \mathbf v_{if}x_i\right)\left(\sum_{j=1}^n\mathbf v_{jf}x_j\right)-\sum_{i=1}^n \mathbf v_{if}^2 x_i^2\right\}\\
+&amp;= \frac{1}{2}\cdot \sum_{f=1}^k\left\{\left(\sum_{i=1}^n v_{if} x_i\right)^2-\sum_{i=1}^n v_{if}^2 x_i^2\right\}
+\end{align}
+\]</span> 综合起来我们可以得到： <span class="math display">\[
+\begin{align}
+\hat y(x) &amp;= w_0 + \sum_{i=1}^n w_i x_i + \sum_{i=1}^{n-1} \sum_{j=i+1}^n \langle \mathbf v_i, \mathbf v_j\rangle x_i x_j\\
+&amp;= w_0 + \sum_{i=1}^n w_i x_i +\frac{1}{2}\cdot \sum_{f=1}^k\left\{\left(\sum_{i=1}^n v_{if} x_i\right)^2-\sum_{i=1}^n v_{if}^2 x_i^2\right\}
+\end{align}
+\]</span> 之前，计算<span class="math inline">\(\hat y\)</span>的复杂度是<span class="math inline">\(O(kn^2)\)</span>，改写后复杂度降低为<span class="math inline">\(O(kn)\)</span>。</p>
+<h2 id="optimization">Optimization</h2>
+<p>FM可以用梯度下降来解决</p>
+<p>首先对<span class="math inline">\(w_0\)</span>求导： <span class="math display">\[
+\frac{\partial y}{\partial w_0} = 1
+\]</span> 对<span class="math inline">\(w_i\)</span>求导也很简单： <span class="math display">\[
+\frac{\partial y}{\partial w_i} = x_i
+\]</span> 接下来是对<span class="math inline">\(\mathbf v_{if}\)</span>求导： <span class="math display">\[
+\frac{\partial y}{\partial \mathbf v_{if}} = x_i \sum_{j=1}^n \mathbf v_{jf}x_j-x_i^2 \mathbf v_{if}
+\]</span> 训练复杂度，由于<span class="math inline">\(\sum_{j=1}^n\mathbf v_{jf}x_j\)</span>与<span class="math inline">\(i\)</span>无关，所以可以进行预处理算出来，复杂度为<span class="math inline">\(O(kN)\)</span>。</p>
+<h2 id="summary">Summary</h2>
+<p>优点：</p>
 <ul>
-<li>考虑了</li>
+<li>考虑了二阶组合特征</li>
+<li>效率高，推断时的时间复杂度为线性，<span class="math inline">\(O(kN)\)</span></li>
 </ul>
 <p>缺点：</p>
 <ul>
-<li>不同类型的特征交叉没有区分性</li>
+<li>每个特征仅对应一个隐向量，不同类型的特征交叉没有区分性</li>
 </ul>
-<h1 id="Field-aware-Factorization-Machine"><a href="#Field-aware-Factorization-Machine" class="headerlink" title="Field-aware Factorization Machine"></a>Field-aware Factorization Machine</h1><p>Field-aware Factorization Machine（简称FFM）</p>
-<h2 id="Field-aware-Feature-Crossing"><a href="#Field-aware-Feature-Crossing" class="headerlink" title="Field-aware Feature Crossing"></a>Field-aware Feature Crossing</h2><p>FFM<br>$$<br>\hat y(x) = w_0 + \sum_{i=1}^n w_i x_i + \sum_{i=1}^{n-1} \sum_{j=i+1}^n \langle \mathbf v_{i,f_j}, \mathbf v_{j, f_j}\rangle x_i x_j<br>$$<br>FFM模型公式和FM的不同之处仅在于二阶交叉时的隐向量。在FFM中，每个特征有$F$个隐向量，$F$为filed的数量，也可以理解为特征分组的数量。</p>
-<h2 id="Optimization-1"><a href="#Optimization-1" class="headerlink" title="Optimization"></a>Optimization</h2><p>模型的表达式为：<br>$$<br>\hat y(x) = w_0 + \sum_{i=1}^n w_i x_i + \sum_{i=1}^{n-1} \sum_{j=i+1}^n \sum_{q=1}^k \mathbf v_{i,f_j}^q \mathbf v_{j, f_j}^q x_i x_j<br>$$</p>
-<h2 id="Summary-1"><a href="#Summary-1" class="headerlink" title="Summary"></a>Summary</h2><p>优点：</p>
+<h1 id="field-aware-factorization-machine">Field-aware Factorization Machine</h1>
+<p>Field-aware Factorization Machine（简称FFM）</p>
+<h2 id="field-aware-feature-crossing">Field-aware Feature Crossing</h2>
+<p>FFM <span class="math display">\[
+\hat y(x) = w_0 + \sum_{i=1}^n w_i x_i + \sum_{i=1}^{n-1} \sum_{j=i+1}^n \langle \mathbf v_{i,f_j}, \mathbf v_{j, f_j}\rangle x_i x_j
+\]</span> FFM模型公式和FM的不同之处仅在于二阶交叉时的隐向量。在FFM中，每个特征有<span class="math inline">\(F\)</span>个隐向量，<span class="math inline">\(F\)</span>为filed的数量，也可以理解为特征分组的数量。</p>
+<h2 id="optimization-1">Optimization</h2>
+<p>模型的表达式为： <span class="math display">\[
+\hat y(x) = w_0 + \sum_{i=1}^n w_i x_i + \sum_{i=1}^{n-1} \sum_{j=i+1}^n \sum_{q=1}^k \mathbf v_{i,f_j}^q \mathbf v_{j, f_j}^q x_i x_j
+\]</span> 首先对<span class="math inline">\(w_0\)</span>求导： <span class="math display">\[
+\frac{\partial y}{\partial w_0} = 1
+\]</span> 对<span class="math inline">\(w_i\)</span>求导也很简单： <span class="math display">\[
+\frac{\partial y}{\partial w_i} = x_i
+\]</span> 对<span class="math inline">\(\mathbf v_{i,f_j}^q\)</span>求导 <span class="math display">\[
+\frac{\partial y}{\partial \mathbf v_{i,f_j}^q}=\mathbf v_{i,f_j}^q x_i x_j
+\]</span> 由于</p>
+<h2 id="summary-1">Summary</h2>
+<p>优点：</p>
 <ul>
 <li>相对于FM</li>
 </ul>
@@ -246,15 +289,29 @@
 <ul>
 <li>时间开销大</li>
 </ul>
-<h1 id="DeepFM"><a href="#DeepFM" class="headerlink" title="DeepFM"></a>DeepFM</h1><h2 id="FM-Component"><a href="#FM-Component" class="headerlink" title="FM Component"></a>FM Component</h2><p>FM部分主要是包含一阶组合特征和二阶组合特征</p>
-<p><img src="https://i.loli.net/2020/09/16/TLC56XFD9hIgPGc.png" srcset="/img/loading.gif" alt=""></p>
-<p>去掉了偏置项<br>$$<br>\hat y(x) = \sum_{i=1}^n w_i x_i + \sum_{i=1}^{n-1} \sum_{j=i+1}^n \langle \mathbf v_i, \mathbf v_j\rangle x_i x_j<br>$$<br>第一项代表了一阶组合特征（就是特征本身），第二项代表了二阶组合特征</p>
-<h2 id="Deep-Component"><a href="#Deep-Component" class="headerlink" title="Deep Component"></a>Deep Component</h2><p>Deep部分主要是为了学习更高阶的组合特征。</p>
-<p><img src="https://i.loli.net/2020/09/16/3JGQI5gYBadKktL.png" srcset="/img/loading.gif" alt=""></p>
+<h1 id="deepfm">DeepFM</h1>
+<h2 id="fm-component">FM Component</h2>
+<p>FM部分主要是包含一阶组合特征和二阶组合特征</p>
+<p><img src="https://i.loli.net/2020/09/16/TLC56XFD9hIgPGc.png" srcset="/img/loading.gif" /></p>
+<p>去掉了偏置项 <span class="math display">\[
+y_{FM}(x) = \sum_{i=1}^n w_i x_i + \sum_{i=1}^{n-1} \sum_{j=i+1}^n \langle \mathbf v_i, \mathbf v_j\rangle x_i x_j
+\]</span> 第一项代表了一阶组合特征（就是特征本身），第二项代表了二阶组合特征</p>
+<h2 id="deep-component">Deep Component</h2>
+<p>Deep部分主要是为了学习更高阶的组合特征。</p>
+<p><img src="https://i.loli.net/2020/09/16/3JGQI5gYBadKktL.png" srcset="/img/loading.gif" /></p>
 <p>其中Dense Embeddings是FM部分和Deep部分所共享的。</p>
-<p><img src="https://i.loli.net/2020/09/16/OrUJPWsiSyoYdlk.png" srcset="/img/loading.gif" alt=""></p>
-<p>假设Dense Embeddings的输出为：<br>$$<br>a^{(0)} = [e_1,e_2,\cdots,e_m]<br>$$<br>其中$e_i$代表第$i$个field的嵌入，$m$为filed的数量。<br>$$<br>a^{(l+1)}=\sigma(W^{(l)}a^{(l)}+b^{(l)})<br>$$</p>
-<h2 id="Concatenation"><a href="#Concatenation" class="headerlink" title="Concatenation"></a>Concatenation</h2><p><img src="https://i.loli.net/2020/09/16/CvTkGHlaxuEOtcW.png" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://i.loli.net/2020/09/16/OrUJPWsiSyoYdlk.png" srcset="/img/loading.gif" /></p>
+<p>假设Dense Embeddings的输出为： <span class="math display">\[
+a^{(0)} = [e_1,e_2,\cdots,e_m]
+\]</span> 其中<span class="math inline">\(e_i\)</span>代表第<span class="math inline">\(i\)</span>个field的嵌入，<span class="math inline">\(m\)</span>为filed的数量。 <span class="math display">\[
+a^{(l+1)}=\sigma(W^{(l)}a^{(l)}+b^{(l)})
+\]</span> Deep部分的输出为： <span class="math display">\[
+y_{DNN}=\sigma(W^{(H+1)}a^{(H)}+b^{(H+1)})
+\]</span> <span class="math inline">\(H\)</span>为隐藏层数。</p>
+<h2 id="concatenation">Concatenation</h2>
+<p>最终的结果为 <span class="math display">\[
+\hat y=\text{Sigmoid}(y_{FM} + y_{DNN})
+\]</span></p>
 
             </article>
             <hr>
