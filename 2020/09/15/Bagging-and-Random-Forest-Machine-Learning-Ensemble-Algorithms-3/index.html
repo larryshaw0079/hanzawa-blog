@@ -160,7 +160,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    302 字
+                    300 字
                   </span>
                 
 
@@ -212,23 +212,22 @@
               </p>
             
             <article class="markdown-body">
-              <h1 id="introduction">Introduction</h1>
-<h1 id="bagging">Bagging</h1>
-<p>Bagging的步骤如下图所示：</p>
-<p><img src="https://i.loli.net/2020/09/15/x85li9MqPaeLShZ.jpg" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+              <h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><h1 id="Bagging"><a href="#Bagging" class="headerlink" title="Bagging"></a>Bagging</h1><p>Bagging的步骤如下图所示：</p>
+<img src="https://i.loli.net/2020/09/15/x85li9MqPaeLShZ.jpg" srcset="/img/loading.gif" style="zoom:67%;" />
+
 <p>分为几个步骤</p>
-<ol type="1">
-<li><strong>随机采样 (Bootstrap)</strong>，按照固定的数目对数据集做<strong>有放回</strong>采样，一般情况下采样集的数目和训练集一样，设为<span class="math inline">\(N\)</span>，那么每个样本被采到的机率就是<span class="math inline">\(\frac{1}{N}\)</span>，采样<span class="math inline">\(N\)</span>次都没采到的机率是<span class="math inline">\((1-\frac{1}{N})^N\)</span>，当采样数目<span class="math inline">\(N\)</span>比较大的时候，即<span class="math inline">\(N\rightarrow \infty\)</span>有<span class="math inline">\((1-\frac{1}{N})^N\rightarrow \frac{1}{e}\approx 0.3679\)</span>。也就是说在每轮采样中，采样数目足够大的情况下，大概有<span class="math inline">\(36.79\%\)</span>的样本没有被采样中；</li>
+<ol>
+<li><strong>随机采样 (Bootstrap)</strong>，按照固定的数目对数据集做<strong>有放回</strong>采样，一般情况下采样集的数目和训练集一样，设为$N$，那么每个样本被采到的机率就是$\frac{1}{N}$，采样$N$次都没采到的机率是$(1-\frac{1}{N})^N$，当采样数目$N$比较大的时候，即$N\rightarrow \infty$有$(1-\frac{1}{N})^N\rightarrow \frac{1}{e}\approx 0.3679$。也就是说在每轮采样中，采样数目足够大的情况下，大概有$36.79%$的样本没有被采样中；</li>
 <li>使用基模型在采样集上进行训练</li>
 <li>进行模型组合的时候，对于分类问题，可以使用简单的投票法，对于回归问题，可以使用简单的平均法</li>
 </ol>
-<h1 id="random-forest">Random Forest</h1>
-<p>随机森林 (Random Forest) 是Bagging模型的一种，</p>
-<p><img src="https://i.loli.net/2020/09/15/jnJ8IKc52e1rtax.png" srcset="/img/loading.gif" style="zoom: 50%;" /></p>
+<h1 id="Random-Forest"><a href="#Random-Forest" class="headerlink" title="Random Forest"></a>Random Forest</h1><p>随机森林 (Random Forest) 是Bagging模型的一种，</p>
+<img src="https://i.loli.net/2020/09/15/jnJ8IKc52e1rtax.png" srcset="/img/loading.gif" style="zoom: 50%;" />
+
 <p>进行了诸多改进：</p>
-<ol type="1">
+<ol>
 <li>使用CART决策树作为弱学习器，</li>
-<li>使用列采样策略，对于划分特征的选择进行下采样，即有<span class="math inline">\(M\)</span>个特征，只会随机选取这<span class="math inline">\(M\)</span>个特征的一个子集进行特征选取，进一步减小方差</li>
+<li>使用列采样策略，对于划分特征的选择进行下采样，即有$M$个特征，只会随机选取这$M$个特征的一个子集进行特征选取，进一步减小方差</li>
 </ol>
 
             </article>
