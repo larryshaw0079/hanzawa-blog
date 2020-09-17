@@ -170,7 +170,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    38
+                    39
                      分钟
                   </span>
                 
@@ -212,156 +212,219 @@
               </p>
             
             <article class="markdown-body">
-              <h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p><a href="https://ieeexplore.ieee.org/abstract/document/8737430/" target="_blank" rel="noopener">论文📃</a></p>
+              <h1 id="introduction">Introduction</h1>
+<p><a href="https://ieeexplore.ieee.org/abstract/document/8737430/" target="_blank" rel="noopener">论文📃</a></p>
 <p><a href="https://github.com/yantijin/Buzz" target="_blank" rel="noopener">代码📥</a></p>
 <p>本文介绍了一种利用对抗训练来进行时间序列异常检测的方法<em>Buzz</em>。作者认为在现实中复杂的KPI数据大量存在，这种数据通常带有非高斯分布的噪声，同时数据分布复杂，导致一般的生成式模型无法对数据进行很好的建模，所以作者提出了基于对抗训练的模型。在文中，作者的创新点主要有三个：</p>
-<ol>
+<ol type="1">
 <li>为了处理复杂数据，将数据空间分为多个子空间，在每个子空间上进行距离的度量；</li>
 <li>采用<em>Wasserstein</em>距离度量模型建模的分布和真实分布之间的距离；</li>
 <li>建立了基于对抗训练的<em>Buzz</em>的损失函数和VAE之间的关系。</li>
 </ol>
-<img src="https://i.loli.net/2020/06/25/FwHi7y56njz8R4m.png" srcset="/img/loading.gif" style="zoom:67%;" />
-
-<h1 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h1><h2 id="Anomaly-Detection"><a href="#Anomaly-Detection" class="headerlink" title="Anomaly Detection"></a>Anomaly Detection</h2><p>对于任意时间$t$，给定历史观察值$x_{t-T+1},\cdots,x_t$，确定异常是否发生(记为$y_t=1$)。通常来收异常检测算法给出的是发生异常的可能性，如$p(y_t=1|x_{t-T+1},\cdots,x_t)$。</p>
-<h2 id="VAE"><a href="#VAE" class="headerlink" title="VAE"></a>VAE</h2><table>
+<p><img src="https://i.loli.net/2020/06/25/FwHi7y56njz8R4m.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<h1 id="background">Background</h1>
+<h2 id="anomaly-detection">Anomaly Detection</h2>
+<p>对于任意时间<span class="math inline">\(t\)</span>，给定历史观察值<span class="math inline">\(x_{t-T+1},\cdots,x_t\)</span>，确定异常是否发生(记为<span class="math inline">\(y_t=1\)</span>)。通常来收异常检测算法给出的是发生异常的可能性，如<span class="math inline">\(p(y_t=1|x_{t-T+1},\cdots,x_t)\)</span>。</p>
+<h2 id="vae">VAE</h2>
+<table>
 <thead>
-<tr>
+<tr class="header">
 <th><strong>Model</strong></th>
 <th><strong>Latent</strong></th>
 <th><strong>Data</strong></th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr class="odd">
 <td><strong><em>Auto-encoder (AE)</em></strong></td>
 <td><code>None</code></td>
 <td><code>L1Loss</code></td>
 </tr>
-<tr>
+<tr class="even">
 <td><strong><em>Variational Auto-encoder (VAE)</em></strong></td>
 <td><code>KL Divergence</code></td>
 <td><code>Log Likelihood</code></td>
 </tr>
-<tr>
+<tr class="odd">
 <td><strong><em>Adversarial Auto-encoder (AAE)</em></strong></td>
 <td><code>Discriminator</code></td>
 <td><code>L1Loss</code></td>
 </tr>
-<tr>
+<tr class="even">
 <td><strong><em>Wasserstein Auto-encoder (WAE)</em></strong></td>
 <td><code>MaxMeanDiscrepancy</code> or <code>Discriminator</code></td>
 <td><code>L1Loss</code></td>
 </tr>
-<tr>
+<tr class="odd">
 <td><strong><em>AlphaGAN</em></strong></td>
 <td><code>Discriminator</code></td>
 <td><code>Discriminator</code>+<code>L1Loss</code></td>
 </tr>
-</tbody></table>
-<h2 id="GAN-and-WGAN-GP"><a href="#GAN-and-WGAN-GP" class="headerlink" title="GAN and WGAN-GP"></a>GAN and WGAN-GP</h2><p>原始GAN等价于优化：<br>$$<br>\mathbb{E}<em>{x\sim P_r}\log{\frac{P_r(x)}{\frac{1}{2}\left[P_r(x)+P_g(x)\right]}}+\mathbb{E}</em>{x\sim P_g}\log{\frac{P_g(x)}{\frac{1}{2}\left[P_r(x)+P_g(x)\right]}}<br>$$<br>根据KL散度和JS散度的定义：<br>$$<br>\text{KL}(P_1\parallel P_2)=\mathbb{E}_{x\sim P_1}\log{\frac{P_1}{P_2}}<br>$$</p>
-<p>$$<br>\text{JS}(P_1\parallel P_2)=\frac{1}{2}\text{KL}(P_1\parallel \frac{P_1+P_2}{2})+\frac{1}{2}\text{KL}(P_2\parallel \frac{P_1+P_2}{2})<br>$$</p>
-<p>可重写为：<br>$$<br>2\text{JS}(P_r\parallel P_g)-2\log 2<br>$$<br>当$P_r$与$P_g$的支撑集（support）是高维空间中的低维流形（manifold）时，$P_r$与$P_g$重叠部分测度（measure）为0的概率为1。</p>
+</tbody>
+</table>
+<h2 id="gan-and-wgan-gp">GAN and WGAN-GP</h2>
+<p>原始GAN等价于优化： <span class="math display">\[
+\mathbb{E}_{x\sim P_r}\log{\frac{P_r(x)}{\frac{1}{2}\left[P_r(x)+P_g(x)\right]}}+\mathbb{E}_{x\sim P_g}\log{\frac{P_g(x)}{\frac{1}{2}\left[P_r(x)+P_g(x)\right]}}
+\]</span> 根据KL散度和JS散度的定义： <span class="math display">\[
+\text{KL}(P_1\parallel P_2)=\mathbb{E}_{x\sim P_1}\log{\frac{P_1}{P_2}}
+\]</span></p>
+<p><span class="math display">\[
+\text{JS}(P_1\parallel P_2)=\frac{1}{2}\text{KL}(P_1\parallel \frac{P_1+P_2}{2})+\frac{1}{2}\text{KL}(P_2\parallel \frac{P_1+P_2}{2})
+\]</span></p>
+<p>可重写为： <span class="math display">\[
+2\text{JS}(P_r\parallel P_g)-2\log 2
+\]</span> 当<span class="math inline">\(P_r\)</span>与<span class="math inline">\(P_g\)</span>的支撑集（support）是高维空间中的低维流形（manifold）时，<span class="math inline">\(P_r\)</span>与<span class="math inline">\(P_g\)</span>重叠部分测度（measure）为0的概率为1。</p>
 <ul>
 <li>支撑集（support）其实就是函数的非零部分子集，比如<code>ReLU</code>函数的支撑集就是[公式]，一个概率分布的支撑集就是所有概率密度非零部分的集合。</li>
 <li>流形（manifold）是高维空间中曲线、曲面概念的拓广，我们可以在低维上直观理解这个概念，比如我们说三维空间中的一个曲面是一个二维流形，因为它的本质维度（intrinsic dimension）只有2，一个点在这个二维流形上移动只有两个方向的自由度。同理，三维空间或者二维空间中的一条曲线都是一个一维流形。</li>
 <li>测度（measure）是高维空间中长度、面积、体积概念的拓广，可以理解为“超体积”。</li>
 </ul>
-<p><em>Wasserstein</em>距离定义如下：<br>$$<br>W(P_r,P_g)=\inf\limits_{\gamma\sim\prod(P_r,P_g)}\mathbb{E}<em>{(x,y)\sim \gamma}\left[\parallel x-y\parallel\right]<br>$$<br>下确界$\inf$没法直接求解，不过根据相关定理其等价于：<br>$$<br>W(P_r,P_g)=\frac{1}{K}\sup\limits</em>{\parallel f\parallel_L\leq K}\mathbb{E}<em>{x\sim P_r}[f(x)]-\mathbb{E}</em>{x\sim P_g}[f(x)]<br>$$<br><em>Lipschitz</em>连续是指存在一个常数$K\geq 0$使得定义域内任意两个元素$x_1$和$x_2$都满足：<br>$$<br>|f(x_1)-f(x_2)|\leq K|x_1-x_2|<br>$$<br>WAN的损失函数：<br>$$<br>\mathcal{L}=\mathop{\mathbb{E}}\limits_{\mathbf{x}\sim\mathbb{P}<em>g}\left[D({\mathbf{x}})\right]-\mathop{\mathbb{E}}\limits</em>{\mathbf{x}\sim\mathbb{P}<em>r}\left[D(\mathbf{x})\right]<br>$$<br>WGAN-GP的损失函数为：<br>$$<br>\mathcal{L}=\mathop{\mathbb{E}}\limits</em>{\tilde{\mathbf{x}}\sim\mathbb{P}<em>g}\left[D(\tilde{\mathbf{x}})\right]-\mathop{\mathbb{E}}\limits</em>{\mathbf{x}\sim\mathbb{P}<em>r}\left[D(\mathbf{x})\right] + \lambda\mathop{\mathbb{E}}\limits</em>{\hat{\mathbf{x}}\sim\mathbb{P}<em>{\hat{\mathbf{x}}}}\left[(\parallel\nabla</em>{\hat{\mathbf{x}}}D(\hat{\mathbf{x}})\parallel_2-1)^2\right]<br>$$</p>
-<h1 id="Proposed-Method"><a href="#Proposed-Method" class="headerlink" title="Proposed Method"></a>Proposed Method</h1><p>下图为<em>Buzz</em>的总体流程：</p>
-<img src="https://i.loli.net/2020/06/25/aGPdzq8TVS6fetJ.png" srcset="/img/loading.gif" style="zoom:67%;" />
-
+<p><em>Wasserstein</em>距离定义如下： <span class="math display">\[
+W(P_r,P_g)=\inf\limits_{\gamma\sim\prod(P_r,P_g)}\mathbb{E}_{(x,y)\sim \gamma}\left[\parallel x-y\parallel\right]
+\]</span> 下确界<span class="math inline">\(\inf\)</span>没法直接求解，不过根据相关定理其等价于： <span class="math display">\[
+W(P_r,P_g)=\frac{1}{K}\sup\limits_{\parallel f\parallel_L\leq K}\mathbb{E}_{x\sim P_r}[f(x)]-\mathbb{E}_{x\sim P_g}[f(x)]
+\]</span> <em>Lipschitz</em>连续是指存在一个常数<span class="math inline">\(K\geq 0\)</span>使得定义域内任意两个元素<span class="math inline">\(x_1\)</span>和<span class="math inline">\(x_2\)</span>都满足： <span class="math display">\[
+|f(x_1)-f(x_2)|\leq K|x_1-x_2|
+\]</span> WAN的损失函数： <span class="math display">\[
+\mathcal{L}=\mathop{\mathbb{E}}\limits_{\mathbf{x}\sim\mathbb{P}_g}\left[D({\mathbf{x}})\right]-\mathop{\mathbb{E}}\limits_{\mathbf{x}\sim\mathbb{P}_r}\left[D(\mathbf{x})\right]
+\]</span> WGAN-GP的损失函数为： <span class="math display">\[
+\mathcal{L}=\mathop{\mathbb{E}}\limits_{\tilde{\mathbf{x}}\sim\mathbb{P}_g}\left[D(\tilde{\mathbf{x}})\right]-\mathop{\mathbb{E}}\limits_{\mathbf{x}\sim\mathbb{P}_r}\left[D(\mathbf{x})\right] + \lambda\mathop{\mathbb{E}}\limits_{\hat{\mathbf{x}}\sim\mathbb{P}_{\hat{\mathbf{x}}}}\left[(\parallel\nabla_{\hat{\mathbf{x}}}D(\hat{\mathbf{x}})\parallel_2-1)^2\right]
+\]</span></p>
+<h1 id="proposed-method">Proposed Method</h1>
+<p>下图为<em>Buzz</em>的总体流程：</p>
+<p><img src="https://i.loli.net/2020/06/25/aGPdzq8TVS6fetJ.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <p>数据会首先进行一些预处理，之后进行训练。在检测阶段会根据异常分数来判定异常。</p>
-<h2 id="Motivation"><a href="#Motivation" class="headerlink" title="Motivation"></a>Motivation</h2><p>在文中，最关键的两个创新点分别是<em>Wasserstein</em>距离和对数据分布进行分区的方法。</p>
+<h2 id="motivation">Motivation</h2>
+<p>在文中，最关键的两个创新点分别是<em>Wasserstein</em>距离和对数据分布进行分区的方法。</p>
 <ul>
-<li><p>在使用距离度量方面， 因为<em>Wasserstein</em>在WGAN中取得了很好的效果，是一种鲁棒的距离度量，所以作者在文中采用了<em>Wasserstein</em>距离来衡量生成的分布和真实的分布之间的距离，并由此引入了对抗训练；</p>
-</li>
-<li><p>在分区方法方面，作者认为原始数据过于复杂，所以将数据空间$\mathcal{X}$进行划分，然后在每个子空间上使用<em>Wasserstein</em>度量距离，而总体的距离由每个分区的距离的期望求得。</p>
-</li>
+<li><p>在使用距离度量方面， 因为<em>Wasserstein</em>在WGAN中取得了很好的效果，是一种鲁棒的距离度量，所以作者在文中采用了<em>Wasserstein</em>距离来衡量生成的分布和真实的分布之间的距离，并由此引入了对抗训练；</p></li>
+<li><p>在分区方法方面，作者认为原始数据过于复杂，所以将数据空间<span class="math inline">\(\mathcal{X}\)</span>进行划分，然后在每个子空间上使用<em>Wasserstein</em>度量距离，而总体的距离由每个分区的距离的期望求得。</p></li>
 </ul>
 <p>作者还发现，当划分地越来越细时，总体距离接近于特定形式的VAE的重构误差项。</p>
-<img src="https://i.loli.net/2020/06/25/knzq4yPaBrXWgeI.png" srcset="/img/loading.gif" style="zoom:67%;" />
-
-<h2 id="Network-Structure"><a href="#Network-Structure" class="headerlink" title="Network Structure"></a>Network Structure</h2><p>下图为模型的网络结构：</p>
-<img src="https://i.loli.net/2020/06/25/Qrgpuh4Iw7YTlny.png" srcset="/img/loading.gif" style="zoom:67%;" />
-
-
-
-<h2 id="Training"><a href="#Training" class="headerlink" title="Training"></a>Training</h2><h3 id="Objective-Function"><a href="#Objective-Function" class="headerlink" title="Objective Function"></a>Objective Function</h3><p>先定义一些符号：</p>
+<p><img src="https://i.loli.net/2020/06/25/knzq4yPaBrXWgeI.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<h2 id="network-structure">Network Structure</h2>
+<p>下图为模型的网络结构：</p>
+<p><img src="https://i.loli.net/2020/06/25/Qrgpuh4Iw7YTlny.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<h2 id="training">Training</h2>
+<h3 id="objective-function">Objective Function</h3>
+<p>先定义一些符号：</p>
 <ul>
-<li>$b$和$s$分别为Batch的大小和邻居的大小，数据集按$s$进行切分，然后随机打乱，每个Batch包含$b$个$s$，之后$s/=2,b*=2$；</li>
-<li>$\mathcal{W}={w_1,w_2,\cdots,w_b}$为一个Batch，且满足每个$w_i$是$s$的倍数；</li>
-<li>$w\in\mathcal{W}$的邻域集(neighborhood set)为一个时间上的partition，记为${w,w+1,\cdots,w+s-1}$</li>
-<li>$\mathbf{x}^{(w)},\mathbf{x}^{(w+1)},\cdots,\mathbf{x}^{(w+s-1)}$为在空间$\mathcal{X}$上的一个partition，记为$S_w$，其中$\mathbf{x}^{(w)}$表示以$w$为结尾的时间窗口。</li>
+<li><span class="math inline">\(b\)</span>和<span class="math inline">\(s\)</span>分别为Batch的大小和邻居的大小，数据集按<span class="math inline">\(s\)</span>进行切分，然后随机打乱，每个Batch包含<span class="math inline">\(b\)</span>个<span class="math inline">\(s\)</span>，之后<span class="math inline">\(s/=2,b*=2\)</span>；</li>
+<li><span class="math inline">\(\mathcal{W}=\{w_1,w_2,\cdots,w_b\}\)</span>为一个Batch，且满足每个<span class="math inline">\(w_i\)</span>是<span class="math inline">\(s\)</span>的倍数；</li>
+<li><span class="math inline">\(w\in\mathcal{W}\)</span>的邻域集(neighborhood set)为一个时间上的partition，记为<span class="math inline">\(\{w,w+1,\cdots,w+s-1\}\)</span></li>
+<li><span class="math inline">\(\mathbf{x}^{(w)},\mathbf{x}^{(w+1)},\cdots,\mathbf{x}^{(w+s-1)}\)</span>为在空间<span class="math inline">\(\mathcal{X}\)</span>上的一个partition，记为<span class="math inline">\(S_w\)</span>，其中<span class="math inline">\(\mathbf{x}^{(w)}\)</span>表示以<span class="math inline">\(w\)</span>为结尾的时间窗口。</li>
 </ul>
 <p><em>Buzz</em>的损失函数和WGAN-GP类似，但做了一些改进，由下面四部分组成，下面分别解释。</p>
-<p>第一个是每一个partition的$\mathbf{z}$后验的KL散度：<br>$$<br>\mathcal{K} = \frac{1}{bs}\sum\limits_{w\in\mathcal{W}}\sum\limits_{i=1}^{s-1}\text{KL}\left[q_\phi(\mathbf{z}|\mathbf{x})\parallel\mathcal{N}(\mathbf{0},\mathbf{1})\right]<br>$$</p>
-<p>第二个在训练时是一个常数：<br>$$<br>Z(\lambda) = \frac{\Gamma(W)}{\Gamma(\frac{W}{2})}2\pi^{\frac{W}{2}}\lambda^{-W}<br>$$</p>
-<p>其中$\Gamma$是<em>Gamma</em>函数。</p>
-<p>第三个是<em>Wasserstein</em>距离：<br>$$<br>\mathcal{T}(F,w)=\frac{1}{bs}\sum\limits_{i=1}^{s-1}\mathbb{E}_{q_\phi(\mathbf{z}|\mathbf{x}^{w+i})}\left[F(\mathbf{x}^{(w+i)})-F(G(\mathbf{z}))\right]<br>$$</p>
+<p>第一个是每一个partition的<span class="math inline">\(\mathbf{z}\)</span>后验的KL散度： <span class="math display">\[
+\mathcal{K} = \frac{1}{bs}\sum\limits_{w\in\mathcal{W}}\sum\limits_{i=1}^{s-1}\text{KL}\left[q_\phi(\mathbf{z}|\mathbf{x})\parallel\mathcal{N}(\mathbf{0},\mathbf{1})\right]
+\]</span></p>
+<p>第二个在训练时是一个常数： <span class="math display">\[
+Z(\lambda) = \frac{\Gamma(W)}{\Gamma(\frac{W}{2})}2\pi^{\frac{W}{2}}\lambda^{-W}
+\]</span></p>
+<p>其中<span class="math inline">\(\Gamma\)</span>是<em>Gamma</em>函数。</p>
+<p>第三个是<em>Wasserstein</em>距离： <span class="math display">\[
+\mathcal{T}(F,w)=\frac{1}{bs}\sum\limits_{i=1}^{s-1}\mathbb{E}_{q_\phi(\mathbf{z}|\mathbf{x}^{w+i})}\left[F(\mathbf{x}^{(w+i)})-F(G(\mathbf{z}))\right]
+\]</span></p>
 <p>第四个是<em>Gradient Penalty</em>：</p>
-<p>$$<br>\mathcal{R}(F,w)=\frac{1}{bs}\sum\limits_{i=1}^{s-1}\mathbb{E}<em>{q_\phi(\mathbf{z}|\mathbf{x}^{(w+i)})}\left[\mathbb{E}</em>{\varepsilon\sim[0,1]}(\parallel\nabla_{\hat{\mathbf{x}}}(\hat{\mathbf{x}})\parallel-\mathbf{1})^2\right]<br>$$</p>
-<p>其中$\hat{\mathbf{x}}=\varepsilon \mathbf{x}^{w+i}+(1-\varepsilon)G(\mathbf{z})$为生成数据与真实数据的插值。</p>
+<p><span class="math display">\[
+\mathcal{R}(F,w)=\frac{1}{bs}\sum\limits_{i=1}^{s-1}\mathbb{E}_{q_\phi(\mathbf{z}|\mathbf{x}^{(w+i)})}\left[\mathbb{E}_{\varepsilon\sim[0,1]}(\parallel\nabla_{\hat{\mathbf{x}}}(\hat{\mathbf{x}})\parallel-\mathbf{1})^2\right]
+\]</span></p>
+<p>其中<span class="math inline">\(\hat{\mathbf{x}}=\varepsilon \mathbf{x}^{w+i}+(1-\varepsilon)G(\mathbf{z})\)</span>为生成数据与真实数据的插值。</p>
 <blockquote>
-<p>原始的WGAN-GP的损失函数为：<br>$$<br>L=\mathop{\mathbb{E}}\limits_{\tilde{\mathbf{x}}\sim\mathbb{P}<em>g}\left[D(\tilde{\mathbf{x}})\right]-\mathop{\mathbb{E}}\limits</em>{\mathbf{x}\sim\mathbb{P}<em>r}\left[D(\mathbf{x})\right] + \lambda\mathop{\mathbb{E}}\limits</em>{\hat{\mathbf{x}}\sim\mathbb{P}<em>{\hat{\mathbf{x}}}}\left[(\parallel\nabla</em>{\hat{\mathbf{x}}}D(\hat{\mathbf{x}})\parallel_2-1)^2\right]<br>$$<br>其中$\mathbb{P}<em>g$为生成器的分布，$\mathbb{P}_r$为真实分布，$\mathbb{P}</em>{\hat{\mathbf{x}}}$为真实数据和生成数据插值得到的分布。</p>
+<p>原始的WGAN-GP的损失函数为： <span class="math display">\[
+L=\mathop{\mathbb{E}}\limits_{\tilde{\mathbf{x}}\sim\mathbb{P}_g}\left[D(\tilde{\mathbf{x}})\right]-\mathop{\mathbb{E}}\limits_{\mathbf{x}\sim\mathbb{P}_r}\left[D(\mathbf{x})\right] + \lambda\mathop{\mathbb{E}}\limits_{\hat{\mathbf{x}}\sim\mathbb{P}_{\hat{\mathbf{x}}}}\left[(\parallel\nabla_{\hat{\mathbf{x}}}D(\hat{\mathbf{x}})\parallel_2-1)^2\right]
+\]</span> 其中<span class="math inline">\(\mathbb{P}_g\)</span>为生成器的分布，<span class="math inline">\(\mathbb{P}_r\)</span>为真实分布，<span class="math inline">\(\mathbb{P}_{\hat{\mathbf{x}}}\)</span>为真实数据和生成数据插值得到的分布。</p>
 </blockquote>
-<p>$$<br>\hat{\mathcal{L}}<em>{Buzz}=-\lambda\sup\limits_F\left[\sum\limits</em>{w\in\mathcal{W}}(\left|\mathcal{T}(F,w)\right|-\eta\mathcal{R}(F,w))\right]-\mathcal{K}-\log Z(\lambda)<br>$$</p>
-<h3 id="Training-Procedure"><a href="#Training-Procedure" class="headerlink" title="Training Procedure"></a>Training Procedure</h3><p><em>Buzz</em>的训练过程与WGAN-GP类似，</p>
-<h2 id="Detection"><a href="#Detection" class="headerlink" title="Detection"></a>Detection</h2><p>文中假设解码器的输出服从如下分布：</p>
-<p>$$<br>p_\theta(\mathbf{x}|\mathbf{z})=\frac{1}{Z(\lambda)}\exp{-\lambda\parallel\mathbf{x}-G(\mathbf{z})\parallel}<br>$$</p>
-<p>作者定义异常分数为：<br>$$<br>\mathcal{S}=\log p_\theta(\mathbf{x})-\log p_\theta(\bar{\mathbf{x}})<br>$$<br>其中$\bar{\mathbf{x}}$为经过MCMC填充后的样本。</p>
-<p>异常分数也可以展开为：<br>$$<br>\log\frac{1}{L}\sum\limits_{l=1}^L\left[\frac{p_\theta(\mathbf{x}|\mathbf{z^{(l)}})p_\theta(\mathbf{z}^{(l)})}{q_\phi(\mathbf{z}^{(l)}|\bar{\mathbf{x}})}\right]-\log\frac{1}{L}\sum\limits_{l=1}^L\left[\frac{p_\theta(\bar{\mathbf{x}}|\mathbf{z}^{(l)})p_\theta(\mathbf{z}^{(l)})}{q_\phi(\mathbf{z}^{(l)}|\bar{\mathbf{x}})}\right]<br>$$</p>
+<p><span class="math display">\[
+\hat{\mathcal{L}}_{Buzz}=-\lambda\sup\limits_F\left[\sum\limits_{w\in\mathcal{W}}(\left|\mathcal{T}(F,w)\right|-\eta\mathcal{R}(F,w))\right]-\mathcal{K}-\log Z(\lambda)
+\]</span></p>
+<h3 id="training-procedure">Training Procedure</h3>
+<p><em>Buzz</em>的训练过程与WGAN-GP类似，</p>
+<h2 id="detection">Detection</h2>
+<p>文中假设解码器的输出服从如下分布：</p>
+<p><span class="math display">\[
+p_\theta(\mathbf{x}|\mathbf{z})=\frac{1}{Z(\lambda)}\exp\{-\lambda\parallel\mathbf{x}-G(\mathbf{z})\parallel\}
+\]</span></p>
+<p>作者定义异常分数为： <span class="math display">\[
+\mathcal{S}=\log p_\theta(\mathbf{x})-\log p_\theta(\bar{\mathbf{x}})
+\]</span> 其中<span class="math inline">\(\bar{\mathbf{x}}\)</span>为经过MCMC填充后的样本。</p>
+<p>异常分数也可以展开为： <span class="math display">\[
+\log\frac{1}{L}\sum\limits_{l=1}^L\left[\frac{p_\theta(\mathbf{x}|\mathbf{z^{(l)}})p_\theta(\mathbf{z}^{(l)})}{q_\phi(\mathbf{z}^{(l)}|\bar{\mathbf{x}})}\right]-\log\frac{1}{L}\sum\limits_{l=1}^L\left[\frac{p_\theta(\bar{\mathbf{x}}|\mathbf{z}^{(l)})p_\theta(\mathbf{z}^{(l)})}{q_\phi(\mathbf{z}^{(l)}|\bar{\mathbf{x}})}\right]
+\]</span></p>
 <p>最终算法流程图为：</p>
-<img src="https://i.loli.net/2020/06/25/Y3NLjRiaWO5eHGT.png" srcset="/img/loading.gif" style="zoom:80%;" />
-
-
-
-<h2 id="Theoretical-Analysis"><a href="#Theoretical-Analysis" class="headerlink" title="Theoretical Analysis"></a>Theoretical Analysis</h2><p>在理论分析中，作者主要是想建立$\mathcal{L}<em>{Buzz}$和VAE的损失函数$\mathcal{L}</em>{vae}$之间的联系，损失函数$\mathcal{\hat{L}}_{Buzz}$为：</p>
-<p>$$<br>\hat{\mathcal{L}}<em>{Buzz}=-\lambda\sup\limits_F\left[\sum\limits</em>{w\in\mathcal{W}}(\left|\mathcal{T}(F,w)\right|-\eta\mathcal{R}(F,w))\right]-\mathcal{K}-\log Z(\lambda)<br>$$</p>
+<p><img src="https://i.loli.net/2020/06/25/Y3NLjRiaWO5eHGT.png" srcset="/img/loading.gif" style="zoom:80%;" /></p>
+<h2 id="theoretical-analysis">Theoretical Analysis</h2>
+<p>在理论分析中，作者主要是想建立<span class="math inline">\(\mathcal{L}_{Buzz}\)</span>和VAE的损失函数<span class="math inline">\(\mathcal{L}_{vae}\)</span>之间的联系，损失函数<span class="math inline">\(\mathcal{\hat{L}}_{Buzz}\)</span>为：</p>
+<p><span class="math display">\[
+\hat{\mathcal{L}}_{Buzz}=-\lambda\sup\limits_F\left[\sum\limits_{w\in\mathcal{W}}(\left|\mathcal{T}(F,w)\right|-\eta\mathcal{R}(F,w))\right]-\mathcal{K}-\log Z(\lambda)
+\]</span></p>
 <p>为了便于分析，去掉<em>Gradient Penalty</em>的部分，公式可简化为：</p>
-<p>$$<br>\mathcal{L}<em>{Buzz}=-\lambda\mathbb{E}</em>{p(w)}W^1\left[P(\mathbf{x}|w)\parallel P(\mathbf{y}|w)\right]-\mathcal{K}-\log Z(\lambda)<br>$$</p>
-<p>实际上$Z(\lambda)=\mathfrak{S}_W\Gamma(W)\lambda^{-W}$，其中$\mathfrak{S}_W$为$W$维单位球的表面积。</p>
+<p><span class="math display">\[
+\mathcal{L}_{Buzz}=-\lambda\mathbb{E}_{p(w)}W^1\left[P(\mathbf{x}|w)\parallel P(\mathbf{y}|w)\right]-\mathcal{K}-\log Z(\lambda)
+\]</span></p>
+<p>实际上<span class="math inline">\(Z(\lambda)=\mathfrak{S}_W\Gamma(W)\lambda^{-W}\)</span>，其中<span class="math inline">\(\mathfrak{S}_W\)</span>为<span class="math inline">\(W\)</span>维单位球的表面积。</p>
 <blockquote>
-<p>$n$维空间单位球表面积公式：<br>$$<br>\omega_n=\frac{2\pi^{\frac{n}{2}}}{\Gamma(\frac{n}{2})}<br>$$</p>
+<p><span class="math inline">\(n\)</span>维空间单位球表面积公式： <span class="math display">\[
+\omega_n=\frac{2\pi^{\frac{n}{2}}}{\Gamma(\frac{n}{2})}
+\]</span></p>
 </blockquote>
-<p>而$W^1\left[P(\mathbf{x}|w)\parallel P(\mathbf{y}|w)\right]$为<em>Wasserstein</em>距离：<br>$$<br>W^1\left[P(\mathbf{x}|w)\parallel P(\mathbf{y}|w)\right]=\sup\limits_{Lip(f)\leq 1}\left{\int_\mathcal{X}f(\mathbf{x})p(\mathbf{x}|w)\mathrm{d}\mathbf{x}-\int_\mathcal{X}f(\mathbf{y})p(\mathbf{y}|w)\mathrm{d}\mathbf{y}\right}<br>$$</p>
-<h3 id="Lemma-1"><a href="#Lemma-1" class="headerlink" title="Lemma 1"></a>Lemma 1</h3><p>通过设定具体形式的后验分布，VAE的损失函数可以写为：</p>
+<p>而<span class="math inline">\(W^1\left[P(\mathbf{x}|w)\parallel P(\mathbf{y}|w)\right]\)</span>为<em>Wasserstein</em>距离： <span class="math display">\[
+W^1\left[P(\mathbf{x}|w)\parallel P(\mathbf{y}|w)\right]=\sup\limits_{Lip(f)\leq 1}\left\{\int_\mathcal{X}f(\mathbf{x})p(\mathbf{x}|w)\mathrm{d}\mathbf{x}-\int_\mathcal{X}f(\mathbf{y})p(\mathbf{y}|w)\mathrm{d}\mathbf{y}\right\}
+\]</span></p>
+<h3 id="lemma-1">Lemma 1</h3>
+<p>通过设定具体形式的后验分布，VAE的损失函数可以写为：</p>
 <blockquote>
-<p>设$\mathbf{x}$的后验分布$p(\mathbf{x}|\mathbf{z})=\frac{1}{Z(\lambda)}\exp{-\lambda\parallel\mathbf{x}-G(\mathbf{z})\parallel}$，那么VAE的损失函数为：<br>$$<br>\mathcal{L}<em>{vae}=\lambda\mathbb{E}</em>{p(w)}\left[\mathbb{E}<em>{p(\mathbf{x}|w)}\mathbb{E}</em>{p_G(\mathbf{y}|\mathbf{x})}-\parallel\mathbf{x}-\mathbf{y}\parallel\right]-\mathcal{K}-\log{Z(\lambda)}<br>$$</p>
+<p>设<span class="math inline">\(\mathbf{x}\)</span>的后验分布<span class="math inline">\(p(\mathbf{x}|\mathbf{z})=\frac{1}{Z(\lambda)}\exp\{-\lambda\parallel\mathbf{x}-G(\mathbf{z})\parallel\}\)</span>，那么VAE的损失函数为： <span class="math display">\[
+\mathcal{L}_{vae}=\lambda\mathbb{E}_{p(w)}\left[\mathbb{E}_{p(\mathbf{x}|w)}\mathbb{E}_{p_G(\mathbf{y}|\mathbf{x})}-\parallel\mathbf{x}-\mathbf{y}\parallel\right]-\mathcal{K}-\log{Z(\lambda)}
+\]</span></p>
 </blockquote>
 <p>后验分布实际上是一个Laplace分布：</p>
 <blockquote>
-<p><strong>Laplace Distribution</strong>:<br>$$<br>f(x|\theta,\lambda)=\frac{1}{2\lambda}\exp{\left(-\frac{|x-\theta|}{\lambda}\right)}<br>$$</p>
+<p><strong>Laplace Distribution</strong>: <span class="math display">\[
+f(x|\theta,\lambda)=\frac{1}{2\lambda}\exp{\left(-\frac{|x-\theta|}{\lambda}\right)}
+\]</span></p>
 </blockquote>
 <p>可以直接把后验分布带入VAE的损失函数就得到了。</p>
-<h3 id="Lemma-2"><a href="#Lemma-2" class="headerlink" title="Lemma 2"></a>Lemma 2</h3><p>$S_w$定义为数据空间$\mathcal{X}$的一个partition，而$S={(\mathbf{x}_1,\mathbf{x}_2)| \exists w, \mathbf{x}_1\in S_w,\mathbf{x}_2\in S_w}$。</p>
+<h3 id="lemma-2">Lemma 2</h3>
+<p><span class="math inline">\(S_w\)</span>定义为数据空间<span class="math inline">\(\mathcal{X}\)</span>的一个partition，而<span class="math inline">\(S=\{(\mathbf{x}_1,\mathbf{x}_2)| \exists w, \mathbf{x}_1\in S_w,\mathbf{x}_2\in S_w\}\)</span>。</p>
 <blockquote>
-<p>当$G,\phi,\lambda$固定时，$S\downarrow$有$\mathcal{L}_{Buzz}\downarrow$</p>
+<p>当<span class="math inline">\(G,\phi,\lambda\)</span>固定时，<span class="math inline">\(S\downarrow\)</span>有<span class="math inline">\(\mathcal{L}_{Buzz}\downarrow\)</span></p>
 </blockquote>
-<h3 id="Lemma-3"><a href="#Lemma-3" class="headerlink" title="Lemma 3"></a>Lemma 3</h3><blockquote>
-<p>$\max\mathcal{L}<em>{Buzz}\geq\max{\mathcal{L}</em>{vae}}$，同时，当$S\downarrow\text{diag}{\mathcal{X}}$时$\max\mathcal{L}<em>{Buzz}\downarrow\max\mathcal{L}</em>{vae}$</p>
-</blockquote>
-<img src="https://i.loli.net/2020/06/25/XM2xwBbOLzikhoc.png" srcset="/img/loading.gif" style="zoom:67%;" />
-
-<h3 id="Lemma-4"><a href="#Lemma-4" class="headerlink" title="Lemma 4"></a>Lemma 4</h3><blockquote>
-<p>令$p^\prime_G(\mathbf{y}|\mathbf{x})$表示$\mathbb{E}<em>{q</em>{\phi^\prime}}\left[p_G(\mathbf{y}|\mathbf{z})\right]$。如果$(G,\phi,\lambda)$是一个解，那么存在$(G,\phi^\prime,\lambda)$使得：<br>$$<br>\mathbb{E}<em>{p(\mathbf{x}|w)}\mathbb{E}</em>{p_G^\prime(\mathbf{y}|\mathbf{x})}\parallel\mathbf{x}-\mathbf{y}\parallel=W^1\left[P(\mathbf{x}|w)\parallel P_G(\mathbf{y}|w)\right]<br>$$<br>此时$\mathcal{L}<em>{Buzz}-\mathcal{L}</em>{vae}^\prime=\mathcal{K}^\prime-\mathcal{K}$，其中$\mathcal{L}^\prime,\mathcal{K}^\prime$分别为$(G,\phi^\prime,\lambda)$时的$\mathcal{L}$和$\mathcal{K}$。</p>
-</blockquote>
-<p>$$<br>\mathcal{L}^\dagger_{Buzz}=\mathbb{E}<em>{p(\mathbf{x})}\left[\mathbb{E}</em>{q_{\phi^\prime}(\mathbf{z}|\mathbf{x})}\log_{p_\theta}(\mathbf{x}|\mathbf{z})\right]-\min\limits_{\bar{\phi}\sim\phi^\prime}\bar{\mathcal{K}}<br>$$</p>
-<h3 id="Lemma-5"><a href="#Lemma-5" class="headerlink" title="Lemma 5"></a>Lemma 5</h3><p>这里主要是想证明</p>
+<h3 id="lemma-3">Lemma 3</h3>
 <blockquote>
-<p>对于固定的$w$，令：<br>$$<br>\mathcal{F}={f|Lip(f)\leq 1}, \space \mathcal{F}^<em>=\left{f|<em>{S_w}\bigg|Lip(f|</em>{S_w})\leq 1\right}<br>$$<br>有$\sup_{f\in\mathcal{F}}\mathcal{T}(f)=\sup_{f|_{S_w}\in\mathcal{F}^</em>}\mathcal{T}^*\left(f|_{S_w}\right)$。</p>
+<p><span class="math inline">\(\max\mathcal{L}_{Buzz}\geq\max{\mathcal{L}_{vae}}\)</span>，同时，当<span class="math inline">\(S\downarrow\text{diag}{\mathcal{X}}\)</span>时<span class="math inline">\(\max\mathcal{L}_{Buzz}\downarrow\max\mathcal{L}_{vae}\)</span></p>
 </blockquote>
-<h3 id="Theorem-6"><a href="#Theorem-6" class="headerlink" title="Theorem 6"></a>Theorem 6</h3><blockquote>
-<p>$\mathcal{L}<em>{Buzz}$的对偶形式为：<br>$$<br>\mathcal{L}</em>{Buzz}=-\lambda\sup\limits_{Lip(F;S)\leq 1}\mathbb{E}_{p(w)}\mathcal{T}^*(F)-\mathcal{K}-\log Z(\lambda)<br>$$</p>
+<p><img src="https://i.loli.net/2020/06/25/XM2xwBbOLzikhoc.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<h3 id="lemma-4">Lemma 4</h3>
+<blockquote>
+<p>令<span class="math inline">\(p^\prime_G(\mathbf{y}|\mathbf{x})\)</span>表示<span class="math inline">\(\mathbb{E}_{q_{\phi^\prime}}\left[p_G(\mathbf{y}|\mathbf{z})\right]\)</span>。如果<span class="math inline">\((G,\phi,\lambda)\)</span>是一个解，那么存在<span class="math inline">\((G,\phi^\prime,\lambda)\)</span>使得： <span class="math display">\[
+\mathbb{E}_{p(\mathbf{x}|w)}\mathbb{E}_{p_G^\prime(\mathbf{y}|\mathbf{x})}\parallel\mathbf{x}-\mathbf{y}\parallel=W^1\left[P(\mathbf{x}|w)\parallel P_G(\mathbf{y}|w)\right]
+\]</span> 此时<span class="math inline">\(\mathcal{L}_{Buzz}-\mathcal{L}_{vae}^\prime=\mathcal{K}^\prime-\mathcal{K}\)</span>，其中<span class="math inline">\(\mathcal{L}^\prime,\mathcal{K}^\prime\)</span>分别为<span class="math inline">\((G,\phi^\prime,\lambda)\)</span>时的<span class="math inline">\(\mathcal{L}\)</span>和<span class="math inline">\(\mathcal{K}\)</span>。</p>
 </blockquote>
-<p>近似的$\mathcal{L}<em>{Buzz}$的对偶形式为：<br>$$<br>\bar{\mathcal{L}}</em>{Buzz}=-\lambda\sup\limits_{Lip(F;S)\leq 1}\mathbb{E}_{p(w)}\mathcal{T}(F)-\mathcal{K}-\log Z(\lambda)<br>$$</p>
-<h1 id="Experiment"><a href="#Experiment" class="headerlink" title="Experiment"></a>Experiment</h1><img src="https://i.loli.net/2020/06/25/GEi3zfeAgXVsvBN.png" srcset="/img/loading.gif" style="zoom:67%;" />
+<p><span class="math display">\[
+\mathcal{L}^\dagger_{Buzz}=\mathbb{E}_{p(\mathbf{x})}\left[\mathbb{E}_{q_{\phi^\prime}(\mathbf{z}|\mathbf{x})}\log_{p_\theta}(\mathbf{x}|\mathbf{z})\right]-\min\limits_{\bar{\phi}\sim\phi^\prime}\bar{\mathcal{K}}
+\]</span></p>
+<h3 id="lemma-5">Lemma 5</h3>
+<p>这里主要是想证明</p>
+<blockquote>
+<p>对于固定的<span class="math inline">\(w\)</span>，令： <span class="math display">\[
+\mathcal{F}=\{f|Lip(f)\leq 1\}, \space \mathcal{F}^*=\left\{f|_{S_w}\bigg|Lip(f|_{S_w})\leq 1\right\}
+\]</span> 有<span class="math inline">\(\sup_{f\in\mathcal{F}}\mathcal{T}(f)=\sup_{f|_{S_w}\in\mathcal{F}^*}\mathcal{T}^*\left(f|_{S_w}\right)\)</span>。</p>
+</blockquote>
+<h3 id="theorem-6">Theorem 6</h3>
+<blockquote>
+<p><span class="math inline">\(\mathcal{L}_{Buzz}\)</span>的对偶形式为： <span class="math display">\[
+\mathcal{L}_{Buzz}=-\lambda\sup\limits_{Lip(F;S)\leq 1}\mathbb{E}_{p(w)}\mathcal{T}^*(F)-\mathcal{K}-\log Z(\lambda)
+\]</span></p>
+</blockquote>
+<p>近似的<span class="math inline">\(\mathcal{L}_{Buzz}\)</span>的对偶形式为： <span class="math display">\[
+\bar{\mathcal{L}}_{Buzz}=-\lambda\sup\limits_{Lip(F;S)\leq 1}\mathbb{E}_{p(w)}\mathcal{T}(F)-\mathcal{K}-\log Z(\lambda)
+\]</span></p>
+<h1 id="experiment">Experiment</h1>
+<p><img src="https://i.loli.net/2020/06/25/GEi3zfeAgXVsvBN.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/7EkhRGNvIsSmwn6.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/yTIhoZb1kVOf4Mv.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 
-
-
-<img src="https://i.loli.net/2020/06/25/7EkhRGNvIsSmwn6.png" srcset="/img/loading.gif" style="zoom:67%;" />
-
-
-
-<img src="https://i.loli.net/2020/06/25/yTIhoZb1kVOf4Mv.png" srcset="/img/loading.gif" style="zoom:67%;" />
             </article>
             <hr>
             <div>
@@ -382,9 +445,9 @@
                     
                       <a class="hover-with-bg" href="/tags/Time-Series/">Time Series</a>
                     
-                      <a class="hover-with-bg" href="/tags/Anomaly-Detection/">Anomaly Detection</a>
-                    
                       <a class="hover-with-bg" href="/tags/Machine-Learning/">Machine Learning</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Anomaly-Detection/">Anomaly Detection</a>
                     
                       <a class="hover-with-bg" href="/tags/Deep-Learning/">Deep Learning</a>
                     

@@ -212,81 +212,140 @@
               </p>
             
             <article class="markdown-body">
-              <h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>本文基于<strong>Extreme Value Theory</strong>提出了一种不需要手动设置阈值也不需要对数据分布作任何假设的时间序列异常检测方法。除此之外，本方法可以用在通用的自动阈值选择的场合中。</p>
+              <h1 id="introduction">Introduction</h1>
+<p>本文基于<strong>Extreme Value Theory</strong>提出了一种不需要手动设置阈值也不需要对数据分布作任何假设的时间序列异常检测方法。除此之外，本方法可以用在通用的自动阈值选择的场合中。</p>
 <p><a href="https://www.kdd.org/kdd2017/papers/view/anomaly-detection-in-streams-with-extreme-value-theory" target="_blank" rel="noopener">原文</a></p>
-<h1 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h1><p>在很多情况下我们需要进行阈值的选择。阈值的选择可以通过实验的方法或者对数据分布进行假设的方法来得到，不过这样做通常不准确。借助<strong>Extreme Value Theory</strong>我们可以在不需要对原始数据的分布作很强的假设的情况下，推断我们想要的极端事件的分布（在异常检测中就是异常值）。</p>
-<p>下面给出一些数学符号，$X$为随机变量，$F$为累积分布函数，即$F(x)=\mathbb{P}(X\leq x)$。记$F$的“末尾”分布$\bar{F}(x)=1-F(x)=\mathbb{P}(X&gt;x)$。对于一个随机变量$X$和给定的概率$q$，记$z_q$为在$1-q$水平的分位数，即$z_q$为满足$\mathbb{P}(X\leq z_q)\geq 1-q$最小的值。</p>
-<h2 id="Extreme-Value-Distributions"><a href="#Extreme-Value-Distributions" class="headerlink" title="Extreme Value Distributions"></a>Extreme Value Distributions</h2><p><strong>Extreme Value Theory</strong>主要是为了找出极端事件发生的规律，有学者证明，在很弱的条件下，所有极端事件都服从一个特定的分布，而不管原始分布如何。具体形式如下：</p>
-<p>$$<br>G_\gamma:x\mapsto \exp(-(1+\gamma x)^{-\frac{1}{\gamma}}), \space\space\space\space\space\gamma\in\mathbb{R}, \space\space\space\space\space 1+\gamma x&gt;0<br>$$</p>
-<p>其中$\gamma$称为<strong>Extreme Value Index</strong>，由原始分布决定。</p>
+<h1 id="background">Background</h1>
+<p>在很多情况下我们需要进行阈值的选择。阈值的选择可以通过实验的方法或者对数据分布进行假设的方法来得到，不过这样做通常不准确。借助<strong>Extreme Value Theory</strong>我们可以在不需要对原始数据的分布作很强的假设的情况下，推断我们想要的极端事件的分布（在异常检测中就是异常值）。</p>
+<p>下面给出一些数学符号，<span class="math inline">\(X\)</span>为随机变量，<span class="math inline">\(F\)</span>为累积分布函数，即<span class="math inline">\(F(x)=\mathbb{P}(X\leq x)\)</span>。记<span class="math inline">\(F\)</span>的“末尾”分布<span class="math inline">\(\bar{F}(x)=1-F(x)=\mathbb{P}(X&gt;x)\)</span>。对于一个随机变量<span class="math inline">\(X\)</span>和给定的概率<span class="math inline">\(q\)</span>，记<span class="math inline">\(z_q\)</span>为在<span class="math inline">\(1-q\)</span>水平的分位数，即<span class="math inline">\(z_q\)</span>为满足<span class="math inline">\(\mathbb{P}(X\leq z_q)\geq 1-q\)</span>最小的值。</p>
+<h2 id="extreme-value-distributions">Extreme Value Distributions</h2>
+<p><strong>Extreme Value Theory</strong>主要是为了找出极端事件发生的规律，有学者证明，在很弱的条件下，所有极端事件都服从一个特定的分布，而不管原始分布如何。具体形式如下：</p>
+<p><span class="math display">\[
+G_\gamma:x\mapsto \exp(-(1+\gamma x)^{-\frac{1}{\gamma}}), \space\space\space\space\space\gamma\in\mathbb{R}, \space\space\space\space\space 1+\gamma x&gt;0
+\]</span></p>
+<p>其中<span class="math inline">\(\gamma\)</span>称为<strong>Extreme Value Index</strong>，由原始分布决定。</p>
 <p>更严谨的说法是Fisher-Tippett-Gnedenko定理（极值理论第一定理）：</p>
 <blockquote>
-<p>*<em>THEOREM: *</em>(Fisher-Tippett-Gnedenko). 令$X_1,X_2,\cdots,X_n,\cdots$为独立同分布的随机变量序列，$M_n=\max {X_1,\cdots,X_n}$。如果实数对序列$(a_n,b_n)$存在且满足$a_n&gt;0$和$\lim\limits_{n\rightarrow \infty}P\left(\frac{M_n-b_n}{a_n}\leq x\right)=F(x)$，其中$F$为非退化分布函数，那么$F$属于Gumbel、Fréchet或Weibull分布族（或总称Generalized Extreme Value Distribution）中的一种。</p>
+<p><strong>THEOREM: </strong>(Fisher-Tippett-Gnedenko). 令<span class="math inline">\(X_1,X_2,\cdots,X_n,\cdots\)</span>为独立同分布的随机变量序列，<span class="math inline">\(M_n=\max \{X_1,\cdots,X_n\}\)</span>。如果实数对序列<span class="math inline">\((a_n,b_n)\)</span>存在且满足<span class="math inline">\(a_n&gt;0\)</span>和<span class="math inline">\(\lim\limits_{n\rightarrow \infty}P\left(\frac{M_n-b_n}{a_n}\leq x\right)=F(x)\)</span>，其中<span class="math inline">\(F\)</span>为非退化分布函数，那么<span class="math inline">\(F\)</span>属于Gumbel、Fréchet或Weibull分布族（或总称Generalized Extreme Value Distribution）中的一种。</p>
 </blockquote>
-<p>这是一个反直觉的结论，但是想到当事件发生变得极端时，即$\mathbb{P}(X&gt;x)\rightarrow 0$，$\bar{F}(x)=\mathbb{P}(X&gt;x)$分布的形状其实并没有很多种选择。Table 1展示了几种不同分布对应的$\gamma$：</p>
-<p><img src="https://i.loli.net/2020/06/24/jyhoWZGc2gFTrJv.png" srcset="/img/loading.gif" alt=""></p>
-<p>Figure 1展示了几种不同$\gamma$情况下的“末尾”分布：</p>
-<p><img src="https://i.loli.net/2020/06/24/4rmZL1AMcBJ2Vzq.png" srcset="/img/loading.gif" alt=""></p>
-<h2 id="Power-of-EVT"><a href="#Power-of-EVT" class="headerlink" title="Power of EVT"></a>Power of EVT</h2><p>根据<strong>Extreme Value Theory</strong>，我们可以在原始分布未知的情况下计算极端事件的概率。但是$\bar{G}_\gamma$分布中参数$\gamma$是未知的，我们需要一种高效的方法来进行估计。<strong>The Peaks-Over-Threshold</strong> (POT) 方法是本文介绍的一种方法。</p>
-<p><img src="https://i.loli.net/2020/06/24/hX2T1IkMAqfioZl.png" srcset="/img/loading.gif" alt=""></p>
-<h2 id="Peaks-Over-Threshold-Approach"><a href="#Peaks-Over-Threshold-Approach" class="headerlink" title="Peaks-Over-Threshold Approach"></a>Peaks-Over-Threshold Approach</h2><p>POT方法依赖于Pickands-Balkema-De Haan定理（极值理论第二定理），维基百科版：</p>
+<p>这是一个反直觉的结论，但是想到当事件发生变得极端时，即<span class="math inline">\(\mathbb{P}(X&gt;x)\rightarrow 0\)</span>，<span class="math inline">\(\bar{F}(x)=\mathbb{P}(X&gt;x)\)</span>分布的形状其实并没有很多种选择。Table 1展示了几种不同分布对应的<span class="math inline">\(\gamma\)</span>：</p>
+<p><img src="https://i.loli.net/2020/06/24/jyhoWZGc2gFTrJv.png" srcset="/img/loading.gif" /></p>
+<p>Figure 1展示了几种不同<span class="math inline">\(\gamma\)</span>情况下的“末尾”分布：</p>
+<p><img src="https://i.loli.net/2020/06/24/4rmZL1AMcBJ2Vzq.png" srcset="/img/loading.gif" /></p>
+<h2 id="power-of-evt">Power of EVT</h2>
+<p>根据<strong>Extreme Value Theory</strong>，我们可以在原始分布未知的情况下计算极端事件的概率。但是<span class="math inline">\(\bar{G}_\gamma\)</span>分布中参数<span class="math inline">\(\gamma\)</span>是未知的，我们需要一种高效的方法来进行估计。<strong>The Peaks-Over-Threshold</strong> (POT) 方法是本文介绍的一种方法。</p>
+<p><img src="https://i.loli.net/2020/06/24/hX2T1IkMAqfioZl.png" srcset="/img/loading.gif" /></p>
+<h2 id="peaks-over-threshold-approach">Peaks-Over-Threshold Approach</h2>
+<p>POT方法依赖于Pickands-Balkema-De Haan定理（极值理论第二定理），维基百科版：</p>
 <blockquote>
-<p>考虑一个未知分布$F$和随机变量$X$，我们的目标是估计$X$在超过确定阈值$u$下的条件分布$F_u$，定义为：<br>$$<br>F_u(y)=P(X-u\leq y|X&gt;u)=\frac{F(u+y)-F(u)}{1-F(u)}<br>$$<br>其中$0\leq y\leq x_F-u$，$x_F$为$F$的右端点。$F_u$描述了超过特征阈值$u$的分布，称为<strong>Conditional Excess Distribution Function</strong>。</p>
-<p>*<em>STATEMENT: *</em>(Pickands-Balkema-De Haan). 设$(X_1,X_2,\cdots)$为独立同分布随机变量序列，$F_u$为相应的Conditional Excess Distribution Function。对于一大类的$F$和很大的$u$，$F_u$能够很好的被Generalized Pareto Distribution所拟合：<br>$$<br>F_u(y)\rightarrow G_{k,\sigma}(y),\space\space \text{as } u\rightarrow \infty<br>$$<br>其中：<br>$$<br>G_{k,\sigma}(y)=<br>\begin{cases}<br>1-(1+ky/\sigma)^{-1/k}, &amp;\text{if }k\neq 0\<br>1-e^{-y/\sigma}, &amp;\text{if }k=0<br>\end{cases}<br>$$<br>当$k\geq 0$时$\sigma&gt;0, y\geq 0$，$k&lt;0$时$0\leq y\leq -\sigma/k$。</p>
+<p>考虑一个未知分布<span class="math inline">\(F\)</span>和随机变量<span class="math inline">\(X\)</span>，我们的目标是估计<span class="math inline">\(X\)</span>在超过确定阈值<span class="math inline">\(u\)</span>下的条件分布<span class="math inline">\(F_u\)</span>，定义为： <span class="math display">\[
+F_u(y)=P(X-u\leq y|X&gt;u)=\frac{F(u+y)-F(u)}{1-F(u)}
+\]</span> 其中<span class="math inline">\(0\leq y\leq x_F-u\)</span>，<span class="math inline">\(x_F\)</span>为<span class="math inline">\(F\)</span>的右端点。<span class="math inline">\(F_u\)</span>描述了超过特征阈值<span class="math inline">\(u\)</span>的分布，称为<strong>Conditional Excess Distribution Function</strong>。</p>
+<p><strong>STATEMENT: </strong>(Pickands-Balkema-De Haan). 设<span class="math inline">\((X_1,X_2,\cdots)\)</span>为独立同分布随机变量序列，<span class="math inline">\(F_u\)</span>为相应的Conditional Excess Distribution Function。对于一大类的<span class="math inline">\(F\)</span>和很大的<span class="math inline">\(u\)</span>，<span class="math inline">\(F_u\)</span>能够很好的被Generalized Pareto Distribution所拟合： <span class="math display">\[
+F_u(y)\rightarrow G_{k,\sigma}(y),\space\space \text{as } u\rightarrow \infty
+\]</span> 其中： <span class="math display">\[
+G_{k,\sigma}(y)=
+\begin{cases}
+1-(1+ky/\sigma)^{-1/k}, &amp;\text{if }k\neq 0\\
+1-e^{-y/\sigma}, &amp;\text{if }k=0
+\end{cases}
+\]</span> 当<span class="math inline">\(k\geq 0\)</span>时<span class="math inline">\(\sigma&gt;0, y\geq 0\)</span>，<span class="math inline">\(k&lt;0\)</span>时<span class="math inline">\(0\leq y\leq -\sigma/k\)</span>。</p>
 </blockquote>
 <p>论文中给出的定理如下：</p>
 <blockquote>
-<p>*<em>THEOREM: *</em>(Pickands-Balkema-De Haan). 累积概率密度函数$F\in\mathcal{D}<em>\gamma$当且仅当函数$\sigma$存在时，对所有$x\in\mathbb{R}$在$1+\gamma x&gt;0$的条件下有：<br>$$<br>\frac{\bar{F}(t+\sigma(t)x)}{\bar{F}(t)}\mathop{\rightarrow}\limits</em>{t\rightarrow\tau}(1+\gamma x)^{-\frac{1}{\gamma}}<br>$$</p>
+<p><strong>THEOREM: </strong>(Pickands-Balkema-De Haan). 累积概率密度函数<span class="math inline">\(F\in\mathcal{D}_\gamma\)</span>当且仅当函数<span class="math inline">\(\sigma\)</span>存在时，对所有<span class="math inline">\(x\in\mathbb{R}\)</span>在<span class="math inline">\(1+\gamma x&gt;0\)</span>的条件下有： <span class="math display">\[
+\frac{\bar{F}(t+\sigma(t)x)}{\bar{F}(t)}\mathop{\rightarrow}\limits_{t\rightarrow\tau}(1+\gamma x)^{-\frac{1}{\gamma}}
+\]</span></p>
 </blockquote>
-<p>上式可以写成如下形式：<br>$$<br>\bar{F}<em>t(x)=\mathbb{P}(X-t&gt;x|X&gt;t)\mathop{\sim}\limits</em>{t\rightarrow\tau}\left(1+\frac{\gamma x}{\sigma(t)}\right)^{-\frac{1}{\gamma}}<br>$$<br>该式表明$X$超过阈值$t$的概率（写为$X-t$）服从<strong>Generalized Pareto Distribution</strong> (GPD)，参数为$\gamma$和$\sigma$。POT主要是拟合GPD而不是EVT分布。</p>
-<p>如果我们要估计参数$\hat{\gamma}$和$\hat{\sigma}$，分位数可以通过下式计算得到：<br>$$<br>z_q\simeq t+\frac{\hat{\sigma}}{\hat{\gamma}}\left(\left(\frac{qn}{N_t}\right)^{-\hat{\gamma}}-1\right)<br>$$</p>
-<p>其中$t$是一个“很高”的阈值，$q$是给定的概率值，$n$是所有观测样本的数量，$N_t$是peaks的数量，即$X_i&gt;t$的数量。为了进行高效的参数估计，文中使用了极大似然估计。</p>
-<h2 id="Maximum-Likelihood-Estimation"><a href="#Maximum-Likelihood-Estimation" class="headerlink" title="Maximum Likelihood Estimation"></a>Maximum Likelihood Estimation</h2><p>设$X_1,\cdots,X_n$为独立同分布的随机变量，概率密度函数记为$f_\theta$，$\theta$为分布中的参数，那么似然函数可以写为：</p>
-<p>$$<br>\mathcal{L}(X_1,\cdots,X_n;\theta)=\prod\limits_{i=1}^n f_\theta(X_i)<br>$$</p>
-<p>在极大似然估计中，我们需要找到合适的参数使得似然函数最大化。在我们的问题中，似然函数如下：<br>$$<br>\log\mathcal{L}(\gamma,\sigma)=-N_t\log\sigma-\left(1+\frac{1}{\gamma}\right)\sum\limits_{i=1}^{N_t}\log\left(1+\frac{\gamma}{\sigma}Y_i\right)<br>$$<br>其中$Y_i&gt;0$表示$X_i$超过阈值$t$的部分。</p>
-<p>文中使用了<strong>Grimshaw’s Trick</strong>来将含两个参数的优化问题转换为只含一个参数的优化问题。记$\ell(\gamma,\sigma)=\log\mathcal{L}(\gamma,\sigma)$，对于所有极值来说有$\nabla \ell(\gamma, \sigma)=0$。Grimshaw’s Trick表明对于满足$\nabla \ell(\gamma, \sigma)=0$的一对$(\gamma^<em>,\sigma^</em>)$，$x^<em>=\frac{\gamma^</em>}{\sigma^<em>}$为等式$u(X)v(X)=1$的解，其中：<br>$$<br>\begin{align}<br>u(x)&amp;=\frac{1}{N_t}\sum\limits_{i=1}^{N_t}\frac{1}{1+xY_i}\<br>v(x)&amp;=1+\frac{1}{N_t}\sum\limits_{i=1}^{N_t}\log(1+xY_i)<br>\end{align}<br>$$<br>在找到满足该等式的解$x^</em>$后，我们可以得到$\gamma^<em>=v(x^</em>)-1$和$\sigma^<em>=\gamma^</em>/x^*$，于是问题就变成了如何寻找方程的所有根。</p>
-<p>因为$\log$的存在，所以有$1+xY_i&gt;0$。而$Y_i$是正数，所以$x^*$的范围一定在$\left(-\frac{1}{Y^M},+\infty\right)$，其中$Y^M=\max Y_i$。</p>
-<p>Grimshaw（作者参考的一篇<a href="https://www.tandfonline.com/doi/abs/10.1080/00401706.1993.10485040" target="_blank" rel="noopener">论文</a>）还给出了一个上界：<br>$$<br>x^*_{\text{max}}=2\frac{\bar{Y}-Y^m}{(Y^m)^2}<br>$$<br>其中$Y^m=\min Y_i$，$\bar{Y}$为$Y_i$的均值。详细的优化方法会在下文讨论。</p>
+<p>上式可以写成如下形式： <span class="math display">\[
+\bar{F}_t(x)=\mathbb{P}(X-t&gt;x|X&gt;t)\mathop{\sim}\limits_{t\rightarrow\tau}\left(1+\frac{\gamma x}{\sigma(t)}\right)^{-\frac{1}{\gamma}}
+\]</span> 该式表明<span class="math inline">\(X\)</span>超过阈值<span class="math inline">\(t\)</span>的概率（写为<span class="math inline">\(X-t\)</span>）服从<strong>Generalized Pareto Distribution</strong> (GPD)，参数为<span class="math inline">\(\gamma\)</span>和<span class="math inline">\(\sigma\)</span>。POT主要是拟合GPD而不是EVT分布。</p>
+<p>如果我们要估计参数<span class="math inline">\(\hat{\gamma}\)</span>和<span class="math inline">\(\hat{\sigma}\)</span>，分位数可以通过下式计算得到： <span class="math display">\[
+z_q\simeq t+\frac{\hat{\sigma}}{\hat{\gamma}}\left(\left(\frac{qn}{N_t}\right)^{-\hat{\gamma}}-1\right)
+\]</span></p>
+<p>其中<span class="math inline">\(t\)</span>是一个“很高”的阈值，<span class="math inline">\(q\)</span>是给定的概率值，<span class="math inline">\(n\)</span>是所有观测样本的数量，<span class="math inline">\(N_t\)</span>是peaks的数量，即<span class="math inline">\(X_i&gt;t\)</span>的数量。为了进行高效的参数估计，文中使用了极大似然估计。</p>
+<h2 id="maximum-likelihood-estimation">Maximum Likelihood Estimation</h2>
+<p>设<span class="math inline">\(X_1,\cdots,X_n\)</span>为独立同分布的随机变量，概率密度函数记为<span class="math inline">\(f_\theta\)</span>，<span class="math inline">\(\theta\)</span>为分布中的参数，那么似然函数可以写为：</p>
+<p><span class="math display">\[
+\mathcal{L}(X_1,\cdots,X_n;\theta)=\prod\limits_{i=1}^n f_\theta(X_i)
+\]</span></p>
+<p>在极大似然估计中，我们需要找到合适的参数使得似然函数最大化。在我们的问题中，似然函数如下： <span class="math display">\[
+\log\mathcal{L}(\gamma,\sigma)=-N_t\log\sigma-\left(1+\frac{1}{\gamma}\right)\sum\limits_{i=1}^{N_t}\log\left(1+\frac{\gamma}{\sigma}Y_i\right)
+\]</span> 其中<span class="math inline">\(Y_i&gt;0\)</span>表示<span class="math inline">\(X_i\)</span>超过阈值<span class="math inline">\(t\)</span>的部分。</p>
+<p>文中使用了<strong>Grimshaw's Trick</strong>来将含两个参数的优化问题转换为只含一个参数的优化问题。记<span class="math inline">\(\ell(\gamma,\sigma)=\log\mathcal{L}(\gamma,\sigma)\)</span>，对于所有极值来说有<span class="math inline">\(\nabla \ell(\gamma, \sigma)=0\)</span>。Grimshaw's Trick表明对于满足<span class="math inline">\(\nabla \ell(\gamma, \sigma)=0\)</span>的一对<span class="math inline">\((\gamma^*,\sigma^*)\)</span>，<span class="math inline">\(x^*=\frac{\gamma^*}{\sigma^*}\)</span>为等式<span class="math inline">\(u(X)v(X)=1\)</span>的解，其中： <span class="math display">\[
+\begin{align}
+u(x)&amp;=\frac{1}{N_t}\sum\limits_{i=1}^{N_t}\frac{1}{1+xY_i}\\
+v(x)&amp;=1+\frac{1}{N_t}\sum\limits_{i=1}^{N_t}\log(1+xY_i)
+\end{align}
+\]</span> 在找到满足该等式的解<span class="math inline">\(x^*\)</span>后，我们可以得到<span class="math inline">\(\gamma^*=v(x^*)-1\)</span>和<span class="math inline">\(\sigma^*=\gamma^*/x^*\)</span>，于是问题就变成了如何寻找方程的所有根。</p>
+<p>因为<span class="math inline">\(\log\)</span>的存在，所以有<span class="math inline">\(1+xY_i&gt;0\)</span>。而<span class="math inline">\(Y_i\)</span>是正数，所以<span class="math inline">\(x^*\)</span>的范围一定在<span class="math inline">\(\left(-\frac{1}{Y^M},+\infty\right)\)</span>，其中<span class="math inline">\(Y^M=\max Y_i\)</span>。</p>
+<p>Grimshaw（作者参考的一篇<a href="https://www.tandfonline.com/doi/abs/10.1080/00401706.1993.10485040" target="_blank" rel="noopener">论文</a>）还给出了一个上界： <span class="math display">\[
+x^*_{\text{max}}=2\frac{\bar{Y}-Y^m}{(Y^m)^2}
+\]</span> 其中<span class="math inline">\(Y^m=\min Y_i\)</span>，<span class="math inline">\(\bar{Y}\)</span>为<span class="math inline">\(Y_i\)</span>的均值。详细的优化方法会在下文讨论。</p>
 <p>背景部分到此结束，接下来的部分就是作者提出的新方法。</p>
-<h1 id="Methodology"><a href="#Methodology" class="headerlink" title="Methodology"></a>Methodology</h1><p>Extreme Value Theory给出了在对原始分布未知的情况下估计使得$\mathbb{P}(X&gt;z_q)&lt;q$的$z_q$的方法。</p>
-<p>本文据此提出了时间序列流的异常检测方法。首先根据已知的观测值$X_1,\cdots,X_n$得到阈值$z_q$，然后根据数据的特性运用两种不同方法来更新$z_q$。对于平稳时间序列，使用SPOT；对于非平稳时间序列，使用DSPOT。</p>
-<h2 id="Initialization-Step"><a href="#Initialization-Step" class="headerlink" title="Initialization Step"></a>Initialization Step</h2><p>在进行异常检测之前，需要根据已有的观测数据进行$z_q$的估计。给定$n$个观测值$X_1,\cdots,X_n$和一个固定的概率值$q$，我们的目标是估计阈值$z_q$使得$\mathbb{P}(X&gt;z_q)&lt;q$。其主要流程是首先设定一个较大的阈值$t$，然后通过拟合GPD分布来计算$z_q$。过程如下图所示：</p>
-<p><img src="https://i.loli.net/2020/06/24/fzeC8vuDtA6mEdl.png" srcset="/img/loading.gif" alt=""></p>
+<h1 id="methodology">Methodology</h1>
+<p>Extreme Value Theory给出了在对原始分布未知的情况下估计使得<span class="math inline">\(\mathbb{P}(X&gt;z_q)&lt;q\)</span>的<span class="math inline">\(z_q\)</span>的方法。</p>
+<p>本文据此提出了时间序列流的异常检测方法。首先根据已知的观测值<span class="math inline">\(X_1,\cdots,X_n\)</span>得到阈值<span class="math inline">\(z_q\)</span>，然后根据数据的特性运用两种不同方法来更新<span class="math inline">\(z_q\)</span>。对于平稳时间序列，使用SPOT；对于非平稳时间序列，使用DSPOT。</p>
+<h2 id="initialization-step">Initialization Step</h2>
+<p>在进行异常检测之前，需要根据已有的观测数据进行<span class="math inline">\(z_q\)</span>的估计。给定<span class="math inline">\(n\)</span>个观测值<span class="math inline">\(X_1,\cdots,X_n\)</span>和一个固定的概率值<span class="math inline">\(q\)</span>，我们的目标是估计阈值<span class="math inline">\(z_q\)</span>使得<span class="math inline">\(\mathbb{P}(X&gt;z_q)&lt;q\)</span>。其主要流程是首先设定一个较大的阈值<span class="math inline">\(t\)</span>，然后通过拟合GPD分布来计算<span class="math inline">\(z_q\)</span>。过程如下图所示：</p>
+<p><img src="https://i.loli.net/2020/06/24/fzeC8vuDtA6mEdl.png" srcset="/img/loading.gif" /></p>
 <p>算法流程如下所示：</p>
-<p><img src="https://i.loli.net/2020/06/24/AEQpnZPiW3C4mr7.png" srcset="/img/loading.gif" alt=""></p>
-<p>$Y_t$代表大于$t$的观测值的集合，GPD分布的拟合使用了前文提到的Grimshaw’s Trick。</p>
-<h2 id="Finding-Anomalies-in-a-Stream"><a href="#Finding-Anomalies-in-a-Stream" class="headerlink" title="Finding Anomalies in a Stream"></a>Finding Anomalies in a Stream</h2><p>通过Initialization Step使用POT算法得到的$z_q$，我们定义其为”Normality Bound”，用于后面的检测。在后面的步骤中，我们会根据新得到的观测值来更新$z_q$。</p>
-<h3 id="Stationary-Case"><a href="#Stationary-Case" class="headerlink" title="Stationary Case"></a>Stationary Case</h3><p>我们首先来讨论时间序列没有时间依赖性的情况（$X_1,\cdots,X_n$之间独立同分布）。通过POT算法对所有观测值得到$z_q$之后，Streaming POT (SPOT) 算法会检查$X_n$之后的值（数据流场景，$X_1,\cdots,X_n$是历史数据，还会有新的数据进来），如果大于$z_q$，则将$X_i$加入异常点集合中；如果大于$t$但小于$z_q$，则将$X_i$加入观测值集合中，更新$z_q$；其他情况我们$X_i$是正常情况。算法流程图如下：</p>
-<p><img src="https://i.loli.net/2020/06/24/h5yKnlCAYxbHu2R.png" srcset="/img/loading.gif" alt=""></p>
-<h3 id="Drifting-Case"><a href="#Drifting-Case" class="headerlink" title="Drifting Case"></a>Drifting Case</h3><p>SPOT算法只适用于平稳分布的情况，但在现实生活中这样的假设过强了。于是作者提出了能处理时间依赖性的Streaming POT with Drift (DSPOT) 算法。</p>
-<p><img src="https://i.loli.net/2020/06/25/O49XwQvVGH7k1ri.png" srcset="/img/loading.gif" alt=""></p>
-<p>在DSPOT中，我们不使用$X_i$的绝对值，而是用相对值$X^\prime_i=X_i-M_i$，其中$M_i$是$i$时刻的局部特征，如Figure 4所示。最简单的实现是使用局部均值，即$M_i=(1/d)\cdot\sum\limits_{k=1}^d X_{i-k}^<em>$，$X_{i-1}^</em>,\cdots,X_{i-d}^*$是长度为$d$的窗口。我们假设$X^\prime_i$服从平稳分布的假设。</p>
+<p><img src="https://i.loli.net/2020/06/24/AEQpnZPiW3C4mr7.png" srcset="/img/loading.gif" /></p>
+<p><span class="math inline">\(Y_t\)</span>代表大于<span class="math inline">\(t\)</span>的观测值的集合，GPD分布的拟合使用了前文提到的Grimshaw's Trick。</p>
+<h2 id="finding-anomalies-in-a-stream">Finding Anomalies in a Stream</h2>
+<p>通过Initialization Step使用POT算法得到的<span class="math inline">\(z_q\)</span>，我们定义其为"Normality Bound"，用于后面的检测。在后面的步骤中，我们会根据新得到的观测值来更新<span class="math inline">\(z_q\)</span>。</p>
+<h3 id="stationary-case">Stationary Case</h3>
+<p>我们首先来讨论时间序列没有时间依赖性的情况（<span class="math inline">\(X_1,\cdots,X_n\)</span>之间独立同分布）。通过POT算法对所有观测值得到<span class="math inline">\(z_q\)</span>之后，Streaming POT (SPOT) 算法会检查<span class="math inline">\(X_n\)</span>之后的值（数据流场景，<span class="math inline">\(X_1,\cdots,X_n\)</span>是历史数据，还会有新的数据进来），如果大于<span class="math inline">\(z_q\)</span>，则将<span class="math inline">\(X_i\)</span>加入异常点集合中；如果大于<span class="math inline">\(t\)</span>但小于<span class="math inline">\(z_q\)</span>，则将<span class="math inline">\(X_i\)</span>加入观测值集合中，更新<span class="math inline">\(z_q\)</span>；其他情况我们<span class="math inline">\(X_i\)</span>是正常情况。算法流程图如下：</p>
+<p><img src="https://i.loli.net/2020/06/24/h5yKnlCAYxbHu2R.png" srcset="/img/loading.gif" /></p>
+<h3 id="drifting-case">Drifting Case</h3>
+<p>SPOT算法只适用于平稳分布的情况，但在现实生活中这样的假设过强了。于是作者提出了能处理时间依赖性的Streaming POT with Drift (DSPOT) 算法。</p>
+<p><img src="https://i.loli.net/2020/06/25/O49XwQvVGH7k1ri.png" srcset="/img/loading.gif" /></p>
+<p>在DSPOT中，我们不使用<span class="math inline">\(X_i\)</span>的绝对值，而是用相对值<span class="math inline">\(X^\prime_i=X_i-M_i\)</span>，其中<span class="math inline">\(M_i\)</span>是<span class="math inline">\(i\)</span>时刻的局部特征，如Figure 4所示。最简单的实现是使用局部均值，即<span class="math inline">\(M_i=(1/d)\cdot\sum\limits_{k=1}^d X_{i-k}^*\)</span>，<span class="math inline">\(X_{i-1}^*,\cdots,X_{i-d}^*\)</span>是长度为<span class="math inline">\(d\)</span>的窗口。我们假设<span class="math inline">\(X^\prime_i\)</span>服从平稳分布的假设。</p>
 <p>算法流程图如下所示：</p>
-<p><img src="https://i.loli.net/2020/06/25/P6hOsD9dnNIHvUV.png" srcset="/img/loading.gif" alt=""></p>
-<h2 id="Numerical-Optimization"><a href="#Numerical-Optimization" class="headerlink" title="Numerical Optimization"></a>Numerical Optimization</h2><p>现在剩下的问题就是优化了，前文已经提到对GPD的拟合已经被优化成一个参数的优化问题，下面将会详细讨论优化算法。</p>
-<h3 id="Reduction-of-the-Optimal-Parameters-Search"><a href="#Reduction-of-the-Optimal-Parameters-Search" class="headerlink" title="Reduction of the Optimal Parameters Search"></a>Reduction of the Optimal Parameters Search</h3><p>前文已经得到了一个初步的$x^<em>$的Bound，即$x^</em>&gt;-\frac{1}{Y^M}$和$x^*\leq 2\frac{\bar{Y}-Y^m}{(Y^m)^2}$，下面将给出一个更严格的Bound。</p>
+<p><img src="https://i.loli.net/2020/06/25/P6hOsD9dnNIHvUV.png" srcset="/img/loading.gif" /></p>
+<h2 id="numerical-optimization">Numerical Optimization</h2>
+<p>现在剩下的问题就是优化了，前文已经提到对GPD的拟合已经被优化成一个参数的优化问题，下面将会详细讨论优化算法。</p>
+<h3 id="reduction-of-the-optimal-parameters-search">Reduction of the Optimal Parameters Search</h3>
+<p>前文已经得到了一个初步的<span class="math inline">\(x^*\)</span>的Bound，即<span class="math inline">\(x^*&gt;-\frac{1}{Y^M}\)</span>和<span class="math inline">\(x^*\leq 2\frac{\bar{Y}-Y^m}{(Y^m)^2}\)</span>，下面将给出一个更严格的Bound。</p>
 <blockquote>
-<p><em><em>PROPOSITION: *</em>如果$x^</em>$是$u(x)v(x)=1$的解，那么：<br>$$<br>x^<em>\leq 0 \text{ or } x^</em>\geq 2\frac{\bar{Y}-Y^m}{\bar{Y}Y^m}<br>$$</p>
+<p><strong>PROPOSITION: </strong>如果<span class="math inline">\(x^*\)</span>是<span class="math inline">\(u(x)v(x)=1\)</span>的解，那么： <span class="math display">\[
+x^*\leq 0 \text{ or } x^*\geq 2\frac{\bar{Y}-Y^m}{\bar{Y}Y^m}
+\]</span></p>
 </blockquote>
 <p>证明见论文原文。</p>
-<p>这样$x^<em>$的范围就进一步缩小了，于是有$u(x)v(X)=1$的解$x^</em>$在以下范围之内：<br>$$<br>\left(-\frac{1}{Y^M},0\right]\text{ and }\left[2\frac{\bar{Y}-Y^m}{\bar{Y}Y^m},2\frac{\bar{Y}-Y^m}{(Y^m)^2}\right]<br>$$</p>
-<h3 id="How-Can-We-Maximize-the-Likelihood-Function"><a href="#How-Can-We-Maximize-the-Likelihood-Function" class="headerlink" title="How Can We Maximize the Likelihood Function?"></a>How Can We Maximize the Likelihood Function?</h3><p>接下来是优化的具体实现问题。文中首先设定了一个很小的值$\epsilon&gt;0\space(\sim 10^{-8})$，然后在下面的范围内寻找函数$w:x\mapsto u(x)v(x)-1$的根：<br>$$<br>\left[-\frac{1}{Y^M}+\epsilon,-\epsilon\right]\text{ and }\left[2\frac{\bar{Y}-Y^m}{\bar{Y}Y^m},2\frac{\bar{Y}-Y^m}{(Y^m)^2}\right]<br>$$<br>作者没有使用现有的寻找函数根的算法，而是转换为如下优化问题：<br>$$<br>\min\limits_{x_1,\cdots,x_k\in I}\sum\limits_{i=1}^k w(x_k)^2<br>$$<br>其中$I$就是$x^*$的Bound。该问题是一个很典型的优化问题，可以被很多成熟的算法所解决。</p>
-<h3 id="Initial-Threshold"><a href="#Initial-Threshold" class="headerlink" title="Initial Threshold"></a>Initial Threshold</h3><p>在算法的Initialization Step，需要事先设定一个阈值$t$，如果设定的太大，那么$Y_t$的数量就会很少。作者给出的建议是保证$t&lt;z_q$，即$t$对应的概率值应该小于$1-q$。</p>
-<h1 id="Experiments"><a href="#Experiments" class="headerlink" title="Experiments"></a>Experiments</h1><p>在实验部分，作者在合成数据和真实数据上试验了SPOT算法和DSPOT算法的有效性。</p>
-<h2 id="D-SPOT-Reliability"><a href="#D-SPOT-Reliability" class="headerlink" title="(D)SPOT Reliability"></a>(D)SPOT Reliability</h2><p>作者首先在合成数据上验证SPOT的有效性。具体做法是使用高斯分布生成数据（高斯分布的分位数能够直接计算），然后将SPOT得出的$z_q$和理论值进行对比。误差定义如下：<br>$$<br>\text{error rate}=\left|\frac{z^{\text{SPOT}}-z^{\text{th}}}{z^{\text{th}}}\right|<br>$$<br>下图是采用不同数量观测值的结果：</p>
-<p><img src="https://i.loli.net/2020/06/25/GXlu2MAJaoqxyd4.png" srcset="/img/loading.gif" alt=""></p>
-<h2 id="Finding-Anomalies-with-SPOT"><a href="#Finding-Anomalies-with-SPOT" class="headerlink" title="Finding Anomalies with SPOT"></a>Finding Anomalies with SPOT</h2><p>在这一节作者在真实数据集上进行了实验以验证SPOT算法的有效性，结果如下图：</p>
-<p><img src="https://i.loli.net/2020/06/25/wTkZxKarFVDOlp6.png" srcset="/img/loading.gif" alt=""></p>
-<p>在文中作者说算法的True Positive达到了$86%$，False Positive小于$4%$。</p>
-<p><img src="https://i.loli.net/2020/06/25/RcUnwtHud7DjNXv.png" srcset="/img/loading.gif" alt=""></p>
-<h2 id="Finding-Anomalies-with-DSPOT"><a href="#Finding-Anomalies-with-DSPOT" class="headerlink" title="Finding Anomalies with DSPOT"></a>Finding Anomalies with DSPOT</h2><p>在这一节作者使用DSPOT在真实数据集上进行了实验。窗口大小$d=450$，预设的风险概率值$q=10^{-3}$。结果如下图所示：</p>
-<p><img src="https://i.loli.net/2020/06/25/lIxqpnGtL7feVKs.png" srcset="/img/loading.gif" alt=""></p>
-<p>在图中可以看出在$8000$ Minutes之后上界显著提高，作者分析了原因，认为是因为超过阈值$t$的点$Y_t$的存储是全局的，在前$8000$ Minutes算法存储了很多较高的$Y_t$值，而在$8000$ Minutes之后，真实数据的趋势开始下降，但算法仍是根据全局的$Y_t$来进行$z_q$的计算（这一段没有特别明白）。作者给出的修正方法是只保存固定数量的Peaks。</p>
+<p>这样<span class="math inline">\(x^*\)</span>的范围就进一步缩小了，于是有<span class="math inline">\(u(x)v(X)=1\)</span>的解<span class="math inline">\(x^*\)</span>在以下范围之内： <span class="math display">\[
+\left(-\frac{1}{Y^M},0\right]\text{ and }\left[2\frac{\bar{Y}-Y^m}{\bar{Y}Y^m},2\frac{\bar{Y}-Y^m}{(Y^m)^2}\right]
+\]</span></p>
+<h3 id="how-can-we-maximize-the-likelihood-function">How Can We Maximize the Likelihood Function?</h3>
+<p>接下来是优化的具体实现问题。文中首先设定了一个很小的值<span class="math inline">\(\epsilon&gt;0\space(\sim 10^{-8})\)</span>，然后在下面的范围内寻找函数<span class="math inline">\(w:x\mapsto u(x)v(x)-1\)</span>的根： <span class="math display">\[
+\left[-\frac{1}{Y^M}+\epsilon,-\epsilon\right]\text{ and }\left[2\frac{\bar{Y}-Y^m}{\bar{Y}Y^m},2\frac{\bar{Y}-Y^m}{(Y^m)^2}\right]
+\]</span> 作者没有使用现有的寻找函数根的算法，而是转换为如下优化问题： <span class="math display">\[
+\min\limits_{x_1,\cdots,x_k\in I}\sum\limits_{i=1}^k w(x_k)^2
+\]</span> 其中<span class="math inline">\(I\)</span>就是<span class="math inline">\(x^*\)</span>的Bound。该问题是一个很典型的优化问题，可以被很多成熟的算法所解决。</p>
+<h3 id="initial-threshold">Initial Threshold</h3>
+<p>在算法的Initialization Step，需要事先设定一个阈值<span class="math inline">\(t\)</span>，如果设定的太大，那么<span class="math inline">\(Y_t\)</span>的数量就会很少。作者给出的建议是保证<span class="math inline">\(t&lt;z_q\)</span>，即<span class="math inline">\(t\)</span>对应的概率值应该小于<span class="math inline">\(1-q\)</span>。</p>
+<h1 id="experiments">Experiments</h1>
+<p>在实验部分，作者在合成数据和真实数据上试验了SPOT算法和DSPOT算法的有效性。</p>
+<h2 id="dspot-reliability">(D)SPOT Reliability</h2>
+<p>作者首先在合成数据上验证SPOT的有效性。具体做法是使用高斯分布生成数据（高斯分布的分位数能够直接计算），然后将SPOT得出的<span class="math inline">\(z_q\)</span>和理论值进行对比。误差定义如下： <span class="math display">\[
+\text{error rate}=\left|\frac{z^{\text{SPOT}}-z^{\text{th}}}{z^{\text{th}}}\right|
+\]</span> 下图是采用不同数量观测值的结果：</p>
+<p><img src="https://i.loli.net/2020/06/25/GXlu2MAJaoqxyd4.png" srcset="/img/loading.gif" /></p>
+<h2 id="finding-anomalies-with-spot">Finding Anomalies with SPOT</h2>
+<p>在这一节作者在真实数据集上进行了实验以验证SPOT算法的有效性，结果如下图：</p>
+<p><img src="https://i.loli.net/2020/06/25/wTkZxKarFVDOlp6.png" srcset="/img/loading.gif" /></p>
+<p>在文中作者说算法的True Positive达到了<span class="math inline">\(86\%\)</span>，False Positive小于<span class="math inline">\(4\%\)</span>。</p>
+<p><img src="https://i.loli.net/2020/06/25/RcUnwtHud7DjNXv.png" srcset="/img/loading.gif" /></p>
+<h2 id="finding-anomalies-with-dspot">Finding Anomalies with DSPOT</h2>
+<p>在这一节作者使用DSPOT在真实数据集上进行了实验。窗口大小<span class="math inline">\(d=450\)</span>，预设的风险概率值<span class="math inline">\(q=10^{-3}\)</span>。结果如下图所示：</p>
+<p><img src="https://i.loli.net/2020/06/25/lIxqpnGtL7feVKs.png" srcset="/img/loading.gif" /></p>
+<p>在图中可以看出在<span class="math inline">\(8000\)</span> Minutes之后上界显著提高，作者分析了原因，认为是因为超过阈值<span class="math inline">\(t\)</span>的点<span class="math inline">\(Y_t\)</span>的存储是全局的，在前<span class="math inline">\(8000\)</span> Minutes算法存储了很多较高的<span class="math inline">\(Y_t\)</span>值，而在<span class="math inline">\(8000\)</span> Minutes之后，真实数据的趋势开始下降，但算法仍是根据全局的<span class="math inline">\(Y_t\)</span>来进行<span class="math inline">\(z_q\)</span>的计算（这一段没有特别明白）。作者给出的修正方法是只保存固定数量的Peaks。</p>
 <p>下图是作者在股票数据上得到的实验结果：</p>
-<p><img src="https://i.loli.net/2020/06/25/VeEo8OPbzyUxXrR.png" srcset="/img/loading.gif" alt=""></p>
-<h2 id="Performances"><a href="#Performances" class="headerlink" title="Performances"></a>Performances</h2><p>作者还验证了算法的时间效率。</p>
-<p><img src="https://i.loli.net/2020/06/25/Egh7CxsU2TtL6az.png" srcset="/img/loading.gif" alt=""></p>
-<p>表中T代表的是每个Iteration的时间，M代表的是Peaks的比例，”bi-“前缀代表的是同时计算上界和下界。</p>
+<p><img src="https://i.loli.net/2020/06/25/VeEo8OPbzyUxXrR.png" srcset="/img/loading.gif" /></p>
+<h2 id="performances">Performances</h2>
+<p>作者还验证了算法的时间效率。</p>
+<p><img src="https://i.loli.net/2020/06/25/Egh7CxsU2TtL6az.png" srcset="/img/loading.gif" /></p>
+<p>表中T代表的是每个Iteration的时间，M代表的是Peaks的比例，"bi-"前缀代表的是同时计算上界和下界。</p>
 
             </article>
             <hr>
@@ -308,9 +367,9 @@
                     
                       <a class="hover-with-bg" href="/tags/Time-Series/">Time Series</a>
                     
-                      <a class="hover-with-bg" href="/tags/Machine-Learning/">Machine Learning</a>
-                    
                       <a class="hover-with-bg" href="/tags/Statistics/">Statistics</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Machine-Learning/">Machine Learning</a>
                     
                   </div>
                 
