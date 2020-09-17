@@ -17,7 +17,7 @@
   <meta name="description" content="">
   <meta name="author" content="Hanzawa">
   <meta name="keywords" content="">
-  <title>Time-Series Anomaly Detection Service at Microsoft - Hanzawa の 部屋</title>
+  <title>Representation Learning with Contrastive Predictive Coding - Hanzawa の 部屋</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
@@ -141,7 +141,7 @@
           <div class="container text-center white-text fadeInUp">
             <span class="h2" id="subtitle">
               
-                Time-Series Anomaly Detection Service at Microsoft
+                Representation Learning with Contrastive Predictive Coding
               
             </span>
 
@@ -149,8 +149,8 @@
               
                 <div class="mt-3 post-meta">
                   <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-                  <time datetime="2019-09-22 20:33">
-                    2019年9月22日 晚上
+                  <time datetime="2020-09-17 20:08">
+                    2020年9月17日 晚上
                   </time>
                 </div>
               
@@ -160,7 +160,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    1.5k 字
+                    1.8k 字
                   </span>
                 
 
@@ -170,7 +170,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    18
+                    25
                      分钟
                   </span>
                 
@@ -207,90 +207,96 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：2020年6月25日 下午
+                  本文最后更新于：2020年9月17日 晚上
                 
               </p>
             
             <article class="markdown-body">
-              <h2 id="abstract">Abstract</h2>
-<p>本文借鉴计算机视觉中的显著性检测，提出了一种基于Spectral Residual的时间序列异常检测算法。</p>
-<p><a href="https://www.kdd.org/kdd2019/accepted-papers/view/time-series-anomaly-detection-service-at-microsoft" target="_blank" rel="noopener">原文</a></p>
-<p>这篇文章还提出了几个时间序列异常检测落地的难点：</p>
-<ol type="1">
-<li><strong>Lack of Labels.</strong> 在实际生产环境中会产生大量的KPI，而很难对每个KPI进行人工标注。</li>
-<li><strong>Generalization.</strong> 不同KPI所表现出来的模式也不尽相同，如Figure 1所示。现有方法很难在所有模式的KPI上都表现良好。</li>
-<li><strong>Efficiency.</strong> 在实际场景中，会产生大量的时间序列数据，同时对异常检测算法的时间效率有要求。</li>
-</ol>
-<p><img src="https://i.loli.net/2020/06/25/o21lnTUtcGuwCq6.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
-<h2 id="contribution">Contribution</h2>
-<ul>
-<li>将Visual Saliency Detection的方法引入了时间序列异常检测。</li>
-<li>结合Spectral Residual和CNN提高了异常检测的效果。</li>
-<li>算法具有良好的时间效率和通用性。</li>
-</ul>
-<h2 id="background">Background</h2>
-<h3 id="spectral-residual">Spectral Residual</h3>
-<p>SR(Spectral Residual)算法主要包含三个步骤：</p>
-<ol type="1">
-<li>通过傅里叶变换得到log amplitude spectrum；</li>
-<li>计算spectral residual；</li>
-<li>通过傅里叶逆变换回到时间域。</li>
-</ol>
-<p>更形式化的表述为如下：</p>
-<p>给定一个序列<span class="math inline">\(\mathbb{x}\)</span>，则有：</p>
-<p><span class="math display">\[A(f)=Amplitude(\mathscr{F}(\mathbb{x}))\]</span></p>
-<p><span class="math display">\[P(f)=Phrase(\mathscr{F}(\mathbb{x}))\]</span></p>
-<p><span class="math display">\[L(f)=\log(A(f))\]</span></p>
-<p><span class="math display">\[AL(F)=h_1(f)\cdot L(f)\]</span></p>
-<p><span class="math display">\[R(f)=L(f)-AL(f)\]</span></p>
-<p><span class="math display">\[S(\mathbb{x})=\parallel\mathscr{F}^{-1}(\exp(R(f)+iP(f)))\parallel\]</span></p>
-<p>其中<span class="math inline">\(\mathscr{F}\)</span>和<span class="math inline">\(\mathscr{F}^{-1}\)</span>分别表示傅里叶变换和傅里叶逆变换；<span class="math inline">\(\mathbb{x}\in \mathbb{R}^{n\times 1}\)</span>表示输入序列；<span class="math inline">\(A(f)\)</span>为幅度谱，<span class="math inline">\(P(f)\)</span>为相位谱，<span class="math inline">\(L(f)\)</span>为对数幅度谱，<span class="math inline">\(AL(F)\)</span>为均值滤波后的对数幅度谱；<span class="math inline">\(R(f)\)</span>为spectral residual；<span class="math inline">\(S(\mathbb{x})\)</span>称为saliency map。Figure 4为文中给出的Saliency Map示意图。</p>
-<p><img src="https://i.loli.net/2020/06/25/OrSlqhBWNdyfEG9.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
-<h2 id="methodology">Methodology</h2>
-<h3 id="problem-definition">Problem Definition</h3>
+              <h1 id="introduction">Introduction</h1>
+<p>本文提出了一种表示学习框架：Contrastive Predictive Coding（CPC）。To be finished...</p>
+<h1 id="proposed-method">Proposed Method</h1>
+<h2 id="contrastive-predictive-coding">Contrastive Predictive Coding</h2>
+<p>N-pair Loss: <span class="math display">\[
+\mathcal L=-\log\frac{\exp(f^+\cdot f^\top)}{\exp(f^+\cdot f^\top)+\sum_{f_j\neq f^\top}\exp(f^+\cdot f_j)}
+\]</span> 你有N个样本<span class="math inline">\(\{x_1,x_2,\cdots,x_N\}\)</span>，然后对应的表示为<span class="math inline">\(f_j\)</span>。假设当前样本为<span class="math inline">\(f^+\)</span>，在所有的<span class="math inline">\(f_j\)</span>中只有一个表示与<span class="math inline">\(f^+\)</span> match，记为<span class="math inline">\(f^\top\)</span>（可以理解为属于同一类，或者两个相似），其他的都是负样本。我们优化上面的优化公式就会拉近<span class="math inline">\(f^+\)</span>和<span class="math inline">\(f^\top\)</span>之间的距离（拉近同类），疏远<span class="math inline">\(f^+\)</span>和所有其他负样本<span class="math inline">\(f_j\)</span>的距离（疏远异类）。不过在N-pair Loss中，正负样本是根据标签来选取的，然而在这里我们没有标签。</p>
+<p>下图展示了Contrastive Predictive Coding的结构：</p>
+<p><img src="https://i.loli.net/2020/07/07/mcFYnVGasjkHrw5.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p>对比学习 <span class="math display">\[
+\mathcal L(f_i)=-\log\frac{\exp(f_i\cdot f^\top)}{\sum_j\exp(f_i\cdot f_j)}
+\]</span> 设数据集（一个Batch）为<span class="math inline">\(\mathbf X=\{x_1,x_2,\cdots,x_N\}\)</span>，正样本对为，负样本对。</p>
+<p>至于<span class="math inline">\(f(\cdot,\cdot)\)</span>的具体形式，其实<span class="math inline">\(\frac{p(x_{t+k}|c_t)}{p(x_{t+k})}\)</span>这个式子我们也是没法直接优化的，因为这个Density Ratio无法直接算出来。在这里，作者使用了一个替代的办法，就是用<span class="math inline">\(\mathbf c_t\)</span>来预测未来的隐变量<span class="math inline">\(\hat{\mathbf z}_{t+1},\hat{\mathbf z}_{t+2},\cdots\)</span>，而真实的隐变量<span class="math inline">\(\mathbf z_{t+1},\mathbf z_{t+2},\cdots\)</span>我们是知道的。这里预测直接使用权重矩阵和<span class="math inline">\(\mathbf c_t\)</span>相乘： <span class="math display">\[
+f_k(\mathbf x_{t+k},\mathbf c_t)=\exp\left(\mathbf z_{t+k}^T \cdot \mathbf W_k\mathbf c_t\right)
+\]</span></p>
+<p>上式有点难以理解，实际上预测值<span class="math inline">\(\hat{\mathbf z}_{t+k}=\mathbf W_k\mathbf c_t\)</span>，而<span class="math inline">\(\mathbf z_{t+k}\hat{\mathbf z}_{t+k}\)</span>相当于计算两者的距离，即相似性。所以<span class="math inline">\(f_k(\cdot,\cdot)\)</span>其实是在计算预测值和真实值的相似性。现在大家先接受这个<span class="math inline">\(f(\cdot,\cdot)\)</span>的定义，因为后面会证明优化这个<span class="math inline">\(f(\cdot,\cdot)\)</span>就相当于在优化Density Ratio <span class="math inline">\(\frac{p(x_{t+k}|c_t)}{p(x_{t+k})}\)</span>。</p>
+<p>一个来自<span class="math inline">\(p(x_{t+k}|c_t)\)</span>的正例和<span class="math inline">\(N-1\)</span>个来自<span class="math inline">\(p(x_{t+k})\)</span>的负例，目标函数（文中称为CPC Loss）为： <span class="math display">\[
+\mathcal L_N=-\mathop{\mathbb E}\limits_X\left[\log\frac{f_k(x_{t+k},c_t)}{\sum_{x_j\in X}f_k(x_j,c_t)}\right]
+\]</span></p>
+<p>这里相当于做了个<span class="math inline">\(N\)</span>分类，因为这里损失函数等价于<span class="math inline">\(N\)</span>分类交叉熵损失函数。</p>
 <blockquote>
-<p>给定一系列实数值<span class="math inline">\(\mathbb{x}=x_1,x_2,\cdots,x_n\)</span>，时间序列异常检测的任务是产生一个输出序列<span class="math inline">\(\mathbb{y}=y_1,y_2,\cdots,y_n\)</span>其中<span class="math inline">\(y_i\in\{0,1\}\)</span>表示<span class="math inline">\(x_i\)</span>是否为异常点。</p>
+<p>两个离散随机变量的交叉熵的定义为： <span class="math display">\[
+H(p,q) = -\sum_{x\in\mathcal X}p(x)\log q(x)
+\]</span> 对于交叉熵损失函数，设<span class="math inline">\(i\)</span>为真实标签，<span class="math inline">\(\hat{\boldsymbol y}\)</span>为分类器的输出。<span class="math inline">\(\frac{\exp(\hat y_i)}{\sum_j\exp(\hat y_j)}\)</span>为经过<code>Softmax</code>归一化之后的输出，其每个分量<span class="math inline">\(\hat y_j\)</span>相当于输入样本<span class="math inline">\(x\)</span>的预测类别为<span class="math inline">\(j\)</span>的概率。不过由于对于真实标签<span class="math inline">\(y\)</span>来说，只有<span class="math inline">\(y_i=1\)</span>，其他的分量都为<span class="math inline">\(0\)</span>，所以最后交叉熵只剩下一项： <span class="math display">\[
+\mathcal L=-\log\left(\frac{\exp(\hat y_i)}{\sum_j\exp(\hat y_j)}\right)
+\]</span></p>
 </blockquote>
-<h3 id="sr">SR</h3>
-<p>对于给定序列<span class="math inline">\(\mathbb{x}\)</span>，计算Saliency Map <span class="math inline">\(S(\mathbb{x})\)</span>，输出序列<span class="math inline">\(O(\mathbb{x})\)</span>定义为：</p>
-<p><span class="math display">\[O(x_i)=\begin{cases}1,\quad \text{if}\frac{S(x_i)-\overline{S(x_i)}}{\overline{S(x_i)}}&gt;\tau\\\\0,\quad \text{otherwise}\end{cases}\]</span></p>
-<p>其中<span class="math inline">\(S(x_i)\)</span>为<span class="math inline">\(x_i\)</span>对应的Saliency Map的值，<span class="math inline">\(\overline{S(x_i)}\)</span>为<span class="math inline">\(x_i\)</span>附近Saliency Map局部均值。</p>
-<hr />
-<p>在实际操作中，FFT是在一个滑动窗口中进行的，文中提到SR方法在点位于窗口中央时效果更好，所以在进行测试的时候，按照如下方法对当前点<span class="math inline">\(x_n\)</span>(也就是当前序列最后一个点)之后的点进行预测：</p>
-<p><span class="math display">\[\overline{g}=\frac{1}{m}\sum_{i=1}^m g(x_n,x_{n-i})\]</span></p>
-<p><span class="math display">\[x_{n+1}=x_{n-m+1}+\overline{g}\cdot m\]</span></p>
-<p>其中<span class="math inline">\(g(x_i,x_j)\)</span>代表<span class="math inline">\(x_i\)</span>和<span class="math inline">\(x_j\)</span>两点构成的直线的梯度；<span class="math inline">\(\overline{g}\)</span>代表所处理的点的平均梯度；<span class="math inline">\(m\)</span>为所处理的点的数量。在本文中设置<span class="math inline">\(m=5\)</span>。文中发现第一个预测的值很重要，所以直接把<span class="math inline">\(x_{n+1}\)</span>赋值<span class="math inline">\(k\)</span>次添加到序列的末尾。</p>
-<h3 id="sr-cnn">SR-CNN</h3>
-<p><img src="https://i.loli.net/2020/06/25/9pEWXRD5JM4umHn.png" srcset="/img/loading.gif" /></p>
-<p>本文提到，仅仅使用一个阈值来进行异常的判断太过简单，于是提出使用一个判别模型来进行异常的判断。由于训练数据没有标签，所以使用如下的公式人工加入异常：</p>
-<p><span class="math display">\[x=(\overline{x}+mean)(1+var)\cdot r+x\]</span></p>
-<p>其中<span class="math inline">\(\overline{x}\)</span>所处理的点的局部均值；<span class="math inline">\(mean\)</span>和<span class="math inline">\(var\)</span>为当前滑动窗口点的均值和方差；<span class="math inline">\(r\sim \mathcal{N}(0,1)\)</span>为服从标准正态分布的噪声。</p>
-<hr />
-<p>对于判别模型使用的是CNN，主要包含两个1维卷积层(kernel size等于窗口大小<span class="math inline">\(w\)</span>)和两个全连接层。两个卷积层的channel size分别为<span class="math inline">\(w\)</span>和<span class="math inline">\(2w\)</span>。</p>
-<h2 id="experiments">Experiments</h2>
-<h3 id="datasets">Datasets</h3>
-<p><img src="https://i.loli.net/2020/06/25/dquAjtRpNSY8rLo.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
-<p>所用数据集包含清华AIOps竞赛数据、Yahoo和Microsoft的KPI数据。</p>
-<h3 id="evaluation-metrics">Evaluation Metrics</h3>
-<p>算法准确率方面用了precision，recall和<span class="math inline">\(F_1\)</span>-score。</p>
-<p><img src="https://i.loli.net/2020/06/25/EbcjA8X5fYa6Glz.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
-<p>由于在实际场景中KPI的异常往往是以一段一段的形式出现，且并不要求某一个时间点出现异常算法就马上检测出来，只要检测出来的时间在一定的容忍范围内即可。本文使用了一些调整的手段，如Figure 6。对于某一段异常，设段首的异常位于时间点<span class="math inline">\(t_{truth}\)</span>，预测为异常的结果中时间在<span class="math inline">\(t_{truth}\)</span>之后且距<span class="math inline">\(t_{truth}\)</span>最近的时间点设为<span class="math inline">\(t_{predict}\)</span>，那么对于一个预先设定的容忍范围<span class="math inline">\(k\)</span>，只要<span class="math inline">\(t_{predict}-t_{truth}\leq k+1\)</span>那么在预测结果中整段异常就会重置为<span class="math inline">\(1\)</span>，否则全部重置为<span class="math inline">\(0\)</span>。</p>
-<h3 id="results">Results</h3>
-<p>实验部分使用了两种训练方式，一种是cold-start，即把所有数据都用来测试，另一种是把数据分为训练测试两部分，在训练集上训练，最后在测试集上进行测试。两种方法适用的baseline不同，最后结果如Table 2和Table 3所示：</p>
-<p><img src="https://i.loli.net/2020/06/25/3L9xe5jJGtnR6AQ.png" srcset="/img/loading.gif" style="zoom: 50%;" /></p>
-<hr />
-<p>在SR的参数设置上，<span class="math inline">\(h_q(f)\)</span>中的<span class="math inline">\(q\)</span>为3，局部平均所用的点数目<span class="math inline">\(z\)</span>为21，阈值<span class="math inline">\(\tau\)</span>为3，估计点的数量<span class="math inline">\(k\)</span>为5，滑动窗口的大小<span class="math inline">\(w\)</span>在KPI、Yahoo、Microsoft三个数据集上分别为1440、64和30。SR-CNN的<span class="math inline">\(q\)</span>，<span class="math inline">\(z\)</span>，<span class="math inline">\(k\)</span>，<span class="math inline">\(w\)</span>设置与SR相同。</p>
-<h3 id="additional-experiments-with-dnn">Additional Experiments with DNN</h3>
-<p>文中还对有监督的情况进行了测试，具体做法是从时间序列提取特征，然后将Saliency Map也作为特征引入，构造一个有监督的Neural Network进行测试。</p>
-<p>提取的特征如Table 5所示：</p>
-<p><img src="https://i.loli.net/2020/06/25/4flipKbc1OtVGg9.png" srcset="/img/loading.gif" style="zoom: 50%;" /></p>
-<hr />
-<p>神经网络的结构为两层全连接层，并添加了Dropout Ratio为0.5的Dropout Layer。两个Layer使用了<span class="math inline">\(L_1=L_2=0.0001\)</span>的正则化。同时为了处理样本不平衡的情况使用了过采样来使正负样本的比例为<span class="math inline">\(1:2\)</span>。结构如Figure 7所示：</p>
-<p><img src="https://i.loli.net/2020/06/25/bxeluFBHv2i7Y5m.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
-<hr />
-<p>训练测试集的情况如Table 6所示，最终结果如Table 7所示，P-R曲线如Figure 8所示。可以看到使用了SR特征的DNN效果由于没有使用SR特征的DNN。</p>
-<p><img src="https://i.loli.net/2020/06/25/E6vapzhCiG9HTPu.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
-<p><img src="https://i.loli.net/2020/06/25/tZAOg74flmE39oI.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><span class="math display">\[
+I(x;c)=\sum_{x,c}p(x,c)\log\frac{p(x|c)}{p(x)}
+\]</span></p>
+<p>编码器<span class="math inline">\(g_{enc}\)</span>将观测值<span class="math inline">\(\boldsymbol x_t\)</span>编码到隐变量<span class="math inline">\(\boldsymbol z_t=g_\text{enc}(\boldsymbol x_t)\)</span>（对应于局部信息），之后自回归模型<span class="math inline">\(g_{ar}\)</span>将所有<span class="math inline">\(t\)</span>之前的（包括<span class="math inline">\(t\)</span>）隐变量<span class="math inline">\(z_{\leq t}\)</span>压缩到一个上下文隐变量<span class="math inline">\(\boldsymbol c_t=g_\text{ar}(\boldsymbol z_{\leq t})\)</span>（希望具有预测性质，捕获了长时依赖性）。不过本文并不是基于<span class="math inline">\(\boldsymbol c_t\)</span>来预测未来的观测值<span class="math inline">\(\boldsymbol x_{t+k}\)</span>，即估计分布<span class="math inline">\(p_k(\boldsymbol x_{t+k}|\boldsymbol c_t)\)</span>，而这样的话又要用到MSE之类的Loss。文中利用的是最大化<span class="math inline">\(\boldsymbol c_t\)</span>和<span class="math inline">\(\boldsymbol x_{t+k}\)</span>之间的互信息<span class="math inline">\(\log \frac{p(x_{t+k}|c_t)}{p(x_{t+k})}\)</span>（这种形式的互信息被称为是点互信息，详见<a href="https://en.wikipedia.org/wiki/Pointwise_mutual_information" target="_blank" rel="noopener">维基</a>）。定义一个度量函数<span class="math inline">\(f(\cdot,\cdot)\)</span>，要求其具有与<span class="math inline">\(\frac{p(x_{t+k}|c_t)}{p(x_{t+k})}\)</span>成比例的性质： <span class="math display">\[
+f_k(x_{t+k},c_t)\propto\frac{p(x_{t+k}|c_t)}{p(x_{t+k})}
+\]</span> 这时最大化<span class="math inline">\(f(\cdot,\cdot)\)</span>就相当于最大化两者的互信息。</p>
+<h2 id="mutual-information-estimation-explanation">Mutual Information Estimation Explanation</h2>
+<p>现在回到公式<span class="math inline">\(I(x;c)=\sum_{x,c}p(x,c)\log\frac{p(x|c)}{p(x)}\)</span>，</p>
+<h2 id="multual-information">Multual Information</h2>
+<p>互信息是衡量已知一个变量时，另一个变量不确定性的减少程度的度量。对于离散随机变量，互信息的定义为： <span class="math display">\[
+I(X,Y)=\sum_{y\in\mathcal Y}\sum_{x\in\mathcal X}p(x,y)\log\frac{p(x,y)}{p(x)p(y)}=\sum_{y\in\mathcal Y}\sum_{x\in\mathcal X}p(x,y)\log\frac{p(y|x)}{p(y)}
+\]</span> 对于连续随机变量，互信息的定义为： <span class="math display">\[
+I(X,Y)=\int_{\mathcal Y}\int_{\mathcal X}p(x,y)\log\frac{p(x,y)}{p(x)p(y)}\mathrm dx\mathrm d y=\int_{\mathcal Y}\int_{\mathcal X}p(x,y)\log\frac{p(y|x)}{p(y)}\mathrm dx\mathrm d y
+\]</span> 互信息与熵之间的关系： <span class="math display">\[
+\begin{align}
+I(X,Y)&amp;=H(X)-H(X|Y)\\
+&amp;=H(Y)-H(Y|X)\\
+&amp;=H(X)+H(Y)-H(X,Y)\\
+&amp;=H(X,Y)-H(X|Y)-H(Y|X)
+\end{align}
+\]</span> 互信息与KL散之间的关系： <span class="math display">\[
+I(X,Y)=\mathbb E_Y[D_{KL}(p(x|y)\parallel p(x))]
+\]</span> 从图中可以很容易看出互信息相当于<span class="math inline">\(X\)</span>和<span class="math inline">\(Y\)</span>两者的熵的“重叠”的部分：</p>
+<p><img src="https://i.loli.net/2020/07/17/orRXnpugEzsZDwq.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p>在表示学习中，互信息的应用越来越广泛。对于输入的数据<span class="math inline">\(X\)</span>，表示学习的目的是尽可能学到“好“的表示<span class="math inline">\(Z\)</span>，保留原始数据尽可能多的重要信息。如果使用基于重构的模型，我们就会要求最小化重构误差<span class="math inline">\(\parallel X-\hat{X}\parallel^2_2\)</span>，但是这种”逐像素“式的损失函数过于严苛，不利于模型学习高层语义信息。如果加入一个判别器来自动学习一个度量，首先增大了计算开销，同时GAN本身也有诸多问题。</p>
+<p>现阶段很多工作使用互信息来判定学到的表示<span class="math inline">\(Z\)</span>的好坏，即最大化原始数据<span class="math inline">\(X\)</span>与表示<span class="math inline">\(Z\)</span>之间的互信息： <span class="math display">\[
+Z^*=\mathop{\arg\max}_{p(z|x)}I(X,Z)
+\]</span> 互信息越大意味着<span class="math inline">\(\log\frac{p(z|x)}{p(z)}\)</span>越大，即<span class="math inline">\(p(z|x)\)</span>要大于<span class="math inline">\(p(z)\)</span>。<span class="math inline">\(p(z)\)</span>可以看作是<span class="math inline">\(Z\)</span>的先验，而<span class="math inline">\(p(z|x)\gg p(z)\)</span>可以理解为在得知输入<span class="math inline">\(X\)</span>之后，我们能找到专属<span class="math inline">\(X\)</span>的那个编码<span class="math inline">\(Z\)</span>。</p>
+<p>接下来作者证明优化<span class="math inline">\(\mathcal L_N\)</span>会使得<span class="math inline">\(f_k(\mathbf x_{t+k},\mathbf c_t)\)</span>和互信息接近。这里的<span class="math inline">\(p(\mathbf x_{t+k}|\mathbf c_t)\)</span>。设<span class="math inline">\(p(d=i|X,c_t)\)</span>为给定数据集（或者Batch）<span class="math inline">\(X\)</span>和context向量<span class="math inline">\(c_t\)</span>的条件下，样本<span class="math inline">\(x_i\)</span>为正样本的概率，有： <span class="math display">\[
+\begin{align}
+p(d=i|X,c_t)&amp;=\frac{p(x_i|c_t)\prod_{l\neq i}p(x_l)}{\sum^N_{j=1} p(x_j|c_t)\prod_{l\neq j}p(x_l)}\\
+&amp;=\frac{\frac{p(x_i|c_t)}{p(x_i)}}{\sum^N_{j=1}\frac{p(x_j|c_t)}{p(x_j)}}
+\end{align}
+\]</span></p>
+<p>$$ <span class="math display">\[\begin{align}
+\mathcal L_\text{N}^\text{opt}&amp;=-\mathop{\mathbb E}\limits_X\log\left[\frac{\frac{p(x_{t+k}|c_t)}{p(x_{t+k})}}{\frac{p(x_{t+k}|c_t)}{p(x_{t+k})}+\sum_{x_j\in X_\text{neg}}\frac{p(x_j|c_t)}{x_j}}\right]\\
+
+\end{align}\]</span> $$</p>
+<p><span class="math display">\[
+I(x_{t+k},c_t)\geq \log(N)-\mathcal L_N
+\]</span></p>
+<p>可以说<span class="math inline">\(\mathcal L_N\)</span>作为互信息<span class="math inline">\(I(x_{t+k},c_t)\)</span>的一个下界。</p>
+<h2 id="implementation-details">Implementation Details</h2>
+<h1 id="experiments">Experiments</h1>
+<h2 id="audio">Audio</h2>
+<p><img src="https://i.loli.net/2020/07/07/kWectjL27MKy1dA.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/07/07/vhBRmpntw2Xx6J9.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/07/07/5QaDOCFvxLE6wqT.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/07/07/nA49kE1WP73oGQJ.png" srcset="/img/loading.gif" /></p>
+<h2 id="vision">Vision</h2>
+<p><img src="https://i.loli.net/2020/07/07/gkNnWo4zyUeBRCa.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/07/07/qH6BAJnhMcP9bKy.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/07/07/ezO1IibwvC5Mus8.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/07/07/sWNGXqv1n38kgcf.png" srcset="/img/loading.gif" /></p>
+<h2 id="natural-language">Natural Language</h2>
+<p><img src="https://i.loli.net/2020/07/07/Ly86Xu9n4KSOJge.png" srcset="/img/loading.gif" /></p>
+<h2 id="reinforcement-learning">Reinforcement Learning</h2>
+<p><img src="https://i.loli.net/2020/07/07/92XzLqltMUfCgTs.png" srcset="/img/loading.gif" /></p>
 
             </article>
             <hr>
@@ -302,7 +308,7 @@
                     
                       <a class="hover-with-bg" href="/categories/Research/">Research</a>
                     
-                      <a class="hover-with-bg" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+                      <a class="hover-with-bg" href="/categories/Research/Self-supervised-Learning/">Self-supervised Learning</a>
                     
                   </div>
                 
@@ -310,15 +316,9 @@
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/Time-Series/">Time Series</a>
-                    
-                      <a class="hover-with-bg" href="/tags/Anomaly-Detection/">Anomaly Detection</a>
-                    
-                      <a class="hover-with-bg" href="/tags/Machine-Learning/">Machine Learning</a>
-                    
                       <a class="hover-with-bg" href="/tags/Deep-Learning/">Deep Learning</a>
                     
-                      <a class="hover-with-bg" href="/tags/Spectral/">Spectral</a>
+                      <a class="hover-with-bg" href="/tags/Self-supervised-Learning/">Self-supervised Learning</a>
                     
                   </div>
                 
@@ -331,15 +331,15 @@
                   <div class="post-prev col-6">
                     
                     
-                      <a href="/2019/09/22/Unsupervised-Anomaly-Detection-via-Variational-Auto-Encoder-for-Seasonal-KPIs-in-Web-Applications/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Unsupervised Anomaly Detection via Variational Auto-Encoder for Seasonal KPIs in Web Applications</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </div>
                   <div class="post-next col-6">
                     
+                    
+                      <a href="/2020/09/15/Factorization-Machines-Machine-Learning-Algorithms-Extra-1/">
+                        <span class="hidden-mobile">Factorization Machines: Machine Learning Algorithms Extra 1</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
                     
                   </div>
                 </div>
@@ -355,8 +355,8 @@
     <div id="disqus_thread"></div>
     <script type="text/javascript">
       var disqus_config = function () {
-        this.page.url = 'http://qfxiao.me/2019/09/22/Time-Series-Anomaly-Detection-Service-at-Microsoft/';
-        this.page.identifier = '/2019/09/22/Time-Series-Anomaly-Detection-Service-at-Microsoft/';
+        this.page.url = 'http://qfxiao.me/2020/09/17/Representation-Learning-with-Contrastive-Predictive-Coding/';
+        this.page.identifier = '/2020/09/17/Representation-Learning-with-Contrastive-Predictive-Coding/';
       };
       var oldLoadDq = window.onload;
       window.onload = function () {

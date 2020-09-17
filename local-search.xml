@@ -4,6 +4,35 @@
   
   
   <entry>
+    <title>Representation Learning with Contrastive Predictive Coding</title>
+    <link href="/2020/09/17/Representation-Learning-with-Contrastive-Predictive-Coding/"/>
+    <url>/2020/09/17/Representation-Learning-with-Contrastive-Predictive-Coding/</url>
+    
+    <content type="html"><![CDATA[<h1 id="introduction">Introduction</h1><p>本文提出了一种表示学习框架：Contrastive Predictive Coding（CPC）。To be finished...</p><h1 id="proposed-method">Proposed Method</h1><h2 id="contrastive-predictive-coding">Contrastive Predictive Coding</h2><p>N-pair Loss: <span class="math display">\[\mathcal L=-\log\frac{\exp(f^+\cdot f^\top)}{\exp(f^+\cdot f^\top)+\sum_{f_j\neq f^\top}\exp(f^+\cdot f_j)}\]</span> 你有N个样本<span class="math inline">\(\{x_1,x_2,\cdots,x_N\}\)</span>，然后对应的表示为<span class="math inline">\(f_j\)</span>。假设当前样本为<span class="math inline">\(f^+\)</span>，在所有的<span class="math inline">\(f_j\)</span>中只有一个表示与<span class="math inline">\(f^+\)</span> match，记为<span class="math inline">\(f^\top\)</span>（可以理解为属于同一类，或者两个相似），其他的都是负样本。我们优化上面的优化公式就会拉近<span class="math inline">\(f^+\)</span>和<span class="math inline">\(f^\top\)</span>之间的距离（拉近同类），疏远<span class="math inline">\(f^+\)</span>和所有其他负样本<span class="math inline">\(f_j\)</span>的距离（疏远异类）。不过在N-pair Loss中，正负样本是根据标签来选取的，然而在这里我们没有标签。</p><p>下图展示了Contrastive Predictive Coding的结构：</p><p><img src="https://i.loli.net/2020/07/07/mcFYnVGasjkHrw5.png" srcset="/img/loading.gif" style="zoom:67%;" /></p><p>对比学习 <span class="math display">\[\mathcal L(f_i)=-\log\frac{\exp(f_i\cdot f^\top)}{\sum_j\exp(f_i\cdot f_j)}\]</span> 设数据集（一个Batch）为<span class="math inline">\(\mathbf X=\{x_1,x_2,\cdots,x_N\}\)</span>，正样本对为，负样本对。</p><p>至于<span class="math inline">\(f(\cdot,\cdot)\)</span>的具体形式，其实<span class="math inline">\(\frac{p(x_{t+k}|c_t)}{p(x_{t+k})}\)</span>这个式子我们也是没法直接优化的，因为这个Density Ratio无法直接算出来。在这里，作者使用了一个替代的办法，就是用<span class="math inline">\(\mathbf c_t\)</span>来预测未来的隐变量<span class="math inline">\(\hat{\mathbf z}_{t+1},\hat{\mathbf z}_{t+2},\cdots\)</span>，而真实的隐变量<span class="math inline">\(\mathbf z_{t+1},\mathbf z_{t+2},\cdots\)</span>我们是知道的。这里预测直接使用权重矩阵和<span class="math inline">\(\mathbf c_t\)</span>相乘： <span class="math display">\[f_k(\mathbf x_{t+k},\mathbf c_t)=\exp\left(\mathbf z_{t+k}^T \cdot \mathbf W_k\mathbf c_t\right)\]</span></p><p>上式有点难以理解，实际上预测值<span class="math inline">\(\hat{\mathbf z}_{t+k}=\mathbf W_k\mathbf c_t\)</span>，而<span class="math inline">\(\mathbf z_{t+k}\hat{\mathbf z}_{t+k}\)</span>相当于计算两者的距离，即相似性。所以<span class="math inline">\(f_k(\cdot,\cdot)\)</span>其实是在计算预测值和真实值的相似性。现在大家先接受这个<span class="math inline">\(f(\cdot,\cdot)\)</span>的定义，因为后面会证明优化这个<span class="math inline">\(f(\cdot,\cdot)\)</span>就相当于在优化Density Ratio <span class="math inline">\(\frac{p(x_{t+k}|c_t)}{p(x_{t+k})}\)</span>。</p><p>一个来自<span class="math inline">\(p(x_{t+k}|c_t)\)</span>的正例和<span class="math inline">\(N-1\)</span>个来自<span class="math inline">\(p(x_{t+k})\)</span>的负例，目标函数（文中称为CPC Loss）为： <span class="math display">\[\mathcal L_N=-\mathop{\mathbb E}\limits_X\left[\log\frac{f_k(x_{t+k},c_t)}{\sum_{x_j\in X}f_k(x_j,c_t)}\right]\]</span></p><p>这里相当于做了个<span class="math inline">\(N\)</span>分类，因为这里损失函数等价于<span class="math inline">\(N\)</span>分类交叉熵损失函数。</p><blockquote><p>两个离散随机变量的交叉熵的定义为： <span class="math display">\[H(p,q) = -\sum_{x\in\mathcal X}p(x)\log q(x)\]</span> 对于交叉熵损失函数，设<span class="math inline">\(i\)</span>为真实标签，<span class="math inline">\(\hat{\boldsymbol y}\)</span>为分类器的输出。<span class="math inline">\(\frac{\exp(\hat y_i)}{\sum_j\exp(\hat y_j)}\)</span>为经过<code>Softmax</code>归一化之后的输出，其每个分量<span class="math inline">\(\hat y_j\)</span>相当于输入样本<span class="math inline">\(x\)</span>的预测类别为<span class="math inline">\(j\)</span>的概率。不过由于对于真实标签<span class="math inline">\(y\)</span>来说，只有<span class="math inline">\(y_i=1\)</span>，其他的分量都为<span class="math inline">\(0\)</span>，所以最后交叉熵只剩下一项： <span class="math display">\[\mathcal L=-\log\left(\frac{\exp(\hat y_i)}{\sum_j\exp(\hat y_j)}\right)\]</span></p></blockquote><p><span class="math display">\[I(x;c)=\sum_{x,c}p(x,c)\log\frac{p(x|c)}{p(x)}\]</span></p><p>编码器<span class="math inline">\(g_{enc}\)</span>将观测值<span class="math inline">\(\boldsymbol x_t\)</span>编码到隐变量<span class="math inline">\(\boldsymbol z_t=g_\text{enc}(\boldsymbol x_t)\)</span>（对应于局部信息），之后自回归模型<span class="math inline">\(g_{ar}\)</span>将所有<span class="math inline">\(t\)</span>之前的（包括<span class="math inline">\(t\)</span>）隐变量<span class="math inline">\(z_{\leq t}\)</span>压缩到一个上下文隐变量<span class="math inline">\(\boldsymbol c_t=g_\text{ar}(\boldsymbol z_{\leq t})\)</span>（希望具有预测性质，捕获了长时依赖性）。不过本文并不是基于<span class="math inline">\(\boldsymbol c_t\)</span>来预测未来的观测值<span class="math inline">\(\boldsymbol x_{t+k}\)</span>，即估计分布<span class="math inline">\(p_k(\boldsymbol x_{t+k}|\boldsymbol c_t)\)</span>，而这样的话又要用到MSE之类的Loss。文中利用的是最大化<span class="math inline">\(\boldsymbol c_t\)</span>和<span class="math inline">\(\boldsymbol x_{t+k}\)</span>之间的互信息<span class="math inline">\(\log \frac{p(x_{t+k}|c_t)}{p(x_{t+k})}\)</span>（这种形式的互信息被称为是点互信息，详见<a href="https://en.wikipedia.org/wiki/Pointwise_mutual_information" target="_blank" rel="noopener">维基</a>）。定义一个度量函数<span class="math inline">\(f(\cdot,\cdot)\)</span>，要求其具有与<span class="math inline">\(\frac{p(x_{t+k}|c_t)}{p(x_{t+k})}\)</span>成比例的性质： <span class="math display">\[f_k(x_{t+k},c_t)\propto\frac{p(x_{t+k}|c_t)}{p(x_{t+k})}\]</span> 这时最大化<span class="math inline">\(f(\cdot,\cdot)\)</span>就相当于最大化两者的互信息。</p><h2 id="mutual-information-estimation-explanation">Mutual Information Estimation Explanation</h2><p>现在回到公式<span class="math inline">\(I(x;c)=\sum_{x,c}p(x,c)\log\frac{p(x|c)}{p(x)}\)</span>，</p><h2 id="multual-information">Multual Information</h2><p>互信息是衡量已知一个变量时，另一个变量不确定性的减少程度的度量。对于离散随机变量，互信息的定义为： <span class="math display">\[I(X,Y)=\sum_{y\in\mathcal Y}\sum_{x\in\mathcal X}p(x,y)\log\frac{p(x,y)}{p(x)p(y)}=\sum_{y\in\mathcal Y}\sum_{x\in\mathcal X}p(x,y)\log\frac{p(y|x)}{p(y)}\]</span> 对于连续随机变量，互信息的定义为： <span class="math display">\[I(X,Y)=\int_{\mathcal Y}\int_{\mathcal X}p(x,y)\log\frac{p(x,y)}{p(x)p(y)}\mathrm dx\mathrm d y=\int_{\mathcal Y}\int_{\mathcal X}p(x,y)\log\frac{p(y|x)}{p(y)}\mathrm dx\mathrm d y\]</span> 互信息与熵之间的关系： <span class="math display">\[\begin{align}I(X,Y)&amp;=H(X)-H(X|Y)\\&amp;=H(Y)-H(Y|X)\\&amp;=H(X)+H(Y)-H(X,Y)\\&amp;=H(X,Y)-H(X|Y)-H(Y|X)\end{align}\]</span> 互信息与KL散之间的关系： <span class="math display">\[I(X,Y)=\mathbb E_Y[D_{KL}(p(x|y)\parallel p(x))]\]</span> 从图中可以很容易看出互信息相当于<span class="math inline">\(X\)</span>和<span class="math inline">\(Y\)</span>两者的熵的“重叠”的部分：</p><p><img src="https://i.loli.net/2020/07/17/orRXnpugEzsZDwq.png" srcset="/img/loading.gif" style="zoom:67%;" /></p><p>在表示学习中，互信息的应用越来越广泛。对于输入的数据<span class="math inline">\(X\)</span>，表示学习的目的是尽可能学到“好“的表示<span class="math inline">\(Z\)</span>，保留原始数据尽可能多的重要信息。如果使用基于重构的模型，我们就会要求最小化重构误差<span class="math inline">\(\parallel X-\hat{X}\parallel^2_2\)</span>，但是这种”逐像素“式的损失函数过于严苛，不利于模型学习高层语义信息。如果加入一个判别器来自动学习一个度量，首先增大了计算开销，同时GAN本身也有诸多问题。</p><p>现阶段很多工作使用互信息来判定学到的表示<span class="math inline">\(Z\)</span>的好坏，即最大化原始数据<span class="math inline">\(X\)</span>与表示<span class="math inline">\(Z\)</span>之间的互信息： <span class="math display">\[Z^*=\mathop{\arg\max}_{p(z|x)}I(X,Z)\]</span> 互信息越大意味着<span class="math inline">\(\log\frac{p(z|x)}{p(z)}\)</span>越大，即<span class="math inline">\(p(z|x)\)</span>要大于<span class="math inline">\(p(z)\)</span>。<span class="math inline">\(p(z)\)</span>可以看作是<span class="math inline">\(Z\)</span>的先验，而<span class="math inline">\(p(z|x)\gg p(z)\)</span>可以理解为在得知输入<span class="math inline">\(X\)</span>之后，我们能找到专属<span class="math inline">\(X\)</span>的那个编码<span class="math inline">\(Z\)</span>。</p><p>接下来作者证明优化<span class="math inline">\(\mathcal L_N\)</span>会使得<span class="math inline">\(f_k(\mathbf x_{t+k},\mathbf c_t)\)</span>和互信息接近。这里的<span class="math inline">\(p(\mathbf x_{t+k}|\mathbf c_t)\)</span>。设<span class="math inline">\(p(d=i|X,c_t)\)</span>为给定数据集（或者Batch）<span class="math inline">\(X\)</span>和context向量<span class="math inline">\(c_t\)</span>的条件下，样本<span class="math inline">\(x_i\)</span>为正样本的概率，有： <span class="math display">\[\begin{align}p(d=i|X,c_t)&amp;=\frac{p(x_i|c_t)\prod_{l\neq i}p(x_l)}{\sum^N_{j=1} p(x_j|c_t)\prod_{l\neq j}p(x_l)}\\&amp;=\frac{\frac{p(x_i|c_t)}{p(x_i)}}{\sum^N_{j=1}\frac{p(x_j|c_t)}{p(x_j)}}\end{align}\]</span></p><p>$$ <span class="math display">\[\begin{align}\mathcal L_\text{N}^\text{opt}&amp;=-\mathop{\mathbb E}\limits_X\log\left[\frac{\frac{p(x_{t+k}|c_t)}{p(x_{t+k})}}{\frac{p(x_{t+k}|c_t)}{p(x_{t+k})}+\sum_{x_j\in X_\text{neg}}\frac{p(x_j|c_t)}{x_j}}\right]\\\end{align}\]</span> $$</p><p><span class="math display">\[I(x_{t+k},c_t)\geq \log(N)-\mathcal L_N\]</span></p><p>可以说<span class="math inline">\(\mathcal L_N\)</span>作为互信息<span class="math inline">\(I(x_{t+k},c_t)\)</span>的一个下界。</p><h2 id="implementation-details">Implementation Details</h2><h1 id="experiments">Experiments</h1><h2 id="audio">Audio</h2><p><img src="https://i.loli.net/2020/07/07/kWectjL27MKy1dA.png" srcset="/img/loading.gif" /></p><p><img src="https://i.loli.net/2020/07/07/vhBRmpntw2Xx6J9.png" srcset="/img/loading.gif" /></p><p><img src="https://i.loli.net/2020/07/07/5QaDOCFvxLE6wqT.png" srcset="/img/loading.gif" /></p><p><img src="https://i.loli.net/2020/07/07/nA49kE1WP73oGQJ.png" srcset="/img/loading.gif" /></p><h2 id="vision">Vision</h2><p><img src="https://i.loli.net/2020/07/07/gkNnWo4zyUeBRCa.png" srcset="/img/loading.gif" style="zoom:67%;" /></p><p><img src="https://i.loli.net/2020/07/07/qH6BAJnhMcP9bKy.png" srcset="/img/loading.gif" style="zoom:67%;" /></p><p><img src="https://i.loli.net/2020/07/07/ezO1IibwvC5Mus8.png" srcset="/img/loading.gif" /></p><p><img src="https://i.loli.net/2020/07/07/sWNGXqv1n38kgcf.png" srcset="/img/loading.gif" /></p><h2 id="natural-language">Natural Language</h2><p><img src="https://i.loli.net/2020/07/07/Ly86Xu9n4KSOJge.png" srcset="/img/loading.gif" /></p><h2 id="reinforcement-learning">Reinforcement Learning</h2><p><img src="https://i.loli.net/2020/07/07/92XzLqltMUfCgTs.png" srcset="/img/loading.gif" /></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>Research</category>
+      
+      <category>Self-supervised Learning</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Deep Learning</tag>
+      
+      <tag>Self-supervised Learning</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Factorization Machines: Machine Learning Algorithms Extra 1</title>
     <link href="/2020/09/15/Factorization-Machines-Machine-Learning-Algorithms-Extra-1/"/>
     <url>/2020/09/15/Factorization-Machines-Machine-Learning-Algorithms-Extra-1/</url>
@@ -865,9 +894,9 @@
       
       <tag>Time Series</tag>
       
-      <tag>Machine Learning</tag>
-      
       <tag>Anomaly Detection</tag>
+      
+      <tag>Machine Learning</tag>
       
       <tag>Deep Learning</tag>
       
@@ -933,9 +962,9 @@
       
       <tag>Time Series</tag>
       
-      <tag>Statistics</tag>
-      
       <tag>Machine Learning</tag>
+      
+      <tag>Statistics</tag>
       
     </tags>
     
@@ -1026,9 +1055,9 @@
       
       <tag>Time Series</tag>
       
-      <tag>Machine Learning</tag>
-      
       <tag>Anomaly Detection</tag>
+      
+      <tag>Machine Learning</tag>
       
       <tag>Deep Learning</tag>
       
@@ -1096,9 +1125,9 @@
       
       <tag>Time Series</tag>
       
-      <tag>Machine Learning</tag>
-      
       <tag>Anomaly Detection</tag>
+      
+      <tag>Machine Learning</tag>
       
       <tag>Deep Learning</tag>
       
@@ -1129,9 +1158,9 @@
       
       <tag>Time Series</tag>
       
-      <tag>Machine Learning</tag>
-      
       <tag>Anomaly Detection</tag>
+      
+      <tag>Machine Learning</tag>
       
       <tag>Deep Learning</tag>
       
@@ -1162,9 +1191,9 @@
       
       <tag>Time Series</tag>
       
-      <tag>Machine Learning</tag>
-      
       <tag>Anomaly Detection</tag>
+      
+      <tag>Machine Learning</tag>
       
       <tag>Deep Learning</tag>
       
@@ -1197,9 +1226,9 @@
       
       <tag>Time Series</tag>
       
-      <tag>Machine Learning</tag>
-      
       <tag>Anomaly Detection</tag>
+      
+      <tag>Machine Learning</tag>
       
       <tag>Deep Learning</tag>
       
