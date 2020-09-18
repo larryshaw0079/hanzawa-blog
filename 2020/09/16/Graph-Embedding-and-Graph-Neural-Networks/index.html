@@ -160,7 +160,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    440 字
+                    794 字
                   </span>
                 
 
@@ -170,7 +170,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    6
+                    11
                      分钟
                   </span>
                 
@@ -217,6 +217,7 @@
 <p><a href="https://zhuanlan.zhihu.com/p/56380812" target="_blank" rel="noopener">zhihu</a></p>
 <h1 id="graph-embedding">Graph Embedding</h1>
 <p>图嵌入 (Graph Embedding) 或者说图表示学习 (Graph Representation Learning)</p>
+<p><a href="http://snap.stanford.edu/proj/embeddings-www/" target="_blank" rel="noopener">jure tutorial</a></p>
 <h2 id="deepwalk">DeepWalk</h2>
 <h3 id="word2vec">Word2vec</h3>
 <p>要讲Deep Walk，就不得不先讲Word2vec。Word2vec是nlp领域中经典的词嵌入方法。得到词表示最简单的方法就是One-hot表示，不过One-hot表示有很大的缺陷。一个是维度太大，同时特征稀疏，并且无法表示两个词之间的相似度（任意两个词之间的内积都是<span class="math inline">\(0\)</span>）。词嵌入的目的正是希望学习一个低维的表示，同时能够很好的表征不同词之间的相似性。</p>
@@ -246,9 +247,51 @@ p(w_c|w_{o1},\cdots,w_{o\cdot2m})=\frac{\exp(\frac{1}{2m}\mathbf u_c^\top(\mathb
 <p><span class="math display">\[
 p(c_i = x|c_{i-1}=v) = \begin{cases}\frac{\pi_{vx}}{Z} &amp; \text{if }(v,x) \in E\\ 0 &amp; \text{otherwise}\end{cases}
 \]</span> <img src="https://i.loli.net/2020/09/18/wJljqzGQCrUDg5Z.png" srcset="/img/loading.gif" /></p>
+<p>node2vec引入了两个超参数 <span class="math display">\[
+\alpha_{pq}(t,x)=\begin{cases}\frac{1}{p} &amp; \text{if } d_{tx} = 0\\
+1 &amp; \text{if } d_{tx} = 1\\
+\frac{1}{q} &amp; \text{if } d_{tx} = 2
+\end{cases}
+\]</span> 在确定下一个随机游走的节点时，node2vec用到了Alias Sampling这个方法，详细可以参考<a href="https://zhuanlan.zhihu.com/p/54867139" target="_blank" rel="noopener">这篇文章</a>。</p>
 <h2 id="line">LINE</h2>
+<p>Large-scale Information Network Embedding (LINE) 算法</p>
+<p><img src="https://i.loli.net/2020/09/18/yi2ORAGSwreHKVh.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p>一阶相似度</p>
+<p>二阶相似度</p>
 <h2 id="sdne">SDNE</h2>
+<p>Structural Deep Network Embedding (SDNE) 算法</p>
+<p><img src="https://i.loli.net/2020/09/18/vFWYNk6Qgzr1f9e.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <h1 id="graph-convolutional-network">Graph Convolutional Network</h1>
+<h2 id="basic-concepts">Basic Concepts</h2>
+<p><a href="https://ieeexplore.ieee.org/document/6494675" target="_blank" rel="noopener">paper</a></p>
+<h3 id="weighted-graph-and-graph-signals">Weighted Graph and Graph Signals</h3>
+<p>一个带权图<span class="math inline">\(\mathcal G=\{\mathcal V,\mathcal E, W\}\)</span></p>
+<p>图信号或者说图函数为<span class="math inline">\(f:\mathcal V\rightarrow \mathbb R\)</span>，如<span class="math inline">\(f(i)\)</span>代表顶点<span class="math inline">\(i\)</span>对应的函数值。</p>
+<p><img src="https://i.loli.net/2020/09/18/IdG27S8BPeKhJXs.png" srcset="/img/loading.gif" style="zoom:50%;" /></p>
+<h3 id="graph-laplacian">Graph Laplacian</h3>
+<p>图的拉普拉斯矩阵定义为 <span class="math display">\[
+\mathcal L = D-W
+\]</span> 其中<span class="math inline">\(D\)</span>为图<span class="math inline">\(\mathcal G\)</span>的度矩阵。拉普拉斯矩阵其实可以看作是一个算子，应用在图函数<span class="math inline">\(f\)</span>上则有： <span class="math display">\[
+(\mathcal L f)(i) = \sum_{j\in \mathcal N(i)}W_{i,j}[f(i)-f(j)]
+\]</span> 比如</p>
+<p><img src="https://i.loli.net/2020/09/18/qFElTjnJQYZkrIV.png" srcset="/img/loading.gif" style="zoom: 50%;" /></p>
+<p>拉普拉斯矩阵的特征值集合记为<span class="math inline">\(\{\lambda_\ell\}_{\ell=0,1,\cdots,N-1}\)</span>，特征向量集合记为<span class="math inline">\(\{\mathbf u_\ell\}_{\ell = 0,1,\cdots, N-1}\)</span></p>
+<p>特征向量</p>
+<p><img src="https://i.loli.net/2020/09/18/VptJxlgkUBy9G1O.png" srcset="/img/loading.gif" /></p>
+<h3 id="graph-fourier-transform">Graph Fourier Transform</h3>
+<p>传统的傅里叶变换 <span class="math display">\[
+\hat f(\xi) = \int_{\mathbb R} f(t)e^{-2\pi i\xi t}\mathrm d t
+\]</span> 图上的傅里叶变换 <span class="math display">\[
+\hat f(\lambda _\ell)=\sum_{i=1}^N f(i) u_\ell(i)
+\]</span></p>
+<h3 id="graph-convolution">Graph Convolution</h3>
+<p>图上的卷积 <span class="math display">\[
+(f\ast h)(i) = \sum_{\ell=0}^{N-1}\hat f(\lambda_\ell)\hat h(\lambda_\ell)u_\ell(i)
+\]</span></p>
+<h2 id="spectral-based">Spectral-based</h2>
+<p><a href="https://arxiv.org/abs/1606.09375" target="_blank" rel="noopener">nips2016</a></p>
+<p><a href="https://arxiv.org/abs/1609.02907" target="_blank" rel="noopener">iclr2017</a></p>
+<h2 id="spatial-based">Spatial-based</h2>
 
             </article>
             <hr>
