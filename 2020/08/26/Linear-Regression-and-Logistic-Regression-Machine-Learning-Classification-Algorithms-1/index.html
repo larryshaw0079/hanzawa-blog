@@ -160,7 +160,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    1k 字
+                    1.1k 字
                   </span>
                 
 
@@ -170,7 +170,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    16
+                    17
                      分钟
                   </span>
                 
@@ -207,7 +207,7 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：2020年9月17日 下午
+                  本文最后更新于：2020年9月18日 中午
                 
               </p>
             
@@ -216,8 +216,15 @@
 <p>Still working on it...</p>
 <h1 id="linear-regression">Linear Regression</h1>
 <h2 id="the-model">The Model</h2>
+<p><span class="math display">\[
+\hat y = w^\top x + b
+\]</span></p>
 <p><img src="https://i.loli.net/2020/09/04/Ji14CNOLADmysah.png" srcset="/img/loading.gif" /></p>
-<h2 id="optimization">Optimization</h2>
+<p>损失函数： <span class="math display">\[
+\mathcal L(w) = \sum_{i=1}^N \parallel w^\top x_i -y_i\parallel^2
+\]</span> 写成矩阵形式 <span class="math display">\[
+\mathcal L(w) = 
+\]</span></p>
 <p>设训练集包含<span class="math inline">\(M\)</span>个样本，<span class="math inline">\(N\)</span>个特征，为了方便后续推导，我们添加一列全是<span class="math inline">\(1\)</span>的向量： <span class="math display">\[
 \mathbf X=\left(
 \begin{matrix}
@@ -231,18 +238,25 @@ x_{M1} &amp; x_{M2} &amp; \cdots &amp; x_{MN} &amp; 1
 \boldsymbol{\hat y} = \mathbf X \hat{\boldsymbol w}
 \]</span> 最终得到</p>
 <h2 id="projection-matrix">Projection Matrix</h2>
+<p><img src="https://i.loli.net/2020/09/17/zTRyQptEDPf5iIN.png" srcset="/img/loading.gif" style="zoom: 50%;" /></p>
 <h2 id="probabilistic-interpretation">Probabilistic Interpretation</h2>
 <p><span class="math display">\[
 \hat{\boldsymbol w}^* = (\mathbf X^\top \mathbf X)^{-1}\mathbf X^\top\boldsymbol y
 \]</span></p>
 <h1 id="linear-regression-with-regularization">Linear Regression with Regularization</h1>
-<h2 id="l1-norm-and-l2-norm">L1 Norm and L2 Norm</h2>
+<p>当特征数<span class="math inline">\(N\)</span>大于样本数量<span class="math inline">\(M\)</span>时，容易发生过拟合。</p>
+<p>过拟合的解决思路：</p>
+<ol type="1">
+<li>增加数据量</li>
+<li>降维，特征选择、特征提取</li>
+<li>增加正则化</li>
+</ol>
 <p>常见的正则项有<span class="math inline">\(\ell_1\)</span>正则和<span class="math inline">\(\ell_2\)</span>正则。假设原始优化函数为 <span class="math display">\[
 \mathop{\arg\min}\limits_{\theta} \mathcal L(\theta)
 \]</span> 加入<span class="math inline">\(\ell_1\)</span>正则化之后 <span class="math display">\[
-\mathop{\arg\min}\limits_{\theta} \mathcal J_1(\theta)=\mathcal L(\theta)+\color{purple}{\lambda\parallel \theta\parallel_1}
+\mathop{\arg\min}\limits_{\theta} \mathcal J_1(\theta)=\mathcal L(\theta)+\color{red}{\lambda\parallel \theta\parallel_1}
 \]</span> 加入<span class="math inline">\(\ell_2\)</span>正则化之后 <span class="math display">\[
-\mathop{\arg\min}\limits_{\theta} \mathcal J_2(\theta)=\mathcal L(\theta)+\color{purple}{\lambda\parallel \theta\parallel_2^2}
+\mathop{\arg\min}\limits_{\theta} \mathcal J_2(\theta)=\mathcal L(\theta)+\color{red}{\lambda\parallel \theta\parallel_2^2}
 \]</span></p>
 <h3 id="probabilistic-interpretation-1">Probabilistic Interpretation</h3>
 <h3 id="optimization-interpretation">Optimization Interpretation</h3>
@@ -310,7 +324,7 @@ w^\top x+b\Rightarrow \beta x
 \]</span> 二阶导数为 <span class="math display">\[
 \frac{\partial^2\ell(\beta)}{\partial\beta\partial\beta^\top}=\sum_{i=1}^N x_ix_i^\top p_\beta(y=0|x)p_\beta(y=1|x)
 \]</span></p>
-<h2 id="optimization-1">Optimization</h2>
+<h2 id="optimization">Optimization</h2>
 
             </article>
             <hr>

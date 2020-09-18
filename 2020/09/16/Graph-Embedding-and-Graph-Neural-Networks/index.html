@@ -17,7 +17,7 @@
   <meta name="description" content="">
   <meta name="author" content="Hanzawa">
   <meta name="keywords" content="">
-  <title>Unsupervised Anomaly Detection Algorithms Overview - Hanzawa の 部屋</title>
+  <title>Graph Embedding and Graph Neural Networks - Hanzawa の 部屋</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
@@ -141,7 +141,7 @@
           <div class="container text-center white-text fadeInUp">
             <span class="h2" id="subtitle">
               
-                Unsupervised Anomaly Detection Algorithms Overview
+                Graph Embedding and Graph Neural Networks
               
             </span>
 
@@ -149,8 +149,8 @@
               
                 <div class="mt-3 post-meta">
                   <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-                  <time datetime="2020-09-10 23:41">
-                    2020年9月10日 晚上
+                  <time datetime="2020-09-16 14:20">
+                    2020年9月16日 下午
                   </time>
                 </div>
               
@@ -160,7 +160,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    584 字
+                    440 字
                   </span>
                 
 
@@ -214,23 +214,41 @@
             <article class="markdown-body">
               <h1 id="introduction">Introduction</h1>
 <p>未完待续，缓慢填坑中。。。</p>
-<h1 id="lof">LOF</h1>
-<h1 id="one-class-svm">One-Class SVM</h1>
-<h1 id="isolation-forest">Isolation Forest</h1>
-<p><img src="https://i.loli.net/2020/09/15/hSrG3W1JzbByEkH.png" srcset="/img/loading.gif" /></p>
-<p>孤立森林 (Isolation Forest) 的思路和随机森林有异曲同工之妙（随机森林可以参考我的<a href="http://qfxiao.me/2020/09/15/Bagging-and-Random-Forest-Machine-Learning-Ensemble-Algorithms-3/">另一篇博文</a>），孤立森林本身也是一种树模型。孤立森林要解决的是无监督异常检测问题，即给定无标签的训练集，把其中的异常值挑选出来。孤立森林的基本假设是我不断选择特征进行分裂，达到停止条件后，每个叶子节点就对应一个/多个样本，正常样本由于比较集中，往往处于比较深的叶子节点，而异常样本由于偏离正常范围，所以往往处于比较浅的叶子节点。在此基础之上，孤立森林和随机森林类似，采用了集成的方法，即采样多个采样集，分别在采样集上训练，最后集成结果。孤立森林的主要特征如下：</p>
-<ol type="1">
-<li>首先，和随机森林一样，孤立森林也需要对数据集进行采样，不过采样集的数量往往比较小；</li>
-<li>对于每一棵树的建立，孤立森林采用的是随机选择特征进行划分，划分点也是随机选取（所以孤立森林的每棵树都是二叉树），这样做的原因可能是我们的数据没有标签，孤立森林对数据分布没有做特定假设，所以采用随机的方式</li>
-</ol>
-<p>对于异常点的判断，孤立森林根据的是该样本在树上的深度。对于样本<span class="math inline">\(x\)</span>在树<span class="math inline">\(T\)</span>上的异常分数，使用下面的公式进行计算： <span class="math display">\[
-h(x) = e + C(N_T)
-\]</span> 其中<span class="math inline">\(e\)</span>为该样本在树上的深度，<span class="math inline">\(C(N_T)\)</span>为用<span class="math inline">\(N_T\)</span>个样本构建二叉树的一个平均深度的估计值，可以由下式计算： <span class="math display">\[
-C(n)=2H(n-1)-\frac{2(n-1)}{n}
-\]</span> 其中<span class="math inline">\(H(n-1)\)</span>可以由<span class="math inline">\(\ln (n-1)+\gamma\)</span>估算，<span class="math inline">\(\gamma\)</span>为欧拉常数。</p>
-<p>最后的异常分数采用集成的方式： <span class="math display">\[
-\mathcal S(x) = 2^{-\frac{E(h(x))}{C(\psi)}}
-\]</span> <span class="math inline">\(E(h(x))\)</span>代表样本<span class="math inline">\(x\)</span>在不同树上分数的均值，<span class="math inline">\(C(\psi)\)</span>代表主要用来做归一化，<span class="math inline">\(\psi\)</span>代表用来建树的采样集的样本数。</p>
+<p><a href="https://zhuanlan.zhihu.com/p/56380812" target="_blank" rel="noopener">zhihu</a></p>
+<h1 id="graph-embedding">Graph Embedding</h1>
+<p>图嵌入 (Graph Embedding) 或者说图表示学习 (Graph Representation Learning)</p>
+<h2 id="deepwalk">DeepWalk</h2>
+<h3 id="word2vec">Word2vec</h3>
+<p>要讲Deep Walk，就不得不先讲Word2vec。Word2vec是nlp领域中经典的词嵌入方法。得到词表示最简单的方法就是One-hot表示，不过One-hot表示有很大的缺陷。一个是维度太大，同时特征稀疏，并且无法表示两个词之间的相似度（任意两个词之间的内积都是<span class="math inline">\(0\)</span>）。词嵌入的目的正是希望学习一个低维的表示，同时能够很好的表征不同词之间的相似性。</p>
+<p><img src="https://i.loli.net/2020/09/18/DmfBM8JY5rGoKc9.png" srcset="/img/loading.gif" style="zoom: 50%;" /></p>
+<h4 id="the-skip-gram-model">The Skip-Gram Model</h4>
+<p><img src="https://i.loli.net/2020/09/18/sdZKuUojPJtl3pC.png" srcset="/img/loading.gif" style="zoom: 50%;" /></p>
+<p>Skip-Gram模型</p>
+<p>Softmax <span class="math display">\[
+p(w_o|w_c)=\frac{\exp(\mathbf u_o^\top \mathbf v_c)}{\sum_{i\in\mathcal V}\exp(\mathbf u_i^\top \mathbf v_c)}
+\]</span> 其中<span class="math inline">\(\mathcal V\)</span>为整个词典，</p>
+<p>最后我们可以将每个窗口每个词的损失函数加起来，得到最终的损失函数： <span class="math display">\[
+\prod_{t=1}^T\prod_{-m\leq j \leq m, \space j\neq 0} p(w^{t+j}|w^t)
+\]</span> 一般来说<span class="math inline">\(\mathbf v_c\)</span>被用来最为最后的表示。</p>
+<h4 id="the-continuous-bag-of-words-cbow-model">The Continuous Bag of Words (CBOW) Model</h4>
+<p><img src="https://i.loli.net/2020/09/18/fV7UhuloR8t3PMx.jpg" srcset="/img/loading.gif" style="zoom: 50%;" /></p>
+<p>条件概率 <span class="math display">\[
+p(w_c|w_{o1},\cdots,w_{o\cdot2m})=\frac{\exp(\frac{1}{2m}\mathbf u_c^\top(\mathbf v_{o1}+\cdots+\mathbf v_{o\cdot 2m}))}{\sum_{i\in \mathcal V }\exp(\frac{1}{2m}\mathbf u_c^\top(\mathbf v_{o1}+\cdots+\mathbf v_{o\cdot 2m}))}
+\]</span></p>
+<h3 id="the-deepwalk-algorithm">The DeepWalk Algorithm</h3>
+<p>在了解了Word2vec算法之后，DeepWalk就很好理解了。DeepWalk的主要思想是采样一系列节点序列，然后把这些节点序列当作是nlp中的句子来使用Word2vec来进行训练。</p>
+<p><img src="https://i.loli.net/2020/09/18/rlgi6TUm2VkWMHd.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/09/18/U3oZ8wB5L9AWFzg.png" srcset="/img/loading.gif" /></p>
+<h2 id="node2vec">node2vec</h2>
+<p>node2vec可以看作是DeepWalk算法的一种扩展。</p>
+<p><img src="https://i.loli.net/2020/09/18/4s32WRhqxvFfGpw.png" srcset="/img/loading.gif" /></p>
+<p>访问下一个节点的概率：</p>
+<p><span class="math display">\[
+p(c_i = x|c_{i-1}=v) = \begin{cases}\frac{\pi_{vx}}{Z} &amp; \text{if }(v,x) \in E\\ 0 &amp; \text{otherwise}\end{cases}
+\]</span> <img src="https://i.loli.net/2020/09/18/wJljqzGQCrUDg5Z.png" srcset="/img/loading.gif" /></p>
+<h2 id="line">LINE</h2>
+<h2 id="sdne">SDNE</h2>
+<h1 id="graph-convolutional-network">Graph Convolutional Network</h1>
 
             </article>
             <hr>
@@ -242,7 +260,7 @@ C(n)=2H(n-1)-\frac{2(n-1)}{n}
                     
                       <a class="hover-with-bg" href="/categories/Technical-Notes/">Technical Notes</a>
                     
-                      <a class="hover-with-bg" href="/categories/Technical-Notes/Anomaly-Detection/">Anomaly Detection</a>
+                      <a class="hover-with-bg" href="/categories/Technical-Notes/Machine-Learning/">Machine Learning</a>
                     
                   </div>
                 
@@ -250,11 +268,13 @@ C(n)=2H(n-1)-\frac{2(n-1)}{n}
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/LOF/">LOF</a>
+                      <a class="hover-with-bg" href="/tags/GCN/">GCN</a>
                     
-                      <a class="hover-with-bg" href="/tags/OCSVM/">OCSVM</a>
+                      <a class="hover-with-bg" href="/tags/GNN/">GNN</a>
                     
-                      <a class="hover-with-bg" href="/tags/iForest/">iForest</a>
+                      <a class="hover-with-bg" href="/tags/RandomWalk/">RandomWalk</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Node2Vec/">Node2Vec</a>
                     
                   </div>
                 
@@ -267,9 +287,9 @@ C(n)=2H(n-1)-\frac{2(n-1)}{n}
                   <div class="post-prev col-6">
                     
                     
-                      <a href="/2020/09/15/Bagging-and-Random-Forest-Machine-Learning-Ensemble-Algorithms-3/">
+                      <a href="/2020/09/17/Representation-Learning-with-Contrastive-Predictive-Coding/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Bagging and Random Forest: Machine Learning Ensemble Algorithms 3</span>
+                        <span class="hidden-mobile">Representation Learning with Contrastive Predictive Coding</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -277,8 +297,8 @@ C(n)=2H(n-1)-\frac{2(n-1)}{n}
                   <div class="post-next col-6">
                     
                     
-                      <a href="/2020/09/09/Model-Selection-and-Evaluation-Machine-Learning-Basics/">
-                        <span class="hidden-mobile">Model Selection and Evaluation: Machine Learning Basics</span>
+                      <a href="/2020/09/15/Factorization-Machines-Machine-Learning-Algorithms-Extra-1/">
+                        <span class="hidden-mobile">Factorization Machines: Machine Learning Algorithms Extra 1</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -297,8 +317,8 @@ C(n)=2H(n-1)-\frac{2(n-1)}{n}
     <div id="disqus_thread"></div>
     <script type="text/javascript">
       var disqus_config = function () {
-        this.page.url = 'http://qfxiao.me/2020/09/10/Unsupervised-Anomaly-Detection-Algorithms-Overview/';
-        this.page.identifier = '/2020/09/10/Unsupervised-Anomaly-Detection-Algorithms-Overview/';
+        this.page.url = 'http://qfxiao.me/2020/09/16/Graph-Embedding-and-Graph-Neural-Networks/';
+        this.page.identifier = '/2020/09/16/Graph-Embedding-and-Graph-Neural-Networks/';
       };
       var oldLoadDq = window.onload;
       window.onload = function () {
