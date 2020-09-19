@@ -160,7 +160,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    2.1k 字
+                    2.5k 字
                   </span>
                 
 
@@ -170,7 +170,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    28
+                    35
                      分钟
                   </span>
                 
@@ -207,7 +207,7 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：2020年9月16日 上午
+                  本文最后更新于：2020年9月19日 下午
                 
               </p>
             
@@ -260,19 +260,38 @@ s.t. \space &amp; y_i(w^\top x_i+b)=\hat\gamma_i\geq\hat\gamma, \space i=1,\cdot
 &amp;g_j(x) \leq 0 \space (j=1,\cdots,n)
 \end{align}
 \]</span></p>
-<p>引入拉格朗日乘子<span class="math inline">\(\boldsymbol\lambda = (\lambda_1,\lambda_2,\cdots,\lambda_m)^\top\)</span>和<span class="math inline">\(\boldsymbol\mu=(\mu_1,\mu_2,\cdots,\mu_n)^\top\)</span>，相应的拉格朗日函数为： <span class="math display">\[
-L(\boldsymbol x,\boldsymbol\lambda,\boldsymbol\mu)=f(\boldsymbol x)+\sum_{i=1}^m \lambda_i h_i(\boldsymbol x)+\sum_{j=1}^n \mu_jg_j(\boldsymbol x)
+<p>引入拉格朗日乘子<span class="math inline">\(\boldsymbol\lambda = (\lambda_1,\lambda_2,\cdots,\lambda_n)^\top\)</span>和<span class="math inline">\(\boldsymbol\mu=(\mu_1,\mu_2,\cdots,\mu_m)^\top\)</span>，相应的广义拉格朗日函数 (generalized Lagrange function) 为： <span class="math display">\[
+L(\boldsymbol x,\boldsymbol\lambda,\boldsymbol\mu)=f(\boldsymbol x)+\sum_{j=1}^n \lambda_j g_j(\boldsymbol x)+\sum_{i=1}^m \mu_i h_i(\boldsymbol x)
 \]</span></p>
+<p>其中<span class="math inline">\(\lambda_j\)</span>，<span class="math inline">\(\mu_i\)</span>被称作是拉格朗日乘子，<span class="math inline">\(\lambda_j \geq 0\)</span>。</p>
 <h3 id="primal-problem">Primal Problem</h3>
+<p>现在我们来讨论原问题的等价性。假设给定某个<span class="math inline">\(x\)</span>，如果<span class="math inline">\(x\)</span>违反约束条件，即存在某个<span class="math inline">\(x\)</span>使得<span class="math inline">\(h_i(x)\neq 0\)</span>或者<span class="math inline">\(g_j(x)&gt;0\)</span>，那么就有： <span class="math display">\[
+\max\limits_{\boldsymbol\lambda,\boldsymbol\mu:\lambda_j\geq 0} L(\boldsymbol x,\boldsymbol\lambda,\boldsymbol\mu)=+\infty
+\]</span> 如果存在某个<span class="math inline">\(x\)</span>使得<span class="math inline">\(h_i(x)\neq 0\)</span>，那么可以令<span class="math inline">\(\lambda_j \rightarrow +\infty\)</span>，如果存在<span class="math inline">\(g_j(x)&gt;0\)</span>，那么可令<span class="math inline">\(\mu_ih_i(x)\rightarrow +\infty\)</span>。</p>
+<p>如果考虑以下极小化问题： <span class="math display">\[
+p^*=\min_x\max\limits_{\boldsymbol\lambda,\boldsymbol\mu:\lambda_j\geq 0} L(\boldsymbol x,\boldsymbol\lambda,\boldsymbol\mu)
+\]</span> 他与原始带约束最优化问题是等价的（因为不符合约束时会有<span class="math inline">\(+\infty\)</span>，而我们考虑的是极小化问题），我们将其记为原问题 (Primal problem)。</p>
 <h3 id="dual-problem-1">Dual Problem</h3>
+<p>如果先考虑最小化<span class="math inline">\(x\)</span>，再考虑最大化<span class="math inline">\(\boldsymbol\lambda\)</span>和<span class="math inline">\(\boldsymbol\mu\)</span>，这时有： <span class="math display">\[
+\max\limits_{\boldsymbol\lambda,\boldsymbol\mu:\lambda_j\geq 0}\min_x L(\boldsymbol x,\boldsymbol\lambda,\boldsymbol\mu)
+\]</span> 对偶问题 (Dual problem) <span class="math display">\[
+d^*=\max\limits_{\boldsymbol\lambda,\boldsymbol\mu:\lambda_j\geq 0}\min_x L(\boldsymbol x,\boldsymbol\lambda,\boldsymbol\mu)
+\]</span> 原问题和对偶问题的关系 <span class="math display">\[
+d^*=\max\limits_{\boldsymbol\lambda,\boldsymbol\mu:\lambda_j\geq 0}\min_x L(\boldsymbol x,\boldsymbol\lambda,\boldsymbol\mu) \leq \min_x\max\limits_{\boldsymbol\lambda,\boldsymbol\mu:\lambda_j\geq 0} L(\boldsymbol x,\boldsymbol\lambda,\boldsymbol\mu) = p^*
+\]</span></p>
 <h3 id="kkt-condition">KKT Condition</h3>
-<p>由不等式引入的KKT条件为： <span class="math display">\[
+<blockquote>
+<p>对于原问题和对偶问题，设<span class="math inline">\(f(x)\)</span>和<span class="math inline">\(g_i(x)\)</span>为凸函数，<span class="math inline">\(h_i(x)\)</span>为仿射函数，并且不等式约束<span class="math inline">\(c_i(x)\)</span>是严格可行的，则<span class="math inline">\(x^*\)</span>，<span class="math inline">\(\lambda^*\)</span>，<span class="math inline">\(\mu^*\)</span>分别是原问题和对偶问题的解的充分必要条件是满足下面的Karush-Kuhn-Tucker (KKT) 条件： <span class="math display">\[
 \begin{cases}
-g_j(\boldsymbol x)\leq 0;\\
-\mu_j \geq 0;\\
-\mu_j g_j(\boldsymbol x)=0
+\nabla_x L(x^*,\lambda^*,\mu^*)=0 &amp;\\ 
+\lambda^*_j g_j(x^*) &amp; j=1,\cdots n\\
+g_j(x^*)\leq 0 &amp; j=1,\cdots n\\
+\lambda_j^*\geq 0 &amp; j=1,\cdots n\\
+h_i(x^*) = 0 &amp; i = 1, \cdots m
 \end{cases}
 \]</span></p>
+</blockquote>
+<p>这告诉我们</p>
 <h2 id="dual-form-of-svm-optimization">Dual Form of SVM Optimization</h2>
 <p>支持向量机优化的对偶问题可以写为： <span class="math display">\[
 L(w,b,\alpha)=\frac{1}{2}\parallel w\parallel^2-\sum_{i=1}^n \alpha_i(y_i(w^\top x_i+b)-1)
@@ -403,9 +422,9 @@ y_i(w^\top x_i+b)\geq 1-\xi_i, \space i=1,\cdots,n
                   <div class="post-prev col-6">
                     
                     
-                      <a href="/2020/08/29/Grokking-the-Interview-Coding-Questions/">
+                      <a href="/2020/09/01/PyTorch-Practice-Guide-Distributed-Training-Automatic-Mixed-Precision-and-etc/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Grokking the Interview Coding Questions: High Frequency Problems</span>
+                        <span class="hidden-mobile">PyTorch Practice Guide: Distributed Training, Automatic Mixed Precision and etc.</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     

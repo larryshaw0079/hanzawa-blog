@@ -17,7 +17,7 @@
   <meta name="description" content="">
   <meta name="author" content="Hanzawa">
   <meta name="keywords" content="">
-  <title>Linear Regression and Logistic Regression - Machine Learning Classification Algorithms 1 - Hanzawa の 部屋</title>
+  <title>Deep Recommendation Models: Machine Learning Algorithms Extra 2 - Hanzawa の 部屋</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
@@ -141,7 +141,7 @@
           <div class="container text-center white-text fadeInUp">
             <span class="h2" id="subtitle">
               
-                Linear Regression and Logistic Regression - Machine Learning Classification Algorithms 1
+                Deep Recommendation Models: Machine Learning Algorithms Extra 2
               
             </span>
 
@@ -149,8 +149,8 @@
               
                 <div class="mt-3 post-meta">
                   <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-                  <time datetime="2020-08-26 02:08">
-                    2020年8月26日 凌晨
+                  <time datetime="2020-09-19 17:35">
+                    2020年9月19日 下午
                   </time>
                 </div>
               
@@ -160,7 +160,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    1.7k 字
+                    195 字
                   </span>
                 
 
@@ -170,7 +170,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    25
+                    2
                      分钟
                   </span>
                 
@@ -207,160 +207,33 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：2020年9月19日 晚上
+                  本文最后更新于：2020年9月19日 下午
                 
               </p>
             
             <article class="markdown-body">
               <h1 id="introduction">Introduction</h1>
-<p>Still working on it...</p>
-<h1 id="linear-regression">Linear Regression</h1>
-<h2 id="the-model">The Model</h2>
-<p><span class="math display">\[
-\hat y = w^\top x + b
-\]</span></p>
-<p><img src="https://i.loli.net/2020/09/04/Ji14CNOLADmysah.png" srcset="/img/loading.gif" /></p>
-<p>损失函数： <span class="math display">\[
-\mathcal L(w) = \sum_{i=1}^N \parallel w^\top x_i -y_i\parallel^2
-\]</span> 写成矩阵形式 <span class="math display">\[
-\mathcal L(w) = 
-\]</span></p>
-<p>设训练集包含<span class="math inline">\(M\)</span>个样本，<span class="math inline">\(N\)</span>个特征，为了方便后续推导，我们添加一列全是<span class="math inline">\(1\)</span>的向量： <span class="math display">\[
-\mathbf X=\left(
-\begin{matrix}
-x_{11} &amp; x_{12} &amp; \cdots &amp; x_{1N} &amp; 1\\
-x_{21} &amp; x_{22} &amp; \cdots &amp; x_{2N} &amp; 1\\
-\vdots &amp; \vdots &amp; \ddots &amp; \vdots &amp; \vdots\\
-x_{M1} &amp; x_{M2} &amp; \cdots &amp; x_{MN} &amp; 1 
-\end{matrix}
-\right)
-\]</span> 我们的模型 <span class="math display">\[
-\boldsymbol{\hat y} = \mathbf X \hat{\boldsymbol w}
-\]</span> 最终得到</p>
-<h2 id="projection-matrix">Projection Matrix</h2>
-<p><img src="https://i.loli.net/2020/09/17/zTRyQptEDPf5iIN.png" srcset="/img/loading.gif" style="zoom: 50%;" /></p>
-<h2 id="probabilistic-interpretation">Probabilistic Interpretation</h2>
-<p><span class="math display">\[
-\hat{\boldsymbol w}^* = (\mathbf X^\top \mathbf X)^{-1}\mathbf X^\top\boldsymbol y
-\]</span></p>
-<h1 id="regularization">Regularization</h1>
-<p>当特征数<span class="math inline">\(N\)</span>大于样本数量<span class="math inline">\(M\)</span>时，容易发生过拟合。</p>
-<p>过拟合的解决思路：</p>
-<ol type="1">
-<li>增加数据量</li>
-<li>降维，特征选择、特征提取</li>
-<li>增加正则化</li>
-</ol>
-<p>常见的正则项有<span class="math inline">\(\ell_1\)</span>正则和<span class="math inline">\(\ell_2\)</span>正则。假设原始优化函数为 <span class="math display">\[
-\mathop{\arg\min}\limits_{\theta} \mathcal L(\theta)
-\]</span> 加入<span class="math inline">\(\ell_1\)</span>正则化之后 <span class="math display">\[
-\mathop{\arg\min}\limits_{\theta} \mathcal J_1(\theta)=\mathcal L(\theta)+\color{red}{\lambda\parallel \theta\parallel_1}
-\]</span> 加入<span class="math inline">\(\ell_2\)</span>正则化之后 <span class="math display">\[
-\mathop{\arg\min}\limits_{\theta} \mathcal J_2(\theta)=\mathcal L(\theta)+\color{red}{\lambda\parallel \theta\parallel_2^2}
-\]</span></p>
-<p>上面两个公式是大家最常见到的形式，那么这两个公式是怎么来的呢？下面先从最优化的角度来推导一下。</p>
-<h2 id="the-optimization-problem">The Optimization Problem</h2>
-<p>一般来说，模型的参数量与模型的复杂度成正比，模型参数越多，越容易发生过拟合。要限制模型的复杂度，最自然的想法是限制参数中非零元素的个数，加入一个约束条件： <span class="math display">\[
-\begin{align}
-\min_\theta &amp;\space\mathcal L(\theta)\\
-\text{s.t.} &amp;\parallel \theta \parallel_0\space \leq\space C
-\end{align}
-\]</span> 这里<span class="math inline">\(\parallel \theta \parallel_0\)</span>代表参数<span class="math inline">\(\theta\)</span>中非零元素的个数。不过直接求解这个问题复杂度过高，我们可以采用近似的方式，不要求<span class="math inline">\(\theta\)</span>严格等于<span class="math inline">\(0\)</span>，而是接近<span class="math inline">\(0\)</span>即可，于是可以用<span class="math inline">\(\ell_1\)</span>范数或者<span class="math inline">\(\ell_2\)</span>范数来替代： <span class="math display">\[
-\begin{align}
-\min_\theta &amp;\space\mathcal L(\theta)\\
-\text{s.t.} &amp;\parallel \theta \parallel_1\space \leq\space C
-\end{align}
-\]</span> 或 <span class="math display">\[
-\begin{align}
-\min_\theta &amp;\space\mathcal L(\theta)\\
-\text{s.t.} &amp;\parallel \theta \parallel_2\space \leq\space C
-\end{align}
-\]</span> 对于上述的优化问题，我们可以使用拉格朗日乘子法将其变为无约束优化形式，以<span class="math inline">\(\ell_1\)</span>范数为例，有： <span class="math display">\[
-\begin{align}
-\min_\theta \max_\lambda &amp; \space\mathcal L(\theta) + \lambda (\parallel \theta \parallel_1-C)\\
-\text{s.t.} &amp; \space \lambda \geq 0
-\end{align}
-\]</span> 我们假设<span class="math inline">\(\lambda\)</span>的最优解为<span class="math inline">\(\lambda^*\)</span>，那么带入上式有： <span class="math display">\[
-\begin{align}
-\min_\theta &amp;\space\mathcal L(\theta) + \lambda^* (\parallel \theta \parallel_1-C) \\\Rightarrow&amp; \space\mathcal L(\theta) + \lambda^*\parallel\theta\parallel_1
-\end{align}
-\]</span> 这就是我们常看到的正则化优化形式。<span class="math inline">\(\ell_2\)</span>范数的推导类似，这里不再赘述。</p>
-<h2 id="optimization-interpretation">Optimization Interpretation</h2>
-<p>下面来从优化的角度进行直观解释，假设参数只有两个<span class="math inline">\(w_1\)</span>和<span class="math inline">\(w_2\)</span>。下图蓝色椭圆代表原始损失函数<span class="math inline">\(\mathcal L(\theta)\)</span>的一条等高线，红色为正则项约束对应的可行域。原函数的最优解一定在导数为<span class="math inline">\(0\)</span>处取得，也就是说导数与蓝色等高线相切，</p>
-<p><img src="https://i.loli.net/2020/09/19/sEzbDiA3Gq9hoFj.png" srcset="/img/loading.gif"  /></p>
-<h2 id="probabilistic-interpretation-1">Probabilistic Interpretation</h2>
-<p>从贝叶斯的角度来看，无论是输入<span class="math inline">\(x\)</span>，输出<span class="math inline">\(y\)</span>还是参数<span class="math inline">\(\theta\)</span>，都是随机变量，我们将参数<span class="math inline">\(\theta\)</span>的先验记为<span class="math inline">\(p(\theta)\)</span>，而<span class="math inline">\(\theta\)</span>的后验有： <span class="math display">\[
-\begin{align}
-p(\theta|x,y)&amp;=\frac{p(x,y|\theta)\cdot p(\theta)}{p(x,y)}\\
-&amp;=\frac{p(x|\theta)\cdot p(y|x,\theta)\cdot p(\theta)}{p(x,y)}\\
-&amp;=\frac{p(x)\cdot p(y|x,\theta)\cdot p(\theta)}{p(x,y)}\\
-&amp;\propto p(y|x,\theta)\cdot p(\theta)
-\end{align}
-\]</span> 其中<span class="math inline">\(x\)</span>和<span class="math inline">\(\theta\)</span>相互独立，那么<span class="math inline">\(p(x|\theta)=p(x)\)</span>，而</p>
-<p><img src="https://i.loli.net/2020/09/19/jRrPJGV2ALvqhIF.png" srcset="/img/loading.gif" style="zoom:33%;" /></p>
-<h2 id="lasso-regression">LASSO Regression</h2>
-<p>LASSO (Least Absolute Shrinkage and Selection Operator)</p>
-<h2 id="ridge-regression">Ridge Regression</h2>
-<p><span class="math display">\[
-\sum_{i=1}^N\parallel \hat{\boldsymbol w}^\top x_i-y_i\parallel^2+\lambda \hat{\boldsymbol w}^\top\hat{\boldsymbol w}
-\]</span> 最优解 <span class="math display">\[
-\hat{\boldsymbol w}^* = (\mathbf X^\top \mathbf X + \lambda \mathbf I)^{-1}\mathbf X^\top\boldsymbol y
-\]</span></p>
-<h1 id="logistic-regression">Logistic Regression</h1>
-<p>假设我们线性回归的对象不是标签，而是关于标签的一个函数<span class="math inline">\(g(y)\)</span>， <span class="math display">\[
-g(y)=w^\top x+b
-\]</span> 取反函数得到 <span class="math display">\[
-y=g^{-1}(w^\top x+b)
-\]</span> 我们就得到了广义线性模型，可以将线性回归适用到更广的情形</p>
-<h2 id="the-model-1">The Model</h2>
-<p>将线性回归的输出值与标签<span class="math inline">\(y\)</span>联系起来，最直观的想法是使用一个单位阶跃函数： <span class="math display">\[
-y=\begin{cases}0, &amp;z&lt;0\\
-0.5, &amp;z=0\\
-1, &amp;z&gt;0\end{cases}
-\]</span> 这样，对于线性回归输出大于<span class="math inline">\(0\)</span>的认为是正样本，小于<span class="math inline">\(0\)</span>的认为是负样本。不过这样的函数是不可导的，我们可以使用一个替代函数： <span class="math display">\[
-\sigma(z)=\sigma(w^\top x+b)=\frac{1}{1+e^{-(w^\top x+b)}}
-\]</span> 其函数图像如下图所示：</p>
-<p><img src="https://i.loli.net/2020/09/14/xa6QIhbGi4eCog1.png" srcset="/img/loading.gif" style="zoom:50%;" /></p>
-<p>该函数被称为是Sigmoid函数，其导数具有以下性质： <span class="math display">\[
-\sigma^\prime(x)=\sigma(x)(1-\sigma(x))
-\]</span> 其输出在<span class="math inline">\(0-1\)</span>之间，可以用作概率解释。</p>
-<p>这样我们就有 <span class="math display">\[
-y=\frac{1}{1+e^{-(w^\top x+b)}}
-\]</span> 我们可以通过变换将其写成广义线性模型的形式，即： <span class="math display">\[
-\log \frac{y}{1-y}=w^\top x+b
-\]</span> 从这一层面上可以认为逻辑回归是以“对数几率”为对象的线性回归</p>
-<h2 id="loss-function">Loss Function</h2>
-<p>前面我们说过Sigmoid函数的输出在<span class="math inline">\(0-1\)</span>之间，可以从概率分布的角度来解释。我们设定Sigmoid为<span class="math inline">\(x\)</span>为负例的概率： <span class="math display">\[
-p_w(y=0|x) = \frac{1}{1+e^{-(w^\top x+b)}}
-\]</span> 那么 <span class="math display">\[
-p_w(y=1|x)=\frac{e^{-(w^\top x + b)}}{1+e^{-(w^\top x+b)}}
-\]</span> 这样我们实际上是认为<span class="math inline">\(p(y|x)\)</span>服从伯努利分布。我们当然是希望参数<span class="math inline">\(w\)</span>得到的模型与真实数据的拟合程度越高越好，可以使用极大似然估计来解决。</p>
-<p>似然 <span class="math display">\[
-L(w,b) = \prod_{i=1}^N (p_w(y=1|x_i))^{y_i} (1-p_w(y=1|x_i))^{1-y_i}
-\]</span> 对数似然为 <span class="math display">\[
-\begin{align}
-\log L(w,b) &amp;= \log \prod_{i=1}^N (p_w(y=1|x_i))^{y_i} (1-p_w(y=1|x_i))^{1-y_i}
-\end{align}
-\]</span> 为了方便推导，我们将偏置项<span class="math inline">\(b\)</span>与<span class="math inline">\(w\)</span>合并起来： <span class="math display">\[
-w^\top x+b\Rightarrow \beta x
-\]</span> 于是 <span class="math display">\[
-\begin{align}
-\log L(\beta) &amp;=\sum_{i=1}^N y_i\log p_\beta(y=1|x_i)+(1-y_i)\log(1-p_\beta(y=1|x_i))\\
-&amp;=\sum_{i=1}^N y_i \log \frac{e^{-\beta x_i}}{1+e^{-\beta x_i}} +(1-y_i)\log \frac{1}{1+e^{-\beta x_i}}\\
-&amp;=\sum_{i=1}^N y_i\log (e^{-\beta x_i} \cdot \frac{1}{1+e^{-\beta x}})+(1-y_i)\log \frac{1}{1+e^{-\beta x}}\\
-&amp; = \sum_{i=1}^N -y_i\beta x_i+y_i \log \frac{1}{1+e^{-\beta x_i}}+\log \frac{1}{1+e^{-\beta x_i}}-y_i \log \frac{1}{1+e^{-\beta x_i}}\\
-&amp;=\sum_{i=1}^N -y_i\beta x_i + \log \frac{1}{1+ e^{-\beta x_i}}\\
-&amp;=\sum_{i=1}^N -y_i\beta x_i - \log(1+ e^{-\beta x_i})
-\end{align}
-\]</span> 损失函数相当于最小化<span class="math inline">\(\log L(\beta)\)</span>的负数： <span class="math display">\[
-\ell (\beta) = \sum_{i=1}^N y_i\beta x_i + \log(1+ e^{-\beta x_i})
-\]</span></p>
-<p>损失函数的导数 <span class="math display">\[
-\frac{\partial \ell(\beta)}{\partial \beta}=\sum_{i=1}^N x_i(y_i-p_\beta(y=1|x_i))
-\]</span> 二阶导数为 <span class="math display">\[
-\frac{\partial^2\ell(\beta)}{\partial\beta\partial\beta^\top}=\sum_{i=1}^N x_ix_i^\top p_\beta(y=0|x)p_\beta(y=1|x)
-\]</span></p>
-<h2 id="optimization">Optimization</h2>
+<h1 id="deepfm">DeepFM</h1>
+<h2 id="fm-component">FM Component</h2>
+<p>FM部分主要是包含一阶组合特征和二阶组合特征</p>
+<p><img src="https://i.loli.net/2020/09/16/TLC56XFD9hIgPGc.png" srcset="/img/loading.gif" /></p>
+<p>去掉了偏置项 <span class="math display">\[
+y_{FM}(x) = \sum_{i=1}^n w_i x_i + \sum_{i=1}^{n-1} \sum_{j=i+1}^n \langle \mathbf v_i, \mathbf v_j\rangle x_i x_j
+\]</span> 第一项代表了一阶组合特征（就是特征本身），第二项代表了二阶组合特征</p>
+<h2 id="deep-component">Deep Component</h2>
+<p>Deep部分主要是为了学习更高阶的组合特征。</p>
+<p><img src="https://i.loli.net/2020/09/16/3JGQI5gYBadKktL.png" srcset="/img/loading.gif" /></p>
+<p>其中Dense Embeddings是FM部分和Deep部分所共享的。</p>
+<p><img src="https://i.loli.net/2020/09/16/OrUJPWsiSyoYdlk.png" srcset="/img/loading.gif" /></p>
+<p>假设Dense Embeddings的输出为： <span class="math display">\[
+a^{(0)} = [e_1,e_2,\cdots,e_m]
+\]</span> 其中<span class="math inline">\(e_i\)</span>代表第<span class="math inline">\(i\)</span>个field的嵌入，<span class="math inline">\(m\)</span>为filed的数量。 <span class="math display">\[
+a^{(l+1)}=\sigma(W^{(l)}a^{(l)}+b^{(l)})
+\]</span> Deep部分的输出为： <span class="math display">\[
+y_{DNN}=\sigma(W^{(H+1)}a^{(H)}+b^{(H+1)})
+\]</span> <span class="math inline">\(H\)</span>为隐藏层数。</p>
+<h2 id="concatenation">Concatenation</h2>
+<p>最终的结果为</p>
 
             </article>
             <hr>
@@ -380,7 +253,9 @@ w^\top x+b\Rightarrow \beta x
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/Linear-Regression/">Linear Regression</a>
+                      <a class="hover-with-bg" href="/tags/Wide-Deep/">Wide&Deep</a>
+                    
+                      <a class="hover-with-bg" href="/tags/DeepFM/">DeepFM</a>
                     
                   </div>
                 
@@ -393,18 +268,12 @@ w^\top x+b\Rightarrow \beta x
                   <div class="post-prev col-6">
                     
                     
-                      <a href="/2020/08/26/Support-Vector-Machine-Machine-Learning-Classification-Algorithms-2/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Support Vector Machine: Machine Learning Classification Algorithms 2</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </div>
                   <div class="post-next col-6">
                     
                     
-                      <a href="/2020/08/26/Boosting-and-AdaBoost-Machine-Learning-Ensemble-Algorithms-1/">
-                        <span class="hidden-mobile">Boosting and AdaBoost: Machine Learning Ensemble Algorithms 1</span>
+                      <a href="/2020/09/17/Representation-Learning-with-Contrastive-Predictive-Coding/">
+                        <span class="hidden-mobile">Representation Learning with Contrastive Predictive Coding</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -423,8 +292,8 @@ w^\top x+b\Rightarrow \beta x
     <div id="disqus_thread"></div>
     <script type="text/javascript">
       var disqus_config = function () {
-        this.page.url = 'http://qfxiao.me/2020/08/26/Linear-Regression-and-Logistic-Regression-Machine-Learning-Classification-Algorithms-1/';
-        this.page.identifier = '/2020/08/26/Linear-Regression-and-Logistic-Regression-Machine-Learning-Classification-Algorithms-1/';
+        this.page.url = 'http://qfxiao.me/2020/09/19/Deep-Recommendation-Models-Machine-Learning-Algorithms-Extra-2/';
+        this.page.identifier = '/2020/09/19/Deep-Recommendation-Models-Machine-Learning-Algorithms-Extra-2/';
       };
       var oldLoadDq = window.onload;
       window.onload = function () {

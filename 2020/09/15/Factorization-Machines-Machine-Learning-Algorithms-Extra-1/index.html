@@ -160,7 +160,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    1.7k 字
+                    1.5k 字
                   </span>
                 
 
@@ -170,7 +170,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    24
+                    21
                      分钟
                   </span>
                 
@@ -207,7 +207,7 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：2020年9月17日 晚上
+                  本文最后更新于：2020年9月19日 下午
                 
               </p>
             
@@ -291,27 +291,7 @@
 <ul>
 <li>时间开销大</li>
 </ul>
-<h1 id="deepfm">DeepFM</h1>
-<h2 id="fm-component">FM Component</h2>
-<p>FM部分主要是包含一阶组合特征和二阶组合特征</p>
-<p><img src="https://i.loli.net/2020/09/16/TLC56XFD9hIgPGc.png" srcset="/img/loading.gif" /></p>
-<p>去掉了偏置项 <span class="math display">\[
-y_{FM}(x) = \sum_{i=1}^n w_i x_i + \sum_{i=1}^{n-1} \sum_{j=i+1}^n \langle \mathbf v_i, \mathbf v_j\rangle x_i x_j
-\]</span> 第一项代表了一阶组合特征（就是特征本身），第二项代表了二阶组合特征</p>
-<h2 id="deep-component">Deep Component</h2>
-<p>Deep部分主要是为了学习更高阶的组合特征。</p>
-<p><img src="https://i.loli.net/2020/09/16/3JGQI5gYBadKktL.png" srcset="/img/loading.gif" /></p>
-<p>其中Dense Embeddings是FM部分和Deep部分所共享的。</p>
-<p><img src="https://i.loli.net/2020/09/16/OrUJPWsiSyoYdlk.png" srcset="/img/loading.gif" /></p>
-<p>假设Dense Embeddings的输出为： <span class="math display">\[
-a^{(0)} = [e_1,e_2,\cdots,e_m]
-\]</span> 其中<span class="math inline">\(e_i\)</span>代表第<span class="math inline">\(i\)</span>个field的嵌入，<span class="math inline">\(m\)</span>为filed的数量。 <span class="math display">\[
-a^{(l+1)}=\sigma(W^{(l)}a^{(l)}+b^{(l)})
-\]</span> Deep部分的输出为： <span class="math display">\[
-y_{DNN}=\sigma(W^{(H+1)}a^{(H)}+b^{(H+1)})
-\]</span> <span class="math inline">\(H\)</span>为隐藏层数。</p>
-<h2 id="concatenation">Concatenation</h2>
-<p>最终的结果为 <span class="math display">\[
+<p><span class="math display">\[
 \hat y=\text{Sigmoid}(y_{FM} + y_{DNN})
 \]</span></p>
 
@@ -336,8 +316,6 @@ y_{DNN}=\sigma(W^{(H+1)}a^{(H)}+b^{(H+1)})
                       <a class="hover-with-bg" href="/tags/FM/">FM</a>
                     
                       <a class="hover-with-bg" href="/tags/FFM/">FFM</a>
-                    
-                      <a class="hover-with-bg" href="/tags/DeepFM/">DeepFM</a>
                     
                   </div>
                 
