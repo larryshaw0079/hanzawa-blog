@@ -4,11 +4,40 @@
   
   
   <entry>
+    <title>Unsupervised Feature Learning via Non-Parametric Instance Discrimination</title>
+    <link href="/2020/09/23/Unsupervised-Feature-Learning-via-Non-Parametric-Instance-Discrimination/"/>
+    <url>/2020/09/23/Unsupervised-Feature-Learning-via-Non-Parametric-Instance-Discrimination/</url>
+    
+    <content type="html"><![CDATA[<h1 id="introduction">Introduction</h1><p>细节待完善。。。</p><p>本文基于样本分类和噪声对比估计提出了一个无监督表示学习算法。下图展示了一个Intuition Example：</p><p><img src="https://i.loli.net/2020/07/28/AimfJM7gtuDsPGQ.png" srcset="/img/loading.gif" style="zoom: 67%;" /></p><p>对于一个有监督的分类器，输入一张图片，作者观察到分类器的Softmax Response中较高的那些类都是在视觉上看起来比较接近的（美洲豹Leopard，美洲虎Jaguar，印度豹Cheetah），也就是说网络捕捉到了类间的视觉相似性，不过这是在有标签的情况下。对于无监督表示学习任务，作者将这个观察推广到了一个极端情况，就是把每一个样本都视作不同的类，然后让分类器来学习样本（类）间的视觉相似性。不过直接这么做会有严重的效率问题，所以作者还利用了Memory Bank机制和噪声对比估计来提高效率。</p><h1 id="proposed-method">Proposed Method</h1><p>学习一个嵌入表示函数<span class="math inline">\(\mathbf v=f_\theta(x)\)</span>。在表示空间中<span class="math inline">\(d_\theta(x,y)=\parallel f_\theta(x)-f_\theta(y)\parallel\)</span></p><p><img src="https://i.loli.net/2020/07/26/WICKVkhrBu6Mci5.png" srcset="/img/loading.gif" /></p><h2 id="non-parametric-softmax-classifier">Non-Parametric Softmax Classifier</h2><h3 id="parametric-classifier">Parametric Classifier</h3><p>在经过嵌入表示函数之后，得到表示向量<span class="math inline">\(\mathbf v_i=f_\theta(\mathbf x_i)\)</span>。要基于这个向量进行分类， <span class="math display">\[P(i|\mathbf v)=\frac{\exp(\mathbf w_i^\top\mathbf v)}{\sum_j\exp(\mathbf w_j^\top\mathbf v)}\]</span> ### Non-Parametric Classifier</p><p><span class="math display">\[P(i|\mathbf v)=\frac{\exp(\mathbf v_i^\top\mathbf v/\tau)}{\sum_j\exp(\mathbf v_j^\top\mathbf v/\tau)}\]</span></p><p>同时约束<span class="math inline">\(\parallel \mathbf v\parallel=1\)</span></p><p>最后的损失函数为负对数似然损失（negative log-likelihood）： <span class="math display">\[J(\theta)=-\sum_{i=1}^n\log P(i|f_\theta(x_i))\]</span></p><p>到这里，算法的大框架就确定下来了，剩下的就是解决两个效率上的问题。一个是损失函数的计算每次都需要计算整个训练集的表示，同时Softmax函数由于分母对应的项目很多（等于训练集大小）在效率上也有问题。</p><h3 id="learning-with-a-memory-bank">Learning with A Memory Bank</h3><p>这里解决第一个效率问题。要计算损失函数，需要遍历整个训练集获得对应的表示，而在训练的时候是一批一批的数据，每次重新计算表示效率很低。为了解决这个问题，作者引入了缓存机制，即加入一个memory bank <span class="math inline">\(V\)</span>，用来保存计算好的表示<span class="math inline">\(\mathbf f_i=f_\theta(x_i)\)</span>。一开始<span class="math inline">\(V\)</span>采用单位随机向量初始化，之后在训练的时候不断更新<span class="math inline">\(\mathbf f_i\rightarrow \mathbf v_i\)</span>。</p><h2 id="noise-contrastive-estimation">Noise Contrastive Estimation</h2><p>第二个效率问题很容易想到使用噪声对比估计（Noise Contrastive Estimation, NCE）来做。NCE主要是将计算复杂的分母作为一个参数来进行优化： <span class="math display">\[P(i|\mathbf v)=\frac{\exp(\mathbf v^\top\mathbf f_i/\tau)}{Z_i}\]</span></p><p>其中<span class="math inline">\(Z_i=\sum_{j=1}^n\exp(\mathbf v^\top_j\mathbf f_i/\tau)\)</span>，噪声分布<span class="math inline">\(P_n=1/n\)</span>，如果噪声样本数量是真实数据的<span class="math inline">\(m\)</span>倍，那么随意给定一个样本，其属于真实样本的后验概率为： <span class="math display">\[h(i,\mathbf v)=P(D=1|i,\mathbf v)=\frac{P(i|\mathbf v)}{P(i|\mathbf v)+mP_n(i)}=\sigma\left(s(\mathbf v)-\log \{m P_n(i)\}\right)\]</span> 其中<span class="math inline">\(\Delta s=s(\mathbf v)-\log [m P_n(i)]\)</span>。这里的真实数据分布<span class="math inline">\(P_d\)</span>为。NCE的损失函数就是要最大化<span class="math inline">\(h(i,\mathbf v)\)</span>，最小化<span class="math inline">\(h(i,\mathbf v^\prime)\)</span> <span class="math display">\[J_{NCE}(\theta)=-E_{P_d}[\log h(i,\mathbf v)]-m\cdot E_{P_n}[\log(1-h(i,\mathbf v^\prime))]\]</span> 为了计算<span class="math inline">\(Z_i\)</span> <span class="math display">\[Z\simeq Z_i\simeq nE_j[\exp(\mathbf v_j^\top\mathbf f_i/\tau)]=\frac{n}{m}\sum_{k=1}^m\exp(\mathbf v_{j_k}^\top\mathbf f_i/\tau)\]</span></p><h2 id="proximal-regularization">Proximal Regularization</h2><p>每个类别只有一个样本 <span class="math display">\[-\log h(i,\mathbf v_i^{(t-1)})+\lambda\parallel\mathbf v_i^{(i)}-\mathbf v_i^{(i-1)}\parallel^2_2\]</span></p><p>最终的损失函数：</p><p><span class="math display">\[J_{NCE}(\theta)=-E_{P_d}\left[\log h(i,\mathbf v_i^{(t-1)})-\lambda\parallel\mathbf v_i^{(t)}-\mathbf v_i^{(t-1)}\parallel^2_2\right]\\-m\cdot E_{P_n}\left[\log(1-h(i,\mathbf v^{\prime(t-1)}))\right]\]</span></p><p><img src="https://i.loli.net/2020/08/06/nvS3Z7jEldVcCep.png" srcset="/img/loading.gif" style="zoom:67%;" /></p><h2 id="weighted-k-nearest-neighbor-classifier">Weighted k-Nearest Neighbor Classifier</h2><p><span class="math inline">\(s_i=\cos(\mathbf v_i,\hat{\mathbf f})\)</span>。记<span class="math inline">\(\mathcal N_k\)</span>。<span class="math inline">\(w_c=\sum_{i\in\mathcal N_k}\alpha_i\cdot 1(c_i=c)\)</span>。</p><p><img src="https://i.loli.net/2020/07/29/Cl8xHeFZzXpvosL.png" srcset="/img/loading.gif" style="zoom:67%;" /></p><h1 id="experiments">Experiments</h1><p><img src="https://i.loli.net/2020/08/07/Zj628R7WYixJGog.png" srcset="/img/loading.gif" style="zoom:67%;" /></p><p><img src="https://i.loli.net/2020/08/07/k6rx1LoaZiFYGpQ.png" srcset="/img/loading.gif" style="zoom:67%;" /></p><p><img src="C:\Users\larry\AppData\Roaming\Typora\typora-user-images\image-20200807000724066.png" srcset="/img/loading.gif" /></p><p><img src="https://i.loli.net/2020/08/07/a3tNMQ7I2xmGdYA.png" srcset="/img/loading.gif" /></p><p><img src="https://i.loli.net/2020/08/07/CK7s3wHbmgnv2j4.png" srcset="/img/loading.gif" style="zoom:80%;" /></p><p><img src="https://i.loli.net/2020/08/07/rM7n3jhOiBbvJXf.png" srcset="/img/loading.gif" style="zoom:67%;" /></p><p><img src="https://i.loli.net/2020/08/07/PVL4nlGFtqOdyRh.png" srcset="/img/loading.gif" style="zoom:67%;" /></p><p><img src="https://i.loli.net/2020/08/07/F3miMXyOqg1DUtK.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>Research</category>
+      
+      <category>Self-supervised Learning</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Representation Learning</tag>
+      
+      <tag>Self-supervised Learning</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Deep Recommendation Models: Machine Learning Algorithms Extra 2</title>
     <link href="/2020/09/19/Deep-Recommendation-Models-Machine-Learning-Algorithms-Extra-2/"/>
     <url>/2020/09/19/Deep-Recommendation-Models-Machine-Learning-Algorithms-Extra-2/</url>
     
-    <content type="html"><![CDATA[<h1 id="introduction">Introduction</h1><h1 id="deepfm">DeepFM</h1><h2 id="fm-component">FM Component</h2><p>FM部分主要是包含一阶组合特征和二阶组合特征</p><p><img src="https://i.loli.net/2020/09/16/TLC56XFD9hIgPGc.png" srcset="/img/loading.gif" /></p><p>去掉了偏置项 <span class="math display">\[y_{FM}(x) = \sum_{i=1}^n w_i x_i + \sum_{i=1}^{n-1} \sum_{j=i+1}^n \langle \mathbf v_i, \mathbf v_j\rangle x_i x_j\]</span> 第一项代表了一阶组合特征（就是特征本身），第二项代表了二阶组合特征</p><h2 id="deep-component">Deep Component</h2><p>Deep部分主要是为了学习更高阶的组合特征。</p><p><img src="https://i.loli.net/2020/09/16/3JGQI5gYBadKktL.png" srcset="/img/loading.gif" /></p><p>其中Dense Embeddings是FM部分和Deep部分所共享的。</p><p><img src="https://i.loli.net/2020/09/16/OrUJPWsiSyoYdlk.png" srcset="/img/loading.gif" /></p><p>假设Dense Embeddings的输出为： <span class="math display">\[a^{(0)} = [e_1,e_2,\cdots,e_m]\]</span> 其中<span class="math inline">\(e_i\)</span>代表第<span class="math inline">\(i\)</span>个field的嵌入，<span class="math inline">\(m\)</span>为filed的数量。 <span class="math display">\[a^{(l+1)}=\sigma(W^{(l)}a^{(l)}+b^{(l)})\]</span> Deep部分的输出为： <span class="math display">\[y_{DNN}=\sigma(W^{(H+1)}a^{(H)}+b^{(H+1)})\]</span> <span class="math inline">\(H\)</span>为隐藏层数。</p><h2 id="concatenation">Concatenation</h2><p>最终的结果为</p>]]></content>
+    <content type="html"><![CDATA[<h1 id="introduction">Introduction</h1><h1 id="deepfm">DeepFM</h1><h2 id="fm-component">FM Component</h2><p>FM部分主要是包含一阶组合特征和二阶组合特征</p><p><img src="https://i.loli.net/2020/09/16/TLC56XFD9hIgPGc.png" srcset="/img/loading.gif" /></p><p>去掉了偏置项 <span class="math display">\[y_{FM}(x) = \sum_{i=1}^n w_i x_i + \sum_{i=1}^{n-1} \sum_{j=i+1}^n \langle \mathbf v_i, \mathbf v_j\rangle x_i x_j\]</span> 第一项代表了一阶组合特征（就是特征本身），第二项代表了二阶组合特征</p><h2 id="deep-component">Deep Component</h2><p>Deep部分主要是为了学习更高阶的组合特征。</p><p><img src="https://i.loli.net/2020/09/16/3JGQI5gYBadKktL.png" srcset="/img/loading.gif" /></p><p>其中Dense Embeddings是FM部分和Deep部分所共享的。</p><p><img src="https://i.loli.net/2020/09/16/OrUJPWsiSyoYdlk.png" srcset="/img/loading.gif" /></p><p>假设Dense Embeddings的输出为： <span class="math display">\[a^{(0)} = [e_1,e_2,\cdots,e_m]\]</span> 其中<span class="math inline">\(e_i\)</span>代表第<span class="math inline">\(i\)</span>个field的嵌入，<span class="math inline">\(m\)</span>为filed的数量。 <span class="math display">\[a^{(l+1)}=\sigma(W^{(l)}a^{(l)}+b^{(l)})\]</span> Deep部分的输出为： <span class="math display">\[y_{DNN}=\sigma(W^{(H+1)}a^{(H)}+b^{(H+1)})\]</span> <span class="math inline">\(H\)</span>为隐藏层数。</p><h2 id="concatenation">Concatenation</h2><p>最终的结果为</p><h1 id="widedeep">Wide&amp;Deep</h1>]]></content>
     
     
     <categories>
@@ -283,7 +312,7 @@
     <link href="/2020/08/26/Support-Vector-Machine-Machine-Learning-Classification-Algorithms-2/"/>
     <url>/2020/08/26/Support-Vector-Machine-Machine-Learning-Classification-Algorithms-2/</url>
     
-    <content type="html"><![CDATA[<h1 id="introduction">Introduction</h1><p>Still working on it😅...</p><p><a href="http://blog.pluskid.org/?page_id=683" target="_blank" rel="noopener">blog</a></p><h1 id="hyperplane">Hyperplane</h1><p>超平面可以从代数和几何两方面来理解。超平面的代数定义可以看作是方程： <span class="math display">\[a_1x_1+\cdots+a_nx_n=d\]</span> 的所有解形成的集合，其中<span class="math inline">\(a_1,\cdots,a_n\)</span>为不全为<span class="math inline">\(0\)</span>的实数，<span class="math inline">\(d\)</span>也是实数。</p><p>从几何上来说，超平面可以看作是除空间<span class="math inline">\(R^n\)</span>自身外维度最大的仿射空间。</p><p><img src="https://i.loli.net/2020/09/07/WiMJQSe7lN8upfw.jpg" srcset="/img/loading.gif" /></p><h1 id="maximum-margin-classifier">Maximum Margin Classifier</h1><p><img src="https://i.loli.net/2020/08/26/vjuyCGXMr4msaUK.png" srcset="/img/loading.gif" style="zoom:67%;" /></p><p>要谈SVM就得先谈线性分类器，其设置是这样的。对于<span class="math inline">\(D\)</span>维空间，我们有一堆数据<span class="math inline">\(X\)</span>，进行二分类任务，标签记为<span class="math inline">\(y\)</span>，其中<span class="math inline">\(y=-1\)</span>和<span class="math inline">\(y=1\)</span>分别代表不同的类别。我们的任务就是找到一个超平面，将正负例切分开来（先假设数据是线性可分的），这个超平面的方程可以表示为： <span class="math display">\[w^\top x+b=0\]</span> 我们令<span class="math inline">\(f(x)=w^\top x+b\)</span>，对于<span class="math inline">\(f(x)&lt;0\)</span>的样本，我们赋予其类别<span class="math inline">\(-1\)</span>，对于<span class="math inline">\(f(x)&gt;0\)</span>的样本，我们可以赋予其类别<span class="math inline">\(1\)</span>。对于相同的分类结果，我们可以找出无限种超平面。不过，对于那些样本特别靠近超平面的情况，鲁棒性并不好。为什么呢？因为这时只要超平面有轻微的变化，样本的分类结果就会发生变化。直观上来说，我们希望样本到超平面的距离越大越好。</p><p>我们先定义函数间隔的概念，函数间隔<span class="math inline">\(\hat \gamma=y(w^\top x+b)\)</span>，乘以<span class="math inline">\(y\)</span>的目的主要是保持非负性，表示起来方便。可见函数间隔的大小并不能表示样本距离，因为同一个超平面，法向量<span class="math inline">\(w\)</span>可以任意增大，函数间隔也会相应增大。</p><p>下面来推导点<span class="math inline">\(x\)</span>到超平面的距离。设<span class="math inline">\(x\)</span>在超平面上的投影为<span class="math inline">\(x_0\)</span>，到超平面的距离为<span class="math inline">\(\gamma\)</span>，<span class="math inline">\(w\)</span>为法向量，那么有： <span class="math display">\[x=x_0+\gamma\frac{w}{\parallel w\parallel}\]</span> 将上式带入到超平面方程可以得到 <span class="math display">\[\gamma=\frac{w^\top}{\parallel w\parallel}x+\frac{b}{\parallel w\parallel}\]</span> 我们称<span class="math inline">\(\gamma\)</span>为几何间隔。</p><p><img src="https://i.loli.net/2020/08/26/b6qLJWzHwFAPDne.png" srcset="/img/loading.gif" /></p><p>可以很容易看出函数间隔和几何间隔的关系： <span class="math display">\[\gamma = \frac{\hat \gamma}{\parallel w\parallel}\]</span> 前面提到我们希望几何间隔越大越好，于是可以直接最大化<span class="math inline">\(\gamma\)</span>，得到： <span class="math display">\[\begin{align}\max \space &amp;\gamma\\s.t. \space &amp; y_i(w^\top x_i+b)=\hat\gamma_i\geq\hat\gamma, \space i=1,\cdots,n\end{align}\]</span> 这里<span class="math inline">\(\hat \gamma=\gamma \parallel w\parallel\)</span>，根据前面的分析我们知道，对于同一个超平面，函数间隔<span class="math inline">\(\hat\gamma\)</span>可以随着<span class="math inline">\(\parallel w\parallel\)</span>的变化而变化，所以为了找到最优的<span class="math inline">\(\gamma\)</span>，我们可以考虑固定<span class="math inline">\(\parallel w\parallel\)</span>或者<span class="math inline">\(\hat\gamma\)</span>，这里我们固定<span class="math inline">\(\hat \gamma=1\)</span>，所以有： <span class="math display">\[\begin{align}\max &amp; \space \frac{1}{\parallel w\parallel},\\ s.t. \space&amp; y_i(w^\top x_i+b)\geq 1, \space i=1,\cdots,n\end{align}\]</span></p><p>下面的约束条件代表前提是所有样本分类正确，而<span class="math inline">\(\max\frac{1}{\parallel w\parallel}\)</span>代表最大化间隔。为了方便，我们将其化为等价的最小化形式： <span class="math display">\[\begin{align}\min &amp; \space \frac{1}{2}\parallel w\parallel^2,\\ s.t. &amp; y_i(w^\top x_i+b)\geq 1, \space i=1,\cdots,n\end{align}\]</span> 其中那些<span class="math inline">\(y_i(w^\top x_i+b)=1\)</span>的样本就是“支持向量”。这个优化问题是典型的二次凸优化问题，可以调用现成的算法去解决。不过我们可以使用拉格朗日乘子法来更高效的解决。</p><h1 id="dual-problem">Dual Problem</h1><p>拉格朗日乘子法可以将有<span class="math inline">\(d\)</span>个变量和<span class="math inline">\(k\)</span>个约束条件的最优化问题转化成有<span class="math inline">\(d+k\)</span>个变量的无约束最优化问题求解。</p><h2 id="lagrange-multiplier">Lagrange Multiplier</h2><p>对于以下有约束优化问题： <span class="math display">\[\begin{align}\min_x \space &amp; f(x)\\\text{s.t.} \space &amp; h_i(x)=0 \space (i=1,\cdots,m),\\&amp;g_j(x) \leq 0 \space (j=1,\cdots,n)\end{align}\]</span></p><p>引入拉格朗日乘子<span class="math inline">\(\boldsymbol\lambda = (\lambda_1,\lambda_2,\cdots,\lambda_n)^\top\)</span>和<span class="math inline">\(\boldsymbol\mu=(\mu_1,\mu_2,\cdots,\mu_m)^\top\)</span>，相应的广义拉格朗日函数 (generalized Lagrange function) 为： <span class="math display">\[L(\boldsymbol x,\boldsymbol\lambda,\boldsymbol\mu)=f(\boldsymbol x)+\sum_{j=1}^n \lambda_j g_j(\boldsymbol x)+\sum_{i=1}^m \mu_i h_i(\boldsymbol x)\]</span></p><p>其中<span class="math inline">\(\lambda_j\)</span>，<span class="math inline">\(\mu_i\)</span>被称作是拉格朗日乘子，<span class="math inline">\(\lambda_j \geq 0\)</span>。</p><h3 id="primal-problem">Primal Problem</h3><p>现在我们来讨论原问题的等价性。假设给定某个<span class="math inline">\(x\)</span>，如果<span class="math inline">\(x\)</span>违反约束条件，即存在某个<span class="math inline">\(x\)</span>使得<span class="math inline">\(h_i(x)\neq 0\)</span>或者<span class="math inline">\(g_j(x)&gt;0\)</span>，那么就有： <span class="math display">\[\max\limits_{\boldsymbol\lambda,\boldsymbol\mu:\lambda_j\geq 0} L(\boldsymbol x,\boldsymbol\lambda,\boldsymbol\mu)=+\infty\]</span> 如果存在某个<span class="math inline">\(x\)</span>使得<span class="math inline">\(h_i(x)\neq 0\)</span>，那么可以令<span class="math inline">\(\lambda_j \rightarrow +\infty\)</span>，如果存在<span class="math inline">\(g_j(x)&gt;0\)</span>，那么可令<span class="math inline">\(\mu_ih_i(x)\rightarrow +\infty\)</span>。</p><p>如果考虑以下极小化问题： <span class="math display">\[p^*=\min_x\max\limits_{\boldsymbol\lambda,\boldsymbol\mu:\lambda_j\geq 0} L(\boldsymbol x,\boldsymbol\lambda,\boldsymbol\mu)\]</span> 他与原始带约束最优化问题是等价的（因为不符合约束时会有<span class="math inline">\(+\infty\)</span>，而我们考虑的是极小化问题），我们将其记为原问题 (Primal problem)。</p><h3 id="dual-problem-1">Dual Problem</h3><p>如果先考虑最小化<span class="math inline">\(x\)</span>，再考虑最大化<span class="math inline">\(\boldsymbol\lambda\)</span>和<span class="math inline">\(\boldsymbol\mu\)</span>，这时有： <span class="math display">\[\max\limits_{\boldsymbol\lambda,\boldsymbol\mu:\lambda_j\geq 0}\min_x L(\boldsymbol x,\boldsymbol\lambda,\boldsymbol\mu)\]</span> 对偶问题 (Dual problem) <span class="math display">\[d^*=\max\limits_{\boldsymbol\lambda,\boldsymbol\mu:\lambda_j\geq 0}\min_x L(\boldsymbol x,\boldsymbol\lambda,\boldsymbol\mu)\]</span> 原问题和对偶问题的关系 <span class="math display">\[d^*=\max\limits_{\boldsymbol\lambda,\boldsymbol\mu:\lambda_j\geq 0}\min_x L(\boldsymbol x,\boldsymbol\lambda,\boldsymbol\mu) \leq \min_x\max\limits_{\boldsymbol\lambda,\boldsymbol\mu:\lambda_j\geq 0} L(\boldsymbol x,\boldsymbol\lambda,\boldsymbol\mu) = p^*\]</span></p><h3 id="kkt-condition">KKT Condition</h3><blockquote><p>对于原问题和对偶问题，设<span class="math inline">\(f(x)\)</span>和<span class="math inline">\(g_i(x)\)</span>为凸函数，<span class="math inline">\(h_i(x)\)</span>为仿射函数，并且不等式约束<span class="math inline">\(c_i(x)\)</span>是严格可行的，则<span class="math inline">\(x^*\)</span>，<span class="math inline">\(\lambda^*\)</span>，<span class="math inline">\(\mu^*\)</span>分别是原问题和对偶问题的解的充分必要条件是满足下面的Karush-Kuhn-Tucker (KKT) 条件： <span class="math display">\[\begin{cases}\nabla_x L(x^*,\lambda^*,\mu^*)=0 &amp;\\ \lambda^*_j g_j(x^*) &amp; j=1,\cdots n\\g_j(x^*)\leq 0 &amp; j=1,\cdots n\\\lambda_j^*\geq 0 &amp; j=1,\cdots n\\h_i(x^*) = 0 &amp; i = 1, \cdots m\end{cases}\]</span></p></blockquote><p>这告诉我们</p><h2 id="dual-form-of-svm-optimization">Dual Form of SVM Optimization</h2><p>支持向量机优化的对偶问题可以写为： <span class="math display">\[L(w,b,\alpha)=\frac{1}{2}\parallel w\parallel^2-\sum_{i=1}^n \alpha_i(y_i(w^\top x_i+b)-1)\]</span> 我们先令： <span class="math display">\[\begin{align}\frac{\partial L}{\partial w}=0&amp;\Rightarrow w=\sum_{i=1}^n\alpha_i y_i x_i\\\frac{\partial L}{\partial b}=0&amp;\Rightarrow \sum_{i=1}^n\alpha_i y_i =0\end{align}\]</span> 带回到<span class="math inline">\(L\)</span>得到： <span class="math display">\[\begin{align}L(w,b,\alpha)&amp;=\frac{1}{2}\sum_{i,j=1}^n\alpha_i\alpha_j y_i y_j x^\top_i x_j-\sum_{i,j=1}^n \alpha_i\alpha_jy_iy_jx^\top_ix_j-b\sum_{i=1}^n\alpha_iy_i+\sum_{i=1}^n\alpha_i\\&amp;=\sum_{i=1}^n \alpha_i - \frac{1}{2}\sum_{i,j=1}^n \alpha_i\alpha_j y_i y_j x^\top_i x_j\end{align}\]</span> 于是得到关于<span class="math inline">\(\alpha\)</span>的对偶优化问题： <span class="math display">\[\begin{align}\max_\alpha &amp;\sum_{i=1}^n \alpha_i - \frac{1}{2}\sum_{i,j=1}^n \alpha_i\alpha_j y_i y_j x^\top_i x_j\\\text{s.t. }&amp; \alpha_i\geq 0, i=1,\cdots,n\\&amp; \sum_{i=1}^n \alpha_i y_i = 0\end{align}\]</span></p><p>前面有提到我们根据<span class="math inline">\(f(x)=w^\top x + b\)</span>的输出来判定样本类别，而刚才得到<span class="math inline">\(w=\sum_{i=1}^n\alpha_i y_i x_i\)</span>，于是： <span class="math display">\[\begin{align}f(x) &amp;= (\sum_{i=1}^n \alpha_iy_ix_i)^\top x+b\\&amp;= \sum_{i=1}^n \alpha_i y_i \langle x_i, x\rangle + b\end{align}\]</span> 最后的<span class="math inline">\(\sum_{i=1}^n \alpha_i y_i \langle x_i, x\rangle + b\)</span>值得特别注意，这意味着我们对于测试样本<span class="math inline">\(x\)</span>的预测，只需要计算它与训练集的内积即可，同时由于所有非支持向量对应的<span class="math inline">\(\alpha\)</span>都是<span class="math inline">\(0\)</span>，我们只需要求一小部分内积。同时这个内积计算也是后面核方法应用的前提。</p><h1 id="kernel">Kernel</h1><p>到目前为止，我们的讨论都是在数据是线性可分的前提下进行讨论的，那么对于线性不可分的情况呢？答案是使用核方法。</p><p><img src="https://i.loli.net/2020/09/08/kSTVgelDjWqtu8v.png" srcset="/img/loading.gif" /></p><p>核方法的思想是，对于原始不可分的数据，我们假设原始数据通过一个映射<span class="math inline">\(\phi(\cdot)\)</span>就变得线性可分了。核方法相当于对数据找到了一种新的表示，如上图没法用一个超平面直接分割，但通过<span class="math inline">\(\phi(\cdot)\)</span>映射之后就变得可分了。原始的分类函数为： <span class="math display">\[f(x)= \sum_{i=1}^n \alpha_i y_i \langle x_i, x\rangle + b\]</span> 加上映射之后变为： <span class="math display">\[f(x)= \sum_{i=1}^n \alpha_i y_i \langle \phi(x_i), \phi(x)\rangle + b\]</span> 优化问题也变为： <span class="math display">\[\begin{align}\max_\alpha &amp;\sum_{i=1}^n \alpha_i - \frac{1}{2}\sum_{i,j=1}^n \alpha_i\alpha_j y_i y_j \langle\phi(x_i), \phi(x_j)\rangle\\\text{s.t. }&amp; \alpha_i\geq 0, i=1,\cdots,n\\&amp; \sum_{i=1}^n \alpha_i y_i = 0\end{align}\]</span> 我们把计算两个向量在映射后的空间中的内积的函数叫做核函数 <span class="math display">\[f(x)= \sum_{i=1}^n \alpha_i y_i k(x_i, x) + b\]</span> 优化问题改为： <span class="math display">\[\begin{align}\max_\alpha &amp;\sum_{i=1}^n \alpha_i - \frac{1}{2}\sum_{i,j=1}^n \alpha_i\alpha_j y_i y_j k(\phi(x_i), \phi(x_j))\\\text{s.t. }&amp; \alpha_i\geq 0, i=1,\cdots,n\\&amp; \sum_{i=1}^n \alpha_i y_i = 0\end{align}\]</span> 实际上，通过核函数，我们隐式地定义了一个映射<span class="math inline">\(\phi(\cdot)\)</span></p><p>常用核函数</p><table><thead><tr class="header"><th>名称</th><th>表达式</th><th>参数</th></tr></thead><tbody><tr class="odd"><td>线性核</td><td></td><td></td></tr><tr class="even"><td>多项式核</td><td></td><td></td></tr><tr class="odd"><td>RBF核</td><td></td><td></td></tr><tr class="even"><td>拉普拉斯核</td><td></td><td></td></tr><tr class="odd"><td>Sigmoid核</td><td></td><td></td></tr></tbody></table><h1 id="soft-margin">Soft Margin</h1><p>数据线性不可分的情况，除了数据本身结构非线性的原因之外（核方法），还有可能是因为噪声或者离群点。为了处理这种情况，我们可以允许一部分点在一定程度上偏离超平面，具体来说就是原来的约束条件<span class="math inline">\(y_i(w^\top x_i+b)\geq 1, \space i=1,\cdots,n\)</span>变成了： <span class="math display">\[y_i(w^\top x_i+b)\geq 1-\xi_i, \space i=1,\cdots,n\]</span> 其中<span class="math inline">\(\xi_i\geq 0\)</span>称作是松弛变量，代表样本<span class="math inline">\(i\)</span>允许的偏离程度。当然松弛变量不可能无限大，所以我们需要将<span class="math inline">\(\xi_i\)</span>加入到优化目标函数中使其尽量小，于是有： <span class="math display">\[\begin{align}\min &amp; \space \frac{1}{2}\parallel w\parallel^2+C\sum_{i=1}^n \xi_i,\\ s.t. &amp; y_i(w^\top x_i+b)\geq 1-\xi_i, \space i=1,\cdots,n\end{align}\]</span> 其中<span class="math inline">\(C\)</span>为控制最优化<span class="math inline">\(\parallel w\parallel\)</span>和松弛变量这两项的权重。这里的优化函数还是对偶问题之前的形式，我们马上会讨论对偶问题。</p><h1 id="numerical-optimization">Numerical Optimization</h1><p>这里讨论SVM高效求解的Sequential Minimal Optimization (SMO)算法。</p><p>坐标下降法是一种非梯度优化算法，</p><p><img src="https://i.loli.net/2020/09/08/I6AonzFRHGVBU3t.png" srcset="/img/loading.gif" /></p><p><img src="https://i.loli.net/2020/09/08/Hmr79nMlK4C8GeJ.png" srcset="/img/loading.gif" /></p>]]></content>
+    <content type="html"><![CDATA[<h1 id="introduction">Introduction</h1><p>Still working on it😅...</p><p><a href="http://blog.pluskid.org/?page_id=683" target="_blank" rel="noopener">blog</a></p><h1 id="hyperplane">Hyperplane</h1><p>超平面可以从代数和几何两方面来理解。超平面的代数定义可以看作是方程： <span class="math display">\[a_1x_1+\cdots+a_nx_n=d\]</span> 的所有解形成的集合，其中<span class="math inline">\(a_1,\cdots,a_n\)</span>为不全为<span class="math inline">\(0\)</span>的实数，<span class="math inline">\(d\)</span>也是实数。</p><p>从几何上来说，超平面可以看作是除空间<span class="math inline">\(R^n\)</span>自身外维度最大的仿射空间。</p><p><img src="https://i.loli.net/2020/09/07/WiMJQSe7lN8upfw.jpg" srcset="/img/loading.gif" /></p><h1 id="maximum-margin-classifier">Maximum Margin Classifier</h1><p><img src="https://i.loli.net/2020/08/26/vjuyCGXMr4msaUK.png" srcset="/img/loading.gif" style="zoom:67%;" /></p><p>要谈SVM就得先谈线性分类器，其设置是这样的。对于<span class="math inline">\(D\)</span>维空间，我们有一堆数据<span class="math inline">\(X\)</span>，进行二分类任务，标签记为<span class="math inline">\(y\)</span>，其中<span class="math inline">\(y=-1\)</span>和<span class="math inline">\(y=1\)</span>分别代表不同的类别。我们的任务就是找到一个超平面，将正负例切分开来（先假设数据是线性可分的），这个超平面的方程可以表示为： <span class="math display">\[w^\top x+b=0\]</span> 我们令<span class="math inline">\(f(x)=w^\top x+b\)</span>，对于<span class="math inline">\(f(x)&lt;0\)</span>的样本，我们赋予其类别<span class="math inline">\(-1\)</span>，对于<span class="math inline">\(f(x)&gt;0\)</span>的样本，我们可以赋予其类别<span class="math inline">\(1\)</span>。对于相同的分类结果，我们可以找出无限种超平面。不过，对于那些样本特别靠近超平面的情况，鲁棒性并不好。为什么呢？因为这时只要超平面有轻微的变化，样本的分类结果就会发生变化。直观上来说，我们希望样本到超平面的距离越大越好。</p><p>我们先定义函数间隔的概念，函数间隔<span class="math inline">\(\hat \gamma=y(w^\top x+b)\)</span>，乘以<span class="math inline">\(y\)</span>的目的主要是保持非负性，表示起来方便。可见函数间隔的大小并不能表示样本距离，因为同一个超平面，法向量<span class="math inline">\(w\)</span>可以任意增大，函数间隔也会相应增大。</p><p>下面来推导点<span class="math inline">\(x\)</span>到超平面的距离。设<span class="math inline">\(x\)</span>在超平面上的投影为<span class="math inline">\(x_0\)</span>，到超平面的距离为<span class="math inline">\(\gamma\)</span>，<span class="math inline">\(w\)</span>为法向量，那么有： <span class="math display">\[x=x_0+\gamma\frac{w}{\parallel w\parallel}\]</span> 将上式带入到超平面方程可以得到 <span class="math display">\[\gamma=\frac{w^\top}{\parallel w\parallel}x+\frac{b}{\parallel w\parallel}\]</span> 我们称<span class="math inline">\(\gamma\)</span>为几何间隔。</p><p><img src="https://i.loli.net/2020/08/26/b6qLJWzHwFAPDne.png" srcset="/img/loading.gif" /></p><p>可以很容易看出函数间隔和几何间隔的关系： <span class="math display">\[\gamma = \frac{\hat \gamma}{\parallel w\parallel}\]</span> 前面提到我们希望几何间隔越大越好，于是可以直接最大化<span class="math inline">\(\gamma\)</span>，得到： <span class="math display">\[\begin{align}\max \space &amp;\gamma\\s.t. \space &amp; y_i(w^\top x_i+b)=\hat\gamma_i\geq\hat\gamma, \space i=1,\cdots,n\end{align}\]</span> 这里<span class="math inline">\(\hat \gamma=\gamma \parallel w\parallel\)</span>，根据前面的分析我们知道，对于同一个超平面，函数间隔<span class="math inline">\(\hat\gamma\)</span>可以随着<span class="math inline">\(\parallel w\parallel\)</span>的变化而变化，所以为了找到最优的<span class="math inline">\(\gamma\)</span>，我们可以考虑固定<span class="math inline">\(\parallel w\parallel\)</span>或者<span class="math inline">\(\hat\gamma\)</span>，这里我们固定<span class="math inline">\(\hat \gamma=1\)</span>，所以有： <span class="math display">\[\begin{align}\max &amp; \space \frac{1}{\parallel w\parallel},\\ s.t. \space&amp; y_i(w^\top x_i+b)\geq 1, \space i=1,\cdots,n\end{align}\]</span></p><p>下面的约束条件代表前提是所有样本分类正确，而<span class="math inline">\(\max\frac{1}{\parallel w\parallel}\)</span>代表最大化间隔。为了方便，我们将其化为等价的最小化形式： <span class="math display">\[\begin{align}\min &amp; \space \frac{1}{2}\parallel w\parallel^2,\\ s.t. &amp; y_i(w^\top x_i+b)\geq 1, \space i=1,\cdots,n\end{align}\]</span> 其中那些<span class="math inline">\(y_i(w^\top x_i+b)=1\)</span>的样本就是“支持向量”。这个优化问题是典型的二次凸优化问题，可以调用现成的算法去解决。不过我们可以使用拉格朗日乘子法来更高效的解决。</p><h1 id="dual-problem">Dual Problem</h1><p>拉格朗日乘子法可以将有<span class="math inline">\(d\)</span>个变量和<span class="math inline">\(k\)</span>个约束条件的最优化问题转化成有<span class="math inline">\(d+k\)</span>个变量的无约束最优化问题求解。</p><h2 id="lagrange-multiplier">Lagrange Multiplier</h2><p>对于以下有约束优化问题： <span class="math display">\[\begin{align}\min_x \space &amp; f(x)\\\text{s.t.} \space &amp; h_i(x)=0 \space (i=1,\cdots,m),\\&amp;g_j(x) \leq 0 \space (j=1,\cdots,n)\end{align}\]</span></p><p>引入拉格朗日乘子<span class="math inline">\(\boldsymbol\lambda = (\lambda_1,\lambda_2,\cdots,\lambda_n)^\top\)</span>和<span class="math inline">\(\boldsymbol\mu=(\mu_1,\mu_2,\cdots,\mu_m)^\top\)</span>，相应的广义拉格朗日函数 (generalized Lagrange function) 为： <span class="math display">\[L(\boldsymbol x,\boldsymbol\lambda,\boldsymbol\mu)=f(\boldsymbol x)+\sum_{j=1}^n \lambda_j g_j(\boldsymbol x)+\sum_{i=1}^m \mu_i h_i(\boldsymbol x)\]</span></p><p>其中<span class="math inline">\(\lambda_j\)</span>，<span class="math inline">\(\mu_i\)</span>被称作是拉格朗日乘子，<span class="math inline">\(\lambda_j \geq 0\)</span>。</p><h3 id="primal-problem">Primal Problem</h3><p>现在我们来讨论原问题的等价性。假设给定某个<span class="math inline">\(x\)</span>，如果<span class="math inline">\(x\)</span>违反约束条件，即存在某个<span class="math inline">\(x\)</span>使得<span class="math inline">\(h_i(x)\neq 0\)</span>或者<span class="math inline">\(g_j(x)&gt;0\)</span>，那么就有： <span class="math display">\[\max\limits_{\boldsymbol\lambda,\boldsymbol\mu:\lambda_j\geq 0} L(\boldsymbol x,\boldsymbol\lambda,\boldsymbol\mu)=+\infty\]</span> 如果存在某个<span class="math inline">\(x\)</span>使得<span class="math inline">\(h_i(x)\neq 0\)</span>，那么可以令<span class="math inline">\(\lambda_j \rightarrow +\infty\)</span>，如果存在<span class="math inline">\(g_j(x)&gt;0\)</span>，那么可令<span class="math inline">\(\mu_ih_i(x)\rightarrow +\infty\)</span>。</p><p>如果考虑以下极小化问题： <span class="math display">\[p^*=\min_x\max\limits_{\boldsymbol\lambda,\boldsymbol\mu:\lambda_j\geq 0} L(\boldsymbol x,\boldsymbol\lambda,\boldsymbol\mu)\]</span> 他与原始带约束最优化问题是等价的（因为不符合约束时会有<span class="math inline">\(+\infty\)</span>，而我们考虑的是极小化问题），我们将其记为原问题 (Primal problem)。</p><h3 id="dual-problem-1">Dual Problem</h3><p>如果先考虑最小化<span class="math inline">\(x\)</span>，再考虑最大化<span class="math inline">\(\boldsymbol\lambda\)</span>和<span class="math inline">\(\boldsymbol\mu\)</span>，这时有： <span class="math display">\[\max\limits_{\boldsymbol\lambda,\boldsymbol\mu:\lambda_j\geq 0}\min_x L(\boldsymbol x,\boldsymbol\lambda,\boldsymbol\mu)\]</span> 对偶问题 (Dual problem) <span class="math display">\[d^*=\max\limits_{\boldsymbol\lambda,\boldsymbol\mu:\lambda_j\geq 0}\min_x L(\boldsymbol x,\boldsymbol\lambda,\boldsymbol\mu)\]</span> 原问题和对偶问题的关系 <span class="math display">\[d^*=\max\limits_{\boldsymbol\lambda,\boldsymbol\mu:\lambda_j\geq 0}\min_x L(\boldsymbol x,\boldsymbol\lambda,\boldsymbol\mu) \leq \min_x\max\limits_{\boldsymbol\lambda,\boldsymbol\mu:\lambda_j\geq 0} L(\boldsymbol x,\boldsymbol\lambda,\boldsymbol\mu) = p^*\]</span></p><h3 id="kkt-condition">KKT Condition</h3><blockquote><p>对于原问题和对偶问题，设<span class="math inline">\(f(x)\)</span>和<span class="math inline">\(g_i(x)\)</span>为凸函数，<span class="math inline">\(h_i(x)\)</span>为仿射函数，并且不等式约束<span class="math inline">\(c_i(x)\)</span>是严格可行的，则<span class="math inline">\(x^*\)</span>，<span class="math inline">\(\lambda^*\)</span>，<span class="math inline">\(\mu^*\)</span>分别是原问题和对偶问题的解的充分必要条件是满足下面的Karush-Kuhn-Tucker (KKT) 条件： <span class="math display">\[\begin{cases}\nabla_x L(x^*,\lambda^*,\mu^*)=0 &amp;\\ \lambda^*_j g_j(x^*)=0 &amp; j=1,\cdots n\\g_j(x^*)\leq 0 &amp; j=1,\cdots n\\\lambda_j^*\geq 0 &amp; j=1,\cdots n\\h_i(x^*) = 0 &amp; i = 1, \cdots m\end{cases}\]</span></p></blockquote><p>这告诉我们</p><h2 id="dual-form-of-svm-optimization">Dual Form of SVM Optimization</h2><p>支持向量机优化的对偶问题可以写为： <span class="math display">\[L(w,b,\alpha)=\frac{1}{2}\parallel w\parallel^2-\sum_{i=1}^n \alpha_i(y_i(w^\top x_i+b)-1)\]</span> 我们先令： <span class="math display">\[\begin{align}\frac{\partial L}{\partial w}=0&amp;\Rightarrow w=\sum_{i=1}^n\alpha_i y_i x_i\\\frac{\partial L}{\partial b}=0&amp;\Rightarrow \sum_{i=1}^n\alpha_i y_i =0\end{align}\]</span> 带回到<span class="math inline">\(L\)</span>得到： <span class="math display">\[\begin{align}L(w,b,\alpha)&amp;=\frac{1}{2}\sum_{i,j=1}^n\alpha_i\alpha_j y_i y_j x^\top_i x_j-\sum_{i,j=1}^n \alpha_i\alpha_jy_iy_jx^\top_ix_j-b\sum_{i=1}^n\alpha_iy_i+\sum_{i=1}^n\alpha_i\\&amp;=\sum_{i=1}^n \alpha_i - \frac{1}{2}\sum_{i,j=1}^n \alpha_i\alpha_j y_i y_j x^\top_i x_j\end{align}\]</span> 于是得到关于<span class="math inline">\(\alpha\)</span>的对偶优化问题： <span class="math display">\[\begin{align}\max_\alpha &amp;\sum_{i=1}^n \alpha_i - \frac{1}{2}\sum_{i,j=1}^n \alpha_i\alpha_j y_i y_j x^\top_i x_j\\\text{s.t. }&amp; \alpha_i\geq 0, i=1,\cdots,n\\&amp; \sum_{i=1}^n \alpha_i y_i = 0\end{align}\]</span></p><p>前面有提到我们根据<span class="math inline">\(f(x)=w^\top x + b\)</span>的输出来判定样本类别，而刚才得到<span class="math inline">\(w=\sum_{i=1}^n\alpha_i y_i x_i\)</span>，于是： <span class="math display">\[\begin{align}f(x) &amp;= (\sum_{i=1}^n \alpha_iy_ix_i)^\top x+b\\&amp;= \sum_{i=1}^n \alpha_i y_i \langle x_i, x\rangle + b\end{align}\]</span> 最后的<span class="math inline">\(\sum_{i=1}^n \alpha_i y_i \langle x_i, x\rangle + b\)</span>值得特别注意，这意味着我们对于测试样本<span class="math inline">\(x\)</span>的预测，只需要计算它与训练集的内积即可，同时由于所有非支持向量对应的<span class="math inline">\(\alpha\)</span>都是<span class="math inline">\(0\)</span>，我们只需要求一小部分内积。同时这个内积计算也是后面核方法应用的前提。</p><h1 id="kernel">Kernel</h1><p>到目前为止，我们的讨论都是在数据是线性可分的前提下进行讨论的，那么对于线性不可分的情况呢？答案是使用核方法。</p><p><img src="https://i.loli.net/2020/09/08/kSTVgelDjWqtu8v.png" srcset="/img/loading.gif" /></p><p>核方法的思想是，对于原始不可分的数据，我们假设原始数据通过一个映射<span class="math inline">\(\phi(\cdot)\)</span>就变得线性可分了。核方法相当于对数据找到了一种新的表示，如上图没法用一个超平面直接分割，但通过<span class="math inline">\(\phi(\cdot)\)</span>映射之后就变得可分了。原始的分类函数为： <span class="math display">\[f(x)= \sum_{i=1}^n \alpha_i y_i \langle x_i, x\rangle + b\]</span> 加上映射之后变为： <span class="math display">\[f(x)= \sum_{i=1}^n \alpha_i y_i \langle \phi(x_i), \phi(x)\rangle + b\]</span> 优化问题也变为： <span class="math display">\[\begin{align}\max_\alpha &amp;\sum_{i=1}^n \alpha_i - \frac{1}{2}\sum_{i,j=1}^n \alpha_i\alpha_j y_i y_j \langle\phi(x_i), \phi(x_j)\rangle\\\text{s.t. }&amp; \alpha_i\geq 0, i=1,\cdots,n\\&amp; \sum_{i=1}^n \alpha_i y_i = 0\end{align}\]</span> 我们把计算两个向量在映射后的空间中的内积的函数叫做核函数 <span class="math display">\[f(x)= \sum_{i=1}^n \alpha_i y_i k(x_i, x) + b\]</span> 优化问题改为： <span class="math display">\[\begin{align}\max_\alpha &amp;\sum_{i=1}^n \alpha_i - \frac{1}{2}\sum_{i,j=1}^n \alpha_i\alpha_j y_i y_j k(\phi(x_i), \phi(x_j))\\\text{s.t. }&amp; \alpha_i\geq 0, i=1,\cdots,n\\&amp; \sum_{i=1}^n \alpha_i y_i = 0\end{align}\]</span> 实际上，通过核函数，我们隐式地定义了一个映射<span class="math inline">\(\phi(\cdot)\)</span></p><p>常用核函数</p><table><thead><tr class="header"><th>名称</th><th>表达式</th><th>参数</th></tr></thead><tbody><tr class="odd"><td>线性核</td><td></td><td></td></tr><tr class="even"><td>多项式核</td><td></td><td></td></tr><tr class="odd"><td>RBF核</td><td></td><td></td></tr><tr class="even"><td>拉普拉斯核</td><td></td><td></td></tr><tr class="odd"><td>Sigmoid核</td><td></td><td></td></tr></tbody></table><h1 id="soft-margin">Soft Margin</h1><p>数据线性不可分的情况，除了数据本身结构非线性的原因之外（核方法），还有可能是因为噪声或者离群点。为了处理这种情况，我们可以允许一部分点在一定程度上偏离超平面，具体来说就是原来的约束条件<span class="math inline">\(y_i(w^\top x_i+b)\geq 1, \space i=1,\cdots,n\)</span>变成了： <span class="math display">\[y_i(w^\top x_i+b)\geq 1-\xi_i, \space i=1,\cdots,n\]</span> 其中<span class="math inline">\(\xi_i\geq 0\)</span>称作是松弛变量，代表样本<span class="math inline">\(i\)</span>允许的偏离程度。当然松弛变量不可能无限大，所以我们需要将<span class="math inline">\(\xi_i\)</span>加入到优化目标函数中使其尽量小，于是有： <span class="math display">\[\begin{align}\min &amp; \space \frac{1}{2}\parallel w\parallel^2+C\sum_{i=1}^n \xi_i,\\ s.t. &amp; y_i(w^\top x_i+b)\geq 1-\xi_i, \space i=1,\cdots,n\end{align}\]</span> 其中<span class="math inline">\(C\)</span>为控制最优化<span class="math inline">\(\parallel w\parallel\)</span>和松弛变量这两项的权重。这里的优化函数还是对偶问题之前的形式，我们马上会讨论对偶问题。</p><h1 id="numerical-optimization">Numerical Optimization</h1><p>这里讨论SVM高效求解的Sequential Minimal Optimization (SMO)算法。</p><p>坐标下降法是一种非梯度优化算法，</p><p><img src="https://i.loli.net/2020/09/08/I6AonzFRHGVBU3t.png" srcset="/img/loading.gif" /></p><p><img src="https://i.loli.net/2020/09/08/Hmr79nMlK4C8GeJ.png" srcset="/img/loading.gif" /></p>]]></content>
     
     
     <categories>
@@ -838,9 +867,9 @@
     
     <tags>
       
-      <tag>Anomaly Detection</tag>
-      
       <tag>Deep Learning</tag>
+      
+      <tag>Anomaly Detection</tag>
       
     </tags>
     
@@ -894,9 +923,9 @@
     
     <tags>
       
-      <tag>Anomaly Detection</tag>
-      
       <tag>VAE</tag>
+      
+      <tag>Anomaly Detection</tag>
       
     </tags>
     
@@ -923,15 +952,15 @@
     
     <tags>
       
+      <tag>VAE</tag>
+      
+      <tag>Deep Learning</tag>
+      
       <tag>Time Series</tag>
       
       <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
-      
-      <tag>Deep Learning</tag>
-      
-      <tag>VAE</tag>
       
     </tags>
     
@@ -958,11 +987,11 @@
     
     <tags>
       
-      <tag>Deep Learning</tag>
+      <tag>Variational Inference</tag>
       
       <tag>VAE</tag>
       
-      <tag>Variational Inference</tag>
+      <tag>Deep Learning</tag>
       
       <tag>GAN</tag>
       
@@ -1022,11 +1051,11 @@
     
     <tags>
       
-      <tag>Deep Learning</tag>
+      <tag>Variational Inference</tag>
       
       <tag>VAE</tag>
       
-      <tag>Variational Inference</tag>
+      <tag>Deep Learning</tag>
       
     </tags>
     
@@ -1053,9 +1082,9 @@
     
     <tags>
       
-      <tag>Time Series</tag>
-      
       <tag>Deep Learning</tag>
+      
+      <tag>Time Series</tag>
       
       <tag>RNN</tag>
       
@@ -1084,15 +1113,15 @@
     
     <tags>
       
+      <tag>VAE</tag>
+      
+      <tag>Deep Learning</tag>
+      
       <tag>Time Series</tag>
       
       <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
-      
-      <tag>Deep Learning</tag>
-      
-      <tag>VAE</tag>
       
       <tag>RNN</tag>
       
@@ -1123,9 +1152,9 @@
     
     <tags>
       
-      <tag>Time Series</tag>
-      
       <tag>Deep Learning</tag>
+      
+      <tag>Time Series</tag>
       
       <tag>GAN</tag>
       
@@ -1154,13 +1183,13 @@
     
     <tags>
       
+      <tag>Deep Learning</tag>
+      
       <tag>Time Series</tag>
       
       <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
-      
-      <tag>Deep Learning</tag>
       
     </tags>
     
@@ -1187,13 +1216,13 @@
     
     <tags>
       
+      <tag>Deep Learning</tag>
+      
       <tag>Time Series</tag>
       
       <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
-      
-      <tag>Deep Learning</tag>
       
     </tags>
     
@@ -1220,15 +1249,15 @@
     
     <tags>
       
+      <tag>VAE</tag>
+      
+      <tag>Deep Learning</tag>
+      
       <tag>Time Series</tag>
       
       <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
-      
-      <tag>Deep Learning</tag>
-      
-      <tag>VAE</tag>
       
     </tags>
     
@@ -1255,13 +1284,13 @@
     
     <tags>
       
+      <tag>Deep Learning</tag>
+      
       <tag>Time Series</tag>
       
       <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
-      
-      <tag>Deep Learning</tag>
       
       <tag>Spectral</tag>
       
