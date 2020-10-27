@@ -4,6 +4,33 @@
   
   
   <entry>
+    <title>Must Read Papers: Applications of Self-supervised Learning in Biomedical Signals</title>
+    <link href="/2020/10/27/Must-Read-Papers-Applications-of-Self-supervised-Learning-in-Biomedical-Signals/"/>
+    <url>/2020/10/27/Must-Read-Papers-Applications-of-Self-supervised-Learning-in-Biomedical-Signals/</url>
+    
+    <content type="html"><![CDATA[<h1 id="introduction">Introduction</h1><p>Self-supervised Learning (SSL)</p><h1 id="self-supervised-learning">Self-supervised Learning</h1><h1 id="ssl-in-video-representation-learning">SSL in Video Representation Learning</h1><h1 id="ssl-in-biomedical-signals">SSL in Biomedical Signals</h1>]]></content>
+    
+    
+    <categories>
+      
+      <category>Research</category>
+      
+      <category>Misc</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Papers</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Unsupervised Feature Learning via Non-Parametric Instance Discrimination</title>
     <link href="/2020/09/23/Unsupervised-Feature-Learning-via-Non-Parametric-Instance-Discrimination/"/>
     <url>/2020/09/23/Unsupervised-Feature-Learning-via-Non-Parametric-Instance-Discrimination/</url>
@@ -741,9 +768,9 @@
     
     <tags>
       
-      <tag>Deep Learning</tag>
-      
       <tag>Anomaly Detection</tag>
+      
+      <tag>Deep Learning</tag>
       
     </tags>
     
@@ -797,9 +824,9 @@
     
     <tags>
       
-      <tag>VAE</tag>
-      
       <tag>Anomaly Detection</tag>
+      
+      <tag>VAE</tag>
       
     </tags>
     
@@ -826,15 +853,15 @@
     
     <tags>
       
-      <tag>VAE</tag>
-      
-      <tag>Deep Learning</tag>
-      
       <tag>Time Series</tag>
+      
+      <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
       
-      <tag>Anomaly Detection</tag>
+      <tag>Deep Learning</tag>
+      
+      <tag>VAE</tag>
       
     </tags>
     
@@ -861,11 +888,11 @@
     
     <tags>
       
+      <tag>Deep Learning</tag>
+      
       <tag>Variational Inference</tag>
       
       <tag>VAE</tag>
-      
-      <tag>Deep Learning</tag>
       
       <tag>GAN</tag>
       
@@ -896,9 +923,9 @@
       
       <tag>Time Series</tag>
       
-      <tag>Statistics</tag>
-      
       <tag>Machine Learning</tag>
+      
+      <tag>Statistics</tag>
       
     </tags>
     
@@ -925,11 +952,11 @@
     
     <tags>
       
+      <tag>Deep Learning</tag>
+      
       <tag>Variational Inference</tag>
       
       <tag>VAE</tag>
-      
-      <tag>Deep Learning</tag>
       
     </tags>
     
@@ -956,9 +983,9 @@
     
     <tags>
       
-      <tag>Deep Learning</tag>
-      
       <tag>Time Series</tag>
+      
+      <tag>Deep Learning</tag>
       
       <tag>RNN</tag>
       
@@ -987,15 +1014,15 @@
     
     <tags>
       
-      <tag>VAE</tag>
-      
-      <tag>Deep Learning</tag>
-      
       <tag>Time Series</tag>
+      
+      <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
       
-      <tag>Anomaly Detection</tag>
+      <tag>Deep Learning</tag>
+      
+      <tag>VAE</tag>
       
       <tag>RNN</tag>
       
@@ -1026,9 +1053,9 @@
     
     <tags>
       
-      <tag>Deep Learning</tag>
-      
       <tag>Time Series</tag>
+      
+      <tag>Deep Learning</tag>
       
       <tag>GAN</tag>
       
@@ -1057,13 +1084,13 @@
     
     <tags>
       
-      <tag>Deep Learning</tag>
-      
       <tag>Time Series</tag>
+      
+      <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
       
-      <tag>Anomaly Detection</tag>
+      <tag>Deep Learning</tag>
       
     </tags>
     
@@ -1090,13 +1117,13 @@
     
     <tags>
       
-      <tag>Deep Learning</tag>
-      
       <tag>Time Series</tag>
+      
+      <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
       
-      <tag>Anomaly Detection</tag>
+      <tag>Deep Learning</tag>
       
     </tags>
     
@@ -1123,15 +1150,15 @@
     
     <tags>
       
-      <tag>VAE</tag>
-      
-      <tag>Deep Learning</tag>
-      
       <tag>Time Series</tag>
+      
+      <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
       
-      <tag>Anomaly Detection</tag>
+      <tag>Deep Learning</tag>
+      
+      <tag>VAE</tag>
       
     </tags>
     
@@ -1158,13 +1185,13 @@
     
     <tags>
       
-      <tag>Deep Learning</tag>
-      
       <tag>Time Series</tag>
+      
+      <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
       
-      <tag>Anomaly Detection</tag>
+      <tag>Deep Learning</tag>
       
       <tag>Spectral</tag>
       

@@ -17,7 +17,7 @@
   <meta name="description" content="">
   <meta name="author" content="Hanzawa">
   <meta name="keywords" content="">
-  <title>GAIN: Missing Data Imputation using Generative Adversarial Nets - Hanzawa の 部屋</title>
+  <title>Must Read Papers: Applications of Self-supervised Learning in Biomedical Signals - Hanzawa の 部屋</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
@@ -141,7 +141,7 @@
           <div class="container text-center white-text fadeInUp">
             <span class="h2" id="subtitle">
               
-                GAIN: Missing Data Imputation using Generative Adversarial Nets
+                Must Read Papers: Applications of Self-supervised Learning in Biomedical Signals
               
             </span>
 
@@ -149,8 +149,8 @@
               
                 <div class="mt-3 post-meta">
                   <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-                  <time datetime="2019-10-16 20:19">
-                    2019年10月16日 晚上
+                  <time datetime="2020-10-27 11:32">
+                    2020年10月27日 中午
                   </time>
                 </div>
               
@@ -160,7 +160,7 @@
                   
                   <span class="post-meta mr-2">
                     <i class="iconfont icon-chart"></i>
-                    1.5k 字
+                    17 字
                   </span>
                 
 
@@ -170,7 +170,7 @@
                       <i class="iconfont icon-clock-fill"></i>
                     
                     
-                    20
+                    1
                      分钟
                   </span>
                 
@@ -207,78 +207,16 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：2020年6月25日 下午
+                  本文最后更新于：2020年10月27日 中午
                 
               </p>
             
             <article class="markdown-body">
-              <h1 id="abstract">Abstract</h1>
-<p>本文基于GAN提出了一种时间序列缺失值填充（Time Series Imputation）的方法。其主要的思路为生成器<span class="math inline">\(G\)</span>从隐空间<span class="math inline">\(Z\)</span>生成完整的样本，而判别器<span class="math inline">\(D\)</span>则输出样本中不同部分为真实的概率。除此之外，作者提出了使用Hint Vector来揭示原始数据中缺失部分的信息，来优化训练过程。</p>
-<p><a href="https://arxiv.org/abs/1806.02920" target="_blank" rel="noopener">原文</a></p>
-<h1 id="methodology">Methodology</h1>
-<h2 id="problem-formulation">Problem Formulation</h2>
-<p>考虑一个<span class="math inline">\(d\)</span>维的空间<span class="math inline">\(\mathcal{X}=\mathcal{X}_1\times \cdots\times \mathcal{X}_d\)</span>，设<span class="math inline">\(\mathbf{X}=(X_1,\cdots,X_d)\)</span>维空间<span class="math inline">\(\mathcal{X}\)</span>上的随机向量（即理想的完整的时间序列），记其分布为<span class="math inline">\(P(\mathbf{X})\)</span>。设<span class="math inline">\(\mathbf{M}=(M_1,\cdots,M_d)\)</span>为Mask向量表示<span class="math inline">\(\mathbf{X}\)</span>中被观察到的部分。（即标识时间序列哪些部分有缺失），取值为<span class="math inline">\(\{0,1\}^d\)</span>。</p>
-<p>对于每一个<span class="math inline">\(i\in\{1,\cdots,d\}\)</span>，我们定义一个新空间<span class="math inline">\(\tilde{\mathcal{X}}=\mathcal{X}\cup\{*\}\)</span>，其中<span class="math inline">\(*\)</span>表示不属于任意<span class="math inline">\(\mathcal{X}_i\)</span>的一个点。令<span class="math inline">\(\tilde{\mathcal{X}}=\tilde{\mathcal{X}_1}\times\cdots\times\tilde{\mathcal{X}_d}\)</span>，同时定义一个新的随机变量（即我们观测到的含有缺失值的时间序列）<span class="math inline">\(\tilde{\mathbf{X}}=(\tilde{X}_1,\cdots,\tilde{X}_d)\in \tilde{\mathcal{X}}\)</span>： <span class="math display">\[
-\tilde{X}_i=\begin{cases}X_i,&amp;\text{if } M_i=1\\*,&amp;\text{otherwise}\end{cases}
-\]</span> 假设数据集的形式为<span class="math inline">\(\mathcal{D}=\{(\tilde{x}^i,m^i)\}^n_{i=1}\)</span>，我们的任务是从<span class="math inline">\(P(\mathbf{X}|\tilde{\mathbf{X}}=\tilde{x}^i)\)</span>上采样来对缺失值进行填充。</p>
-<h2 id="model-architecture">Model Architecture</h2>
-<p>模型的架构如下图所示：</p>
-<p><img src="https://i.loli.net/2020/06/25/wCK3J8MoTASrj9Y.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
-<h3 id="generator">Generator</h3>
-<p>生成器的输入有三项：<span class="math inline">\(\tilde{\mathbf{X}}\)</span>，<span class="math inline">\(\mathbf{M}\)</span>和随机噪声<span class="math inline">\(\mathbf{Z}\)</span>，输出设为<span class="math inline">\(\bar{\mathbf{X}}\)</span>。设生成器为映射<span class="math inline">\(G: \tilde{\mathcal{X}}\times\{0,1\}^d\times[0,1]^d\rightarrow \mathcal{X}\)</span>，而<span class="math inline">\(\mathbf{Z}\)</span>为<span class="math inline">\(d\)</span>维的高斯噪声。生成器的输出和填充后的时间序列定义为： <span class="math display">\[
-\begin{align}
-\bar{\mathbf{X}}&amp;=G(\tilde{\mathbf{X}},\mathbf{M},(1-\mathbf{M})\odot\mathbf{Z})\\
-\hat{\mathbf{X}}&amp;=\mathbf{M}\odot\tilde{\mathbf{X}}+(1-\mathbf{M})\odot\bar{\mathbf{X}}
-\end{align}
-\]</span> <span class="math inline">\(\bar{\mathbf{X}}\)</span>即为生成器的直接输出，因为其实有些部分没有缺失，生成器还是会为每个部分输出值。</p>
-<p><span class="math inline">\(\hat{\mathbf{X}}\)</span>为填充后的时间序列，对于缺失的部分采用生成器的输出进行填充。</p>
-<h3 id="discriminator">Discriminator</h3>
-<p>和原始的GAN不同的是，我们不需要判断整个样本是真实的或者是生成的，而是需要判断样本的那些部分是真实的或者是生成的，所以判别器为映射<span class="math inline">\(D: \mathcal{X}\rightarrow[0,1]^d\)</span>。判别器的具体目标函数将在后面讨论。</p>
-<h3 id="hint">Hint</h3>
-<p>Hint是一种提示机值，是一个和<span class="math inline">\(\mathbf{X}\)</span>相同维度的随机变量<span class="math inline">\(\mathbf{H}\)</span>，其分布依赖于<span class="math inline">\(\mathbf{M}\)</span>。<span class="math inline">\(\mathbf{H}\)</span>是由用户自己定义的，相当于一种不完整的<span class="math inline">\(\mathbf{M}\)</span>，用来作为判别器的额外输入。</p>
-<h3 id="objective">Objective</h3>
-<p>我们训练判别器最大化正确预测<span class="math inline">\(\mathbf{M}\)</span>的概率，而生成器最小化判别器正确预测<span class="math inline">\(\mathbf{M}\)</span>的概率，目标函数如下： <span class="math display">\[
-\begin{align}
-V(D,G)=&amp;\mathbb{E}_{\hat{X},M,H}[\mathbf{M}^T\log D(\hat{\mathbf{X}},\mathbf{H})\\&amp;+(1-\mathbf{M})^T\log(1-D(\hat{\mathbf{X}},\mathbf{H}))]
-\end{align}
-\]</span> 按照标准的GAN可以将优化函数写成以下的形式： <span class="math display">\[
-\min_G\max_D V(D,G)
-\]</span> 在这里判别器的任务可以看作是一个二分类，而目标函数就是二值交叉熵的定义，因此可以写为： <span class="math display">\[
-\mathcal{L}(a,b)=\sum\limits_{i=1}^d[a_i\log(b_i)+(1-a_i)\log(1-b_i)]
-\]</span> <span class="math inline">\(\mathbf{M}\)</span>可以看作Ground Truth，记<span class="math inline">\(\hat{\mathbf{M}}=D(\hat{\mathbf{X},\mathbf{H}})\)</span>，即判别器输出的预测，因此优化函数可以简记为： <span class="math display">\[
-\min_G\max_D\mathbb{E}[\mathcal{L}(\mathbf{M},\hat{\mathbf{M}})]
-\]</span></p>
-<h2 id="gain-algorithm">GAIN Algorithm</h2>
-<p>下面讨论GAIN算法的训练流程。</p>
-<p>本文通过理论讨论，给出了生成Hint Vector的一个方法，首先定义随机变量<span class="math inline">\(\mathbf{B}=(B_1,\cdots,B_d)\in\{0,1\}^d\)</span>，<span class="math inline">\(\mathbf{B}\)</span>通过从<span class="math inline">\(\{1,\cdots,d\}\)</span>随机均匀采样一个<span class="math inline">\(k\)</span>，然后由下列公式得到： <span class="math display">\[
-B_j=\begin{cases}1, &amp;\text{if }j\neq k\\0, &amp;\text{if }j=k\end{cases}
-\]</span> 定义空间<span class="math inline">\(\mathcal{H}=\{0,0.5,1\}^d\)</span>，Hint Vector为<span class="math inline">\(\mathbf{H}=\mathbf{B}\odot\mathbf{M}+0.5(1-\mathbf{B})\in\mathcal{H}\)</span>。</p>
-<p>判别器的训练过程如下：固定生成器<span class="math inline">\(G\)</span>，对一个大小为<span class="math inline">\(k_D\)</span>的mini-batch，独立同分布采样<span class="math inline">\(k_D\)</span>个<span class="math inline">\(z\)</span>和<span class="math inline">\(b\)</span>，用来计算<span class="math inline">\(\mathbf{Z}\)</span>和<span class="math inline">\(\mathbf{B}\)</span>。判别器的损失函数定义如下： <span class="math display">\[
-\mathcal{L}_D(m,\hat{m},b)=\sum\limits_{i:b_i=0}[m_i\log(\hat{m}_i)+(1-m_i)\log(1-\hat{m}_i)]
-\]</span> 判别器的优化函数为： <span class="math display">\[
-\min_D-\sum\limits_{j=1}^{k_D}\mathcal{L}_D(m(j),\hat{m}(j),b(j))
-\]</span> 其中<span class="math inline">\(\hat{m}(j)=D(\hat{x}(j),m(j))\)</span>。</p>
-<p>在优化了判别器之后，需要优化生成器，对一个大小为<span class="math inline">\(k_G\)</span>的mini-batch，生成器的损失函数包含两个部分，一个是在缺失部分的损失：</p>
-<p><span class="math display">\[
-\mathcal{L}_G(m,\hat{m},b)=-\sum\limits_{i:b_i=0}(1-m_i)\log(\hat{m}_i)
-\]</span> 一个是未缺失部分的损失： <span class="math display">\[
-\mathcal{L}_M(x,x^\prime)=\sum\limits_{i=1}^d m_iL_M(x_i,x_i^\prime)
-\]</span> 其中： <span class="math display">\[
-L_M(x_i,x_i^\prime)=\begin{cases}(x_i^\prime-x_i)^2, &amp;\text{if }x_i\text{ is continuours},\\-x_i\log(x_i^\prime), &amp;\text{if }x_i\text{ is binary}.\end{cases}
-\]</span> 最终的优化函数为： <span class="math display">\[
-\min_G\sum\limits_{j=1}^{k_G}\mathcal{L}_G(m(j),\hat{m}(j),b(j))+\alpha\mathcal{L}_M(\tilde{x}(j),\hat{x}(j))
-\]</span> 算法流程如下：</p>
-<p><img src="https://i.loli.net/2020/06/25/znABi6x9mJuvDOX.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
-<h1 id="experiments">Experiments</h1>
-<p>下表为在5个不同数据集上实验，与其他5种方法对比的结果：</p>
-<p><img src="https://i.loli.net/2020/06/25/EenX2YO8aDxQAk3.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
-<p>上图为GAIN、MissForest和Autoencoder三种模型在不同缺失比例、样本数量、特征维度下的对比曲线图。</p>
-<p>下表为使用不同模型对时间序列进行填充之后，使用逻辑回归进行回归任务的性能：</p>
-<p><img src="https://i.loli.net/2020/06/25/PzeWKdGu4wADshV.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
-<p>下图为GAIN、MissForest和Autoencoder三种模型在不同缺失比例下的AUROC曲线图：</p>
-<p><img src="https://i.loli.net/2020/06/25/IKtoTj8xgG1yJDk.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
-<p>下表展示的是作者对时间序列填充算法保持特征-标签关系的能力。作者分别用完整的数据和填充后的数据用逻辑回归模型进行训练，将两者的权重求绝对值和均方根的结果。</p>
-<p><img src="https://i.loli.net/2020/06/25/uy2jPcnbtSrC6vI.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+              <h1 id="introduction">Introduction</h1>
+<p>Self-supervised Learning (SSL)</p>
+<h1 id="self-supervised-learning">Self-supervised Learning</h1>
+<h1 id="ssl-in-video-representation-learning">SSL in Video Representation Learning</h1>
+<h1 id="ssl-in-biomedical-signals">SSL in Biomedical Signals</h1>
 
             </article>
             <hr>
@@ -290,7 +228,7 @@ L_M(x_i,x_i^\prime)=\begin{cases}(x_i^\prime-x_i)^2, &amp;\text{if }x_i\text{ is
                     
                       <a class="hover-with-bg" href="/categories/Research/">Research</a>
                     
-                      <a class="hover-with-bg" href="/categories/Research/Time-Series-Imputation/">Time Series Imputation</a>
+                      <a class="hover-with-bg" href="/categories/Research/Misc/">Misc</a>
                     
                   </div>
                 
@@ -298,11 +236,7 @@ L_M(x_i,x_i^\prime)=\begin{cases}(x_i^\prime-x_i)^2, &amp;\text{if }x_i\text{ is
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/Time-Series/">Time Series</a>
-                    
-                      <a class="hover-with-bg" href="/tags/Deep-Learning/">Deep Learning</a>
-                    
-                      <a class="hover-with-bg" href="/tags/GAN/">GAN</a>
+                      <a class="hover-with-bg" href="/tags/Papers/">Papers</a>
                     
                   </div>
                 
@@ -315,18 +249,12 @@ L_M(x_i,x_i^\prime)=\begin{cases}(x_i^\prime-x_i)^2, &amp;\text{if }x_i\text{ is
                   <div class="post-prev col-6">
                     
                     
-                      <a href="/2019/10/18/Robust-Anomaly-Detection-for-Multivariate-Time-Series-through-Stochastic-Recurrent-Neural-Network/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Robust Anomaly Detection for Multivariate Time Series through Stochastic Recurrent Neural Network</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </div>
                   <div class="post-next col-6">
                     
                     
-                      <a href="/2019/09/22/Anomaly-Detection-with-Generative-Adversarial-Networks-for-Multivariate-Time-Series/">
-                        <span class="hidden-mobile">Anomaly Detection with Generative Adversarial Networks for Multivariate Time Series</span>
+                      <a href="/2020/09/23/Unsupervised-Feature-Learning-via-Non-Parametric-Instance-Discrimination/">
+                        <span class="hidden-mobile">Unsupervised Feature Learning via Non-Parametric Instance Discrimination</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -345,8 +273,8 @@ L_M(x_i,x_i^\prime)=\begin{cases}(x_i^\prime-x_i)^2, &amp;\text{if }x_i\text{ is
     <div id="disqus_thread"></div>
     <script type="text/javascript">
       var disqus_config = function () {
-        this.page.url = 'http://qfxiao.me/2019/10/16/GAIN-Missing-Data-Imputation-using-Generative-Adversarial-Nets/';
-        this.page.identifier = '/2019/10/16/GAIN-Missing-Data-Imputation-using-Generative-Adversarial-Nets/';
+        this.page.url = 'http://qfxiao.me/2020/10/27/Must-Read-Papers-Applications-of-Self-supervised-Learning-in-Biomedical-Signals/';
+        this.page.identifier = '/2020/10/27/Must-Read-Papers-Applications-of-Self-supervised-Learning-in-Biomedical-Signals/';
       };
       var oldLoadDq = window.onload;
       window.onload = function () {
