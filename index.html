@@ -1,7 +1,7 @@
+
+
 <!DOCTYPE html>
-<html lang="zh-CN">
-
-
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
 
 
 
@@ -13,28 +13,23 @@
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
-  <meta name="theme-color" content="#2D5BA6">
+  <meta name="theme-color" content="#2f4154">
   <meta name="description" content="">
   <meta name="author" content="Hanzawa">
   <meta name="keywords" content="">
   <title>Hanzawa の 部屋</title>
 
-  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
-<link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
 
-
-  <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/tomorrow.min.css" />
 
 
 <!-- 主题依赖的图标库，不要自行修改 -->
 
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_yg9cfy8wd6.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
 
 
 
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
-
-
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
 
 
 <link  rel="stylesheet" href="/css/main.css" />
@@ -42,6 +37,12 @@
 <!-- 自定义样式保持在最底部 -->
 
 
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"qfxiao.me","root":"/","version":"1.8.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"copy_btn":true,"image_zoom":{"enable":true},"lazyload":{"enable":true,"onlypost":true},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
 <meta name="generator" content="Hexo 4.2.1"></head>
 
 
@@ -124,8 +125,14 @@
         
         
           <li class="nav-item" id="search-btn">
-            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
-                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
           </li>
         
       </ul>
@@ -133,15 +140,13 @@
   </div>
 </nav>
 
-    <div class="view intro-2" id="background" parallax=true
+    <div class="banner intro-2" id="background" parallax=true
          style="background: url('/img/bg/coffe_bear.jpg') no-repeat center center;
            background-size: cover;">
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
-          <div class="container text-center white-text fadeInUp">
-            <span class="h2" id="subtitle">
-              
-                Machine Learning, Deep Learning, Python and etc.
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Machine Learning, Deep Learning, Python and etc.">
               
             </span>
 
@@ -169,28 +174,196 @@
   <div class="row mx-auto index-card">
     
     
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2020/10/27/Anomaly-Detection-Resource-Collection/" target="_self">
-          <img src="https://i.loli.net/2020/07/13/KeiSrsnlHVYIDE3.png" srcset="/img/loading.gif" alt="Anomaly Detection Resource Collection">
-        </a>
-      </div>
-    
-    <div class="col-12 col-md-8 mx-auto index-info">
-      <a class="index-header" href="/2020/10/27/Anomaly-Detection-Resource-Collection/">Anomaly Detection Resource Collection</a>
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2020/10/31/Self-supervised-Co-training-for-Video-Representation-Learning/">Self-supervised Co-training for Video Representation Learning</a>
+      </h1>
 
-      <a href="/2020/10/27/Anomaly-Detection-Resource-Collection/" class="index-excerpt">
-        
-        
+      <p class="index-excerpt">
+        <a href="/2020/10/31/Self-supervised-Co-training-for-Video-Representation-Learning/">
           
-        
-        <div>Introduction
-异常检测（Anomaly Detection或Outlier Detection或Novelty Detection）本身包含的东西很多，有时序（Time Series）的异常检测，图像（Image）的异常检测，视频（Video）的异常检测，图（Graph）的异常检测，表格数据（Categorical Data）的异常检测等等，他们之间有共性也有很大的区别。本文主要关注</div>
-      </a>
+          
+            
+          
+          Introduction
+Methodology
+
+Self-supervised CoCLR
+Experiments
+
+        </a>
+      </p>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-10-27
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-10-31 20:52" pubdate>
+              2020-10-31
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/Research/">Research</a>
+            
+              <a href="/categories/Research/Self-supervised-Learning/">Self-supervised Learning</a>
+            
+          </div>
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2020/10/30/Learning-Memory-guided-Normality-for-Anomaly-Detection/">Learning Memory-guided Normality for Anomaly Detection</a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2020/10/30/Learning-Memory-guided-Normality-for-Anomaly-Detection/">
+          
+          
+            
+          
+          Introduction
+
+Methodology
+
+
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-10-30 18:50" pubdate>
+              2020-10-30
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/Research/">Research</a>
+            
+              <a href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Anomaly-Detection/">Anomaly Detection</a>
+            
+              <a href="/tags/Memory-Mechanism/">Memory Mechanism</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2020/10/30/Memorizing-Normality-to-Detect-Anomaly-Memory-augmented-Deep-Autoencoder-for-Unsupervised-Anomaly-Detection/">Memorizing Normality to Detect Anomaly: Memory-augmented Deep Autoencoder for Unsupervised Anomaly Detection</a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2020/10/30/Memorizing-Normality-to-Detect-Anomaly-Memory-augmented-Deep-Autoencoder-for-Unsupervised-Anomaly-Detection/">
+          
+          
+            
+          
+          Introduction
+
+Methodology
+
+
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-10-30 18:43" pubdate>
+              2020-10-30
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/Research/">Research</a>
+            
+              <a href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Anomaly-Detection/">Anomaly Detection</a>
+            
+              <a href="/tags/Memory-Mechanism/">Memory Mechanism</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2020/10/27/Anomaly-Detection-Resource-Collection/" target="_self">
+          <img src="https://i.loli.net/2020/07/13/KeiSrsnlHVYIDE3.png" alt="Anomaly Detection Resource Collection">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2020/10/27/Anomaly-Detection-Resource-Collection/">Anomaly Detection Resource Collection</a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2020/10/27/Anomaly-Detection-Resource-Collection/">
+          
+          
+            
+          
+          Introduction
+异常检测（Anomaly Detection或Outlier Detection或Novelty Detection）本身包含的东西很多，有时序（Time Series）的异常检测，图像（Image）的异常检测，视频（Video）的异常检测，图（Graph）的异常检测，表格数据（Categorical Data）的异常检测等等，他们之间有共性也有很大的区别。本文主要关注
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-10-27 12:49" pubdate>
+              2020-10-27
+            </time>
           </div>
         
         
@@ -212,7 +385,7 @@
           </div>
         
       </div>
-    </div>
+    </article>
   </div>
 
   <div class="row mx-auto index-card">
@@ -220,19 +393,23 @@
     
       <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2020/10/27/Must-Read-Papers-Applications-of-Self-supervised-Learning-in-Biomedical-Signals/" target="_self">
-          <img src="https://i.loli.net/2020/10/27/ANDKPZpqGQl36CI.png" srcset="/img/loading.gif" alt="Must Read Papers: Applications of Self-supervised Learning in Biomedical Signals">
+          <img src="https://i.loli.net/2020/10/27/ANDKPZpqGQl36CI.png" alt="Must Read Papers: Applications of Self-supervised Learning in Biomedical Signals">
         </a>
       </div>
     
-    <div class="col-12 col-md-8 mx-auto index-info">
-      <a class="index-header" href="/2020/10/27/Must-Read-Papers-Applications-of-Self-supervised-Learning-in-Biomedical-Signals/">Must Read Papers: Applications of Self-supervised Learning in Biomedical Signals</a>
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2020/10/27/Must-Read-Papers-Applications-of-Self-supervised-Learning-in-Biomedical-Signals/">Must Read Papers: Applications of Self-supervised Learning in Biomedical Signals</a>
+      </h1>
 
-      <a href="/2020/10/27/Must-Read-Papers-Applications-of-Self-supervised-Learning-in-Biomedical-Signals/" class="index-excerpt">
-        
-        
+      <p class="index-excerpt">
+        <a href="/2020/10/27/Must-Read-Papers-Applications-of-Self-supervised-Learning-in-Biomedical-Signals/">
           
-        
-        <div>Introduction
+          
+            
+          
+          Introduction
 Self-supervised Learning (SSL)
 更新中。。。
 Self-supervised Learning
@@ -251,13 +428,17 @@ Link
 
 
 
-Unsupervised Feature Learning via Non-Parametric Instance Discriminat</div>
-      </a>
+Unsupervised Feature Learning via Non-Parametric Instance Discriminat
+        </a>
+      </p>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-10-27
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-10-27 11:32" pubdate>
+              2020-10-27
+            </time>
           </div>
         
         
@@ -279,7 +460,7 @@ Unsupervised Feature Learning via Non-Parametric Instance Discriminat</div>
           </div>
         
       </div>
-    </div>
+    </article>
   </div>
 
   <div class="row mx-auto index-card">
@@ -287,29 +468,37 @@ Unsupervised Feature Learning via Non-Parametric Instance Discriminat</div>
     
       <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2020/09/23/Unsupervised-Feature-Learning-via-Non-Parametric-Instance-Discrimination/" target="_self">
-          <img src="https://i.loli.net/2020/07/26/WICKVkhrBu6Mci5.png" srcset="/img/loading.gif" alt="Unsupervised Feature Learning via Non-Parametric Instance Discrimination">
+          <img src="https://i.loli.net/2020/07/26/WICKVkhrBu6Mci5.png" alt="Unsupervised Feature Learning via Non-Parametric Instance Discrimination">
         </a>
       </div>
     
-    <div class="col-12 col-md-8 mx-auto index-info">
-      <a class="index-header" href="/2020/09/23/Unsupervised-Feature-Learning-via-Non-Parametric-Instance-Discrimination/">Unsupervised Feature Learning via Non-Parametric Instance Discrimination</a>
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2020/09/23/Unsupervised-Feature-Learning-via-Non-Parametric-Instance-Discrimination/">Unsupervised Feature Learning via Non-Parametric Instance Discrimination</a>
+      </h1>
 
-      <a href="/2020/09/23/Unsupervised-Feature-Learning-via-Non-Parametric-Instance-Discrimination/" class="index-excerpt">
-        
-        
+      <p class="index-excerpt">
+        <a href="/2020/09/23/Unsupervised-Feature-Learning-via-Non-Parametric-Instance-Discrimination/">
           
-        
-        <div>Introduction
+          
+            
+          
+          Introduction
 细节待完善。。。
 本文基于样本分类和噪声对比估计提出了一个无监督表示学习算法。下图展示了一个Intuition Example：
 
-对于一个有监督的分类器，输入一张图片，作者观察到分类器的Softmax Response中较高的那些类都是在视觉上看起来比较接近的（美洲豹Leopard，美洲虎Jaguar，印度豹Cheetah），也就是说网络捕捉到了类间的视觉相似性</div>
-      </a>
+对于一个有监督的分类器，输入一张图片，作者观察到分类器的Softmax Response中较高的那些类都是在视觉上看起来比较接近的（美洲豹Leopard，美洲虎Jaguar，印度豹Cheetah），也就是说网络捕捉到了类间的视觉相似性
+        </a>
+      </p>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-09-23
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-09-23 20:36" pubdate>
+              2020-09-23
+            </time>
           </div>
         
         
@@ -333,7 +522,7 @@ Unsupervised Feature Learning via Non-Parametric Instance Discriminat</div>
           </div>
         
       </div>
-    </div>
+    </article>
   </div>
 
   <div class="row mx-auto index-card">
@@ -341,31 +530,39 @@ Unsupervised Feature Learning via Non-Parametric Instance Discriminat</div>
     
       <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2020/09/17/Representation-Learning-with-Contrastive-Predictive-Coding/" target="_self">
-          <img src="https://i.loli.net/2020/07/07/mcFYnVGasjkHrw5.png" srcset="/img/loading.gif" alt="Representation Learning with Contrastive Predictive Coding">
+          <img src="https://i.loli.net/2020/07/07/mcFYnVGasjkHrw5.png" alt="Representation Learning with Contrastive Predictive Coding">
         </a>
       </div>
     
-    <div class="col-12 col-md-8 mx-auto index-info">
-      <a class="index-header" href="/2020/09/17/Representation-Learning-with-Contrastive-Predictive-Coding/">Representation Learning with Contrastive Predictive Coding</a>
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2020/09/17/Representation-Learning-with-Contrastive-Predictive-Coding/">Representation Learning with Contrastive Predictive Coding</a>
+      </h1>
 
-      <a href="/2020/09/17/Representation-Learning-with-Contrastive-Predictive-Coding/" class="index-excerpt">
-        
-        
+      <p class="index-excerpt">
+        <a href="/2020/09/17/Representation-Learning-with-Contrastive-Predictive-Coding/">
           
-        
-        <div>Introduction
+          
+            
+          
+          Introduction
 本文提出了一种表示学习框架：Contrastive Predictive Coding（CPC）。To be finished...
 原文
 Proposed Method
 Contrastive Predictive Coding
 N-pair Loss: \[
-\mathcal L=-\log\frac{\exp(f^+\cdot f^\top)}{\exp</div>
-      </a>
+\mathcal L=-\log\frac{\exp(f^+\cdot f^\top)}{\exp
+        </a>
+      </p>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-09-17
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-09-17 20:08" pubdate>
+              2020-09-17
+            </time>
           </div>
         
         
@@ -389,7 +586,7 @@ N-pair Loss: \[
           </div>
         
       </div>
-    </div>
+    </article>
   </div>
 
   <div class="row mx-auto index-card">
@@ -397,31 +594,39 @@ N-pair Loss: \[
     
       <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2020/09/15/Bagging-and-Random-Forest-Machine-Learning-Ensemble-Algorithms-3/" target="_self">
-          <img src="https://i.loli.net/2020/09/15/AmoYRSCPZdJhkBq.png" srcset="/img/loading.gif" alt="Bagging and Random Forest: Machine Learning Ensemble Algorithms 3">
+          <img src="https://i.loli.net/2020/09/15/AmoYRSCPZdJhkBq.png" alt="Bagging and Random Forest: Machine Learning Ensemble Algorithms 3">
         </a>
       </div>
     
-    <div class="col-12 col-md-8 mx-auto index-info">
-      <a class="index-header" href="/2020/09/15/Bagging-and-Random-Forest-Machine-Learning-Ensemble-Algorithms-3/">Bagging and Random Forest: Machine Learning Ensemble Algorithms 3</a>
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2020/09/15/Bagging-and-Random-Forest-Machine-Learning-Ensemble-Algorithms-3/">Bagging and Random Forest: Machine Learning Ensemble Algorithms 3</a>
+      </h1>
 
-      <a href="/2020/09/15/Bagging-and-Random-Forest-Machine-Learning-Ensemble-Algorithms-3/" class="index-excerpt">
-        
-        
+      <p class="index-excerpt">
+        <a href="/2020/09/15/Bagging-and-Random-Forest-Machine-Learning-Ensemble-Algorithms-3/">
           
-        
-        <div>Introduction
+          
+            
+          
+          Introduction
 Bagging
 Bagging的步骤如下图所示：
 
 分为几个步骤
 
-随机采样 (Bootstrap)，按照固定的数目对数据集做有放回采样，一般情况下采样集的数目和训练集一样，设为\(N\)，那么每个样本被采到的机率就是\(\frac{1}{N}\)，采样\(N\)次都没采到的机率是\((1-\frac{1}{N})^N\)，当采样数目\(N\)比较大的时候，即</div>
-      </a>
+随机采样 (Bootstrap)，按照固定的数目对数据集做有放回采样，一般情况下采样集的数目和训练集一样，设为\(N\)，那么每个样本被采到的机率就是\(\frac{1}{N}\)，采样\(N\)次都没采到的机率是\((1-\frac{1}{N})^N\)，当采样数目\(N\)比较大的时候，即
+        </a>
+      </p>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-09-15
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-09-15 10:35" pubdate>
+              2020-09-15
+            </time>
           </div>
         
         
@@ -443,7 +648,7 @@ Bagging的步骤如下图所示：
           </div>
         
       </div>
-    </div>
+    </article>
   </div>
 
   <div class="row mx-auto index-card">
@@ -451,31 +656,39 @@ Bagging的步骤如下图所示：
     
       <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2020/09/10/Unsupervised-Anomaly-Detection-Algorithms-Overview/" target="_self">
-          <img src="https://i.loli.net/2020/09/10/g2lZYd1NAuM4GcO.png" srcset="/img/loading.gif" alt="Unsupervised Anomaly Detection Algorithms Overview">
+          <img src="https://i.loli.net/2020/09/10/g2lZYd1NAuM4GcO.png" alt="Unsupervised Anomaly Detection Algorithms Overview">
         </a>
       </div>
     
-    <div class="col-12 col-md-8 mx-auto index-info">
-      <a class="index-header" href="/2020/09/10/Unsupervised-Anomaly-Detection-Algorithms-Overview/">Unsupervised Anomaly Detection Algorithms Overview</a>
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2020/09/10/Unsupervised-Anomaly-Detection-Algorithms-Overview/">Unsupervised Anomaly Detection Algorithms Overview</a>
+      </h1>
 
-      <a href="/2020/09/10/Unsupervised-Anomaly-Detection-Algorithms-Overview/" class="index-excerpt">
-        
-        
+      <p class="index-excerpt">
+        <a href="/2020/09/10/Unsupervised-Anomaly-Detection-Algorithms-Overview/">
           
-        
-        <div>Introduction
+          
+            
+          
+          Introduction
 未完待续，缓慢填坑中。。。
 LOF
 One-Class SVM
 Isolation Forest
 
-孤立森林 (Isolation Forest) 的思路和随机森林有异曲同工之妙（随机森林可以参考我的另一篇博文），孤立森林本身也是一种树模型。孤立森林要解决的是无监督异常检测问题，即给定无标签的训练集，把其中的异常值挑选出来。孤立森林的基本假设是我不断选择特征进</div>
-      </a>
+孤立森林 (Isolation Forest) 的思路和随机森林有异曲同工之妙（随机森林可以参考我的另一篇博文），孤立森林本身也是一种树模型。孤立森林要解决的是无监督异常检测问题，即给定无标签的训练集，把其中的异常值挑选出来。孤立森林的基本假设是我不断选择特征进
+        </a>
+      </p>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-09-10
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-09-10 23:41" pubdate>
+              2020-09-10
+            </time>
           </div>
         
         
@@ -501,7 +714,7 @@ Isolation Forest
           </div>
         
       </div>
-    </div>
+    </article>
   </div>
 
   <div class="row mx-auto index-card">
@@ -509,27 +722,35 @@ Isolation Forest
     
       <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2020/09/09/Model-Selection-and-Evaluation-Machine-Learning-Basics/" target="_self">
-          <img src="https://i.loli.net/2020/09/09/EekOPdnNiTRbsuG.png" srcset="/img/loading.gif" alt="Model Selection and Evaluation: Machine Learning Basics">
+          <img src="https://i.loli.net/2020/09/09/EekOPdnNiTRbsuG.png" alt="Model Selection and Evaluation: Machine Learning Basics">
         </a>
       </div>
     
-    <div class="col-12 col-md-8 mx-auto index-info">
-      <a class="index-header" href="/2020/09/09/Model-Selection-and-Evaluation-Machine-Learning-Basics/">Model Selection and Evaluation: Machine Learning Basics</a>
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2020/09/09/Model-Selection-and-Evaluation-Machine-Learning-Basics/">Model Selection and Evaluation: Machine Learning Basics</a>
+      </h1>
 
-      <a href="/2020/09/09/Model-Selection-and-Evaluation-Machine-Learning-Basics/" class="index-excerpt">
-        
-        
+      <p class="index-excerpt">
+        <a href="/2020/09/09/Model-Selection-and-Evaluation-Machine-Learning-Basics/">
           
-        
-        <div>Introduction
+          
+            
+          
+          Introduction
 Overfitting
-我们将模型输出与真实值之间的差异称为误差，如对于分类问题，我们可以使用模型分类错误的样本数量占总样本数的比例。模型在训练集（我们收集到的数据）上的误差称作是训练误差 (training error)，而在新样本（这里指的是新的样本而不是测试集，训练集测试集是从我们收集到的数据上人为划分出来的）上的误差称作是泛化误差 (generalizatio</div>
-      </a>
+我们将模型输出与真实值之间的差异称为误差，如对于分类问题，我们可以使用模型分类错误的样本数量占总样本数的比例。模型在训练集（我们收集到的数据）上的误差称作是训练误差 (training error)，而在新样本（这里指的是新的样本而不是测试集，训练集测试集是从我们收集到的数据上人为划分出来的）上的误差称作是泛化误差 (generalizatio
+        </a>
+      </p>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-09-09
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-09-09 11:33" pubdate>
+              2020-09-09
+            </time>
           </div>
         
         
@@ -555,176 +776,7 @@ Overfitting
           </div>
         
       </div>
-    </div>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2020/09/02/Decision-Tree-Machine-Learning-Classification-Algorithms-3/" target="_self">
-          <img src="https://i.loli.net/2020/09/02/I6zJKe4X1qG5fdF.png" srcset="/img/loading.gif" alt="Decision Tree: Machine Learning Classification Algorithms 3">
-        </a>
-      </div>
-    
-    <div class="col-12 col-md-8 mx-auto index-info">
-      <a class="index-header" href="/2020/09/02/Decision-Tree-Machine-Learning-Classification-Algorithms-3/">Decision Tree: Machine Learning Classification Algorithms 3</a>
-
-      <a href="/2020/09/02/Decision-Tree-Machine-Learning-Classification-Algorithms-3/" class="index-excerpt">
-        
-        
-          
-        
-        <div>Introduction
-（PS：本文内容是学习高级树模型（GBDT，XGBoost）的基础，强烈建议在看那些内容之前先了解本文的内容！）
-本文主要是介绍常用的三种决策树模型：ID3、C4.5和CART。决策树（Decision Tree）是一种有监督分类模型（稍加改造可进行回归任务）。
-比如我们要判断一个瓜是不是好瓜，对于人来说，要判断一个瓜是不是好瓜，可能会先去看看色泽，然后看看根蒂，然</div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-09-02
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/Technical-Notes/">Technical Notes</a>
-            
-              <a href="/categories/Technical-Notes/Machine-Learning/">Machine Learning</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/ID3/">ID3</a>
-            
-              <a href="/tags/C4-5/">C4.5</a>
-            
-              <a href="/tags/CART/">CART</a>
-            
-          </div>
-        
-      </div>
-    </div>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2020/08/26/Support-Vector-Machine-Machine-Learning-Classification-Algorithms-2/" target="_self">
-          <img src="https://i.loli.net/2020/08/29/qirgbCydejXMc5B.jpg" srcset="/img/loading.gif" alt="Support Vector Machine: Machine Learning Classification Algorithms 2">
-        </a>
-      </div>
-    
-    <div class="col-12 col-md-8 mx-auto index-info">
-      <a class="index-header" href="/2020/08/26/Support-Vector-Machine-Machine-Learning-Classification-Algorithms-2/">Support Vector Machine: Machine Learning Classification Algorithms 2</a>
-
-      <a href="/2020/08/26/Support-Vector-Machine-Machine-Learning-Classification-Algorithms-2/" class="index-excerpt">
-        
-        
-          
-        
-        <div>Introduction
-Still working on it😅...
-blog
-Hyperplane
-超平面可以从代数和几何两方面来理解。超平面的代数定义可以看作是方程： \[
-a_1x_1+\cdots+a_nx_n=d
-\] 的所有解形成的集合，其中\(a_1,\cdots,a_n\)为不全为\(0\)的实数，\(d\)也是实数。
-从几何上来说，超平面可以看作是除空间\(R</div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-08-26
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/Technical-Notes/">Technical Notes</a>
-            
-              <a href="/categories/Technical-Notes/Machine-Learning/">Machine Learning</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/SVM/">SVM</a>
-            
-          </div>
-        
-      </div>
-    </div>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2020/08/26/Linear-Regression-and-Logistic-Regression-Machine-Learning-Classification-Algorithms-1/" target="_self">
-          <img src="https://i.loli.net/2020/08/29/Y6BGoQWxzITbJwu.jpg" srcset="/img/loading.gif" alt="Linear Regression and Logistic Regression - Machine Learning Classification Algorithms 1">
-        </a>
-      </div>
-    
-    <div class="col-12 col-md-8 mx-auto index-info">
-      <a class="index-header" href="/2020/08/26/Linear-Regression-and-Logistic-Regression-Machine-Learning-Classification-Algorithms-1/">Linear Regression and Logistic Regression - Machine Learning Classification Algorithms 1</a>
-
-      <a href="/2020/08/26/Linear-Regression-and-Logistic-Regression-Machine-Learning-Classification-Algorithms-1/" class="index-excerpt">
-        
-        
-          
-        
-        <div>Introduction
-Still working on it...
-Linear Regression
-The Model
-\[
-\hat y = w^\top x + b
-\]
-
-损失函数： \[
-\mathcal L(w) = \sum_{i=1}^N \parallel w^\top x_i -y_i\parallel^2
-\] 写成矩阵形式 \[
-\mathcal</div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-08-26
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/Technical-Notes/">Technical Notes</a>
-            
-              <a href="/categories/Technical-Notes/Machine-Learning/">Machine Learning</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Linear-Regression/">Linear Regression</a>
-            
-          </div>
-        
-      </div>
-    </div>
+    </article>
   </div>
 
 
@@ -749,16 +801,15 @@ The Model
         </div>
       </div>
     
-  </main>
 
-  
-    <a id="scroll-top-button" href="#" role="button">
-      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
-    </a>
-  
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
 
-  
-    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
      aria-hidden="true">
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
@@ -779,60 +830,89 @@ The Model
     </div>
   </div>
 </div>
-  
-
-  
-
-  
-
-  <footer class="mt-5">
-  <div class="text-center py-3">
-    <div>
-      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
-      <i class="iconfont icon-love"></i>
-      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
-        <span>Fluid</span></a>
-    </div>
     
-  <div>
+
     
-      <!-- 不蒜子统计PV -->
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
       
-      <span id="busuanzi_container_site_pv" style="display: none">
-      总访问量 <span id="busuanzi_value_site_pv"></span> 次
-    </span>
-    
-    
-      <!-- 不蒜子统计UV -->
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
       
-      <span id="busuanzi_container_site_uv" style="display: none">
-      总访客数 <span id="busuanzi_value_site_uv"></span> 人
-    </span>
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
     
   </div>
 
 
-    
+  
 
-    
-  </div>
+  
 </footer>
 
 <!-- SCRIPTS -->
-<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
-<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    document.addEventListener('DOMContentLoaded', function() {
+      window.NProgress && window.NProgress.inc();
+    })
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
 <script  src="/js/debouncer.js" ></script>
-<script  src="/js/main.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
 
 
-  <script  src="/js/lazyload.js" ></script>
+  
+    
+  
+
+
+
+  
+
+
+
+
 
 
 
 
 
   <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
-  <script  src="/js/clipboard-use.js" ></script>
 
 
 
@@ -840,38 +920,29 @@ The Model
 
 
 
-
-<!-- Plugins -->
-
-
-
-
-
-  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
   <script>
-    anchors.options = {
-      placement: "right",
-      visible: "hover",
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
       
-    };
-    var el = "h1,h2,h3,h4,h5,h6".split(",");
-    var res = [];
-    for (item of el) {
-      res.push(".markdown-body > " + item)
-    }
-    anchors.add(res.join(", "))
+      typing(title)
+      
+    })(window, document);
   </script>
 
 
 
   <script  src="/js/local-search.js" ></script>
   <script>
-    var path = "/local-search.xml";
-    var inputArea = document.querySelector("#local-search-input");
-    inputArea.onclick = function () {
-      searchFunc(path, 'local-search-input', 'local-search-result');
-      this.onclick = null
-    }
+    (function () {
+      var path = "/local-search.xml";
+      var inputArea = document.querySelector("#local-search-input");
+      inputArea.onclick = function () {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        this.onclick = null
+      }
+    })()
   </script>
 
 
@@ -888,8 +959,8 @@ The Model
 
 
 
-
-
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
 
 
 

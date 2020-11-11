@@ -1,7 +1,7 @@
+
+
 <!DOCTYPE html>
-<html lang="zh-CN">
-
-
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
 
 
 
@@ -13,28 +13,23 @@
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
-  <meta name="theme-color" content="#2D5BA6">
+  <meta name="theme-color" content="#2f4154">
   <meta name="description" content="">
   <meta name="author" content="Hanzawa">
   <meta name="keywords" content="">
   <title>分类 - Hanzawa の 部屋</title>
 
-  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
-<link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
 
-
-  <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/tomorrow.min.css" />
 
 
 <!-- 主题依赖的图标库，不要自行修改 -->
 
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_yg9cfy8wd6.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
 
 
 
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
-
-
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
 
 
 <link  rel="stylesheet" href="/css/main.css" />
@@ -42,6 +37,12 @@
 <!-- 自定义样式保持在最底部 -->
 
 
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"qfxiao.me","root":"/","version":"1.8.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"copy_btn":true,"image_zoom":{"enable":true},"lazyload":{"enable":true,"onlypost":true},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
 <meta name="generator" content="Hexo 4.2.1"></head>
 
 
@@ -124,8 +125,14 @@
         
         
           <li class="nav-item" id="search-btn">
-            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
-                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
           </li>
         
       </ul>
@@ -133,15 +140,13 @@
   </div>
 </nav>
 
-    <div class="view intro-2" id="background" parallax=true
+    <div class="banner intro-2" id="background" parallax=true
          style="background: url('/img/bg/coffe_bear.jpg') no-repeat center center;
            background-size: cover;">
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
-          <div class="container text-center white-text fadeInUp">
-            <span class="h2" id="subtitle">
-              
-                分类
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="分类">
               
             </span>
 
@@ -180,22 +185,22 @@
     
     <div class="category row">
       <a
-        class="category-item  list-group-item category-item-action col-10 col-md-11"
-        id="heading-Research" role="tab" data-toggle="collapse" href="#collapse-Research"
-        aria-expanded="true"
+        class="category-item collapsed list-group-item category-item-action col-10 col-md-11"
+        id="heading-ckhdb95er0003d8tydkhcgx7l" role="tab" data-toggle="collapse" href="#collapse-ckhdb95er0003d8tydkhcgx7l"
+        aria-expanded="false"
       >
         Research
         <i class="iconfont icon-arrowright"></i>
       </a>
       <a href="/categories/Research/" class="category-count col-2 col-md-1">
         <i class="iconfont icon-articles"></i>
-        <span>30</span>
+        <span>33</span>
       </a>
       <div class="category-collapse">
         
           
-  <div id="collapse-Research" class="collapse in show" role="tabpanel"
-       aria-labelledby="heading-Research">
+  <div id="collapse-ckhdb95er0003d8tydkhcgx7l" class="collapse in " role="tabpanel"
+       aria-labelledby="heading-ckhdb95er0003d8tydkhcgx7l">
     
   
   
@@ -204,7 +209,7 @@
     <div class="category-sub row">
       <a
         class="category-subitem collapsed list-group-item category-item-action col-10 col-md-11"
-        id="heading-Anomaly Detection" role="tab" data-toggle="collapse" href="#collapse-Anomaly Detection"
+        id="heading-ckhdb95fv000gd8ty21wz5qh8" role="tab" data-toggle="collapse" href="#collapse-ckhdb95fv000gd8ty21wz5qh8"
         aria-expanded="false"
       >
         Anomaly Detection
@@ -212,15 +217,29 @@
       </a>
       <a href="/categories/Research/Anomaly-Detection/" class="category-count col-2 col-md-1">
         <i class="iconfont icon-articles"></i>
-        <span>19</span>
+        <span>21</span>
       </a>
       <div class="category-collapse">
         
           
-  <div id="collapse-Anomaly Detection" class="collapse in" role="tabpanel"
-       aria-labelledby="heading-Anomaly Detection">
+  <div id="collapse-ckhdb95fv000gd8ty21wz5qh8" class="collapse in" role="tabpanel"
+       aria-labelledby="heading-ckhdb95fv000gd8ty21wz5qh8">
     
     
+    
+      
+      
+        <a href="/2020/10/30/Learning-Memory-guided-Normality-for-Anomaly-Detection/" class="list-group-item list-group-item-action">
+          <span class="category-post">Learning Memory-guided Normality for Anomaly Detection</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2020/10/30/Memorizing-Normality-to-Detect-Anomaly-Memory-augmented-Deep-Autoencoder-for-Unsupervised-Anomaly-Detection/" class="list-group-item list-group-item-action">
+          <span class="category-post">Memorizing Normality to Detect Anomaly: Memory-augmented Deep Autoencoder for Unsupervised Anomaly Detection</span>
+        </a>
+      
     
       
       
@@ -280,20 +299,6 @@
     
       
       
-        <a href="/2020/03/30/Deep-Weakly-supervised-Anomaly-Detection/" class="list-group-item list-group-item-action">
-          <span class="category-post">Deep Weakly-supervised Anomaly Detection</span>
-        </a>
-      
-    
-      
-      
-        <a href="/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/" class="list-group-item list-group-item-action">
-          <span class="category-post">Transfer Anomaly Detection by Inferring Latent Domain Representations</span>
-        </a>
-      
-    
-      
-      
         <a href="/categories/Research/Anomaly-Detection/" class="list-group-item list-group-item-action">
           <span class="category-post">More...</span>
         </a>
@@ -309,7 +314,57 @@
     <div class="category-sub row">
       <a
         class="category-subitem collapsed list-group-item category-item-action col-10 col-md-11"
-        id="heading-Misc" role="tab" data-toggle="collapse" href="#collapse-Misc"
+        id="heading-ckhdb95js004sd8ty2zpw96se" role="tab" data-toggle="collapse" href="#collapse-ckhdb95js004sd8ty2zpw96se"
+        aria-expanded="false"
+      >
+        Self-supervised Learning
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      <a href="/categories/Research/Self-supervised-Learning/" class="category-count col-2 col-md-1">
+        <i class="iconfont icon-articles"></i>
+        <span>3</span>
+      </a>
+      <div class="category-collapse">
+        
+          
+  <div id="collapse-ckhdb95js004sd8ty2zpw96se" class="collapse in" role="tabpanel"
+       aria-labelledby="heading-ckhdb95js004sd8ty2zpw96se">
+    
+    
+    
+      
+      
+        <a href="/2020/10/31/Self-supervised-Co-training-for-Video-Representation-Learning/" class="list-group-item list-group-item-action">
+          <span class="category-post">Self-supervised Co-training for Video Representation Learning</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2020/09/23/Unsupervised-Feature-Learning-via-Non-Parametric-Instance-Discrimination/" class="list-group-item list-group-item-action">
+          <span class="category-post">Unsupervised Feature Learning via Non-Parametric Instance Discrimination</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2020/09/17/Representation-Learning-with-Contrastive-Predictive-Coding/" class="list-group-item list-group-item-action">
+          <span class="category-post">Representation Learning with Contrastive Predictive Coding</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+    
+    
+    <div class="category-sub row">
+      <a
+        class="category-subitem collapsed list-group-item category-item-action col-10 col-md-11"
+        id="heading-ckhdb95ho002fd8ty4fo1a8so" role="tab" data-toggle="collapse" href="#collapse-ckhdb95ho002fd8ty4fo1a8so"
         aria-expanded="false"
       >
         Misc
@@ -322,8 +377,8 @@
       <div class="category-collapse">
         
           
-  <div id="collapse-Misc" class="collapse in" role="tabpanel"
-       aria-labelledby="heading-Misc">
+  <div id="collapse-ckhdb95ho002fd8ty4fo1a8so" class="collapse in" role="tabpanel"
+       aria-labelledby="heading-ckhdb95ho002fd8ty4fo1a8so">
     
     
     
@@ -352,50 +407,7 @@
     <div class="category-sub row">
       <a
         class="category-subitem collapsed list-group-item category-item-action col-10 col-md-11"
-        id="heading-Self-supervised Learning" role="tab" data-toggle="collapse" href="#collapse-Self-supervised Learning"
-        aria-expanded="false"
-      >
-        Self-supervised Learning
-        <i class="iconfont icon-arrowright"></i>
-      </a>
-      <a href="/categories/Research/Self-supervised-Learning/" class="category-count col-2 col-md-1">
-        <i class="iconfont icon-articles"></i>
-        <span>2</span>
-      </a>
-      <div class="category-collapse">
-        
-          
-  <div id="collapse-Self-supervised Learning" class="collapse in" role="tabpanel"
-       aria-labelledby="heading-Self-supervised Learning">
-    
-    
-    
-      
-      
-        <a href="/2020/09/23/Unsupervised-Feature-Learning-via-Non-Parametric-Instance-Discrimination/" class="list-group-item list-group-item-action">
-          <span class="category-post">Unsupervised Feature Learning via Non-Parametric Instance Discrimination</span>
-        </a>
-      
-    
-      
-      
-        <a href="/2020/09/17/Representation-Learning-with-Contrastive-Predictive-Coding/" class="list-group-item list-group-item-action">
-          <span class="category-post">Representation Learning with Contrastive Predictive Coding</span>
-        </a>
-      
-    
-  </div>
-
-        
-      </div>
-    </div>
-  
-    
-    
-    <div class="category-sub row">
-      <a
-        class="category-subitem collapsed list-group-item category-item-action col-10 col-md-11"
-        id="heading-Tutorial" role="tab" data-toggle="collapse" href="#collapse-Tutorial"
+        id="heading-ckhdb95g5000ld8tyb2m27ary" role="tab" data-toggle="collapse" href="#collapse-ckhdb95g5000ld8tyb2m27ary"
         aria-expanded="false"
       >
         Tutorial
@@ -408,8 +420,8 @@
       <div class="category-collapse">
         
           
-  <div id="collapse-Tutorial" class="collapse in" role="tabpanel"
-       aria-labelledby="heading-Tutorial">
+  <div id="collapse-ckhdb95g5000ld8tyb2m27ary" class="collapse in" role="tabpanel"
+       aria-labelledby="heading-ckhdb95g5000ld8tyb2m27ary">
     
     
     
@@ -431,7 +443,7 @@
     <div class="category-sub row">
       <a
         class="category-subitem collapsed list-group-item category-item-action col-10 col-md-11"
-        id="heading-Time Series Imputation" role="tab" data-toggle="collapse" href="#collapse-Time Series Imputation"
+        id="heading-ckhdb95hu002od8ty3wj4ft4b" role="tab" data-toggle="collapse" href="#collapse-ckhdb95hu002od8ty3wj4ft4b"
         aria-expanded="false"
       >
         Time Series Imputation
@@ -444,8 +456,8 @@
       <div class="category-collapse">
         
           
-  <div id="collapse-Time Series Imputation" class="collapse in" role="tabpanel"
-       aria-labelledby="heading-Time Series Imputation">
+  <div id="collapse-ckhdb95hu002od8ty3wj4ft4b" class="collapse in" role="tabpanel"
+       aria-labelledby="heading-ckhdb95hu002od8ty3wj4ft4b">
     
     
     
@@ -467,7 +479,7 @@
     <div class="category-sub row">
       <a
         class="category-subitem collapsed list-group-item category-item-action col-10 col-md-11"
-        id="heading-Notes" role="tab" data-toggle="collapse" href="#collapse-Notes"
+        id="heading-ckhdb95jd0044d8tycfrz5jpa" role="tab" data-toggle="collapse" href="#collapse-ckhdb95jd0044d8tycfrz5jpa"
         aria-expanded="false"
       >
         Notes
@@ -480,8 +492,8 @@
       <div class="category-collapse">
         
           
-  <div id="collapse-Notes" class="collapse in" role="tabpanel"
-       aria-labelledby="heading-Notes">
+  <div id="collapse-ckhdb95jd0044d8tycfrz5jpa" class="collapse in" role="tabpanel"
+       aria-labelledby="heading-ckhdb95jd0044d8tycfrz5jpa">
     
     
     
@@ -503,7 +515,7 @@
     <div class="category-sub row">
       <a
         class="category-subitem collapsed list-group-item category-item-action col-10 col-md-11"
-        id="heading-RNN" role="tab" data-toggle="collapse" href="#collapse-RNN"
+        id="heading-ckhdb95jp004md8tyajzmcbop" role="tab" data-toggle="collapse" href="#collapse-ckhdb95jp004md8tyajzmcbop"
         aria-expanded="false"
       >
         RNN
@@ -516,8 +528,8 @@
       <div class="category-collapse">
         
           
-  <div id="collapse-RNN" class="collapse in" role="tabpanel"
-       aria-labelledby="heading-RNN">
+  <div id="collapse-ckhdb95jp004md8tyajzmcbop" class="collapse in" role="tabpanel"
+       aria-labelledby="heading-ckhdb95jp004md8tyajzmcbop">
     
     
     
@@ -539,7 +551,7 @@
     <div class="category-sub row">
       <a
         class="category-subitem collapsed list-group-item category-item-action col-10 col-md-11"
-        id="heading-Time Series Modeling" role="tab" data-toggle="collapse" href="#collapse-Time Series Modeling"
+        id="heading-ckhdb95k3005bd8ty2yc3dgv5" role="tab" data-toggle="collapse" href="#collapse-ckhdb95k3005bd8ty2yc3dgv5"
         aria-expanded="false"
       >
         Time Series Modeling
@@ -552,8 +564,8 @@
       <div class="category-collapse">
         
           
-  <div id="collapse-Time Series Modeling" class="collapse in" role="tabpanel"
-       aria-labelledby="heading-Time Series Modeling">
+  <div id="collapse-ckhdb95k3005bd8ty2yc3dgv5" class="collapse in" role="tabpanel"
+       aria-labelledby="heading-ckhdb95k3005bd8ty2yc3dgv5">
     
     
     
@@ -575,7 +587,7 @@
     <div class="category-sub row">
       <a
         class="category-subitem collapsed list-group-item category-item-action col-10 col-md-11"
-        id="heading-Representation Learning" role="tab" data-toggle="collapse" href="#collapse-Representation Learning"
+        id="heading-ckhdb95kw005xd8tyej6m5khm" role="tab" data-toggle="collapse" href="#collapse-ckhdb95kw005xd8tyej6m5khm"
         aria-expanded="false"
       >
         Representation Learning
@@ -588,8 +600,8 @@
       <div class="category-collapse">
         
           
-  <div id="collapse-Representation Learning" class="collapse in" role="tabpanel"
-       aria-labelledby="heading-Representation Learning">
+  <div id="collapse-ckhdb95kw005xd8tyej6m5khm" class="collapse in" role="tabpanel"
+       aria-labelledby="heading-ckhdb95kw005xd8tyej6m5khm">
     
     
     
@@ -611,7 +623,7 @@
     <div class="category-sub row">
       <a
         class="category-subitem collapsed list-group-item category-item-action col-10 col-md-11"
-        id="heading-GAN" role="tab" data-toggle="collapse" href="#collapse-GAN"
+        id="heading-ckhdb95l00063d8tyhsrx8ihz" role="tab" data-toggle="collapse" href="#collapse-ckhdb95l00063d8tyhsrx8ihz"
         aria-expanded="false"
       >
         GAN
@@ -624,8 +636,8 @@
       <div class="category-collapse">
         
           
-  <div id="collapse-GAN" class="collapse in" role="tabpanel"
-       aria-labelledby="heading-GAN">
+  <div id="collapse-ckhdb95l00063d8tyhsrx8ihz" class="collapse in" role="tabpanel"
+       aria-labelledby="heading-ckhdb95l00063d8tyhsrx8ihz">
     
     
     
@@ -652,9 +664,9 @@
     
     <div class="category row">
       <a
-        class="category-item  list-group-item category-item-action col-10 col-md-11"
-        id="heading-Technical Notes" role="tab" data-toggle="collapse" href="#collapse-Technical Notes"
-        aria-expanded="true"
+        class="category-item collapsed list-group-item category-item-action col-10 col-md-11"
+        id="heading-ckhdb95gj000zd8tyd2qr3fiq" role="tab" data-toggle="collapse" href="#collapse-ckhdb95gj000zd8tyd2qr3fiq"
+        aria-expanded="false"
       >
         Technical Notes
         <i class="iconfont icon-arrowright"></i>
@@ -666,8 +678,8 @@
       <div class="category-collapse">
         
           
-  <div id="collapse-Technical Notes" class="collapse in show" role="tabpanel"
-       aria-labelledby="heading-Technical Notes">
+  <div id="collapse-ckhdb95gj000zd8tyd2qr3fiq" class="collapse in " role="tabpanel"
+       aria-labelledby="heading-ckhdb95gj000zd8tyd2qr3fiq">
     
   
   
@@ -676,7 +688,7 @@
     <div class="category-sub row">
       <a
         class="category-subitem collapsed list-group-item category-item-action col-10 col-md-11"
-        id="heading-Machine Learning" role="tab" data-toggle="collapse" href="#collapse-Machine Learning"
+        id="heading-ckhdb95i0002ud8tyczubeeai" role="tab" data-toggle="collapse" href="#collapse-ckhdb95i0002ud8tyczubeeai"
         aria-expanded="false"
       >
         Machine Learning
@@ -689,8 +701,8 @@
       <div class="category-collapse">
         
           
-  <div id="collapse-Machine Learning" class="collapse in" role="tabpanel"
-       aria-labelledby="heading-Machine Learning">
+  <div id="collapse-ckhdb95i0002ud8tyczubeeai" class="collapse in" role="tabpanel"
+       aria-labelledby="heading-ckhdb95i0002ud8tyczubeeai">
     
     
     
@@ -754,7 +766,7 @@
     <div class="category-sub row">
       <a
         class="category-subitem collapsed list-group-item category-item-action col-10 col-md-11"
-        id="heading-Misc" role="tab" data-toggle="collapse" href="#collapse-Misc"
+        id="heading-ckhdb95ii003hd8ty3xwqdd60" role="tab" data-toggle="collapse" href="#collapse-ckhdb95ii003hd8ty3xwqdd60"
         aria-expanded="false"
       >
         Misc
@@ -767,8 +779,8 @@
       <div class="category-collapse">
         
           
-  <div id="collapse-Misc" class="collapse in" role="tabpanel"
-       aria-labelledby="heading-Misc">
+  <div id="collapse-ckhdb95ii003hd8ty3xwqdd60" class="collapse in" role="tabpanel"
+       aria-labelledby="heading-ckhdb95ii003hd8ty3xwqdd60">
     
     
     
@@ -804,7 +816,7 @@
     <div class="category-sub row">
       <a
         class="category-subitem collapsed list-group-item category-item-action col-10 col-md-11"
-        id="heading-Anomaly Detection" role="tab" data-toggle="collapse" href="#collapse-Anomaly Detection"
+        id="heading-ckhdb95ko005od8tybof88qjv" role="tab" data-toggle="collapse" href="#collapse-ckhdb95ko005od8tybof88qjv"
         aria-expanded="false"
       >
         Anomaly Detection
@@ -817,8 +829,8 @@
       <div class="category-collapse">
         
           
-  <div id="collapse-Anomaly Detection" class="collapse in" role="tabpanel"
-       aria-labelledby="heading-Anomaly Detection">
+  <div id="collapse-ckhdb95ko005od8tybof88qjv" class="collapse in" role="tabpanel"
+       aria-labelledby="heading-ckhdb95ko005od8tybof88qjv">
     
     
     
@@ -849,16 +861,15 @@
         </div>
       </div>
     
-  </main>
 
-  
-    <a id="scroll-top-button" href="#" role="button">
-      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
-    </a>
-  
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
 
-  
-    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
      aria-hidden="true">
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
@@ -879,60 +890,89 @@
     </div>
   </div>
 </div>
-  
-
-  
-
-  
-
-  <footer class="mt-5">
-  <div class="text-center py-3">
-    <div>
-      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
-      <i class="iconfont icon-love"></i>
-      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
-        <span>Fluid</span></a>
-    </div>
     
-  <div>
+
     
-      <!-- 不蒜子统计PV -->
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
       
-      <span id="busuanzi_container_site_pv" style="display: none">
-      总访问量 <span id="busuanzi_value_site_pv"></span> 次
-    </span>
-    
-    
-      <!-- 不蒜子统计UV -->
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
       
-      <span id="busuanzi_container_site_uv" style="display: none">
-      总访客数 <span id="busuanzi_value_site_uv"></span> 人
-    </span>
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
     
   </div>
 
 
-    
+  
 
-    
-  </div>
+  
 </footer>
 
 <!-- SCRIPTS -->
-<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
-<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    document.addEventListener('DOMContentLoaded', function() {
+      window.NProgress && window.NProgress.inc();
+    })
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
 <script  src="/js/debouncer.js" ></script>
-<script  src="/js/main.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
 
 
-  <script  src="/js/lazyload.js" ></script>
+  
+    
+  
+
+
+
+  
+
+
+
+
 
 
 
 
 
   <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
-  <script  src="/js/clipboard-use.js" ></script>
 
 
 
@@ -940,38 +980,29 @@
 
 
 
-
-<!-- Plugins -->
-
-
-
-
-
-  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
   <script>
-    anchors.options = {
-      placement: "right",
-      visible: "hover",
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
       
-    };
-    var el = "h1,h2,h3,h4,h5,h6".split(",");
-    var res = [];
-    for (item of el) {
-      res.push(".markdown-body > " + item)
-    }
-    anchors.add(res.join(", "))
+      typing(title)
+      
+    })(window, document);
   </script>
 
 
 
   <script  src="/js/local-search.js" ></script>
   <script>
-    var path = "/local-search.xml";
-    var inputArea = document.querySelector("#local-search-input");
-    inputArea.onclick = function () {
-      searchFunc(path, 'local-search-input', 'local-search-result');
-      this.onclick = null
-    }
+    (function () {
+      var path = "/local-search.xml";
+      var inputArea = document.querySelector("#local-search-input");
+      inputArea.onclick = function () {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        this.onclick = null
+      }
+    })()
   </script>
 
 
@@ -988,8 +1019,8 @@
 
 
 
-
-
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
 
 
 

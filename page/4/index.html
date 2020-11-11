@@ -1,7 +1,7 @@
+
+
 <!DOCTYPE html>
-<html lang="zh-CN">
-
-
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
 
 
 
@@ -13,28 +13,23 @@
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
-  <meta name="theme-color" content="#2D5BA6">
+  <meta name="theme-color" content="#2f4154">
   <meta name="description" content="">
   <meta name="author" content="Hanzawa">
   <meta name="keywords" content="">
   <title>Hanzawa の 部屋</title>
 
-  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
-<link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
 
-
-  <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/tomorrow.min.css" />
 
 
 <!-- 主题依赖的图标库，不要自行修改 -->
 
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_yg9cfy8wd6.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
 
 
 
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
-
-
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
 
 
 <link  rel="stylesheet" href="/css/main.css" />
@@ -42,6 +37,12 @@
 <!-- 自定义样式保持在最底部 -->
 
 
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"qfxiao.me","root":"/","version":"1.8.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"copy_btn":true,"image_zoom":{"enable":true},"lazyload":{"enable":true,"onlypost":true},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
 <meta name="generator" content="Hexo 4.2.1"></head>
 
 
@@ -124,8 +125,14 @@
         
         
           <li class="nav-item" id="search-btn">
-            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
-                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
           </li>
         
       </ul>
@@ -133,15 +140,13 @@
   </div>
 </nav>
 
-    <div class="view intro-2" id="background" parallax=true
+    <div class="banner intro-2" id="background" parallax=true
          style="background: url('/img/bg/coffe_bear.jpg') no-repeat center center;
            background-size: cover;">
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
-          <div class="container text-center white-text fadeInUp">
-            <span class="h2" id="subtitle">
-              
-                Machine Learning, Deep Learning, Python and etc.
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Machine Learning, Deep Learning, Python and etc.">
               
             </span>
 
@@ -170,31 +175,35 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2020/01/06/Unsupervised-Anomaly-Detection-for-Intricate-KPIs-via-Adversarial-Training-of-VAE/" target="_self">
-          <img src="https://i.loli.net/2020/06/25/FwHi7y56njz8R4m.png" srcset="/img/loading.gif" alt="Unsupervised Anomaly Detection for Intricate KPIs via Adversarial Training of VAE">
+        <a href="/2020/02/24/Deep-Anomaly-Detection-with-Deviation-Networks/" target="_self">
+          <img src="https://i.loli.net/2020/06/25/ZuE1mb2Ytv6Jdl7.png" alt="Deep Anomaly Detection with Deviation Networks">
         </a>
       </div>
     
-    <div class="col-12 col-md-8 mx-auto index-info">
-      <a class="index-header" href="/2020/01/06/Unsupervised-Anomaly-Detection-for-Intricate-KPIs-via-Adversarial-Training-of-VAE/">Unsupervised Anomaly Detection for Intricate KPIs via Adversarial Training of VAE</a>
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2020/02/24/Deep-Anomaly-Detection-with-Deviation-Networks/">Deep Anomaly Detection with Deviation Networks</a>
+      </h1>
 
-      <a href="/2020/01/06/Unsupervised-Anomaly-Detection-for-Intricate-KPIs-via-Adversarial-Training-of-VAE/" class="index-excerpt">
-        
-        
+      <p class="index-excerpt">
+        <a href="/2020/02/24/Deep-Anomaly-Detection-with-Deviation-Networks/">
           
-        
-        <div>Introduction
-论文📃
-代码📥
-本文介绍了一种利用对抗训练来进行时间序列异常检测的方法Buzz。作者认为在现实中复杂的KPI数据大量存在，这种数据通常带有非高斯分布的噪声，同时数据分布复杂，导致一般的生成式模型无法对数据进行很好的建模，所以作者提出了基于对抗训练的模型。在文中，作者的创新点主要有三个：
-
-为了处理复杂数据，将数据空间分为多个子空间，在每个子空间上进行距离的度</div>
-      </a>
+          
+            
+          
+          Introduction
+本文关注Deep Anomaly Detection，也就是用深度学习的方法来进行异常检测。文中提到现有的Deep Anomaly Detection存在两个弊端：一个是采用深度学习方法来进行特征学习，然后通过下游任务得到Anomaly Score，相比文中End-to-End的Anomaly Score学习，存在优化不充分的风险；另一个是现有的方法主要是无监督学习，无
+        </a>
+      </p>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-01-06
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-02-24 10:45" pubdate>
+              2020-02-24
+            </time>
           </div>
         
         
@@ -211,20 +220,205 @@
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
+              <a href="/tags/Deep-Learning/">Deep Learning</a>
+            
+              <a href="/tags/Anomaly-Detection/">Anomaly Detection</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2020/01/31/Geant4-%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/" target="_self">
+          <img src="https://i.loli.net/2020/06/25/C3wcWdUTkjthPGR.png" alt="Geant4 安装教程与调试环境配置">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2020/01/31/Geant4-%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/">Geant4 安装教程与调试环境配置</a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2020/01/31/Geant4-%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/">
+          
+          
+            
+          
+          Introduction
+Geant4安装的教程很多，版本都很旧了，这里写一个新版本（10.6）基于Ubuntu的安装教程，并且开启CLion IDE调试。
+Step 1: Download Packages
+首先进入官网(http://geant4.web.cern.ch/support/download)下载源代码（推荐tar.gz格式）及数据文件，解压。新建一个文件夹专门用来放Gean
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-01-31 11:25" pubdate>
+              2020-01-31
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/Technical-Notes/">Technical Notes</a>
+            
+              <a href="/categories/Technical-Notes/Misc/">Misc</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Geant4/">Geant4</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2020/01/09/Complementary-Set-Variational-Autoencoder-for-Supervised-Anomaly-Detection/" target="_self">
+          <img src="https://i.loli.net/2020/06/25/vrxAzRVCtaE3oLc.png" alt="Complementary Set Variational Autoencoder for Supervised Anomaly Detection">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2020/01/09/Complementary-Set-Variational-Autoencoder-for-Supervised-Anomaly-Detection/">Complementary Set Variational Autoencoder for Supervised Anomaly Detection</a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2020/01/09/Complementary-Set-Variational-Autoencoder-for-Supervised-Anomaly-Detection/">
+          
+          
+            
+          
+          Introduction
+对于异常检测问题，异常的模式是多种多样的。有监督模型能够较好地处理训练集中出现过的模式，无监督模型能够处理训练集中未出现过的模式，但对于训练集中出现过的异常模型并没有学习。本文提出了一种既能学习训练集中出现过的异常模式，同时能处理未出现过的异常模式的方法。
+Proposed Model
+Conventional VAE
+首先回顾一下原始的VAE。
+原始VAE中的
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-01-09 10:15" pubdate>
+              2020-01-09
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/Research/">Research</a>
+            
+              <a href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/VAE/">VAE</a>
+            
+              <a href="/tags/Anomaly-Detection/">Anomaly Detection</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2020/01/06/Unsupervised-Anomaly-Detection-for-Intricate-KPIs-via-Adversarial-Training-of-VAE/" target="_self">
+          <img src="https://i.loli.net/2020/06/25/FwHi7y56njz8R4m.png" alt="Unsupervised Anomaly Detection for Intricate KPIs via Adversarial Training of VAE">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2020/01/06/Unsupervised-Anomaly-Detection-for-Intricate-KPIs-via-Adversarial-Training-of-VAE/">Unsupervised Anomaly Detection for Intricate KPIs via Adversarial Training of VAE</a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2020/01/06/Unsupervised-Anomaly-Detection-for-Intricate-KPIs-via-Adversarial-Training-of-VAE/">
+          
+          
+            
+          
+          Introduction
+论文📃
+代码📥
+本文介绍了一种利用对抗训练来进行时间序列异常检测的方法Buzz。作者认为在现实中复杂的KPI数据大量存在，这种数据通常带有非高斯分布的噪声，同时数据分布复杂，导致一般的生成式模型无法对数据进行很好的建模，所以作者提出了基于对抗训练的模型。在文中，作者的创新点主要有三个：
+
+为了处理复杂数据，将数据空间分为多个子空间，在每个子空间上进行距离的度
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-01-06 13:09" pubdate>
+              2020-01-06
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/Research/">Research</a>
+            
+              <a href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/VAE/">VAE</a>
+            
+              <a href="/tags/Deep-Learning/">Deep Learning</a>
+            
               <a href="/tags/Time-Series/">Time Series</a>
             
               <a href="/tags/Anomaly-Detection/">Anomaly Detection</a>
             
               <a href="/tags/Machine-Learning/">Machine Learning</a>
             
-              <a href="/tags/Deep-Learning/">Deep Learning</a>
-            
-              <a href="/tags/VAE/">VAE</a>
-            
           </div>
         
       </div>
-    </div>
+    </article>
   </div>
 
   <div class="row mx-auto index-card">
@@ -232,26 +426,34 @@
     
       <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2019/11/02/Variational-Approaches-for-Auto-Encoding-Generative-Adversarial-Networks/" target="_self">
-          <img src="https://i.loli.net/2020/06/25/TKt3yUwPDQm4MeV.png" srcset="/img/loading.gif" alt="Variational Approaches for Auto-Encoding Generative Adversarial Networks">
+          <img src="https://i.loli.net/2020/06/25/TKt3yUwPDQm4MeV.png" alt="Variational Approaches for Auto-Encoding Generative Adversarial Networks">
         </a>
       </div>
     
-    <div class="col-12 col-md-8 mx-auto index-info">
-      <a class="index-header" href="/2019/11/02/Variational-Approaches-for-Auto-Encoding-Generative-Adversarial-Networks/">Variational Approaches for Auto-Encoding Generative Adversarial Networks</a>
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2019/11/02/Variational-Approaches-for-Auto-Encoding-Generative-Adversarial-Networks/">Variational Approaches for Auto-Encoding Generative Adversarial Networks</a>
+      </h1>
 
-      <a href="/2019/11/02/Variational-Approaches-for-Auto-Encoding-Generative-Adversarial-Networks/" class="index-excerpt">
-        
-        
+      <p class="index-excerpt">
+        <a href="/2019/11/02/Variational-Approaches-for-Auto-Encoding-Generative-Adversarial-Networks/">
           
-        
-        <div>Abstract
-本文揭示了对抗生成网络（Generative Adversarial Networks, GAN）和变分自编码器（Variational Auto-encoders, VAE）之间的联系，并据此提出了一种将两者结合的新模型。文中主要是将不可解的似然函数和未知的后验分布用一个非确定的分布（Immplicit Distribution）替代，并加入判别器来使得该分布逼近真实的分布。</div>
-      </a>
+          
+            
+          
+          Abstract
+本文揭示了对抗生成网络（Generative Adversarial Networks, GAN）和变分自编码器（Variational Auto-encoders, VAE）之间的联系，并据此提出了一种将两者结合的新模型。文中主要是将不可解的似然函数和未知的后验分布用一个非确定的分布（Immplicit Distribution）替代，并加入判别器来使得该分布逼近真实的分布。
+        </a>
+      </p>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2019-11-02
+            <i class="iconfont icon-date"></i>
+            <time datetime="2019-11-02 23:28" pubdate>
+              2019-11-02
+            </time>
           </div>
         
         
@@ -268,18 +470,18 @@
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/Deep-Learning/">Deep Learning</a>
-            
               <a href="/tags/Variational-Inference/">Variational Inference</a>
             
               <a href="/tags/VAE/">VAE</a>
+            
+              <a href="/tags/Deep-Learning/">Deep Learning</a>
             
               <a href="/tags/GAN/">GAN</a>
             
           </div>
         
       </div>
-    </div>
+    </article>
   </div>
 
   <div class="row mx-auto index-card">
@@ -287,29 +489,37 @@
     
       <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2019/10/29/Anomaly-Detection-in-Streams-with-Extreme-Value-Theory/" target="_self">
-          <img src="https://i.loli.net/2020/06/25/lIxqpnGtL7feVKs.png" srcset="/img/loading.gif" alt="Anomaly Detection in Streams with Extreme Value Theory">
+          <img src="https://i.loli.net/2020/06/25/lIxqpnGtL7feVKs.png" alt="Anomaly Detection in Streams with Extreme Value Theory">
         </a>
       </div>
     
-    <div class="col-12 col-md-8 mx-auto index-info">
-      <a class="index-header" href="/2019/10/29/Anomaly-Detection-in-Streams-with-Extreme-Value-Theory/">Anomaly Detection in Streams with Extreme Value Theory</a>
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2019/10/29/Anomaly-Detection-in-Streams-with-Extreme-Value-Theory/">Anomaly Detection in Streams with Extreme Value Theory</a>
+      </h1>
 
-      <a href="/2019/10/29/Anomaly-Detection-in-Streams-with-Extreme-Value-Theory/" class="index-excerpt">
-        
-        
+      <p class="index-excerpt">
+        <a href="/2019/10/29/Anomaly-Detection-in-Streams-with-Extreme-Value-Theory/">
           
-        
-        <div>Introduction
+          
+            
+          
+          Introduction
 本文基于Extreme Value Theory提出了一种不需要手动设置阈值也不需要对数据分布作任何假设的时间序列异常检测方法。除此之外，本方法可以用在通用的自动阈值选择的场合中。
 原文
 Background
-在很多情况下我们需要进行阈值的选择。阈值的选择可以通过实验的方法或者对数据分布进行假设的方法来得到，不过这样做通常不准确。借助Extreme Value T</div>
-      </a>
+在很多情况下我们需要进行阈值的选择。阈值的选择可以通过实验的方法或者对数据分布进行假设的方法来得到，不过这样做通常不准确。借助Extreme Value T
+        </a>
+      </p>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2019-10-29
+            <i class="iconfont icon-date"></i>
+            <time datetime="2019-10-29 11:36" pubdate>
+              2019-10-29
+            </time>
           </div>
         
         
@@ -335,7 +545,7 @@ Background
           </div>
         
       </div>
-    </div>
+    </article>
   </div>
 
   <div class="row mx-auto index-card">
@@ -343,26 +553,34 @@ Background
     
       <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2019/10/22/An-Introduction-to-Variational-Autoencoders/" target="_self">
-          <img src="https://i.loli.net/2020/06/24/B1d9UtTzNfjG6e2.png" srcset="/img/loading.gif" alt="An Introduction to Variational Autoencoders">
+          <img src="https://i.loli.net/2020/06/24/B1d9UtTzNfjG6e2.png" alt="An Introduction to Variational Autoencoders">
         </a>
       </div>
     
-    <div class="col-12 col-md-8 mx-auto index-info">
-      <a class="index-header" href="/2019/10/22/An-Introduction-to-Variational-Autoencoders/">An Introduction to Variational Autoencoders</a>
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2019/10/22/An-Introduction-to-Variational-Autoencoders/">An Introduction to Variational Autoencoders</a>
+      </h1>
 
-      <a href="/2019/10/22/An-Introduction-to-Variational-Autoencoders/" class="index-excerpt">
-        
-        
+      <p class="index-excerpt">
+        <a href="/2019/10/22/An-Introduction-to-Variational-Autoencoders/">
           
-        
-        <div>Deep Generative Models
-生成模型是指一系列用于随机生成可观测数据的模型。假设在一个高维空间\(\mathcal{X}\)中，存在一个随机向量\(\mathbf{X}\)服从一个未知的分布\(p_r(x),x\in \mathcal{X}\)。生成模型就是根据一些可观测的样本\(x^{(1)},x^{(2)},\cdots,x^{(N)}\)来学习一个参数化的模型\(p_\t</div>
-      </a>
+          
+            
+          
+          Deep Generative Models
+生成模型是指一系列用于随机生成可观测数据的模型。假设在一个高维空间\(\mathcal{X}\)中，存在一个随机向量\(\mathbf{X}\)服从一个未知的分布\(p_r(x),x\in \mathcal{X}\)。生成模型就是根据一些可观测的样本\(x^{(1)},x^{(2)},\cdots,x^{(N)}\)来学习一个参数化的模型\(p_\t
+        </a>
+      </p>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2019-10-22
+            <i class="iconfont icon-date"></i>
+            <time datetime="2019-10-22 15:14" pubdate>
+              2019-10-22
+            </time>
           </div>
         
         
@@ -379,16 +597,16 @@ Background
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/Deep-Learning/">Deep Learning</a>
-            
               <a href="/tags/Variational-Inference/">Variational Inference</a>
             
               <a href="/tags/VAE/">VAE</a>
             
+              <a href="/tags/Deep-Learning/">Deep Learning</a>
+            
           </div>
         
       </div>
-    </div>
+    </article>
   </div>
 
   <div class="row mx-auto index-card">
@@ -396,30 +614,38 @@ Background
     
       <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2019/10/18/Recurrent-Neural-Networks-for-Multivariate-Time-Series-with-Missing-Values/" target="_self">
-          <img src="https://i.loli.net/2020/06/25/aXbS4ADkLfeHPCR.png" srcset="/img/loading.gif" alt="Recurrent Neural Networks for Multivariate Time Series with Missing Values">
+          <img src="https://i.loli.net/2020/06/25/aXbS4ADkLfeHPCR.png" alt="Recurrent Neural Networks for Multivariate Time Series with Missing Values">
         </a>
       </div>
     
-    <div class="col-12 col-md-8 mx-auto index-info">
-      <a class="index-header" href="/2019/10/18/Recurrent-Neural-Networks-for-Multivariate-Time-Series-with-Missing-Values/">Recurrent Neural Networks for Multivariate Time Series with Missing Values</a>
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2019/10/18/Recurrent-Neural-Networks-for-Multivariate-Time-Series-with-Missing-Values/">Recurrent Neural Networks for Multivariate Time Series with Missing Values</a>
+      </h1>
 
-      <a href="/2019/10/18/Recurrent-Neural-Networks-for-Multivariate-Time-Series-with-Missing-Values/" class="index-excerpt">
-        
-        
+      <p class="index-excerpt">
+        <a href="/2019/10/18/Recurrent-Neural-Networks-for-Multivariate-Time-Series-with-Missing-Values/">
           
-        
-        <div>Abstract
+          
+            
+          
+          Abstract
 文中提出了一种可以处理带缺失值多为时间序列的GRU模型：GRU-D。本模型不仅可以捕捉时间序列中的长期依赖模式，并且还能利用时间序列中的缺失模式来达到更好的时间序列预测效果。
 原文
 Methodology
 Notations
-记包含\(D\)个变量的多变量时间序列为\(X=(x_1,x_2,\cdots,x_T)^T\in\mathbb{R}^{T\times D}\)</div>
-      </a>
+记包含\(D\)个变量的多变量时间序列为\(X=(x_1,x_2,\cdots,x_T)^T\in\mathbb{R}^{T\times D}\)
+        </a>
+      </p>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2019-10-18
+            <i class="iconfont icon-date"></i>
+            <time datetime="2019-10-18 23:17" pubdate>
+              2019-10-18
+            </time>
           </div>
         
         
@@ -436,16 +662,16 @@ Notations
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/Time-Series/">Time Series</a>
-            
               <a href="/tags/Deep-Learning/">Deep Learning</a>
+            
+              <a href="/tags/Time-Series/">Time Series</a>
             
               <a href="/tags/RNN/">RNN</a>
             
           </div>
         
       </div>
-    </div>
+    </article>
   </div>
 
   <div class="row mx-auto index-card">
@@ -453,31 +679,39 @@ Notations
     
       <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2019/10/18/Robust-Anomaly-Detection-for-Multivariate-Time-Series-through-Stochastic-Recurrent-Neural-Network/" target="_self">
-          <img src="https://i.loli.net/2020/06/25/wd8maAoVb3Fk9vP.png" srcset="/img/loading.gif" alt="Robust Anomaly Detection for Multivariate Time Series through Stochastic Recurrent Neural Network">
+          <img src="https://i.loli.net/2020/06/25/wd8maAoVb3Fk9vP.png" alt="Robust Anomaly Detection for Multivariate Time Series through Stochastic Recurrent Neural Network">
         </a>
       </div>
     
-    <div class="col-12 col-md-8 mx-auto index-info">
-      <a class="index-header" href="/2019/10/18/Robust-Anomaly-Detection-for-Multivariate-Time-Series-through-Stochastic-Recurrent-Neural-Network/">Robust Anomaly Detection for Multivariate Time Series through Stochastic Recurrent Neural Network</a>
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2019/10/18/Robust-Anomaly-Detection-for-Multivariate-Time-Series-through-Stochastic-Recurrent-Neural-Network/">Robust Anomaly Detection for Multivariate Time Series through Stochastic Recurrent Neural Network</a>
+      </h1>
 
-      <a href="/2019/10/18/Robust-Anomaly-Detection-for-Multivariate-Time-Series-through-Stochastic-Recurrent-Neural-Network/" class="index-excerpt">
-        
-        
+      <p class="index-excerpt">
+        <a href="/2019/10/18/Robust-Anomaly-Detection-for-Multivariate-Time-Series-through-Stochastic-Recurrent-Neural-Network/">
           
-        
-        <div>Abstract
+          
+            
+          
+          Abstract
 本文提出了OmniAnomaly：一种针对多变量时间序列的随机循环神经网络异常检测算法。该模型运用了一系列技术来捕捉多变量时间序列的正常模式，并在检测阶段基于重构误差来检测异常，同时本文还提供了一定的理论解释。
 原文
 Contribution
 
 提出了OmniAnomaly，一种基于随机循环神经网络的多变量时间序列异常检测算法；
-提出了针对多变量时间序列异常检测的解释</div>
-      </a>
+提出了针对多变量时间序列异常检测的解释
+        </a>
+      </p>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2019-10-18
+            <i class="iconfont icon-date"></i>
+            <time datetime="2019-10-18 23:00" pubdate>
+              2019-10-18
+            </time>
           </div>
         
         
@@ -494,15 +728,15 @@ Contribution
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
+              <a href="/tags/VAE/">VAE</a>
+            
+              <a href="/tags/Deep-Learning/">Deep Learning</a>
+            
               <a href="/tags/Time-Series/">Time Series</a>
             
               <a href="/tags/Anomaly-Detection/">Anomaly Detection</a>
             
               <a href="/tags/Machine-Learning/">Machine Learning</a>
-            
-              <a href="/tags/Deep-Learning/">Deep Learning</a>
-            
-              <a href="/tags/VAE/">VAE</a>
             
               <a href="/tags/RNN/">RNN</a>
             
@@ -511,7 +745,7 @@ Contribution
           </div>
         
       </div>
-    </div>
+    </article>
   </div>
 
   <div class="row mx-auto index-card">
@@ -519,29 +753,37 @@ Contribution
     
       <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2019/10/16/GAIN-Missing-Data-Imputation-using-Generative-Adversarial-Nets/" target="_self">
-          <img src="https://i.loli.net/2020/06/25/wCK3J8MoTASrj9Y.png" srcset="/img/loading.gif" alt="GAIN: Missing Data Imputation using Generative Adversarial Nets">
+          <img src="https://i.loli.net/2020/06/25/wCK3J8MoTASrj9Y.png" alt="GAIN: Missing Data Imputation using Generative Adversarial Nets">
         </a>
       </div>
     
-    <div class="col-12 col-md-8 mx-auto index-info">
-      <a class="index-header" href="/2019/10/16/GAIN-Missing-Data-Imputation-using-Generative-Adversarial-Nets/">GAIN: Missing Data Imputation using Generative Adversarial Nets</a>
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2019/10/16/GAIN-Missing-Data-Imputation-using-Generative-Adversarial-Nets/">GAIN: Missing Data Imputation using Generative Adversarial Nets</a>
+      </h1>
 
-      <a href="/2019/10/16/GAIN-Missing-Data-Imputation-using-Generative-Adversarial-Nets/" class="index-excerpt">
-        
-        
+      <p class="index-excerpt">
+        <a href="/2019/10/16/GAIN-Missing-Data-Imputation-using-Generative-Adversarial-Nets/">
           
-        
-        <div>Abstract
+          
+            
+          
+          Abstract
 本文基于GAN提出了一种时间序列缺失值填充（Time Series Imputation）的方法。其主要的思路为生成器\(G\)从隐空间\(Z\)生成完整的样本，而判别器\(D\)则输出样本中不同部分为真实的概率。除此之外，作者提出了使用Hint Vector来揭示原始数据中缺失部分的信息，来优化训练过程。
 原文
 Methodology
-Problem Formulati</div>
-      </a>
+Problem Formulati
+        </a>
+      </p>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2019-10-16
+            <i class="iconfont icon-date"></i>
+            <time datetime="2019-10-16 20:19" pubdate>
+              2019-10-16
+            </time>
           </div>
         
         
@@ -558,207 +800,16 @@ Problem Formulati</div>
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/Time-Series/">Time Series</a>
-            
               <a href="/tags/Deep-Learning/">Deep Learning</a>
+            
+              <a href="/tags/Time-Series/">Time Series</a>
             
               <a href="/tags/GAN/">GAN</a>
             
           </div>
         
       </div>
-    </div>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2019/09/22/Anomaly-Detection-with-Generative-Adversarial-Networks-for-Multivariate-Time-Series/" target="_self">
-          <img src="https://i.loli.net/2020/06/25/scEA9Ou1Yi7nThG.png" srcset="/img/loading.gif" alt="Anomaly Detection with Generative Adversarial Networks for Multivariate Time Series">
-        </a>
-      </div>
-    
-    <div class="col-12 col-md-8 mx-auto index-info">
-      <a class="index-header" href="/2019/09/22/Anomaly-Detection-with-Generative-Adversarial-Networks-for-Multivariate-Time-Series/">Anomaly Detection with Generative Adversarial Networks for Multivariate Time Series</a>
-
-      <a href="/2019/09/22/Anomaly-Detection-with-Generative-Adversarial-Networks-for-Multivariate-Time-Series/" class="index-excerpt">
-        
-        
-          
-        
-        <div>Introduction
-这篇文章提出了一个基于GAN的时间序列异常检测模型。
-原文
-Contribution
-
-提出了基于GAN的时间序列无监督异常检测模型
-我们使用基于LSTM的GAN来对多变量时间序列进行建模
-结合使用了Residual Loss和Discrimination Loss来进行异常的判断
-
-Background
-Generative Adversarial </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2019-09-22
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/Research/">Research</a>
-            
-              <a href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Time-Series/">Time Series</a>
-            
-              <a href="/tags/Anomaly-Detection/">Anomaly Detection</a>
-            
-              <a href="/tags/Machine-Learning/">Machine Learning</a>
-            
-              <a href="/tags/Deep-Learning/">Deep Learning</a>
-            
-          </div>
-        
-      </div>
-    </div>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2019/09/22/ALSR-An-adaptive-label-screening-and-relearning-approach-for-interval-oriented-anomaly-detection/" target="_self">
-          <img src="https://i.loli.net/2020/06/24/YgRwavDIn7izLPX.png" srcset="/img/loading.gif" alt="ALSR: An Adaptive Label Screening and Relearning Approach for Interval-Oriented Anomaly Detection">
-        </a>
-      </div>
-    
-    <div class="col-12 col-md-8 mx-auto index-info">
-      <a class="index-header" href="/2019/09/22/ALSR-An-adaptive-label-screening-and-relearning-approach-for-interval-oriented-anomaly-detection/">ALSR: An Adaptive Label Screening and Relearning Approach for Interval-Oriented Anomaly Detection</a>
-
-      <a href="/2019/09/22/ALSR-An-adaptive-label-screening-and-relearning-approach-for-interval-oriented-anomaly-detection/" class="index-excerpt">
-        
-        
-          
-        
-        <div>Introduction
-本文针对面向区间的KPI异常检测提出了Label Screening方法和Relearning Algorithm.
-原文
-Contribution
-
-提出了一种Label Screening方法来对区间内不同重要性进行过滤
-提出了一种Relearning Algorithm来对FP和TP进行Relearning，在不减少Recall的条件下增大Precisi</div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2019-09-22
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/Research/">Research</a>
-            
-              <a href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Time-Series/">Time Series</a>
-            
-              <a href="/tags/Anomaly-Detection/">Anomaly Detection</a>
-            
-              <a href="/tags/Machine-Learning/">Machine Learning</a>
-            
-              <a href="/tags/Deep-Learning/">Deep Learning</a>
-            
-          </div>
-        
-      </div>
-    </div>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2019/09/22/Unsupervised-Anomaly-Detection-via-Variational-Auto-Encoder-for-Seasonal-KPIs-in-Web-Applications/" target="_self">
-          <img src="https://i.loli.net/2020/06/25/HcX78lUoG4meJq5.png" srcset="/img/loading.gif" alt="Unsupervised Anomaly Detection via Variational Auto-Encoder for Seasonal KPIs in Web Applications">
-        </a>
-      </div>
-    
-    <div class="col-12 col-md-8 mx-auto index-info">
-      <a class="index-header" href="/2019/09/22/Unsupervised-Anomaly-Detection-via-Variational-Auto-Encoder-for-Seasonal-KPIs-in-Web-Applications/">Unsupervised Anomaly Detection via Variational Auto-Encoder for Seasonal KPIs in Web Applications</a>
-
-      <a href="/2019/09/22/Unsupervised-Anomaly-Detection-via-Variational-Auto-Encoder-for-Seasonal-KPIs-in-Web-Applications/" class="index-excerpt">
-        
-        
-          
-        
-        <div>Abstract
-本文提出了Donut，一个基于VAE的无监督时间序列异常检测系统。
-原文
-
-Contribution
-
-Donut中使用到了三个技巧，包括改进后的ELBO、缺失数据注入和MCMC插值；
-提出基于VAE的异常检测训练既需要正常样本也需要异常样本；
-对Donut提出了在z-空间中基于KDE的理论解释。
-
-Background
-Anomaly Detection</div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2019-09-22
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/Research/">Research</a>
-            
-              <a href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Time-Series/">Time Series</a>
-            
-              <a href="/tags/Anomaly-Detection/">Anomaly Detection</a>
-            
-              <a href="/tags/Machine-Learning/">Machine Learning</a>
-            
-              <a href="/tags/Deep-Learning/">Deep Learning</a>
-            
-              <a href="/tags/VAE/">VAE</a>
-            
-          </div>
-        
-      </div>
-    </div>
+    </article>
   </div>
 
 
@@ -783,16 +834,15 @@ Anomaly Detection</div>
         </div>
       </div>
     
-  </main>
 
-  
-    <a id="scroll-top-button" href="#" role="button">
-      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
-    </a>
-  
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
 
-  
-    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
      aria-hidden="true">
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
@@ -813,60 +863,89 @@ Anomaly Detection</div>
     </div>
   </div>
 </div>
-  
-
-  
-
-  
-
-  <footer class="mt-5">
-  <div class="text-center py-3">
-    <div>
-      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
-      <i class="iconfont icon-love"></i>
-      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
-        <span>Fluid</span></a>
-    </div>
     
-  <div>
+
     
-      <!-- 不蒜子统计PV -->
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
       
-      <span id="busuanzi_container_site_pv" style="display: none">
-      总访问量 <span id="busuanzi_value_site_pv"></span> 次
-    </span>
-    
-    
-      <!-- 不蒜子统计UV -->
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
       
-      <span id="busuanzi_container_site_uv" style="display: none">
-      总访客数 <span id="busuanzi_value_site_uv"></span> 人
-    </span>
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
     
   </div>
 
 
-    
+  
 
-    
-  </div>
+  
 </footer>
 
 <!-- SCRIPTS -->
-<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
-<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    document.addEventListener('DOMContentLoaded', function() {
+      window.NProgress && window.NProgress.inc();
+    })
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
 <script  src="/js/debouncer.js" ></script>
-<script  src="/js/main.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
 
 
-  <script  src="/js/lazyload.js" ></script>
+  
+    
+  
+
+
+
+  
+
+
+
+
 
 
 
 
 
   <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
-  <script  src="/js/clipboard-use.js" ></script>
 
 
 
@@ -874,38 +953,29 @@ Anomaly Detection</div>
 
 
 
-
-<!-- Plugins -->
-
-
-
-
-
-  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
   <script>
-    anchors.options = {
-      placement: "right",
-      visible: "hover",
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
       
-    };
-    var el = "h1,h2,h3,h4,h5,h6".split(",");
-    var res = [];
-    for (item of el) {
-      res.push(".markdown-body > " + item)
-    }
-    anchors.add(res.join(", "))
+      typing(title)
+      
+    })(window, document);
   </script>
 
 
 
   <script  src="/js/local-search.js" ></script>
   <script>
-    var path = "/local-search.xml";
-    var inputArea = document.querySelector("#local-search-input");
-    inputArea.onclick = function () {
-      searchFunc(path, 'local-search-input', 'local-search-result');
-      this.onclick = null
-    }
+    (function () {
+      var path = "/local-search.xml";
+      var inputArea = document.querySelector("#local-search-input");
+      inputArea.onclick = function () {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        this.onclick = null
+      }
+    })()
   </script>
 
 
@@ -922,8 +992,8 @@ Anomaly Detection</div>
 
 
 
-
-
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
 
 
 
