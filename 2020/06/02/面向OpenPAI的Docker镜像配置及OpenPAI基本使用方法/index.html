@@ -59,7 +59,8 @@
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
-<meta name="generator" content="Hexo 4.2.1"></head>
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Hanzawa の 部屋" type="application/atom+xml">
+</head>
 
 
 <body>
@@ -184,7 +185,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      4.2k 字
+      4.3k 字
     </span>
   
 
@@ -288,7 +289,7 @@ Copy</code></pre>
 <p>输入<code>cat /etc/issue</code>可以看到默认拉取的是最新的Ubuntu 20.04 LTS：</p>
 <p><img src="https://i.loli.net/2020/06/24/wldBMFtx3eIk98C.png" srcset="/img/loading.gif" /></p>
 <h1 id="build-customized-docker-images">Build Customized Docker Images</h1>
-<p>如果没有现成的Docker镜像能满足我们的需求，我们可以考虑自己写一个。要自定义一个Docker镜像需要两步，第一步是编写Dockerfile，第二步是使用<code>docker build</code>命令构建镜像。Dockerfile可以看作是一个脚本，描述了我们构建镜像所需要的全部命令，比如要构建一个用于Python科学计算的Docker镜像，我们需要在Dockerfile中编写安装Python的命令，安装Numpy、Scipy等常用包的命令等等。我们先来上手编写Dockerfile，这里我准备写一个包含<a href="https://hexo.io/" target="_blank" rel="noopener">hexo博客框架</a>的镜像，这个框架需要node作为基础环境，不过我们不需要在Dockerfile里写安装node的命令。因为类似于<code>C++</code>或<code>Python</code>中的对象的继承，Dockerfile也可以“继承”，这意味着我们不必从头写起。我们先来看一下完整的Dockfile和效果，再来一一解释。</p>
+<p>如果没有现成的Docker镜像能满足我们的需求，我们可以考虑自己写一个。要自定义一个Docker镜像需要两步，第一步是编写Dockerfile，第二步是使用<code>docker build</code>命令构建镜像。Dockerfile可以看作是一个脚本，描述了我们构建镜像所需要的全部命令，比如要构建一个用于Python科学计算的Docker镜像，我们需要在Dockerfile中编写安装Python的命令，安装Numpy、Scipy等常用包的命令等等。我们先来上手编写Dockerfile，这里我准备写一个包含<a target="_blank" rel="noopener" href="https://hexo.io/">hexo博客框架</a>的镜像，这个框架需要node作为基础环境，不过我们不需要在Dockerfile里写安装node的命令。因为类似于<code>C++</code>或<code>Python</code>中的对象的继承，Dockerfile也可以“继承”，这意味着我们不必从头写起。我们先来看一下完整的Dockfile和效果，再来一一解释。</p>
 <pre><code class="hljs dockerfile"><span class="hljs-keyword">FROM</span> node
 
 --------------------------------------------------------------
@@ -298,7 +299,7 @@ Copy</code></pre>
 <span class="hljs-keyword">CMD</span><span class="bash"> hexo init blog &amp;&amp; <span class="hljs-built_in">cd</span> blog &amp;&amp; hexo generate &amp;&amp; hexo serverCopy</span></code></pre>
 <p>运行结果如下所示，可以看到Docker按照我们写的Dockerfile一行一行的进行镜像的构建：</p>
 <p><img src="https://i.loli.net/2020/06/24/tZ3JW4SPNhxUwEn.png" srcset="/img/loading.gif" /></p>
-<p>现在来解释Docerfile里的内容。<code>FROM &lt;docker image&gt;</code>表示继承其他的镜像，这里我们使用node官方的镜像。接下来是安装hexo，<code>RUN &lt;command&gt;</code>表示执行命令，这里我们直接用<code>npm install -g hexo-cli</code>进行安装。由于要浏览博客网页需要开放端口，而Docker容器运行的时候和外部主机是完全隔断的，要使外部主机访问Docker容器端口，需要暴露端口。<code>EXPOSE &lt;port&gt;</code>代表暴露端口，这里用的是4000端口。之后是创建博客和启动本地服务，<code>CMD &lt;command&gt;</code>和<code>RUN &lt;command&gt;</code>的区别是RUN会在构建的时候执行，而CMD是在容器启动之后才会执行。<code>hexo init blog &amp;&amp; cd blog &amp;&amp; hexo generate &amp;&amp; hexo server</code>分别代表初始化博客、进入博客所在文件夹、生成博客网站、启动本地服务器。更多指令可以参考<a href="https://docs.docker.com/engine/reference/builder/" target="_blank" rel="noopener">官方文档</a>。</p>
+<p>现在来解释Docerfile里的内容。<code>FROM &lt;docker image&gt;</code>表示继承其他的镜像，这里我们使用node官方的镜像。接下来是安装hexo，<code>RUN &lt;command&gt;</code>表示执行命令，这里我们直接用<code>npm install -g hexo-cli</code>进行安装。由于要浏览博客网页需要开放端口，而Docker容器运行的时候和外部主机是完全隔断的，要使外部主机访问Docker容器端口，需要暴露端口。<code>EXPOSE &lt;port&gt;</code>代表暴露端口，这里用的是4000端口。之后是创建博客和启动本地服务，<code>CMD &lt;command&gt;</code>和<code>RUN &lt;command&gt;</code>的区别是RUN会在构建的时候执行，而CMD是在容器启动之后才会执行。<code>hexo init blog &amp;&amp; cd blog &amp;&amp; hexo generate &amp;&amp; hexo server</code>分别代表初始化博客、进入博客所在文件夹、生成博客网站、启动本地服务器。更多指令可以参考<a target="_blank" rel="noopener" href="https://docs.docker.com/engine/reference/builder/">官方文档</a>。</p>
 <p>然后我们使用<code>docker build -t test_hexo .</code>命令构建镜像。</p>
 <blockquote>
 <p>构建镜像 <code>docker build -t &lt;image_name&gt; &lt;direcotry&gt;</code></p>
@@ -311,7 +312,7 @@ Copy</code></pre>
 <p><img src="https://i.loli.net/2020/06/24/vmSUb5QH6l4afzF.png" srcset="/img/loading.gif" /></p>
 <p>值得注意的是，在Dockerfile中我们暴露了4000端口，使用<code>-p</code>标签可以达到同样的效果：<code>docker run -p &lt;docker_port&gt;:&lt;local_port&gt; &lt;image_name&gt;</code>。比如<code>docker run -p 9999:8888 xxxx</code>代表将Docker容器中的9999端口转发到外部主机的8888端口。如果你是在远程服务器上使用的Docker，那么端口只是被转发到了远程服务器上，还得手动将远程服务器再转发到你本机上才能直接在本机浏览器上看到页面。</p>
 <h2 id="build-docker-images-with-aliyun-container-registry">Build Docker Images with Aliyun Container Registry</h2>
-<p>因为某些原因，如果在构建镜像的时候需要通过<code>apt-get update</code>更新源，会发现无论如何都会卡住。这个时候可以使用<a href="https://cr.console.aliyun.com/" target="_blank" rel="noopener">阿里云容器镜像服务</a>，在阿里的服务器上构建好镜像，再拉取到自己的机器上。注册好帐号之后，点击创建镜像仓库：</p>
+<p>因为某些原因，如果在构建镜像的时候需要通过<code>apt-get update</code>更新源，会发现无论如何都会卡住。这个时候可以使用<a target="_blank" rel="noopener" href="https://cr.console.aliyun.com/">阿里云容器镜像服务</a>，在阿里的服务器上构建好镜像，再拉取到自己的机器上。注册好帐号之后，点击创建镜像仓库：</p>
 <p><img src="https://i.loli.net/2020/06/24/u4DGHv3En1iLI5z.png" srcset="/img/loading.gif" /></p>
 <p>这里仓库类型如果没有特殊需求建议使用公开，然后填写一些基本信息：</p>
 <p><img src="https://i.loli.net/2020/06/24/Qipw5hAg136afnL.png" srcset="/img/loading.gif" /></p>
@@ -329,15 +330,15 @@ Copy</code></pre>
 <h1 id="build-docker-images-for-deep-learning">Build Docker Images for Deep Learning</h1>
 <h2 id="startup">Startup</h2>
 <p>在Docker中配置适用于OpenPAI的深度学习镜像不是一件容易的事，会有很多的坑，这里专门说一下如何配置。推荐在阿里云容器镜像服务中进行构建，会少很多麻烦。</p>
-<p>第一步是初始镜像，由于需要用到CUDA，这里可以根据自己的需求（比如不同CUDA版本支持的GPU驱动版本不一样，还有Tensorflow不同版本对CUDA和cuDNN要求也不一样）从Nvidia的Dockerhub<a href="https://hub.docker.com/r/nvidia/cuda" target="_blank" rel="noopener">官方页面</a>选择合适的CUDA和cuDNN版本：</p>
+<p>第一步是初始镜像，由于需要用到CUDA，这里可以根据自己的需求（比如不同CUDA版本支持的GPU驱动版本不一样，还有Tensorflow不同版本对CUDA和cuDNN要求也不一样）从Nvidia的Dockerhub<a target="_blank" rel="noopener" href="https://hub.docker.com/r/nvidia/cuda">官方页面</a>选择合适的CUDA和cuDNN版本：</p>
 <p><img src="https://i.loli.net/2020/06/24/pftdhmHiWkTq8Fj.png" srcset="/img/loading.gif" /></p>
 <p>这里我们选择CUDA10.1 + cuDNN7：</p>
-<pre><code class="hljs angelscript">FROM nvidia/cuda:<span class="hljs-number">10.1</span>-cudnn7-devel-ubuntu18<span class="hljs-number">.04</span>Copy</code></pre>
+<pre><code class="hljs apache"><span class="hljs-attribute">FROM</span> nvidia/cuda:<span class="hljs-number">10</span>.<span class="hljs-number">1</span>-cudnn<span class="hljs-number">7</span>-devel-ubuntu<span class="hljs-number">18</span>.<span class="hljs-number">04</span>Copy</code></pre>
 <p>这一条主要是解决乱码问题以及定义用到的软件包的版本，这里Miniconda版本设置为4.5.4的原因是这是最后一个自带Python3.6的版本，我在这儿为了稳定所以用了Python3.6，大家也可以安装最新版的Miniconda：</p>
-<pre><code class="hljs routeros">ENV <span class="hljs-attribute">LANG</span>=C.UTF-8 <span class="hljs-attribute">LC_ALL</span>=C.UTF-8
-ENV <span class="hljs-attribute">HADOOP_VERSION</span>=2.7.2
-LABEL <span class="hljs-attribute">HADOOP_VERSION</span>=2.7.2
-ENV <span class="hljs-attribute">MINICONDA_VERSION</span>=4.5.4Copy</code></pre>
+<pre><code class="hljs apache"><span class="hljs-attribute">ENV</span> LANG=C.UTF-<span class="hljs-number">8</span> LC_ALL=C.UTF-<span class="hljs-number">8</span>
+<span class="hljs-attribute">ENV</span> HADOOP_VERSION=<span class="hljs-number">2</span>.<span class="hljs-number">7</span>.<span class="hljs-number">2</span>
+<span class="hljs-attribute">LABEL</span> HADOOP_VERSION=<span class="hljs-number">2</span>.<span class="hljs-number">7</span>.<span class="hljs-number">2</span>
+<span class="hljs-attribute">ENV</span> MINICONDA_VERSION=<span class="hljs-number">4</span>.<span class="hljs-number">5</span>.<span class="hljs-number">4</span>Copy</code></pre>
 <p>接下来安装必须的包，大家可以根据需求自行调整，<code>-y</code>标签代表Yes，即自动同意安装：</p>
 <pre><code class="hljs livescript">RUN DEBIAN_FRONTEND=noninteractive &amp;&amp; <span class="hljs-string">\</span>
     apt-get -y update &amp;&amp; <span class="hljs-string">\</span>
@@ -357,11 +358,11 @@ ENV <span class="hljs-attribute">MINICONDA_VERSION</span>=4.5.4Copy</code></pre>
 <p>安装Miniconda并设置环境变量，<code>-b</code>标签可以让Miniconda无交互自动安装：</p>
 <pre><code class="hljs awk">RUN wget --quiet https:<span class="hljs-regexp">//</span>repo.anaconda.com<span class="hljs-regexp">/miniconda/</span>Miniconda3-<span class="hljs-variable">$&#123;MINICONDA_VERSION&#125;</span>-Linux-x86_64.sh &amp;&amp; <span class="hljs-regexp">/bin/</span>bash Miniconda3-<span class="hljs-variable">$&#123;MINICONDA_VERSION&#125;</span>-Linux-x86_64.sh -b -p <span class="hljs-regexp">/opt/mi</span>niconda \
 &amp;&amp; rm Miniconda3-<span class="hljs-variable">$&#123;MINICONDA_VERSION&#125;</span>-Linux-x86_64.sh
-ENV PATH <span class="hljs-regexp">/opt/mi</span>niconda<span class="hljs-regexp">/bin:$PATHCopy</span></code></pre>
+ENV PATH <span class="hljs-regexp">/opt/mi</span>niconda/bin:<span class="hljs-variable">$PATHCopy</span></code></pre>
 <p>安装Hadoop，OpenPAI平台会用到：</p>
-<pre><code class="hljs awk">RUN wget -qO- http:<span class="hljs-regexp">//</span>archive.apache.org<span class="hljs-regexp">/dist/</span>hadoop<span class="hljs-regexp">/common/</span>hadoop-<span class="hljs-variable">$&#123;HADOOP_VERSION&#125;</span><span class="hljs-regexp">/hadoop-$&#123;HADOOP_VERSION&#125;.tar.gz | \</span>
-<span class="hljs-regexp">    tar xz -C /u</span>sr<span class="hljs-regexp">/local &amp;&amp; \</span>
-<span class="hljs-regexp">    mv /u</span>sr<span class="hljs-regexp">/local/</span>hadoop-<span class="hljs-variable">$&#123;HADOOP_VERSION&#125;</span> <span class="hljs-regexp">/usr/</span>local<span class="hljs-regexp">/hadoopCopy</span></code></pre>
+<pre><code class="hljs awk">RUN wget -qO- http:<span class="hljs-regexp">//</span>archive.apache.org<span class="hljs-regexp">/dist/</span>hadoop<span class="hljs-regexp">/common/</span>hadoop-<span class="hljs-variable">$&#123;HADOOP_VERSION&#125;</span>/hadoop-<span class="hljs-variable">$&#123;HADOOP_VERSION&#125;</span>.tar.gz | \
+    tar xz -C <span class="hljs-regexp">/usr/</span>local &amp;&amp; \
+    mv <span class="hljs-regexp">/usr/</span>local<span class="hljs-regexp">/hadoop-$&#123;HADOOP_VERSION&#125; /u</span>sr<span class="hljs-regexp">/local/</span>hadoopCopy</code></pre>
 <p><code>ENV</code>的作用是配置环境变量。配置JAVA和Hadoop环境变量：</p>
 <pre><code class="hljs routeros">ENV <span class="hljs-attribute">JAVA_HOME</span>=/usr/lib/jvm/java-8-openjdk-amd64 \
     <span class="hljs-attribute">HADOOP_INSTALL</span>=/usr/local/hadoop \
@@ -372,12 +373,12 @@ ENV <span class="hljs-attribute">HADOOP_PREFIX</span>=<span class="hljs-variable
     <span class="hljs-attribute">HADOOP_SBIN_DIR</span>=<span class="hljs-variable">$&#123;HADOOP_INSTALL&#125;</span>/sbin \
     <span class="hljs-attribute">HADOOP_HDFS_HOME</span>=<span class="hljs-variable">$&#123;HADOOP_INSTALL&#125;</span> \
     <span class="hljs-attribute">HADOOP_COMMON_LIB_NATIVE_DIR</span>=<span class="hljs-variable">$&#123;HADOOP_INSTALL&#125;</span>/lib/native \
-    <span class="hljs-attribute">HADOOP_OPTS</span>=<span class="hljs-string">"-Djava.library.path=<span class="hljs-variable">$&#123;HADOOP_INSTALL&#125;</span>/lib/native"</span>Copy</code></pre>
+    <span class="hljs-attribute">HADOOP_OPTS</span>=<span class="hljs-string">&quot;-Djava.library.path=<span class="hljs-variable">$&#123;HADOOP_INSTALL&#125;</span>/lib/native&quot;</span>Copy</code></pre>
 <p>设置PATH环境变量：</p>
 <pre><code class="hljs elixir">ENV PATH=<span class="hljs-regexp">/usr/local</span><span class="hljs-regexp">/nvidia/bin</span><span class="hljs-symbol">:/usr/local/cuda/bin</span><span class="hljs-symbol">:/usr/local/sbin</span><span class="hljs-symbol">:/usr/local/bin</span><span class="hljs-symbol">:/usr/sbin</span><span class="hljs-symbol">:/usr/bin</span><span class="hljs-symbol">:/sbin</span><span class="hljs-symbol">:/bin</span><span class="hljs-symbol">:</span><span class="hljs-variable">$&#123;</span>HADOOP_BIN_DIR&#125;<span class="hljs-symbol">:</span><span class="hljs-variable">$&#123;</span>HADOOP_SBIN_DIR&#125; \
 LD_LIBRARY_PATH=<span class="hljs-regexp">/usr/local</span><span class="hljs-regexp">/cuda/extras</span><span class="hljs-regexp">/CUPTI/lib</span><span class="hljs-symbol">:/usr/local/cuda/extras/CUPTI/lib64</span><span class="hljs-symbol">:/usr/local/nvidia/lib</span><span class="hljs-symbol">:/usr/local/nvidia/lib64</span><span class="hljs-symbol">:/usr/local/cuda/lib64</span><span class="hljs-symbol">:/usr/local/cuda/targets/x86_64-linux/lib/stubs</span><span class="hljs-symbol">:</span><span class="hljs-variable">$&#123;</span>JAVA_HOME&#125;/jre/lib/amd64/serverCopy</code></pre>
 <p>完整的Dockerfile如下：</p>
-<pre><code class="hljs crystal">FROM nvidia/<span class="hljs-symbol">cuda:</span><span class="hljs-number">10.1</span>-cudnn7-devel-ubuntu18.<span class="hljs-number">0</span>4
+<pre><code class="hljs awk">FROM nvidia/cuda:<span class="hljs-number">10.1</span>-cudnn7-devel-ubuntu18.<span class="hljs-number">04</span>
 
 ENV LANG=C.UTF-<span class="hljs-number">8</span> LC_ALL=C.UTF-<span class="hljs-number">8</span>
 ENV HADOOP_VERSION=<span class="hljs-number">2.7</span>.<span class="hljs-number">2</span>
@@ -398,46 +399,46 @@ RUN DEBIAN_FRONTEND=noninteractive &amp;&amp; \
         lsof \
         libcupti-dev &amp;&amp; \
     apt-get clean &amp;&amp; \
-    rm -rf /var/<span class="hljs-class"><span class="hljs-keyword">lib</span>/<span class="hljs-title">apt</span>/<span class="hljs-title">lists</span>/*</span>
+    rm -rf <span class="hljs-regexp">/var/</span>lib<span class="hljs-regexp">/apt/</span>lists/*
 
-RUN wget --quiet <span class="hljs-symbol">https:</span>/<span class="hljs-regexp">/repo.anaconda.com/miniconda</span><span class="hljs-regexp">/Miniconda3-$&#123;MINICONDA_VERSION&#125;-Linux-x86_64.sh &amp;&amp; /bin</span><span class="hljs-regexp">/bash Miniconda3-$&#123;MINICONDA_VERSION&#125;-Linux-x86_64.sh -b -p /opt</span><span class="hljs-regexp">/miniconda \</span>
-<span class="hljs-regexp">&amp;&amp; rm Miniconda3-$&#123;MINICONDA_VERSION&#125;-Linux-x86_64.sh</span>
-<span class="hljs-regexp">ENV PATH /opt</span><span class="hljs-regexp">/miniconda/bin</span>:$PATH
+RUN wget --quiet https:<span class="hljs-regexp">//</span>repo.anaconda.com<span class="hljs-regexp">/miniconda/</span>Miniconda3-<span class="hljs-variable">$&#123;MINICONDA_VERSION&#125;</span>-Linux-x86_64.sh &amp;&amp; <span class="hljs-regexp">/bin/</span>bash Miniconda3-<span class="hljs-variable">$&#123;MINICONDA_VERSION&#125;</span>-Linux-x86_64.sh -b -p <span class="hljs-regexp">/opt/mi</span>niconda \
+&amp;&amp; rm Miniconda3-<span class="hljs-variable">$&#123;MINICONDA_VERSION&#125;</span>-Linux-x86_64.sh
+ENV PATH <span class="hljs-regexp">/opt/mi</span>niconda/bin:<span class="hljs-variable">$PATH</span>
     
-RUN wget -qO- <span class="hljs-symbol">http:</span>/<span class="hljs-regexp">/archive.apache.org/dist</span><span class="hljs-regexp">/hadoop/common</span><span class="hljs-regexp">/hadoop-$&#123;HADOOP_VERSION&#125;/hadoop</span>-$&#123;HADOOP_VERSION&#125;.tar.gz | \
-    tar xz -C /usr/local &amp;&amp; \
-    mv /usr/local/hadoop-$&#123;HADOOP_VERSION&#125; /usr/local/hadoop
+RUN wget -qO- http:<span class="hljs-regexp">//</span>archive.apache.org<span class="hljs-regexp">/dist/</span>hadoop<span class="hljs-regexp">/common/</span>hadoop-<span class="hljs-variable">$&#123;HADOOP_VERSION&#125;</span>/hadoop-<span class="hljs-variable">$&#123;HADOOP_VERSION&#125;</span>.tar.gz | \
+    tar xz -C <span class="hljs-regexp">/usr/</span>local &amp;&amp; \
+    mv <span class="hljs-regexp">/usr/</span>local<span class="hljs-regexp">/hadoop-$&#123;HADOOP_VERSION&#125; /u</span>sr<span class="hljs-regexp">/local/</span>hadoop
     
-ENV JAVA_HOME=<span class="hljs-regexp">/usr/lib</span><span class="hljs-regexp">/jvm/java</span>-<span class="hljs-number">8</span>-openjdk-amd64 \
-    HADOOP_INSTALL=<span class="hljs-regexp">/usr/local</span><span class="hljs-regexp">/hadoop \</span>
-<span class="hljs-regexp">    NVIDIA_VISIBLE_DEVICES=all</span>
-<span class="hljs-regexp"></span>
-<span class="hljs-regexp">ENV HADOOP_PREFIX=$&#123;HADOOP_INSTALL&#125; \</span>
-<span class="hljs-regexp">    HADOOP_BIN_DIR=$&#123;HADOOP_INSTALL&#125;/bin</span> \
-    HADOOP_SBIN_DIR=$&#123;HADOOP_INSTALL&#125;/sbin \
-    HADOOP_HDFS_HOME=$&#123;HADOOP_INSTALL&#125; \
-    HADOOP_COMMON_LIB_NATIVE_DIR=$&#123;HADOOP_INSTALL&#125;/<span class="hljs-class"><span class="hljs-keyword">lib</span>/<span class="hljs-title">native</span> \</span>
-    HADOOP_OPTS=<span class="hljs-string">"-Djava.library.path=$&#123;HADOOP_INSTALL&#125;/lib/native"</span>
+ENV JAVA_HOME=<span class="hljs-regexp">/usr/</span>lib<span class="hljs-regexp">/jvm/</span>java-<span class="hljs-number">8</span>-openjdk-amd64 \
+    HADOOP_INSTALL=<span class="hljs-regexp">/usr/</span>local/hadoop \
+    NVIDIA_VISIBLE_DEVICES=all
 
-ENV PATH=<span class="hljs-regexp">/usr/local</span><span class="hljs-regexp">/nvidia/bin</span>:<span class="hljs-regexp">/usr/local</span><span class="hljs-regexp">/cuda/bin</span>:<span class="hljs-regexp">/usr/local</span><span class="hljs-regexp">/sbin:/usr</span><span class="hljs-regexp">/local/bin</span>:<span class="hljs-regexp">/usr/sbin</span>:<span class="hljs-regexp">/usr/bin</span>:<span class="hljs-regexp">/sbin:/bin</span>:$&#123;HADOOP_BIN_DIR&#125;:$&#123;HADOOP_SBIN_DIR&#125;:$PATH \
-LD_LIBRARY_PATH=<span class="hljs-regexp">/usr/local</span><span class="hljs-regexp">/cuda/extras</span><span class="hljs-regexp">/CUPTI/lib</span>:<span class="hljs-regexp">/usr/local</span><span class="hljs-regexp">/cuda/extras</span><span class="hljs-regexp">/CUPTI/lib</span>64:<span class="hljs-regexp">/usr/local</span><span class="hljs-regexp">/nvidia/lib</span>:<span class="hljs-regexp">/usr/local</span><span class="hljs-regexp">/nvidia/lib</span>64:<span class="hljs-regexp">/usr/local</span><span class="hljs-regexp">/cuda/lib</span>64:<span class="hljs-regexp">/usr/local</span><span class="hljs-regexp">/cuda/targets</span><span class="hljs-regexp">/x86_64-linux/lib</span><span class="hljs-regexp">/stubs:$&#123;JAVA_HOME&#125;/jre</span><span class="hljs-regexp">/lib/amd</span>64/serverCopy</code></pre>
+ENV HADOOP_PREFIX=<span class="hljs-variable">$&#123;HADOOP_INSTALL&#125;</span> \
+    HADOOP_BIN_DIR=<span class="hljs-variable">$&#123;HADOOP_INSTALL&#125;</span>/bin \
+    HADOOP_SBIN_DIR=<span class="hljs-variable">$&#123;HADOOP_INSTALL&#125;</span>/sbin \
+    HADOOP_HDFS_HOME=<span class="hljs-variable">$&#123;HADOOP_INSTALL&#125;</span> \
+    HADOOP_COMMON_LIB_NATIVE_DIR=<span class="hljs-variable">$&#123;HADOOP_INSTALL&#125;</span><span class="hljs-regexp">/lib/</span>native \
+    HADOOP_OPTS=<span class="hljs-string">&quot;-Djava.library.path=$&#123;HADOOP_INSTALL&#125;/lib/native&quot;</span>
+
+ENV PATH=<span class="hljs-regexp">/usr/</span>local<span class="hljs-regexp">/nvidia/</span>bin:<span class="hljs-regexp">/usr/</span>local<span class="hljs-regexp">/cuda/</span>bin:<span class="hljs-regexp">/usr/</span>local<span class="hljs-regexp">/sbin:/u</span>sr<span class="hljs-regexp">/local/</span>bin:<span class="hljs-regexp">/usr/</span>sbin:<span class="hljs-regexp">/usr/</span>bin:<span class="hljs-regexp">/sbin:/</span>bin:<span class="hljs-variable">$&#123;HADOOP_BIN_DIR&#125;</span>:<span class="hljs-variable">$&#123;HADOOP_SBIN_DIR&#125;</span>:<span class="hljs-variable">$PATH</span> \
+LD_LIBRARY_PATH=<span class="hljs-regexp">/usr/</span>local<span class="hljs-regexp">/cuda/</span>extras<span class="hljs-regexp">/CUPTI/</span>lib:<span class="hljs-regexp">/usr/</span>local<span class="hljs-regexp">/cuda/</span>extras<span class="hljs-regexp">/CUPTI/</span>lib64:<span class="hljs-regexp">/usr/</span>local<span class="hljs-regexp">/nvidia/</span>lib:<span class="hljs-regexp">/usr/</span>local<span class="hljs-regexp">/nvidia/</span>lib64:<span class="hljs-regexp">/usr/</span>local<span class="hljs-regexp">/cuda/</span>lib64:<span class="hljs-regexp">/usr/</span>local<span class="hljs-regexp">/cuda/</span>targets<span class="hljs-regexp">/x86_64-linux/</span>lib<span class="hljs-regexp">/stubs:$&#123;JAVA_HOME&#125;/</span>jre<span class="hljs-regexp">/lib/</span>amd64/serverCopy</code></pre>
 <p>建议先把这一部分进行构建，作为基础镜像，后面要配置其他环境（如安装Pytorch框架登），就不用重复构建这部分，还减少了出错的可能性。这里说一下，启动带CUDA的Docker镜像需要在<code>docker run</code>加上额外的参数<code>--runtime nvidia</code>。</p>
 <p>接下来安装深度学习框架。</p>
 <h2 id="configure-pytorch">Configure PyTorch</h2>
 <p>假设上面的镜像我们命名为xiaoqinfeng/base，那么构建PyTorch的Dockerfile可以像下面这么写：</p>
-<pre><code class="hljs dockerfile"><span class="hljs-keyword">FROM</span> xiaoqinfeng/base
+<pre><code class="hljs apache"><span class="hljs-attribute">FROM</span> xiaoqinfeng/base
 
-<span class="hljs-keyword">RUN</span><span class="bash"> pip install -U pip</span>
-<span class="hljs-keyword">RUN</span><span class="bash"> pip install numpy scipy pandas matplotlib tqdm</span>
-<span class="hljs-keyword">RUN</span><span class="bash"> pip install torch==1.5.0+cu101 torchvision==0.6.0+cu101 -f https://download.pytorch.org/whl/torch_stable.htmlCopy</span></code></pre>
-<p>因为这里我用的CUDA10.1，其他版本的CUDA安装指令可能不太一样，具体可以参考<a href="https://pytorch.org/get-started/locally/" target="_blank" rel="noopener">官网</a>。</p>
+<span class="hljs-attribute">RUN</span> pip install -U pip
+<span class="hljs-attribute">RUN</span> pip install numpy scipy pandas matplotlib tqdm
+<span class="hljs-attribute">RUN</span> pip install torch==<span class="hljs-number">1</span>.<span class="hljs-number">5</span>.<span class="hljs-number">0</span>+cu<span class="hljs-number">101</span> torchvision==<span class="hljs-number">0</span>.<span class="hljs-number">6</span>.<span class="hljs-number">0</span>+cu<span class="hljs-number">101</span> -f https://download.pytorch.org/whl/torch_stable.htmlCopy</code></pre>
+<p>因为这里我用的CUDA10.1，其他版本的CUDA安装指令可能不太一样，具体可以参考<a target="_blank" rel="noopener" href="https://pytorch.org/get-started/locally/">官网</a>。</p>
 <h2 id="configure-tensorflow">Configure Tensorflow</h2>
 <p>如果是安装Tensorflow，那么构建Tensorflow的Dockerfile可以像下面这么写：</p>
 <pre><code class="hljs dockerfile"><span class="hljs-keyword">FROM</span> xiaoqinfeng/base
 
 <span class="hljs-keyword">RUN</span><span class="bash"> pip install -U pip</span>
 <span class="hljs-keyword">RUN</span><span class="bash"> pip install numpy scipy pandas matplotlib tqdm tensorflow-gpuCopy</span></code></pre>
-<p>这里会自动安装最新版本的Tensorflow2。Tensorflow不同版本对CUDA和cuDNN版本甚至Python版本的支持都不太一样，可以参考<a href="https://www.tensorflow.org/install/source#linux" target="_blank" rel="noopener">官网</a>的说明。</p>
+<p>这里会自动安装最新版本的Tensorflow2。Tensorflow不同版本对CUDA和cuDNN版本甚至Python版本的支持都不太一样，可以参考<a target="_blank" rel="noopener" href="https://www.tensorflow.org/install/source#linux">官网</a>的说明。</p>
 <h1 id="deep-learning-with-openpai">Deep Learning with OpenPAI</h1>
 <h2 id="what-is-openpai">What is OpenPAI</h2>
 <p>OpenPAI是一个分布式深度学习计算资源管理平台，对于我们用户来说，只需要定义好Docker镜像，然后编写好任务设置，提交到平台之后，平台便会自动分配计算资源来运行任务。</p>
@@ -511,7 +512,7 @@ tar -xvf files.tarCopy</code></pre>
                 
               </div>
               
-                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
               
               
                 <div class="post-prevnext row">
@@ -559,7 +560,7 @@ tar -xvf files.tarCopy</code></pre>
       });
     </script>
     <noscript>Please enable JavaScript to view the
-      <a href="https://disqus.com/?ref_noscript" target="_blank" rel="nofollow noopener noopener">comments powered by Disqus.</a>
+      <a target="_blank" href="https://disqus.com/?ref_noscript" rel="nofollow noopener noopener">comments powered by Disqus.</a>
     </noscript>
   </div>
 

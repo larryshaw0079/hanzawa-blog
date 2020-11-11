@@ -59,7 +59,8 @@
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
-<meta name="generator" content="Hexo 4.2.1"></head>
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Hanzawa の 部屋" type="application/atom+xml">
+</head>
 
 
 <body>
@@ -243,7 +244,7 @@
             <div class="markdown-body">
               <h1 id="abstract">Abstract</h1>
 <p>文中提出了一种可以处理带缺失值多为时间序列的GRU模型：<strong>GRU-D</strong>。本模型不仅可以捕捉时间序列中的长期依赖模式，并且还能利用时间序列中的缺失模式来达到更好的时间序列预测效果。</p>
-<p><a href="https://www.nature.com/articles/s41598-018-24271-9" target="_blank" rel="noopener">原文</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.nature.com/articles/s41598-018-24271-9">原文</a></p>
 <h1 id="methodology">Methodology</h1>
 <h2 id="notations">Notations</h2>
 <p>记包含<span class="math inline">\(D\)</span>个变量的多变量时间序列为<span class="math inline">\(X=(x_1,x_2,\cdots,x_T)^T\in\mathbb{R}^{T\times D}\)</span>，其中对于每个<span class="math inline">\(t\in\{1,2,\cdots,T\},x_t\in\mathbb{R}^D\)</span>表示时间序列在时间<span class="math inline">\(t\)</span>的观测值，<span class="math inline">\(x_t^d\)</span>表示<span class="math inline">\(x_t\)</span>的第<span class="math inline">\(d\)</span>个成分。记<span class="math inline">\(s_t\in\mathbb{R}\)</span>为<span class="math inline">\(t\)</span>时刻的时间戳，并假设第一个观测值的时间戳为<span class="math inline">\(0\)</span>。对于包含缺失值的时间序列，我们用<strong>Masking Vector</strong> <span class="math inline">\(m_t\in\{0,1\}\)</span>进行标记，同时对每个<span class="math inline">\(x_t^d\)</span>维护距离上一个观测值的<strong>Time Interval</strong> <span class="math inline">\(\delta_t^d\in\mathbb{R}\)</span>，公式如下： <span class="math display">\[
@@ -331,9 +332,9 @@ h_t&amp;=(1-z_t)\odot \hat{h}_{t-1}+z_t\odot\tilde{h}_t
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/Deep-Learning/">Deep Learning</a>
-                    
                       <a class="hover-with-bg" href="/tags/Time-Series/">Time Series</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Deep-Learning/">Deep Learning</a>
                     
                       <a class="hover-with-bg" href="/tags/RNN/">RNN</a>
                     
@@ -341,7 +342,7 @@ h_t&amp;=(1-z_t)\odot \hat{h}_{t-1}+z_t\odot\tilde{h}_t
                 
               </div>
               
-                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
               
               
                 <div class="post-prevnext row">
@@ -389,7 +390,7 @@ h_t&amp;=(1-z_t)\odot \hat{h}_{t-1}+z_t\odot\tilde{h}_t
       });
     </script>
     <noscript>Please enable JavaScript to view the
-      <a href="https://disqus.com/?ref_noscript" target="_blank" rel="nofollow noopener noopener">comments powered by Disqus.</a>
+      <a target="_blank" href="https://disqus.com/?ref_noscript" rel="nofollow noopener noopener">comments powered by Disqus.</a>
     </noscript>
   </div>
 

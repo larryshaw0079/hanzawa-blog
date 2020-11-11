@@ -59,7 +59,8 @@
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
-<meta name="generator" content="Hexo 4.2.1"></head>
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Hanzawa の 部屋" type="application/atom+xml">
+</head>
 
 
 <body>
@@ -243,7 +244,7 @@
             <div class="markdown-body">
               <h1 id="abstract">Abstract</h1>
 <p>本文基于GAN提出了一种时间序列缺失值填充（Time Series Imputation）的方法。其主要的思路为生成器<span class="math inline">\(G\)</span>从隐空间<span class="math inline">\(Z\)</span>生成完整的样本，而判别器<span class="math inline">\(D\)</span>则输出样本中不同部分为真实的概率。除此之外，作者提出了使用Hint Vector来揭示原始数据中缺失部分的信息，来优化训练过程。</p>
-<p><a href="https://arxiv.org/abs/1806.02920" target="_blank" rel="noopener">原文</a></p>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1806.02920">原文</a></p>
 <h1 id="methodology">Methodology</h1>
 <h2 id="problem-formulation">Problem Formulation</h2>
 <p>考虑一个<span class="math inline">\(d\)</span>维的空间<span class="math inline">\(\mathcal{X}=\mathcal{X}_1\times \cdots\times \mathcal{X}_d\)</span>，设<span class="math inline">\(\mathbf{X}=(X_1,\cdots,X_d)\)</span>维空间<span class="math inline">\(\mathcal{X}\)</span>上的随机向量（即理想的完整的时间序列），记其分布为<span class="math inline">\(P(\mathbf{X})\)</span>。设<span class="math inline">\(\mathbf{M}=(M_1,\cdots,M_d)\)</span>为Mask向量表示<span class="math inline">\(\mathbf{X}\)</span>中被观察到的部分。（即标识时间序列哪些部分有缺失），取值为<span class="math inline">\(\{0,1\}^d\)</span>。</p>
@@ -327,9 +328,9 @@ L_M(x_i,x_i^\prime)=\begin{cases}(x_i^\prime-x_i)^2, &amp;\text{if }x_i\text{ is
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/Deep-Learning/">Deep Learning</a>
-                    
                       <a class="hover-with-bg" href="/tags/Time-Series/">Time Series</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Deep-Learning/">Deep Learning</a>
                     
                       <a class="hover-with-bg" href="/tags/GAN/">GAN</a>
                     
@@ -337,7 +338,7 @@ L_M(x_i,x_i^\prime)=\begin{cases}(x_i^\prime-x_i)^2, &amp;\text{if }x_i\text{ is
                 
               </div>
               
-                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
               
               
                 <div class="post-prevnext row">
@@ -385,7 +386,7 @@ L_M(x_i,x_i^\prime)=\begin{cases}(x_i^\prime-x_i)^2, &amp;\text{if }x_i\text{ is
       });
     </script>
     <noscript>Please enable JavaScript to view the
-      <a href="https://disqus.com/?ref_noscript" target="_blank" rel="nofollow noopener noopener">comments powered by Disqus.</a>
+      <a target="_blank" href="https://disqus.com/?ref_noscript" rel="nofollow noopener noopener">comments powered by Disqus.</a>
     </noscript>
   </div>
 

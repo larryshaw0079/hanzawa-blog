@@ -59,7 +59,8 @@
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
-<meta name="generator" content="Hexo 4.2.1"></head>
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Hanzawa の 部屋" type="application/atom+xml">
+</head>
 
 
 <body>
@@ -296,8 +297,8 @@ n_S(x)=\sum_{i=0}^{k-1}\sum_{j=0}^{k-1}([\tilde{\boldsymbol\alpha}_i]_j-1)\log\m
 <p><img src="https://i.loli.net/2020/06/23/z8MpdeoD6ZGavlN.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
 <p>这里结合作者的源代码简单说一下检测阶段的流程。</p>
 <hr />
-<pre><code class="hljs python"><span class="hljs-keyword">for</span> t_ind <span class="hljs-keyword">in</span> range(transformer.n_transforms):
-        observed_dirichlet = mdl.predict(transformer.transform_batch(observed_data, [t_ind] * len(observed_data)), batch_size=<span class="hljs-number">1024</span>)</code></pre>
+<pre><code class="hljs python"><span class="hljs-keyword">for</span> t_ind <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(transformer.n_transforms):
+        observed_dirichlet = mdl.predict(transformer.transform_batch(observed_data, [t_ind] * <span class="hljs-built_in">len</span>(observed_data)), batch_size=<span class="hljs-number">1024</span>)</code></pre>
 <p>在训练好模型之后，对于训练集的所有样本，对其进行<span class="math inline">\(K\)</span>个几何变换之后，得到<span class="math inline">\(K\)</span>个样本<span class="math inline">\(\{T_i(x)\}\)</span>，对于所有第<span class="math inline">\(i\)</span>个几何变换对应的样本<span class="math inline">\(\{T_i(x)\}\)</span>，通过分类器<span class="math inline">\(f_\theta\)</span>会给出输出<span class="math inline">\(\mathbf y(T_i(x))\)</span>。这里对应算法中的第<span class="math inline">\(7-8\)</span>行，这个<code>observed_dirichlet</code>就是<span class="math inline">\(S_i\)</span>。</p>
 <hr />
 <pre><code class="hljs python">log_p_hat_train = np.log(observed_dirichlet).mean(axis=<span class="hljs-number">0</span>)
@@ -305,40 +306,40 @@ n_S(x)=\sum_{i=0}^{k-1}\sum_{j=0}^{k-1}([\tilde{\boldsymbol\alpha}_i]_j-1)\log\m
 alpha_sum_approx = calc_approx_alpha_sum(observed_dirichlet)
 alpha_0 = observed_dirichlet.mean(axis=<span class="hljs-number">0</span>) * alpha_sum_approx</code></pre>
 <p>之后这部分主要对应算法中的<span class="math inline">\(9-11\)</span>行。作者把所有的第<span class="math inline">\(i\)</span>个变换，分类器的输出的集合（也就是变量<code>observed_dirichlet</code>）记为<span class="math inline">\(S_i\)</span>，<span class="math inline">\(\bar s\)</span>为<span class="math inline">\(S_i\)</span>的平均，<span class="math inline">\(\bar l\)</span>为<span class="math inline">\(S_i\)</span>对数的平均（变量<code>log_p_hat_train</code>），初始值<span class="math inline">\(\tilde{\alpha}_i\)</span>由<span class="math inline">\(\bar s\frac{(k-1)(-\Psi(1))}{\bar s\cdot\log\bar s-\bar s\cdot\bar l}\)</span>给出（变量<code>alpha_0</code>）。函数<code>calc_approx_alpha_sum</code>实现的是算法中第<span class="math inline">\(11\)</span>行的<span class="math inline">\(\frac{(k-1)(-\Psi(1))}{\bar s\cdot\log\bar s-\bar s\cdot\bar l}\)</span>，代码如下：</p>
-<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">calc_approx_alpha_sum</span><span class="hljs-params">(observations)</span>:</span>
-    N = len(observations)
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">calc_approx_alpha_sum</span>(<span class="hljs-params">observations</span>):</span>
+    N = <span class="hljs-built_in">len</span>(observations)
     f = np.mean(observations, axis=<span class="hljs-number">0</span>)
 
-    <span class="hljs-keyword">return</span> (N * (len(f) - <span class="hljs-number">1</span>) * (-psi(<span class="hljs-number">1</span>))) / (
-        N * np.sum(f * np.log(f)) - np.sum(f * np.sum(np.log(observations), axis=<span class="hljs-number">0</span>)))</code></pre>
+    <span class="hljs-keyword">return</span> (N * (<span class="hljs-built_in">len</span>(f) - <span class="hljs-number">1</span>) * (-psi(<span class="hljs-number">1</span>))) / (
+        N * np.<span class="hljs-built_in">sum</span>(f * np.log(f)) - np.<span class="hljs-built_in">sum</span>(f * np.<span class="hljs-built_in">sum</span>(np.log(observations), axis=<span class="hljs-number">0</span>)))</code></pre>
 <hr />
 <pre><code class="hljs python">mle_alpha_t = fixed_point_dirichlet_mle(alpha_0, log_p_hat_train)</code></pre>
 <p>这里对应算法中的<span class="math inline">\(12-14\)</span>行，即重复<span class="math inline">\(\tilde\alpha_i\leftarrow\Psi^{-1}\left(\Psi(\sum_j[\alpha_i]_j)+\bar l\right)\)</span>来估计<span class="math inline">\(\alpha\)</span>，函数<code>fixed_point_dirichlet_mle</code>代码如下：</p>
-<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">fixed_point_dirichlet_mle</span><span class="hljs-params">(alpha_init, log_p_hat, max_iter=<span class="hljs-number">1000</span>)</span>:</span>
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">fixed_point_dirichlet_mle</span>(<span class="hljs-params">alpha_init, log_p_hat, max_iter=<span class="hljs-number">1000</span></span>):</span>
     alpha_new = alpha_old = alpha_init
-    <span class="hljs-keyword">for</span> _ <span class="hljs-keyword">in</span> range(max_iter):
-        alpha_new = inv_psi(psi(np.sum(alpha_old)) + log_p_hat)
-        <span class="hljs-keyword">if</span> np.sqrt(np.sum((alpha_old - alpha_new) ** <span class="hljs-number">2</span>)) &lt; <span class="hljs-number">1e-9</span>:
+    <span class="hljs-keyword">for</span> _ <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(max_iter):
+        alpha_new = inv_psi(psi(np.<span class="hljs-built_in">sum</span>(alpha_old)) + log_p_hat)
+        <span class="hljs-keyword">if</span> np.sqrt(np.<span class="hljs-built_in">sum</span>((alpha_old - alpha_new) ** <span class="hljs-number">2</span>)) &lt; <span class="hljs-number">1e-9</span>:
             <span class="hljs-keyword">break</span>
         alpha_old = alpha_new
     <span class="hljs-keyword">return</span> alpha_new</code></pre>
 <p><span class="math inline">\(\Psi^{-1}(\cdot)\)</span>是通过数值方法来估计的：</p>
-<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">inv_psi</span><span class="hljs-params">(y, iters=<span class="hljs-number">5</span>)</span>:</span>
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">inv_psi</span>(<span class="hljs-params">y, iters=<span class="hljs-number">5</span></span>):</span>
     <span class="hljs-comment"># initial estimate</span>
     cond = y &gt;= <span class="hljs-number">-2.22</span>
     x = cond * (np.exp(y) + <span class="hljs-number">0.5</span>) + (<span class="hljs-number">1</span> - cond) * <span class="hljs-number">-1</span> / (y - psi(<span class="hljs-number">1</span>))
 
-    <span class="hljs-keyword">for</span> _ <span class="hljs-keyword">in</span> range(iters):
+    <span class="hljs-keyword">for</span> _ <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(iters):
         x = x - (psi(x) - y) / polygamma(<span class="hljs-number">1</span>, x)
     <span class="hljs-keyword">return</span> x</code></pre>
 <hr />
 <p>最后，在得到对<span class="math inline">\(\alpha\)</span>的估计之后，可以来计算测试样本的分数了。这里对应的是算法中的第<span class="math inline">\(16\)</span>行。</p>
-<pre><code class="hljs python">x_test_p = mdl.predict(transformer.transform_batch(x_test, [t_ind] * len(x_test)), batch_size=<span class="hljs-number">1024</span>)
+<pre><code class="hljs python">x_test_p = mdl.predict(transformer.transform_batch(x_test, [t_ind] * <span class="hljs-built_in">len</span>(x_test)), batch_size=<span class="hljs-number">1024</span>)
 
 scores += dirichlet_normality_score(mle_alpha_t, x_test_p)</code></pre>
 <p>函数<code>dirichlet_normality_score</code>代码如下：</p>
-<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">dirichlet_normality_score</span><span class="hljs-params">(alpha, p)</span>:</span>
-    <span class="hljs-keyword">return</span> np.sum((alpha - <span class="hljs-number">1</span>) * np.log(p), axis=<span class="hljs-number">-1</span>)</code></pre>
+<pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">dirichlet_normality_score</span>(<span class="hljs-params">alpha, p</span>):</span>
+    <span class="hljs-keyword">return</span> np.<span class="hljs-built_in">sum</span>((alpha - <span class="hljs-number">1</span>) * np.log(p), axis=<span class="hljs-number">-1</span>)</code></pre>
 <h1 id="experiments">Experiments</h1>
 <h2 id="baselines">Baselines</h2>
 <p>文中用到了如下的Baseline：</p>
@@ -425,7 +426,7 @@ scores += dirichlet_normality_score(mle_alpha_t, x_test_p)</code></pre>
                 
               </div>
               
-                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
               
               
                 <div class="post-prevnext row">
@@ -473,7 +474,7 @@ scores += dirichlet_normality_score(mle_alpha_t, x_test_p)</code></pre>
       });
     </script>
     <noscript>Please enable JavaScript to view the
-      <a href="https://disqus.com/?ref_noscript" target="_blank" rel="nofollow noopener noopener">comments powered by Disqus.</a>
+      <a target="_blank" href="https://disqus.com/?ref_noscript" rel="nofollow noopener noopener">comments powered by Disqus.</a>
     </noscript>
   </div>
 

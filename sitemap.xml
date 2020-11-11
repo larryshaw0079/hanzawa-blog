@@ -1,0 +1,687 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <url>
+    <loc>http://qfxiao.me/2020/10/27/Must-Read-Papers-Applications-of-Self-supervised-Learning-in-Biomedical-Signals/</loc>
+    
+    <lastmod>2020-10-27</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/2020/10/27/Anomaly-Detection-Resource-Collection/</loc>
+    
+    <lastmod>2020-10-27</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/2020/09/23/Unsupervised-Feature-Learning-via-Non-Parametric-Instance-Discrimination/</loc>
+    
+    <lastmod>2020-09-23</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/2020/08/26/Support-Vector-Machine-Machine-Learning-Classification-Algorithms-2/</loc>
+    
+    <lastmod>2020-09-20</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/2020/08/26/Linear-Regression-and-Logistic-Regression-Machine-Learning-Classification-Algorithms-1/</loc>
+    
+    <lastmod>2020-09-19</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/2020/09/10/Unsupervised-Anomaly-Detection-Algorithms-Overview/</loc>
+    
+    <lastmod>2020-09-18</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/2020/08/26/GBDT-and-XGBoost-Machine-Learning-Ensemble-Algorithms-2/</loc>
+    
+    <lastmod>2020-09-17</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/2020/09/17/Representation-Learning-with-Contrastive-Predictive-Coding/</loc>
+    
+    <lastmod>2020-09-17</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/2020/09/15/Bagging-and-Random-Forest-Machine-Learning-Ensemble-Algorithms-3/</loc>
+    
+    <lastmod>2020-09-15</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/2019/10/18/Robust-Anomaly-Detection-for-Multivariate-Time-Series-through-Stochastic-Recurrent-Neural-Network/</loc>
+    
+    <lastmod>2020-09-12</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/2020/09/02/Decision-Tree-Machine-Learning-Classification-Algorithms-3/</loc>
+    
+    <lastmod>2020-09-10</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/2020/09/09/Model-Selection-and-Evaluation-Machine-Learning-Basics/</loc>
+    
+    <lastmod>2020-09-10</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/2020/08/26/Boosting-and-AdaBoost-Machine-Learning-Ensemble-Algorithms-1/</loc>
+    
+    <lastmod>2020-09-09</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/2020/08/24/Unsupervised-Representation-Learning-by-Predicting-Random-Distances/</loc>
+    
+    <lastmod>2020-08-24</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/2020/06/02/%E9%9D%A2%E5%90%91OpenPAI%E7%9A%84Docker%E9%95%9C%E5%83%8F%E9%85%8D%E7%BD%AE%E5%8F%8AOpenPAI%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/</loc>
+    
+    <lastmod>2020-08-01</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/2020/07/14/Effective-End-to-end-Unsupervised-Outlier-Detection-via-Linear-Priority-of-Discriminative-Network/</loc>
+    
+    <lastmod>2020-07-21</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/2020/06/13/Time2Graph-Revisiting-Time-Series-Modeling-with-Dynamic-Shapelets/</loc>
+    
+    <lastmod>2020-07-07</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/2020/06/22/PRML-Notes-1-1-Probability-Distributions-Binary-and-Multinomial-Variables/</loc>
+    
+    <lastmod>2020-06-27</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/2020/06/01/Deep-Anomaly-Detection-Using-Geometric-Transformations/</loc>
+    
+    <lastmod>2020-06-26</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/2020/06/02/Classification-based-Anomaly-Detection-for-General-Data/</loc>
+    
+    <lastmod>2020-06-26</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/2020/06/06/Estimate-the-Implicit-Likelihoods-of-GANs-with-Application-to-Anomaly-Detection/</loc>
+    
+    <lastmod>2020-06-25</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/2020/01/06/Unsupervised-Anomaly-Detection-for-Intricate-KPIs-via-Adversarial-Training-of-VAE/</loc>
+    
+    <lastmod>2020-06-25</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/2019/11/02/Variational-Approaches-for-Auto-Encoding-Generative-Adversarial-Networks/</loc>
+    
+    <lastmod>2020-06-25</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/2019/09/22/Unsupervised-Anomaly-Detection-via-Variational-Auto-Encoder-for-Seasonal-KPIs-in-Web-Applications/</loc>
+    
+    <lastmod>2020-06-25</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/2020/06/02/Ubuntu20-4LTS-%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE-CUDA10-2-cuDNN7-6-5-Tensorflow-Pytorch/</loc>
+    
+    <lastmod>2020-06-25</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/</loc>
+    
+    <lastmod>2020-06-25</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/2019/09/22/Time-Series-Anomaly-Detection-Service-at-Microsoft/</loc>
+    
+    <lastmod>2020-06-25</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/2019/10/18/Recurrent-Neural-Networks-for-Multivariate-Time-Series-with-Missing-Values/</loc>
+    
+    <lastmod>2020-06-25</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/2020/05/06/Learning-Representations-of-Ultrahigh-dimensional-Data-for-Random-Distance-based-Outlier-Detection/</loc>
+    
+    <lastmod>2020-06-25</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/2020/06/06/Generative-Probabilistic-Novelty-Detection-with-Adversarial-Autoencoders/</loc>
+    
+    <lastmod>2020-06-25</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/2020/01/31/Geant4-%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/</loc>
+    
+    <lastmod>2020-06-25</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/2019/10/16/GAIN-Missing-Data-Imputation-using-Generative-Adversarial-Nets/</loc>
+    
+    <lastmod>2020-06-25</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/</loc>
+    
+    <lastmod>2020-06-25</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/2020/03/30/Deep-Weakly-supervised-Anomaly-Detection/</loc>
+    
+    <lastmod>2020-06-25</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/2020/02/24/Deep-Anomaly-Detection-with-Deviation-Networks/</loc>
+    
+    <lastmod>2020-06-25</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/2020/06/01/Cross-dataset-Time-Series-Anomaly-Detection-for-Cloud-Systems/</loc>
+    
+    <lastmod>2020-06-25</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/2020/01/09/Complementary-Set-Variational-Autoencoder-for-Supervised-Anomaly-Detection/</loc>
+    
+    <lastmod>2020-06-25</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/2019/09/22/Anomaly-Detection-with-Generative-Adversarial-Networks-for-Multivariate-Time-Series/</loc>
+    
+    <lastmod>2020-06-25</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/2019/10/29/Anomaly-Detection-in-Streams-with-Extreme-Value-Theory/</loc>
+    
+    <lastmod>2020-06-25</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/2019/10/22/An-Introduction-to-Variational-Autoencoders/</loc>
+    
+    <lastmod>2020-06-24</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/2019/09/22/ALSR-An-adaptive-label-screening-and-relearning-approach-for-interval-oriented-anomaly-detection/</loc>
+    
+    <lastmod>2020-06-24</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/about/index.html</loc>
+    
+    <lastmod>2020-05-27</lastmod>
+    
+  </url>
+  
+
+  <url>
+    <loc>http://qfxiao.me/</loc>
+    <lastmod>2020-11-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  
+  <url>
+    <loc>http://qfxiao.me/tags/Time-Series/</loc>
+    <lastmod>2020-11-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/tags/Anomaly-Detection/</loc>
+    <lastmod>2020-11-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/tags/Machine-Learning/</loc>
+    <lastmod>2020-11-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/tags/Deep-Learning/</loc>
+    <lastmod>2020-11-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/tags/Variational-Inference/</loc>
+    <lastmod>2020-11-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/tags/VAE/</loc>
+    <lastmod>2020-11-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/tags/Statistics/</loc>
+    <lastmod>2020-11-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/tags/Random-Forest/</loc>
+    <lastmod>2020-11-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/tags/Boosting/</loc>
+    <lastmod>2020-11-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/tags/Adaboost/</loc>
+    <lastmod>2020-11-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/tags/Transfer-Learning/</loc>
+    <lastmod>2020-11-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/tags/ID3/</loc>
+    <lastmod>2020-11-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/tags/C4-5/</loc>
+    <lastmod>2020-11-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/tags/CART/</loc>
+    <lastmod>2020-11-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/tags/Self-Supervised-Learning/</loc>
+    <lastmod>2020-11-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/tags/GAN/</loc>
+    <lastmod>2020-11-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/tags/GBDT/</loc>
+    <lastmod>2020-11-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/tags/XGBoost/</loc>
+    <lastmod>2020-11-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/tags/Novelty-Detection/</loc>
+    <lastmod>2020-11-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/tags/Geant4/</loc>
+    <lastmod>2020-11-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/tags/Representation-Learning/</loc>
+    <lastmod>2020-11-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/tags/Linear-Regression/</loc>
+    <lastmod>2020-11-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/tags/Overfitting/</loc>
+    <lastmod>2020-11-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/tags/Bias/</loc>
+    <lastmod>2020-11-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/tags/Variance/</loc>
+    <lastmod>2020-11-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/tags/Probability/</loc>
+    <lastmod>2020-11-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/tags/Papers/</loc>
+    <lastmod>2020-11-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/tags/RNN/</loc>
+    <lastmod>2020-11-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/tags/Flow-based-Model/</loc>
+    <lastmod>2020-11-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/tags/Self-supervised-Learning/</loc>
+    <lastmod>2020-11-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/tags/Spectral/</loc>
+    <lastmod>2020-11-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/tags/SVM/</loc>
+    <lastmod>2020-11-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/tags/Shapelet/</loc>
+    <lastmod>2020-11-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/tags/Pytorch/</loc>
+    <lastmod>2020-11-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/tags/Tensorflow/</loc>
+    <lastmod>2020-11-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/tags/LOF/</loc>
+    <lastmod>2020-11-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/tags/OCSVM/</loc>
+    <lastmod>2020-11-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/tags/iForest/</loc>
+    <lastmod>2020-11-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/tags/Docker/</loc>
+    <lastmod>2020-11-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+
+  
+  <url>
+    <loc>http://qfxiao.me/categories/Research/</loc>
+    <lastmod>2020-11-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/categories/Research/Anomaly-Detection/</loc>
+    <lastmod>2020-11-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/categories/Technical-Notes/</loc>
+    <lastmod>2020-11-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/categories/Research/Tutorial/</loc>
+    <lastmod>2020-11-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/categories/Research/Misc/</loc>
+    <lastmod>2020-11-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/categories/Technical-Notes/Machine-Learning/</loc>
+    <lastmod>2020-11-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/categories/Research/Time-Series-Imputation/</loc>
+    <lastmod>2020-11-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/categories/Technical-Notes/Misc/</loc>
+    <lastmod>2020-11-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/categories/Research/Notes/</loc>
+    <lastmod>2020-11-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/categories/Research/RNN/</loc>
+    <lastmod>2020-11-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/categories/Research/Self-supervised-Learning/</loc>
+    <lastmod>2020-11-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/categories/Research/Time-Series-Modeling/</loc>
+    <lastmod>2020-11-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/categories/Technical-Notes/Anomaly-Detection/</loc>
+    <lastmod>2020-11-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/categories/Research/Representation-Learning/</loc>
+    <lastmod>2020-11-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/categories/Research/GAN/</loc>
+    <lastmod>2020-11-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+</urlset>

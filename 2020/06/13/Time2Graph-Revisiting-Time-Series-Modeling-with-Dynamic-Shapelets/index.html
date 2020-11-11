@@ -59,7 +59,8 @@
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
-<meta name="generator" content="Hexo 4.2.1"></head>
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Hanzawa の 部屋" type="application/atom+xml">
+</head>
 
 
 <body>
@@ -243,7 +244,7 @@
             <div class="markdown-body">
               <h1 id="introduction">Introduction</h1>
 <p>本文旨在提供一种可解释的高效的时间序列建模（表示学习）方法来更好地服务分类任务。Shapelet在时间序列分类任务上体现了良好的可解释性。不过传统的基于Shapelet的方法忽略了Shapelet在不同时间片段上的动态性，即整个时间维度上不同的时间片段可能适合用不同的Shapelet。作者基于此设计了动态的<em>time-aware shapelet</em>，并且定义了<em>shapelet evolution graph</em>来捕获Shapelet在时间维度上的动态变化。</p>
-<p><a href="https://arxiv.org/abs/1911.04143" target="_blank" rel="noopener">📰Get Paper</a></p>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1911.04143">📰Get Paper</a></p>
 <h1 id="preliminaries">Preliminaries</h1>
 <p>时间序列集合<span class="math inline">\(T=\{t_1,\cdots,t_{|T|}\}\)</span>包含若干条时序数据<span class="math inline">\(t=\{x_1,\cdots,x_n\}\)</span>。一个<span class="math inline">\(t\)</span>的片段<span class="math inline">\(s\)</span>是<span class="math inline">\(t\)</span>的一个连续子序列。如果<span class="math inline">\(t\)</span>能被切分成<span class="math inline">\(m\)</span>个长度都为<span class="math inline">\(l\)</span>的片段，那么我们就有<span class="math inline">\(t=\{\{x_{l*k+1},\cdots,x_{l*k+l}\},0\leq k\leq m-1\}\)</span>。两个长度相等的片段之间距离很好度量，直接计算欧式距离即可，那么两个片段长度不相等的情况呢？这就需要对其（Alignment）的概念。</p>
 <blockquote>
@@ -363,7 +364,7 @@ D(s,t)=\min_{1\leq k\leq m} d(s,s_k)
                 
               </div>
               
-                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
               
               
                 <div class="post-prevnext row">
@@ -411,7 +412,7 @@ D(s,t)=\min_{1\leq k\leq m} d(s,s_k)
       });
     </script>
     <noscript>Please enable JavaScript to view the
-      <a href="https://disqus.com/?ref_noscript" target="_blank" rel="nofollow noopener noopener">comments powered by Disqus.</a>
+      <a target="_blank" href="https://disqus.com/?ref_noscript" rel="nofollow noopener noopener">comments powered by Disqus.</a>
     </noscript>
   </div>
 

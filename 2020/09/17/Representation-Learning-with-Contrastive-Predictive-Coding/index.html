@@ -59,7 +59,8 @@
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
-<meta name="generator" content="Hexo 4.2.1"></head>
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Hanzawa の 部屋" type="application/atom+xml">
+</head>
 
 
 <body>
@@ -243,7 +244,7 @@
             <div class="markdown-body">
               <h1 id="introduction">Introduction</h1>
 <p>本文提出了一种表示学习框架：Contrastive Predictive Coding（CPC）。To be finished...</p>
-<p><a href="https://arxiv.org/abs/1807.03748" target="_blank" rel="noopener">原文</a></p>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1807.03748">原文</a></p>
 <h1 id="proposed-method">Proposed Method</h1>
 <h2 id="contrastive-predictive-coding">Contrastive Predictive Coding</h2>
 <p>N-pair Loss: <span class="math display">\[
@@ -272,7 +273,7 @@ H(p,q) = -\sum_{x\in\mathcal X}p(x)\log q(x)
 <p><span class="math display">\[
 I(x;c)=\sum_{x,c}p(x,c)\log\frac{p(x|c)}{p(x)}
 \]</span></p>
-<p>编码器<span class="math inline">\(g_{enc}\)</span>将观测值<span class="math inline">\(\boldsymbol x_t\)</span>编码到隐变量<span class="math inline">\(\boldsymbol z_t=g_\text{enc}(\boldsymbol x_t)\)</span>（对应于局部信息），之后自回归模型<span class="math inline">\(g_{ar}\)</span>将所有<span class="math inline">\(t\)</span>之前的（包括<span class="math inline">\(t\)</span>）隐变量<span class="math inline">\(z_{\leq t}\)</span>压缩到一个上下文隐变量<span class="math inline">\(\boldsymbol c_t=g_\text{ar}(\boldsymbol z_{\leq t})\)</span>（希望具有预测性质，捕获了长时依赖性）。不过本文并不是基于<span class="math inline">\(\boldsymbol c_t\)</span>来预测未来的观测值<span class="math inline">\(\boldsymbol x_{t+k}\)</span>，即估计分布<span class="math inline">\(p_k(\boldsymbol x_{t+k}|\boldsymbol c_t)\)</span>，而这样的话又要用到MSE之类的Loss。文中利用的是最大化<span class="math inline">\(\boldsymbol c_t\)</span>和<span class="math inline">\(\boldsymbol x_{t+k}\)</span>之间的互信息<span class="math inline">\(\log \frac{p(x_{t+k}|c_t)}{p(x_{t+k})}\)</span>（这种形式的互信息被称为是点互信息，详见<a href="https://en.wikipedia.org/wiki/Pointwise_mutual_information" target="_blank" rel="noopener">维基</a>）。定义一个度量函数<span class="math inline">\(f(\cdot,\cdot)\)</span>，要求其具有与<span class="math inline">\(\frac{p(x_{t+k}|c_t)}{p(x_{t+k})}\)</span>成比例的性质： <span class="math display">\[
+<p>编码器<span class="math inline">\(g_{enc}\)</span>将观测值<span class="math inline">\(\boldsymbol x_t\)</span>编码到隐变量<span class="math inline">\(\boldsymbol z_t=g_\text{enc}(\boldsymbol x_t)\)</span>（对应于局部信息），之后自回归模型<span class="math inline">\(g_{ar}\)</span>将所有<span class="math inline">\(t\)</span>之前的（包括<span class="math inline">\(t\)</span>）隐变量<span class="math inline">\(z_{\leq t}\)</span>压缩到一个上下文隐变量<span class="math inline">\(\boldsymbol c_t=g_\text{ar}(\boldsymbol z_{\leq t})\)</span>（希望具有预测性质，捕获了长时依赖性）。不过本文并不是基于<span class="math inline">\(\boldsymbol c_t\)</span>来预测未来的观测值<span class="math inline">\(\boldsymbol x_{t+k}\)</span>，即估计分布<span class="math inline">\(p_k(\boldsymbol x_{t+k}|\boldsymbol c_t)\)</span>，而这样的话又要用到MSE之类的Loss。文中利用的是最大化<span class="math inline">\(\boldsymbol c_t\)</span>和<span class="math inline">\(\boldsymbol x_{t+k}\)</span>之间的互信息<span class="math inline">\(\log \frac{p(x_{t+k}|c_t)}{p(x_{t+k})}\)</span>（这种形式的互信息被称为是点互信息，详见<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Pointwise_mutual_information">维基</a>）。定义一个度量函数<span class="math inline">\(f(\cdot,\cdot)\)</span>，要求其具有与<span class="math inline">\(\frac{p(x_{t+k}|c_t)}{p(x_{t+k})}\)</span>成比例的性质： <span class="math display">\[
 f_k(x_{t+k},c_t)\propto\frac{p(x_{t+k}|c_t)}{p(x_{t+k})}
 \]</span> 这时最大化<span class="math inline">\(f(\cdot,\cdot)\)</span>就相当于最大化两者的互信息。</p>
 <h2 id="mutual-information-estimation-explanation">Mutual Information Estimation Explanation</h2>
@@ -354,7 +355,7 @@ I(x_{t+k},c_t)\geq \log(N)-\mathcal L_N
                 
               </div>
               
-                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
               
               
                 <div class="post-prevnext row">
@@ -402,7 +403,7 @@ I(x_{t+k},c_t)\geq \log(N)-\mathcal L_N
       });
     </script>
     <noscript>Please enable JavaScript to view the
-      <a href="https://disqus.com/?ref_noscript" target="_blank" rel="nofollow noopener noopener">comments powered by Disqus.</a>
+      <a target="_blank" href="https://disqus.com/?ref_noscript" rel="nofollow noopener noopener">comments powered by Disqus.</a>
     </noscript>
   </div>
 
