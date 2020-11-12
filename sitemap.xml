@@ -375,13 +375,6 @@
   </url>
   
   <url>
-    <loc>http://qfxiao.me/tags/Transfer-Learning/</loc>
-    <lastmod>2020-11-12</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>http://qfxiao.me/tags/ID3/</loc>
     <lastmod>2020-11-12</lastmod>
     <changefreq>daily</changefreq>
@@ -403,14 +396,14 @@
   </url>
   
   <url>
-    <loc>http://qfxiao.me/tags/Self-Supervised-Learning/</loc>
+    <loc>http://qfxiao.me/tags/Transfer-Learning/</loc>
     <lastmod>2020-11-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>http://qfxiao.me/tags/GAN/</loc>
+    <loc>http://qfxiao.me/tags/Self-Supervised-Learning/</loc>
     <lastmod>2020-11-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -431,6 +424,13 @@
   </url>
   
   <url>
+    <loc>http://qfxiao.me/tags/GAN/</loc>
+    <lastmod>2020-11-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>http://qfxiao.me/tags/Geant4/</loc>
     <lastmod>2020-11-12</lastmod>
     <changefreq>daily</changefreq>
@@ -438,14 +438,14 @@
   </url>
   
   <url>
-    <loc>http://qfxiao.me/tags/Representation-Learning/</loc>
+    <loc>http://qfxiao.me/tags/Novelty-Detection/</loc>
     <lastmod>2020-11-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>http://qfxiao.me/tags/Novelty-Detection/</loc>
+    <loc>http://qfxiao.me/tags/Representation-Learning/</loc>
     <lastmod>2020-11-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -515,14 +515,14 @@
   </url>
   
   <url>
-    <loc>http://qfxiao.me/tags/Spectral/</loc>
+    <loc>http://qfxiao.me/tags/SVM/</loc>
     <lastmod>2020-11-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>http://qfxiao.me/tags/SVM/</loc>
+    <loc>http://qfxiao.me/tags/Spectral/</loc>
     <lastmod>2020-11-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -671,14 +671,14 @@
   </url>
   
   <url>
-    <loc>http://qfxiao.me/categories/Research/Representation-Learning/</loc>
+    <loc>http://qfxiao.me/categories/Research/GAN/</loc>
     <lastmod>2020-11-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>http://qfxiao.me/categories/Research/GAN/</loc>
+    <loc>http://qfxiao.me/categories/Research/Representation-Learning/</loc>
     <lastmod>2020-11-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
