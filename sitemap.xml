@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://qfxiao.me/about/index.html</loc>
+    
+    <lastmod>2020-11-12</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://qfxiao.me/2020/10/27/Must-Read-Papers-Applications-of-Self-supervised-Learning-in-Biomedical-Signals/</loc>
     
     <lastmod>2020-10-27</lastmod>
@@ -288,13 +295,6 @@
     
   </url>
   
-  <url>
-    <loc>http://qfxiao.me/about/index.html</loc>
-    
-    <lastmod>2020-05-27</lastmod>
-    
-  </url>
-  
 
   <url>
     <loc>http://qfxiao.me/</loc>
@@ -375,6 +375,13 @@
   </url>
   
   <url>
+    <loc>http://qfxiao.me/tags/Transfer-Learning/</loc>
+    <lastmod>2020-11-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>http://qfxiao.me/tags/ID3/</loc>
     <lastmod>2020-11-12</lastmod>
     <changefreq>daily</changefreq>
@@ -396,28 +403,7 @@
   </url>
   
   <url>
-    <loc>http://qfxiao.me/tags/Transfer-Learning/</loc>
-    <lastmod>2020-11-12</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>http://qfxiao.me/tags/Self-Supervised-Learning/</loc>
-    <lastmod>2020-11-12</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://qfxiao.me/tags/GBDT/</loc>
-    <lastmod>2020-11-12</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://qfxiao.me/tags/XGBoost/</loc>
     <lastmod>2020-11-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -432,6 +418,20 @@
   
   <url>
     <loc>http://qfxiao.me/tags/Geant4/</loc>
+    <lastmod>2020-11-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/tags/GBDT/</loc>
+    <lastmod>2020-11-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/tags/XGBoost/</loc>
     <lastmod>2020-11-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -459,6 +459,13 @@
   </url>
   
   <url>
+    <loc>http://qfxiao.me/tags/Papers/</loc>
+    <lastmod>2020-11-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>http://qfxiao.me/tags/Overfitting/</loc>
     <lastmod>2020-11-12</lastmod>
     <changefreq>daily</changefreq>
@@ -474,13 +481,6 @@
   
   <url>
     <loc>http://qfxiao.me/tags/Variance/</loc>
-    <lastmod>2020-11-12</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://qfxiao.me/tags/Papers/</loc>
     <lastmod>2020-11-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -671,14 +671,14 @@
   </url>
   
   <url>
-    <loc>http://qfxiao.me/categories/Research/GAN/</loc>
+    <loc>http://qfxiao.me/categories/Research/Representation-Learning/</loc>
     <lastmod>2020-11-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>http://qfxiao.me/categories/Research/Representation-Learning/</loc>
+    <loc>http://qfxiao.me/categories/Research/GAN/</loc>
     <lastmod>2020-11-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
