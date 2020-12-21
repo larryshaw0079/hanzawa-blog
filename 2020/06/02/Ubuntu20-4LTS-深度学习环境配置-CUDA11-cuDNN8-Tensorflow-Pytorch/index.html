@@ -185,7 +185,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1.4k 字
+      1.5k 字
     </span>
   
 
@@ -195,7 +195,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      17
+      19
        分钟
     </span>
   
@@ -237,7 +237,7 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：1 分钟前
+                  本文最后更新于：几秒前
                 
               </p>
             
@@ -255,9 +255,14 @@
 </figure>
 <p>可以看到推荐驱动版本是455，直接使用命令<code>ubuntu-drivers autoinstall</code>就可以自动安装推荐版本的驱动了。</p>
 <h1 id="install-cuda-cudnn">Install CUDA &amp; cuDNN</h1>
-<p>这里选择apt-get的方式安装CUDA：</p>
+<p>最常用的方式是按照<a href="%5BCUDA%20Toolkit%2011.0%20Download%20%7C%20NVIDIA%20Developer%5D(https://developer.nvidia.com/cuda-11.0-download-archive?target_os=Linux&amp;target_arch=x86_64&amp;target_distro=Ubuntu&amp;target_version=1804&amp;target_type=deblocal)">官网</a>的指导来安装CUDA，之后需要设置环境变量，在<code>~/.bashrc</code>中添加下列指令：</p>
+<pre><code class="hljs bash"><span class="hljs-built_in">export</span> PATH=/usr/<span class="hljs-built_in">local</span>/cuda-11.0/bin<span class="hljs-variable">$&#123;PATH:+:<span class="hljs-variable">$&#123;PATH&#125;</span>&#125;</span>
+<span class="hljs-built_in">export</span> LD_LIBRARY_PATH=/usr/<span class="hljs-built_in">local</span>/cuda-11.0/lib64\
+                         <span class="hljs-variable">$&#123;LD_LIBRARY_PATH:+:<span class="hljs-variable">$&#123;LD_LIBRARY_PATH&#125;</span>&#125;</span></code></pre>
+<p>还可以选择简单的方式，直接使用apt-get来安装CUDA：</p>
 <pre><code class="hljs bash">sudo apt-get install nvidia-cuda-toolkit</code></pre>
-<p>输入<code>nvcc --version</code>可以测试是否安装成功，输入<code>nvidia-smi</code>可以看到GPU信息和CUDA版本。</p>
+<p>不过这样会直接安装最新的CUDA版本，而PyTorch等深度学习框架不一定对最新的CUDA版本都有很好的支持，所以不推荐这种方式。</p>
+<p>安装完CUDA之后输入<code>nvcc --version</code>可以测试是否安装成功，输入<code>nvidia-smi</code>可以看到GPU信息和CUDA版本。</p>
 <p>之后安装cuDNN，进入<a target="_blank" rel="noopener" href="https://developer.nvidia.com/cudnn">官网</a>，选择Download cuDNN：</p>
 <p><img src="https://i.loli.net/2020/06/24/VYBRoINFDC9ObA1.png" srcset="/img/loading.gif" /></p>
 <p>会要求登录，如果没有账号的注册一个即可。在这里根据CUDA版本选择适合的cuDNN，我这里是CUDA10.2。我们选择deb包的方式安装，下载下图中圈出来的三个deb包，依次用<code>sudo dpkg -i xxx.deb</code>命令安装。</p>
