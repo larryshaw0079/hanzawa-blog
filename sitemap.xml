@@ -9,13 +9,6 @@
   </url>
   
   <url>
-    <loc>http://qfxiao.me/2020/12/19/Recent-Progress-of-Contrastive-Learning-in-NeurIPS-2020/</loc>
-    
-    <lastmod>2020-12-19</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://qfxiao.me/about/index.html</loc>
     
     <lastmod>2020-11-12</lastmod>
@@ -424,6 +417,13 @@
   </url>
   
   <url>
+    <loc>http://qfxiao.me/tags/Geant4/</loc>
+    <lastmod>2020-12-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>http://qfxiao.me/tags/GBDT/</loc>
     <lastmod>2020-12-21</lastmod>
     <changefreq>daily</changefreq>
@@ -432,13 +432,6 @@
   
   <url>
     <loc>http://qfxiao.me/tags/XGBoost/</loc>
-    <lastmod>2020-12-21</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://qfxiao.me/tags/Geant4/</loc>
     <lastmod>2020-12-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -466,13 +459,6 @@
   </url>
   
   <url>
-    <loc>http://qfxiao.me/tags/Papers/</loc>
-    <lastmod>2020-12-21</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>http://qfxiao.me/tags/Overfitting/</loc>
     <lastmod>2020-12-21</lastmod>
     <changefreq>daily</changefreq>
@@ -488,6 +474,13 @@
   
   <url>
     <loc>http://qfxiao.me/tags/Variance/</loc>
+    <lastmod>2020-12-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/tags/Papers/</loc>
     <lastmod>2020-12-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -522,14 +515,14 @@
   </url>
   
   <url>
-    <loc>http://qfxiao.me/tags/SVM/</loc>
+    <loc>http://qfxiao.me/tags/Spectral/</loc>
     <lastmod>2020-12-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>http://qfxiao.me/tags/Spectral/</loc>
+    <loc>http://qfxiao.me/tags/SVM/</loc>
     <lastmod>2020-12-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
