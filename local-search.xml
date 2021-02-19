@@ -4,19 +4,6 @@
   
   
   <entry>
-    <title>A Short Review of Self-supervised Learning for Physiological Signals</title>
-    <link href="/2021/01/22/A-Short-Review-of-Self-supervised-Learning-for-Physiological-Signals/"/>
-    <url>/2021/01/22/A-Short-Review-of-Self-supervised-Learning-for-Physiological-Signals/</url>
-    
-    <content type="html"><![CDATA[<h1 id="introduction">Introduction</h1><h1 id="uncovering-the-structure-of-clinical-eeg-signals-with-self-supervised-learning">Uncovering the structure of clinical EEG signals with self-supervised learning</h1><p><img src="https://i.loli.net/2021/01/22/3lokMUqiuEm7D6g.png" srcset="/img/loading.gif" /></p><h1 id="self-supervised-learning-for-ecg-based-emotion-recognition">Self-supervised learning for ECG-based emotion Recognition</h1><p><img src="https://i.loli.net/2021/01/22/NPeOCfBhpFZrdmz.png" srcset="/img/loading.gif" /></p><h1 id="contrastive-representation-learning-for-electroencephalogram-classification">Contrastive Representation Learning for Electroencephalogram Classification</h1><p><img src="https://i.loli.net/2021/01/22/UnMeWYH1wiN6gZl.png" srcset="/img/loading.gif" /></p><h1 id="subject-aware-contrastive-learning-for-biosignals">Subject-Aware Contrastive Learning for Biosignals</h1><p><img src="https://i.loli.net/2021/01/22/dX3ANhOalTYI5SB.png" srcset="/img/loading.gif" /></p><h1 id="pcps-patient-cardiac-prototypes">PCPS: Patient Cardiac Prototypes</h1><p><img src="https://i.loli.net/2021/01/22/MvwFReWXYGgrVmC.png" srcset="/img/loading.gif" /></p><h1 id="clocs-contrastive-learning-of-cardiac-signals-across-space-time-and-patients">CLOCS: Contrastive Learning of Cardiac Signals Across Space, Time, and Patients</h1><figure><img src="https://i.loli.net/2021/01/22/uFkTqzMsKdAobWa.png" srcset="/img/loading.gif" alt="" /><figcaption>image-20210122130832544</figcaption></figure><h1 id="wav2vec-2.0-a-framework-for-self-supervised-learning-of-speech-representations">wav2vec 2.0: A Framework for Self-Supervised Learning of Speech Representations</h1><figure><img src="https://i.loli.net/2021/01/22/DB9vAzn1cmCQxh3.png" srcset="/img/loading.gif" alt="" /><figcaption>image-20210122130814002</figcaption></figure>]]></content>
-    
-    
-    
-  </entry>
-  
-  
-  
-  <entry>
     <title>Unsupervised Feature Learning via Non-Parametric Instance Discrimination</title>
     <link href="/2020/09/23/Unsupervised-Feature-Learning-via-Non-Parametric-Instance-Discrimination/"/>
     <url>/2020/09/23/Unsupervised-Feature-Learning-via-Non-Parametric-Instance-Discrimination/</url>
