@@ -185,7 +185,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      975 字
+      970 字
     </span>
   
 
@@ -237,13 +237,12 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：3 个月前
+                  本文最后更新于：6 小时前
                 
               </p>
             
             <div class="markdown-body">
               <h1 id="introduction">Introduction</h1>
-<p>细节待完善。。。</p>
 <p>本文基于样本分类和噪声对比估计提出了一个无监督表示学习算法。下图展示了一个Intuition Example：</p>
 <p><img src="https://i.loli.net/2020/07/28/AimfJM7gtuDsPGQ.png" srcset="/img/loading.gif" style="zoom: 67%;" /></p>
 <p>对于一个有监督的分类器，输入一张图片，作者观察到分类器的Softmax Response中较高的那些类都是在视觉上看起来比较接近的（美洲豹Leopard，美洲虎Jaguar，印度豹Cheetah），也就是说网络捕捉到了类间的视觉相似性，不过这是在有标签的情况下。对于无监督表示学习任务，作者将这个观察推广到了一个极端情况，就是把每一个样本都视作不同的类，然后让分类器来学习样本（类）间的视觉相似性。不过直接这么做会有严重的效率问题，所以作者还利用了Memory Bank机制和噪声对比估计来提高效率。</p>
@@ -332,9 +331,9 @@ J_{NCE}(\theta)=-E_{P_d}\left[\log h(i,\mathbf v_i^{(t-1)})-\lambda\parallel\mat
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2020/10/27/Must-Read-Papers-Applications-of-Self-supervised-Learning-in-Biomedical-Signals/">
+                      <a href="/2021/01/22/A-Short-Review-of-Self-supervised-Learning-for-Physiological-Signals/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Must Read Papers: Applications of Self-supervised Learning in Biomedical Signals</span>
+                        <span class="hidden-mobile">A Short Review of Self-supervised Learning for Physiological Signals</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     

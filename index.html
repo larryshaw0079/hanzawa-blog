@@ -175,26 +175,24 @@
   <div class="row mx-auto index-card">
     
     
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2020/10/27/Anomaly-Detection-Resource-Collection/" target="_self">
-          <img src="https://i.loli.net/2020/07/13/KeiSrsnlHVYIDE3.png" alt="Anomaly Detection Resource Collection">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
+    <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
-        <a href="/2020/10/27/Anomaly-Detection-Resource-Collection/">Anomaly Detection Resource Collection</a>
+        <a href="/2021/01/22/A-Short-Review-of-Self-supervised-Learning-for-Physiological-Signals/">A Short Review of Self-supervised Learning for Physiological Signals</a>
       </h1>
 
       <p class="index-excerpt">
-        <a href="/2020/10/27/Anomaly-Detection-Resource-Collection/">
+        <a href="/2021/01/22/A-Short-Review-of-Self-supervised-Learning-for-Physiological-Signals/">
           
           
             
           
           Introduction
-异常检测（Anomaly Detection或Outlier Detection或Novelty Detection）本身包含的东西很多，有时序（Time Series）的异常检测，图像（Image）的异常检测，视频（Video）的异常检测，图（Graph）的异常检测，表格数据（Categorical Data）的异常检测等等，他们之间有共性也有很大的区别。本文主要关注
+Uncovering the structure of clinical EEG signals with self-supervised learning
+
+Self-supervised learning for ECG-based emotion Recognition
+
+Contrastive Representation Learning for El
         </a>
       </p>
 
@@ -202,103 +200,12 @@
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
-            <time datetime="2020-10-27 12:49" pubdate>
-              2020-10-27
+            <time datetime="2021-01-22 13:03" pubdate>
+              2021-01-22
             </time>
           </div>
         
         
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/Research/">Research</a>
-            
-              <a href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Anomaly-Detection/">Anomaly Detection</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2020/10/27/Must-Read-Papers-Applications-of-Self-supervised-Learning-in-Biomedical-Signals/" target="_self">
-          <img src="https://i.loli.net/2020/10/27/ANDKPZpqGQl36CI.png" alt="Must Read Papers: Applications of Self-supervised Learning in Biomedical Signals">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2020/10/27/Must-Read-Papers-Applications-of-Self-supervised-Learning-in-Biomedical-Signals/">Must Read Papers: Applications of Self-supervised Learning in Biomedical Signals</a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2020/10/27/Must-Read-Papers-Applications-of-Self-supervised-Learning-in-Biomedical-Signals/">
-          
-          
-            
-          
-          Introduction
-Self-supervised Learning (SSL)
-更新中。。。
-Self-supervised Learning
-
-
-
-
-
-
-
-
-Title
-Conf/Journal
-Link
-
-
-
-
-Unsupervised Feature Learning via Non-Parametric Instance Discriminat
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2020-10-27 11:32" pubdate>
-              2020-10-27
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/Research/">Research</a>
-            
-              <a href="/categories/Research/Misc/">Misc</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Papers/">Papers</a>
-            
-          </div>
         
       </div>
     </article>
@@ -326,10 +233,9 @@ Unsupervised Feature Learning via Non-Parametric Instance Discriminat
             
           
           Introduction
-细节待完善。。。
 本文基于样本分类和噪声对比估计提出了一个无监督表示学习算法。下图展示了一个Intuition Example：
 
-对于一个有监督的分类器，输入一张图片，作者观察到分类器的Softmax Response中较高的那些类都是在视觉上看起来比较接近的（美洲豹Leopard，美洲虎Jaguar，印度豹Cheetah），也就是说网络捕捉到了类间的视觉相似性
+对于一个有监督的分类器，输入一张图片，作者观察到分类器的Softmax Response中较高的那些类都是在视觉上看起来比较接近的（美洲豹Leopard，美洲虎Jaguar，印度豹Cheetah），也就是说网络捕捉到了类间的视觉相似性，不过这是在有标签的
         </a>
       </p>
 
@@ -388,12 +294,12 @@ Unsupervised Feature Learning via Non-Parametric Instance Discriminat
             
           
           Introduction
-本文提出了一种表示学习框架：Contrastive Predictive Coding（CPC）。To be finished...
+这篇文章算是Contrastive Learning的开山之作之一了，本文提出了表示学习框架：Contrastive Predictive Coding（CPC）和InfoNCE Loss。
 原文
 Proposed Method
 Contrastive Predictive Coding
 N-pair Loss: \[
-\mathcal L=-\log\frac{\exp(f^+\cdot f^\top)}{\exp
+\mathcal L=-\log\fra
         </a>
       </p>
 
@@ -422,135 +328,9 @@ N-pair Loss: \[
             
               <a href="/tags/Deep-Learning/">Deep Learning</a>
             
+              <a href="/tags/Contrastive-Learning/">Contrastive Learning</a>
+            
               <a href="/tags/Self-supervised-Learning/">Self-supervised Learning</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2020/09/15/Bagging-and-Random-Forest-Machine-Learning-Ensemble-Algorithms-3/" target="_self">
-          <img src="https://i.loli.net/2020/09/15/AmoYRSCPZdJhkBq.png" alt="Bagging and Random Forest: Machine Learning Ensemble Algorithms 3">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2020/09/15/Bagging-and-Random-Forest-Machine-Learning-Ensemble-Algorithms-3/">Bagging and Random Forest: Machine Learning Ensemble Algorithms 3</a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2020/09/15/Bagging-and-Random-Forest-Machine-Learning-Ensemble-Algorithms-3/">
-          
-          
-            
-          
-          Introduction
-Bagging
-Bagging的步骤如下图所示：
-
-分为几个步骤
-
-随机采样 (Bootstrap)，按照固定的数目对数据集做有放回采样，一般情况下采样集的数目和训练集一样，设为\(N\)，那么每个样本被采到的机率就是\(\frac{1}{N}\)，采样\(N\)次都没采到的机率是\((1-\frac{1}{N})^N\)，当采样数目\(N\)比较大的时候，即
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2020-09-15 10:35" pubdate>
-              2020-09-15
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/Technical-Notes/">Technical Notes</a>
-            
-              <a href="/categories/Technical-Notes/Machine-Learning/">Machine Learning</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Random-Forest/">Random Forest</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2020/09/10/Unsupervised-Anomaly-Detection-Algorithms-Overview/" target="_self">
-          <img src="https://i.loli.net/2020/09/10/g2lZYd1NAuM4GcO.png" alt="Unsupervised Anomaly Detection Algorithms Overview">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2020/09/10/Unsupervised-Anomaly-Detection-Algorithms-Overview/">Unsupervised Anomaly Detection Algorithms Overview</a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2020/09/10/Unsupervised-Anomaly-Detection-Algorithms-Overview/">
-          
-          
-            
-          
-          Introduction
-未完待续，缓慢填坑中。。。
-LOF
-One-Class SVM
-Isolation Forest
-
-孤立森林 (Isolation Forest) 的思路和随机森林有异曲同工之妙（随机森林可以参考我的另一篇博文），孤立森林本身也是一种树模型。孤立森林要解决的是无监督异常检测问题，即给定无标签的训练集，把其中的异常值挑选出来。孤立森林的基本假设是我不断选择特征进
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2020-09-10 23:41" pubdate>
-              2020-09-10
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/Technical-Notes/">Technical Notes</a>
-            
-              <a href="/categories/Technical-Notes/Anomaly-Detection/">Anomaly Detection</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/LOF/">LOF</a>
-            
-              <a href="/tags/OCSVM/">OCSVM</a>
-            
-              <a href="/tags/iForest/">iForest</a>
             
           </div>
         
@@ -579,9 +359,8 @@ Isolation Forest
           
             
           
-          Introduction
-Overfitting
-我们将模型输出与真实值之间的差异称为误差，如对于分类问题，我们可以使用模型分类错误的样本数量占总样本数的比例。模型在训练集（我们收集到的数据）上的误差称作是训练误差 (training error)，而在新样本（这里指的是新的样本而不是测试集，训练集测试集是从我们收集到的数据上人为划分出来的）上的误差称作是泛化误差 (generalizatio
+          Overfitting
+我们将模型输出与真实值之间的差异称为误差，如对于分类问题，我们可以使用模型分类错误的样本数量占总样本数的比例。模型在训练集（我们收集到的数据）上的误差称作是训练误差 (training error)，而在新样本（这里指的是新的样本而不是测试集，训练集测试集是从我们收集到的数据上人为划分出来的）上的误差称作是泛化误差 (generalization error)。对于机器学
         </a>
       </p>
 
@@ -624,19 +403,19 @@ Overfitting
     
     
       <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2020/09/02/Decision-Tree-Machine-Learning-Classification-Algorithms-3/" target="_self">
-          <img src="https://i.loli.net/2020/09/02/I6zJKe4X1qG5fdF.png" alt="Decision Tree: Machine Learning Classification Algorithms 3">
+        <a href="/2020/09/02/Machine-Learning-Classification-Algorithms-Decision-Trees/" target="_self">
+          <img src="https://i.loli.net/2020/09/02/I6zJKe4X1qG5fdF.png" alt="Machine Learning Classification Algorithms: Decision Trees">
         </a>
       </div>
     
     <article class="col-12 col-md-8 mx-auto index-info">
       <h1 class="index-header">
         
-        <a href="/2020/09/02/Decision-Tree-Machine-Learning-Classification-Algorithms-3/">Decision Tree: Machine Learning Classification Algorithms 3</a>
+        <a href="/2020/09/02/Machine-Learning-Classification-Algorithms-Decision-Trees/">Machine Learning Classification Algorithms: Decision Trees</a>
       </h1>
 
       <p class="index-excerpt">
-        <a href="/2020/09/02/Decision-Tree-Machine-Learning-Classification-Algorithms-3/">
+        <a href="/2020/09/02/Machine-Learning-Classification-Algorithms-Decision-Trees/">
           
           
             
@@ -687,19 +466,19 @@ Overfitting
     
     
       <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2020/08/26/Support-Vector-Machine-Machine-Learning-Classification-Algorithms-2/" target="_self">
-          <img src="https://i.loli.net/2020/08/29/qirgbCydejXMc5B.jpg" alt="Support Vector Machine: Machine Learning Classification Algorithms 2">
+        <a href="/2020/08/26/Machine-Learning-Classification-Algorithms-Support-Vector-Machine/" target="_self">
+          <img src="https://i.loli.net/2020/08/29/qirgbCydejXMc5B.jpg" alt="Machine Learning Classification Algorithms: Support Vector Machine">
         </a>
       </div>
     
     <article class="col-12 col-md-8 mx-auto index-info">
       <h1 class="index-header">
         
-        <a href="/2020/08/26/Support-Vector-Machine-Machine-Learning-Classification-Algorithms-2/">Support Vector Machine: Machine Learning Classification Algorithms 2</a>
+        <a href="/2020/08/26/Machine-Learning-Classification-Algorithms-Support-Vector-Machine/">Machine Learning Classification Algorithms: Support Vector Machine</a>
       </h1>
 
       <p class="index-excerpt">
-        <a href="/2020/08/26/Support-Vector-Machine-Machine-Learning-Classification-Algorithms-2/">
+        <a href="/2020/08/26/Machine-Learning-Classification-Algorithms-Support-Vector-Machine/">
           
           
             
@@ -750,35 +529,31 @@ a_1x_1+\cdots+a_nx_n=d
     
     
       <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2020/08/26/Linear-Regression-and-Logistic-Regression-Machine-Learning-Classification-Algorithms-1/" target="_self">
-          <img src="https://i.loli.net/2020/08/29/Y6BGoQWxzITbJwu.jpg" alt="Linear Regression and Logistic Regression - Machine Learning Classification Algorithms 1">
+        <a href="/2020/08/26/Boosting-and-AdaBoost-Machine-Learning-Ensemble-Algorithms-1/" target="_self">
+          <img src="https://i.loli.net/2020/08/29/UPywh85NifTDubW.png" alt="Boosting and AdaBoost: Machine Learning Ensemble Algorithms 1">
         </a>
       </div>
     
     <article class="col-12 col-md-8 mx-auto index-info">
       <h1 class="index-header">
         
-        <a href="/2020/08/26/Linear-Regression-and-Logistic-Regression-Machine-Learning-Classification-Algorithms-1/">Linear Regression and Logistic Regression - Machine Learning Classification Algorithms 1</a>
+        <a href="/2020/08/26/Boosting-and-AdaBoost-Machine-Learning-Ensemble-Algorithms-1/">Boosting and AdaBoost: Machine Learning Ensemble Algorithms 1</a>
       </h1>
 
       <p class="index-excerpt">
-        <a href="/2020/08/26/Linear-Regression-and-Logistic-Regression-Machine-Learning-Classification-Algorithms-1/">
+        <a href="/2020/08/26/Boosting-and-AdaBoost-Machine-Learning-Ensemble-Algorithms-1/">
           
           
             
           
           Introduction
-Still working on it...
-Linear Regression
-The Model
-\[
-\hat y = w^\top x + b
-\]
+Boosting
+AdaBoost Algorithm
+给定数据集\(X=\{(x_1,y_1),\cdots,(x_N,y_N)\}\)，AdaBoost的思想是通过训练一系列弱分类器，并通过线性相加将这些弱分类器组合成强分类器。
 
-损失函数： \[
-\mathcal L(w) = \sum_{i=1}^N \parallel w^\top x_i -y_i\parallel^2
-\] 写成矩阵形式 \[
-\mathcal
+初始化数据的权重分布\(D_1\)
+在训练数据上使用权重分布\(D_m\)进行训练，得到基分类器\(G_m(x)\)
+计算基
         </a>
       </p>
 
@@ -786,7 +561,7 @@ The Model
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
-            <time datetime="2020-08-26 02:08" pubdate>
+            <time datetime="2020-08-26 00:28" pubdate>
               2020-08-26
             </time>
           </div>
@@ -805,7 +580,198 @@ The Model
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/Linear-Regression/">Linear Regression</a>
+              <a href="/tags/Boosting/">Boosting</a>
+            
+              <a href="/tags/Adaboost/">Adaboost</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2020/08/26/Machine-Learning-Ensemble-Algorithms-GBDT-and-XGBoost/" target="_self">
+          <img src="https://i.loli.net/2020/08/29/AVTDIrz23bhECgk.png" alt="Machine Learning Ensemble Algorithms: GBDT and XGBoost">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2020/08/26/Machine-Learning-Ensemble-Algorithms-GBDT-and-XGBoost/">Machine Learning Ensemble Algorithms: GBDT and XGBoost</a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2020/08/26/Machine-Learning-Ensemble-Algorithms-GBDT-and-XGBoost/">
+          
+          
+            
+          
+          Introduction
+本文主要介绍GBDT和XGBoost，在学习本文内容之前建议先学习决策树相关内容。
+下面是一些有用的参考链接
+XGBoost Documentation
+AdaBoost blog
+GBDT blog
+slide
+陈天奇slide
+blog
+blog
+Preliminaries
+实际上，GBDT和梯度下降、XGBoost和牛顿法之间是存在密切关系的，
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-08-26 00:28" pubdate>
+              2020-08-26
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/Technical-Notes/">Technical Notes</a>
+            
+              <a href="/categories/Technical-Notes/Machine-Learning/">Machine Learning</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/GBDT/">GBDT</a>
+            
+              <a href="/tags/XGBoost/">XGBoost</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2020/08/24/Unsupervised-Representation-Learning-by-Predicting-Random-Distances/" target="_self">
+          <img src="https://i.loli.net/2020/07/19/vRV32EgLiYkWaQN.png" alt="Unsupervised Representation Learning by Predicting Random Distances">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2020/08/24/Unsupervised-Representation-Learning-by-Predicting-Random-Distances/">Unsupervised Representation Learning by Predicting Random Distances</a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2020/08/24/Unsupervised-Representation-Learning-by-Predicting-Random-Distances/">
+          
+          
+            
+          
+          Introduction
+针对高维表格数据的表示学习，作者提出了基于预测预计变换后的距离的无监督表示学习框架RDP，并进行了理论上的讨论。To be finished...
+论文地址 代码地址
+Proposed Method
+Random Distance Prediction Model
+对于很多下游任务来说，高维数据对模型效率和性能都很大，所以学习低维的有意义（能够最大限度保存原始空
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-08-24 16:17" pubdate>
+              2020-08-24
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/Research/">Research</a>
+            
+              <a href="/categories/Research/Representation-Learning/">Representation Learning</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Anomaly-Detection/">Anomaly Detection</a>
+            
+              <a href="/tags/Representation-Learning/">Representation Learning</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2020/07/14/Effective-End-to-end-Unsupervised-Outlier-Detection-via-Linear-Priority-of-Discriminative-Network/" target="_self">
+          <img src="https://i.loli.net/2020/07/14/ULAdYpzsoGfFwtD.png" alt="Effective End-to-end Unsupervised Outlier Detection via Linear Priority of Discriminative Network">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2020/07/14/Effective-End-to-end-Unsupervised-Outlier-Detection-via-Linear-Priority-of-Discriminative-Network/">Effective End-to-end Unsupervised Outlier Detection via Linear Priority of Discriminative Network</a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2020/07/14/Effective-End-to-end-Unsupervised-Outlier-Detection-via-Linear-Priority-of-Discriminative-Network/">
+          
+          
+            
+          
+          Introduction
+本文针对无监督异常检测提出了\(E^3\space{Outlier}\)。作者使用自监督学习的方法，通过构建有监督任务在没有标签的情况下学习高层语义特征。PS：这篇文章的方法和NIPS18上的Deep Anomaly Detection Using Geometric Transformations（后面简称GEOM）颇为相似，但是不知为啥没有在实验中进行比较。后面我会
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-07-14 18:46" pubdate>
+              2020-07-14
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/Research/">Research</a>
+            
+              <a href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Self-Supervised-Learning/">Self-Supervised Learning</a>
             
           </div>
         
@@ -817,7 +783,7 @@ The Model
 
   <nav aria-label="navigation">
     <span class="pagination" id="pagination">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/"><i class="iconfont icon-arrowright"></i></a>
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/"><i class="iconfont icon-arrowright"></i></a>
     </span>
   </nav>
   
