@@ -1,248 +1,434 @@
-
-
 <!DOCTYPE html>
-<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+<html lang="zh-CN">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
 
 
 
 <head>
-  <meta charset="UTF-8">
-  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
-  <link rel="icon" type="image/png" href="/img/favicon.png">
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
-  
-  <meta name="theme-color" content="#2f4154">
-  <meta name="description" content="">
-  <meta name="author" content="Hanzawa">
-  <meta name="keywords" content="">
-  <title>Discovering Physical Concepts with Neural Networks - Hanzawa の 部屋</title>
-
-  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
-
-
-  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
-  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
-
-  
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="author" content="Hanzawa">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="Hanzawa">
     
+    <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
     
-      
-      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.1.2/styles/github-gist.min.css" />
+    <meta name="description" content="">
+    <meta name="description" content="Introduction 如题目所示，本文的目的是利用神经网络来发掘物理概念。其思路是从实验数据学到表示，然后用学到的表示来回答物理问题，由此物理概念可以从学到的表示来提取出。作者进行了4个实验：  在阻尼振动实验中，模型学到了相关的物理参数； 在角动量守恒实验中，模型预测了质点的运动； 给定量子系统的观测数据，模型正确的识别出了量子状态的自由度； 给定从地球观测的太阳和火星的位置时间">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Discovering Physical Concepts with Neural Networks">
+<meta property="og:url" content="http://qfxiao.me/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/index.html">
+<meta property="og:site_name" content="Hanzawa の 部屋">
+<meta property="og:description" content="Introduction 如题目所示，本文的目的是利用神经网络来发掘物理概念。其思路是从实验数据学到表示，然后用学到的表示来回答物理问题，由此物理概念可以从学到的表示来提取出。作者进行了4个实验：  在阻尼振动实验中，模型学到了相关的物理参数； 在角动量守恒实验中，模型预测了质点的运动； 给定量子系统的观测数据，模型正确的识别出了量子状态的自由度； 给定从地球观测的太阳和火星的位置时间">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2020/06/25/yh5Wj9AQmd6nsFC.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/25/zCnYjVEZHdbqAD3.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/25/uWd1lOUFxXgQJ7f.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/25/yWGzxo4eFKmABul.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/25/Q4PKa3pm2htekqd.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/25/SKfJLxl1QmuzFt9.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/25/qimk9ZYBe7UPs3z.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/25/8lY1LBsQCZUwX2I.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/25/ZTRKfzb63Jrvk5C.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/25/vXl3Ae4RpzibrmY.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/25/XnsYqcRS6izZGEm.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/25/az3UmkchyFWevP7.png">
+<meta property="article:published_time" content="2020-03-01T14:55:02.000Z">
+<meta property="article:modified_time" content="2020-06-25T05:35:20.215Z">
+<meta property="article:author" content="Hanzawa">
+<meta property="article:tag" content="Deep Learning">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/06/25/yh5Wj9AQmd6nsFC.png">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     
-  
+    <title>Discovering Physical Concepts with Neural Networks · fi3ework&#39;s Studio</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
 
-  
-    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
-  
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href= "/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= "/css/mobile.css?v=20180824" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
 
 
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
 
-<!-- 主题依赖的图标库，不要自行修改 -->
-
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
-
-
-
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
-
-
-<link  rel="stylesheet" href="/css/main.css" />
-
-<!-- 自定义样式保持在最底部 -->
-
-
-  <script id="fluid-configs">
-    var Fluid = window.Fluid || {};
-    var CONFIG = {"hostname":"qfxiao.me","root":"/","version":"1.8.5","typing":{"enable":true,"typeSpeed":20,"cursorChar":"_","loop":false},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"copy_btn":true,"image_zoom":{"enable":true},"lazyload":{"enable":true,"onlypost":true},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
-  </script>
-  <script  src="/js/utils.js" ></script>
-  <script  src="/js/color-schema.js" ></script>
+    <link rel="icon" href= "/assets/favicon.ico" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
+    <link rel="preload" href="/scripts/main.js" as="script" />
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
 <meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Hanzawa の 部屋" type="application/atom+xml">
 </head>
 
+    
+        <body class="post-body">
+    
+    
+<header class="header">
 
-<body>
-  <header style="height: 70vh;">
-    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
-  <div class="container">
-    <a class="navbar-brand"
-       href="/">&nbsp;<strong>Hanzawa</strong>&nbsp;</a>
-
-    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
-            data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <div class="animated-icon"><span></span><span></span><span></span></div>
-    </button>
-
-    <!-- Collapsible content -->
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav ml-auto text-center">
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/">
-                <i class="iconfont icon-home-fill"></i>
-                首页
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/archives/">
-                <i class="iconfont icon-archive-fill"></i>
-                归档
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/categories/">
-                <i class="iconfont icon-category-fill"></i>
-                分类
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/tags/">
-                <i class="iconfont icon-tags-fill"></i>
-                标签
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/about/">
-                <i class="iconfont icon-user-fill"></i>
-                关于
-              </a>
-            </li>
-          
-        
-        
-          <li class="nav-item" id="search-btn">
-            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
-                class="iconfont icon-search"></i>&nbsp;</a>
-          </li>
-        
-        
-          <li class="nav-item" id="color-toggle-btn">
-            <a class="nav-link" href="javascript:">&nbsp;<i
-                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
-          </li>
-        
-      </ul>
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >fi3ework&#39;s Studio.</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">Discovering Physical Concepts with Neural Networks</a>
+            </div>
     </div>
-  </div>
-</nav>
+    
+    <a class="home-link" href=/>fi3ework's Studio.</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style="
 
-    <div class="banner intro-2" id="background" parallax=true
-         style="background: url('/img/bg/coffe_heart.jpg') no-repeat center center;
-           background-size: cover;">
-      <div class="full-bg-img">
-        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
-          <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="Discovering Physical Concepts with Neural Networks">
-              
-            </span>
 
+
+
+
+
+
+height:50vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
             
-              <div class="mt-3">
-  
-  
-    <span class="post-meta">
-      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2020-03-01 22:55" pubdate>
-        2020年3月1日 晚上
-      </time>
-    </span>
-  
-</div>
-
-<div class="mt-1">
-  
-    
-    <span class="post-meta mr-2">
-      <i class="iconfont icon-chart"></i>
-      1.9k 字
-    </span>
-  
-
-  
-    
-    <span class="post-meta mr-2">
-      <i class="iconfont icon-clock-fill"></i>
-      
-      
-      23
-       分钟
-    </span>
-  
-
-  
-  
-    
-      <!-- 不蒜子统计文章PV -->
-      <span id="busuanzi_container_page_pv" style="display: none">
-        <i class="iconfont icon-eye" aria-hidden="true"></i>
-        <span id="busuanzi_value_page_pv"></span> 次
-      </span>
-    
-  
-</div>
-
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
             
-          </div>
-
-          
-        </div>
-      </div>
+            Discovering Physical Concepts with Neural Networks
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Deep Learning">Deep Learning</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">1.9k</span>阅读时长: <span class="post-count reading-time">7 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2020/03/01</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
     </div>
-  </header>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
 
-  <main>
-    
-      
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
 
-<div class="container-fluid">
-  <div class="row">
-    <div class="d-none d-lg-block col-lg-2"></div>
-    <div class="col-lg-8 nopadding-md">
-      <div class="container nopadding-md" id="board-ctn">
-        <div class="py-5" id="board">
-          <article class="post-content mx-auto">
-            <!-- SEO header -->
-            <h1 style="display: none">Discovering Physical Concepts with Neural Networks</h1>
-            
-              <p class="note note-info">
-                
-                  本文最后更新于：8 个月前
-                
-              </p>
-            
-            <div class="markdown-body">
-              <h1 id="introduction">Introduction</h1>
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="introduction">Introduction</h1>
 <p>如题目所示，本文的目的是利用神经网络来发掘物理概念。其思路是从实验数据学到表示，然后用学到的表示来回答物理问题，由此物理概念可以从学到的表示来提取出。作者进行了4个实验：</p>
 <ol type="1">
 <li>在阻尼振动实验中，模型学到了相关的物理参数；</li>
@@ -252,10 +438,10 @@
 </ol>
 <h1 id="preliminaries">Preliminaries</h1>
 <p>作者在附录中对神经网络的基础知识进行了介绍，这里不再赘述，只截取了一些相对前沿的内容。</p>
-<p><img src="https://i.loli.net/2020/06/25/yh5Wj9AQmd6nsFC.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/yh5Wj9AQmd6nsFC.png" style="zoom:67%;" /></p>
 <h2 id="variational-autoencoders">Variational Autoencoders</h2>
 <p>本文用到的模型基础是VAE：</p>
-<p><img src="https://i.loli.net/2020/06/25/zCnYjVEZHdbqAD3.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/zCnYjVEZHdbqAD3.png" style="zoom:67%;" /></p>
 <h3 id="representation-learning">Representation Learning</h3>
 <p><em>Representation learning</em>的主要目标是将数据映射到一个隐向量 (encoder)，为了保证隐向量包含了所有相关信息， 那么应该能够从隐向量还原原数据 (decoder)。传统的Autoencoder是这个思想的最简单实现，而VAE则将AE和<em>Variational Inference</em>结合了起来，是一种经典的生成式模型。现在很多研究关注<em>Disentangled Representation Learning</em>，也就是说我们希望模型能够无监督地学习数据，从中学到有意义的表示。</p>
 <h3 id="boldsymbol-beta-vae"><span class="math inline">\(\boldsymbol \beta\)</span>-VAE</h3>
@@ -267,7 +453,7 @@ C_\beta(x)=\parallel \hat{x} - x \parallel^2_2-\frac{\beta}{2}\left(\sum\limits_
 <h1 id="network-structure">Network Structure</h1>
 <h2 id="network-structure-scinet">Network Structure: <em>SciNet</em></h2>
 <p>模仿物理学家建模物理问题的过程，作者提出了<em>SciNet</em>，如下图所示：</p>
-<p><img src="https://i.loli.net/2020/06/25/uWd1lOUFxXgQJ7f.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/uWd1lOUFxXgQJ7f.png" style="zoom:67%;" /></p>
 <p>物理学家在建模物理问题的时候，往往是从一些实验数据出发，根据物理常识提取更加精练的表示，然后用学到的表示来回答物理问题。</p>
 <p>对于单纯的输入输出问题，<em>SciNet</em>可以看作是一个映射，<span class="math inline">\(F:\mathcal{O}\times\mathcal{Q}\rightarrow\mathcal{A}\)</span>。<span class="math inline">\(\mathcal{O}\)</span>是可能的实验数据集合，<span class="math inline">\(\mathcal{Q}\)</span>是可能的问题集合，<span class="math inline">\(\mathcal{A}\)</span>是可能的答案集合。可以将其分为两个步骤：编码过程<span class="math inline">\(E:\mathcal{O}\rightarrow\mathcal{R}\)</span>从实验数据学到表示，解码过程<span class="math inline">\(D:\mathcal{R}\times \mathcal{Q}\rightarrow \mathcal{A}\)</span>根据给定的问题从表示来回答问题。由此，<span class="math inline">\(F(o,q)=D(E(o),q)\)</span>。在实现方面，<em>SciNet</em>采用的是全连接网络。</p>
 <h2 id="training-and-testing-scinet">Training and Testing <em>SciNet</em></h2>
@@ -282,9 +468,9 @@ C_\beta(x)=\parallel \hat{x} - x \parallel^2_2-\frac{\beta}{2}\left(\sum\limits_
 <li><p>观测数据：位置时间序列数据<span class="math inline">\(o=[x(t_i)]_{i\in\{1,\cdots,50\}}\in\mathbb{R}^{50}\)</span>，时间间隔相等，质量<span class="math inline">\(m=1\text{kg}\)</span>，振幅<span class="math inline">\(A_0=1\text{m}\)</span>，相位<span class="math inline">\(\delta_0=0\)</span>，弹性模量<span class="math inline">\(k\in[5,10]\text{kg}/\text{s}^2\)</span>，阻尼系数<span class="math inline">\(b\in[0.5,1]\text{kg}/\text{s}\)</span>。</p></li>
 <li><p>问题：预测<span class="math inline">\(q=t_\text{pred}\in\mathbb{R}\)</span></p></li>
 </ul>
-<p><img src="https://i.loli.net/2020/06/25/yWGzxo4eFKmABul.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/yWGzxo4eFKmABul.png" /></p>
 <p>隐变量大小设置为3，结果如下图所示：</p>
-<p><img src="https://i.loli.net/2020/06/25/Q4PKa3pm2htekqd.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/Q4PKa3pm2htekqd.png" style="zoom:67%;" /></p>
 <p>(b)中的三幅图分别是学到的三个隐变量和我们感兴趣的参数<span class="math inline">\(k\)</span>和<span class="math inline">\(b\)</span>的关系图。第一幅图中变量<span class="math inline">\(1\)</span>与<span class="math inline">\(b\)</span>几乎完全线性相关，与<span class="math inline">\(k\)</span>基于线性无关，变量<span class="math inline">\(2\)</span>只和<span class="math inline">\(k\)</span>相关。变量<span class="math inline">\(3\)</span>几乎为一个常数，故不提供额外的信息。由此作者认为<em>SciNet</em>学到了我们关心的两个参数的知识。</p>
 <h2 id="conservation-of-angular-momentum">Conservation of Angular Momentum</h2>
 <p>角动量守恒实验：</p>
@@ -299,9 +485,9 @@ J=m_\text{rot}r^2\omega-rm_\text{free}(\mathbf{v}_\text{free})_x=m_\text{rot}r^2
 <li>观测数据：在撞击之前两个质点的位置数据<span class="math inline">\(o=[(t_i^\text{rot},q_\text{rot}(t_i^\text{rot})),(t_i^\text{free},q_\text{free}(t_i^\text{free}))]_{i\in\{1,\cdots,5\}}\)</span>，质量为固定值，半径<span class="math inline">\(r\)</span>也为固定值。数据添加高斯噪声。</li>
 <li>问题：预测撞击之后自由质点在时间<span class="math inline">\(t_\text{pred}^\prime\)</span>的位置</li>
 </ul>
-<p><img src="https://i.loli.net/2020/06/25/SKfJLxl1QmuzFt9.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/SKfJLxl1QmuzFt9.png" /></p>
 <p>实验室意图如下：</p>
-<p><img src="https://i.loli.net/2020/06/25/qimk9ZYBe7UPs3z.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/qimk9ZYBe7UPs3z.png" style="zoom:67%;" /></p>
 <p>实验结果表明<em>SciNet</em>能够正确预测质点撞击之后的位置，同时对噪音鲁棒。根据(b)，隐变量和角动量存在线性相关关系，作者认为<em>SciNet</em>学到了守恒的动量这一概念。</p>
 <h2 id="representation-of-qubits">Representation of Qubits</h2>
 <p>量子比特实验：</p>
@@ -311,9 +497,9 @@ J=m_\text{rot}r^2\omega-rm_\text{free}(\mathbf{v}_\text{free})_x=m_\text{rot}r^2
 <li>观测数据：状态<span class="math inline">\(\psi: o=[p(\alpha_i,\psi)]_{i\in\{i,\cdots,n_1\}}\)</span>的操作参数化：表示一组固定的随机二元射影测量值<span class="math inline">\(\mathcal{M}_1=\{\alpha_1,\cdots,\alpha_{n_1}\}\)</span>（一个量子位<span class="math inline">\(n_1 = 10\)</span>，两个量子位<span class="math inline">\(n_1 = 30\)</span>）</li>
 <li>问题：对于固定的一组随机二元射影测量<span class="math inline">\(\mathcal{M}_2=\{\beta_1,\cdots,\beta_{n_2}\}\)</span>，测量<span class="math inline">\(\omega:q=[p(\beta_i,\omega)]_{i\in\{1,\cdots,n_2\}}\)</span>的Operational参数化（一个量子位<span class="math inline">\(n_2 = 10\)</span>，两个量子位<span class="math inline">\(n_2 = 30\)</span>）</li>
 </ul>
-<p><img src="https://i.loli.net/2020/06/25/8lY1LBsQCZUwX2I.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/8lY1LBsQCZUwX2I.png" /></p>
 <p>实验结果如下：</p>
-<p><img src="https://i.loli.net/2020/06/25/ZTRKfzb63Jrvk5C.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/ZTRKfzb63Jrvk5C.png" style="zoom:67%;" /></p>
 <p>通过实验发现，<em>SciNet</em>可以在不提供先验物理知识的条件下确定表述状态<span class="math inline">\(\psi\)</span>最小的参数数量。同时，<em>SciNet</em>还能分辨<em>tomographically complete</em>和<em>tomographically incomplete</em>。</p>
 <h2 id="heliocentric-model-of-the-solar-system">Heliocentric Model of the Solar System</h2>
 <p>日心说模型：</p>
@@ -322,321 +508,955 @@ J=m_\text{rot}r^2\omega-rm_\text{free}(\mathbf{v}_\text{free})_x=m_\text{rot}r^2
 <li>物理模型：地球和火星围绕太阳以一定角速度做近似圆周运动</li>
 <li>观测数据：给定初始角度，随机选择周周期的哥白尼的观测数据</li>
 </ul>
-<p><img src="https://i.loli.net/2020/06/25/vXl3Ae4RpzibrmY.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/vXl3Ae4RpzibrmY.png" /></p>
 <p>模型的实现稍有变化，如下图所示：</p>
-<p><img src="https://i.loli.net/2020/06/25/XnsYqcRS6izZGEm.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/XnsYqcRS6izZGEm.png" style="zoom:67%;" /></p>
 <p>这样，对于不同时间都对应一个隐变量<span class="math inline">\(r(t_i)\)</span>，而且隐变量是时间依赖的，对于一个隐变量<span class="math inline">\(r(t_i)\)</span>有一个解码器来输出答案。</p>
-<p><img src="https://i.loli.net/2020/06/25/az3UmkchyFWevP7.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/az3UmkchyFWevP7.png" style="zoom:67%;" /></p>
 <p>实验结果表示，<em>SciNet</em>不仅正确预测了太阳和火星相对地球的角度，同时隐变量揭示了火星和地球相对太阳的角度。</p>
 
-            </div>
-            <hr>
-            <div>
-              <div class="post-metas mb-3">
-                
-                  <div class="post-meta mr-3">
-                    <i class="iconfont icon-category"></i>
-                    
-                      <a class="hover-with-bg" href="/categories/Research/">Research</a>
-                    
-                      <a class="hover-with-bg" href="/categories/Research/Misc/">Misc</a>
-                    
-                  </div>
-                
-                
-                  <div class="post-meta">
-                    <i class="iconfont icon-tags"></i>
-                    
-                      <a class="hover-with-bg" href="/tags/Deep-Learning/">Deep Learning</a>
-                    
-                  </div>
-                
-              </div>
-              
-                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
-              
-              
-                <div class="post-prevnext row">
-                  <article class="post-prev col-6">
-                    
-                    
-                      <a href="/2020/03/30/Deep-Weakly-supervised-Anomaly-Detection/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Deep Weakly-supervised Anomaly Detection</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
-                  </article>
-                  <article class="post-next col-6">
-                    
-                    
-                      <a href="/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/">
-                        <span class="hidden-mobile">Transfer Anomaly Detection by Inferring Latent Domain Representations</span>
-                        <span class="visible-mobile">下一篇</span>
-                        <i class="iconfont icon-arrowright"></i>
-                      </a>
-                    
-                  </article>
-                </div>
-              
-            </div>
-
-            
-              <!-- Comments -->
-              <article class="comments" id="comments">
-                
-                
-  <div class="disqus" style="width:100%">
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-      var disqus_config = function() {
-        this.page.url = 'http://qfxiao.me/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/';
-        this.page.identifier = '/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/';
-      };
-      Fluid.utils.waitElementVisible('disqus_thread', function () {
-        var d = document, s = d.createElement('script');
-        s.src = '//' + 'http-larryshaw0079-coding-me-blog' + '.disqus.com/embed.js';
-        s.setAttribute('data-timestamp', new Date());
-        (d.head || d.body).appendChild(s);
-      });
-    </script>
-    <noscript>Please enable JavaScript to view the
-      <a target="_blank" href="https://disqus.com/?ref_noscript" rel="nofollow noopener noopener">comments powered by Disqus.</a>
-    </noscript>
-  </div>
-
-
-              </article>
-            
-          </article>
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者：<a href="http://qfxiao.me">Hanzawa</a>
+            <p>原文链接：<a href="http://qfxiao.me/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/">http://qfxiao.me/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/</a>
+            <p>发表日期：<a href="http://qfxiao.me/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/">March 1st 2020, 10:55:02 pm</a>
+            <p>更新日期：<a href="http://qfxiao.me/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/">June 25th 2020, 1:35:20 pm</a>
+            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
-      </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href= "/2020/03/30/Deep-Weakly-supervised-Anomaly-Detection/" title= "Deep Weakly-supervised Anomaly Detection">
+                    <div class="nextTitle">Deep Weakly-supervised Anomaly Detection</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/" title= "Transfer Anomaly Detection by Inferring Latent Domain Representations">
+                    <div class="prevTitle">Transfer Anomaly Detection by Inferring Latent Domain Representations</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!-- gitalk评论 -->
+
+    <!-- utteranc评论 -->
+
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:12345@qq.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/fi3ework" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                  
+                  <img class="profile-qr" src="/assets/example_qr.png" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
     </div>
     
-      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
-        <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
-  <div class="toc-body" id="toc-body"></div>
-</div>
-
-      </div>
-    
-  </div>
-</div>
-
-<!-- Custom -->
-
-
-    
-
-    
-      <a id="scroll-top-button" href="#" role="button">
-        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
-      </a>
-    
-
-    
-      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
-     aria-hidden="true">
-  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
-        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body mx-3">
-        <div class="md-form mb-5">
-          <input type="text" id="local-search-input" class="form-control validate">
-          <label data-error="x" data-success="v"
-                 for="local-search-input">关键词</label>
-        </div>
-        <div class="list-group" id="local-search-result"></div>
-      </div>
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
     </div>
-  </div>
-</div>
+    <!-- 不蒜子  -->
     
-
+    <div class="busuanzi-container">
     
-  </main>
-
-  <footer class="text-center mt-5 py-3">
-  <div class="footer-content">
-     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
-  </div>
-  
-  <div class="statistics">
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
     
+    </div>
     
-
-    
-      
-        <!-- 不蒜子统计PV -->
-        <span id="busuanzi_container_site_pv" style="display: none">
-            总访问量 
-            <span id="busuanzi_value_site_pv"></span>
-             次
-          </span>
-      
-      
-        <!-- 不蒜子统计UV -->
-        <span id="busuanzi_container_site_uv" style="display: none">
-            总访客数 
-            <span id="busuanzi_value_site_uv"></span>
-             人
-          </span>
-      
-    
-  </div>
-
-
-  
-
-  
 </footer>
-
-<!-- SCRIPTS -->
-
-  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
-  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
-
-  <script>
-    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
-    NProgress.start()
-    document.addEventListener('DOMContentLoaded', function() {
-      window.NProgress && window.NProgress.inc();
-    })
-    window.addEventListener('load', function() {
-      NProgress.done();
-    })
-  </script>
-
-
-<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
-<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
-<script  src="/js/debouncer.js" ></script>
-<script  src="/js/events.js" ></script>
-<script  src="/js/plugins.js" ></script>
-
-<!-- Plugins -->
-
-
-  
+    </div>
+    <!-- toc -->
     
-      <script  src="/js/lazyload.js" ></script>
+    <div class="toc-wrapper" style=
     
-  
-
-
-
-  
-
-
-
-  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
-
-
-
-  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
-
-
-
-  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
-
-
-
-  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
-
-
-
-  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
-
-
-
-  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
-  <script>
-    (function (window, document) {
-      var typing = Fluid.plugins.typing;
-      var title = document.getElementById('subtitle').title;
-      
-      typing(title)
-      
-    })(window, document);
-  </script>
-
-
-
-  <script  src="/js/local-search.js" ></script>
-  <script>
-    (function () {
-      var path = "/local-search.xml";
-      var inputArea = document.querySelector("#local-search-input");
-      inputArea.onclick = function () {
-        searchFunc(path, 'local-search-input', 'local-search-result');
-        this.onclick = null
-      }
-    })()
-  </script>
 
 
 
 
 
-  
 
-  
-    <!-- MathJax -->
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#introduction"><span class="toc-number">1.</span> <span class="toc-text">Introduction</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#preliminaries"><span class="toc-number">2.</span> <span class="toc-text">Preliminaries</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#variational-autoencoders"><span class="toc-number">2.1.</span> <span class="toc-text">Variational Autoencoders</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#representation-learning"><span class="toc-number">2.1.1.</span> <span class="toc-text">Representation Learning</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#boldsymbol-beta-vae"><span class="toc-number">2.1.2.</span> <span class="toc-text">\(\boldsymbol \beta\)-VAE</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#network-structure"><span class="toc-number">3.</span> <span class="toc-text">Network Structure</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#network-structure-scinet"><span class="toc-number">3.1.</span> <span class="toc-text">Network Structure: SciNet</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#training-and-testing-scinet"><span class="toc-number">3.2.</span> <span class="toc-text">Training and Testing SciNet</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#results"><span class="toc-number">4.</span> <span class="toc-text">Results</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#damped-pendulum"><span class="toc-number">4.1.</span> <span class="toc-text">Damped Pendulum</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#conservation-of-angular-momentum"><span class="toc-number">4.2.</span> <span class="toc-text">Conservation of Angular Momentum</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#representation-of-qubits"><span class="toc-number">4.3.</span> <span class="toc-text">Representation of Qubits</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#heliocentric-model-of-the-solar-system"><span class="toc-number">4.4.</span> <span class="toc-text">Heliocentric Model of the Solar System</span></a></li></ol></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 33
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2020 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/23</span><a class="archive-post-title" href= "/2020/09/23/Unsupervised-Feature-Learning-via-Non-Parametric-Instance-Discrimination/" >Unsupervised Feature Learning via Non-Parametric Instance Discrimination</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/17</span><a class="archive-post-title" href= "/2020/09/17/Representation-Learning-with-Contrastive-Predictive-Coding/" >Representation Learning with Contrastive Predictive Coding</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/09</span><a class="archive-post-title" href= "/2020/09/09/Model-Selection-and-Evaluation-Machine-Learning-Basics/" >Model Selection and Evaluation: Machine Learning Basics</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/02</span><a class="archive-post-title" href= "/2020/09/02/Machine-Learning-Classification-Algorithms-Decision-Trees/" >Machine Learning Classification Algorithms: Decision Trees</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/26</span><a class="archive-post-title" href= "/2020/08/26/Machine-Learning-Classification-Algorithms-Support-Vector-Machine/" >Machine Learning Classification Algorithms: Support Vector Machine</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/26</span><a class="archive-post-title" href= "/2020/08/26/Boosting-and-AdaBoost-Machine-Learning-Ensemble-Algorithms-1/" >Boosting and AdaBoost: Machine Learning Ensemble Algorithms 1</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/26</span><a class="archive-post-title" href= "/2020/08/26/Machine-Learning-Ensemble-Algorithms-GBDT-and-XGBoost/" >Machine Learning Ensemble Algorithms: GBDT and XGBoost</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span><a class="archive-post-title" href= "/2020/08/24/Unsupervised-Representation-Learning-by-Predicting-Random-Distances/" >Unsupervised Representation Learning by Predicting Random Distances</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/14</span><a class="archive-post-title" href= "/2020/07/14/Effective-End-to-end-Unsupervised-Outlier-Detection-via-Linear-Priority-of-Discriminative-Network/" >Effective End-to-end Unsupervised Outlier Detection via Linear Priority of Discriminative Network</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/22</span><a class="archive-post-title" href= "/2020/06/22/Probability-Distributions-Binary-and-Multinomial-Variables/" >Probability Distributions - Binary and Multinomial Variables</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/13</span><a class="archive-post-title" href= "/2020/06/13/Time2Graph-Revisiting-Time-Series-Modeling-with-Dynamic-Shapelets/" >Time2Graph: Revisiting Time Series Modeling with Dynamic Shapelets</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/06</span><a class="archive-post-title" href= "/2020/06/06/Generative-Probabilistic-Novelty-Detection-with-Adversarial-Autoencoders/" >Generative Probabilistic Novelty Detection with Adversarial Autoencoders</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/02</span><a class="archive-post-title" href= "/2020/06/02/Classification-based-Anomaly-Detection-for-General-Data/" >Classification-based Anomaly Detection for General Data</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/02</span><a class="archive-post-title" href= "/2020/06/02/%E9%9D%A2%E5%90%91OpenPAI%E7%9A%84Docker%E9%95%9C%E5%83%8F%E9%85%8D%E7%BD%AE%E5%8F%8AOpenPAI%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/" >面向OpenPAI的Docker镜像配置及OpenPAI基本使用方法</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/02</span><a class="archive-post-title" href= "/2020/06/02/Ubuntu20-4LTS-%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE-CUDA11-cuDNN8-Tensorflow-Pytorch/" >Ubuntu20.04LTS 深度学习环境配置 CUDA11 + cuDNN8 + Tensorflow + Pytorch</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/01</span><a class="archive-post-title" href= "/2020/06/01/Deep-Anomaly-Detection-Using-Geometric-Transformations/" >Deep Anomaly Detection Using Geometric Transformations</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/01</span><a class="archive-post-title" href= "/2020/06/01/Cross-dataset-Time-Series-Anomaly-Detection-for-Cloud-Systems/" >Cross-dataset Time Series Anomaly Detection for Cloud Systems</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/06</span><a class="archive-post-title" href= "/2020/05/06/Learning-Representations-of-Ultrahigh-dimensional-Data-for-Random-Distance-based-Outlier-Detection/" >Learning Representations of Ultrahigh-dimensional Data for Random Distance-based Outlier Detection</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/30</span><a class="archive-post-title" href= "/2020/03/30/Deep-Weakly-supervised-Anomaly-Detection/" >Deep Weakly-supervised Anomaly Detection</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/01</span><a class="archive-post-title" href= "/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/" >Discovering Physical Concepts with Neural Networks</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/27</span><a class="archive-post-title" href= "/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/" >Transfer Anomaly Detection by Inferring Latent Domain Representations</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/24</span><a class="archive-post-title" href= "/2020/02/24/Deep-Anomaly-Detection-with-Deviation-Networks/" >Deep Anomaly Detection with Deviation Networks</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/31</span><a class="archive-post-title" href= "/2020/01/31/Geant4-%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/" >Geant4 安装教程与调试环境配置</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/09</span><a class="archive-post-title" href= "/2020/01/09/Complementary-Set-Variational-Autoencoder-for-Supervised-Anomaly-Detection/" >Complementary Set Variational Autoencoder for Supervised Anomaly Detection</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2019 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/29</span><a class="archive-post-title" href= "/2019/10/29/Anomaly-Detection-in-Streams-with-Extreme-Value-Theory/" >Anomaly Detection in Streams with Extreme Value Theory</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/22</span><a class="archive-post-title" href= "/2019/10/22/An-Introduction-to-Variational-Autoencoders/" >An Introduction to Variational Autoencoders</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/18</span><a class="archive-post-title" href= "/2019/10/18/Recurrent-Neural-Networks-for-Multivariate-Time-Series-with-Missing-Values/" >Recurrent Neural Networks for Multivariate Time Series with Missing Values</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/18</span><a class="archive-post-title" href= "/2019/10/18/Robust-Anomaly-Detection-for-Multivariate-Time-Series-through-Stochastic-Recurrent-Neural-Network/" >Robust Anomaly Detection for Multivariate Time Series through Stochastic Recurrent Neural Network</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/16</span><a class="archive-post-title" href= "/2019/10/16/GAIN-Missing-Data-Imputation-using-Generative-Adversarial-Nets/" >GAIN: Missing Data Imputation using Generative Adversarial Nets</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/22</span><a class="archive-post-title" href= "/2019/09/22/Anomaly-Detection-with-Generative-Adversarial-Networks-for-Multivariate-Time-Series/" >Anomaly Detection with Generative Adversarial Networks for Multivariate Time Series</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/22</span><a class="archive-post-title" href= "/2019/09/22/ALSR-An-adaptive-label-screening-and-relearning-approach-for-interval-oriented-anomaly-detection/" >ALSR: An Adaptive Label Screening and Relearning Approach for Interval-Oriented Anomaly Detection</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/22</span><a class="archive-post-title" href= "/2019/09/22/Time-Series-Anomaly-Detection-Service-at-Microsoft/" >Time-Series Anomaly Detection Service at Microsoft</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/22</span><a class="archive-post-title" href= "/2019/09/22/Unsupervised-Anomaly-Detection-via-Variational-Auto-Encoder-for-Seasonal-KPIs-in-Web-Applications/" >Unsupervised Anomaly Detection via Variational Auto-Encoder for Seasonal KPIs in Web Applications</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="Variational Inference"><span class="iconfont-archer">&#xe606;</span>Variational Inference</span>
+    
+        <span class="sidebar-tag-name" data-tags="VAE"><span class="iconfont-archer">&#xe606;</span>VAE</span>
+    
+        <span class="sidebar-tag-name" data-tags="Deep Learning"><span class="iconfont-archer">&#xe606;</span>Deep Learning</span>
+    
+        <span class="sidebar-tag-name" data-tags="Time Series"><span class="iconfont-archer">&#xe606;</span>Time Series</span>
+    
+        <span class="sidebar-tag-name" data-tags="Statistics"><span class="iconfont-archer">&#xe606;</span>Statistics</span>
+    
+        <span class="sidebar-tag-name" data-tags="Machine Learning"><span class="iconfont-archer">&#xe606;</span>Machine Learning</span>
+    
+        <span class="sidebar-tag-name" data-tags="Anomaly Detection"><span class="iconfont-archer">&#xe606;</span>Anomaly Detection</span>
+    
+        <span class="sidebar-tag-name" data-tags="Boosting"><span class="iconfont-archer">&#xe606;</span>Boosting</span>
+    
+        <span class="sidebar-tag-name" data-tags="Adaboost"><span class="iconfont-archer">&#xe606;</span>Adaboost</span>
+    
+        <span class="sidebar-tag-name" data-tags="Transfer Learning"><span class="iconfont-archer">&#xe606;</span>Transfer Learning</span>
+    
+        <span class="sidebar-tag-name" data-tags="Self-Supervised Learning"><span class="iconfont-archer">&#xe606;</span>Self-Supervised Learning</span>
+    
+        <span class="sidebar-tag-name" data-tags="GAN"><span class="iconfont-archer">&#xe606;</span>GAN</span>
+    
+        <span class="sidebar-tag-name" data-tags="Novelty Detection"><span class="iconfont-archer">&#xe606;</span>Novelty Detection</span>
+    
+        <span class="sidebar-tag-name" data-tags="Geant4"><span class="iconfont-archer">&#xe606;</span>Geant4</span>
+    
+        <span class="sidebar-tag-name" data-tags="Representation Learning"><span class="iconfont-archer">&#xe606;</span>Representation Learning</span>
+    
+        <span class="sidebar-tag-name" data-tags="ID3"><span class="iconfont-archer">&#xe606;</span>ID3</span>
+    
+        <span class="sidebar-tag-name" data-tags="C4.5"><span class="iconfont-archer">&#xe606;</span>C4.5</span>
+    
+        <span class="sidebar-tag-name" data-tags="CART"><span class="iconfont-archer">&#xe606;</span>CART</span>
+    
+        <span class="sidebar-tag-name" data-tags="SVM"><span class="iconfont-archer">&#xe606;</span>SVM</span>
+    
+        <span class="sidebar-tag-name" data-tags="Probability"><span class="iconfont-archer">&#xe606;</span>Probability</span>
+    
+        <span class="sidebar-tag-name" data-tags="GBDT"><span class="iconfont-archer">&#xe606;</span>GBDT</span>
+    
+        <span class="sidebar-tag-name" data-tags="XGBoost"><span class="iconfont-archer">&#xe606;</span>XGBoost</span>
+    
+        <span class="sidebar-tag-name" data-tags="Overfitting"><span class="iconfont-archer">&#xe606;</span>Overfitting</span>
+    
+        <span class="sidebar-tag-name" data-tags="Bias"><span class="iconfont-archer">&#xe606;</span>Bias</span>
+    
+        <span class="sidebar-tag-name" data-tags="Variance"><span class="iconfont-archer">&#xe606;</span>Variance</span>
+    
+        <span class="sidebar-tag-name" data-tags="RNN"><span class="iconfont-archer">&#xe606;</span>RNN</span>
+    
+        <span class="sidebar-tag-name" data-tags="Contrastive Learning"><span class="iconfont-archer">&#xe606;</span>Contrastive Learning</span>
+    
+        <span class="sidebar-tag-name" data-tags="Self-supervised Learning"><span class="iconfont-archer">&#xe606;</span>Self-supervised Learning</span>
+    
+        <span class="sidebar-tag-name" data-tags="Flow-based Model"><span class="iconfont-archer">&#xe606;</span>Flow-based Model</span>
+    
+        <span class="sidebar-tag-name" data-tags="Spectral"><span class="iconfont-archer">&#xe606;</span>Spectral</span>
+    
+        <span class="sidebar-tag-name" data-tags="Shapelet"><span class="iconfont-archer">&#xe606;</span>Shapelet</span>
+    
+        <span class="sidebar-tag-name" data-tags="Pytorch"><span class="iconfont-archer">&#xe606;</span>Pytorch</span>
+    
+        <span class="sidebar-tag-name" data-tags="Tensorflow"><span class="iconfont-archer">&#xe606;</span>Tensorflow</span>
+    
+        <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+        <span class="sidebar-category-name" data-categories="Research"><span class="iconfont-archer">&#xe60a;</span>Research</span>
+    
+        <span class="sidebar-category-name" data-categories="Research/Anomaly-Detection"><span class="iconfont-archer">&#xe60a;</span>Research/Anomaly-Detection</span>
+    
+        <span class="sidebar-category-name" data-categories="Research/Tutorial"><span class="iconfont-archer">&#xe60a;</span>Research/Tutorial</span>
+    
+        <span class="sidebar-category-name" data-categories="Technical-Notes"><span class="iconfont-archer">&#xe60a;</span>Technical-Notes</span>
+    
+        <span class="sidebar-category-name" data-categories="Research/Misc"><span class="iconfont-archer">&#xe60a;</span>Research/Misc</span>
+    
+        <span class="sidebar-category-name" data-categories="Research/Time-Series-Imputation"><span class="iconfont-archer">&#xe60a;</span>Research/Time-Series-Imputation</span>
+    
+        <span class="sidebar-category-name" data-categories="Technical-Notes/Misc"><span class="iconfont-archer">&#xe60a;</span>Technical-Notes/Misc</span>
+    
+        <span class="sidebar-category-name" data-categories="Technical-Notes/Machine-Learning"><span class="iconfont-archer">&#xe60a;</span>Technical-Notes/Machine-Learning</span>
+    
+        <span class="sidebar-category-name" data-categories="Research/Notes"><span class="iconfont-archer">&#xe60a;</span>Research/Notes</span>
+    
+        <span class="sidebar-category-name" data-categories="Research/RNN"><span class="iconfont-archer">&#xe60a;</span>Research/RNN</span>
+    
+        <span class="sidebar-category-name" data-categories="Research/Self-supervised-Learning"><span class="iconfont-archer">&#xe60a;</span>Research/Self-supervised-Learning</span>
+    
+        <span class="sidebar-category-name" data-categories="Research/Time-Series-Modeling"><span class="iconfont-archer">&#xe60a;</span>Research/Time-Series-Modeling</span>
+    
+        <span class="sidebar-category-name" data-categories="Research/Representation-Learning"><span class="iconfont-archer">&#xe60a;</span>Research/Representation-Learning</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
     <script>
-      MathJax = {
-        tex: {
-          inlineMath: [['$', '$'], ['\\(', '\\)']]
-        },
-        options: {
-          renderActions: {
-            findScript: [10, doc => {
-              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
-                const display = !!node.type.match(/; *mode=display/);
-                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
-                const text = document.createTextNode('');
-                node.parentNode.replaceChild(text, node);
-                math.start = { node: text, delim: '', n: 0 };
-                math.end = { node: text, delim: '', n: 0 };
-                doc.math.push(math);
-              });
-            }, '', false],
-            insertedScript: [200, () => {
-              document.querySelectorAll('mjx-container').forEach(node => {
-                let target = node.parentNode;
-                if (target.nodeName.toLowerCase() === 'li') {
-                  target.parentNode.classList.add('has-jax');
-                }
-              });
-            }, '', false]
-          }
+    var siteMeta = {
+        root: "/",
+        author: "Hanzawa"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
         }
-      };
     </script>
-
-    <script async src="https://cdn.staticfile.org/mathjax/3.1.2/es5/tex-svg.js" ></script>
-
-  
-
-
-
-
-
-
-
-
-
-
-
-<!-- 主题的启动项 保持在最底部 -->
-<script  src="/js/boot.js" ></script>
-
-
-
-</body>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
 </html>
+
+

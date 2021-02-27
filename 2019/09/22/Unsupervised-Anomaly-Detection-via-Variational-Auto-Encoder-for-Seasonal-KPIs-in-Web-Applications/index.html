@@ -1,251 +1,454 @@
-
-
 <!DOCTYPE html>
-<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+<html lang="zh-CN">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
 
 
 
 <head>
-  <meta charset="UTF-8">
-  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
-  <link rel="icon" type="image/png" href="/img/favicon.png">
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
-  
-  <meta name="theme-color" content="#2f4154">
-  <meta name="description" content="">
-  <meta name="author" content="Hanzawa">
-  <meta name="keywords" content="">
-  <title>Unsupervised Anomaly Detection via Variational Auto-Encoder for Seasonal KPIs in Web Applications - Hanzawa の 部屋</title>
-
-  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
-
-
-  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
-  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
-
-  
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="author" content="Hanzawa">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="Hanzawa">
     
+    <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
     
-      
-      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.1.2/styles/github-gist.min.css" />
+    <meta name="description" content="">
+    <meta name="description" content="Abstract 本文提出了Donut，一个基于VAE的无监督时间序列异常检测系统。 原文  Contribution  Donut中使用到了三个技巧，包括改进后的ELBO、缺失数据注入和MCMC插值； 提出基于VAE的异常检测训练既需要正常样本也需要异常样本； 对Donut提出了在z-空间中基于KDE的理论解释。  Background Anomaly Detection">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Unsupervised Anomaly Detection via Variational Auto-Encoder for Seasonal KPIs in Web Applications">
+<meta property="og:url" content="http://qfxiao.me/2019/09/22/Unsupervised-Anomaly-Detection-via-Variational-Auto-Encoder-for-Seasonal-KPIs-in-Web-Applications/index.html">
+<meta property="og:site_name" content="Hanzawa の 部屋">
+<meta property="og:description" content="Abstract 本文提出了Donut，一个基于VAE的无监督时间序列异常检测系统。 原文  Contribution  Donut中使用到了三个技巧，包括改进后的ELBO、缺失数据注入和MCMC插值； 提出基于VAE的异常检测训练既需要正常样本也需要异常样本； 对Donut提出了在z-空间中基于KDE的理论解释。  Background Anomaly Detection">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2020/06/25/aoNWpGDLmJzwXOj.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/25/PoKJmnIpEqNdtCe.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/25/DFP1boZNzdVG9pH.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/25/HlDXkSeFOruVbac.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/25/wEenLKz4URfm2FN.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/25/A9qajrZtmhcvyHW.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/25/6LNwizqrWVe5sRv.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/25/2j1Br45MUxTaYEX.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/25/raHG6Phyxo1j82n.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/25/OXpIRoe4wr7YzuQ.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/25/BHfP5DUZ48ALnma.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/25/HcX78lUoG4meJq5.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/25/GeWufVlUDo4QtO6.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/25/8puDRylqZfQkcN6.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/25/AaC9oNMShBRHFeY.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/25/udigOl3sJGwSaPz.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/25/23zsxwurICV7aTj.png">
+<meta property="article:published_time" content="2019-09-22T12:35:18.000Z">
+<meta property="article:modified_time" content="2020-06-25T09:11:13.347Z">
+<meta property="article:author" content="Hanzawa">
+<meta property="article:tag" content="VAE">
+<meta property="article:tag" content="Deep Learning">
+<meta property="article:tag" content="Time Series">
+<meta property="article:tag" content="Machine Learning">
+<meta property="article:tag" content="Anomaly Detection">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/06/25/aoNWpGDLmJzwXOj.png">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     
-  
+    <title>Unsupervised Anomaly Detection via Variational Auto-Encoder for Seasonal KPIs in Web Applications · fi3ework&#39;s Studio</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
 
-  
-    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
-  
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href= "/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= "/css/mobile.css?v=20180824" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
 
 
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
 
-<!-- 主题依赖的图标库，不要自行修改 -->
-
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
-
-
-
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
-
-
-<link  rel="stylesheet" href="/css/main.css" />
-
-<!-- 自定义样式保持在最底部 -->
-
-
-  <script id="fluid-configs">
-    var Fluid = window.Fluid || {};
-    var CONFIG = {"hostname":"qfxiao.me","root":"/","version":"1.8.5","typing":{"enable":true,"typeSpeed":20,"cursorChar":"_","loop":false},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"copy_btn":true,"image_zoom":{"enable":true},"lazyload":{"enable":true,"onlypost":true},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
-  </script>
-  <script  src="/js/utils.js" ></script>
-  <script  src="/js/color-schema.js" ></script>
+    <link rel="icon" href= "/assets/favicon.ico" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
+    <link rel="preload" href="/scripts/main.js" as="script" />
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
 <meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Hanzawa の 部屋" type="application/atom+xml">
 </head>
 
+    
+        <body class="post-body">
+    
+    
+<header class="header">
 
-<body>
-  <header style="height: 70vh;">
-    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
-  <div class="container">
-    <a class="navbar-brand"
-       href="/">&nbsp;<strong>Hanzawa</strong>&nbsp;</a>
-
-    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
-            data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <div class="animated-icon"><span></span><span></span><span></span></div>
-    </button>
-
-    <!-- Collapsible content -->
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav ml-auto text-center">
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/">
-                <i class="iconfont icon-home-fill"></i>
-                首页
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/archives/">
-                <i class="iconfont icon-archive-fill"></i>
-                归档
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/categories/">
-                <i class="iconfont icon-category-fill"></i>
-                分类
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/tags/">
-                <i class="iconfont icon-tags-fill"></i>
-                标签
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/about/">
-                <i class="iconfont icon-user-fill"></i>
-                关于
-              </a>
-            </li>
-          
-        
-        
-          <li class="nav-item" id="search-btn">
-            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
-                class="iconfont icon-search"></i>&nbsp;</a>
-          </li>
-        
-        
-          <li class="nav-item" id="color-toggle-btn">
-            <a class="nav-link" href="javascript:">&nbsp;<i
-                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
-          </li>
-        
-      </ul>
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >fi3ework&#39;s Studio.</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">Unsupervised Anomaly Detection via Variational Auto-Encoder for Seasonal KPIs in Web Applications</a>
+            </div>
     </div>
-  </div>
-</nav>
+    
+    <a class="home-link" href=/>fi3ework's Studio.</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style="
 
-    <div class="banner intro-2" id="background" parallax=true
-         style="background: url('/img/bg/coffe_heart.jpg') no-repeat center center;
-           background-size: cover;">
-      <div class="full-bg-img">
-        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
-          <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="Unsupervised Anomaly Detection via Variational Auto-Encoder for Seasonal KPIs in Web Applications">
-              
-            </span>
 
+
+
+
+
+
+height:50vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
             
-              <div class="mt-3">
-  
-  
-    <span class="post-meta">
-      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2019-09-22 20:35" pubdate>
-        2019年9月22日 晚上
-      </time>
-    </span>
-  
-</div>
-
-<div class="mt-1">
-  
-    
-    <span class="post-meta mr-2">
-      <i class="iconfont icon-chart"></i>
-      3.5k 字
-    </span>
-  
-
-  
-    
-    <span class="post-meta mr-2">
-      <i class="iconfont icon-clock-fill"></i>
-      
-      
-      42
-       分钟
-    </span>
-  
-
-  
-  
-    
-      <!-- 不蒜子统计文章PV -->
-      <span id="busuanzi_container_page_pv" style="display: none">
-        <i class="iconfont icon-eye" aria-hidden="true"></i>
-        <span id="busuanzi_value_page_pv"></span> 次
-      </span>
-    
-  
-</div>
-
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
             
-          </div>
-
-          
-        </div>
-      </div>
+            Unsupervised Anomaly Detection via Variational Auto-Encoder for Seasonal KPIs...
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "VAE">VAE</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Deep Learning">Deep Learning</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Time Series">Time Series</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Machine Learning">Machine Learning</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Anomaly Detection">Anomaly Detection</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">3.5k</span>阅读时长: <span class="post-count reading-time">13 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2019/09/22</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
     </div>
-  </header>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
 
-  <main>
-    
-      
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
 
-<div class="container-fluid">
-  <div class="row">
-    <div class="d-none d-lg-block col-lg-2"></div>
-    <div class="col-lg-8 nopadding-md">
-      <div class="container nopadding-md" id="board-ctn">
-        <div class="py-5" id="board">
-          <article class="post-content mx-auto">
-            <!-- SEO header -->
-            <h1 style="display: none">Unsupervised Anomaly Detection via Variational Auto-Encoder for Seasonal KPIs in Web Applications</h1>
-            
-              <p class="note note-info">
-                
-                  本文最后更新于：8 个月前
-                
-              </p>
-            
-            <div class="markdown-body">
-              <h2 id="abstract">Abstract</h2>
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h2 id="abstract">Abstract</h2>
 <p>本文提出了Donut，一个基于VAE的无监督时间序列异常检测系统。</p>
 <p><a target="_blank" rel="noopener" href="https://dl.acm.org/citation.cfm?id=3185996">原文</a></p>
-<p><img src="https://i.loli.net/2020/06/25/aoNWpGDLmJzwXOj.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/aoNWpGDLmJzwXOj.png" style="zoom:67%;" /></p>
 <h2 id="contribution">Contribution</h2>
 <ol type="1">
 <li>Donut中使用到了三个技巧，包括改进后的ELBO、缺失数据注入和MCMC插值；</li>
@@ -258,13 +461,13 @@
 <h2 id="methodology">Methodology</h2>
 <h3 id="problem-statement">Problem Statement</h3>
 <p>本文的目的是<strong>基于深度生成网络开发具有理论解释性的无监督异常检测算法，并且在有标签的情况下能利用标签信息提升性能</strong>。本文基于VAE来构建模型。</p>
-<p><img src="https://i.loli.net/2020/06/25/PoKJmnIpEqNdtCe.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/PoKJmnIpEqNdtCe.png" style="zoom:67%;" /></p>
 <h3 id="network-structure">Network Structure</h3>
 <p>算法的总体框架如下图所示：</p>
-<p><img src="https://i.loli.net/2020/06/25/DFP1boZNzdVG9pH.png" srcset="/img/loading.gif" style="zoom: 80%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/DFP1boZNzdVG9pH.png" style="zoom: 80%;" /></p>
 <p>一共包含了预处理、训练和检测三个部分。</p>
 <p>下图为模型的概率图模型：</p>
-<p><img src="https://i.loli.net/2020/06/25/HlDXkSeFOruVbac.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/HlDXkSeFOruVbac.png" style="zoom:67%;" /></p>
 <p>图中双实线的框为本文模型有别于传统VAE的地方，其余地方和VAE一样。先验概率<span class="math inline">\(p_\theta(z)\)</span>选为标准正态分布<span class="math inline">\(\mathcal{N}(0,I)\)</span>，后验概率<span class="math inline">\(x\)</span>和<span class="math inline">\(z\)</span>都是对角化高斯分布，即<span class="math inline">\(p_\theta(x|z)=\mathcal{N}(\mu_x,\sigma_x^2 I),q_\phi(z|x)=\mathcal{N}(\mu_z,\sigma_z^2 I)\)</span>。如Figure 4所示，推断网络和生成网络中分别都有隐含层<span class="math inline">\(f_\phi(x)\)</span>和<span class="math inline">\(f_\theta(z)\)</span>对网络的输入进行特征抽取。高斯分布的参数即从这些抽取出来的特征上得到。均值通过线性层得到：<span class="math inline">\(\mu_x=W^T_{\mu_x}f_\theta(z)+b_{\mu_x}, \mu_z=W^T_{\mu_z}f_\theta(x)+b_{\mu_z}\)</span>。标准差通过Soft Plus层加一个高斯噪声得到：<span class="math inline">\(\sigma_x=\text{SoftPlus}[W^T_{\sigma_x}f_\theta(z)+b_{\sigma_x}]+\varepsilon，\sigma_x=\text{SoftPlus}[W^T_{\sigma_z}f_\theta(x)+b_{\sigma_z}]+\varepsilon\)</span>。</p>
 <p>文中提到因为KPI的局部方差非常小，所以采用直接建模<span class="math inline">\(\sigma_x,\sigma_z\)</span>的方式而不是采用对数。除此之外，为了理论上的解释性，文中的神经网络只使用了全连接层。</p>
 <h3 id="training">Training</h3>
@@ -285,23 +488,23 @@
 <h3 id="detection">Detection</h3>
 <p>在检测阶段，对于一个输入样本，我们需要模型输出其异常的概率。因为我们建模了<span class="math inline">\(p_\theta(x|z)\)</span>，一种方法是采样计算<span class="math inline">\(p_\theta(x)=\mathbb{E}_{p_\theta(z)}[p_\theta(x|z)]\)</span>，但这种方法计算代价十分昂贵。其他的一些方案有计算<span class="math inline">\(\mathbb{E}_{q_\phi(z|x)}[p_\theta(x|z)]\)</span>或<span class="math inline">\(\mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x|z)]\)</span>，其中后者被称为"<strong>Reconstruction Probability</strong>"，作者便采用了这种方案。</p>
 <p>同时，作者认为输入的检测样本的缺失值会对结果造成较大偏差，于是使用了一种<strong>MCMC-based Missing Data Imputation</strong>的方法来对检测样本的缺失值进行填充。具体做法是将测试样本分为已观测和缺失两部分<span class="math inline">\(x=(x_o,x_m)\)</span>，然后使用训练好的VAE进行重构得到<span class="math inline">\((x^\prime_o,x^\prime_m)\)</span>，然后用<span class="math inline">\(x^\prime_m\)</span>替换<span class="math inline">\(x_m\)</span>，这样不断循环如下图所示：</p>
-<p><img src="https://i.loli.net/2020/06/25/wEenLKz4URfm2FN.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/wEenLKz4URfm2FN.png" style="zoom:67%;" /></p>
 <p>作者使用了<span class="math inline">\(L\)</span>个样本来计算<strong>Reconstruction Probability</strong>，虽然得到的输出是针对整个窗口每个点的，但作者只使用最后一个点。</p>
 <h2 id="experiments">Experiments</h2>
 <h3 id="datasets">Datasets</h3>
 <p>作者选择了三条KPI作为测试数据，分别记为<span class="math inline">\(\mathcal{A}\)</span>，<span class="math inline">\(\mathcal{B}\)</span>，<span class="math inline">\(\mathcal{C}\)</span>，其基本数据如下表所示：</p>
-<p><img src="https://i.loli.net/2020/06/25/A9qajrZtmhcvyHW.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/A9qajrZtmhcvyHW.png" style="zoom:67%;" /></p>
 <h3 id="metrics">Metrics</h3>
 <p>因为异常检测类别的极不均衡性，传统的性能指标并不太合适（异常样本极少，且异常一般呈连续的片段）。作者认为在实际应用场景中运维人员需要尽量早的获知异常的发生，于是提出了新的评测机制。</p>
-<p><img src="https://i.loli.net/2020/06/25/6LNwizqrWVe5sRv.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/6LNwizqrWVe5sRv.png" style="zoom:67%;" /></p>
 <p>如上图所示，第一行为真实的标签，第二行为预测的异常概率，第三行为预测的标签。第一行中异常片段被加粗表示，对于每一个异常片段的第一个位置<span class="math inline">\({y}_{t^\prime}\)</span>，如果预测的标签中存在<span class="math inline">\(\hat{y}_{t}\)</span>满足<span class="math inline">\(t^\prime&lt;t\)</span>且<span class="math inline">\(|t-t^\prime|\)</span>小于等于预设的阈值<span class="math inline">\(T\)</span>，那么<span class="math inline">\(y_{t^\prime}\)</span>对应的整段异常都被认为正确检测，否则整段异常都认为没有被正确检测。然后在此基础上计算F1-score，AUC等指标作为评测手段。</p>
 <h2 id="results">Results</h2>
 <h3 id="overall-performance">Overall Performance</h3>
 <p>下图展示了不同方法在不同数据集上的表现：</p>
-<p><img src="https://i.loli.net/2020/06/25/2j1Br45MUxTaYEX.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/2j1Br45MUxTaYEX.png" style="zoom:67%;" /></p>
 <h3 id="effects-of-donut-techniques">Effects of Donut Techniques</h3>
 <p>为了探究Donut中所做的各种改进的实际作用，作者做了大量对比实验，结果如下图所示：</p>
-<p><img src="https://i.loli.net/2020/06/25/raHG6Phyxo1j82n.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/raHG6Phyxo1j82n.png" style="zoom:67%;" /></p>
 <ul>
 <li><strong>M-ELBO</strong> 从图中可以看出<strong>M-ELBO</strong>对性能提升最大。作者在文中提到一开始并没期望<strong>M-ELBO</strong>能带来性能的提升，只是希望它能够Work。这表明在VAE的训练中，只使用正常样本是不够的，也需要加入非正常的信息；</li>
 <li><strong>Missing Data Injection</strong> 该技巧的主要作用是增强<strong>M-ELBO</strong>的效果。从结果上来看作用并不是十分的显著，只是在一些情况下获得了少量的提升；</li>
@@ -309,21 +512,21 @@
 </ul>
 <h3 id="impact-of-k">Impact of K</h3>
 <p>该部分作者探究了隐变量<span class="math inline">\(z\)</span>的维度<span class="math inline">\(K\)</span>对性能的影响，结果如下图：</p>
-<p><img src="https://i.loli.net/2020/06/25/OXpIRoe4wr7YzuQ.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/OXpIRoe4wr7YzuQ.png" style="zoom:67%;" /></p>
 <p>从图上来看，对数据集<span class="math inline">\(\mathcal{A}\)</span>，<span class="math inline">\(\mathcal{B}\)</span>，<span class="math inline">\(\mathcal{C}\)</span>最佳的<span class="math inline">\(K\)</span>分别是<span class="math inline">\(5\)</span>，<span class="math inline">\(4\)</span>和<span class="math inline">\(3\)</span>，但是设定较大的<span class="math inline">\(K\)</span>并不会对性能有严重的损害。作者还发现对于较为平滑的KPI需要较大的<span class="math inline">\(K\)</span>。</p>
 <h2 id="analysis">Analysis</h2>
 <h3 id="kde-interpretation">KDE Interpretation</h3>
 <p>在这一节作者对<strong>Reconstruction Probability</strong>的意义进行了深入的探讨。首先作者对<span class="math inline">\(q_\phi(z|x)\)</span>进行了可视化，在图中作者将时间维度用颜色来表示。如Figure 11(a) 所示，<span class="math inline">\(z\)</span>几乎是按照<span class="math inline">\(x\)</span>对应的时间呈一个连续的流形分布，作者将这种现象称为<strong>Time Gradient</strong>。即使Donut没有显式的用到时间信息，不过因为实验用到的数据基本是平滑的，所以说相邻的<span class="math inline">\(x\)</span>会比较相似，因此经过映射后的<span class="math inline">\(z\)</span>也会比较相似。作者据此提出Donut的一个优势便是对于没有见过的后验分布<span class="math inline">\(q_\phi(z|x)\)</span>，只要其位于训练过的两个后验之间，也会产生合理的分布。</p>
-<p><img src="https://i.loli.net/2020/06/25/BHfP5DUZ48ALnma.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/BHfP5DUZ48ALnma.png" style="zoom:67%;" /></p>
 <p>对于异常的样本<span class="math inline">\(x\)</span>，假设其对应的正常模式为<span class="math inline">\(\tilde{x}\)</span>，作者认为<span class="math inline">\(q_\phi(z|x)\)</span>会在某种程度上对正常的<span class="math inline">\(q_\phi(z|\tilde{x})\)</span>进行近似。因为模型是用正常样本进行训练的，隐变量<span class="math inline">\(z\)</span>的维度通常来说小于样本<span class="math inline">\(x\)</span>，这就导致<span class="math inline">\(z\)</span>只会保留一部分主要的信息。对于异常样本，其异常模式在编码时就被丢掉了。作者还指出如果<span class="math inline">\(x\)</span>包含的异常太多，那么模型将难以对<span class="math inline">\(x\)</span>进行还原。</p>
-<p><img src="https://i.loli.net/2020/06/25/HcX78lUoG4meJq5.png" srcset="/img/loading.gif" style="zoom: 50%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/HcX78lUoG4meJq5.png" style="zoom: 50%;" /></p>
 <p>基于上述讨论，作者对使用<span class="math inline">\(\mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x|z)]\)</span>作为<strong>Reconstruction Probability</strong>的意义进行了阐释。设输入样本为<span class="math inline">\(x\)</span>，如果其包含异常，假设其对应的正常样本为<span class="math inline">\(\tilde{x}\)</span>，那么<span class="math inline">\(q_\phi(z|x)\)</span>部分地和<span class="math inline">\(q_\phi(z|\tilde{x})\)</span>相似。如果<span class="math inline">\(x\)</span>和<span class="math inline">\(\tilde{x}\)</span>相似程度高，那么<span class="math inline">\(\log p_\theta(x|z)\)</span>就会很大（其中<span class="math inline">\(z\sim q_\phi(z|\tilde{x})\)</span>）。<span class="math inline">\(\log p_\theta(x|z)\)</span>类似于一个密度估计器，代表<span class="math inline">\(x\)</span>在多大程度上与<span class="math inline">\(\tilde{x}\)</span>接近，<span class="math inline">\(\mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x|z)]\)</span>相当于对每一个<span class="math inline">\(z\)</span>对应的<span class="math inline">\(\log p_\theta(x|z)\)</span>乘以一个权重<span class="math inline">\(q_\phi(z|x)\)</span>然后相加。于是作者提出了<strong>Reconstruction Probability</strong>的<strong>KDE Interpretation</strong>:在Donut模型中，<strong>Reconstruction Probability</strong> <span class="math inline">\(\mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x|z)]\)</span>可以看作是以<span class="math inline">\(q_\phi(z|x)\)</span>为权重，<span class="math inline">\(\log p_\theta(x|z)\)</span>为核的核密度估计 (Kernel Density Estimation)。</p>
 <p>三维可视化如下图所示：</p>
-<p><img src="https://i.loli.net/2020/06/25/GeWufVlUDo4QtO6.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/GeWufVlUDo4QtO6.png" style="zoom:67%;" /></p>
 <p>作者还对直接计算<span class="math inline">\(p_\theta(x)=\mathbb{E}_{p_\theta(z)}[p_\theta(x|z)]\)</span>进行了质疑，因为这种方法直接求<span class="math inline">\(x\)</span>的先验，仅仅考虑了<span class="math inline">\(x\)</span>的总体模式，而忽略了<span class="math inline">\(x\)</span>的个体模式。</p>
 <h3 id="find-good-posteriors-for-abnormal-x">Find Good Posteriors for Abnormal <span class="math inline">\(x\)</span></h3>
 <p>通过上面的讨论我们知道了Donut通过找到<span class="math inline">\(x\)</span>的正常后验来估计<span class="math inline">\(x\)</span>在多大程度上与<span class="math inline">\(\tilde{x}\)</span>相似，在这一节作者讨论了文中使用的不同技巧对找到<span class="math inline">\(x\)</span>的后验的作用。对于<strong>Missing Data Injection</strong>作者认为该技巧增强了<strong>M-ELBO</strong>的效果。对于<strong>MCMC Imputation</strong>，作者认为该技巧主要是在检测阶段通过不断迭代提供了更好的后验，如下图所示：</p>
-<p><img src="https://i.loli.net/2020/06/25/8puDRylqZfQkcN6.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/8puDRylqZfQkcN6.png" style="zoom:67%;" /></p>
 <p>作者认为，虽然对于包含大量异常的样本，Donut不能很好的还原，但在运维场景中，只要对大段异常的开始阶段进行准确预测即可。</p>
 <h3 id="causes-of-time-gradient">Causes of Time Gradient</h3>
 <p>在这一节作者讨论了<strong>Time Gradient</strong>出现的原因。首先假设<span class="math inline">\(x\)</span>都是正常点，这时<span class="math inline">\(x\)</span>的ELBO为： <span class="math display">\[
@@ -332,331 +535,957 @@
 &amp;=\mathbb{E}[\log p_\theta(x|z)]+\mathbb{E}[\log p_\theta(z)]+\text{H}[z|x]
 \end{align}
 \]</span> 第一项表明在<span class="math inline">\(z\sim q_\phi(z|x)\)</span>下尽可能重构<span class="math inline">\(x\)</span>。第二项表明<span class="math inline">\(q_\phi(z|x)\)</span>尽量与<span class="math inline">\(z\)</span>的先验<span class="math inline">\(\mathcal{N}(0,I)\)</span>接近。第三项为<span class="math inline">\(q_\phi(z|x)\)</span>的熵，表明<span class="math inline">\(q_\phi(z|x)\)</span>应尽量分散。然而第二项又限制了这种分散的区域，如 Figure 11(c) 所示。同时考虑这三项的话，第一项使得<span class="math inline">\(z\)</span>不能自由地分散，对于不相似的<span class="math inline">\(x\)</span>其对应的<span class="math inline">\(z\)</span>也是不相似的，因为要最大化<span class="math inline">\(x\)</span>的重构概率。然而对于相似的<span class="math inline">\(x\)</span>来说，其对应的<span class="math inline">\(q_\phi(z|x)\)</span>会出现很多重复的部分。当达到平衡时，<strong>Time Gradient</strong>就出现了。</p>
-<p><img src="https://i.loli.net/2020/06/25/AaC9oNMShBRHFeY.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/AaC9oNMShBRHFeY.png" style="zoom:67%;" /></p>
 <p>在训练过程中，当<span class="math inline">\(x\)</span>越不相似，<span class="math inline">\(q_\phi(z|x)\)</span>就会相距越远，如上图所示。然而在一开始，参数经过随机初始化，<span class="math inline">\(q_\phi(z|x)\)</span>都是随机散乱的，如 Figure 11(b) 所示。随着训练的进行，<span class="math inline">\(q_\phi(z|x)\)</span>将会不断优化。由于KPI数据往往是光滑的，那么在时间上相距越远的样本就会越不相似，对应的<span class="math inline">\(q_\phi(z|x)\)</span>也会相距更远。这也说明了，训练结束后，时间上相距越远的，<span class="math inline">\(q_\phi(z|x)\)</span>也会相距越远，反之亦然。同时这也表明学习率的设置对本模型的稳定性有至关重要的作用。</p>
 <h3 id="sub-optimal-equilibrium">Sub-Optimal Equilibrium</h3>
 <p>上面我们讨论了随着训练进行<span class="math inline">\(q_\phi(z|x)\)</span>的演变，作者提出在训练过程中可能会遇到模型收敛到次优的情况，如下图所示：</p>
-<p><img src="https://i.loli.net/2020/06/25/udigOl3sJGwSaPz.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/udigOl3sJGwSaPz.png" style="zoom:67%;" /></p>
 <p>第一行展示的是收敛到最优的情况，第二行展示的是收敛到次优的情况。从第二行的第一个图（Step 100）来看，紫色的点开始穿过绿色的点，随着训练的进行，紫色的点开始将绿色的点推开。到Step 5000的时候，绿色的点已经被分成了两半。下图展示了对应的训练误差和验证误差：</p>
-<p><img src="https://i.loli.net/2020/06/25/23zsxwurICV7aTj.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/23zsxwurICV7aTj.png" style="zoom:67%;" /></p>
 <p>这样的现象会导致在两半绿色区域之间的测试样本会被识别为紫色，从而降低性能。作者提出在<span class="math inline">\(K\)</span>较大的时候这种现象不容易发生，但这时训练的收敛又会成为一个问题。</p>
 
-            </div>
-            <hr>
-            <div>
-              <div class="post-metas mb-3">
-                
-                  <div class="post-meta mr-3">
-                    <i class="iconfont icon-category"></i>
-                    
-                      <a class="hover-with-bg" href="/categories/Research/">Research</a>
-                    
-                      <a class="hover-with-bg" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
-                    
-                  </div>
-                
-                
-                  <div class="post-meta">
-                    <i class="iconfont icon-tags"></i>
-                    
-                      <a class="hover-with-bg" href="/tags/Time-Series/">Time Series</a>
-                    
-                      <a class="hover-with-bg" href="/tags/Anomaly-Detection/">Anomaly Detection</a>
-                    
-                      <a class="hover-with-bg" href="/tags/Machine-Learning/">Machine Learning</a>
-                    
-                      <a class="hover-with-bg" href="/tags/Deep-Learning/">Deep Learning</a>
-                    
-                      <a class="hover-with-bg" href="/tags/VAE/">VAE</a>
-                    
-                  </div>
-                
-              </div>
-              
-                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
-              
-              
-                <div class="post-prevnext row">
-                  <article class="post-prev col-6">
-                    
-                    
-                      <a href="/2019/09/22/ALSR-An-adaptive-label-screening-and-relearning-approach-for-interval-oriented-anomaly-detection/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">ALSR: An Adaptive Label Screening and Relearning Approach for Interval-Oriented Anomaly Detection</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
-                  </article>
-                  <article class="post-next col-6">
-                    
-                    
-                      <a href="/2019/09/22/Time-Series-Anomaly-Detection-Service-at-Microsoft/">
-                        <span class="hidden-mobile">Time-Series Anomaly Detection Service at Microsoft</span>
-                        <span class="visible-mobile">下一篇</span>
-                        <i class="iconfont icon-arrowright"></i>
-                      </a>
-                    
-                  </article>
-                </div>
-              
-            </div>
-
-            
-              <!-- Comments -->
-              <article class="comments" id="comments">
-                
-                
-  <div class="disqus" style="width:100%">
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-      var disqus_config = function() {
-        this.page.url = 'http://qfxiao.me/2019/09/22/Unsupervised-Anomaly-Detection-via-Variational-Auto-Encoder-for-Seasonal-KPIs-in-Web-Applications/';
-        this.page.identifier = '/2019/09/22/Unsupervised-Anomaly-Detection-via-Variational-Auto-Encoder-for-Seasonal-KPIs-in-Web-Applications/';
-      };
-      Fluid.utils.waitElementVisible('disqus_thread', function () {
-        var d = document, s = d.createElement('script');
-        s.src = '//' + 'http-larryshaw0079-coding-me-blog' + '.disqus.com/embed.js';
-        s.setAttribute('data-timestamp', new Date());
-        (d.head || d.body).appendChild(s);
-      });
-    </script>
-    <noscript>Please enable JavaScript to view the
-      <a target="_blank" href="https://disqus.com/?ref_noscript" rel="nofollow noopener noopener">comments powered by Disqus.</a>
-    </noscript>
-  </div>
-
-
-              </article>
-            
-          </article>
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者：<a href="http://qfxiao.me">Hanzawa</a>
+            <p>原文链接：<a href="http://qfxiao.me/2019/09/22/Unsupervised-Anomaly-Detection-via-Variational-Auto-Encoder-for-Seasonal-KPIs-in-Web-Applications/">http://qfxiao.me/2019/09/22/Unsupervised-Anomaly-Detection-via-Variational-Auto-Encoder-for-Seasonal-KPIs-in-Web-Applications/</a>
+            <p>发表日期：<a href="http://qfxiao.me/2019/09/22/Unsupervised-Anomaly-Detection-via-Variational-Auto-Encoder-for-Seasonal-KPIs-in-Web-Applications/">September 22nd 2019, 8:35:18 pm</a>
+            <p>更新日期：<a href="http://qfxiao.me/2019/09/22/Unsupervised-Anomaly-Detection-via-Variational-Auto-Encoder-for-Seasonal-KPIs-in-Web-Applications/">June 25th 2020, 5:11:13 pm</a>
+            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
-      </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href= "/2019/09/22/ALSR-An-adaptive-label-screening-and-relearning-approach-for-interval-oriented-anomaly-detection/" title= "ALSR: An Adaptive Label Screening and Relearning Approach for Interval-Oriented Anomaly Detection">
+                    <div class="nextTitle">ALSR: An Adaptive Label Screening and Relearning Approach for Interval-Oriented Anomaly Detection</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2019/09/22/Time-Series-Anomaly-Detection-Service-at-Microsoft/" title= "Time-Series Anomaly Detection Service at Microsoft">
+                    <div class="prevTitle">Time-Series Anomaly Detection Service at Microsoft</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!-- gitalk评论 -->
+
+    <!-- utteranc评论 -->
+
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:12345@qq.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/fi3ework" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                  
+                  <img class="profile-qr" src="/assets/example_qr.png" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
     </div>
     
-      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
-        <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
-  <div class="toc-body" id="toc-body"></div>
-</div>
-
-      </div>
-    
-  </div>
-</div>
-
-<!-- Custom -->
-
-
-    
-
-    
-      <a id="scroll-top-button" href="#" role="button">
-        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
-      </a>
-    
-
-    
-      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
-     aria-hidden="true">
-  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
-        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body mx-3">
-        <div class="md-form mb-5">
-          <input type="text" id="local-search-input" class="form-control validate">
-          <label data-error="x" data-success="v"
-                 for="local-search-input">关键词</label>
-        </div>
-        <div class="list-group" id="local-search-result"></div>
-      </div>
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
     </div>
-  </div>
-</div>
+    <!-- 不蒜子  -->
     
-
+    <div class="busuanzi-container">
     
-  </main>
-
-  <footer class="text-center mt-5 py-3">
-  <div class="footer-content">
-     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
-  </div>
-  
-  <div class="statistics">
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
     
+    </div>
     
-
-    
-      
-        <!-- 不蒜子统计PV -->
-        <span id="busuanzi_container_site_pv" style="display: none">
-            总访问量 
-            <span id="busuanzi_value_site_pv"></span>
-             次
-          </span>
-      
-      
-        <!-- 不蒜子统计UV -->
-        <span id="busuanzi_container_site_uv" style="display: none">
-            总访客数 
-            <span id="busuanzi_value_site_uv"></span>
-             人
-          </span>
-      
-    
-  </div>
-
-
-  
-
-  
 </footer>
-
-<!-- SCRIPTS -->
-
-  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
-  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
-
-  <script>
-    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
-    NProgress.start()
-    document.addEventListener('DOMContentLoaded', function() {
-      window.NProgress && window.NProgress.inc();
-    })
-    window.addEventListener('load', function() {
-      NProgress.done();
-    })
-  </script>
-
-
-<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
-<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
-<script  src="/js/debouncer.js" ></script>
-<script  src="/js/events.js" ></script>
-<script  src="/js/plugins.js" ></script>
-
-<!-- Plugins -->
-
-
-  
+    </div>
+    <!-- toc -->
     
-      <script  src="/js/lazyload.js" ></script>
+    <div class="toc-wrapper" style=
     
-  
-
-
-
-  
-
-
-
-  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
-
-
-
-  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
-
-
-
-  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
-
-
-
-  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
-
-
-
-  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
-
-
-
-  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
-  <script>
-    (function (window, document) {
-      var typing = Fluid.plugins.typing;
-      var title = document.getElementById('subtitle').title;
-      
-      typing(title)
-      
-    })(window, document);
-  </script>
-
-
-
-  <script  src="/js/local-search.js" ></script>
-  <script>
-    (function () {
-      var path = "/local-search.xml";
-      var inputArea = document.querySelector("#local-search-input");
-      inputArea.onclick = function () {
-        searchFunc(path, 'local-search-input', 'local-search-result');
-        this.onclick = null
-      }
-    })()
-  </script>
 
 
 
 
 
-  
 
-  
-    <!-- MathJax -->
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#abstract"><span class="toc-number">1.</span> <span class="toc-text">Abstract</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#contribution"><span class="toc-number">2.</span> <span class="toc-text">Contribution</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#background"><span class="toc-number">3.</span> <span class="toc-text">Background</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#anomaly-detection"><span class="toc-number">3.1.</span> <span class="toc-text">Anomaly Detection</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#methodology"><span class="toc-number">4.</span> <span class="toc-text">Methodology</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#problem-statement"><span class="toc-number">4.1.</span> <span class="toc-text">Problem Statement</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#network-structure"><span class="toc-number">4.2.</span> <span class="toc-text">Network Structure</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#training"><span class="toc-number">4.3.</span> <span class="toc-text">Training</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#detection"><span class="toc-number">4.4.</span> <span class="toc-text">Detection</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#experiments"><span class="toc-number">5.</span> <span class="toc-text">Experiments</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#datasets"><span class="toc-number">5.1.</span> <span class="toc-text">Datasets</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#metrics"><span class="toc-number">5.2.</span> <span class="toc-text">Metrics</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#results"><span class="toc-number">6.</span> <span class="toc-text">Results</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#overall-performance"><span class="toc-number">6.1.</span> <span class="toc-text">Overall Performance</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#effects-of-donut-techniques"><span class="toc-number">6.2.</span> <span class="toc-text">Effects of Donut Techniques</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#impact-of-k"><span class="toc-number">6.3.</span> <span class="toc-text">Impact of K</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#analysis"><span class="toc-number">7.</span> <span class="toc-text">Analysis</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#kde-interpretation"><span class="toc-number">7.1.</span> <span class="toc-text">KDE Interpretation</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#find-good-posteriors-for-abnormal-x"><span class="toc-number">7.2.</span> <span class="toc-text">Find Good Posteriors for Abnormal \(x\)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#causes-of-time-gradient"><span class="toc-number">7.3.</span> <span class="toc-text">Causes of Time Gradient</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#sub-optimal-equilibrium"><span class="toc-number">7.4.</span> <span class="toc-text">Sub-Optimal Equilibrium</span></a></li></ol></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 33
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2020 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/23</span><a class="archive-post-title" href= "/2020/09/23/Unsupervised-Feature-Learning-via-Non-Parametric-Instance-Discrimination/" >Unsupervised Feature Learning via Non-Parametric Instance Discrimination</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/17</span><a class="archive-post-title" href= "/2020/09/17/Representation-Learning-with-Contrastive-Predictive-Coding/" >Representation Learning with Contrastive Predictive Coding</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/09</span><a class="archive-post-title" href= "/2020/09/09/Model-Selection-and-Evaluation-Machine-Learning-Basics/" >Model Selection and Evaluation: Machine Learning Basics</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/02</span><a class="archive-post-title" href= "/2020/09/02/Machine-Learning-Classification-Algorithms-Decision-Trees/" >Machine Learning Classification Algorithms: Decision Trees</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/26</span><a class="archive-post-title" href= "/2020/08/26/Machine-Learning-Classification-Algorithms-Support-Vector-Machine/" >Machine Learning Classification Algorithms: Support Vector Machine</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/26</span><a class="archive-post-title" href= "/2020/08/26/Boosting-and-AdaBoost-Machine-Learning-Ensemble-Algorithms-1/" >Boosting and AdaBoost: Machine Learning Ensemble Algorithms 1</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/26</span><a class="archive-post-title" href= "/2020/08/26/Machine-Learning-Ensemble-Algorithms-GBDT-and-XGBoost/" >Machine Learning Ensemble Algorithms: GBDT and XGBoost</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span><a class="archive-post-title" href= "/2020/08/24/Unsupervised-Representation-Learning-by-Predicting-Random-Distances/" >Unsupervised Representation Learning by Predicting Random Distances</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/14</span><a class="archive-post-title" href= "/2020/07/14/Effective-End-to-end-Unsupervised-Outlier-Detection-via-Linear-Priority-of-Discriminative-Network/" >Effective End-to-end Unsupervised Outlier Detection via Linear Priority of Discriminative Network</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/22</span><a class="archive-post-title" href= "/2020/06/22/Probability-Distributions-Binary-and-Multinomial-Variables/" >Probability Distributions - Binary and Multinomial Variables</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/13</span><a class="archive-post-title" href= "/2020/06/13/Time2Graph-Revisiting-Time-Series-Modeling-with-Dynamic-Shapelets/" >Time2Graph: Revisiting Time Series Modeling with Dynamic Shapelets</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/06</span><a class="archive-post-title" href= "/2020/06/06/Generative-Probabilistic-Novelty-Detection-with-Adversarial-Autoencoders/" >Generative Probabilistic Novelty Detection with Adversarial Autoencoders</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/02</span><a class="archive-post-title" href= "/2020/06/02/Classification-based-Anomaly-Detection-for-General-Data/" >Classification-based Anomaly Detection for General Data</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/02</span><a class="archive-post-title" href= "/2020/06/02/%E9%9D%A2%E5%90%91OpenPAI%E7%9A%84Docker%E9%95%9C%E5%83%8F%E9%85%8D%E7%BD%AE%E5%8F%8AOpenPAI%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/" >面向OpenPAI的Docker镜像配置及OpenPAI基本使用方法</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/02</span><a class="archive-post-title" href= "/2020/06/02/Ubuntu20-4LTS-%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE-CUDA11-cuDNN8-Tensorflow-Pytorch/" >Ubuntu20.04LTS 深度学习环境配置 CUDA11 + cuDNN8 + Tensorflow + Pytorch</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/01</span><a class="archive-post-title" href= "/2020/06/01/Deep-Anomaly-Detection-Using-Geometric-Transformations/" >Deep Anomaly Detection Using Geometric Transformations</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/01</span><a class="archive-post-title" href= "/2020/06/01/Cross-dataset-Time-Series-Anomaly-Detection-for-Cloud-Systems/" >Cross-dataset Time Series Anomaly Detection for Cloud Systems</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/06</span><a class="archive-post-title" href= "/2020/05/06/Learning-Representations-of-Ultrahigh-dimensional-Data-for-Random-Distance-based-Outlier-Detection/" >Learning Representations of Ultrahigh-dimensional Data for Random Distance-based Outlier Detection</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/30</span><a class="archive-post-title" href= "/2020/03/30/Deep-Weakly-supervised-Anomaly-Detection/" >Deep Weakly-supervised Anomaly Detection</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/01</span><a class="archive-post-title" href= "/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/" >Discovering Physical Concepts with Neural Networks</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/27</span><a class="archive-post-title" href= "/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/" >Transfer Anomaly Detection by Inferring Latent Domain Representations</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/24</span><a class="archive-post-title" href= "/2020/02/24/Deep-Anomaly-Detection-with-Deviation-Networks/" >Deep Anomaly Detection with Deviation Networks</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/31</span><a class="archive-post-title" href= "/2020/01/31/Geant4-%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/" >Geant4 安装教程与调试环境配置</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/09</span><a class="archive-post-title" href= "/2020/01/09/Complementary-Set-Variational-Autoencoder-for-Supervised-Anomaly-Detection/" >Complementary Set Variational Autoencoder for Supervised Anomaly Detection</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2019 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/29</span><a class="archive-post-title" href= "/2019/10/29/Anomaly-Detection-in-Streams-with-Extreme-Value-Theory/" >Anomaly Detection in Streams with Extreme Value Theory</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/22</span><a class="archive-post-title" href= "/2019/10/22/An-Introduction-to-Variational-Autoencoders/" >An Introduction to Variational Autoencoders</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/18</span><a class="archive-post-title" href= "/2019/10/18/Recurrent-Neural-Networks-for-Multivariate-Time-Series-with-Missing-Values/" >Recurrent Neural Networks for Multivariate Time Series with Missing Values</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/18</span><a class="archive-post-title" href= "/2019/10/18/Robust-Anomaly-Detection-for-Multivariate-Time-Series-through-Stochastic-Recurrent-Neural-Network/" >Robust Anomaly Detection for Multivariate Time Series through Stochastic Recurrent Neural Network</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/16</span><a class="archive-post-title" href= "/2019/10/16/GAIN-Missing-Data-Imputation-using-Generative-Adversarial-Nets/" >GAIN: Missing Data Imputation using Generative Adversarial Nets</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/22</span><a class="archive-post-title" href= "/2019/09/22/Anomaly-Detection-with-Generative-Adversarial-Networks-for-Multivariate-Time-Series/" >Anomaly Detection with Generative Adversarial Networks for Multivariate Time Series</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/22</span><a class="archive-post-title" href= "/2019/09/22/ALSR-An-adaptive-label-screening-and-relearning-approach-for-interval-oriented-anomaly-detection/" >ALSR: An Adaptive Label Screening and Relearning Approach for Interval-Oriented Anomaly Detection</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/22</span><a class="archive-post-title" href= "/2019/09/22/Time-Series-Anomaly-Detection-Service-at-Microsoft/" >Time-Series Anomaly Detection Service at Microsoft</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/22</span><a class="archive-post-title" href= "/2019/09/22/Unsupervised-Anomaly-Detection-via-Variational-Auto-Encoder-for-Seasonal-KPIs-in-Web-Applications/" >Unsupervised Anomaly Detection via Variational Auto-Encoder for Seasonal KPIs in Web Applications</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="Variational Inference"><span class="iconfont-archer">&#xe606;</span>Variational Inference</span>
+    
+        <span class="sidebar-tag-name" data-tags="VAE"><span class="iconfont-archer">&#xe606;</span>VAE</span>
+    
+        <span class="sidebar-tag-name" data-tags="Deep Learning"><span class="iconfont-archer">&#xe606;</span>Deep Learning</span>
+    
+        <span class="sidebar-tag-name" data-tags="Time Series"><span class="iconfont-archer">&#xe606;</span>Time Series</span>
+    
+        <span class="sidebar-tag-name" data-tags="Statistics"><span class="iconfont-archer">&#xe606;</span>Statistics</span>
+    
+        <span class="sidebar-tag-name" data-tags="Machine Learning"><span class="iconfont-archer">&#xe606;</span>Machine Learning</span>
+    
+        <span class="sidebar-tag-name" data-tags="Anomaly Detection"><span class="iconfont-archer">&#xe606;</span>Anomaly Detection</span>
+    
+        <span class="sidebar-tag-name" data-tags="Boosting"><span class="iconfont-archer">&#xe606;</span>Boosting</span>
+    
+        <span class="sidebar-tag-name" data-tags="Adaboost"><span class="iconfont-archer">&#xe606;</span>Adaboost</span>
+    
+        <span class="sidebar-tag-name" data-tags="Transfer Learning"><span class="iconfont-archer">&#xe606;</span>Transfer Learning</span>
+    
+        <span class="sidebar-tag-name" data-tags="Self-Supervised Learning"><span class="iconfont-archer">&#xe606;</span>Self-Supervised Learning</span>
+    
+        <span class="sidebar-tag-name" data-tags="GAN"><span class="iconfont-archer">&#xe606;</span>GAN</span>
+    
+        <span class="sidebar-tag-name" data-tags="Novelty Detection"><span class="iconfont-archer">&#xe606;</span>Novelty Detection</span>
+    
+        <span class="sidebar-tag-name" data-tags="Geant4"><span class="iconfont-archer">&#xe606;</span>Geant4</span>
+    
+        <span class="sidebar-tag-name" data-tags="Representation Learning"><span class="iconfont-archer">&#xe606;</span>Representation Learning</span>
+    
+        <span class="sidebar-tag-name" data-tags="ID3"><span class="iconfont-archer">&#xe606;</span>ID3</span>
+    
+        <span class="sidebar-tag-name" data-tags="C4.5"><span class="iconfont-archer">&#xe606;</span>C4.5</span>
+    
+        <span class="sidebar-tag-name" data-tags="CART"><span class="iconfont-archer">&#xe606;</span>CART</span>
+    
+        <span class="sidebar-tag-name" data-tags="SVM"><span class="iconfont-archer">&#xe606;</span>SVM</span>
+    
+        <span class="sidebar-tag-name" data-tags="Probability"><span class="iconfont-archer">&#xe606;</span>Probability</span>
+    
+        <span class="sidebar-tag-name" data-tags="GBDT"><span class="iconfont-archer">&#xe606;</span>GBDT</span>
+    
+        <span class="sidebar-tag-name" data-tags="XGBoost"><span class="iconfont-archer">&#xe606;</span>XGBoost</span>
+    
+        <span class="sidebar-tag-name" data-tags="Overfitting"><span class="iconfont-archer">&#xe606;</span>Overfitting</span>
+    
+        <span class="sidebar-tag-name" data-tags="Bias"><span class="iconfont-archer">&#xe606;</span>Bias</span>
+    
+        <span class="sidebar-tag-name" data-tags="Variance"><span class="iconfont-archer">&#xe606;</span>Variance</span>
+    
+        <span class="sidebar-tag-name" data-tags="RNN"><span class="iconfont-archer">&#xe606;</span>RNN</span>
+    
+        <span class="sidebar-tag-name" data-tags="Contrastive Learning"><span class="iconfont-archer">&#xe606;</span>Contrastive Learning</span>
+    
+        <span class="sidebar-tag-name" data-tags="Self-supervised Learning"><span class="iconfont-archer">&#xe606;</span>Self-supervised Learning</span>
+    
+        <span class="sidebar-tag-name" data-tags="Flow-based Model"><span class="iconfont-archer">&#xe606;</span>Flow-based Model</span>
+    
+        <span class="sidebar-tag-name" data-tags="Spectral"><span class="iconfont-archer">&#xe606;</span>Spectral</span>
+    
+        <span class="sidebar-tag-name" data-tags="Shapelet"><span class="iconfont-archer">&#xe606;</span>Shapelet</span>
+    
+        <span class="sidebar-tag-name" data-tags="Pytorch"><span class="iconfont-archer">&#xe606;</span>Pytorch</span>
+    
+        <span class="sidebar-tag-name" data-tags="Tensorflow"><span class="iconfont-archer">&#xe606;</span>Tensorflow</span>
+    
+        <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+        <span class="sidebar-category-name" data-categories="Research"><span class="iconfont-archer">&#xe60a;</span>Research</span>
+    
+        <span class="sidebar-category-name" data-categories="Research/Anomaly-Detection"><span class="iconfont-archer">&#xe60a;</span>Research/Anomaly-Detection</span>
+    
+        <span class="sidebar-category-name" data-categories="Research/Tutorial"><span class="iconfont-archer">&#xe60a;</span>Research/Tutorial</span>
+    
+        <span class="sidebar-category-name" data-categories="Technical-Notes"><span class="iconfont-archer">&#xe60a;</span>Technical-Notes</span>
+    
+        <span class="sidebar-category-name" data-categories="Research/Misc"><span class="iconfont-archer">&#xe60a;</span>Research/Misc</span>
+    
+        <span class="sidebar-category-name" data-categories="Research/Time-Series-Imputation"><span class="iconfont-archer">&#xe60a;</span>Research/Time-Series-Imputation</span>
+    
+        <span class="sidebar-category-name" data-categories="Technical-Notes/Misc"><span class="iconfont-archer">&#xe60a;</span>Technical-Notes/Misc</span>
+    
+        <span class="sidebar-category-name" data-categories="Technical-Notes/Machine-Learning"><span class="iconfont-archer">&#xe60a;</span>Technical-Notes/Machine-Learning</span>
+    
+        <span class="sidebar-category-name" data-categories="Research/Notes"><span class="iconfont-archer">&#xe60a;</span>Research/Notes</span>
+    
+        <span class="sidebar-category-name" data-categories="Research/RNN"><span class="iconfont-archer">&#xe60a;</span>Research/RNN</span>
+    
+        <span class="sidebar-category-name" data-categories="Research/Self-supervised-Learning"><span class="iconfont-archer">&#xe60a;</span>Research/Self-supervised-Learning</span>
+    
+        <span class="sidebar-category-name" data-categories="Research/Time-Series-Modeling"><span class="iconfont-archer">&#xe60a;</span>Research/Time-Series-Modeling</span>
+    
+        <span class="sidebar-category-name" data-categories="Research/Representation-Learning"><span class="iconfont-archer">&#xe60a;</span>Research/Representation-Learning</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
     <script>
-      MathJax = {
-        tex: {
-          inlineMath: [['$', '$'], ['\\(', '\\)']]
-        },
-        options: {
-          renderActions: {
-            findScript: [10, doc => {
-              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
-                const display = !!node.type.match(/; *mode=display/);
-                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
-                const text = document.createTextNode('');
-                node.parentNode.replaceChild(text, node);
-                math.start = { node: text, delim: '', n: 0 };
-                math.end = { node: text, delim: '', n: 0 };
-                doc.math.push(math);
-              });
-            }, '', false],
-            insertedScript: [200, () => {
-              document.querySelectorAll('mjx-container').forEach(node => {
-                let target = node.parentNode;
-                if (target.nodeName.toLowerCase() === 'li') {
-                  target.parentNode.classList.add('has-jax');
-                }
-              });
-            }, '', false]
-          }
+    var siteMeta = {
+        root: "/",
+        author: "Hanzawa"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
         }
-      };
     </script>
-
-    <script async src="https://cdn.staticfile.org/mathjax/3.1.2/es5/tex-svg.js" ></script>
-
-  
-
-
-
-
-
-
-
-
-
-
-
-<!-- 主题的启动项 保持在最底部 -->
-<script  src="/js/boot.js" ></script>
-
-
-
-</body>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
 </html>
+
+
