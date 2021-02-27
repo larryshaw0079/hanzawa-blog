@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://qfxiao.me/2020/09/23/Unsupervised-Feature-Learning-via-Non-Parametric-Instance-Discrimination/</loc>
+    
+    <lastmod>2021-02-27</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://qfxiao.me/2020/08/26/Machine-Learning-Ensemble-Algorithms-GBDT-and-XGBoost/</loc>
     
     <lastmod>2021-02-21</lastmod>
@@ -38,13 +45,6 @@
   
   <url>
     <loc>http://qfxiao.me/2020/09/17/Representation-Learning-with-Contrastive-Predictive-Coding/</loc>
-    
-    <lastmod>2021-02-19</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://qfxiao.me/2020/09/23/Unsupervised-Feature-Learning-via-Non-Parametric-Instance-Discrimination/</loc>
     
     <lastmod>2021-02-19</lastmod>
     
