@@ -1,40 +1,1729 @@
-extends ./_layout.pug
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head hexo-theme='https://github.com/volantis-x/hexo-theme-volantis/tree/4.3.1'>
+  <meta charset="utf-8">
+  <!-- SEO相关 -->
+  
+    
+  
+  <!-- 渲染优化 -->
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  <link rel='dns-prefetch' href='https://cdn.jsdelivr.net'>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  <link rel="preload" href="/css/first.css" as="style">
+  
 
-block content
-  // Just used to judge whether it is an article page
-  div#is-post
-  div.post
-    include ./_mixins/post-header.pug
-    include ./_mixins/gallery.pug
+  <!-- 页面元数据 -->
+  
+  <title>面向OpenPAI的Docker镜像配置及OpenPAI基本使用方法 - Hanzawa の 部屋</title>
+  
+    <meta name="keywords" content="Pytorch,Tensorflow,Docker">
+  
 
-    +postHeader(page)
+  
 
-    div.post-body
-      if page.photos && page.photos.length
-        +gallery(page)
-      != page.content
+  <!-- feed -->
+  
+    <link rel="alternate" href="/atom.xml" title="Hanzawa の 部屋" type="application/atom+xml">
+  
 
-    footer.post-footer
-      if theme.post_widget.end_text.enable
-        div.post-ending.ending
-          div.ending__text= __('post.end')
+  <!-- import meta -->
+  
 
-      if page.copyright === true || (isShowCC && theme.creative_commons.post)
-        include ./_partials/widgets/copyright.pug
+  <!-- link -->
+  
 
-      if theme.post_widget.tags
-        if page.tags && page.tags.length > 0
-          div.post-tags
-            each tag in page.tags.data
-              span.post-tags-item
-                span.post-tags-item__icon
-                  i(class=theme.icon.post_tags)
-                a.post-tags-item__link(href=tag.permalink)= tag.name
+  <!-- import link -->
+  
 
-      if theme.post_widget.share.enable
-        include ./_partials/widgets/share.pug
+  
+    
+<link rel="stylesheet" href="/css/first.css">
 
-      if isShowReward
-        include ./_partials/widgets/reward.pug
+  
 
-      include ./_partials/widgets/paginator.pug
+  
+  <link rel="stylesheet" href="/css/style.css" media="print" onload="this.media='all';this.onload=null">
+  <noscript><link rel="stylesheet" href="/css/style.css"></noscript>
+  
+
+  <script id="loadcss"></script>
+
+  
+<script>
+if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMode))
+    document.write(
+	'<style>'+
+		'html{'+
+			'overflow-x: hidden !important;'+
+			'overflow-y: hidden !important;'+
+		'}'+
+		'.kill-ie{'+
+			'text-align:center;'+
+			'height: 100%;'+
+			'margin-top: 15%;'+
+			'margin-bottom: 5500%;'+
+		'}'+
+	'</style>'+
+    '<div class="kill-ie">'+
+        '<h1><b>抱歉，您的浏览器无法访问本站</b></h1>'+
+        '<h3>微软已经于2016年终止了对 Internet Explorer (IE) 10 及更早版本的支持，<br/>'+
+        '继续使用存在极大的安全隐患，请使用当代主流的浏览器进行访问。</h3><br/>'+
+        '<a target="_blank" rel="noopener" href="https://www.microsoft.com/zh-cn/WindowsForBusiness/End-of-IE-support"><strong>了解详情 ></strong></a>'+
+    '</div>');
+</script>
+
+
+<noscript>
+	<style>
+		html{
+			overflow-x: hidden !important;
+			overflow-y: hidden !important;
+		}
+		.kill-noscript{
+			text-align:center;
+			height: 100%;
+			margin-top: 15%;
+			margin-bottom: 5500%;
+		}
+	</style>
+    <div class="kill-noscript">
+        <h1><b>抱歉，您的浏览器无法访问本站</b></h1>
+        <h3>本页面需要浏览器支持（启用）JavaScript</h3><br/>
+        <a target="_blank" rel="noopener" href="https://www.baidu.com/s?wd=启用JavaScript"><strong>了解详情 ></strong></a>
+    </div>
+</noscript>
+
+</head>
+
+  <body>
+    
+
+<header id="l_header" class="l_header auto shadow blur show" style='opacity: 0' >
+  <div class='container'>
+  <div id='wrapper'>
+    <div class='nav-sub'>
+      <p class="title"></p>
+      <ul class='switcher nav-list-h m-phone' id="pjax-header-nav-list">
+        <li><a id="s-comment" class="fas fa-comments fa-fw" target="_self" href='javascript:void(0)'></a></li>
+        
+          <li><a id="s-toc" class="s-toc fas fa-list fa-fw" target="_self" href='javascript:void(0)'></a></li>
+        
+      </ul>
+    </div>
+		<div class="nav-main">
+      
+        
+        <a class="title flat-box" target="_self" href='/'>
+          
+            <img no-lazy class='logo' src='https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/blog/Logo-NavBar@3x.png'/>
+          
+          
+          
+        </a>
+      
+
+			<div class='menu navigation'>
+				<ul class='nav-list-h m-pc'>
+          
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/
+                  
+                  
+                  
+                    id="home"
+                  >
+                  <i class='fas fa-rss fa-fw'></i>博客
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/categories/
+                  
+                  
+                  
+                    id="categories"
+                  >
+                  <i class='fas fa-folder-open fa-fw'></i>分类
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/tags/
+                  
+                  
+                  
+                    id="tags"
+                  >
+                  <i class='fas fa-tags fa-fw'></i>标签
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/archives/
+                  
+                  
+                  
+                    id="archives"
+                  >
+                  <i class='fas fa-archive fa-fw'></i>归档
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/friends/
+                  
+                  
+                  
+                    id="friends"
+                  >
+                  <i class='fas fa-link fa-fw'></i>友链
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/about/
+                  
+                  
+                  
+                    id="about"
+                  >
+                  <i class='fas fa-info-circle fa-fw'></i>关于
+                </a>
+                
+              </li>
+            
+          
+          
+				</ul>
+			</div>
+
+      <div class="m_search">
+        <form name="searchform" class="form u-search-form">
+          <i class="icon fas fa-search fa-fw"></i>
+          <input type="text" class="input u-search-input" placeholder="Search..." />
+        </form>
+      </div>
+
+			<ul class='switcher nav-list-h m-phone'>
+				
+					<li><a class="s-search fas fa-search fa-fw" target="_self" href='javascript:void(0)'></a></li>
+				
+				<li>
+          <a class="s-menu fas fa-bars fa-fw" target="_self" href='javascript:void(0)'></a>
+          <ul class="menu-phone list-v navigation white-box">
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/
+                  
+                  
+                  
+                    id="home"
+                  >
+                  <i class='fas fa-rss fa-fw'></i>博客
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/categories/
+                  
+                  
+                  
+                    id="categories"
+                  >
+                  <i class='fas fa-folder-open fa-fw'></i>分类
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/tags/
+                  
+                  
+                  
+                    id="tags"
+                  >
+                  <i class='fas fa-tags fa-fw'></i>标签
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/archives/
+                  
+                  
+                  
+                    id="archives"
+                  >
+                  <i class='fas fa-archive fa-fw'></i>归档
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/friends/
+                  
+                  
+                  
+                    id="friends"
+                  >
+                  <i class='fas fa-link fa-fw'></i>友链
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/about/
+                  
+                  
+                  
+                    id="about"
+                  >
+                  <i class='fas fa-info-circle fa-fw'></i>关于
+                </a>
+                
+              </li>
+            
+          
+            
+          </ul>
+        </li>
+			</ul>
+		</div>
+	</div>
+  </div>
+</header>
+
+    <div id="l_body">
+      <div id="l_cover">
+  
+    
+        <div id="full" class='cover-wrapper post dock' style="display: none;">
+          
+            <div class='cover-bg lazyload placeholder' data-bg="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture"></div>
+          
+          <div class='cover-body'>
+  <div class='top'>
+    
+    
+      <p class="title">Volantis</p>
+    
+    
+  </div>
+  <div class='bottom'>
+    <div class='menu navigation'>
+      <div class='list-h'>
+        
+          
+            <a href="/v4/getting-started/"
+              
+              
+              id="v4getting-started">
+              <img src='https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f5c3.svg'><p>文档</p>
+            </a>
+          
+            <a href="/faqs/"
+              
+              
+              id="faqs">
+              <img src='https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f516.svg'><p>帮助</p>
+            </a>
+          
+            <a href="/examples/"
+              
+              
+              id="examples">
+              <img src='https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f396.svg'><p>示例</p>
+            </a>
+          
+            <a href="/contributors/"
+              
+              
+              id="contributors">
+              <img src='https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f389.svg'><p>社区</p>
+            </a>
+          
+            <a href="/archives/"
+              
+              
+              id="archives">
+              <img src='https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f4f0.svg'><p>博客</p>
+            </a>
+          
+            <a target="_blank" rel="noopener" href="https://github.com/volantis-x/hexo-theme-volantis/"
+              
+              
+              id="https:githubcomvolantis-xhexo-theme-volantis">
+              <img src='https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f9ec.svg'><p>源码</p>
+            </a>
+          
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+          <div id="scroll-down" style="display: none;"><i class="fa fa-chevron-down scroll-down-effects"></i></div>
+        </div>
+    
+  
+  </div>
+
+      <div id="safearea">
+        <div class="body-wrapper" id="pjax-container">
+          
+
+<div class='l_main'>
+  <article class="article post white-box reveal md shadow article-type-post" id="post" itemscope itemprop="blogPost">
+  
+
+
+  
+  <div class="article-meta" id="top">
+    
+    
+    
+      <h1 class="title">
+        面向OpenPAI的Docker镜像配置及OpenPAI基本使用方法
+      </h1>
+      <div class='new-meta-box'>
+        
+          
+            
+<div class='new-meta-item author'>
+  <a class='author' href="/" rel="nofollow">
+    <img no-lazy src="">
+    <p>请设置文章作者</p>
+  </a>
+</div>
+
+          
+        
+          
+            
+  <div class='new-meta-item category'>
+    <a class='notlink'>
+      <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>
+      <a class="category-link" href="/categories/Technical-Notes/">Technical Notes</a><span class="sep"></span><a class="category-link" href="/categories/Technical-Notes/Misc/">Misc</a>
+    </a>
+  </div>
+
+
+          
+        
+          
+            <div class="new-meta-item date">
+  <a class='notlink'>
+    <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>
+    <p>发布于：2020年6月2日</p>
+  </a>
+</div>
+
+          
+        
+          
+            
+  <div class="new-meta-item browse leancloud">
+    <a class='notlink'>
+      
+      <div id="lc-pv" data-title="面向OpenPAI的Docker镜像配置及OpenPAI基本使用方法" data-path="/2020/06/02/%E9%9D%A2%E5%90%91OpenPAI%E7%9A%84Docker%E9%95%9C%E5%83%8F%E9%85%8D%E7%BD%AE%E5%8F%8AOpenPAI%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/">
+        <i class="fas fa-eye fa-fw" aria-hidden="true"></i>
+        <span id='number'><i class="fas fa-circle-notch fa-spin fa-fw" aria-hidden="true"></i></span>
+        次浏览
+      </div>
+    </a>
+  </div>
+
+
+          
+        
+      </div>
+    
+  </div>
+
+
+  
+  
+  <h1 id="introduction">Introduction</h1>
+<p>实验室服务器集群采用OpenPAI来进行GPU资源的管理，而OpenPAI采用了Docker作为基础，即代码都放在Docker容器中运行。由于Docker的使用、Docker镜像的配置都有一定的门槛，所以这里写一篇Tutorial来进行介绍。本文不是网上资料的拼凑，而是经过本人走弯路踩坑形成的"Best practice"。主要内容包括Docker的介绍、Docker的基本使用、如何配置自己的Docker镜像以及OpenPAI平台的基本使用，但不包括Docker和OpenPAI的安装。</p>
+<blockquote>
+<p>2020.8.1 Update: 加入通过HDFS读取容器保存的文件的方法</p>
+</blockquote>
+<h1 id="docker-from-scratch">Docker from Scratch</h1>
+<p>要理解Docker是什么，从虚拟机开始讲可能会比较好理解。虚拟机大家可能都很熟悉了，比如说我用的系统是Windows，但我需要Linux系统来作为一个Flask编写的网站的服务器，但是又不想单独安装Linux系统，于是可以使用虚拟机来解决这个问题。安装VMWare Workstation，去官网下载Ubuntu系统镜像，然后在VMWare中安装好系统，然后从头配置Flask相关环境。实际上我需要的仅仅是一个Flask运行环境而已，而使用虚拟机却需要如此“大费周章”，这时Docker出现了，网上有大量现成的Flask Docker镜像，配置好了你所需的Flask环境，你只需要下载这些镜像，然后运行它，你就得到了一个Flask运行环境，而与你当前使用的系统无关。如果你需要一个Tomcat的运行环境，那么去找一个Tomcat的Docker镜像就行。Docker将需求或者说服务绑定在了Docker镜像中（<strong>轻量化</strong>，一个需求对应一个Docker镜像，每个镜像都很小），你有什么需求，去找相应的镜像即可（或者自己写一个），镜像的运行是以虚拟机的形式存在，所以他们之间也是互不干扰的。同时，你在写好一个Docker镜像之后，你还可以<strong>分享</strong>给别人，这样其他人就不用重新配置，直接运行你给他的镜像即可。Docker有两个比较关键的概念：</p>
+<ul>
+<li><strong>镜像 Images：</strong> 这里的镜像不是指我们安装系统时下载的ISO镜像，Docker镜像就是把你需要的东西（一个系统+需要的服务）集中到一起，相当于做菜的菜谱；</li>
+<li><strong>容器 Containers：</strong> 如果一个Docker镜像启动了，那么就会有一个Docker容器产生，相当于按照菜谱做出来的菜。</li>
+</ul>
+<p><img src="https://i.loli.net/2020/06/24/H2x9mnPwkVQyO6p.png" class="lazyload" data-srcset="https://i.loli.net/2020/06/24/H2x9mnPwkVQyO6p.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" alt="img" style="zoom: 33%;" /></p>
+<p><img src="https://i.loli.net/2020/06/24/7k6S3yecX2lbvQY.png" class="lazyload" data-srcset="https://i.loli.net/2020/06/24/7k6S3yecX2lbvQY.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" alt="img" style="zoom: 33%;" /></p>
+<p>这一节我们先不讨论如何自己写Docker镜像，只是先讨论Docker的基本操作。</p>
+<h2 id="basic-operations">Basic Operations</h2>
+<p>Docker新安装好当然是没有什么镜像的，首先我们使用<code>docker pull hello-world</code>来下载一个测试镜像。</p>
+<blockquote>
+<p>拉取镜像 <code>docker pull &lt;image_name&gt;</code></p>
+</blockquote>
+<p>在输入之后，Docker会自动在远程服务器上查找对应的镜像进行下载。由于我的电脑上已经有这个镜像了，所以显示是下面的样子：</p>
+<p><img src="https://i.loli.net/2020/06/24/rvqcAwzOYJtF6T8.png" class="lazyload" data-srcset="https://i.loli.net/2020/06/24/rvqcAwzOYJtF6T8.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" /></p>
+<p>接下来，我们输入<code>docker run hello-world</code>运行这个镜像。</p>
+<blockquote>
+<p>运行镜像<code>docker run &lt;image_name&gt;</code></p>
+</blockquote>
+<p>可以看到，Docker输出了一些信息就自己退出了，这和我们理解的虚拟机不太一样。在Docker里面，我们既可以创建一个完整的系统，用户在运行之后就可以正常使用这个操作系统，也可以创建一个简单的服务，默认运行完一些指令就退出了。这里的<code>hello-world</code>镜像这是输出了一些信息后就自动退出了，因为这就是这个镜像的全部内容。</p>
+<p><img src="https://i.loli.net/2020/06/24/Zb1VKjFyMh8gHf2.png" class="lazyload" data-srcset="https://i.loli.net/2020/06/24/Zb1VKjFyMh8gHf2.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" /></p>
+<p>我们尝试来运行一个完整的系统，先用<code>docker pull ubuntu</code>拉取Ubuntu Docker镜像：</p>
+<p><img src="https://i.loli.net/2020/06/24/zEerb2gPwYWX8O7.png" class="lazyload" data-srcset="https://i.loli.net/2020/06/24/zEerb2gPwYWX8O7.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" /></p>
+<p>接下来我们使用：</p>
+<p><img src="https://i.loli.net/2020/06/24/6cMz1WGH4fgpBsS.png" class="lazyload" data-srcset="https://i.loli.net/2020/06/24/6cMz1WGH4fgpBsS.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" /></p>
+<blockquote>
+<p><code>-it</code>的意思是什么？根据<code>docker run --help</code>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">-i, --interactive                    Keep STDIN open even if not attached</span><br><span class="line">    --ip string                      IPv4 address (e.g., 172.30.100.104)</span><br><span class="line">    --ip6 string                     IPv6 address (e.g., 2001:db8::33)</span><br><span class="line">    --ipc string                     IPC mode to use</span><br><span class="line">    --isolation string               Container isolation technology</span><br><span class="line">    --kernel-memory bytes            Kernel memory limit</span><br><span class="line">-t, --tty                            Allocate a pseudo-TTY</span><br><span class="line">    --ulimit ulimit                  Ulimit options (default [])</span><br><span class="line">Copy</span><br></pre></td></tr></table></figure>
+<p>其实<code>-it</code>是<code>-i</code>和<code>-t</code>的合并写法，意思是运行后进入这个容器并且启用shell，不然运行之后就会放到后台而不会进入容器中。而<code>--rm</code>则代表容器退出之后会被删除（镜像不会被删除），每次运行实际上会创建一个新的容器，如果不加<code>--rm</code>或退出之后不手动删除的话会看到一堆停止运行的容器。</p>
+</blockquote>
+<p>输入<code>cat /etc/issue</code>可以看到默认拉取的是最新的Ubuntu 20.04 LTS：</p>
+<p><img src="https://i.loli.net/2020/06/24/wldBMFtx3eIk98C.png" class="lazyload" data-srcset="https://i.loli.net/2020/06/24/wldBMFtx3eIk98C.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" /></p>
+<h1 id="build-customized-docker-images">Build Customized Docker Images</h1>
+<p>如果没有现成的Docker镜像能满足我们的需求，我们可以考虑自己写一个。要自定义一个Docker镜像需要两步，第一步是编写Dockerfile，第二步是使用<code>docker build</code>命令构建镜像。Dockerfile可以看作是一个脚本，描述了我们构建镜像所需要的全部命令，比如要构建一个用于Python科学计算的Docker镜像，我们需要在Dockerfile中编写安装Python的命令，安装Numpy、Scipy等常用包的命令等等。我们先来上手编写Dockerfile，这里我准备写一个包含<a target="_blank" rel="noopener" href="https://hexo.io/">hexo博客框架</a>的镜像，这个框架需要node作为基础环境，不过我们不需要在Dockerfile里写安装node的命令。因为类似于<code>C++</code>或<code>Python</code>中的对象的继承，Dockerfile也可以“继承”，这意味着我们不必从头写起。我们先来看一下完整的Dockfile和效果，再来一一解释。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">FROM node</span><br><span class="line"></span><br><span class="line">--------------------------------------------------------------</span><br><span class="line"></span><br><span class="line">RUN npm install -g hexo-cli</span><br><span class="line">EXPOSE 4000</span><br><span class="line">CMD hexo init blog &amp;&amp; cd blog &amp;&amp; hexo generate &amp;&amp; hexo serverCopy</span><br></pre></td></tr></table></figure>
+<p>运行结果如下所示，可以看到Docker按照我们写的Dockerfile一行一行的进行镜像的构建：</p>
+<p><img src="https://i.loli.net/2020/06/24/tZ3JW4SPNhxUwEn.png" class="lazyload" data-srcset="https://i.loli.net/2020/06/24/tZ3JW4SPNhxUwEn.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" /></p>
+<p>现在来解释Docerfile里的内容。<code>FROM &lt;docker image&gt;</code>表示继承其他的镜像，这里我们使用node官方的镜像。接下来是安装hexo，<code>RUN &lt;command&gt;</code>表示执行命令，这里我们直接用<code>npm install -g hexo-cli</code>进行安装。由于要浏览博客网页需要开放端口，而Docker容器运行的时候和外部主机是完全隔断的，要使外部主机访问Docker容器端口，需要暴露端口。<code>EXPOSE &lt;port&gt;</code>代表暴露端口，这里用的是4000端口。之后是创建博客和启动本地服务，<code>CMD &lt;command&gt;</code>和<code>RUN &lt;command&gt;</code>的区别是RUN会在构建的时候执行，而CMD是在容器启动之后才会执行。<code>hexo init blog &amp;&amp; cd blog &amp;&amp; hexo generate &amp;&amp; hexo server</code>分别代表初始化博客、进入博客所在文件夹、生成博客网站、启动本地服务器。更多指令可以参考<a target="_blank" rel="noopener" href="https://docs.docker.com/engine/reference/builder/">官方文档</a>。</p>
+<p>然后我们使用<code>docker build -t test_hexo .</code>命令构建镜像。</p>
+<blockquote>
+<p>构建镜像 <code>docker build -t &lt;image_name&gt; &lt;direcotry&gt;</code></p>
+</blockquote>
+<p>运行镜像：</p>
+<p><img src="https://i.loli.net/2020/06/24/m4FSe15kMIDCHXy.png" class="lazyload" data-srcset="https://i.loli.net/2020/06/24/m4FSe15kMIDCHXy.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" /></p>
+<p>可以看到容器启动后开始执行博客初始化。</p>
+<p><img src="https://i.loli.net/2020/06/24/BEdibvgPTMz4sn8.png" class="lazyload" data-srcset="https://i.loli.net/2020/06/24/BEdibvgPTMz4sn8.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" /></p>
+<p>最后在<code>locahost:4000</code>上启动了一个本地服务器，在浏览器中输入这个地址，可以看到刚刚构建好的博客：</p>
+<p><img src="https://i.loli.net/2020/06/24/vmSUb5QH6l4afzF.png" class="lazyload" data-srcset="https://i.loli.net/2020/06/24/vmSUb5QH6l4afzF.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" /></p>
+<p>值得注意的是，在Dockerfile中我们暴露了4000端口，使用<code>-p</code>标签可以达到同样的效果：<code>docker run -p &lt;docker_port&gt;:&lt;local_port&gt; &lt;image_name&gt;</code>。比如<code>docker run -p 9999:8888 xxxx</code>代表将Docker容器中的9999端口转发到外部主机的8888端口。如果你是在远程服务器上使用的Docker，那么端口只是被转发到了远程服务器上，还得手动将远程服务器再转发到你本机上才能直接在本机浏览器上看到页面。</p>
+<h2 id="build-docker-images-with-aliyun-container-registry">Build Docker Images with Aliyun Container Registry</h2>
+<p>因为某些原因，如果在构建镜像的时候需要通过<code>apt-get update</code>更新源，会发现无论如何都会卡住。这个时候可以使用<a target="_blank" rel="noopener" href="https://cr.console.aliyun.com/">阿里云容器镜像服务</a>，在阿里的服务器上构建好镜像，再拉取到自己的机器上。注册好帐号之后，点击创建镜像仓库：</p>
+<p><img src="https://i.loli.net/2020/06/24/u4DGHv3En1iLI5z.png" class="lazyload" data-srcset="https://i.loli.net/2020/06/24/u4DGHv3En1iLI5z.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" /></p>
+<p>这里仓库类型如果没有特殊需求建议使用公开，然后填写一些基本信息：</p>
+<p><img src="https://i.loli.net/2020/06/24/Qipw5hAg136afnL.png" class="lazyload" data-srcset="https://i.loli.net/2020/06/24/Qipw5hAg136afnL.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" /></p>
+<p>之后设置代码源，其实就是告诉阿里云从哪儿获取Dockerfile，我这里用的是Github，所以需要先在阿里云中关联Github账号，然后在Github中创建一个用来放Dockerfile的仓库。构建设置里有一个“海外机器构建”，这正是我们使用阿里云容器服务的主要目的，勾选。</p>
+<p><img src="https://i.loli.net/2020/06/24/ksvZJG9lKfdh6aR.png" class="lazyload" data-srcset="https://i.loli.net/2020/06/24/ksvZJG9lKfdh6aR.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" /></p>
+<p>镜像仓库创建好之后，点进去，在构建页面点击添加规则：</p>
+<p><img src="https://i.loli.net/2020/06/24/irBm3QcqjVhGMsv.png" class="lazyload" data-srcset="https://i.loli.net/2020/06/24/irBm3QcqjVhGMsv.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" /></p>
+<p>按下图进行设置即可，镜像版本就是你想要的镜像名字：</p>
+<p><img src="https://i.loli.net/2020/06/24/7pAFvM8CJQbq6mU.png" class="lazyload" data-srcset="https://i.loli.net/2020/06/24/7pAFvM8CJQbq6mU.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" /></p>
+<p>点击“立即构建”：</p>
+<p><img src="https://i.loli.net/2020/06/24/GlMwqDInL7zVOpf.png" class="lazyload" data-srcset="https://i.loli.net/2020/06/24/GlMwqDInL7zVOpf.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" /></p>
+<p>等待一段时间后，如果构建成功，便可以进行拉取了，在镜像仓库的基本信息页面可以看到地址：</p>
+<p><img src="https://i.loli.net/2020/06/24/57jmEv8PYkr2nQG.png" class="lazyload" data-srcset="https://i.loli.net/2020/06/24/57jmEv8PYkr2nQG.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" /></p>
+<p>将阿里云上的镜像拉取到本机之后一般会想要对镜像改名，可以使用<code>docker tag &lt;old_name&gt; &lt;new_name&gt;</code>。</p>
+<h1 id="build-docker-images-for-deep-learning">Build Docker Images for Deep Learning</h1>
+<h2 id="startup">Startup</h2>
+<p>在Docker中配置适用于OpenPAI的深度学习镜像不是一件容易的事，会有很多的坑，这里专门说一下如何配置。推荐在阿里云容器镜像服务中进行构建，会少很多麻烦。</p>
+<p>第一步是初始镜像，由于需要用到CUDA，这里可以根据自己的需求（比如不同CUDA版本支持的GPU驱动版本不一样，还有Tensorflow不同版本对CUDA和cuDNN要求也不一样）从Nvidia的Dockerhub<a target="_blank" rel="noopener" href="https://hub.docker.com/r/nvidia/cuda">官方页面</a>选择合适的CUDA和cuDNN版本：</p>
+<p><img src="https://i.loli.net/2020/06/24/pftdhmHiWkTq8Fj.png" class="lazyload" data-srcset="https://i.loli.net/2020/06/24/pftdhmHiWkTq8Fj.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" /></p>
+<p>这里我们选择CUDA10.1 + cuDNN7：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FROM nvidia&#x2F;cuda:10.1-cudnn7-devel-ubuntu18.04Copy</span><br></pre></td></tr></table></figure>
+<p>这一条主要是解决乱码问题以及定义用到的软件包的版本，这里Miniconda版本设置为4.5.4的原因是这是最后一个自带Python3.6的版本，我在这儿为了稳定所以用了Python3.6，大家也可以安装最新版的Miniconda：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ENV LANG&#x3D;C.UTF-8 LC_ALL&#x3D;C.UTF-8</span><br><span class="line">ENV HADOOP_VERSION&#x3D;2.7.2</span><br><span class="line">LABEL HADOOP_VERSION&#x3D;2.7.2</span><br><span class="line">ENV MINICONDA_VERSION&#x3D;4.5.4Copy</span><br></pre></td></tr></table></figure>
+<p>接下来安装必须的包，大家可以根据需求自行调整，<code>-y</code>标签代表Yes，即自动同意安装：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">RUN DEBIAN_FRONTEND&#x3D;noninteractive &amp;&amp; \</span><br><span class="line">    apt-get -y update &amp;&amp; \</span><br><span class="line">    apt-get -y install build-essential \</span><br><span class="line">        wget \</span><br><span class="line">        git \</span><br><span class="line">        curl \</span><br><span class="line">        unzip \</span><br><span class="line">        automake \</span><br><span class="line">        openjdk-8-jdk \</span><br><span class="line">        openssh-server \</span><br><span class="line">        openssh-client \</span><br><span class="line">        lsof \</span><br><span class="line">        libcupti-dev &amp;&amp; \</span><br><span class="line">    apt-get clean &amp;&amp; \</span><br><span class="line">    rm -rf &#x2F;var&#x2F;lib&#x2F;apt&#x2F;lists&#x2F;*Copy</span><br></pre></td></tr></table></figure>
+<p>安装Miniconda并设置环境变量，<code>-b</code>标签可以让Miniconda无交互自动安装：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">RUN wget --quiet https:&#x2F;&#x2F;repo.anaconda.com&#x2F;miniconda&#x2F;Miniconda3-$&#123;MINICONDA_VERSION&#125;-Linux-x86_64.sh &amp;&amp; &#x2F;bin&#x2F;bash Miniconda3-$&#123;MINICONDA_VERSION&#125;-Linux-x86_64.sh -b -p &#x2F;opt&#x2F;miniconda \</span><br><span class="line">&amp;&amp; rm Miniconda3-$&#123;MINICONDA_VERSION&#125;-Linux-x86_64.sh</span><br><span class="line">ENV PATH &#x2F;opt&#x2F;miniconda&#x2F;bin:$PATHCopy</span><br></pre></td></tr></table></figure>
+<p>安装Hadoop，OpenPAI平台会用到：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">RUN wget -qO- http:&#x2F;&#x2F;archive.apache.org&#x2F;dist&#x2F;hadoop&#x2F;common&#x2F;hadoop-$&#123;HADOOP_VERSION&#125;&#x2F;hadoop-$&#123;HADOOP_VERSION&#125;.tar.gz | \</span><br><span class="line">    tar xz -C &#x2F;usr&#x2F;local &amp;&amp; \</span><br><span class="line">    mv &#x2F;usr&#x2F;local&#x2F;hadoop-$&#123;HADOOP_VERSION&#125; &#x2F;usr&#x2F;local&#x2F;hadoopCopy</span><br></pre></td></tr></table></figure>
+<p><code>ENV</code>的作用是配置环境变量。配置JAVA和Hadoop环境变量：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">ENV JAVA_HOME&#x3D;&#x2F;usr&#x2F;lib&#x2F;jvm&#x2F;java-8-openjdk-amd64 \</span><br><span class="line">    HADOOP_INSTALL&#x3D;&#x2F;usr&#x2F;local&#x2F;hadoop \</span><br><span class="line">    NVIDIA_VISIBLE_DEVICES&#x3D;all</span><br><span class="line"></span><br><span class="line">ENV HADOOP_PREFIX&#x3D;$&#123;HADOOP_INSTALL&#125; \</span><br><span class="line">    HADOOP_BIN_DIR&#x3D;$&#123;HADOOP_INSTALL&#125;&#x2F;bin \</span><br><span class="line">    HADOOP_SBIN_DIR&#x3D;$&#123;HADOOP_INSTALL&#125;&#x2F;sbin \</span><br><span class="line">    HADOOP_HDFS_HOME&#x3D;$&#123;HADOOP_INSTALL&#125; \</span><br><span class="line">    HADOOP_COMMON_LIB_NATIVE_DIR&#x3D;$&#123;HADOOP_INSTALL&#125;&#x2F;lib&#x2F;native \</span><br><span class="line">    HADOOP_OPTS&#x3D;&quot;-Djava.library.path&#x3D;$&#123;HADOOP_INSTALL&#125;&#x2F;lib&#x2F;native&quot;Copy</span><br></pre></td></tr></table></figure>
+<p>设置PATH环境变量：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ENV PATH&#x3D;&#x2F;usr&#x2F;local&#x2F;nvidia&#x2F;bin:&#x2F;usr&#x2F;local&#x2F;cuda&#x2F;bin:&#x2F;usr&#x2F;local&#x2F;sbin:&#x2F;usr&#x2F;local&#x2F;bin:&#x2F;usr&#x2F;sbin:&#x2F;usr&#x2F;bin:&#x2F;sbin:&#x2F;bin:$&#123;HADOOP_BIN_DIR&#125;:$&#123;HADOOP_SBIN_DIR&#125; \</span><br><span class="line">LD_LIBRARY_PATH&#x3D;&#x2F;usr&#x2F;local&#x2F;cuda&#x2F;extras&#x2F;CUPTI&#x2F;lib:&#x2F;usr&#x2F;local&#x2F;cuda&#x2F;extras&#x2F;CUPTI&#x2F;lib64:&#x2F;usr&#x2F;local&#x2F;nvidia&#x2F;lib:&#x2F;usr&#x2F;local&#x2F;nvidia&#x2F;lib64:&#x2F;usr&#x2F;local&#x2F;cuda&#x2F;lib64:&#x2F;usr&#x2F;local&#x2F;cuda&#x2F;targets&#x2F;x86_64-linux&#x2F;lib&#x2F;stubs:$&#123;JAVA_HOME&#125;&#x2F;jre&#x2F;lib&#x2F;amd64&#x2F;serverCopy</span><br></pre></td></tr></table></figure>
+<p>完整的Dockerfile如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">FROM nvidia&#x2F;cuda:10.1-cudnn7-devel-ubuntu18.04</span><br><span class="line"></span><br><span class="line">ENV LANG&#x3D;C.UTF-8 LC_ALL&#x3D;C.UTF-8</span><br><span class="line">ENV HADOOP_VERSION&#x3D;2.7.2</span><br><span class="line">LABEL HADOOP_VERSION&#x3D;2.7.2</span><br><span class="line">ENV MINICONDA_VERSION&#x3D;4.5.4</span><br><span class="line"></span><br><span class="line">RUN DEBIAN_FRONTEND&#x3D;noninteractive &amp;&amp; \</span><br><span class="line">    apt-get -y update &amp;&amp; \</span><br><span class="line">    apt-get -y install build-essential \</span><br><span class="line">        wget \</span><br><span class="line">        git \</span><br><span class="line">        curl \</span><br><span class="line">        unzip \</span><br><span class="line">        automake \</span><br><span class="line">        openjdk-8-jdk \</span><br><span class="line">        openssh-server \</span><br><span class="line">        openssh-client \</span><br><span class="line">        lsof \</span><br><span class="line">        libcupti-dev &amp;&amp; \</span><br><span class="line">    apt-get clean &amp;&amp; \</span><br><span class="line">    rm -rf &#x2F;var&#x2F;lib&#x2F;apt&#x2F;lists&#x2F;*</span><br><span class="line"></span><br><span class="line">RUN wget --quiet https:&#x2F;&#x2F;repo.anaconda.com&#x2F;miniconda&#x2F;Miniconda3-$&#123;MINICONDA_VERSION&#125;-Linux-x86_64.sh &amp;&amp; &#x2F;bin&#x2F;bash Miniconda3-$&#123;MINICONDA_VERSION&#125;-Linux-x86_64.sh -b -p &#x2F;opt&#x2F;miniconda \</span><br><span class="line">&amp;&amp; rm Miniconda3-$&#123;MINICONDA_VERSION&#125;-Linux-x86_64.sh</span><br><span class="line">ENV PATH &#x2F;opt&#x2F;miniconda&#x2F;bin:$PATH</span><br><span class="line">    </span><br><span class="line">RUN wget -qO- http:&#x2F;&#x2F;archive.apache.org&#x2F;dist&#x2F;hadoop&#x2F;common&#x2F;hadoop-$&#123;HADOOP_VERSION&#125;&#x2F;hadoop-$&#123;HADOOP_VERSION&#125;.tar.gz | \</span><br><span class="line">    tar xz -C &#x2F;usr&#x2F;local &amp;&amp; \</span><br><span class="line">    mv &#x2F;usr&#x2F;local&#x2F;hadoop-$&#123;HADOOP_VERSION&#125; &#x2F;usr&#x2F;local&#x2F;hadoop</span><br><span class="line">    </span><br><span class="line">ENV JAVA_HOME&#x3D;&#x2F;usr&#x2F;lib&#x2F;jvm&#x2F;java-8-openjdk-amd64 \</span><br><span class="line">    HADOOP_INSTALL&#x3D;&#x2F;usr&#x2F;local&#x2F;hadoop \</span><br><span class="line">    NVIDIA_VISIBLE_DEVICES&#x3D;all</span><br><span class="line"></span><br><span class="line">ENV HADOOP_PREFIX&#x3D;$&#123;HADOOP_INSTALL&#125; \</span><br><span class="line">    HADOOP_BIN_DIR&#x3D;$&#123;HADOOP_INSTALL&#125;&#x2F;bin \</span><br><span class="line">    HADOOP_SBIN_DIR&#x3D;$&#123;HADOOP_INSTALL&#125;&#x2F;sbin \</span><br><span class="line">    HADOOP_HDFS_HOME&#x3D;$&#123;HADOOP_INSTALL&#125; \</span><br><span class="line">    HADOOP_COMMON_LIB_NATIVE_DIR&#x3D;$&#123;HADOOP_INSTALL&#125;&#x2F;lib&#x2F;native \</span><br><span class="line">    HADOOP_OPTS&#x3D;&quot;-Djava.library.path&#x3D;$&#123;HADOOP_INSTALL&#125;&#x2F;lib&#x2F;native&quot;</span><br><span class="line"></span><br><span class="line">ENV PATH&#x3D;&#x2F;usr&#x2F;local&#x2F;nvidia&#x2F;bin:&#x2F;usr&#x2F;local&#x2F;cuda&#x2F;bin:&#x2F;usr&#x2F;local&#x2F;sbin:&#x2F;usr&#x2F;local&#x2F;bin:&#x2F;usr&#x2F;sbin:&#x2F;usr&#x2F;bin:&#x2F;sbin:&#x2F;bin:$&#123;HADOOP_BIN_DIR&#125;:$&#123;HADOOP_SBIN_DIR&#125;:$PATH \</span><br><span class="line">LD_LIBRARY_PATH&#x3D;&#x2F;usr&#x2F;local&#x2F;cuda&#x2F;extras&#x2F;CUPTI&#x2F;lib:&#x2F;usr&#x2F;local&#x2F;cuda&#x2F;extras&#x2F;CUPTI&#x2F;lib64:&#x2F;usr&#x2F;local&#x2F;nvidia&#x2F;lib:&#x2F;usr&#x2F;local&#x2F;nvidia&#x2F;lib64:&#x2F;usr&#x2F;local&#x2F;cuda&#x2F;lib64:&#x2F;usr&#x2F;local&#x2F;cuda&#x2F;targets&#x2F;x86_64-linux&#x2F;lib&#x2F;stubs:$&#123;JAVA_HOME&#125;&#x2F;jre&#x2F;lib&#x2F;amd64&#x2F;serverCopy</span><br></pre></td></tr></table></figure>
+<p>建议先把这一部分进行构建，作为基础镜像，后面要配置其他环境（如安装Pytorch框架登），就不用重复构建这部分，还减少了出错的可能性。这里说一下，启动带CUDA的Docker镜像需要在<code>docker run</code>加上额外的参数<code>--runtime nvidia</code>。</p>
+<p>接下来安装深度学习框架。</p>
+<h2 id="configure-pytorch">Configure PyTorch</h2>
+<p>假设上面的镜像我们命名为xiaoqinfeng/base，那么构建PyTorch的Dockerfile可以像下面这么写：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">FROM xiaoqinfeng&#x2F;base</span><br><span class="line"></span><br><span class="line">RUN pip install -U pip</span><br><span class="line">RUN pip install numpy scipy pandas matplotlib tqdm</span><br><span class="line">RUN pip install torch&#x3D;&#x3D;1.5.0+cu101 torchvision&#x3D;&#x3D;0.6.0+cu101 -f https:&#x2F;&#x2F;download.pytorch.org&#x2F;whl&#x2F;torch_stable.htmlCopy</span><br></pre></td></tr></table></figure>
+<p>因为这里我用的CUDA10.1，其他版本的CUDA安装指令可能不太一样，具体可以参考<a target="_blank" rel="noopener" href="https://pytorch.org/get-started/locally/">官网</a>。</p>
+<h2 id="configure-tensorflow">Configure Tensorflow</h2>
+<p>如果是安装Tensorflow，那么构建Tensorflow的Dockerfile可以像下面这么写：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">FROM xiaoqinfeng&#x2F;base</span><br><span class="line"></span><br><span class="line">RUN pip install -U pip</span><br><span class="line">RUN pip install numpy scipy pandas matplotlib tqdm tensorflow-gpuCopy</span><br></pre></td></tr></table></figure>
+<p>这里会自动安装最新版本的Tensorflow2。Tensorflow不同版本对CUDA和cuDNN版本甚至Python版本的支持都不太一样，可以参考<a target="_blank" rel="noopener" href="https://www.tensorflow.org/install/source#linux">官网</a>的说明。</p>
+<h1 id="deep-learning-with-openpai">Deep Learning with OpenPAI</h1>
+<h2 id="what-is-openpai">What is OpenPAI</h2>
+<p>OpenPAI是一个分布式深度学习计算资源管理平台，对于我们用户来说，只需要定义好Docker镜像，然后编写好任务设置，提交到平台之后，平台便会自动分配计算资源来运行任务。</p>
+<p>OpenPAI界面：</p>
+<p><img src="https://i.loli.net/2020/06/24/CDrZjgYR7lNcieh.png" class="lazyload" data-srcset="https://i.loli.net/2020/06/24/CDrZjgYR7lNcieh.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" style="zoom: 50%;" /></p>
+<p><img src="https://i.loli.net/2020/06/24/FGJpVCbls7YP4aM.png" class="lazyload" data-srcset="https://i.loli.net/2020/06/24/FGJpVCbls7YP4aM.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" style="zoom: 50%;" /></p>
+<p>下面我们来讲讲怎么向OpenPAI平台提交任务。</p>
+<h2 id="submit-jobs-to-openpai">Submit Jobs to OpenPAI</h2>
+<h3 id="pack-code-data-files">Pack Code &amp; Data Files</h3>
+<p>假设你已经完成了代码的编写和测试，你的目录结构可能看起来是这样：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── README.md</span><br><span class="line">├── data</span><br><span class="line">│   └── dataset.csv</span><br><span class="line">├── main.py</span><br><span class="line">└── src</span><br><span class="line">    ├── data.py</span><br><span class="line">    └── net.pyCopy</span><br></pre></td></tr></table></figure>
+<p>因为OpenPAI会创建一个虚拟容器来运行你的代码，所以你的数据和代码必须要以某种方式传送到OpenPAI上的虚拟容器中。我们先来打包，在代码目录下执行<code>tar -cvf files.tar ./</code>。之后，运行<code>python -m http.server &lt;port&gt;</code>。打开浏览器输入<code>&lt;server_ip&gt;:&lt;port&gt;</code>应该就能看到你的文件了：</p>
+<p><img src="https://i.loli.net/2020/06/24/Cbgiw3XKnGYsNHp.png" class="lazyload" data-srcset="https://i.loli.net/2020/06/24/Cbgiw3XKnGYsNHp.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" /></p>
+<p>由于这个http进程需要一直运行，所以建议使用<code>screen</code>放到后台执行。</p>
+<h3 id="configure-tasks">Configure Tasks</h3>
+<p>像OpenPAI提交任务可以采用网页提交也可以使用VSCode插件，这里我们采用网页提交。登入OpenPAI界面，点击Submit Job：</p>
+<p><img src="https://i.loli.net/2020/06/24/bhXAcJfOmo8RtT2.png" class="lazyload" data-srcset="https://i.loli.net/2020/06/24/bhXAcJfOmo8RtT2.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" /></p>
+<p>可以看到提交任务的界面：</p>
+<p><img src="https://i.loli.net/2020/06/24/KME8GuN49gyY1ph.png" class="lazyload" data-srcset="https://i.loli.net/2020/06/24/KME8GuN49gyY1ph.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" /></p>
+<p>Job name大家可以自己设置。在Command一栏，是执行任务所需的全部命令，首先我们要做的就是将代码数据压缩包下载到容器中并解压：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wget &lt;server_ip&gt;:&lt;port&gt;&#x2F;files.tar</span><br><span class="line"></span><br><span class="line">tar -xvf files.tarCopy</span><br></pre></td></tr></table></figure>
+<p>然后是运行代码，假设我这里的任务比较简单，只有一行main.py的调用：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python main.pyCopy</span><br></pre></td></tr></table></figure>
+<p>如果任务的执行比较复杂，也只需把命令填到Command里即可，OpenPAI会自动执行。接下来是设置配置，可以选GPU的数量，内存大小等等：</p>
+<p><img src="https://i.loli.net/2020/06/24/T7ryOxjpJP4FWYR.png" class="lazyload" data-srcset="https://i.loli.net/2020/06/24/T7ryOxjpJP4FWYR.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" style="zoom:67%;" /></p>
+<p>然后是镜像的选择：</p>
+<p><img src="https://i.loli.net/2020/06/24/3n7SpNlsLjBRvgE.png" class="lazyload" data-srcset="https://i.loli.net/2020/06/24/3n7SpNlsLjBRvgE.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" style="zoom:67%;" /></p>
+<p>要注意在本机上构建好镜像之后，需要把镜像重命名为<code>&lt;repository_address&gt;/&lt;image_name&gt;</code>的格式（我们的<code>&lt;repository&gt;</code>是<code>lin-ai-27:5000</code>，假设我的镜像名是<code>xiaoqinfeng/pytorch</code>，那就是改成<code>lin-ai-27:5000/xiaoqinfeng/pytorch</code>），然后执行<code>docker push</code>推送到Docker镜像服务器上才能在OpenPAI上使用。</p>
+<p>提交之后，可以在Jobs界面看到任务的运行情况：</p>
+<p><img src="https://i.loli.net/2020/06/24/ZD4cUgOCIqnyHdB.png" class="lazyload" data-srcset="https://i.loli.net/2020/06/24/ZD4cUgOCIqnyHdB.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" style="zoom: 50%;" /></p>
+<h1 id="misc">Misc</h1>
+<h2 id="store-files-in-containers">Store Files in Containers</h2>
+<p>我们往往需要在程序运行的时候保存文件，如checkpoints等。在OpenPAI上执行程序的话文件是保存在程序中的，如果我们想要在运行完之后把文件复制到本地电脑上呢？这个时候就需要在任务的配置文件里加上复制文件到HDFS的语句。首先确认你的HDFS的URL：如<code>hdfs://172.31.246.52:9000/你的OpenPAI用户名/</code>。</p>
+<p>如果要创建文件夹，则可以使用<code>hdfs dfs -mkdir -p &lt;HDFS URL&gt;+&lt;New Folder&gt;</code>。这里<code>&lt;New Folder&gt;</code>是你要创建的的文件夹的路径，用起来和Linux的<code>mkdir</code>命令其实是差不多的。</p>
+<p>要复制文件（夹）则使用<code>hdfs dfs -cp &lt;Source Dir&gt; &lt;Dest Dir&gt;</code>。</p>
+
+  
+  
+    
+    <div class='footer'>
+      
+      
+      
+        <div class='copyright'>
+          <blockquote>
+            
+              
+                <p>博客内容遵循 署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</p>
+
+              
+            
+              
+                <p>本文永久链接是：<a href=http://qfxiao.me/2020/06/02/%E9%9D%A2%E5%90%91OpenPAI%E7%9A%84Docker%E9%95%9C%E5%83%8F%E9%85%8D%E7%BD%AE%E5%8F%8AOpenPAI%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/>http://qfxiao.me/2020/06/02/%E9%9D%A2%E5%90%91OpenPAI%E7%9A%84Docker%E9%95%9C%E5%83%8F%E9%85%8D%E7%BD%AE%E5%8F%8AOpenPAI%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/</a></p>
+              
+            
+          </blockquote>
+        </div>
+      
+      
+    </div>
+  
+  
+    
+
+
+  <div class='article-meta' id="bottom">
+    <div class='new-meta-box'>
+      
+        
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-08-01T12:00:16+08:00">
+  <a class='notlink'>
+    <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
+    <p>更新于：2020年8月1日</p>
+  </a>
+</div>
+
+        
+      
+        
+          
+  
+  <div class="new-meta-item meta-tags"><a class="tag" href="/tags/Pytorch/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>Pytorch</p></a></div> <div class="new-meta-item meta-tags"><a class="tag" href="/tags/Tensorflow/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>Tensorflow</p></a></div> <div class="new-meta-item meta-tags"><a class="tag" href="/tags/Docker/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>Docker</p></a></div>
+
+
+        
+      
+        
+          
+  <div class="new-meta-item share -mob-share-list">
+  <div class="-mob-share-list share-body">
+    
+      
+        <a class="-mob-share-qq" title="" rel="external nofollow noopener noreferrer noopener"
+          
+          target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://qfxiao.me/2020/06/02/%E9%9D%A2%E5%90%91OpenPAI%E7%9A%84Docker%E9%95%9C%E5%83%8F%E9%85%8D%E7%BD%AE%E5%8F%8AOpenPAI%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/&title=面向OpenPAI的Docker镜像配置及OpenPAI基本使用方法 - Hanzawa の 部屋&summary="
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qq.png" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qq.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-qzone" title="" rel="external nofollow noopener noreferrer noopener"
+          
+          target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=http://qfxiao.me/2020/06/02/%E9%9D%A2%E5%90%91OpenPAI%E7%9A%84Docker%E9%95%9C%E5%83%8F%E9%85%8D%E7%BD%AE%E5%8F%8AOpenPAI%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/&title=面向OpenPAI的Docker镜像配置及OpenPAI基本使用方法 - Hanzawa の 部屋&summary="
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qzone.png" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qzone.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-weibo" title="" rel="external nofollow noopener noreferrer noopener"
+          
+          target="_blank" href="http://service.weibo.com/share/share.php?url=http://qfxiao.me/2020/06/02/%E9%9D%A2%E5%90%91OpenPAI%E7%9A%84Docker%E9%95%9C%E5%83%8F%E9%85%8D%E7%BD%AE%E5%8F%8AOpenPAI%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/&title=面向OpenPAI的Docker镜像配置及OpenPAI基本使用方法 - Hanzawa の 部屋&summary="
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/weibo.png" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/weibo.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=">
+          
+        </a>
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+
+
+        
+      
+    </div>
+  </div>
+
+
+  
+  
+
+  
+    <div class="prev-next">
+      
+        <a class='prev' href='/2020/06/02/Classification-based-Anomaly-Detection-for-General-Data/'>
+          <p class='title'><i class="fas fa-chevron-left" aria-hidden="true"></i>Classification-based Anomaly Detection for General Data</p>
+          <p class='content'>Introduction
+本文主要是对NIPS18这篇异常检测文章的改进，首先是利用了标签信息来提升算法的表现，其次是将算法扩展到了非图像数据。作者对现有的异常检测算法进行了回顾：
+
+Re...</p>
+        </a>
+      
+      
+        <a class='next' href='/2020/06/02/Ubuntu20-4LTS-%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE-CUDA11-cuDNN8-Tensorflow-Pytorch/'>
+          <p class='title'>Ubuntu20.04LTS 深度学习环境配置 CUDA11 + cuDNN8 + Tensorflow + Pytorch<i class="fas fa-chevron-right" aria-hidden="true"></i></p>
+          <p class='content'>Introduction
+Ubuntu的最新LTS版本也更新到了20.04，在给新机器配置深度学习环境的时候发现比以前容易了许多，特此写一篇Tutorial。这里的安装方法只针对Ubuntu2...</p>
+        </a>
+      
+    </div>
+  
+</article>
+
+
+  
+
+  <article class="post white-box reveal shadow" id="comments">
+    <p ct><i class='fas fa-comments'></i> 评论</p>
+    
+    <div id="valine_container" class="valine_thread">
+  <i class="fas fa-cog fa-spin fa-fw fa-2x"></i>
+</div>
+
+  </article>
+
+
+
+
+
+
+</div>
+<aside class='l_side'>
+  
+  
+    
+    
+
+
+
+  <section class="widget toc-wrapper shadow desktop mobile" id="toc-div" >
+    
+  <header>
+    
+      <i class="fas fa-list fa-fw" aria-hidden="true"></i><span class='name'>本文目录</span>
+    
+  </header>
+
+
+    <div class='content'>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#basic-operations"><span class="toc-text">Basic Operations</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#build-docker-images-with-aliyun-container-registry"><span class="toc-text">Build Docker Images with Aliyun Container Registry</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#startup"><span class="toc-text">Startup</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#configure-pytorch"><span class="toc-text">Configure PyTorch</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#configure-tensorflow"><span class="toc-text">Configure Tensorflow</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#what-is-openpai"><span class="toc-text">What is OpenPAI</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#submit-jobs-to-openpai"><span class="toc-text">Submit Jobs to OpenPAI</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#pack-code-data-files"><span class="toc-text">Pack Code &amp; Data Files</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#configure-tasks"><span class="toc-text">Configure Tasks</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#store-files-in-containers"><span class="toc-text">Store Files in Containers</span></a></li></ol>
+    </div>
+  </section>
+
+
+  
+
+
+</aside>
+
+
+
+		  
+		  <!--此文件用来存放一些不方便取值的变量-->
+<!--思路大概是将值藏到重加载的区域内-->
+
+<script>
+  window.pdata={}
+  pdata.ispage=true;
+  pdata.postTitle="面向OpenPAI的Docker镜像配置及OpenPAI基本使用方法";
+  pdata.commentPath="";
+  pdata.commentPlaceholder="";
+  // header 这里无论是否开启pjax都需要
+  var l_header=document.getElementById("l_header");
+  
+  l_header.classList.add("show");
+  
+  
+    // cover
+    var cover_wrapper=document.querySelector('.cover-wrapper');
+    
+    cover_wrapper.id="none";
+    cover_wrapper.style.display="none";
+    
+  
+</script>
+
+        </div>
+        
+  
+  <footer class="footer clearfix">
+    <br><br>
+    
+      
+        <div class="aplayer-container">
+          
+
+
+        </div>
+      
+    
+      
+        <br>
+        <div class="social-wrapper">
+          
+            
+          
+            
+          
+            
+          
+        </div>
+      
+    
+      
+        <div><p>博客内容遵循 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</a></p>
+</div>
+      
+    
+      
+        
+          <div><p><span id="lc-sv">本站总访问量为 <span id="number"><i class="fas fa-circle-notch fa-spin fa-fw" aria-hidden="true"></i></span> 次</span> <span id="lc-uv">访客数为 <span id="number"><i class="fas fa-circle-notch fa-spin fa-fw" aria-hidden="true"></i></span> 人</span></p>
+</div>
+        
+      
+    
+      
+        本站使用
+        <a href="https://github.com/volantis-x/hexo-theme-volantis/tree/4.3.1" target="_blank" class="codename">Volantis</a>
+        作为主题
+      
+    
+      
+        <div class='copyright'>
+        <p><a href="/">Copyright © 2017-2020 XXX</a></p>
+
+        </div>
+      
+    
+  </footer>
+
+
+        <a id="s-top" class="fas fa-arrow-up fa-fw" href="javascript:void(0)"></a>
+      </div>
+    </div>
+    <div>
+      <script>
+/************这个文件存放不需要重载的全局变量和全局函数*********/
+window.volantis={};
+window.volantis.loadcss=document.getElementById("loadcss");
+/******************** Pjax ********************************/
+function VPjax(){
+	this.list=[] // 存放回调函数
+	this.start=()=>{
+	  for(var i=0;i<this.list.length;i++){
+		this.list[i].run();
+	  }
+	}
+	this.push=(fn,name)=>{
+		var f=new PjaxItem(fn,name);
+		this.list.push(f);
+	}
+	// 构造一个可以run的对象
+	function PjaxItem(fn,name){
+		// 函数名称
+		this.name = name || fn.name
+		// run方法
+		this.run=()=>{
+			fn()
+		}
+	}
+}
+volantis.pjax={}
+volantis.pjax.method={
+	complete: new VPjax(),
+	error: new VPjax(),
+	send: new VPjax()
+}
+volantis.pjax={
+	...volantis.pjax,
+	push: volantis.pjax.method.complete.push,
+	error: volantis.pjax.method.error.push,
+	send: volantis.pjax.method.send.push
+}
+/********************脚本懒加载函数********************************/
+// 已经加入了setTimeout
+function loadScript(src, cb) {
+	setTimeout(function() {
+		var HEAD = document.getElementsByTagName('head')[0] || document.documentElement;
+		var script = document.createElement('script');
+		script.setAttribute('type','text/javascript');
+		if (cb) script.onload = cb;
+		script.setAttribute('src', src);
+		HEAD.appendChild(script);
+	});
+}
+//https://github.com/filamentgroup/loadCSS
+var loadCSS = function( href, before, media, attributes ){
+	var doc = window.document;
+	var ss = doc.createElement( "link" );
+	var ref;
+	if( before ){
+		ref = before;
+	}
+	else {
+		var refs = ( doc.body || doc.getElementsByTagName( "head" )[ 0 ] ).childNodes;
+		ref = refs[ refs.length - 1];
+	}
+	var sheets = doc.styleSheets;
+	if( attributes ){
+		for( var attributeName in attributes ){
+			if( attributes.hasOwnProperty( attributeName ) ){
+				ss.setAttribute( attributeName, attributes[attributeName] );
+			}
+		}
+	}
+	ss.rel = "stylesheet";
+	ss.href = href;
+	ss.media = "only x";
+	function ready( cb ){
+		if( doc.body ){
+			return cb();
+		}
+		setTimeout(function(){
+			ready( cb );
+		});
+	}
+	ready( function(){
+		ref.parentNode.insertBefore( ss, ( before ? ref : ref.nextSibling ) );
+	});
+	var onloadcssdefined = function( cb ){
+		var resolvedHref = ss.href;
+		var i = sheets.length;
+		while( i-- ){
+			if( sheets[ i ].href === resolvedHref ){
+				return cb();
+			}
+		}
+		setTimeout(function() {
+			onloadcssdefined( cb );
+		});
+	};
+	function loadCB(){
+		if( ss.addEventListener ){
+			ss.removeEventListener( "load", loadCB );
+		}
+		ss.media = media || "all";
+	}
+	if( ss.addEventListener ){
+		ss.addEventListener( "load", loadCB);
+	}
+	ss.onloadcssdefined = onloadcssdefined;
+	onloadcssdefined( loadCB );
+	return ss;
+};
+</script>
+<script>
+  
+  loadCSS("https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.14/css/all.min.css", window.volantis.loadcss);
+  
+  
+  
+  
+</script>
+<!-- required -->
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5/dist/jquery.min.js"></script>
+
+<script>
+  function pjax_fancybox() {
+    $(".md .gallery").find("img").each(function () { //渲染 fancybox
+      var element = document.createElement("a"); // a 标签
+      $(element).attr("class", "fancybox");
+      $(element).attr("pjax-fancybox", "");  // 过滤 pjax
+      $(element).attr("href", $(this).attr("src"));
+      if ($(this).attr("data-original")) {
+        $(element).attr("href", $(this).attr("data-original"));
+      }
+      $(element).attr("data-fancybox", "images");
+      var caption = "";   // 描述信息
+      if ($(this).attr('alt')) {  // 判断当前页面是否存在描述信息
+        $(element).attr('data-caption', $(this).attr('alt'));
+        caption = $(this).attr('alt');
+      }
+      var div = document.createElement("div");
+      $(div).addClass("fancybox");
+      $(this).wrap(div); // 最外层套 div ，其实主要作用还是 class 样式
+      var span = document.createElement("span");
+      $(span).addClass("image-caption");
+      $(span).text(caption); // 加描述
+      $(this).after(span);  // 再套一层描述
+      $(this).wrap(element);  // 最后套 a 标签
+    })
+    $(".md .gallery").find("img").fancybox({
+      selector: '[data-fancybox="images"]',
+      hash: false,
+      loop: false,
+      closeClick: true,
+      helpers: {
+        overlay: {closeClick: true}
+      },
+      buttons: [
+        "zoom",
+        "close"
+      ]
+    });
+  };
+  function SCload_fancybox() {
+    if ($(".md .gallery").find("img").length == 0) return;
+    loadCSS("https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css", document.getElementById("loadcss"));
+    loadScript('https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js', pjax_fancybox)
+  };
+  $(function () {
+    SCload_fancybox();
+  });
+  function Pjax_SCload_fancybox(){
+	if (typeof $.fancybox == "undefined") {
+	 SCload_fancybox();
+    } else {
+	 pjax_fancybox();
+    }
+  }
+  volantis.pjax.push(Pjax_SCload_fancybox)
+  volantis.pjax.send(()=>{
+      if (typeof $.fancybox != "undefined") {
+        $.fancybox.close();    // 关闭弹窗
+      }
+  },'fancybox')
+</script>
+
+
+<!-- internal -->
+
+
+
+
+<script>
+  function loadIssuesJS() {
+    if ($(".md").find(".issues-api").length == 0) return;
+	
+	  loadScript('/js/issues.js');
+	
+  };
+  $(function () {
+    loadIssuesJS();
+  });
+  volantis.pjax.push(()=>{
+	if (typeof IssuesAPI == "undefined") {
+	  loadIssuesJS();
+	}
+  },"IssuesJS")
+</script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@17.1.0/dist/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazyload",
+    threshold: 0
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    lazyLoadInstance.update();
+  });
+  document.addEventListener('pjax:complete', function () {
+    lazyLoadInstance.update();
+  });
+</script>
+
+
+
+
+  
+
+<script>
+  window.FPConfig = {
+	delay: 0,
+	ignoreKeywords: [],
+	maxRPS: 5,
+	hoverDelay: 25
+  };
+</script>
+<script defer src="https://cdn.jsdelivr.net/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+<script src="/js/valine.js"></script>
+
+
+<script>
+  function emoji(path, idx, ext) {
+    return path + "/" + path + "-" + idx + "." + ext;
+  }
+  var emojiMaps = {};
+  for (var i = 1; i <= 54; i++) {
+    emojiMaps['tieba-' + i] = emoji('tieba', i, 'png');
+  }
+  for (var i = 1; i <= 101; i++) {
+    emojiMaps['qq-' + i] = emoji('qq', i, 'gif');
+  }
+  for (var i = 1; i <= 116; i++) {
+    emojiMaps['aru-' + i] = emoji('aru', i, 'gif');
+  }
+  for (var i = 1; i <= 125; i++) {
+    emojiMaps['twemoji-' + i] = emoji('twemoji', i, 'png');
+  }
+  for (var i = 1; i <= 4; i++) {
+    emojiMaps['weibo-' + i] = emoji('weibo', i, 'png');
+  }
+  function pjax_valine() {
+    if(!document.querySelectorAll("#valine_container")[0])return;
+    let pagePlaceholder = pdata.commentPlaceholder || "快来评论吧~";
+    let path = pdata.commentPath;
+    if (path.length == 0) {
+      let defaultPath = '';
+      path = defaultPath || decodeURI(window.location.pathname);
+    }
+    var valine = new Valine();
+    valine.init(Object.assign({"path":null,"placeholder":"快来评论吧~","appId":null,"appKey":null,"meta":["nick","mail","link"],"requiredFields":["nick","mail"],"enableQQ":true,"recordIP":false,"avatar":"robohash","pageSize":10,"lang":"zh-cn","highlight":true,"mathJax":false}, {
+      el: '#valine_container',
+      path: path,
+      placeholder: pagePlaceholder,
+      emojiCDN: 'https://cdn.jsdelivr.net/gh/volantis-x/cdn-emoji/valine/',
+      emojiMaps: emojiMaps,
+    }))
+  }
+  $(function () {
+    pjax_valine();
+  });
+  volantis.pjax.push(pjax_valine);
+</script>
+
+
+
+
+
+
+  
+<script src="/js/app.js"></script>
+
+
+
+<!-- optional -->
+
+  <script>
+const SearchServiceimagePath="https://cdn.jsdelivr.net/gh/volantis-x/cdn-volantis@master/img/";
+const ROOT =  ("/" || "/").endsWith('/') ? ("/" || "/") : ("//" || "/" );
+
+$('.input.u-search-input').one('focus',function(){
+	
+		loadScript('/js/search/hexo.js',setSearchService);
+	
+})
+
+function listenSearch(){
+  
+    customSearch = new HexoSearch({
+      imagePath: SearchServiceimagePath
+    });
+  
+}
+function setSearchService() {
+	listenSearch();
+	
+}
+</script>
+
+
+
+
+
+
+
+
+
+
+
+  <script defer>
+
+  const LCCounter = {
+    app_id: 'u9j57bwJod4EDmXWdxrwuqQT-MdYXbMMI',
+    app_key: 'jfHtEKVE24j0IVCGHbvuFClp',
+    custom_api_server: '',
+
+    // 查询存储的记录
+    getRecord(Counter, url, title) {
+      return new Promise(function (resolve, reject) {
+        Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({url})))
+          .then(resp => resp.json())
+          .then(({results, code, error}) => {
+            if (code === 401) {
+              throw error;
+            }
+            if (results && results.length > 0) {
+              var record = results[0];
+              resolve(record);
+            } else {
+              Counter('post', '/classes/Counter', {url, title: title, times: 0})
+                .then(resp => resp.json())
+                .then((record, error) => {
+                  if (error) {
+                    throw error;
+                  }
+                  resolve(record);
+                }).catch(error => {
+                console.error('Failed to create', error);
+                reject(error);
+              });
+            }
+          }).catch((error) => {
+          console.error('LeanCloud Counter Error:', error);
+          reject(error);
+        });
+      })
+    },
+
+    // 发起自增请求
+    increment(Counter, incrArr) {
+      return new Promise(function (resolve, reject) {
+        Counter('post', '/batch', {
+          "requests": incrArr
+        }).then((res) => {
+          res = res.json();
+          if (res.error) {
+            throw res.error;
+          }
+          resolve(res);
+        }).catch((error) => {
+          console.error('Failed to save visitor count', error);
+          reject(error);
+        });
+      });
+    },
+
+    // 构建自增请求体
+    buildIncrement(objectId) {
+      return {
+        "method": "PUT",
+        "path": `/1.1/classes/Counter/${ objectId }`,
+        "body": {
+          "times": {
+            '__op': 'Increment',
+            'amount': 1
+          }
+        }
+      }
+    },
+
+    // 校验是否为有效的 UV
+    validUV() {
+      var key = 'LeanCloudUVTimestamp';
+      var flag = localStorage.getItem(key);
+      if (flag) {
+        // 距离标记小于 24 小时则不计为 UV
+        if (new Date().getTime() - parseInt(flag) <= 86400000) {
+          return false;
+        }
+      }
+      localStorage.setItem(key, new Date().getTime().toString());
+      return true;
+    },
+
+    addCount(Counter) {
+      var enableIncr = '' === 'true' && window.location.hostname !== 'localhost';
+      enableIncr = true;
+      var getterArr = [];
+      var incrArr = [];
+      // 请求 PV 并自增
+      var pvCtn = document.querySelector('#lc-sv');
+      if (pvCtn || enableIncr) {
+        var pvGetter = this.getRecord(Counter, 'http://qfxiao.me' + '/#lc-sv', 'Visits').then((record) => {
+          incrArr.push(this.buildIncrement(record.objectId))
+          var eles = document.querySelectorAll('#lc-sv #number');
+          if (eles.length > 0) {
+            eles.forEach((el,index,array)=>{
+              el.innerText = record.times + 1;
+              if (pvCtn) {
+                pvCtn.style.display = 'inline';
+              }
+            })
+          }
+        });
+        getterArr.push(pvGetter);
+      }
+
+      // 请求 UV 并自增
+      var uvCtn = document.querySelector('#lc-uv');
+      if (uvCtn || enableIncr) {
+        var uvGetter = this.getRecord(Counter, 'http://qfxiao.me' + '/#lc-uv', 'Visitors').then((record) => {
+          var vuv = this.validUV();
+          vuv && incrArr.push(this.buildIncrement(record.objectId))
+          var eles = document.querySelectorAll('#lc-uv #number');
+          if (eles.length > 0) {
+            eles.forEach((el,index,array)=>{
+              el.innerText = record.times + (vuv ? 1 : 0);
+              if (uvCtn) {
+                uvCtn.style.display = 'inline';
+              }
+            })
+          }
+        });
+        getterArr.push(uvGetter);
+      }
+
+      // 请求文章的浏览数，如果是当前页面就自增
+      var allPV = document.querySelectorAll('#lc-pv');
+      if (allPV.length > 0 || enableIncr) {
+        for (i = 0; i < allPV.length; i++) {
+          let pv = allPV[i];
+          let title = pv.getAttribute('data-title');
+          var url = 'http://qfxiao.me' + pv.getAttribute('data-path');
+          if (url) {
+            var viewGetter = this.getRecord(Counter, url, title).then((record) => {
+              // 是当前页面就自增
+              let curPath = window.location.pathname;
+              if (curPath.includes('index.html')) {
+                curPath = curPath.substring(0, curPath.lastIndexOf('index.html'));
+              }
+              if (pv.getAttribute('data-path') == curPath) {
+                incrArr.push(this.buildIncrement(record.objectId));
+              }
+              if (pv) {
+                var ele = pv.querySelector('#lc-pv #number');
+                if (ele) {
+                  if (pv.getAttribute('data-path') == curPath) {
+                    ele.innerText = (record.times || 0) + 1;
+                  } else {
+                    ele.innerText = record.times || 0;
+                  }
+                  pv.style.display = 'inline';
+                }
+              }
+            });
+            getterArr.push(viewGetter);
+          }
+        }
+      }
+
+      // 如果启动计数自增，批量发起自增请求
+      if (enableIncr) {
+        Promise.all(getterArr).then(() => {
+          incrArr.length > 0 && this.increment(Counter, incrArr);
+        })
+      }
+
+    },
+
+
+    fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${ api_server }/1.1${ url }`, {
+          method,
+          headers: {
+            'X-LC-Id': this.app_id,
+            'X-LC-Key': this.app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      this.addCount(Counter);
+    },
+
+    refreshCounter() {
+      var api_server = this.app_id.slice(-9) !== '-MdYXbMMI' ? this.custom_api_server : `https://${ this.app_id.slice(0, 8).toLowerCase() }.api.lncldglobal.com`;
+      if (api_server) {
+        this.fetchData(api_server);
+      } else {
+        fetch('https://app-router.leancloud.cn/2/route?appId=' + this.app_id)
+          .then(resp => resp.json())
+          .then(({api_server}) => {
+            this.fetchData('https://' + api_server);
+          });
+      }
+    }
+
+  };
+
+  LCCounter.refreshCounter();
+
+  document.addEventListener('pjax:complete', function () {
+    LCCounter.refreshCounter();
+  });
+</script>
+
+
+
+
+  <script>
+const rootElement = document.documentElement;
+const darkModeStorageKey = "user-color-scheme";
+const rootElementDarkModeAttributeName = "data-user-color-scheme";
+
+const setLS = (k, v) => {
+    localStorage.setItem(k, v);
+};
+
+const removeLS = (k) => {
+    localStorage.removeItem(k);
+};
+
+const getLS = (k) => {
+    return localStorage.getItem(k);
+};
+
+const getModeFromCSSMediaQuery = () => {
+  return window.matchMedia("(prefers-color-scheme: dark)").matches
+    ? "dark"
+    : "light";
+};
+
+const resetRootDarkModeAttributeAndLS = () => {
+  rootElement.removeAttribute(rootElementDarkModeAttributeName);
+  removeLS(darkModeStorageKey);
+};
+
+const validColorModeKeys = {
+  dark: true,
+  light: true,
+};
+
+const applyCustomDarkModeSettings = (mode) => {
+  const currentSetting = mode || getLS(darkModeStorageKey);
+
+  if (currentSetting === getModeFromCSSMediaQuery()) {
+    resetRootDarkModeAttributeAndLS();
+  } else if (validColorModeKeys[currentSetting]) {
+    rootElement.setAttribute(rootElementDarkModeAttributeName, currentSetting);
+  } else {
+    resetRootDarkModeAttributeAndLS();
+  }
+};
+
+const invertDarkModeObj = {
+  dark: "light",
+  light: "dark",
+};
+
+/**
+ * get target mode
+ */
+const toggleCustomDarkMode = () => {
+  let currentSetting = getLS(darkModeStorageKey);
+
+  if (validColorModeKeys[currentSetting]) {
+    currentSetting = invertDarkModeObj[currentSetting];
+  } else if (currentSetting === null) {
+    currentSetting = invertDarkModeObj[getModeFromCSSMediaQuery()];
+  } else {
+    return;
+  }
+  setLS(darkModeStorageKey, currentSetting);
+  return currentSetting;
+};
+
+/**
+ * bind click event for toggle button
+ */
+var btn=$("#wrapper .toggle-mode-btn,#rightmenu-wrapper .toggle-mode-btn");
+function bindToggleButton() {
+    btn.on('click',(e) => {
+      const mode = toggleCustomDarkMode();
+      applyCustomDarkModeSettings(mode);
+    });
+}
+
+applyCustomDarkModeSettings();
+document.addEventListener("DOMContentLoaded", bindToggleButton);
+volantis.pjax.push(bindToggleButton);
+volantis.pjax.send(()=>{
+	btn.unbind('click');
+},'toggle-mode-btn-unbind');
+</script>
+
+
+
+
+
+
+
+
+<script>
+function listennSidebarTOC() {
+  const navItems = document.querySelectorAll(".toc li");
+  if (!navItems.length) return;
+  const sections = [...navItems].map((element) => {
+    const link = element.querySelector(".toc-link");
+    const target = document.getElementById(
+      decodeURI(link.getAttribute("href")).replace("#", "")
+    );
+    link.addEventListener("click", (event) => {
+      event.preventDefault();
+      window.scrollTo({
+		top: target.offsetTop + 100,
+		
+		behavior: "smooth"
+		
+	  });
+    });
+    return target;
+  });
+
+  function activateNavByIndex(target) {
+    if (target.classList.contains("active-current")) return;
+
+    document.querySelectorAll(".toc .active").forEach((element) => {
+      element.classList.remove("active", "active-current");
+    });
+    target.classList.add("active", "active-current");
+    let parent = target.parentNode;
+    while (!parent.matches(".toc")) {
+      if (parent.matches("li")) parent.classList.add("active");
+      parent = parent.parentNode;
+    }
+  }
+
+  function findIndex(entries) {
+    let index = 0;
+    let entry = entries[index];
+    if (entry.boundingClientRect.top > 0) {
+      index = sections.indexOf(entry.target);
+      return index === 0 ? 0 : index - 1;
+    }
+    for (; index < entries.length; index++) {
+      if (entries[index].boundingClientRect.top <= 0) {
+        entry = entries[index];
+      } else {
+        return sections.indexOf(entry.target);
+      }
+    }
+    return sections.indexOf(entry.target);
+  }
+
+  function createIntersectionObserver(marginTop) {
+    marginTop = Math.floor(marginTop + 10000);
+    let intersectionObserver = new IntersectionObserver(
+      (entries, observe) => {
+        let scrollHeight = document.documentElement.scrollHeight + 100;
+        if (scrollHeight > marginTop) {
+          observe.disconnect();
+          createIntersectionObserver(scrollHeight);
+          return;
+        }
+        let index = findIndex(entries);
+        activateNavByIndex(navItems[index]);
+      },
+      {
+        rootMargin: marginTop + "px 0px -100% 0px",
+        threshold: 0,
+      }
+    );
+    sections.forEach((element) => {
+      element && intersectionObserver.observe(element);
+    });
+  }
+  createIntersectionObserver(document.documentElement.scrollHeight);
+}
+
+document.addEventListener("DOMContentLoaded", listennSidebarTOC);
+document.addEventListener("pjax:success", listennSidebarTOC);
+</script>
+
+<!-- more -->
+
+ 
+	   
+	    
+
+
+<script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script>
+
+
+<script>
+    var pjax;
+    document.addEventListener('DOMContentLoaded', function () {
+      pjax = new Pjax({
+        elements: 'a[href]:not([href^="#"]):not([href="javascript:void(0)"]):not([pjax-fancybox])',
+        selectors: [
+          "title",
+          
+          "#pjax-container",
+          "#pjax-header-nav-list"
+        ],
+        cacheBust: false,   // url 地址追加时间戳，用以避免浏览器缓存
+        timeout: 5000
+      });
+    });
+
+    document.addEventListener('pjax:send', function (e) {
+      //window.stop(); // 相当于点击了浏览器的停止按钮
+
+      try {
+        var currentUrl = window.location.pathname;
+        var targetUrl = e.triggerElement.href;
+        var banUrl = [""];
+        if (banUrl[0] != "") {
+          banUrl.forEach(item => {
+            if(currentUrl.indexOf(item) != -1 || targetUrl.indexOf(item) != -1) {
+              window.location.href = targetUrl;
+            }
+          });
+        }
+      } catch (error) {}
+
+      window.subData = null; // 移除标题（用于一二级导航栏切换处）
+
+      volantis.$switcher.removeClass('active'); // 关闭移动端激活的搜索框
+      volantis.$header.removeClass('z_search-open'); // 关闭移动端激活的搜索框
+      volantis.$wrapper.removeClass('sub'); // 跳转页面时关闭二级导航
+
+      // 解绑事件 避免重复监听
+      volantis.$topBtn.unbind('click');
+      $('.menu a').unbind('click');
+      $(window).unbind('resize');
+      $(window).unbind('scroll');
+      $(document).unbind('scroll');
+      $(document).unbind('click');
+      $('body').unbind('click');
+	  // 使用 volantis.pjax.send 方法传入pjax:send回调函数 参见layout/_partial/scripts/global.ejs
+	  volantis.pjax.method.send.start();
+    });
+
+    document.addEventListener('pjax:complete', function () {
+      $('.nav-main').find('.list-v').not('.menu-phone').removeAttr("style",""); // 移除小尾巴的移除
+      $('.menu-phone.list-v').removeAttr("style",""); // 移除小尾巴的移除
+      $('script[data-pjax], .pjax-reload script').each(function () {
+        $(this).parent().append($(this).remove());
+      });
+      try{
+		// 使用 volantis.pjax.push 方法传入重载函数 参见layout/_partial/scripts/global.ejs
+		volantis.pjax.method.complete.start();
+      } catch (e) {
+        console.log(e);
+      }
+    });
+
+    document.addEventListener('pjax:error', function (e) {
+	  // 使用 volantis.pjax.error 方法传入pjax:error回调函数 参见layout/_partial/scripts/global.ejs
+	  volantis.pjax.method.error.start();
+      window.location.href = e.triggerElement.href;
+    });
+</script>
+ 
+	  
+    </div>
+  </body>
+</html>

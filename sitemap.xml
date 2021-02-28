@@ -326,14 +326,14 @@
   </url>
   
   <url>
-    <loc>http://qfxiao.me/tags/GAN/</loc>
+    <loc>http://qfxiao.me/tags/Geant4/</loc>
     <lastmod>2021-02-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>http://qfxiao.me/tags/Geant4/</loc>
+    <loc>http://qfxiao.me/tags/GAN/</loc>
     <lastmod>2021-02-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -396,6 +396,13 @@
   </url>
   
   <url>
+    <loc>http://qfxiao.me/tags/Probability/</loc>
+    <lastmod>2021-02-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>http://qfxiao.me/tags/Overfitting/</loc>
     <lastmod>2021-02-28</lastmod>
     <changefreq>daily</changefreq>
@@ -411,13 +418,6 @@
   
   <url>
     <loc>http://qfxiao.me/tags/Variance/</loc>
-    <lastmod>2021-02-28</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://qfxiao.me/tags/Probability/</loc>
     <lastmod>2021-02-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -445,13 +445,6 @@
   </url>
   
   <url>
-    <loc>http://qfxiao.me/tags/Shapelet/</loc>
-    <lastmod>2021-02-28</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>http://qfxiao.me/tags/Spectral/</loc>
     <lastmod>2021-02-28</lastmod>
     <changefreq>daily</changefreq>
@@ -460,6 +453,13 @@
   
   <url>
     <loc>http://qfxiao.me/tags/Flow-based-Model/</loc>
+    <lastmod>2021-02-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/tags/Shapelet/</loc>
     <lastmod>2021-02-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -524,7 +524,7 @@
   </url>
   
   <url>
-    <loc>http://qfxiao.me/categories/Research/Time-Series-Imputation/</loc>
+    <loc>http://qfxiao.me/categories/Technical-Notes/Misc/</loc>
     <lastmod>2021-02-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -538,7 +538,7 @@
   </url>
   
   <url>
-    <loc>http://qfxiao.me/categories/Technical-Notes/Misc/</loc>
+    <loc>http://qfxiao.me/categories/Research/Time-Series-Imputation/</loc>
     <lastmod>2021-02-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>

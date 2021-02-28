@@ -1,40 +1,1711 @@
-extends ./_layout.pug
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head hexo-theme='https://github.com/volantis-x/hexo-theme-volantis/tree/4.3.1'>
+  <meta charset="utf-8">
+  <!-- SEO相关 -->
+  
+    
+  
+  <!-- 渲染优化 -->
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  <link rel='dns-prefetch' href='https://cdn.jsdelivr.net'>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  <link rel="preload" href="/css/first.css" as="style">
+  
 
-block content
-  // Just used to judge whether it is an article page
-  div#is-post
-  div.post
-    include ./_mixins/post-header.pug
-    include ./_mixins/gallery.pug
+  <!-- 页面元数据 -->
+  
+  <title>Deep Anomaly Detection Using Geometric Transformations - Hanzawa の 部屋</title>
+  
+    <meta name="keywords" content="Anomaly Detection">
+  
 
-    +postHeader(page)
+  
 
-    div.post-body
-      if page.photos && page.photos.length
-        +gallery(page)
-      != page.content
+  <!-- feed -->
+  
+    <link rel="alternate" href="/atom.xml" title="Hanzawa の 部屋" type="application/atom+xml">
+  
 
-    footer.post-footer
-      if theme.post_widget.end_text.enable
-        div.post-ending.ending
-          div.ending__text= __('post.end')
+  <!-- import meta -->
+  
 
-      if page.copyright === true || (isShowCC && theme.creative_commons.post)
-        include ./_partials/widgets/copyright.pug
+  <!-- link -->
+  
 
-      if theme.post_widget.tags
-        if page.tags && page.tags.length > 0
-          div.post-tags
-            each tag in page.tags.data
-              span.post-tags-item
-                span.post-tags-item__icon
-                  i(class=theme.icon.post_tags)
-                a.post-tags-item__link(href=tag.permalink)= tag.name
+  <!-- import link -->
+  
 
-      if theme.post_widget.share.enable
-        include ./_partials/widgets/share.pug
+  
+    
+<link rel="stylesheet" href="/css/first.css">
 
-      if isShowReward
-        include ./_partials/widgets/reward.pug
+  
 
-      include ./_partials/widgets/paginator.pug
+  
+  <link rel="stylesheet" href="/css/style.css" media="print" onload="this.media='all';this.onload=null">
+  <noscript><link rel="stylesheet" href="/css/style.css"></noscript>
+  
+
+  <script id="loadcss"></script>
+
+  
+<script>
+if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMode))
+    document.write(
+	'<style>'+
+		'html{'+
+			'overflow-x: hidden !important;'+
+			'overflow-y: hidden !important;'+
+		'}'+
+		'.kill-ie{'+
+			'text-align:center;'+
+			'height: 100%;'+
+			'margin-top: 15%;'+
+			'margin-bottom: 5500%;'+
+		'}'+
+	'</style>'+
+    '<div class="kill-ie">'+
+        '<h1><b>抱歉，您的浏览器无法访问本站</b></h1>'+
+        '<h3>微软已经于2016年终止了对 Internet Explorer (IE) 10 及更早版本的支持，<br/>'+
+        '继续使用存在极大的安全隐患，请使用当代主流的浏览器进行访问。</h3><br/>'+
+        '<a target="_blank" rel="noopener" href="https://www.microsoft.com/zh-cn/WindowsForBusiness/End-of-IE-support"><strong>了解详情 ></strong></a>'+
+    '</div>');
+</script>
+
+
+<noscript>
+	<style>
+		html{
+			overflow-x: hidden !important;
+			overflow-y: hidden !important;
+		}
+		.kill-noscript{
+			text-align:center;
+			height: 100%;
+			margin-top: 15%;
+			margin-bottom: 5500%;
+		}
+	</style>
+    <div class="kill-noscript">
+        <h1><b>抱歉，您的浏览器无法访问本站</b></h1>
+        <h3>本页面需要浏览器支持（启用）JavaScript</h3><br/>
+        <a target="_blank" rel="noopener" href="https://www.baidu.com/s?wd=启用JavaScript"><strong>了解详情 ></strong></a>
+    </div>
+</noscript>
+
+</head>
+
+  <body>
+    
+
+<header id="l_header" class="l_header auto shadow blur show" style='opacity: 0' >
+  <div class='container'>
+  <div id='wrapper'>
+    <div class='nav-sub'>
+      <p class="title"></p>
+      <ul class='switcher nav-list-h m-phone' id="pjax-header-nav-list">
+        <li><a id="s-comment" class="fas fa-comments fa-fw" target="_self" href='javascript:void(0)'></a></li>
+        
+          <li><a id="s-toc" class="s-toc fas fa-list fa-fw" target="_self" href='javascript:void(0)'></a></li>
+        
+      </ul>
+    </div>
+		<div class="nav-main">
+      
+        
+        <a class="title flat-box" target="_self" href='/'>
+          
+            <img no-lazy class='logo' src='https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/blog/Logo-NavBar@3x.png'/>
+          
+          
+          
+        </a>
+      
+
+			<div class='menu navigation'>
+				<ul class='nav-list-h m-pc'>
+          
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/
+                  
+                  
+                  
+                    id="home"
+                  >
+                  <i class='fas fa-rss fa-fw'></i>博客
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/categories/
+                  
+                  
+                  
+                    id="categories"
+                  >
+                  <i class='fas fa-folder-open fa-fw'></i>分类
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/tags/
+                  
+                  
+                  
+                    id="tags"
+                  >
+                  <i class='fas fa-tags fa-fw'></i>标签
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/archives/
+                  
+                  
+                  
+                    id="archives"
+                  >
+                  <i class='fas fa-archive fa-fw'></i>归档
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/friends/
+                  
+                  
+                  
+                    id="friends"
+                  >
+                  <i class='fas fa-link fa-fw'></i>友链
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/about/
+                  
+                  
+                  
+                    id="about"
+                  >
+                  <i class='fas fa-info-circle fa-fw'></i>关于
+                </a>
+                
+              </li>
+            
+          
+          
+				</ul>
+			</div>
+
+      <div class="m_search">
+        <form name="searchform" class="form u-search-form">
+          <i class="icon fas fa-search fa-fw"></i>
+          <input type="text" class="input u-search-input" placeholder="Search..." />
+        </form>
+      </div>
+
+			<ul class='switcher nav-list-h m-phone'>
+				
+					<li><a class="s-search fas fa-search fa-fw" target="_self" href='javascript:void(0)'></a></li>
+				
+				<li>
+          <a class="s-menu fas fa-bars fa-fw" target="_self" href='javascript:void(0)'></a>
+          <ul class="menu-phone list-v navigation white-box">
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/
+                  
+                  
+                  
+                    id="home"
+                  >
+                  <i class='fas fa-rss fa-fw'></i>博客
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/categories/
+                  
+                  
+                  
+                    id="categories"
+                  >
+                  <i class='fas fa-folder-open fa-fw'></i>分类
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/tags/
+                  
+                  
+                  
+                    id="tags"
+                  >
+                  <i class='fas fa-tags fa-fw'></i>标签
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/archives/
+                  
+                  
+                  
+                    id="archives"
+                  >
+                  <i class='fas fa-archive fa-fw'></i>归档
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/friends/
+                  
+                  
+                  
+                    id="friends"
+                  >
+                  <i class='fas fa-link fa-fw'></i>友链
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/about/
+                  
+                  
+                  
+                    id="about"
+                  >
+                  <i class='fas fa-info-circle fa-fw'></i>关于
+                </a>
+                
+              </li>
+            
+          
+            
+          </ul>
+        </li>
+			</ul>
+		</div>
+	</div>
+  </div>
+</header>
+
+    <div id="l_body">
+      <div id="l_cover">
+  
+    
+        <div id="full" class='cover-wrapper post dock' style="display: none;">
+          
+            <div class='cover-bg lazyload placeholder' data-bg="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture"></div>
+          
+          <div class='cover-body'>
+  <div class='top'>
+    
+    
+      <p class="title">Volantis</p>
+    
+    
+  </div>
+  <div class='bottom'>
+    <div class='menu navigation'>
+      <div class='list-h'>
+        
+          
+            <a href="/v4/getting-started/"
+              
+              
+              id="v4getting-started">
+              <img src='https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f5c3.svg'><p>文档</p>
+            </a>
+          
+            <a href="/faqs/"
+              
+              
+              id="faqs">
+              <img src='https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f516.svg'><p>帮助</p>
+            </a>
+          
+            <a href="/examples/"
+              
+              
+              id="examples">
+              <img src='https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f396.svg'><p>示例</p>
+            </a>
+          
+            <a href="/contributors/"
+              
+              
+              id="contributors">
+              <img src='https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f389.svg'><p>社区</p>
+            </a>
+          
+            <a href="/archives/"
+              
+              
+              id="archives">
+              <img src='https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f4f0.svg'><p>博客</p>
+            </a>
+          
+            <a target="_blank" rel="noopener" href="https://github.com/volantis-x/hexo-theme-volantis/"
+              
+              
+              id="https:githubcomvolantis-xhexo-theme-volantis">
+              <img src='https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f9ec.svg'><p>源码</p>
+            </a>
+          
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+          <div id="scroll-down" style="display: none;"><i class="fa fa-chevron-down scroll-down-effects"></i></div>
+        </div>
+    
+  
+  </div>
+
+      <div id="safearea">
+        <div class="body-wrapper" id="pjax-container">
+          
+
+<div class='l_main'>
+  <article class="article post white-box reveal md shadow article-type-post" id="post" itemscope itemprop="blogPost">
+  
+
+
+  
+  <div class="article-meta" id="top">
+    
+    
+    
+      <h1 class="title">
+        Deep Anomaly Detection Using Geometric Transformations
+      </h1>
+      <div class='new-meta-box'>
+        
+          
+            
+<div class='new-meta-item author'>
+  <a class='author' href="/" rel="nofollow">
+    <img no-lazy src="">
+    <p>请设置文章作者</p>
+  </a>
+</div>
+
+          
+        
+          
+            
+  <div class='new-meta-item category'>
+    <a class='notlink'>
+      <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>
+      <a class="category-link" href="/categories/Research/">Research</a><span class="sep"></span><a class="category-link" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+    </a>
+  </div>
+
+
+          
+        
+          
+            <div class="new-meta-item date">
+  <a class='notlink'>
+    <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>
+    <p>发布于：2020年6月1日</p>
+  </a>
+</div>
+
+          
+        
+          
+            
+  <div class="new-meta-item browse leancloud">
+    <a class='notlink'>
+      
+      <div id="lc-pv" data-title="Deep Anomaly Detection Using Geometric Transformations" data-path="/2020/06/01/Deep-Anomaly-Detection-Using-Geometric-Transformations/">
+        <i class="fas fa-eye fa-fw" aria-hidden="true"></i>
+        <span id='number'><i class="fas fa-circle-notch fa-spin fa-fw" aria-hidden="true"></i></span>
+        次浏览
+      </div>
+    </a>
+  </div>
+
+
+          
+        
+      </div>
+    
+  </div>
+
+
+  
+  
+  <h1 id="introduction">Introduction</h1>
+<p>本文考虑图像数据的异常检测问题。与基于重构的方法不同，本文提出的方法通过对正常图片施加不同的几何变换之后，训练一个多分类器将无监督异常检测问题转化为一个有监督问题。本方法背后的直觉是在训练能够分辨不同变换后的图片之后，分类器一定学得了一些显著的几何特征，这些几何特征是正常类别独有的。</p>
+<h1 id="proposed-method">Proposed Method</h1>
+<h2 id="problem-statement">Problem Statement</h2>
+<p>本文考虑针对图像的异常检测。记<span class="math inline">\(\mathcal X\)</span>为所有自然图像的空间，<span class="math inline">\(X\subseteq\mathcal X\)</span>为正常图像集合。给定数据集<span class="math inline">\(S\subseteq X\)</span>，异常检测的目的是学习一个分类器<span class="math inline">\(h_S(x):\mathcal X\rightarrow\{0,1\}\)</span>，其中<span class="math inline">\(h_S(x)=1\Leftrightarrow x\in X\)</span>。</p>
+<p>为了兼顾查准率和查全率，常用的设置是学习一个打分函数<span class="math inline">\(n_S(x):\mathcal X\rightarrow\mathbb R\)</span>，分数越高代表样本属于<span class="math inline">\(X\)</span>的概率越大。之后，通过设定阈值，便可以构建异常分类器： <span class="math display">\[
+\begin{align}
+h_S^\lambda(x)=
+\begin{cases}
+1 &amp; n_S(x)\leq\lambda\\
+0 &amp; n_S(x)&lt;\lambda
+\end{cases}
+\end{align}
+\]</span></p>
+<h2 id="discriminative-learning-of-an-anomaly-scoring-function-using-geometric-transformations">Discriminative Learning of an Anomaly Scoring Function Using Geometric Transformations</h2>
+<p>有初始数据集<span class="math inline">\(S\)</span>，几何变换集合<span class="math inline">\(\mathcal T\)</span>，通过对<span class="math inline">\(S\)</span>中每个样本施加这<span class="math inline">\(|\mathcal T|\)</span>个几何变换得到新数据集记为<span class="math inline">\(S_\mathcal{T}\)</span>，且<span class="math inline">\(S_\mathcal{T}\)</span>中每个样本的标签为变换的序号。之后，在<span class="math inline">\(S_\mathcal{T}\)</span>上训练一个<span class="math inline">\(|\mathcal T|\)</span>分类器。在测试阶段，对测试样本同样施加<span class="math inline">\(|\mathcal T|\)</span>个几何变换，分类器会给出经过<span class="math inline">\(\mathrm{softmax}\)</span>的输出向量，最终的异常分数由经过输出的向量构造的分布对数似然得来。</p>
+<h3 id="creating-and-learning-the-self-labeled-dataset">Creating and Learning the Self-Labeled Dataset</h3>
+<p>设<span class="math inline">\(\mathcal T=\{T_0,T_1,\cdots,T_{k-1}\}\)</span>为几何变换集合，<span class="math inline">\(1\leq i\leq k-1,\space T_i:\mathcal X\rightarrow \mathcal X\)</span>，且<span class="math inline">\(T_0(x)=x\)</span>。<span class="math inline">\(S_\mathcal{T}\)</span>定义为：</p>
+<p><span class="math display">\[
+S_\mathcal T=\{(T_j(x),j):x\in S,T_j\in\mathcal T\}
+\]</span> 对于每个<span class="math inline">\(x\in S\)</span>，<span class="math inline">\(j\)</span>为<span class="math inline">\(T_j(x)\)</span>的标签。我们直接学习一个<span class="math inline">\(K\)</span>类分类器<span class="math inline">\(f_\theta\)</span>，来预测输入样本对应的几何变换种类，这相当于是一个图像分类问题。</p>
+<p><img src="https://i.loli.net/2020/06/24/XBFKcPio64u3U1C.png" class="lazyload" data-srcset="https://i.loli.net/2020/06/24/XBFKcPio64u3U1C.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" style="zoom:67%;" /></p>
+<h3 id="dirichlet-normality-score">Dirichlet Normality Score</h3>
+<p>接下来要做的是如何定义异常分数，记为<span class="math inline">\(n_S(x)\)</span>，这是文中的一个重要的部分。设几何变换集合<span class="math inline">\(\mathcal T=\{T_0,T_1,\cdots,T_{k-1}\}\)</span>，且<span class="math inline">\(k\)</span>分类器<span class="math inline">\(f_\theta\)</span>在<span class="math inline">\(S_\mathcal{T}\)</span>上完成训练。对于任意一个样本<span class="math inline">\(x\)</span>，令<span class="math inline">\(\mathbf y(x)=\text{softmax}(f_{\theta}(x))\)</span>，即分类器<span class="math inline">\(f_\theta\)</span>输出的<span class="math inline">\(\text{softmax}\)</span>之后的向量。异常分数<span class="math inline">\(n_S(x)\)</span>定义为：</p>
+<p><span class="math display">\[
+n_S(x)=\sum\limits_{i=0}^{k-1}\log p(\mathbf y(T_i(x))|T_i)
+\]</span></p>
+<p>该异常分数定义为每个类别上，在几何变换<span class="math inline">\(T_i\)</span>的条件下，输出的<span class="math inline">\(\mathbf y\)</span>的对数似然之和。在文中，作者假设<span class="math inline">\(\mathbf y(T_i(x)|T_i\)</span>服从迪利克雷分布：<span class="math inline">\(\mathbf y(T_i(x))|T_i\sim\text{Dir}(\boldsymbol \alpha_i)\)</span>，其中<span class="math inline">\(\boldsymbol \alpha_i\in\mathbb R^k_+\)</span>，<span class="math inline">\(x\sim p_X(x)\)</span>，<span class="math inline">\(i\sim\text{Uni}(0,k-1)\)</span>，而<span class="math inline">\(p_X(x)\)</span>代表正常样本的真实数据分布。于是：</p>
+<p><span class="math display">\[
+n_S(x)=\sum_{i=0}^{k-1}\left[\log\Gamma(\sum_{j=0}^{k-1}[\tilde{\boldsymbol\alpha}_i]_j)-\sum_{j=0}^{k-1}\log\Gamma([\tilde{\boldsymbol\alpha}_i]_j)+\sum_{j=0}^{k-1}([\tilde{\boldsymbol\alpha}_i]_j-1)\log\mathbf y(T_i(x))_j\right]
+\]</span></p>
+<p>因为<span class="math inline">\(\tilde{\alpha}_i\)</span>相对于<span class="math inline">\(x\)</span>来说是常数，所以可以直接忽略，于是式子简化为： <span class="math display">\[
+n_S(x)=\sum_{i=0}^{k-1}\sum_{j=0}^{k-1}([\tilde{\boldsymbol\alpha}_i]_j-1)\log\mathbf y(T_i(x))_j=\sum_{i=0}^{k-1}(\tilde{\boldsymbol \alpha}_i-1)\cdot\log\mathbf y(T_i(x))
+\]</span></p>
+<p>注意这里的每个<span class="math inline">\(\boldsymbol \alpha_i\)</span>都是一个向量，即对于每个变换<span class="math inline">\(i\)</span>，都对应一个迪利克雷分布，其参数为<span class="math inline">\(\boldsymbol\alpha_i\)</span>；在对训练集进行第<span class="math inline">\(i\)</span>个几何变换之后，我们得到了<span class="math inline">\(\{T_i(x)\}\)</span>，然后分类器<span class="math inline">\(f_\theta(\cdot)\)</span>的输出<span class="math inline">\(\mathbf y(T_i(x))\)</span>相当于迪利克雷分布的观测值，我们需要根据观测值来估计参数<span class="math inline">\(\boldsymbol \alpha_i\)</span>，然后根据这个参数来计算<span class="math inline">\(n_S(x)\)</span>。对于<span class="math inline">\(\boldsymbol\alpha_i\)</span>，可以知道其第<span class="math inline">\(i\)</span>个分量应该是相对比较大的，下面是运行官方代码得到的<span class="math inline">\(\boldsymbol\alpha_i\)</span>的结果（<span class="math inline">\(i=69\)</span>，<span class="math inline">\(i\)</span>从<span class="math inline">\(0\)</span>开始，总共为<span class="math inline">\(72\)</span>维），可以看到第<span class="math inline">\(69\)</span>个分量是最大的。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[INFO] value of mle_alpha_t:</span><br><span class="line"> [ 0.10228925  0.08997199  0.13083569  0.10862965  0.09811163  0.08527119</span><br><span class="line">  0.17637901  0.27628416  0.12873376  0.19197053  0.11587154  0.09873095</span><br><span class="line">  0.12700618  0.07688542  0.10488203  0.12499191  0.11637607  0.07739511</span><br><span class="line">  0.13049147  0.51031647  0.20546597  0.15558449  0.09288609  0.12134945</span><br><span class="line">  0.09324992  0.14650162  0.16281216  0.11827823  0.08214853  0.15618336</span><br><span class="line">  0.28129761  0.45293697  0.11485838  1.78598954  0.16556983  0.1141158</span><br><span class="line">  0.10909459  0.13916602  0.11563799  0.07309986  0.11049714  0.12974086</span><br><span class="line">  0.15930642  0.13714361  0.13938356  0.70619553  0.11174039  0.07201538</span><br><span class="line">  0.16626109  0.12153727  0.09548811  0.07940956  0.15832209  0.11035474</span><br><span class="line">  0.12487912  0.16937875  0.23212662  0.37041831  0.08557451  0.0839439</span><br><span class="line">  0.09924258  0.39766872  0.14917286  0.08704662  0.09554555  0.31047109</span><br><span class="line">  0.24504759  0.16812463  0.11508187 63.98878807  0.12971073  0.07972932]</span><br></pre></td></tr></table></figure>
+<p>下图也展示了对于每个变换<span class="math inline">\(i\)</span>，<span class="math inline">\(\mathbf y(T_i(x)|T_i\)</span>分布的情况：</p>
+<p><img src="https://i.loli.net/2020/06/23/fLkst4i7Hu6PhQl.png" class="lazyload" data-srcset="https://i.loli.net/2020/06/23/fLkst4i7Hu6PhQl.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" style="zoom:67%;" /></p>
+<p>作者还给出了一种简化的形式，<span class="math inline">\(\hat{n}_S(x)=\frac{1}{k}\sum^{k-1}_{j=0}[\mathbf y(T_j(x))]_j\)</span>。相当于说，对于每个变换<span class="math inline">\(T_i\)</span>分类器都会给出一个<span class="math inline">\(\text{softmax}\)</span>向量，取其第<span class="math inline">\(i\)</span>个分量<span class="math inline">\([\mathbf y(T_j(x))]_j\)</span>，然后把每个变换对应的<span class="math inline">\([\mathbf y(T_j(x))]_j\)</span>加起来。</p>
+<p>整个算法的流程如下：</p>
+<p><img src="https://i.loli.net/2020/06/23/z8MpdeoD6ZGavlN.png" class="lazyload" data-srcset="https://i.loli.net/2020/06/23/z8MpdeoD6ZGavlN.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" style="zoom:67%;" /></p>
+<p>这里结合作者的源代码简单说一下检测阶段的流程。</p>
+<hr />
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> t_ind <span class="keyword">in</span> <span class="built_in">range</span>(transformer.n_transforms):</span><br><span class="line">        observed_dirichlet = mdl.predict(transformer.transform_batch(observed_data, [t_ind] * <span class="built_in">len</span>(observed_data)), batch_size=<span class="number">1024</span>)</span><br></pre></td></tr></table></figure>
+<p>在训练好模型之后，对于训练集的所有样本，对其进行<span class="math inline">\(K\)</span>个几何变换之后，得到<span class="math inline">\(K\)</span>个样本<span class="math inline">\(\{T_i(x)\}\)</span>，对于所有第<span class="math inline">\(i\)</span>个几何变换对应的样本<span class="math inline">\(\{T_i(x)\}\)</span>，通过分类器<span class="math inline">\(f_\theta\)</span>会给出输出<span class="math inline">\(\mathbf y(T_i(x))\)</span>。这里对应算法中的第<span class="math inline">\(7-8\)</span>行，这个<code>observed_dirichlet</code>就是<span class="math inline">\(S_i\)</span>。</p>
+<hr />
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">log_p_hat_train = np.log(observed_dirichlet).mean(axis=<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">alpha_sum_approx = calc_approx_alpha_sum(observed_dirichlet)</span><br><span class="line">alpha_0 = observed_dirichlet.mean(axis=<span class="number">0</span>) * alpha_sum_approx</span><br></pre></td></tr></table></figure>
+<p>之后这部分主要对应算法中的<span class="math inline">\(9-11\)</span>行。作者把所有的第<span class="math inline">\(i\)</span>个变换，分类器的输出的集合（也就是变量<code>observed_dirichlet</code>）记为<span class="math inline">\(S_i\)</span>，<span class="math inline">\(\bar s\)</span>为<span class="math inline">\(S_i\)</span>的平均，<span class="math inline">\(\bar l\)</span>为<span class="math inline">\(S_i\)</span>对数的平均（变量<code>log_p_hat_train</code>），初始值<span class="math inline">\(\tilde{\alpha}_i\)</span>由<span class="math inline">\(\bar s\frac{(k-1)(-\Psi(1))}{\bar s\cdot\log\bar s-\bar s\cdot\bar l}\)</span>给出（变量<code>alpha_0</code>）。函数<code>calc_approx_alpha_sum</code>实现的是算法中第<span class="math inline">\(11\)</span>行的<span class="math inline">\(\frac{(k-1)(-\Psi(1))}{\bar s\cdot\log\bar s-\bar s\cdot\bar l}\)</span>，代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">calc_approx_alpha_sum</span>(<span class="params">observations</span>):</span></span><br><span class="line">    N = <span class="built_in">len</span>(observations)</span><br><span class="line">    f = np.mean(observations, axis=<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (N * (<span class="built_in">len</span>(f) - <span class="number">1</span>) * (-psi(<span class="number">1</span>))) / (</span><br><span class="line">        N * np.<span class="built_in">sum</span>(f * np.log(f)) - np.<span class="built_in">sum</span>(f * np.<span class="built_in">sum</span>(np.log(observations), axis=<span class="number">0</span>)))</span><br></pre></td></tr></table></figure>
+<hr />
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mle_alpha_t = fixed_point_dirichlet_mle(alpha_0, log_p_hat_train)</span><br></pre></td></tr></table></figure>
+<p>这里对应算法中的<span class="math inline">\(12-14\)</span>行，即重复<span class="math inline">\(\tilde\alpha_i\leftarrow\Psi^{-1}\left(\Psi(\sum_j[\alpha_i]_j)+\bar l\right)\)</span>来估计<span class="math inline">\(\alpha\)</span>，函数<code>fixed_point_dirichlet_mle</code>代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fixed_point_dirichlet_mle</span>(<span class="params">alpha_init, log_p_hat, max_iter=<span class="number">1000</span></span>):</span></span><br><span class="line">    alpha_new = alpha_old = alpha_init</span><br><span class="line">    <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(max_iter):</span><br><span class="line">        alpha_new = inv_psi(psi(np.<span class="built_in">sum</span>(alpha_old)) + log_p_hat)</span><br><span class="line">        <span class="keyword">if</span> np.sqrt(np.<span class="built_in">sum</span>((alpha_old - alpha_new) ** <span class="number">2</span>)) &lt; <span class="number">1e-9</span>:</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        alpha_old = alpha_new</span><br><span class="line">    <span class="keyword">return</span> alpha_new</span><br></pre></td></tr></table></figure>
+<p><span class="math inline">\(\Psi^{-1}(\cdot)\)</span>是通过数值方法来估计的：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">inv_psi</span>(<span class="params">y, iters=<span class="number">5</span></span>):</span></span><br><span class="line">    <span class="comment"># initial estimate</span></span><br><span class="line">    cond = y &gt;= <span class="number">-2.22</span></span><br><span class="line">    x = cond * (np.exp(y) + <span class="number">0.5</span>) + (<span class="number">1</span> - cond) * <span class="number">-1</span> / (y - psi(<span class="number">1</span>))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(iters):</span><br><span class="line">        x = x - (psi(x) - y) / polygamma(<span class="number">1</span>, x)</span><br><span class="line">    <span class="keyword">return</span> x</span><br></pre></td></tr></table></figure>
+<hr />
+<p>最后，在得到对<span class="math inline">\(\alpha\)</span>的估计之后，可以来计算测试样本的分数了。这里对应的是算法中的第<span class="math inline">\(16\)</span>行。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">x_test_p = mdl.predict(transformer.transform_batch(x_test, [t_ind] * <span class="built_in">len</span>(x_test)), batch_size=<span class="number">1024</span>)</span><br><span class="line"></span><br><span class="line">scores += dirichlet_normality_score(mle_alpha_t, x_test_p)</span><br></pre></td></tr></table></figure>
+<p>函数<code>dirichlet_normality_score</code>代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">dirichlet_normality_score</span>(<span class="params">alpha, p</span>):</span></span><br><span class="line">    <span class="keyword">return</span> np.<span class="built_in">sum</span>((alpha - <span class="number">1</span>) * np.log(p), axis=<span class="number">-1</span>)</span><br></pre></td></tr></table></figure>
+<h1 id="experiments">Experiments</h1>
+<h2 id="baselines">Baselines</h2>
+<p>文中用到了如下的Baseline：</p>
+<ul>
+<li><strong>One-class SVM. </strong>单类支持向量机，作者使用了三个变体，分别为<strong>RAW-OC-SVM</strong>——使用原始数据作为输入，<strong>CAE-OC-SVM</strong>——使用一个卷积自编码器来获得低维表示作为输入和<strong>E2E-OC-SVM</strong>——全名为<strong>One-Class Deep Support Vector Data Description</strong>；</li>
+<li><strong>Deep structured energy-based models. </strong></li>
+<li><strong>Deep Autoencoding Gaussian Mixture Model. </strong></li>
+<li><strong>Generative Adversarial Networks. </strong></li>
+</ul>
+<h2 id="datasets">Datasets</h2>
+<p>文中用到了一下几个数据集：</p>
+<ul>
+<li><strong>CIFAR-10</strong></li>
+<li><strong>CIFAR-100</strong></li>
+<li><strong>Fashion-MNIST</strong></li>
+<li><strong>CatsVsDogs</strong></li>
+</ul>
+<p>在实验中所有图片都被归一化到<span class="math inline">\([-1,1]\)</span>的范围。</p>
+<h2 id="experimental-protocol">Experimental Protocol</h2>
+<p>设数据集有<span class="math inline">\(C\)</span>个类，我们会进行<span class="math inline">\(C\)</span>次实验，在第<span class="math inline">\(c\)</span>次实验 (<span class="math inline">\(1\leq c \leq C\)</span>)中我们会将第<span class="math inline">\(c\)</span>个类作为正常样本，而其他类作为异常样本。在训练阶段，训练集只包含正常样本，而在测试阶段则会有正常样本和异常样本。在获得异常分数之后，阈值<span class="math inline">\(\lambda\)</span>则根据ROC曲线下面积选择。</p>
+<p>实验中使用的几何变换基于以下三种基变换：</p>
+<ul>
+<li><strong>Horizontal flip: </strong> 记为<span class="math inline">\(T_b^{flip}(x)\)</span>，<span class="math inline">\(b\in\{T,F\}\)</span>代表是否翻转；</li>
+<li><strong>Translation: </strong> 记为<span class="math inline">\(T_{s_h,s_w}^{trans}(x)\)</span>，其中<span class="math inline">\(s_h,s_w\in\{-1,0,1\}\)</span>。在长宽两个维度上位移分别为<span class="math inline">\(0.25\)</span>高度和<span class="math inline">\(0.25\)</span>宽度，这两个维度发生位移的方向由<span class="math inline">\(s_h\)</span>和<span class="math inline">\(s_w\)</span>决定，当<span class="math inline">\(s_h=s_w=0\)</span>时代表不移动；</li>
+<li><strong>Rotation by multiples 90 degrees: </strong> 记为<span class="math inline">\(T_k^{rot}(x)\)</span>，<span class="math inline">\(k\in\{0,1,2,3\}\)</span>。旋转<span class="math inline">\(k\times90\)</span>度。</li>
+</ul>
+<p>将三种基变换叠加有： <span class="math display">\[
+\mathcal T=\left\{
+ T_k^{rot}\circ T_{s_h,s_w}^{trans}\circ T_b^{flip} : \begin{matrix}
+ b &amp;\in \{T,F\}\\
+ s_h,s_w&amp;\in\{-1,0,1\}\\
+ k&amp;\in\{0,1,2,3\}
+ \end{matrix} 
+\right\}
+\]</span> 最终几何变换种数为<span class="math inline">\(2\times3\times3\times4=72\)</span>种。</p>
+<p>分类器模型使用的是<strong>Wide Residual Network</strong>，优化器为Adam，Batch size为128，训练轮数为200。</p>
+<h2 id="results">Results</h2>
+<p>下面是不同方法在不同数据集上的实验结果：</p>
+<p><img src="https://i.loli.net/2020/06/24/gHZohrvz9MGYmxi.png" class="lazyload" data-srcset="https://i.loli.net/2020/06/24/gHZohrvz9MGYmxi.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" /></p>
+<p>评测标准使用的是AUROC。作者关于结果的分析主要有以下几点：</p>
+<ol type="1">
+<li>在绝大多数情况下，我们的算法都比Baseline要好，而且是越大的数据集效果越好。CatsVsDogs数据集每张图片的大小比其他几个数据集都要大，而Baseline在这个数据集上的结果都在<span class="math inline">\(50\%\)</span>或不到<span class="math inline">\(50\%\)</span>，这基本等同于瞎猜；</li>
+<li>在CIFAR-100数据集里，由于将这100类聚合为了20类，所以存在类内样本差异大的问题。比如在类<span class="math inline">\(5\)</span>、类<span class="math inline">\(7\)</span>和类<span class="math inline">\(13\)</span>上，模型表现就不够好；</li>
+<li>在Fashion-MNIST数据集上几乎所有方法（除了DAGMM）都表现很好。</li>
+</ol>
+<h2 id="on-the-intuition-for-using-geometric-transformations">On the Intuition for Using Geometric Transformations</h2>
+<p>这里作者对所选用的几何变换做了一些解释。实验中选用的三种基本几何变换都是可逆的线性几何变换（且为双射），作者也试过一些复杂的非线性变换，如高斯模糊、锐化、伽马校正等等，但是效果并不好。</p>
+<p>作者认为分类器能够分辨不同变换的能力与最终性能成正比，为了验证这一点，进行了<span class="math inline">\(3\)</span>个实验。从MNIST数据集选择一个数字作为正常样本，几何变换只采用两个，然后选择另一个数字作为异常样本，结果如下：</p>
+<ul>
+<li><strong>Normal digit: 8，Anomaly: 3，Transformations: Identity and horizontal flip. </strong>由于数字<span class="math inline">\(8\)</span>是对称的，所以要让分类器分辨原始的<span class="math inline">\(8\)</span>和翻转之后的<span class="math inline">\(8\)</span>是很难的，AUROC只有<span class="math inline">\(0.646\)</span>；</li>
+<li><strong>Normal digit: 3，Anomaly: 8，Transformations: Identity and horizontal flip. </strong>这里把<span class="math inline">\(3\)</span>作为正常样本，由于<span class="math inline">\(3\)</span>不是对称的，所以两种变换是可以分辨的，AUROC达到了<span class="math inline">\(0.957\)</span>；</li>
+<li><strong>Normal digit: 8，Anomaly: 3，Transformations: Identity and translation by 7 pixels. </strong>同样是把<span class="math inline">\(8\)</span>作为正常样本，但变换用的是平移，AUROC达到了<span class="math inline">\(0.919\)</span>。</li>
+</ul>
+<p>除此之外，作者还设计了一个实验，目的是测试什么样的图像会获得较高的分数<span class="math inline">\(n_S(x)\)</span>。在给定训练好的分类器的情况下，优化输入的图像，目标函数是最大化分数<span class="math inline">\(n_S(x)\)</span>。下图为实验结果：</p>
+<p><img src="https://i.loli.net/2020/06/24/8Pi4EKCRuBXrYgp.png" class="lazyload" data-srcset="https://i.loli.net/2020/06/24/8Pi4EKCRuBXrYgp.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" /></p>
+<p>在左图中，将数字<span class="math inline">\(3\)</span>作为正常样本训练的分类器、原始输入为数字<span class="math inline">\(0\)</span>的图片时，随着优化的进行，图片慢慢地变得像数字<span class="math inline">\(3\)</span>。在右图中，同样是将数字<span class="math inline">\(3\)</span>作为正常样本训练的分类器，不过原始输入也是数字<span class="math inline">\(3\)</span>，这时图像却没有怎么变化。</p>
+<h1 id="remark">Remark</h1>
+<ul>
+<li>文中提到的在CIFAR100数据的实验上，由于类间差异比较大导致效果较差，那么很自然地，不同的变换样本对应的集簇实际上应当足够分开，集簇内的样本要足够进，这样对于分类器来说才能比较好的分类。不过采用的几何变换并没有针对这一点进行特别设计；</li>
+<li>文中强调了所使用的变换为几何变换，其实除此之外，所使用的变换还都是可以用矩阵表示的可逆的变换。</li>
+</ul>
+
+  
+  
+    
+    <div class='footer'>
+      
+      
+      
+        <div class='copyright'>
+          <blockquote>
+            
+              
+                <p>博客内容遵循 署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</p>
+
+              
+            
+              
+                <p>本文永久链接是：<a href=http://qfxiao.me/2020/06/01/Deep-Anomaly-Detection-Using-Geometric-Transformations/>http://qfxiao.me/2020/06/01/Deep-Anomaly-Detection-Using-Geometric-Transformations/</a></p>
+              
+            
+          </blockquote>
+        </div>
+      
+      
+    </div>
+  
+  
+    
+
+
+  <div class='article-meta' id="bottom">
+    <div class='new-meta-box'>
+      
+        
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-06-27T00:25:25+08:00">
+  <a class='notlink'>
+    <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
+    <p>更新于：2020年6月27日</p>
+  </a>
+</div>
+
+        
+      
+        
+          
+  
+  <div class="new-meta-item meta-tags"><a class="tag" href="/tags/Anomaly-Detection/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>Anomaly Detection</p></a></div>
+
+
+        
+      
+        
+          
+  <div class="new-meta-item share -mob-share-list">
+  <div class="-mob-share-list share-body">
+    
+      
+        <a class="-mob-share-qq" title="" rel="external nofollow noopener noreferrer noopener"
+          
+          target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://qfxiao.me/2020/06/01/Deep-Anomaly-Detection-Using-Geometric-Transformations/&title=Deep Anomaly Detection Using Geometric Transformations - Hanzawa の 部屋&summary="
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qq.png" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qq.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-qzone" title="" rel="external nofollow noopener noreferrer noopener"
+          
+          target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=http://qfxiao.me/2020/06/01/Deep-Anomaly-Detection-Using-Geometric-Transformations/&title=Deep Anomaly Detection Using Geometric Transformations - Hanzawa の 部屋&summary="
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qzone.png" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qzone.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-weibo" title="" rel="external nofollow noopener noreferrer noopener"
+          
+          target="_blank" href="http://service.weibo.com/share/share.php?url=http://qfxiao.me/2020/06/01/Deep-Anomaly-Detection-Using-Geometric-Transformations/&title=Deep Anomaly Detection Using Geometric Transformations - Hanzawa の 部屋&summary="
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/weibo.png" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/weibo.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=">
+          
+        </a>
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+
+
+        
+      
+    </div>
+  </div>
+
+
+  
+  
+
+  
+    <div class="prev-next">
+      
+        <a class='prev' href='/2020/06/02/Ubuntu20-4LTS-%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE-CUDA11-cuDNN8-Tensorflow-Pytorch/'>
+          <p class='title'><i class="fas fa-chevron-left" aria-hidden="true"></i>Ubuntu20.04LTS 深度学习环境配置 CUDA11 + cuDNN8 + Tensorflow + Pytorch</p>
+          <p class='content'>Introduction
+Ubuntu的最新LTS版本也更新到了20.04，在给新机器配置深度学习环境的时候发现比以前容易了许多，特此写一篇Tutorial。这里的安装方法只针对Ubuntu2...</p>
+        </a>
+      
+      
+        <a class='next' href='/2020/06/01/Cross-dataset-Time-Series-Anomaly-Detection-for-Cloud-Systems/'>
+          <p class='title'>Cross-dataset Time Series Anomaly Detection for Cloud Systems<i class="fas fa-chevron-right" aria-hidden="true"></i></p>
+          <p class='content'>Introduction
+本文介绍了一种用于云计算平台的时间序列异常检测框架。为了解决标签不足的问题，文中使用了迁移学习的方法，即在有标签的source domain上训练模型，在没有标签的t...</p>
+        </a>
+      
+    </div>
+  
+</article>
+
+
+  
+
+  <article class="post white-box reveal shadow" id="comments">
+    <p ct><i class='fas fa-comments'></i> 评论</p>
+    
+    <div id="valine_container" class="valine_thread">
+  <i class="fas fa-cog fa-spin fa-fw fa-2x"></i>
+</div>
+
+  </article>
+
+
+
+
+
+
+</div>
+<aside class='l_side'>
+  
+  
+    
+    
+
+
+
+  <section class="widget toc-wrapper shadow desktop mobile" id="toc-div" >
+    
+  <header>
+    
+      <i class="fas fa-list fa-fw" aria-hidden="true"></i><span class='name'>本文目录</span>
+    
+  </header>
+
+
+    <div class='content'>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#problem-statement"><span class="toc-text">Problem Statement</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#discriminative-learning-of-an-anomaly-scoring-function-using-geometric-transformations"><span class="toc-text">Discriminative Learning of an Anomaly Scoring Function Using Geometric Transformations</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#creating-and-learning-the-self-labeled-dataset"><span class="toc-text">Creating and Learning the Self-Labeled Dataset</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#dirichlet-normality-score"><span class="toc-text">Dirichlet Normality Score</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#baselines"><span class="toc-text">Baselines</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#datasets"><span class="toc-text">Datasets</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#experimental-protocol"><span class="toc-text">Experimental Protocol</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#results"><span class="toc-text">Results</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#on-the-intuition-for-using-geometric-transformations"><span class="toc-text">On the Intuition for Using Geometric Transformations</span></a></li></ol>
+    </div>
+  </section>
+
+
+  
+
+
+</aside>
+
+
+
+		  
+		  <!--此文件用来存放一些不方便取值的变量-->
+<!--思路大概是将值藏到重加载的区域内-->
+
+<script>
+  window.pdata={}
+  pdata.ispage=true;
+  pdata.postTitle="Deep Anomaly Detection Using Geometric Transformations";
+  pdata.commentPath="";
+  pdata.commentPlaceholder="";
+  // header 这里无论是否开启pjax都需要
+  var l_header=document.getElementById("l_header");
+  
+  l_header.classList.add("show");
+  
+  
+    // cover
+    var cover_wrapper=document.querySelector('.cover-wrapper');
+    
+    cover_wrapper.id="none";
+    cover_wrapper.style.display="none";
+    
+  
+</script>
+
+        </div>
+        
+  
+  <footer class="footer clearfix">
+    <br><br>
+    
+      
+        <div class="aplayer-container">
+          
+
+
+        </div>
+      
+    
+      
+        <br>
+        <div class="social-wrapper">
+          
+            
+          
+            
+          
+            
+          
+        </div>
+      
+    
+      
+        <div><p>博客内容遵循 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</a></p>
+</div>
+      
+    
+      
+        
+          <div><p><span id="lc-sv">本站总访问量为 <span id="number"><i class="fas fa-circle-notch fa-spin fa-fw" aria-hidden="true"></i></span> 次</span> <span id="lc-uv">访客数为 <span id="number"><i class="fas fa-circle-notch fa-spin fa-fw" aria-hidden="true"></i></span> 人</span></p>
+</div>
+        
+      
+    
+      
+        本站使用
+        <a href="https://github.com/volantis-x/hexo-theme-volantis/tree/4.3.1" target="_blank" class="codename">Volantis</a>
+        作为主题
+      
+    
+      
+        <div class='copyright'>
+        <p><a href="/">Copyright © 2017-2020 XXX</a></p>
+
+        </div>
+      
+    
+  </footer>
+
+
+        <a id="s-top" class="fas fa-arrow-up fa-fw" href="javascript:void(0)"></a>
+      </div>
+    </div>
+    <div>
+      <script>
+/************这个文件存放不需要重载的全局变量和全局函数*********/
+window.volantis={};
+window.volantis.loadcss=document.getElementById("loadcss");
+/******************** Pjax ********************************/
+function VPjax(){
+	this.list=[] // 存放回调函数
+	this.start=()=>{
+	  for(var i=0;i<this.list.length;i++){
+		this.list[i].run();
+	  }
+	}
+	this.push=(fn,name)=>{
+		var f=new PjaxItem(fn,name);
+		this.list.push(f);
+	}
+	// 构造一个可以run的对象
+	function PjaxItem(fn,name){
+		// 函数名称
+		this.name = name || fn.name
+		// run方法
+		this.run=()=>{
+			fn()
+		}
+	}
+}
+volantis.pjax={}
+volantis.pjax.method={
+	complete: new VPjax(),
+	error: new VPjax(),
+	send: new VPjax()
+}
+volantis.pjax={
+	...volantis.pjax,
+	push: volantis.pjax.method.complete.push,
+	error: volantis.pjax.method.error.push,
+	send: volantis.pjax.method.send.push
+}
+/********************脚本懒加载函数********************************/
+// 已经加入了setTimeout
+function loadScript(src, cb) {
+	setTimeout(function() {
+		var HEAD = document.getElementsByTagName('head')[0] || document.documentElement;
+		var script = document.createElement('script');
+		script.setAttribute('type','text/javascript');
+		if (cb) script.onload = cb;
+		script.setAttribute('src', src);
+		HEAD.appendChild(script);
+	});
+}
+//https://github.com/filamentgroup/loadCSS
+var loadCSS = function( href, before, media, attributes ){
+	var doc = window.document;
+	var ss = doc.createElement( "link" );
+	var ref;
+	if( before ){
+		ref = before;
+	}
+	else {
+		var refs = ( doc.body || doc.getElementsByTagName( "head" )[ 0 ] ).childNodes;
+		ref = refs[ refs.length - 1];
+	}
+	var sheets = doc.styleSheets;
+	if( attributes ){
+		for( var attributeName in attributes ){
+			if( attributes.hasOwnProperty( attributeName ) ){
+				ss.setAttribute( attributeName, attributes[attributeName] );
+			}
+		}
+	}
+	ss.rel = "stylesheet";
+	ss.href = href;
+	ss.media = "only x";
+	function ready( cb ){
+		if( doc.body ){
+			return cb();
+		}
+		setTimeout(function(){
+			ready( cb );
+		});
+	}
+	ready( function(){
+		ref.parentNode.insertBefore( ss, ( before ? ref : ref.nextSibling ) );
+	});
+	var onloadcssdefined = function( cb ){
+		var resolvedHref = ss.href;
+		var i = sheets.length;
+		while( i-- ){
+			if( sheets[ i ].href === resolvedHref ){
+				return cb();
+			}
+		}
+		setTimeout(function() {
+			onloadcssdefined( cb );
+		});
+	};
+	function loadCB(){
+		if( ss.addEventListener ){
+			ss.removeEventListener( "load", loadCB );
+		}
+		ss.media = media || "all";
+	}
+	if( ss.addEventListener ){
+		ss.addEventListener( "load", loadCB);
+	}
+	ss.onloadcssdefined = onloadcssdefined;
+	onloadcssdefined( loadCB );
+	return ss;
+};
+</script>
+<script>
+  
+  loadCSS("https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.14/css/all.min.css", window.volantis.loadcss);
+  
+  
+  
+  
+</script>
+<!-- required -->
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5/dist/jquery.min.js"></script>
+
+<script>
+  function pjax_fancybox() {
+    $(".md .gallery").find("img").each(function () { //渲染 fancybox
+      var element = document.createElement("a"); // a 标签
+      $(element).attr("class", "fancybox");
+      $(element).attr("pjax-fancybox", "");  // 过滤 pjax
+      $(element).attr("href", $(this).attr("src"));
+      if ($(this).attr("data-original")) {
+        $(element).attr("href", $(this).attr("data-original"));
+      }
+      $(element).attr("data-fancybox", "images");
+      var caption = "";   // 描述信息
+      if ($(this).attr('alt')) {  // 判断当前页面是否存在描述信息
+        $(element).attr('data-caption', $(this).attr('alt'));
+        caption = $(this).attr('alt');
+      }
+      var div = document.createElement("div");
+      $(div).addClass("fancybox");
+      $(this).wrap(div); // 最外层套 div ，其实主要作用还是 class 样式
+      var span = document.createElement("span");
+      $(span).addClass("image-caption");
+      $(span).text(caption); // 加描述
+      $(this).after(span);  // 再套一层描述
+      $(this).wrap(element);  // 最后套 a 标签
+    })
+    $(".md .gallery").find("img").fancybox({
+      selector: '[data-fancybox="images"]',
+      hash: false,
+      loop: false,
+      closeClick: true,
+      helpers: {
+        overlay: {closeClick: true}
+      },
+      buttons: [
+        "zoom",
+        "close"
+      ]
+    });
+  };
+  function SCload_fancybox() {
+    if ($(".md .gallery").find("img").length == 0) return;
+    loadCSS("https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css", document.getElementById("loadcss"));
+    loadScript('https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js', pjax_fancybox)
+  };
+  $(function () {
+    SCload_fancybox();
+  });
+  function Pjax_SCload_fancybox(){
+	if (typeof $.fancybox == "undefined") {
+	 SCload_fancybox();
+    } else {
+	 pjax_fancybox();
+    }
+  }
+  volantis.pjax.push(Pjax_SCload_fancybox)
+  volantis.pjax.send(()=>{
+      if (typeof $.fancybox != "undefined") {
+        $.fancybox.close();    // 关闭弹窗
+      }
+  },'fancybox')
+</script>
+
+
+<!-- internal -->
+
+
+
+
+<script>
+  function loadIssuesJS() {
+    if ($(".md").find(".issues-api").length == 0) return;
+	
+	  loadScript('/js/issues.js');
+	
+  };
+  $(function () {
+    loadIssuesJS();
+  });
+  volantis.pjax.push(()=>{
+	if (typeof IssuesAPI == "undefined") {
+	  loadIssuesJS();
+	}
+  },"IssuesJS")
+</script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@17.1.0/dist/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazyload",
+    threshold: 0
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    lazyLoadInstance.update();
+  });
+  document.addEventListener('pjax:complete', function () {
+    lazyLoadInstance.update();
+  });
+</script>
+
+
+
+
+  
+
+<script>
+  window.FPConfig = {
+	delay: 0,
+	ignoreKeywords: [],
+	maxRPS: 5,
+	hoverDelay: 25
+  };
+</script>
+<script defer src="https://cdn.jsdelivr.net/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+<script src="/js/valine.js"></script>
+
+
+<script>
+  function emoji(path, idx, ext) {
+    return path + "/" + path + "-" + idx + "." + ext;
+  }
+  var emojiMaps = {};
+  for (var i = 1; i <= 54; i++) {
+    emojiMaps['tieba-' + i] = emoji('tieba', i, 'png');
+  }
+  for (var i = 1; i <= 101; i++) {
+    emojiMaps['qq-' + i] = emoji('qq', i, 'gif');
+  }
+  for (var i = 1; i <= 116; i++) {
+    emojiMaps['aru-' + i] = emoji('aru', i, 'gif');
+  }
+  for (var i = 1; i <= 125; i++) {
+    emojiMaps['twemoji-' + i] = emoji('twemoji', i, 'png');
+  }
+  for (var i = 1; i <= 4; i++) {
+    emojiMaps['weibo-' + i] = emoji('weibo', i, 'png');
+  }
+  function pjax_valine() {
+    if(!document.querySelectorAll("#valine_container")[0])return;
+    let pagePlaceholder = pdata.commentPlaceholder || "快来评论吧~";
+    let path = pdata.commentPath;
+    if (path.length == 0) {
+      let defaultPath = '';
+      path = defaultPath || decodeURI(window.location.pathname);
+    }
+    var valine = new Valine();
+    valine.init(Object.assign({"path":null,"placeholder":"快来评论吧~","appId":null,"appKey":null,"meta":["nick","mail","link"],"requiredFields":["nick","mail"],"enableQQ":true,"recordIP":false,"avatar":"robohash","pageSize":10,"lang":"zh-cn","highlight":true,"mathJax":false}, {
+      el: '#valine_container',
+      path: path,
+      placeholder: pagePlaceholder,
+      emojiCDN: 'https://cdn.jsdelivr.net/gh/volantis-x/cdn-emoji/valine/',
+      emojiMaps: emojiMaps,
+    }))
+  }
+  $(function () {
+    pjax_valine();
+  });
+  volantis.pjax.push(pjax_valine);
+</script>
+
+
+
+
+
+
+  
+<script src="/js/app.js"></script>
+
+
+
+<!-- optional -->
+
+  <script>
+const SearchServiceimagePath="https://cdn.jsdelivr.net/gh/volantis-x/cdn-volantis@master/img/";
+const ROOT =  ("/" || "/").endsWith('/') ? ("/" || "/") : ("//" || "/" );
+
+$('.input.u-search-input').one('focus',function(){
+	
+		loadScript('/js/search/hexo.js',setSearchService);
+	
+})
+
+function listenSearch(){
+  
+    customSearch = new HexoSearch({
+      imagePath: SearchServiceimagePath
+    });
+  
+}
+function setSearchService() {
+	listenSearch();
+	
+}
+</script>
+
+
+
+
+
+
+
+
+
+
+
+  <script defer>
+
+  const LCCounter = {
+    app_id: 'u9j57bwJod4EDmXWdxrwuqQT-MdYXbMMI',
+    app_key: 'jfHtEKVE24j0IVCGHbvuFClp',
+    custom_api_server: '',
+
+    // 查询存储的记录
+    getRecord(Counter, url, title) {
+      return new Promise(function (resolve, reject) {
+        Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({url})))
+          .then(resp => resp.json())
+          .then(({results, code, error}) => {
+            if (code === 401) {
+              throw error;
+            }
+            if (results && results.length > 0) {
+              var record = results[0];
+              resolve(record);
+            } else {
+              Counter('post', '/classes/Counter', {url, title: title, times: 0})
+                .then(resp => resp.json())
+                .then((record, error) => {
+                  if (error) {
+                    throw error;
+                  }
+                  resolve(record);
+                }).catch(error => {
+                console.error('Failed to create', error);
+                reject(error);
+              });
+            }
+          }).catch((error) => {
+          console.error('LeanCloud Counter Error:', error);
+          reject(error);
+        });
+      })
+    },
+
+    // 发起自增请求
+    increment(Counter, incrArr) {
+      return new Promise(function (resolve, reject) {
+        Counter('post', '/batch', {
+          "requests": incrArr
+        }).then((res) => {
+          res = res.json();
+          if (res.error) {
+            throw res.error;
+          }
+          resolve(res);
+        }).catch((error) => {
+          console.error('Failed to save visitor count', error);
+          reject(error);
+        });
+      });
+    },
+
+    // 构建自增请求体
+    buildIncrement(objectId) {
+      return {
+        "method": "PUT",
+        "path": `/1.1/classes/Counter/${ objectId }`,
+        "body": {
+          "times": {
+            '__op': 'Increment',
+            'amount': 1
+          }
+        }
+      }
+    },
+
+    // 校验是否为有效的 UV
+    validUV() {
+      var key = 'LeanCloudUVTimestamp';
+      var flag = localStorage.getItem(key);
+      if (flag) {
+        // 距离标记小于 24 小时则不计为 UV
+        if (new Date().getTime() - parseInt(flag) <= 86400000) {
+          return false;
+        }
+      }
+      localStorage.setItem(key, new Date().getTime().toString());
+      return true;
+    },
+
+    addCount(Counter) {
+      var enableIncr = '' === 'true' && window.location.hostname !== 'localhost';
+      enableIncr = true;
+      var getterArr = [];
+      var incrArr = [];
+      // 请求 PV 并自增
+      var pvCtn = document.querySelector('#lc-sv');
+      if (pvCtn || enableIncr) {
+        var pvGetter = this.getRecord(Counter, 'http://qfxiao.me' + '/#lc-sv', 'Visits').then((record) => {
+          incrArr.push(this.buildIncrement(record.objectId))
+          var eles = document.querySelectorAll('#lc-sv #number');
+          if (eles.length > 0) {
+            eles.forEach((el,index,array)=>{
+              el.innerText = record.times + 1;
+              if (pvCtn) {
+                pvCtn.style.display = 'inline';
+              }
+            })
+          }
+        });
+        getterArr.push(pvGetter);
+      }
+
+      // 请求 UV 并自增
+      var uvCtn = document.querySelector('#lc-uv');
+      if (uvCtn || enableIncr) {
+        var uvGetter = this.getRecord(Counter, 'http://qfxiao.me' + '/#lc-uv', 'Visitors').then((record) => {
+          var vuv = this.validUV();
+          vuv && incrArr.push(this.buildIncrement(record.objectId))
+          var eles = document.querySelectorAll('#lc-uv #number');
+          if (eles.length > 0) {
+            eles.forEach((el,index,array)=>{
+              el.innerText = record.times + (vuv ? 1 : 0);
+              if (uvCtn) {
+                uvCtn.style.display = 'inline';
+              }
+            })
+          }
+        });
+        getterArr.push(uvGetter);
+      }
+
+      // 请求文章的浏览数，如果是当前页面就自增
+      var allPV = document.querySelectorAll('#lc-pv');
+      if (allPV.length > 0 || enableIncr) {
+        for (i = 0; i < allPV.length; i++) {
+          let pv = allPV[i];
+          let title = pv.getAttribute('data-title');
+          var url = 'http://qfxiao.me' + pv.getAttribute('data-path');
+          if (url) {
+            var viewGetter = this.getRecord(Counter, url, title).then((record) => {
+              // 是当前页面就自增
+              let curPath = window.location.pathname;
+              if (curPath.includes('index.html')) {
+                curPath = curPath.substring(0, curPath.lastIndexOf('index.html'));
+              }
+              if (pv.getAttribute('data-path') == curPath) {
+                incrArr.push(this.buildIncrement(record.objectId));
+              }
+              if (pv) {
+                var ele = pv.querySelector('#lc-pv #number');
+                if (ele) {
+                  if (pv.getAttribute('data-path') == curPath) {
+                    ele.innerText = (record.times || 0) + 1;
+                  } else {
+                    ele.innerText = record.times || 0;
+                  }
+                  pv.style.display = 'inline';
+                }
+              }
+            });
+            getterArr.push(viewGetter);
+          }
+        }
+      }
+
+      // 如果启动计数自增，批量发起自增请求
+      if (enableIncr) {
+        Promise.all(getterArr).then(() => {
+          incrArr.length > 0 && this.increment(Counter, incrArr);
+        })
+      }
+
+    },
+
+
+    fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${ api_server }/1.1${ url }`, {
+          method,
+          headers: {
+            'X-LC-Id': this.app_id,
+            'X-LC-Key': this.app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      this.addCount(Counter);
+    },
+
+    refreshCounter() {
+      var api_server = this.app_id.slice(-9) !== '-MdYXbMMI' ? this.custom_api_server : `https://${ this.app_id.slice(0, 8).toLowerCase() }.api.lncldglobal.com`;
+      if (api_server) {
+        this.fetchData(api_server);
+      } else {
+        fetch('https://app-router.leancloud.cn/2/route?appId=' + this.app_id)
+          .then(resp => resp.json())
+          .then(({api_server}) => {
+            this.fetchData('https://' + api_server);
+          });
+      }
+    }
+
+  };
+
+  LCCounter.refreshCounter();
+
+  document.addEventListener('pjax:complete', function () {
+    LCCounter.refreshCounter();
+  });
+</script>
+
+
+
+
+  <script>
+const rootElement = document.documentElement;
+const darkModeStorageKey = "user-color-scheme";
+const rootElementDarkModeAttributeName = "data-user-color-scheme";
+
+const setLS = (k, v) => {
+    localStorage.setItem(k, v);
+};
+
+const removeLS = (k) => {
+    localStorage.removeItem(k);
+};
+
+const getLS = (k) => {
+    return localStorage.getItem(k);
+};
+
+const getModeFromCSSMediaQuery = () => {
+  return window.matchMedia("(prefers-color-scheme: dark)").matches
+    ? "dark"
+    : "light";
+};
+
+const resetRootDarkModeAttributeAndLS = () => {
+  rootElement.removeAttribute(rootElementDarkModeAttributeName);
+  removeLS(darkModeStorageKey);
+};
+
+const validColorModeKeys = {
+  dark: true,
+  light: true,
+};
+
+const applyCustomDarkModeSettings = (mode) => {
+  const currentSetting = mode || getLS(darkModeStorageKey);
+
+  if (currentSetting === getModeFromCSSMediaQuery()) {
+    resetRootDarkModeAttributeAndLS();
+  } else if (validColorModeKeys[currentSetting]) {
+    rootElement.setAttribute(rootElementDarkModeAttributeName, currentSetting);
+  } else {
+    resetRootDarkModeAttributeAndLS();
+  }
+};
+
+const invertDarkModeObj = {
+  dark: "light",
+  light: "dark",
+};
+
+/**
+ * get target mode
+ */
+const toggleCustomDarkMode = () => {
+  let currentSetting = getLS(darkModeStorageKey);
+
+  if (validColorModeKeys[currentSetting]) {
+    currentSetting = invertDarkModeObj[currentSetting];
+  } else if (currentSetting === null) {
+    currentSetting = invertDarkModeObj[getModeFromCSSMediaQuery()];
+  } else {
+    return;
+  }
+  setLS(darkModeStorageKey, currentSetting);
+  return currentSetting;
+};
+
+/**
+ * bind click event for toggle button
+ */
+var btn=$("#wrapper .toggle-mode-btn,#rightmenu-wrapper .toggle-mode-btn");
+function bindToggleButton() {
+    btn.on('click',(e) => {
+      const mode = toggleCustomDarkMode();
+      applyCustomDarkModeSettings(mode);
+    });
+}
+
+applyCustomDarkModeSettings();
+document.addEventListener("DOMContentLoaded", bindToggleButton);
+volantis.pjax.push(bindToggleButton);
+volantis.pjax.send(()=>{
+	btn.unbind('click');
+},'toggle-mode-btn-unbind');
+</script>
+
+
+
+
+
+
+
+
+<script>
+function listennSidebarTOC() {
+  const navItems = document.querySelectorAll(".toc li");
+  if (!navItems.length) return;
+  const sections = [...navItems].map((element) => {
+    const link = element.querySelector(".toc-link");
+    const target = document.getElementById(
+      decodeURI(link.getAttribute("href")).replace("#", "")
+    );
+    link.addEventListener("click", (event) => {
+      event.preventDefault();
+      window.scrollTo({
+		top: target.offsetTop + 100,
+		
+		behavior: "smooth"
+		
+	  });
+    });
+    return target;
+  });
+
+  function activateNavByIndex(target) {
+    if (target.classList.contains("active-current")) return;
+
+    document.querySelectorAll(".toc .active").forEach((element) => {
+      element.classList.remove("active", "active-current");
+    });
+    target.classList.add("active", "active-current");
+    let parent = target.parentNode;
+    while (!parent.matches(".toc")) {
+      if (parent.matches("li")) parent.classList.add("active");
+      parent = parent.parentNode;
+    }
+  }
+
+  function findIndex(entries) {
+    let index = 0;
+    let entry = entries[index];
+    if (entry.boundingClientRect.top > 0) {
+      index = sections.indexOf(entry.target);
+      return index === 0 ? 0 : index - 1;
+    }
+    for (; index < entries.length; index++) {
+      if (entries[index].boundingClientRect.top <= 0) {
+        entry = entries[index];
+      } else {
+        return sections.indexOf(entry.target);
+      }
+    }
+    return sections.indexOf(entry.target);
+  }
+
+  function createIntersectionObserver(marginTop) {
+    marginTop = Math.floor(marginTop + 10000);
+    let intersectionObserver = new IntersectionObserver(
+      (entries, observe) => {
+        let scrollHeight = document.documentElement.scrollHeight + 100;
+        if (scrollHeight > marginTop) {
+          observe.disconnect();
+          createIntersectionObserver(scrollHeight);
+          return;
+        }
+        let index = findIndex(entries);
+        activateNavByIndex(navItems[index]);
+      },
+      {
+        rootMargin: marginTop + "px 0px -100% 0px",
+        threshold: 0,
+      }
+    );
+    sections.forEach((element) => {
+      element && intersectionObserver.observe(element);
+    });
+  }
+  createIntersectionObserver(document.documentElement.scrollHeight);
+}
+
+document.addEventListener("DOMContentLoaded", listennSidebarTOC);
+document.addEventListener("pjax:success", listennSidebarTOC);
+</script>
+
+<!-- more -->
+
+ 
+	   
+	    
+
+
+<script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script>
+
+
+<script>
+    var pjax;
+    document.addEventListener('DOMContentLoaded', function () {
+      pjax = new Pjax({
+        elements: 'a[href]:not([href^="#"]):not([href="javascript:void(0)"]):not([pjax-fancybox])',
+        selectors: [
+          "title",
+          
+          "#pjax-container",
+          "#pjax-header-nav-list"
+        ],
+        cacheBust: false,   // url 地址追加时间戳，用以避免浏览器缓存
+        timeout: 5000
+      });
+    });
+
+    document.addEventListener('pjax:send', function (e) {
+      //window.stop(); // 相当于点击了浏览器的停止按钮
+
+      try {
+        var currentUrl = window.location.pathname;
+        var targetUrl = e.triggerElement.href;
+        var banUrl = [""];
+        if (banUrl[0] != "") {
+          banUrl.forEach(item => {
+            if(currentUrl.indexOf(item) != -1 || targetUrl.indexOf(item) != -1) {
+              window.location.href = targetUrl;
+            }
+          });
+        }
+      } catch (error) {}
+
+      window.subData = null; // 移除标题（用于一二级导航栏切换处）
+
+      volantis.$switcher.removeClass('active'); // 关闭移动端激活的搜索框
+      volantis.$header.removeClass('z_search-open'); // 关闭移动端激活的搜索框
+      volantis.$wrapper.removeClass('sub'); // 跳转页面时关闭二级导航
+
+      // 解绑事件 避免重复监听
+      volantis.$topBtn.unbind('click');
+      $('.menu a').unbind('click');
+      $(window).unbind('resize');
+      $(window).unbind('scroll');
+      $(document).unbind('scroll');
+      $(document).unbind('click');
+      $('body').unbind('click');
+	  // 使用 volantis.pjax.send 方法传入pjax:send回调函数 参见layout/_partial/scripts/global.ejs
+	  volantis.pjax.method.send.start();
+    });
+
+    document.addEventListener('pjax:complete', function () {
+      $('.nav-main').find('.list-v').not('.menu-phone').removeAttr("style",""); // 移除小尾巴的移除
+      $('.menu-phone.list-v').removeAttr("style",""); // 移除小尾巴的移除
+      $('script[data-pjax], .pjax-reload script').each(function () {
+        $(this).parent().append($(this).remove());
+      });
+      try{
+		// 使用 volantis.pjax.push 方法传入重载函数 参见layout/_partial/scripts/global.ejs
+		volantis.pjax.method.complete.start();
+      } catch (e) {
+        console.log(e);
+      }
+    });
+
+    document.addEventListener('pjax:error', function (e) {
+	  // 使用 volantis.pjax.error 方法传入pjax:error回调函数 参见layout/_partial/scripts/global.ejs
+	  volantis.pjax.method.error.start();
+      window.location.href = e.triggerElement.href;
+    });
+</script>
+ 
+	  
+    </div>
+  </body>
+</html>

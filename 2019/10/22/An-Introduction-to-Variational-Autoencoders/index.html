@@ -1,40 +1,1707 @@
-extends ./_layout.pug
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head hexo-theme='https://github.com/volantis-x/hexo-theme-volantis/tree/4.3.1'>
+  <meta charset="utf-8">
+  <!-- SEO相关 -->
+  
+    
+  
+  <!-- 渲染优化 -->
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  <link rel='dns-prefetch' href='https://cdn.jsdelivr.net'>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  <link rel="preload" href="/css/first.css" as="style">
+  
 
-block content
-  // Just used to judge whether it is an article page
-  div#is-post
-  div.post
-    include ./_mixins/post-header.pug
-    include ./_mixins/gallery.pug
+  <!-- 页面元数据 -->
+  
+  <title>An Introduction to Variational Autoencoders - Hanzawa の 部屋</title>
+  
+    <meta name="keywords" content="Deep Learning,Variational Inference,VAE">
+  
 
-    +postHeader(page)
+  
 
-    div.post-body
-      if page.photos && page.photos.length
-        +gallery(page)
-      != page.content
+  <!-- feed -->
+  
+    <link rel="alternate" href="/atom.xml" title="Hanzawa の 部屋" type="application/atom+xml">
+  
 
-    footer.post-footer
-      if theme.post_widget.end_text.enable
-        div.post-ending.ending
-          div.ending__text= __('post.end')
+  <!-- import meta -->
+  
 
-      if page.copyright === true || (isShowCC && theme.creative_commons.post)
-        include ./_partials/widgets/copyright.pug
+  <!-- link -->
+  
 
-      if theme.post_widget.tags
-        if page.tags && page.tags.length > 0
-          div.post-tags
-            each tag in page.tags.data
-              span.post-tags-item
-                span.post-tags-item__icon
-                  i(class=theme.icon.post_tags)
-                a.post-tags-item__link(href=tag.permalink)= tag.name
+  <!-- import link -->
+  
 
-      if theme.post_widget.share.enable
-        include ./_partials/widgets/share.pug
+  
+    
+<link rel="stylesheet" href="/css/first.css">
 
-      if isShowReward
-        include ./_partials/widgets/reward.pug
+  
 
-      include ./_partials/widgets/paginator.pug
+  
+  <link rel="stylesheet" href="/css/style.css" media="print" onload="this.media='all';this.onload=null">
+  <noscript><link rel="stylesheet" href="/css/style.css"></noscript>
+  
+
+  <script id="loadcss"></script>
+
+  
+<script>
+if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMode))
+    document.write(
+	'<style>'+
+		'html{'+
+			'overflow-x: hidden !important;'+
+			'overflow-y: hidden !important;'+
+		'}'+
+		'.kill-ie{'+
+			'text-align:center;'+
+			'height: 100%;'+
+			'margin-top: 15%;'+
+			'margin-bottom: 5500%;'+
+		'}'+
+	'</style>'+
+    '<div class="kill-ie">'+
+        '<h1><b>抱歉，您的浏览器无法访问本站</b></h1>'+
+        '<h3>微软已经于2016年终止了对 Internet Explorer (IE) 10 及更早版本的支持，<br/>'+
+        '继续使用存在极大的安全隐患，请使用当代主流的浏览器进行访问。</h3><br/>'+
+        '<a target="_blank" rel="noopener" href="https://www.microsoft.com/zh-cn/WindowsForBusiness/End-of-IE-support"><strong>了解详情 ></strong></a>'+
+    '</div>');
+</script>
+
+
+<noscript>
+	<style>
+		html{
+			overflow-x: hidden !important;
+			overflow-y: hidden !important;
+		}
+		.kill-noscript{
+			text-align:center;
+			height: 100%;
+			margin-top: 15%;
+			margin-bottom: 5500%;
+		}
+	</style>
+    <div class="kill-noscript">
+        <h1><b>抱歉，您的浏览器无法访问本站</b></h1>
+        <h3>本页面需要浏览器支持（启用）JavaScript</h3><br/>
+        <a target="_blank" rel="noopener" href="https://www.baidu.com/s?wd=启用JavaScript"><strong>了解详情 ></strong></a>
+    </div>
+</noscript>
+
+</head>
+
+  <body>
+    
+
+<header id="l_header" class="l_header auto shadow blur show" style='opacity: 0' >
+  <div class='container'>
+  <div id='wrapper'>
+    <div class='nav-sub'>
+      <p class="title"></p>
+      <ul class='switcher nav-list-h m-phone' id="pjax-header-nav-list">
+        <li><a id="s-comment" class="fas fa-comments fa-fw" target="_self" href='javascript:void(0)'></a></li>
+        
+          <li><a id="s-toc" class="s-toc fas fa-list fa-fw" target="_self" href='javascript:void(0)'></a></li>
+        
+      </ul>
+    </div>
+		<div class="nav-main">
+      
+        
+        <a class="title flat-box" target="_self" href='/'>
+          
+            <img no-lazy class='logo' src='https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/blog/Logo-NavBar@3x.png'/>
+          
+          
+          
+        </a>
+      
+
+			<div class='menu navigation'>
+				<ul class='nav-list-h m-pc'>
+          
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/
+                  
+                  
+                  
+                    id="home"
+                  >
+                  <i class='fas fa-rss fa-fw'></i>博客
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/categories/
+                  
+                  
+                  
+                    id="categories"
+                  >
+                  <i class='fas fa-folder-open fa-fw'></i>分类
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/tags/
+                  
+                  
+                  
+                    id="tags"
+                  >
+                  <i class='fas fa-tags fa-fw'></i>标签
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/archives/
+                  
+                  
+                  
+                    id="archives"
+                  >
+                  <i class='fas fa-archive fa-fw'></i>归档
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/friends/
+                  
+                  
+                  
+                    id="friends"
+                  >
+                  <i class='fas fa-link fa-fw'></i>友链
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/about/
+                  
+                  
+                  
+                    id="about"
+                  >
+                  <i class='fas fa-info-circle fa-fw'></i>关于
+                </a>
+                
+              </li>
+            
+          
+          
+				</ul>
+			</div>
+
+      <div class="m_search">
+        <form name="searchform" class="form u-search-form">
+          <i class="icon fas fa-search fa-fw"></i>
+          <input type="text" class="input u-search-input" placeholder="Search..." />
+        </form>
+      </div>
+
+			<ul class='switcher nav-list-h m-phone'>
+				
+					<li><a class="s-search fas fa-search fa-fw" target="_self" href='javascript:void(0)'></a></li>
+				
+				<li>
+          <a class="s-menu fas fa-bars fa-fw" target="_self" href='javascript:void(0)'></a>
+          <ul class="menu-phone list-v navigation white-box">
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/
+                  
+                  
+                  
+                    id="home"
+                  >
+                  <i class='fas fa-rss fa-fw'></i>博客
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/categories/
+                  
+                  
+                  
+                    id="categories"
+                  >
+                  <i class='fas fa-folder-open fa-fw'></i>分类
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/tags/
+                  
+                  
+                  
+                    id="tags"
+                  >
+                  <i class='fas fa-tags fa-fw'></i>标签
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/archives/
+                  
+                  
+                  
+                    id="archives"
+                  >
+                  <i class='fas fa-archive fa-fw'></i>归档
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/friends/
+                  
+                  
+                  
+                    id="friends"
+                  >
+                  <i class='fas fa-link fa-fw'></i>友链
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/about/
+                  
+                  
+                  
+                    id="about"
+                  >
+                  <i class='fas fa-info-circle fa-fw'></i>关于
+                </a>
+                
+              </li>
+            
+          
+            
+          </ul>
+        </li>
+			</ul>
+		</div>
+	</div>
+  </div>
+</header>
+
+    <div id="l_body">
+      <div id="l_cover">
+  
+    
+        <div id="full" class='cover-wrapper post dock' style="display: none;">
+          
+            <div class='cover-bg lazyload placeholder' data-bg="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture"></div>
+          
+          <div class='cover-body'>
+  <div class='top'>
+    
+    
+      <p class="title">Volantis</p>
+    
+    
+  </div>
+  <div class='bottom'>
+    <div class='menu navigation'>
+      <div class='list-h'>
+        
+          
+            <a href="/v4/getting-started/"
+              
+              
+              id="v4getting-started">
+              <img src='https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f5c3.svg'><p>文档</p>
+            </a>
+          
+            <a href="/faqs/"
+              
+              
+              id="faqs">
+              <img src='https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f516.svg'><p>帮助</p>
+            </a>
+          
+            <a href="/examples/"
+              
+              
+              id="examples">
+              <img src='https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f396.svg'><p>示例</p>
+            </a>
+          
+            <a href="/contributors/"
+              
+              
+              id="contributors">
+              <img src='https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f389.svg'><p>社区</p>
+            </a>
+          
+            <a href="/archives/"
+              
+              
+              id="archives">
+              <img src='https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f4f0.svg'><p>博客</p>
+            </a>
+          
+            <a target="_blank" rel="noopener" href="https://github.com/volantis-x/hexo-theme-volantis/"
+              
+              
+              id="https:githubcomvolantis-xhexo-theme-volantis">
+              <img src='https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f9ec.svg'><p>源码</p>
+            </a>
+          
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+          <div id="scroll-down" style="display: none;"><i class="fa fa-chevron-down scroll-down-effects"></i></div>
+        </div>
+    
+  
+  </div>
+
+      <div id="safearea">
+        <div class="body-wrapper" id="pjax-container">
+          
+
+<div class='l_main'>
+  <article class="article post white-box reveal md shadow article-type-post" id="post" itemscope itemprop="blogPost">
+  
+
+
+  
+  <div class="article-meta" id="top">
+    
+    
+    
+      <h1 class="title">
+        An Introduction to Variational Autoencoders
+      </h1>
+      <div class='new-meta-box'>
+        
+          
+            
+<div class='new-meta-item author'>
+  <a class='author' href="/" rel="nofollow">
+    <img no-lazy src="">
+    <p>请设置文章作者</p>
+  </a>
+</div>
+
+          
+        
+          
+            
+  <div class='new-meta-item category'>
+    <a class='notlink'>
+      <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>
+      <a class="category-link" href="/categories/Research/">Research</a><span class="sep"></span><a class="category-link" href="/categories/Research/Tutorial/">Tutorial</a>
+    </a>
+  </div>
+
+
+          
+        
+          
+            <div class="new-meta-item date">
+  <a class='notlink'>
+    <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>
+    <p>发布于：2019年10月22日</p>
+  </a>
+</div>
+
+          
+        
+          
+            
+  <div class="new-meta-item browse leancloud">
+    <a class='notlink'>
+      
+      <div id="lc-pv" data-title="An Introduction to Variational Autoencoders" data-path="/2019/10/22/An-Introduction-to-Variational-Autoencoders/">
+        <i class="fas fa-eye fa-fw" aria-hidden="true"></i>
+        <span id='number'><i class="fas fa-circle-notch fa-spin fa-fw" aria-hidden="true"></i></span>
+        次浏览
+      </div>
+    </a>
+  </div>
+
+
+          
+        
+      </div>
+    
+  </div>
+
+
+  
+  
+  <h1 id="deep-generative-models">Deep Generative Models</h1>
+<p>生成模型是指一系列用于随机生成可观测数据的模型。假设在一个高维空间<span class="math inline">\(\mathcal{X}\)</span>中，存在一个随机向量<span class="math inline">\(\mathbf{X}\)</span>服从一个未知的分布<span class="math inline">\(p_r(x),x\in \mathcal{X}\)</span>。生成模型就是根据一些可观测的样本<span class="math inline">\(x^{(1)},x^{(2)},\cdots,x^{(N)}\)</span>来学习一个参数化的模型<span class="math inline">\(p_\theta(x)\)</span>来近似未知分布<span class="math inline">\(p_r(x)\)</span>。</p>
+<p>生成模型主要用于密度估计和样本生成。</p>
+<hr />
+<p>密度估计即给定一组数据<span class="math inline">\(\mathcal{D}=\{x^{(i)}\},1\leq i\leq N\)</span>，假设他们都是从相同的概率密度函数<span class="math inline">\(p_r(x)\)</span>独立产生的。密度估计就是根据数据集<span class="math inline">\(\mathcal{D}\)</span>来估计其概率密度函数<span class="math inline">\(p_r(x)\)</span>。</p>
+<p>如果将生成模型用于监督学习，那么就是输出标签的条件概率分布<span class="math inline">\(p(y|x)\)</span>，根据贝叶斯公式：</p>
+<p><span class="math display">\[p(y|x)=\frac{p(x,y)}{\sum_y p(x,y)}\]</span></p>
+<p>问题就变为了联合概率<span class="math inline">\(p(x,y)\)</span>的密度估计问题。</p>
+<hr />
+<p>样本生成即根据给定的概率分布<span class="math inline">\(p_\theta(x)\)</span>生成一些服从这个分布的样本，即采样。在含隐变量的生成模型中，生成<span class="math inline">\(x\)</span>的过程一般包含两步：</p>
+<ol type="1">
+<li>根据隐变量的分布<span class="math inline">\(p_\theta(z)\)</span>采样得到<span class="math inline">\(z\)</span>；</li>
+<li>根据条件分布<span class="math inline">\(p_\theta(x|z;\theta)\)</span>进行采样得到<span class="math inline">\(x\)</span>。</li>
+</ol>
+<p>所以在生成模型中的重点是估计条件分布<span class="math inline">\(p(x|z;\theta)\)</span>。</p>
+<h1 id="parameter-estimation-for-hidden-variable-with-em-algorithm">Parameter Estimation for Hidden Variable with EM Algorithm</h1>
+<p>如果图模型中存在隐变量，就需要使用EM算法进行参数估计。</p>
+<p>在一个包含隐变量的图模型中，令<span class="math inline">\(\mathbf{X}\)</span>为可观测变量集合，<span class="math inline">\(\mathbf{Z}\)</span>为隐变量集合，则一个样本<span class="math inline">\(x\)</span>的边际似然函数为：</p>
+<p><span class="math display">\[p(x;\theta)=\sum_z p(x,z;\theta)\]</span></p>
+<p>给定包含<span class="math inline">\(N\)</span>个训练样本的训练集<span class="math inline">\(\mathcal{D}=\{x^{(n)}\},1\leq i\leq N\)</span>，则训练集的对数边际似然为：</p>
+<p><span class="math display">\[\begin{align}\mathcal{L}(\mathcal{D};\theta)&amp;=\frac{1}{N}\sum_{n=1}^N \log p(x^{(n)};\theta)\\&amp;=\frac{1}{N}\sum_{n=1}^N \log \sum_z p(x^{(n)},z;\theta)\end{align}\]</span></p>
+<hr />
+<p>这时，只要最大化整个训练集的对数边际似然<span class="math inline">\(\mathcal{L}(\mathcal{D};\theta)\)</span>，即可估计出最优的参数<span class="math inline">\(\theta^*\)</span>。不过在计算梯度的时候，需要在对数函数内部进行求和或积分计算。为了更好的计算<span class="math inline">\(\log p(x;\theta)\)</span>，我们引入一个额外的变分函数<span class="math inline">\(q(z)\)</span>，<span class="math inline">\(q(z)\)</span>为定义在隐变量<span class="math inline">\(z\)</span>上的分布。样本<span class="math inline">\(x\)</span>的对数边际似然函数为：</p>
+<p><span class="math display">\[\begin{align}\log p(x;\theta)&amp;=\log \sum_z q(z)\frac{p(x,z;\theta)}{q(z)}\\&amp;\geq\sum_z q(z)\log \frac{p(x,z;\theta)}{q(z)}\\&amp;\triangleq ELBO(q,x;\theta)\end{align}\]</span></p>
+<p>其中<span class="math inline">\(ELBO(q,x;\theta)\)</span>为对数边际似然函数<span class="math inline">\(\log p(x;\theta)\)</span>的下界，称为证据下界。公式中使用了Jensen不等式(即对于凹函数<span class="math inline">\(g\)</span>，有<span class="math inline">\(g(\mathbb{E}[x])\geq\mathbb{E}[g(X)]\)</span>)。在这里，<span class="math inline">\(\frac{p(x,z;\theta)}{q(z)}\)</span>可视为<span class="math inline">\(q(z)\)</span>的函数，记为<span class="math inline">\(f(q(z))\)</span>，那么<span class="math inline">\(f(q(z))\)</span>的期望即<span class="math inline">\(\mathbb{E}[f(q(z))]=\sum_z q(z)f(q(z))=\sum_z q(z)\frac{p(x,z;\theta)}{q(z)}\)</span>。而根据Jensen不等式，有<span class="math inline">\(g(\mathbb{E}[f(q(z))])\geq\mathbb{E}[g(f(q(z)))]\Leftrightarrow g(\sum_z q(z)\frac{p(x,z;\theta)}{q(z)})\geq \sum_z q(z)g(\frac{p(x,z;\theta)}{q(z)})\)</span>，在这里<span class="math inline">\(g\)</span>就是对数函数。</p>
+<hr />
+<p>根据Jensen不等式取等的条件：<span class="math inline">\(\frac{p(x,z;\theta)}{q(z)}=c\)</span>，<span class="math inline">\(c\)</span>为常数，有：</p>
+<p><span class="math display">\[\begin{align}\sum_z p(x,z;\theta)&amp;=c\sum_z q(z)\\\Leftrightarrow\sum_z p(x,z;\theta)&amp;=c\cdot1\end{align}\]</span></p>
+<p>因此：</p>
+<p><span class="math display">\[\begin{align}q(z)&amp;=\frac{p(x,z;\theta)}{\sum_z p(x,z;\theta)}\\&amp;=\frac{p(x,z;\theta)}{p(x;\theta)}\\&amp;=p(z|x;\theta)\end{align}\]</span></p>
+<p>所以，当且仅当<span class="math inline">\(q(z)=p(z|x;\theta)\)</span>时，<span class="math inline">\(\log p(x;\theta)=ELBO(q,x;\theta)\)</span>。</p>
+<hr />
+<p>于是最大化对数边际似然函数<span class="math inline">\(\log p(x;\theta)\)</span>的过程可以分解为两个步骤：</p>
+<ol type="1">
+<li>先找到近似分布<span class="math inline">\(q(z)\)</span>使得<span class="math inline">\(\log p(x;\theta)=ELBO(q,x;\theta)\)</span>；</li>
+<li>再寻找参数<span class="math inline">\(\theta\)</span>最大化<span class="math inline">\(ELBO(q,x;\theta)\)</span>。</li>
+</ol>
+<p>这就是期望最大化(Expectation-Maximum,EM)算法。</p>
+<hr />
+<p>EM算法通过迭代的方法，不断重复直到收敛到某个局部最优解。在第<span class="math inline">\(t\)</span>步更新时，E步和M步分别为：</p>
+<ol type="1">
+<li><p>E步：固定参数<span class="math inline">\(\theta_t\)</span>，找到一个分布使<span class="math inline">\(ELBO(q,x;\theta_t)\)</span>最大，即等于<span class="math inline">\(\log p(x;\theta_t)\)</span>：<span class="math inline">\(q_{t+1}(z)=\text{arg}_q \max ELBO(q,x;\theta_t)\)</span>；</p></li>
+<li><p>M步：固定<span class="math inline">\(q_{t+1}(z)\)</span>，找到一组参数使得证据下界最大，即：<span class="math inline">\(\theta_{t+1}=\text{arg}_\theta\max ELBO(q_{t+1},x;\theta)\)</span>。</p></li>
+</ol>
+<hr />
+<p>对数边际似然也可以通过信息论的视角来进行分解：</p>
+<p><span class="math display">\[\begin{align}\log p(x;\theta)&amp;=\sum_z q(z)\log p(x;\theta)\\&amp;=\sum_z q(z)(\log p(x,z;\theta)-\log p(z|x;\theta))\\&amp;=\sum_z q(z)\log\frac{p(x,z;\theta)}{q(z)}-\sum_z q(z)\log\frac{p(z|x;\theta)}{q(z)}\\&amp;=ELBO(q,x;\theta)+D_{KL}(q(z)\parallel p(z|x;\theta))\end{align}\]</span></p>
+<p>其中<span class="math inline">\(D_{KL}(q(z)\parallel p(z|x;\theta))\)</span></p>
+<h1 id="generative-model-with-hidden-variable">Generative Model with Hidden Variable</h1>
+<p>假设一个生成模型包含不可观测的隐变量，其中可观测变量<span class="math inline">\(x\)</span>为一个高维空间中的随机向量，而不可观测的隐变量<span class="math inline">\(z\)</span>为一个相对低维空间中的随机向量。</p>
+<p>这个生成模型的联合概率密度函数可以表达为：</p>
+<p><span class="math display">\[p(x,z;\theta)=p(x|z;\theta)p(z;\theta)\]</span></p>
+<p>其中<span class="math inline">\(p(z;\theta)\)</span>为隐变量<span class="math inline">\(z\)</span>的先验概率分布；<span class="math inline">\(p(x|z;\theta)\)</span>为已知<span class="math inline">\(z\)</span>条件下<span class="math inline">\(x\)</span>的概率分布。通常情况下，我们可以假设<span class="math inline">\(p(z;\theta)\)</span>和<span class="math inline">\(p(x|z;\theta)\)</span>服从某种带参的分布族，其形式已知，而参数可以通过最大似然来进行估计。</p>
+<p>给定一个样本<span class="math inline">\(x\)</span>，其对数边际似然<span class="math inline">\(\log p(x;\theta)\)</span>可以分解为：</p>
+<p><span class="math display">\[\log p(x;\theta)=ELBO(q,x;\theta,\phi)+D_{KL}(q(z;\phi)\parallel p(z|x;\theta))\]</span></p>
+<p>其中<span class="math inline">\(q(z;\phi)\)</span>为额外引入的变分密度函数，<span class="math inline">\(ELBO(q,x;\theta,\phi)\)</span>为证据下界：</p>
+<p><span class="math display">\[ELBO(q,x;\theta,\phi)=\mathbb{E}_{z\sim q(z;\phi)}[\log{\frac{p(x,z;\theta)}{q(z;\phi)}}]\]</span></p>
+<p>最大化<span class="math inline">\(\log p(x;\theta)\)</span>可以用EM算法来求解：</p>
+<ul>
+<li><strong>E-step:</strong> 寻找一个密度函数<span class="math inline">\(q(z;\phi)\)</span>使其等于或接近于后验密度函数<span class="math inline">\(p(z|x;\theta)\)</span>;</li>
+<li><strong>M-step:</strong> 保持<span class="math inline">\(q(z;\phi)\)</span>固定，寻找<span class="math inline">\(\theta\)</span>来最大化<span class="math inline">\(ELBO(q,x;\theta,\phi)\)</span>。</li>
+</ul>
+<p>在EM算法的每次迭代中，理论上最优的<span class="math inline">\(q(z;\phi)\)</span>为隐变量的后验概率密度函数<span class="math inline">\(p(z|x;\theta)\)</span>：</p>
+<p><span class="math display">\[p(z|x;\theta)=\frac{p(x|z;\theta)p(z;\theta)}{\int_z p(x|z;\theta)p(z;\theta)\text{d}z}\]</span></p>
+<p>后验密度函数<span class="math inline">\(p(z|x;\theta)\)</span>的计算是一个统计推断的问题，在一般情况下<span class="math inline">\(p(x|z;\theta)\)</span>也比较难以计算。</p>
+<h1 id="variational-autoencoder">Variational Autoencoder</h1>
+<p>变分自编码器(Variational Autoencoder, VAE)的主要思想是利用神经网络来分别建模两个复杂的条件概率密度函数：</p>
+<ol type="1">
+<li>用神经网络来产生变分分布<span class="math inline">\(q(z;\phi)\)</span>，称为推断网络。推断网络的输入为<span class="math inline">\(x\)</span>，输出为变分分布<span class="math inline">\(q(z|x;\phi)\)</span>；</li>
+<li>用神经网络来产生概率分布<span class="math inline">\(p(x|z;\theta)\)</span>，称为生成网络。生成网络的输入为<span class="math inline">\(z\)</span>，输出为概率分布<span class="math inline">\(p(x|z;\theta)\)</span>。</li>
+</ol>
+<p><img src="https://i.loli.net/2020/06/24/B1d9UtTzNfjG6e2.png" class="lazyload" data-srcset="https://i.loli.net/2020/06/24/B1d9UtTzNfjG6e2.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" /></p>
+<p>VAE的图模型如下图所示：</p>
+<p><img src="https://i.loli.net/2020/06/24/GAhy281seQ3tbZT.png" class="lazyload" data-srcset="https://i.loli.net/2020/06/24/GAhy281seQ3tbZT.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" /></p>
+<h2 id="variational-network">Variational Network</h2>
+<p>假设<span class="math inline">\(q(z|x;\phi)\)</span>是服从对角化协方差的高斯分布：</p>
+<p><span class="math display">\[q(z|x;\phi)=\mathcal{N}(z;\mu_I,\sigma^2_I I)\]</span></p>
+<p>其中<span class="math inline">\(\mu_I\)</span>和<span class="math inline">\(\sigma_I^2\)</span>是高斯分布的均值和方差，可以通过推断网络<span class="math inline">\(f_I(x;\phi)\)</span>来预测：</p>
+<p><span class="math display">\[
+\left[\begin{matrix}\mu_I\\\sigma_I\end{matrix}\right]=f_I(x;\phi)
+\]</span> 推断网络<span class="math inline">\(f_I(x;\phi)\)</span>可以是一般的全连接网络或卷积网络，比如一个两层的神经网络：</p>
+<p><span class="math display">\[\begin{align}h&amp;=\sigma(W^{(1)}x+b^{(1)})\\\mu_I&amp;=W^{(2)}h+b^{(2)}\\\sigma_I&amp;=\text{softplus}(W^{(3)}h+b^{(3)})\end{align}\]</span></p>
+<p>其中所有网络参数<span class="math inline">\(\{W^{(1)},W^{(2)},W^{(3)},b^{(1)},b^{(2)},b^{(3)}\}\)</span>即对应了变分参数<span class="math inline">\(\phi\)</span>。</p>
+<hr />
+<p>推断网络的目标是使得<span class="math inline">\(q(z|x;\phi)\)</span>来尽可能接近真实的后验<span class="math inline">\(p(z|x;\theta)\)</span>，需要找到变分参数<span class="math inline">\(\phi^*\)</span>来最小化两个分布的KL散度：</p>
+<p><span class="math display">\[\phi^*=\text{arg}_\phi\min{D_{KL}(q(z|x;\phi)\parallel p(z|x;\theta))}\]</span></p>
+<p>由于<span class="math inline">\(p(z|x;\theta)\)</span>未知，故KL散度无法直接计算，不过由于<span class="math inline">\(D_{KL}(q(z|x;\phi)\parallel p(z|x;\theta))=\log p(x;\theta)-ELBO(q,x;\theta,\phi)\)</span>，所以可以直接最大化证据下界，有：</p>
+<p><span class="math display">\[\phi^*=\text{arg}_\phi\max{ELBO(q,x;\theta,\phi)}\]</span></p>
+<h2 id="generative-network">Generative Network</h2>
+<p>生成模型的联合分布可以分解为两部分：隐变量<span class="math inline">\(z\)</span>的先验分布<span class="math inline">\(p(z;\theta)\)</span>和条件概率分布<span class="math inline">\(p(x|z;\theta)\)</span>。为简单起见，一般假设隐变量<span class="math inline">\(z\)</span>的先验分布为标准正态分布<span class="math inline">\(\mathcal{N}(z|0,I)\)</span>，隐变量每一维之间都是独立的。条件概率分布<span class="math inline">\(p(x|z;\theta)\)</span>可以通过生成网络来建模，我们同样用参数化的分布族来表示条件概率分布<span class="math inline">\(p(x|z;\theta)\)</span>，这些分布族的函数可以用生成网络计算得到。根据变量<span class="math inline">\(x\)</span>的类型不同，可以假设<span class="math inline">\(p(x|z;\theta)\)</span>服从不同的分布族。如果<span class="math inline">\(x\in\{0,1\}^d\)</span>是<span class="math inline">\(d\)</span>维的二值向量，可以假设<span class="math inline">\(\log p(x|z;\theta)\)</span>服从多变量的伯努利分布，即：</p>
+<p><span class="math display">\[\begin{align}p(x|z;\theta)&amp;=\prod\limits_{i=1}^d p(x_i|z;\theta)\\&amp;=\prod\limits_{i=1}^d \gamma_i^{x_i}(1-\gamma_i)^{(1-x_i)}\end{align}\]</span></p>
+<p>如果<span class="math inline">\(x\in\mathbb{R}^d\)</span>是<span class="math inline">\(d\)</span>维的连续向量，可以假设<span class="math inline">\(p(x|z;\theta)\)</span>服从对角化协方差的高斯分布，即：</p>
+<p><span class="math display">\[p(x|z;\theta)=\mathcal{N}(x;\mu_G,\sigma_G^2 I)\]</span></p>
+<hr />
+<p>生成网络的目标是找到一组<span class="math inline">\(\theta^*\)</span>最大化证据下界<span class="math inline">\(ELBO(q,x;\theta,\phi)\)</span>：</p>
+<p><span class="math display">\[\theta^*=\text{arg}_\theta\max ELBO(q,x;\theta,\phi)\]</span></p>
+<h2 id="model-combination">Model Combination</h2>
+<p>推断网络和生成网络的目标都是最大化证据下界因此总的目标函数为：</p>
+<p><span class="math display">\[\begin{align}\max_{\theta,\phi}ELBO(q,x;\theta,\phi)&amp;=\max_{\theta,\phi}\mathbb{E}_{z\sim q(z;\phi)}[\log\frac{p(x|z;\theta)p(z;\theta)}{q(z;\theta)}]\\&amp;=\max_{\theta,\phi}\mathbb{E}_{z\sim q(z|x;\phi)}[\log p(x|z;\theta)]-D_{KL}(q(z|x;\phi)\parallel p(z;\theta))\end{align}\]</span></p>
+<p>其中先验分布<span class="math inline">\(p(z;\theta)=\mathcal{N}(z|0,I)\)</span>。</p>
+<p>公式中<span class="math inline">\(\mathbb{E}_{z\sim q(z|x;\phi)}[\log p(x|z;\theta)]\)</span>一般通过采样的方式进行计算，最后取平均值。</p>
+<h2 id="model-training">Model Training</h2>
+<p>给定数据集<span class="math inline">\(\mathcal{D}\)</span>，包含<span class="math inline">\(N\)</span>个从未知数据分布中抽取的独立同分布样本<span class="math inline">\(x^{(1)},x^{(2)},\cdots,x^{(N)}\)</span>。变分自编码器的目标函数为：</p>
+<p><span class="math display">\[\mathcal{J}(\phi,\theta|\mathcal{D})=\sum\limits_{n=1}^N(\frac{1}{M}\sum\limits_{m=1}^M\log p(x^{(n)}|z^{(n,m)};\theta)-D_{KL}(q(z|x^{(n)};\phi)\parallel\mathcal{N}(z;0,I)))\]</span></p>
+<p>如果采用随机梯度下降法，每次从数据集中采一个样本<span class="math inline">\(x\)</span>，然后根据<span class="math inline">\(q(z|x;\phi)\)</span>采一个隐变量<span class="math inline">\(z\)</span>，则目标函数变为：</p>
+<p><span class="math display">\[\mathcal{J}(\phi,\theta|x)=\log p(x|z;\theta)-D_{KL}(q(z|x;\phi)\parallel\mathcal{N}(z;0,I))\]</span></p>
+<p>假设<span class="math inline">\(q(z|x;\phi)\)</span>是正态分布，KL散度可直接算出：</p>
+<p><span class="math display">\[D_{KL}(\mathcal{N}(\mu_1,\Sigma_1)\parallel\mathcal(\mu_2,\Sigma_2))\\=\frac{1}{2}(\text{tr}(\sigma_I^2 I)+\mu_I^T\mu_I-d-\log(|\sigma_I^2 I|))\]</span></p>
+<hr />
+<p>再参数化是将一个参数为<span class="math inline">\(u\)</span>的函数<span class="math inline">\(f(u)\)</span>，通过一个函数<span class="math inline">\(u=g(v)\)</span>，转换为参数为<span class="math inline">\(v\)</span>的函数<span class="math inline">\(\hat{f}(v)=f(g(v))\)</span>。在变分自编码器中，一个问题是如何求随机变量<span class="math inline">\(z\)</span>关于<span class="math inline">\(\phi\)</span>的导数。但由于是采样的方式，无法直接刻画<span class="math inline">\(z\)</span>和<span class="math inline">\(\phi\)</span>之间的函数关系，因此也无法计算导数。</p>
+<p>如果<span class="math inline">\(z\sim q(z|x;\phi)\)</span>的随机性独立于参数<span class="math inline">\(\phi\)</span>，我们可以通过再参数化的方法来计算导数。假设<span class="math inline">\(q(z|x;\phi)\)</span>为正态分布<span class="math inline">\(\mathcal{N}(\mu_I,\sigma^2_I I)\)</span>，其中<span class="math inline">\(\mu_I\)</span>和<span class="math inline">\(\sigma_I\)</span>是推断网络<span class="math inline">\(f_I(x;\phi)\)</span>的输出。我们可以通过下面的方式采样<span class="math inline">\(z\)</span>：</p>
+<p><span class="math display">\[z=\mu_I+\sigma_I\odot \varepsilon\]</span></p>
+<p>其中<span class="math inline">\(\varepsilon\sim\mathcal{N}(0,I)\)</span>。这样<span class="math inline">\(z\)</span>和<span class="math inline">\(\mu_I,\sigma_I\)</span>的关系从采样关系变为函数关系。</p>
+<hr />
+<p>如果进一步假设<span class="math inline">\(p(x|z;\theta)\)</span>服从高斯分布<span class="math inline">\(\mathcal{N}(x|\mu_G,I)\)</span>，其中<span class="math inline">\(\mu_G=f_G(z;\theta)\)</span>是生成网络的输出，则目标函数可以简化为：</p>
+<p><span class="math display">\[\mathcal{J}(\phi,\theta|x)=-\parallel x-\mu_G\parallel^2+D_{KL}(\mathcal{N}(\mu_I,\sigma_I)\parallel\mathcal{N}(0,I))\]</span></p>
+<p>其中第一项可以近似看作是输入<span class="math inline">\(x\)</span>的重构正确性，第二项可以看作是正则化项。</p>
+
+  
+  
+    
+    <div class='footer'>
+      
+      
+      
+        <div class='copyright'>
+          <blockquote>
+            
+              
+                <p>博客内容遵循 署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</p>
+
+              
+            
+              
+                <p>本文永久链接是：<a href=http://qfxiao.me/2019/10/22/An-Introduction-to-Variational-Autoencoders/>http://qfxiao.me/2019/10/22/An-Introduction-to-Variational-Autoencoders/</a></p>
+              
+            
+          </blockquote>
+        </div>
+      
+      
+    </div>
+  
+  
+    
+
+
+  <div class='article-meta' id="bottom">
+    <div class='new-meta-box'>
+      
+        
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-06-24T16:16:51+08:00">
+  <a class='notlink'>
+    <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
+    <p>更新于：2020年6月24日</p>
+  </a>
+</div>
+
+        
+      
+        
+          
+  
+  <div class="new-meta-item meta-tags"><a class="tag" href="/tags/Deep-Learning/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>Deep Learning</p></a></div> <div class="new-meta-item meta-tags"><a class="tag" href="/tags/Variational-Inference/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>Variational Inference</p></a></div> <div class="new-meta-item meta-tags"><a class="tag" href="/tags/VAE/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>VAE</p></a></div>
+
+
+        
+      
+        
+          
+  <div class="new-meta-item share -mob-share-list">
+  <div class="-mob-share-list share-body">
+    
+      
+        <a class="-mob-share-qq" title="" rel="external nofollow noopener noreferrer noopener"
+          
+          target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://qfxiao.me/2019/10/22/An-Introduction-to-Variational-Autoencoders/&title=An Introduction to Variational Autoencoders - Hanzawa の 部屋&summary="
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qq.png" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qq.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-qzone" title="" rel="external nofollow noopener noreferrer noopener"
+          
+          target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=http://qfxiao.me/2019/10/22/An-Introduction-to-Variational-Autoencoders/&title=An Introduction to Variational Autoencoders - Hanzawa の 部屋&summary="
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qzone.png" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qzone.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-weibo" title="" rel="external nofollow noopener noreferrer noopener"
+          
+          target="_blank" href="http://service.weibo.com/share/share.php?url=http://qfxiao.me/2019/10/22/An-Introduction-to-Variational-Autoencoders/&title=An Introduction to Variational Autoencoders - Hanzawa の 部屋&summary="
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/weibo.png" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/weibo.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=">
+          
+        </a>
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+
+
+        
+      
+    </div>
+  </div>
+
+
+  
+  
+
+  
+    <div class="prev-next">
+      
+        <a class='prev' href='/2019/10/29/Anomaly-Detection-in-Streams-with-Extreme-Value-Theory/'>
+          <p class='title'><i class="fas fa-chevron-left" aria-hidden="true"></i>Anomaly Detection in Streams with Extreme Value Theory</p>
+          <p class='content'>Introduction
+本文基于Extreme Value Theory提出了一种不需要手动设置阈值也不需要对数据分布作任何假设的时间序列异常检测方法。除此之外，本方法可以用在通用的自动阈值...</p>
+        </a>
+      
+      
+        <a class='next' href='/2019/10/18/Recurrent-Neural-Networks-for-Multivariate-Time-Series-with-Missing-Values/'>
+          <p class='title'>Recurrent Neural Networks for Multivariate Time Series with Missing Values<i class="fas fa-chevron-right" aria-hidden="true"></i></p>
+          <p class='content'>Abstract
+文中提出了一种可以处理带缺失值多为时间序列的GRU模型：GRU-D。本模型不仅可以捕捉时间序列中的长期依赖模式，并且还能利用时间序列中的缺失模式来达到更好的时间序列预测效果。...</p>
+        </a>
+      
+    </div>
+  
+</article>
+
+
+  
+
+  <article class="post white-box reveal shadow" id="comments">
+    <p ct><i class='fas fa-comments'></i> 评论</p>
+    
+    <div id="valine_container" class="valine_thread">
+  <i class="fas fa-cog fa-spin fa-fw fa-2x"></i>
+</div>
+
+  </article>
+
+
+
+
+
+
+</div>
+<aside class='l_side'>
+  
+  
+    
+    
+
+
+
+  <section class="widget toc-wrapper shadow desktop mobile" id="toc-div" >
+    
+  <header>
+    
+      <i class="fas fa-list fa-fw" aria-hidden="true"></i><span class='name'>本文目录</span>
+    
+  </header>
+
+
+    <div class='content'>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#variational-network"><span class="toc-text">Variational Network</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#generative-network"><span class="toc-text">Generative Network</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#model-combination"><span class="toc-text">Model Combination</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#model-training"><span class="toc-text">Model Training</span></a></li></ol>
+    </div>
+  </section>
+
+
+  
+
+
+</aside>
+
+
+
+		  
+		  <!--此文件用来存放一些不方便取值的变量-->
+<!--思路大概是将值藏到重加载的区域内-->
+
+<script>
+  window.pdata={}
+  pdata.ispage=true;
+  pdata.postTitle="An Introduction to Variational Autoencoders";
+  pdata.commentPath="";
+  pdata.commentPlaceholder="";
+  // header 这里无论是否开启pjax都需要
+  var l_header=document.getElementById("l_header");
+  
+  l_header.classList.add("show");
+  
+  
+    // cover
+    var cover_wrapper=document.querySelector('.cover-wrapper');
+    
+    cover_wrapper.id="none";
+    cover_wrapper.style.display="none";
+    
+  
+</script>
+
+        </div>
+        
+  
+  <footer class="footer clearfix">
+    <br><br>
+    
+      
+        <div class="aplayer-container">
+          
+
+
+        </div>
+      
+    
+      
+        <br>
+        <div class="social-wrapper">
+          
+            
+          
+            
+          
+            
+          
+        </div>
+      
+    
+      
+        <div><p>博客内容遵循 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</a></p>
+</div>
+      
+    
+      
+        
+          <div><p><span id="lc-sv">本站总访问量为 <span id="number"><i class="fas fa-circle-notch fa-spin fa-fw" aria-hidden="true"></i></span> 次</span> <span id="lc-uv">访客数为 <span id="number"><i class="fas fa-circle-notch fa-spin fa-fw" aria-hidden="true"></i></span> 人</span></p>
+</div>
+        
+      
+    
+      
+        本站使用
+        <a href="https://github.com/volantis-x/hexo-theme-volantis/tree/4.3.1" target="_blank" class="codename">Volantis</a>
+        作为主题
+      
+    
+      
+        <div class='copyright'>
+        <p><a href="/">Copyright © 2017-2020 XXX</a></p>
+
+        </div>
+      
+    
+  </footer>
+
+
+        <a id="s-top" class="fas fa-arrow-up fa-fw" href="javascript:void(0)"></a>
+      </div>
+    </div>
+    <div>
+      <script>
+/************这个文件存放不需要重载的全局变量和全局函数*********/
+window.volantis={};
+window.volantis.loadcss=document.getElementById("loadcss");
+/******************** Pjax ********************************/
+function VPjax(){
+	this.list=[] // 存放回调函数
+	this.start=()=>{
+	  for(var i=0;i<this.list.length;i++){
+		this.list[i].run();
+	  }
+	}
+	this.push=(fn,name)=>{
+		var f=new PjaxItem(fn,name);
+		this.list.push(f);
+	}
+	// 构造一个可以run的对象
+	function PjaxItem(fn,name){
+		// 函数名称
+		this.name = name || fn.name
+		// run方法
+		this.run=()=>{
+			fn()
+		}
+	}
+}
+volantis.pjax={}
+volantis.pjax.method={
+	complete: new VPjax(),
+	error: new VPjax(),
+	send: new VPjax()
+}
+volantis.pjax={
+	...volantis.pjax,
+	push: volantis.pjax.method.complete.push,
+	error: volantis.pjax.method.error.push,
+	send: volantis.pjax.method.send.push
+}
+/********************脚本懒加载函数********************************/
+// 已经加入了setTimeout
+function loadScript(src, cb) {
+	setTimeout(function() {
+		var HEAD = document.getElementsByTagName('head')[0] || document.documentElement;
+		var script = document.createElement('script');
+		script.setAttribute('type','text/javascript');
+		if (cb) script.onload = cb;
+		script.setAttribute('src', src);
+		HEAD.appendChild(script);
+	});
+}
+//https://github.com/filamentgroup/loadCSS
+var loadCSS = function( href, before, media, attributes ){
+	var doc = window.document;
+	var ss = doc.createElement( "link" );
+	var ref;
+	if( before ){
+		ref = before;
+	}
+	else {
+		var refs = ( doc.body || doc.getElementsByTagName( "head" )[ 0 ] ).childNodes;
+		ref = refs[ refs.length - 1];
+	}
+	var sheets = doc.styleSheets;
+	if( attributes ){
+		for( var attributeName in attributes ){
+			if( attributes.hasOwnProperty( attributeName ) ){
+				ss.setAttribute( attributeName, attributes[attributeName] );
+			}
+		}
+	}
+	ss.rel = "stylesheet";
+	ss.href = href;
+	ss.media = "only x";
+	function ready( cb ){
+		if( doc.body ){
+			return cb();
+		}
+		setTimeout(function(){
+			ready( cb );
+		});
+	}
+	ready( function(){
+		ref.parentNode.insertBefore( ss, ( before ? ref : ref.nextSibling ) );
+	});
+	var onloadcssdefined = function( cb ){
+		var resolvedHref = ss.href;
+		var i = sheets.length;
+		while( i-- ){
+			if( sheets[ i ].href === resolvedHref ){
+				return cb();
+			}
+		}
+		setTimeout(function() {
+			onloadcssdefined( cb );
+		});
+	};
+	function loadCB(){
+		if( ss.addEventListener ){
+			ss.removeEventListener( "load", loadCB );
+		}
+		ss.media = media || "all";
+	}
+	if( ss.addEventListener ){
+		ss.addEventListener( "load", loadCB);
+	}
+	ss.onloadcssdefined = onloadcssdefined;
+	onloadcssdefined( loadCB );
+	return ss;
+};
+</script>
+<script>
+  
+  loadCSS("https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.14/css/all.min.css", window.volantis.loadcss);
+  
+  
+  
+  
+</script>
+<!-- required -->
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5/dist/jquery.min.js"></script>
+
+<script>
+  function pjax_fancybox() {
+    $(".md .gallery").find("img").each(function () { //渲染 fancybox
+      var element = document.createElement("a"); // a 标签
+      $(element).attr("class", "fancybox");
+      $(element).attr("pjax-fancybox", "");  // 过滤 pjax
+      $(element).attr("href", $(this).attr("src"));
+      if ($(this).attr("data-original")) {
+        $(element).attr("href", $(this).attr("data-original"));
+      }
+      $(element).attr("data-fancybox", "images");
+      var caption = "";   // 描述信息
+      if ($(this).attr('alt')) {  // 判断当前页面是否存在描述信息
+        $(element).attr('data-caption', $(this).attr('alt'));
+        caption = $(this).attr('alt');
+      }
+      var div = document.createElement("div");
+      $(div).addClass("fancybox");
+      $(this).wrap(div); // 最外层套 div ，其实主要作用还是 class 样式
+      var span = document.createElement("span");
+      $(span).addClass("image-caption");
+      $(span).text(caption); // 加描述
+      $(this).after(span);  // 再套一层描述
+      $(this).wrap(element);  // 最后套 a 标签
+    })
+    $(".md .gallery").find("img").fancybox({
+      selector: '[data-fancybox="images"]',
+      hash: false,
+      loop: false,
+      closeClick: true,
+      helpers: {
+        overlay: {closeClick: true}
+      },
+      buttons: [
+        "zoom",
+        "close"
+      ]
+    });
+  };
+  function SCload_fancybox() {
+    if ($(".md .gallery").find("img").length == 0) return;
+    loadCSS("https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css", document.getElementById("loadcss"));
+    loadScript('https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js', pjax_fancybox)
+  };
+  $(function () {
+    SCload_fancybox();
+  });
+  function Pjax_SCload_fancybox(){
+	if (typeof $.fancybox == "undefined") {
+	 SCload_fancybox();
+    } else {
+	 pjax_fancybox();
+    }
+  }
+  volantis.pjax.push(Pjax_SCload_fancybox)
+  volantis.pjax.send(()=>{
+      if (typeof $.fancybox != "undefined") {
+        $.fancybox.close();    // 关闭弹窗
+      }
+  },'fancybox')
+</script>
+
+
+<!-- internal -->
+
+
+
+
+<script>
+  function loadIssuesJS() {
+    if ($(".md").find(".issues-api").length == 0) return;
+	
+	  loadScript('/js/issues.js');
+	
+  };
+  $(function () {
+    loadIssuesJS();
+  });
+  volantis.pjax.push(()=>{
+	if (typeof IssuesAPI == "undefined") {
+	  loadIssuesJS();
+	}
+  },"IssuesJS")
+</script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@17.1.0/dist/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazyload",
+    threshold: 0
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    lazyLoadInstance.update();
+  });
+  document.addEventListener('pjax:complete', function () {
+    lazyLoadInstance.update();
+  });
+</script>
+
+
+
+
+  
+
+<script>
+  window.FPConfig = {
+	delay: 0,
+	ignoreKeywords: [],
+	maxRPS: 5,
+	hoverDelay: 25
+  };
+</script>
+<script defer src="https://cdn.jsdelivr.net/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+<script src="/js/valine.js"></script>
+
+
+<script>
+  function emoji(path, idx, ext) {
+    return path + "/" + path + "-" + idx + "." + ext;
+  }
+  var emojiMaps = {};
+  for (var i = 1; i <= 54; i++) {
+    emojiMaps['tieba-' + i] = emoji('tieba', i, 'png');
+  }
+  for (var i = 1; i <= 101; i++) {
+    emojiMaps['qq-' + i] = emoji('qq', i, 'gif');
+  }
+  for (var i = 1; i <= 116; i++) {
+    emojiMaps['aru-' + i] = emoji('aru', i, 'gif');
+  }
+  for (var i = 1; i <= 125; i++) {
+    emojiMaps['twemoji-' + i] = emoji('twemoji', i, 'png');
+  }
+  for (var i = 1; i <= 4; i++) {
+    emojiMaps['weibo-' + i] = emoji('weibo', i, 'png');
+  }
+  function pjax_valine() {
+    if(!document.querySelectorAll("#valine_container")[0])return;
+    let pagePlaceholder = pdata.commentPlaceholder || "快来评论吧~";
+    let path = pdata.commentPath;
+    if (path.length == 0) {
+      let defaultPath = '';
+      path = defaultPath || decodeURI(window.location.pathname);
+    }
+    var valine = new Valine();
+    valine.init(Object.assign({"path":null,"placeholder":"快来评论吧~","appId":null,"appKey":null,"meta":["nick","mail","link"],"requiredFields":["nick","mail"],"enableQQ":true,"recordIP":false,"avatar":"robohash","pageSize":10,"lang":"zh-cn","highlight":true,"mathJax":false}, {
+      el: '#valine_container',
+      path: path,
+      placeholder: pagePlaceholder,
+      emojiCDN: 'https://cdn.jsdelivr.net/gh/volantis-x/cdn-emoji/valine/',
+      emojiMaps: emojiMaps,
+    }))
+  }
+  $(function () {
+    pjax_valine();
+  });
+  volantis.pjax.push(pjax_valine);
+</script>
+
+
+
+
+
+
+  
+<script src="/js/app.js"></script>
+
+
+
+<!-- optional -->
+
+  <script>
+const SearchServiceimagePath="https://cdn.jsdelivr.net/gh/volantis-x/cdn-volantis@master/img/";
+const ROOT =  ("/" || "/").endsWith('/') ? ("/" || "/") : ("//" || "/" );
+
+$('.input.u-search-input').one('focus',function(){
+	
+		loadScript('/js/search/hexo.js',setSearchService);
+	
+})
+
+function listenSearch(){
+  
+    customSearch = new HexoSearch({
+      imagePath: SearchServiceimagePath
+    });
+  
+}
+function setSearchService() {
+	listenSearch();
+	
+}
+</script>
+
+
+
+
+
+
+
+
+
+
+
+  <script defer>
+
+  const LCCounter = {
+    app_id: 'u9j57bwJod4EDmXWdxrwuqQT-MdYXbMMI',
+    app_key: 'jfHtEKVE24j0IVCGHbvuFClp',
+    custom_api_server: '',
+
+    // 查询存储的记录
+    getRecord(Counter, url, title) {
+      return new Promise(function (resolve, reject) {
+        Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({url})))
+          .then(resp => resp.json())
+          .then(({results, code, error}) => {
+            if (code === 401) {
+              throw error;
+            }
+            if (results && results.length > 0) {
+              var record = results[0];
+              resolve(record);
+            } else {
+              Counter('post', '/classes/Counter', {url, title: title, times: 0})
+                .then(resp => resp.json())
+                .then((record, error) => {
+                  if (error) {
+                    throw error;
+                  }
+                  resolve(record);
+                }).catch(error => {
+                console.error('Failed to create', error);
+                reject(error);
+              });
+            }
+          }).catch((error) => {
+          console.error('LeanCloud Counter Error:', error);
+          reject(error);
+        });
+      })
+    },
+
+    // 发起自增请求
+    increment(Counter, incrArr) {
+      return new Promise(function (resolve, reject) {
+        Counter('post', '/batch', {
+          "requests": incrArr
+        }).then((res) => {
+          res = res.json();
+          if (res.error) {
+            throw res.error;
+          }
+          resolve(res);
+        }).catch((error) => {
+          console.error('Failed to save visitor count', error);
+          reject(error);
+        });
+      });
+    },
+
+    // 构建自增请求体
+    buildIncrement(objectId) {
+      return {
+        "method": "PUT",
+        "path": `/1.1/classes/Counter/${ objectId }`,
+        "body": {
+          "times": {
+            '__op': 'Increment',
+            'amount': 1
+          }
+        }
+      }
+    },
+
+    // 校验是否为有效的 UV
+    validUV() {
+      var key = 'LeanCloudUVTimestamp';
+      var flag = localStorage.getItem(key);
+      if (flag) {
+        // 距离标记小于 24 小时则不计为 UV
+        if (new Date().getTime() - parseInt(flag) <= 86400000) {
+          return false;
+        }
+      }
+      localStorage.setItem(key, new Date().getTime().toString());
+      return true;
+    },
+
+    addCount(Counter) {
+      var enableIncr = '' === 'true' && window.location.hostname !== 'localhost';
+      enableIncr = true;
+      var getterArr = [];
+      var incrArr = [];
+      // 请求 PV 并自增
+      var pvCtn = document.querySelector('#lc-sv');
+      if (pvCtn || enableIncr) {
+        var pvGetter = this.getRecord(Counter, 'http://qfxiao.me' + '/#lc-sv', 'Visits').then((record) => {
+          incrArr.push(this.buildIncrement(record.objectId))
+          var eles = document.querySelectorAll('#lc-sv #number');
+          if (eles.length > 0) {
+            eles.forEach((el,index,array)=>{
+              el.innerText = record.times + 1;
+              if (pvCtn) {
+                pvCtn.style.display = 'inline';
+              }
+            })
+          }
+        });
+        getterArr.push(pvGetter);
+      }
+
+      // 请求 UV 并自增
+      var uvCtn = document.querySelector('#lc-uv');
+      if (uvCtn || enableIncr) {
+        var uvGetter = this.getRecord(Counter, 'http://qfxiao.me' + '/#lc-uv', 'Visitors').then((record) => {
+          var vuv = this.validUV();
+          vuv && incrArr.push(this.buildIncrement(record.objectId))
+          var eles = document.querySelectorAll('#lc-uv #number');
+          if (eles.length > 0) {
+            eles.forEach((el,index,array)=>{
+              el.innerText = record.times + (vuv ? 1 : 0);
+              if (uvCtn) {
+                uvCtn.style.display = 'inline';
+              }
+            })
+          }
+        });
+        getterArr.push(uvGetter);
+      }
+
+      // 请求文章的浏览数，如果是当前页面就自增
+      var allPV = document.querySelectorAll('#lc-pv');
+      if (allPV.length > 0 || enableIncr) {
+        for (i = 0; i < allPV.length; i++) {
+          let pv = allPV[i];
+          let title = pv.getAttribute('data-title');
+          var url = 'http://qfxiao.me' + pv.getAttribute('data-path');
+          if (url) {
+            var viewGetter = this.getRecord(Counter, url, title).then((record) => {
+              // 是当前页面就自增
+              let curPath = window.location.pathname;
+              if (curPath.includes('index.html')) {
+                curPath = curPath.substring(0, curPath.lastIndexOf('index.html'));
+              }
+              if (pv.getAttribute('data-path') == curPath) {
+                incrArr.push(this.buildIncrement(record.objectId));
+              }
+              if (pv) {
+                var ele = pv.querySelector('#lc-pv #number');
+                if (ele) {
+                  if (pv.getAttribute('data-path') == curPath) {
+                    ele.innerText = (record.times || 0) + 1;
+                  } else {
+                    ele.innerText = record.times || 0;
+                  }
+                  pv.style.display = 'inline';
+                }
+              }
+            });
+            getterArr.push(viewGetter);
+          }
+        }
+      }
+
+      // 如果启动计数自增，批量发起自增请求
+      if (enableIncr) {
+        Promise.all(getterArr).then(() => {
+          incrArr.length > 0 && this.increment(Counter, incrArr);
+        })
+      }
+
+    },
+
+
+    fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${ api_server }/1.1${ url }`, {
+          method,
+          headers: {
+            'X-LC-Id': this.app_id,
+            'X-LC-Key': this.app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      this.addCount(Counter);
+    },
+
+    refreshCounter() {
+      var api_server = this.app_id.slice(-9) !== '-MdYXbMMI' ? this.custom_api_server : `https://${ this.app_id.slice(0, 8).toLowerCase() }.api.lncldglobal.com`;
+      if (api_server) {
+        this.fetchData(api_server);
+      } else {
+        fetch('https://app-router.leancloud.cn/2/route?appId=' + this.app_id)
+          .then(resp => resp.json())
+          .then(({api_server}) => {
+            this.fetchData('https://' + api_server);
+          });
+      }
+    }
+
+  };
+
+  LCCounter.refreshCounter();
+
+  document.addEventListener('pjax:complete', function () {
+    LCCounter.refreshCounter();
+  });
+</script>
+
+
+
+
+  <script>
+const rootElement = document.documentElement;
+const darkModeStorageKey = "user-color-scheme";
+const rootElementDarkModeAttributeName = "data-user-color-scheme";
+
+const setLS = (k, v) => {
+    localStorage.setItem(k, v);
+};
+
+const removeLS = (k) => {
+    localStorage.removeItem(k);
+};
+
+const getLS = (k) => {
+    return localStorage.getItem(k);
+};
+
+const getModeFromCSSMediaQuery = () => {
+  return window.matchMedia("(prefers-color-scheme: dark)").matches
+    ? "dark"
+    : "light";
+};
+
+const resetRootDarkModeAttributeAndLS = () => {
+  rootElement.removeAttribute(rootElementDarkModeAttributeName);
+  removeLS(darkModeStorageKey);
+};
+
+const validColorModeKeys = {
+  dark: true,
+  light: true,
+};
+
+const applyCustomDarkModeSettings = (mode) => {
+  const currentSetting = mode || getLS(darkModeStorageKey);
+
+  if (currentSetting === getModeFromCSSMediaQuery()) {
+    resetRootDarkModeAttributeAndLS();
+  } else if (validColorModeKeys[currentSetting]) {
+    rootElement.setAttribute(rootElementDarkModeAttributeName, currentSetting);
+  } else {
+    resetRootDarkModeAttributeAndLS();
+  }
+};
+
+const invertDarkModeObj = {
+  dark: "light",
+  light: "dark",
+};
+
+/**
+ * get target mode
+ */
+const toggleCustomDarkMode = () => {
+  let currentSetting = getLS(darkModeStorageKey);
+
+  if (validColorModeKeys[currentSetting]) {
+    currentSetting = invertDarkModeObj[currentSetting];
+  } else if (currentSetting === null) {
+    currentSetting = invertDarkModeObj[getModeFromCSSMediaQuery()];
+  } else {
+    return;
+  }
+  setLS(darkModeStorageKey, currentSetting);
+  return currentSetting;
+};
+
+/**
+ * bind click event for toggle button
+ */
+var btn=$("#wrapper .toggle-mode-btn,#rightmenu-wrapper .toggle-mode-btn");
+function bindToggleButton() {
+    btn.on('click',(e) => {
+      const mode = toggleCustomDarkMode();
+      applyCustomDarkModeSettings(mode);
+    });
+}
+
+applyCustomDarkModeSettings();
+document.addEventListener("DOMContentLoaded", bindToggleButton);
+volantis.pjax.push(bindToggleButton);
+volantis.pjax.send(()=>{
+	btn.unbind('click');
+},'toggle-mode-btn-unbind');
+</script>
+
+
+
+
+
+
+
+
+<script>
+function listennSidebarTOC() {
+  const navItems = document.querySelectorAll(".toc li");
+  if (!navItems.length) return;
+  const sections = [...navItems].map((element) => {
+    const link = element.querySelector(".toc-link");
+    const target = document.getElementById(
+      decodeURI(link.getAttribute("href")).replace("#", "")
+    );
+    link.addEventListener("click", (event) => {
+      event.preventDefault();
+      window.scrollTo({
+		top: target.offsetTop + 100,
+		
+		behavior: "smooth"
+		
+	  });
+    });
+    return target;
+  });
+
+  function activateNavByIndex(target) {
+    if (target.classList.contains("active-current")) return;
+
+    document.querySelectorAll(".toc .active").forEach((element) => {
+      element.classList.remove("active", "active-current");
+    });
+    target.classList.add("active", "active-current");
+    let parent = target.parentNode;
+    while (!parent.matches(".toc")) {
+      if (parent.matches("li")) parent.classList.add("active");
+      parent = parent.parentNode;
+    }
+  }
+
+  function findIndex(entries) {
+    let index = 0;
+    let entry = entries[index];
+    if (entry.boundingClientRect.top > 0) {
+      index = sections.indexOf(entry.target);
+      return index === 0 ? 0 : index - 1;
+    }
+    for (; index < entries.length; index++) {
+      if (entries[index].boundingClientRect.top <= 0) {
+        entry = entries[index];
+      } else {
+        return sections.indexOf(entry.target);
+      }
+    }
+    return sections.indexOf(entry.target);
+  }
+
+  function createIntersectionObserver(marginTop) {
+    marginTop = Math.floor(marginTop + 10000);
+    let intersectionObserver = new IntersectionObserver(
+      (entries, observe) => {
+        let scrollHeight = document.documentElement.scrollHeight + 100;
+        if (scrollHeight > marginTop) {
+          observe.disconnect();
+          createIntersectionObserver(scrollHeight);
+          return;
+        }
+        let index = findIndex(entries);
+        activateNavByIndex(navItems[index]);
+      },
+      {
+        rootMargin: marginTop + "px 0px -100% 0px",
+        threshold: 0,
+      }
+    );
+    sections.forEach((element) => {
+      element && intersectionObserver.observe(element);
+    });
+  }
+  createIntersectionObserver(document.documentElement.scrollHeight);
+}
+
+document.addEventListener("DOMContentLoaded", listennSidebarTOC);
+document.addEventListener("pjax:success", listennSidebarTOC);
+</script>
+
+<!-- more -->
+
+ 
+	   
+	    
+
+
+<script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script>
+
+
+<script>
+    var pjax;
+    document.addEventListener('DOMContentLoaded', function () {
+      pjax = new Pjax({
+        elements: 'a[href]:not([href^="#"]):not([href="javascript:void(0)"]):not([pjax-fancybox])',
+        selectors: [
+          "title",
+          
+          "#pjax-container",
+          "#pjax-header-nav-list"
+        ],
+        cacheBust: false,   // url 地址追加时间戳，用以避免浏览器缓存
+        timeout: 5000
+      });
+    });
+
+    document.addEventListener('pjax:send', function (e) {
+      //window.stop(); // 相当于点击了浏览器的停止按钮
+
+      try {
+        var currentUrl = window.location.pathname;
+        var targetUrl = e.triggerElement.href;
+        var banUrl = [""];
+        if (banUrl[0] != "") {
+          banUrl.forEach(item => {
+            if(currentUrl.indexOf(item) != -1 || targetUrl.indexOf(item) != -1) {
+              window.location.href = targetUrl;
+            }
+          });
+        }
+      } catch (error) {}
+
+      window.subData = null; // 移除标题（用于一二级导航栏切换处）
+
+      volantis.$switcher.removeClass('active'); // 关闭移动端激活的搜索框
+      volantis.$header.removeClass('z_search-open'); // 关闭移动端激活的搜索框
+      volantis.$wrapper.removeClass('sub'); // 跳转页面时关闭二级导航
+
+      // 解绑事件 避免重复监听
+      volantis.$topBtn.unbind('click');
+      $('.menu a').unbind('click');
+      $(window).unbind('resize');
+      $(window).unbind('scroll');
+      $(document).unbind('scroll');
+      $(document).unbind('click');
+      $('body').unbind('click');
+	  // 使用 volantis.pjax.send 方法传入pjax:send回调函数 参见layout/_partial/scripts/global.ejs
+	  volantis.pjax.method.send.start();
+    });
+
+    document.addEventListener('pjax:complete', function () {
+      $('.nav-main').find('.list-v').not('.menu-phone').removeAttr("style",""); // 移除小尾巴的移除
+      $('.menu-phone.list-v').removeAttr("style",""); // 移除小尾巴的移除
+      $('script[data-pjax], .pjax-reload script').each(function () {
+        $(this).parent().append($(this).remove());
+      });
+      try{
+		// 使用 volantis.pjax.push 方法传入重载函数 参见layout/_partial/scripts/global.ejs
+		volantis.pjax.method.complete.start();
+      } catch (e) {
+        console.log(e);
+      }
+    });
+
+    document.addEventListener('pjax:error', function (e) {
+	  // 使用 volantis.pjax.error 方法传入pjax:error回调函数 参见layout/_partial/scripts/global.ejs
+	  volantis.pjax.method.error.start();
+      window.location.href = e.triggerElement.href;
+    });
+</script>
+ 
+	  
+    </div>
+  </body>
+</html>
