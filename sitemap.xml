@@ -298,14 +298,14 @@
   </url>
   
   <url>
-    <loc>http://qfxiao.me/tags/GAN/</loc>
+    <loc>http://qfxiao.me/tags/Self-Supervised-Learning/</loc>
     <lastmod>2021-02-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>http://qfxiao.me/tags/Self-Supervised-Learning/</loc>
+    <loc>http://qfxiao.me/tags/GAN/</loc>
     <lastmod>2021-02-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -319,14 +319,14 @@
   </url>
   
   <url>
-    <loc>http://qfxiao.me/tags/Novelty-Detection/</loc>
+    <loc>http://qfxiao.me/tags/Representation-Learning/</loc>
     <lastmod>2021-02-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>http://qfxiao.me/tags/Representation-Learning/</loc>
+    <loc>http://qfxiao.me/tags/Novelty-Detection/</loc>
     <lastmod>2021-02-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -354,13 +354,6 @@
   </url>
   
   <url>
-    <loc>http://qfxiao.me/tags/SVM/</loc>
-    <lastmod>2021-02-28</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>http://qfxiao.me/tags/GBDT/</loc>
     <lastmod>2021-02-28</lastmod>
     <changefreq>daily</changefreq>
@@ -369,6 +362,13 @@
   
   <url>
     <loc>http://qfxiao.me/tags/XGBoost/</loc>
+    <lastmod>2021-02-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/tags/SVM/</loc>
     <lastmod>2021-02-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -410,7 +410,14 @@
   </url>
   
   <url>
-    <loc>http://qfxiao.me/tags/Flow-based-Model/</loc>
+    <loc>http://qfxiao.me/tags/Contrastive-Learning/</loc>
+    <lastmod>2021-02-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/tags/Self-supervised-Learning/</loc>
     <lastmod>2021-02-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -424,21 +431,14 @@
   </url>
   
   <url>
+    <loc>http://qfxiao.me/tags/Flow-based-Model/</loc>
+    <lastmod>2021-02-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>http://qfxiao.me/tags/Shapelet/</loc>
-    <lastmod>2021-02-28</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://qfxiao.me/tags/Contrastive-Learning/</loc>
-    <lastmod>2021-02-28</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://qfxiao.me/tags/Self-supervised-Learning/</loc>
     <lastmod>2021-02-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -524,14 +524,14 @@
   </url>
   
   <url>
-    <loc>http://qfxiao.me/categories/Research/Time-Series-Modeling/</loc>
+    <loc>http://qfxiao.me/categories/Research/Self-supervised-Learning/</loc>
     <lastmod>2021-02-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>http://qfxiao.me/categories/Research/Self-supervised-Learning/</loc>
+    <loc>http://qfxiao.me/categories/Research/Time-Series-Modeling/</loc>
     <lastmod>2021-02-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
