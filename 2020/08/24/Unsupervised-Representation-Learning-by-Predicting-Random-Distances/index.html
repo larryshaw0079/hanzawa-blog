@@ -237,80 +237,45 @@
               </p>
             
             <div class="markdown-body">
-              <h1 id="introduction">Introduction</h1>
-<p>针对高维表格数据的表示学习，作者提出了基于预测预计变换后的距离的无监督表示学习框架RDP，并进行了理论上的讨论。To be finished...</p>
-<p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1912.12186">论文地址</a> <a target="_blank" rel="noopener" href="https://github.com/billhhh/RDP">代码地址</a></p>
-<h1 id="proposed-method">Proposed Method</h1>
-<h2 id="random-distance-prediction-model">Random Distance Prediction Model</h2>
-<p>对于很多下游任务来说，高维数据对模型效率和性能都很大，所以学习低维的有意义（能够最大限度保存原始空间的信息）的表示十分重要。本文的大致思想是给定一个确定的随机映射将样本映射到一个新的空间，然后构造数据集，输入时任意一对样本，标签是两个样本在新的空间的距离，之后训练一个模型来学习这个距离。作者认为通过该任务的训练，模型能够学到有意义的低维表示。模型的框架如下图：</p>
-<p><img src="https://i.loli.net/2020/07/19/vRV32EgLiYkWaQN.png" srcset="/img/loading.gif" style="zoom: 50%;" /></p>
-<p>其中<span class="math inline">\(\phi(\mathbf x;\Theta):\mathbb R^D\mapsto\mathbb R^M\)</span>为孪生神经网络（Siamese Neural Network），将数据映射到<span class="math inline">\(M\)</span>的新空间。损失函数为：</p>
-<p><span class="math display">\[
-\mathcal L_{rdp}(\mathbf x_i,\mathbf x_j)=l(\langle \phi(\mathbf x_i;\Theta),\phi(\mathbf x_j;\Theta)\rangle,\langle\eta(\mathbf x_i),\eta(\mathbf x_j)\rangle)
-\]</span></p>
-<p>其中<span class="math inline">\(\eta(\cdot)\)</span>为已知的映射，<span class="math inline">\(l(\cdot)\)</span>为衡量两个输入相似程度的度量。具体的来说，文中选取了简单的实现方案，即采用内积作为映射后的样本的距离度量：</p>
-<p><span class="math display">\[
-\mathcal L_{rdp}(\mathbf x_i,\mathbf x_j)=\left(\phi(\mathbf x_i;\Theta)\cdot\phi(\mathbf x_j;\Theta)-\eta(\mathbf x_i)\cdot\eta(\mathbf x_j)\right)^2
-\]</span></p>
-<p><span class="math inline">\(\eta(\cdot)\)</span>为现成的映射。至于为什么要这么做，可以先接着看下面原文给出的理论分析，然后我再说说我自己的理解。</p>
-<h2 id="incorporating-task-dependent-complementary-auxiliary-loss">Incorporating Task-Dependent Complementary Auxiliary Loss</h2>
-<p>对于特定的下游任务，作者提出可以整合额外的误差函数来提高模型行性能。比如说针对聚类任务可以使用重构误差：</p>
-<p><span class="math display">\[
-\mathcal L_{aux}^{clu}(\mathbf x)=(\mathbf x-\phi^\prime(\phi(\mathbf x;\Theta); \Theta^\prime))^2
-\]</span></p>
-<p>其中<span class="math inline">\(\phi(\cdot)\)</span>和<span class="math inline">\(\phi^\prime(\cdot):\mathbb R^M\mapsto\mathbb R^D\)</span>分别为编码器和解码器。</p>
-<p>对于异常检测任务，可以使用下式： <span class="math display">\[
-\mathcal L_{aux}^{ad}(\mathbf x)=(\phi(\mathbf x;\Theta)-\eta(\mathbf x))^2
-\]</span></p>
-<p>这一个Loss本来是出现在强化学习的论文中，用来检测一个状态<span class="math inline">\(\mathbf x\)</span>出现的频率，如果预测误差较小，说明这个样本之前见过或见过类似的，否则没怎么见过，可以认为是异常。由于本文的目的主要是降维加保留原始空间信息，可以认为使用线性变换的话此目的已经达到了。</p>
-<h2 id="theoretical-analysis">Theoretical Analysis</h2>
-<h3 id="using-linear-projection">Using Linear Projection</h3>
-<p>这里讨论使用线性映射的情况，设数据集<span class="math inline">\(\mathcal X\subset\mathbb R^{N\times D}\)</span>，映射矩阵<span class="math inline">\(\mathbf A\subset\mathbb R^{K\times D}\)</span>为一随机矩阵，映射之后的数据为<span class="math inline">\(\mathbf A\mathcal X^\top\)</span>。对于<span class="math inline">\(\epsilon\in(0,\frac{1}{2})\)</span>和<span class="math inline">\(K=\frac{20\log n}{\epsilon^2}\)</span>，存在<span class="math inline">\(f:\mathbb R^D\mapsto\mathbb R^K\)</span>使得对于所有的<span class="math inline">\(\mathbf x_i,\mathbf x_j\in\mathcal X\)</span>有：</p>
-<p><span class="math display">\[
-(1-\epsilon)\parallel\mathbf x_i-\mathbf x_j \parallel^2\leq \parallel f(\mathbf x_i)-f(\mathbf x_j)\parallel^2\leq (1+\epsilon)\parallel\mathbf x_i-\mathbf x_j\parallel^2
-\]</span></p>
-<p>如果<span class="math inline">\(\mathbf A\)</span>的每个元素独立采样自标准正态分布那么有：</p>
-<p><span class="math display">\[
-\text{Pr}\left((1-\epsilon)\parallel\mathbf x\parallel^2\leq\parallel\frac{1}{\sqrt{K}}\mathbf A\mathbf x\parallel^2\leq(1+\epsilon)\parallel\mathbf x\parallel^2\right)\geq 1-2e^{\frac{-(\epsilon^2-\epsilon^3)K}{4}}
-\]</span></p>
+              <h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>针对高维表格数据的表示学习，作者提出了基于预测预计变换后的距离的无监督表示学习框架RDP，并进行了理论上的讨论。To be finished…</p>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1912.12186">论文地址</a>         <a target="_blank" rel="noopener" href="https://github.com/billhhh/RDP">代码地址</a></p>
+<h1 id="Proposed-Method"><a href="#Proposed-Method" class="headerlink" title="Proposed Method"></a>Proposed Method</h1><h2 id="Random-Distance-Prediction-Model"><a href="#Random-Distance-Prediction-Model" class="headerlink" title="Random Distance Prediction Model"></a>Random Distance Prediction Model</h2><p>对于很多下游任务来说，高维数据对模型效率和性能都很大，所以学习低维的有意义（能够最大限度保存原始空间的信息）的表示十分重要。本文的大致思想是给定一个确定的随机映射将样本映射到一个新的空间，然后构造数据集，输入时任意一对样本，标签是两个样本在新的空间的距离，之后训练一个模型来学习这个距离。作者认为通过该任务的训练，模型能够学到有意义的低维表示。模型的框架如下图：</p>
+<img src="https://i.loli.net/2020/07/19/vRV32EgLiYkWaQN.png" srcset="/img/loading.gif" style="zoom: 50%;" />
+
+<p>其中$\phi(\mathbf x;\Theta):\mathbb R^D\mapsto\mathbb R^M$为孪生神经网络（Siamese Neural Network），将数据映射到$M$的新空间。损失函数为：</p>
+<p>$$<br>\mathcal L_{rdp}(\mathbf x_i,\mathbf x_j)=l(\langle \phi(\mathbf x_i;\Theta),\phi(\mathbf x_j;\Theta)\rangle,\langle\eta(\mathbf x_i),\eta(\mathbf x_j)\rangle)<br>$$</p>
+<p>其中$\eta(\cdot)$为已知的映射，$l(\cdot)$为衡量两个输入相似程度的度量。具体的来说，文中选取了简单的实现方案，即采用内积作为映射后的样本的距离度量：</p>
+<p>$$<br>\mathcal L_{rdp}(\mathbf x_i,\mathbf x_j)=\left(\phi(\mathbf x_i;\Theta)\cdot\phi(\mathbf x_j;\Theta)-\eta(\mathbf x_i)\cdot\eta(\mathbf x_j)\right)^2<br>$$</p>
+<p>$\eta(\cdot)$为现成的映射。至于为什么要这么做，可以先接着看下面原文给出的理论分析，然后我再说说我自己的理解。</p>
+<h2 id="Incorporating-Task-Dependent-Complementary-Auxiliary-Loss"><a href="#Incorporating-Task-Dependent-Complementary-Auxiliary-Loss" class="headerlink" title="Incorporating Task-Dependent Complementary Auxiliary Loss"></a>Incorporating Task-Dependent Complementary Auxiliary Loss</h2><p>对于特定的下游任务，作者提出可以整合额外的误差函数来提高模型行性能。比如说针对聚类任务可以使用重构误差：</p>
+<p>$$<br>\mathcal L_{aux}^{clu}(\mathbf x)=(\mathbf x-\phi^\prime(\phi(\mathbf x;\Theta); \Theta^\prime))^2<br>$$</p>
+<p>其中$\phi(\cdot)$和$\phi^\prime(\cdot):\mathbb R^M\mapsto\mathbb R^D$分别为编码器和解码器。</p>
+<p>对于异常检测任务，可以使用下式：<br>$$<br>\mathcal L_{aux}^{ad}(\mathbf x)=(\phi(\mathbf x;\Theta)-\eta(\mathbf x))^2<br>$$</p>
+<p>这一个Loss本来是出现在强化学习的论文中，用来检测一个状态$\mathbf x$出现的频率，如果预测误差较小，说明这个样本之前见过或见过类似的，否则没怎么见过，可以认为是异常。由于本文的目的主要是降维加保留原始空间信息，可以认为使用线性变换的话此目的已经达到了。</p>
+<h2 id="Theoretical-Analysis"><a href="#Theoretical-Analysis" class="headerlink" title="Theoretical Analysis"></a>Theoretical Analysis</h2><h3 id="Using-Linear-Projection"><a href="#Using-Linear-Projection" class="headerlink" title="Using Linear Projection"></a>Using Linear Projection</h3><p>这里讨论使用线性映射的情况，设数据集$\mathcal X\subset\mathbb R^{N\times D}$，映射矩阵$\mathbf A\subset\mathbb R^{K\times D}$为一随机矩阵，映射之后的数据为$\mathbf A\mathcal X^\top$。对于$\epsilon\in(0,\frac{1}{2})$和$K=\frac{20\log n}{\epsilon^2}$，存在$f:\mathbb R^D\mapsto\mathbb R^K$使得对于所有的$\mathbf x_i,\mathbf x_j\in\mathcal X$有：</p>
+<p>$$<br>(1-\epsilon)\parallel\mathbf x_i-\mathbf x_j \parallel^2\leq \parallel f(\mathbf x_i)-f(\mathbf x_j)\parallel^2\leq (1+\epsilon)\parallel\mathbf x_i-\mathbf x_j\parallel^2<br>$$</p>
+<p>如果$\mathbf A$的每个元素独立采样自标准正态分布那么有：</p>
+<p>$$<br>\text{Pr}\left((1-\epsilon)\parallel\mathbf x\parallel^2\leq\parallel\frac{1}{\sqrt{K}}\mathbf A\mathbf x\parallel^2\leq(1+\epsilon)\parallel\mathbf x\parallel^2\right)\geq 1-2e^{\frac{-(\epsilon^2-\epsilon^3)K}{4}}<br>$$</p>
 <p>在该随机映射下有：</p>
-<p><span class="math display">\[
-\text{Pr}(|\hat{\mathbf x}_i\cdot\hat{\mathbf x}_j-f(\hat{\mathbf x}_i)\cdot f(\hat{\mathbf x}_j)|\geq\epsilon)\leq 4e^{\frac{-(\epsilon^2-\epsilon^3)\cdot K}{4}}
-\]</span></p>
+<p>$$<br>\text{Pr}(|\hat{\mathbf x}_i\cdot\hat{\mathbf x}_j-f(\hat{\mathbf x}_i)\cdot f(\hat{\mathbf x}_j)|\geq\epsilon)\leq 4e^{\frac{-(\epsilon^2-\epsilon^3)\cdot K}{4}}<br>$$</p>
 <p>直观的解释就是说使用线性映射的情况下，只要使用的变换矩阵采样自标准正态分布，那么变换之后样本对之间的距离信息能够以一定的概率保留。</p>
-<h3 id="using-non-linear-projection">Using Non-Linear Projection</h3>
-<p>这里作者试图说明，在某些条件下，非线性随机映射的作用和核函数接近。对于一个确定的随机映射函数<span class="math inline">\(g:\mathbb R^D\mapsto\mathbb R^K\)</span>，在某些特定的条件下，函数<span class="math inline">\(g\)</span>和核函数存在下列关系：</p>
-<p><span class="math display">\[
-k(\mathbf x_i,\mathbf x_j)=\langle\psi(\mathbf x_i),\psi(\mathbf x_j)\rangle\approx g(\mathbf x_i)\cdot g(\mathbf x_j)
-\]</span></p>
-<p>这个条件是函数<span class="math inline">\(g\)</span>为一个乘以一个线性矩阵<span class="math inline">\(\mathbf A\)</span>然后在经过一个具备平移不变性的傅里叶基函数（如cosine）。由于核函数能够保留原始空间的信息，所以作者认为使用非线性函数也能保留原始空间的信息。</p>
+<h3 id="Using-Non-Linear-Projection"><a href="#Using-Non-Linear-Projection" class="headerlink" title="Using Non-Linear Projection"></a>Using Non-Linear Projection</h3><p>这里作者试图说明，在某些条件下，非线性随机映射的作用和核函数接近。对于一个确定的随机映射函数$g:\mathbb R^D\mapsto\mathbb R^K$，在某些特定的条件下，函数$g$和核函数存在下列关系：</p>
+<p>$$<br>k(\mathbf x_i,\mathbf x_j)=\langle\psi(\mathbf x_i),\psi(\mathbf x_j)\rangle\approx g(\mathbf x_i)\cdot g(\mathbf x_j)<br>$$</p>
+<p>这个条件是函数$g$为一个乘以一个线性矩阵$\mathbf A$然后在经过一个具备平移不变性的傅里叶基函数（如cosine）。由于核函数能够保留原始空间的信息，所以作者认为使用非线性函数也能保留原始空间的信息。</p>
 <blockquote>
 <p>PS: 感觉作者在理论部分的讨论还是有点模糊，因为把一个随机的映射作为（伪）监督信息来进行学习，神经网络学到的不也就是随机噪声信息吗？对于这个方法work的原因，我在这里不负责任的分析一下。</p>
 </blockquote>
-<h3 id="learning-class-structure-by-random-distance-prediction">Learning Class Structure by Random Distance Prediction</h3>
-<p>这一节主要解释为什么神经网络<span class="math inline">\(\phi(\cdot)\)</span>学到的要比随机映射<span class="math inline">\(\eta(\cdot)\)</span>要好。模型的优化目标可以写成如下的形式：</p>
-<p><span class="math display">\[
-\mathop{\arg\min}_{\Theta}\sum_{\mathbf x_i,\mathbf x_j\in\mathcal X}(\phi(\mathbf x_i;\Theta)\cdot\phi(\mathbf x_j;\Theta)-y_{ij})^2
-\]</span></p>
-<p>其中<span class="math inline">\(y_{ij}=\eta(\mathbf x_i)\cdot\eta(\mathbf x_j)\)</span>。设<span class="math inline">\(\mathbf Y_\eta\in\mathbb R^{N\times N}\)</span>为距离矩阵。这个目标函数是在最小化每一对样本在经过<span class="math inline">\(\phi(\cdot)\)</span>和<span class="math inline">\(\eta(\cdot)\)</span>映射后之间的距离的差距。通过公式(7)和公式(8)我们知道，在合适的条件下，随机映射<span class="math inline">\(\eta(\cdot)\)</span>能够保留原始空间的距离信息（即原始空间相近的样本在映射后也相近）。不过，上述公式的成立都依赖于对数据分布的一定假设，当真实的数据不满足条件时，结论就会有所偏差。</p>
-<h1 id="experiments">Experiments</h1>
-<h2 id="performance-evaluation-in-anomaly-detection">Performance Evaluation in Anomaly Detection</h2>
-<h3 id="experimental-settings">Experimental Settings</h3>
-<p><img src="https://i.loli.net/2020/07/20/3G7DNKjwfQkiIz4.png" srcset="/img/loading.gif" /></p>
-<p>异常分数定义为<span class="math inline">\(\mathcal S(\mathbf x)=(\phi(\mathbf x;\Theta)-\eta(\mathbf x))^2\)</span>。</p>
-<h3 id="comparison-to-the-state-of-the-art-competing-methods">Comparison to the State-of-the-art Competing Methods</h3>
-<p><img src="https://i.loli.net/2020/07/20/8Ie2Q3mpdPHtrYF.png" srcset="/img/loading.gif" /></p>
-<p><img src="https://i.loli.net/2020/07/20/OEcQSvZmfBz1ACt.png" srcset="/img/loading.gif" /></p>
-<h3 id="ablation-study">Ablation Study</h3>
-<p><img src="https://i.loli.net/2020/07/20/7GtKlN8q5Mvygre.png" srcset="/img/loading.gif" /></p>
-<h2 id="performance-evaluation-in-clustering">Performance Evaluation in Clustering</h2>
-<h3 id="experimental-settings-1">Experimental Settings</h3>
-<p><img src="https://i.loli.net/2020/07/20/9xW12MVkoXgFZ6J.png" srcset="/img/loading.gif" /></p>
-<h3 id="comparison-to-the-state-of-the-art-competing-methods-1">Comparison to the State-of-the-art Competing Methods</h3>
-<p><img src="https://i.loli.net/2020/07/20/pUZ64aX1xWiLf2q.png" srcset="/img/loading.gif" /></p>
-<figure>
-<img src="https://i.loli.net/2020/07/20/VrnXuJsymiMItUf.png" srcset="/img/loading.gif" alt="" /><figcaption>image-20200720014002063</figcaption>
-</figure>
+<h3 id="Learning-Class-Structure-by-Random-Distance-Prediction"><a href="#Learning-Class-Structure-by-Random-Distance-Prediction" class="headerlink" title="Learning Class Structure by Random Distance Prediction"></a>Learning Class Structure by Random Distance Prediction</h3><p>这一节主要解释为什么神经网络$\phi(\cdot)$学到的要比随机映射$\eta(\cdot)$要好。模型的优化目标可以写成如下的形式：</p>
+<p>$$<br>\mathop{\arg\min}<em>{\Theta}\sum</em>{\mathbf x_i,\mathbf x_j\in\mathcal X}(\phi(\mathbf x_i;\Theta)\cdot\phi(\mathbf x_j;\Theta)-y_{ij})^2<br>$$</p>
+<p>其中$y_{ij}=\eta(\mathbf x_i)\cdot\eta(\mathbf x_j)$。设$\mathbf Y_\eta\in\mathbb R^{N\times N}$为距离矩阵。这个目标函数是在最小化每一对样本在经过$\phi(\cdot)$和$\eta(\cdot)$映射后之间的距离的差距。通过公式(7)和公式(8)我们知道，在合适的条件下，随机映射$\eta(\cdot)$能够保留原始空间的距离信息（即原始空间相近的样本在映射后也相近）。不过，上述公式的成立都依赖于对数据分布的一定假设，当真实的数据不满足条件时，结论就会有所偏差。</p>
+<h1 id="Experiments"><a href="#Experiments" class="headerlink" title="Experiments"></a>Experiments</h1><h2 id="Performance-Evaluation-in-Anomaly-Detection"><a href="#Performance-Evaluation-in-Anomaly-Detection" class="headerlink" title="Performance Evaluation in Anomaly Detection"></a>Performance Evaluation in Anomaly Detection</h2><h3 id="Experimental-Settings"><a href="#Experimental-Settings" class="headerlink" title="Experimental Settings"></a>Experimental Settings</h3><p><img src="https://i.loli.net/2020/07/20/3G7DNKjwfQkiIz4.png" srcset="/img/loading.gif"></p>
+<p>异常分数定义为$\mathcal S(\mathbf x)=(\phi(\mathbf x;\Theta)-\eta(\mathbf x))^2$。</p>
+<h3 id="Comparison-to-the-State-of-the-art-Competing-Methods"><a href="#Comparison-to-the-State-of-the-art-Competing-Methods" class="headerlink" title="Comparison to the State-of-the-art Competing Methods"></a>Comparison to the State-of-the-art Competing Methods</h3><p><img src="https://i.loli.net/2020/07/20/8Ie2Q3mpdPHtrYF.png" srcset="/img/loading.gif"></p>
+<p><img src="https://i.loli.net/2020/07/20/OEcQSvZmfBz1ACt.png" srcset="/img/loading.gif"></p>
+<h3 id="Ablation-Study"><a href="#Ablation-Study" class="headerlink" title="Ablation Study"></a>Ablation Study</h3><p><img src="https://i.loli.net/2020/07/20/7GtKlN8q5Mvygre.png" srcset="/img/loading.gif"></p>
+<h2 id="Performance-Evaluation-in-Clustering"><a href="#Performance-Evaluation-in-Clustering" class="headerlink" title="Performance Evaluation in Clustering"></a>Performance Evaluation in Clustering</h2><h3 id="Experimental-Settings-1"><a href="#Experimental-Settings-1" class="headerlink" title="Experimental Settings"></a>Experimental Settings</h3><p><img src="https://i.loli.net/2020/07/20/9xW12MVkoXgFZ6J.png" srcset="/img/loading.gif"></p>
+<h3 id="Comparison-to-the-State-of-the-art-Competing-Methods-1"><a href="#Comparison-to-the-State-of-the-art-Competing-Methods-1" class="headerlink" title="Comparison to the State-of-the-art Competing Methods"></a>Comparison to the State-of-the-art Competing Methods</h3><p><img src="https://i.loli.net/2020/07/20/pUZ64aX1xWiLf2q.png" srcset="/img/loading.gif"></p>
+<p><img src="https://i.loli.net/2020/07/20/VrnXuJsymiMItUf.png" srcset="/img/loading.gif" alt="image-20200720014002063"></p>
 
             </div>
             <hr>
