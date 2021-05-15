@@ -20,7 +20,7 @@
   <meta name="author" content="Hanzawa">
   <meta name="keywords" content="">
   
-  <title>Learning Representations of Ultrahigh-dimensional Data for Random Distance-based Outlier Detection - Hanzawa の 部屋</title>
+  <title>Self-supervised Learning Meets Anomaly Detection - Hanzawa の 部屋</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
 
@@ -166,7 +166,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="Learning Representations of Ultrahigh-dimensional Data for Random Distance-based Outlier Detection">
+            <span class="h2" id="subtitle" title="Self-supervised Learning Meets Anomaly Detection">
               
             </span>
 
@@ -176,8 +176,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2020-05-06 11:05" pubdate>
-        2020年5月6日 上午
+      <time datetime="2021-05-12 14:40" pubdate>
+        2021年5月12日 下午
       </time>
     </span>
   
@@ -188,7 +188,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1.3k 字
+      470 字
     </span>
   
 
@@ -198,7 +198,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      18
+      8
        分钟
     </span>
   
@@ -228,124 +228,83 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Learning Representations of Ultrahigh-dimensional Data for Random Distance-based Outlier Detection</h1>
+            <h1 style="display: none">Self-supervised Learning Meets Anomaly Detection</h1>
             
               <p class="note note-info">
                 
-                  本文最后更新于：1 年前
+                  本文最后更新于：2 天前
                 
               </p>
             
             <div class="markdown-body">
               <h1 id="introduction">Introduction</h1>
-<p>本文提出了一种针对高维数据异常检测的表示学习方法。文中提出了<strong>RAMODO</strong>框架，一种基于排序的结合表示学习和异常检测的无监督框架。除此之外，基于<strong>RAMODO</strong>，文中还提出了基于此框架的模型<strong>REPEN</strong>。</p>
-<p><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1806.04808">Paper📰</a></p>
-<h1 id="proposed-method">Proposed Method</h1>
-<h2 id="the-proposed-framework-ramodo">The Proposed Framework: <strong>RAMODO</strong></h2>
-<h3 id="problem-statement">Problem Statement</h3>
-<p>我们的目的是为高维数据学习低维表示，同时在学到的低维表示中能够更好地进行异常检测。设有数据集<span class="math inline">\(\mathcal{X}=\{\mathbf x_1,\mathbf x_2,\cdots, \mathbf x_N\}\)</span> (<span class="math inline">\(\mathbf x_i\in \mathbb{R}^D\)</span>) 和一个基于随机距离的异常检测器<span class="math inline">\(\phi:\mathcal{X}\mapsto \mathbb{R}\)</span>，我们的目标是学习一个表示函数<span class="math inline">\(f:\mathcal{X}\mapsto\mathbb{R}^M (M\ll D)\)</span>使得对于所有异常样本<span class="math inline">\(\mathbf x_i\)</span>和正常样本<span class="math inline">\(\mathbf x_j\)</span>都有<span class="math inline">\(\phi(f(\mathbf x_i))&gt;\phi(f(\mathbf x_j))\)</span>。</p>
-<h3 id="ranking-model-based-representation-learning-framework">Ranking Model-based Representation Learning Framework</h3>
-<p><strong>RAMODO</strong>基于<em>pairwise ranking model</em>。第一步是通过一定的预处理算法（原文中称为<em>outlier thresholding</em>）将数据划分为inlier候选集和outlier候选集；第二步通过随机从inlier候选集采样<span class="math inline">\(n\)</span>个样本生成query set <span class="math inline">\((\mathbf x_i,\cdots,\mathbf x_{i+n-1})\)</span>，从inlier候选集采样一个样本生成<em>positive example</em> <span class="math inline">\((\mathbf x^+)\)</span>，从outlier候选集采样一个样本生成<em>negative example</em> <span class="math inline">\((\mathbf x^-)\)</span>，将三者组合生成 <em>metatriplet</em> <span class="math inline">\(T=(&lt;\mathbf x_i,\cdots,\mathbf x_{i+n-1}&gt;,\mathbf x^+,\mathbf x^-)\)</span>；第三步通过神经网络<span class="math inline">\(f\)</span>学习表示；第四步通过<em>outlier score-based ranking loss</em> <span class="math inline">\(L(\phi(f(\mathbf x^+)|&lt;f(\mathbf x_i),\cdots,f(\mathbf x_{i+n-1})&gt;),\phi(f(\mathbf x^-)|&lt;f(\mathbf x_i),\cdots,f(\mathbf x_{i+n-1})&gt;))\)</span>来进行优化，其中<span class="math inline">\(\phi(\cdot|\cdot)\)</span>为基于距离的异常检测器。</p>
-<p><img src="https://i.loli.net/2020/06/25/4I7fx5ZjBhueUDz.png" srcset="/img/loading.gif" /></p>
-<h2 id="a-ramodo-instance-repen">A <strong>RAMODO</strong> Instance: <strong>REPEN</strong></h2>
-<p><strong>REPEN</strong>为<strong>RAMODO</strong>的实例模型，使用Sp作为异常检测器。</p>
-<h3 id="outlier-thresholding-using-state-of-the-art-detectors-and-cantellis-inequality">Outlier Thresholding Using State-of-the-art Detectors and Cantelli's Inequality</h3>
-<p>第一步使用Sp作为基础获得初始anomaly score：</p>
-<blockquote>
-<p><strong>Definition 1</strong> (<em>Sp-based Outlier Scoring</em>). 给定样本<span class="math inline">\(x_i\)</span>，Sp 以以下方式定义该样本的异常程度： <span class="math display">\[
-r_i=\frac{1}{m}\sum\limits_{j=1}^m nn\_dist(\mathbf x_i|\mathcal{S}_j)
-\]</span> 其中<span class="math inline">\(\mathcal S_j\subset \mathcal X\)</span>为数据集随机采样的子集，<span class="math inline">\(m\)</span>为集成大小，<span class="math inline">\(nn_dist(\cdot|\cdot)\)</span>为<span class="math inline">\(\mathcal S_j\)</span>中最近邻居的距离。</p>
-</blockquote>
-<p>接着通过<em>Cantelli's Inequality</em>来定义<em>Pseudo Outlier</em>：</p>
-<blockquote>
-<p><strong>Definition 2 </strong>(<em>Cantelli's Inequality-based Outlier Thresholding</em>). 给定异常分数向量<span class="math inline">\(\mathbf r\in\mathbb R^N\)</span>，更高异常分数代表更高的可能性为异常，设<span class="math inline">\(\mu\)</span>和<span class="math inline">\(\delta^2\)</span>分别为均值和方差，<em>Outlier</em>候选集由以下方式确定： <span class="math display">\[
-\mathcal{O}=\{\mathbf x_i|r_i \geq \mu + \alpha\delta\}, \space\forall \mathbf x_i\in\mathcal X, \space r_i\in\mathbf r
-\]</span> 其中<span class="math inline">\(\alpha\geq 0\)</span>为自定义的阈值。</p>
-</blockquote>
-<p><em>Inlier</em>候选集<span class="math inline">\(\mathcal I=\mathcal X\backslash \mathcal O\)</span>。</p>
-<h3 id="triplet-sampling-based-on-outlier-scores">Triplet Sampling Based on Outlier Scores</h3>
-<p>首先，从<span class="math inline">\(\mathcal I\)</span>采样一定数量的样本组成<em>query set</em>，每个样本被采样的概率与其对应的异常分数有关：</p>
+<h1 id="distinguishing-geometric-transformations">Distinguishing Geometric Transformations</h1>
+<ol type="1">
+<li><p><a target="_blank" rel="noopener" href="http://hanzawa.me/2020/06/01/Deep-Anomaly-Detection-Using-Geometric-Transformations/">Deep Anomaly Detection Using Geometric Transformations - Hanzawa の 部屋</a></p></li>
+<li><p><a target="_blank" rel="noopener" href="http://hanzawa.me/2020/06/02/Classification-based-Anomaly-Detection-for-General-Data/">Classification-based Anomaly Detection for General Data - Hanzawa の 部屋</a></p></li>
+<li><p><a target="_blank" rel="noopener" href="http://hanzawa.me/2020/07/14/Effective-End-to-end-Unsupervised-Outlier-Detection-via-Linear-Priority-of-Discriminative-Network/">Effective End-to-end Unsupervised Outlier Detection via Linear Priority of Discriminative Network - Hanzawa の 部屋</a></p></li>
+</ol>
+<h1 id="csi-novelty-detection-via-contrastive-learning-on-distributionally-shifted-instances">CSI: Novelty Detection via Contrastive Learning on Distributionally Shifted Instances</h1>
+<h2 id="methodology">Methodology</h2>
 <p><span class="math display">\[
-p(\mathbf x_i)=\frac{\mathbb Z-r_i}{\sum_{t=1}^{|\mathcal I|}[\mathbb Z-r_t]}
+\mathcal L_\texttt{con-SI}=\mathcal L_\texttt{SimCLR}\left(\bigcup_{S\in\mathcal S}\mathcal B_S;\mathcal T\right)
+\]</span> 其中<span class="math inline">\(\mathcal B_S=\{S(x_i)\}_{i=1}^B\)</span> <span class="math display">\[
+\mathcal L_\textrm{cls-SI}=\frac{1}{2B}\frac{1}{K}\sum_{S\in\mathcal S}\sum_{\widetilde{x}_S\in\widetilde{\mathcal B}_S}-\log p_\textrm{cls-SI}(y^{\mathcal S}=S|\widetilde x_S)
 \]</span></p>
-<p>其中<span class="math inline">\(\mathbb Z=\sum_{t=1}^{|\mathcal I|}r_t\)</span>。</p>
-<p>之后从<em>inlier set</em>中均匀随机采样一个<em>positive sample</em> <span class="math inline">\(\mathbf x^+\)</span>。最后从<em>outlier set</em>中根据以下概率采样一个<em>negative sample</em> <span class="math inline">\(\mathbf x^-\)</span>： <span class="math display">\[
-p(\mathbf x_j)=\frac{r_j}{\sum_{t=1}^{|\mathcal O|}r_t}
+<p><span class="math display">\[
+\mathcal s_\textrm{con}(x;\{x_m\}) = \max_m\text{sim}(z(x_m),z(x))\cdot\parallel z(x)\parallel
 \]</span></p>
-<h3 id="a-shallow-data-representation">A Shallow Data Representation</h3>
-<p>单层神经网络用来获得浅层的表示：</p>
-<blockquote>
-<p><strong>Definition 3 </strong>(<em>Single-layer Fully-connected Representations</em>) 给定输入<span class="math inline">\(x\)</span>， <span class="math display">\[
-f_\Theta(\mathbf x)=\{\psi(\mathbf w_1^\top\mathbf x),\psi(\mathbf w_2^\top\mathbf x),\cdots,\psi(\mathbf w_M^\top\mathbf x)\}
-\]</span> 其中<span class="math inline">\(\psi(\cdot)\)</span>为激活函数，<span class="math inline">\(\mathbf w\)</span>为权重矩阵。</p>
-</blockquote>
-<h3 id="ranking-loss-using-random-nearest-neighbor-distance-based-outlier-scores">Ranking Loss Using Random Nearest Neighbor Distance-based Outlier Scores</h3>
-<p>设<span class="math inline">\(\mathcal{Q}=&lt;f_\Theta(\mathbf x_i),\cdots,f_\Theta(\mathbf x_{i+n-1})&gt;\)</span>为<em>query set</em>，给定样本<span class="math inline">\(\mathbf x\)</span>，<strong>REPEN</strong>根据最近邻距离定义了<span class="math inline">\(f_\Theta(\mathbf x)\)</span>的异常程度： <span class="math display">\[
-\phi(f_\Theta(\mathbf x)|\mathcal{Q})=nn\_dist(f_\Theta(\mathbf x)|\mathcal Q)
-\]</span> 因此，给定三元组<span class="math inline">\(T=(\mathcal Q,f_\Theta(\mathbf x^+),f_\Theta(\mathbf x^-))\)</span>，我们的目标是学得表示<span class="math inline">\(f(\cdot)\)</span>使得： <span class="math display">\[
-nn\_dist(f_\Theta(\mathbf x^+)|\mathcal Q)&lt;nn\_dist(f_\Theta(\mathbf x^-)|\mathcal Q)
-\]</span> 损失函数： <span class="math display">\[
-J(\Theta;T)=L(\phi(f_\Theta(\mathbf x^+)|\mathcal Q),\phi(f_\Theta(\mathbf x^-)|\mathcal Q))=\\\max\{0, c+nn\_dist(f_\Theta(\mathbf x^+)|\mathcal Q)-nn\_dist(f_\Theta(\mathbf x^-)|\mathcal Q)\}
-\]</span> 其中<span class="math inline">\(c\)</span>为边界参数。给定一系列三元组，最终优化目标如下： <span class="math display">\[
-\mathop{\text{arg min}}\limits_{\Theta}\frac{1}{|\mathcal{T}|}\sum\limits_{i=1}^{|\mathcal T|}J(\Theta;T_i)
+<p><span class="math display">\[
+\mathcal s_\textrm{con-SI}(x;\{x_m\})=\sum_{S\in\mathcal S}\lambda_S^\textrm{con}s_\textrm{con}(S(x);\{S(x_m\})
 \]</span></p>
-<h3 id="the-algorithm-and-its-time-complexity">The Algorithm and Its Time Complexity</h3>
-<p><img src="https://i.loli.net/2020/06/25/eYtKHBJ7szCgjNa.png" srcset="/img/loading.gif" /></p>
-<h3 id="leveraging-a-few-labeled-outliers-to-improve-triplet-sampling">Leveraging A Few Labeled Outliers to Improve Triplet Sampling</h3>
-<h1 id="experiments">Experiments</h1>
-<h2 id="datasets">Datasets</h2>
-<ul>
-<li>AD：网络广告检测</li>
-<li>LC：肺癌疾病监测</li>
-<li>p53：异常蛋白质活动检测</li>
-<li>R8：文本分类</li>
-<li>News20：文本分类</li>
-<li>URL：异常网址检测</li>
-<li>Webspam：Pascal Large Scale LearningChallenge</li>
-</ul>
-<h2 id="effectiveness-in-real-world-data-with-thousands-to-millions-of-features">Effectiveness in Real-world Data with Thousands to Millions of Features</h2>
-<p>作者分别使用原始特征和<em>REPEN</em>学到的特征进行异常检测，IMP代表性能提升比例，SU代表加速比例。</p>
-<p><img src="https://i.loli.net/2020/06/25/mvUiE1NzyTwOgV8.png" srcset="/img/loading.gif" /></p>
-<h2 id="comparing-to-state-of-the-art-representation-learning-competitors">Comparing to State-of-the-art Representation Learning Competitors</h2>
-<ul>
-<li><strong>AE: </strong>自编码器</li>
-<li><strong>HLLE: </strong> <em>Hessian Locally Linear Embedding</em></li>
-<li><strong>SRP: </strong> <em>Sparse Random Projection</em></li>
-<li><strong>CoP: </strong> <em>Coherent Pursuit</em></li>
-</ul>
-<p><img src="https://i.loli.net/2020/06/25/yQumCRNrHAheJ34.png" srcset="/img/loading.gif" /></p>
-<h2 id="the-capability-of-leveraging-labeled-outliers-as-prior-knowledge">The Capability of Leveraging Labeled Outliers as Prior Knowledge</h2>
-<p><img src="https://i.loli.net/2020/06/25/NOLfKQd2u1JMPtp.png" srcset="/img/loading.gif" /></p>
-<h2 id="sensitivity-test-w.r.t.-the-representation-dimension">Sensitivity Test w.r.t. the Representation Dimension</h2>
-<p><img src="https://i.loli.net/2020/06/25/BoGjY5SEu6vrK3X.png" srcset="/img/loading.gif" /></p>
-<p><img src="https://i.loli.net/2020/06/25/Rlx7Df9Hvsjp2Eg.png" srcset="/img/loading.gif" /></p>
-<p>文中提到了对于R8、URL、News20这三个数据集在维度<span class="math inline">\(M=1\)</span>的时候表现和其他维度一样好，作者给出的解释是在这几个数据集中异常部分是线性可分的，所以1维就足够了，另一个解释是优化问题。</p>
-<h2 id="scalability-test">Scalability Test</h2>
-<p><img src="https://i.loli.net/2020/06/25/1JfUclWyFYgLdNp.png" srcset="/img/loading.gif" /></p>
+<p><span class="math display">\[
+\mathcal s_\textrm{cls-SI}(x)=\sum_{S\in\mathcal S}\lambda_S^\textrm{cls}W_S f_\theta(S(x))
+\]</span></p>
+<p><span class="math display">\[
+\mathcal s_\textrm{CSI}(x;\{x_m\})=\mathcal s_\textrm{con-SI}(x;\{x_m\})+\mathcal s_\textrm{cls-SI}(x)
+\]</span></p>
+<p><span class="math display">\[
+\mathcal S_\textrm{SupCLR}(\mathcal C;\mathcal T)=\frac{1}{2B}\sum_{j=1}^{2B}\mathcal L_\textrm{con}(\widetilde x_j,\widetilde {\mathcal C}_{y_j}\backslash \{\widetilde x_j\},\widetilde{\mathcal C}_{-y_j})
+\]</span></p>
+<p><span class="math display">\[
+\mathcal L_\textrm{sup-CSI}=\mathcal L_\textrm{SupCLR}\left(\bigcup_{S\in\mathcal S}\mathcal C_S;\mathcal T\right)
+\]</span> 其中<span class="math inline">\(\mathcal C_S=\{(S(x_i),(y_i,S))\}_{i=1}^B\)</span></p>
+<p><span class="math display">\[
+p_\textrm{CSI-ens}(y|x) = \sigma\left(\frac{1}{K}\sum_k l(S_k(x))_k\right)
+\]</span></p>
+<h2 id="experiments">Experiments</h2>
+<p><img src="https://i.loli.net/2021/05/13/t4KBzSLxovWh5aD.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2021/05/13/Xt21qONbZxsTpAJ.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2021/05/13/FomE2l6fqzyCkJi.png" srcset="/img/loading.gif" /></p>
+<h1 id="ssd-a-unified-framework-for-self-supervised-outlier-detection">SSD: A Unified Framework For Self-supervised Outlier Detection</h1>
+<h2 id="methodology-1">Methodology</h2>
+<p>第一步，使用对比学习进行预训练，： <span class="math display">\[
+\mathcal L_\text{batch} = \frac{1}{2N}\sum_{i=1}^{2N}-\log\frac{e^{u_i^\top u_j/\tau}}{\sum_{k=1}^{2N}\boldsymbol 1(k\neq i)e^{u_i^\top u_k/\tau}}
+\]</span> 其中<span class="math inline">\(u_i\)</span>都经过归一化。</p>
+<p>之后，在学到的特征上使用K-Means算法将 <span class="math display">\[
+s_x = \min_m(z_x-\mu_m)^\top \Sigma_m^{-1}(z_x-\mu_m)
+\]</span></p>
+<p><span class="math display">\[
+s_x=(z_x-\mu_\text{in})^\top\Sigma_\text{in}^{-1}(z_x-\mu_\text{in})-(z_x-\mu_\text{ood})^\top \Sigma_\text{ood}^{-1}(z_x-\mu_\text{ood})
+\]</span></p>
+<p><span class="math display">\[
+s_x=(z_x-\mu_\text{in})^\top \Sigma_\text{in}^{-1}(z_x-\mu_\text{in})-(z_x-\mu_U)^\top S_U^{-1}(z_x-\mu_U)
+\]</span></p>
+<p><span class="math display">\[
+\mathcal L_\text{batch}=\frac{1}{2N}\sum_{i=1}^{2N}-\log\frac{\frac{1}{2N_{y_i}-1}\sum_{k=1}^{2N}\boldsymbol 1(k\neq i)\boldsymbol 1(y_k=y_i)e^{u_i^\top u_k/\tau}}{\sum_{k=1}^{2N}\boldsymbol 1(k\neq i)e^{u_i^\top u_k/\tau}}
+\]</span></p>
+<p><img src="https://i.loli.net/2021/05/13/yTw7jYDv2kPmZVr.png" srcset="/img/loading.gif" /></p>
+<h2 id="experiments-1">Experiments</h2>
+<p><img src="https://i.loli.net/2021/05/13/UhAxS4KRV6gZjqC.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2021/05/13/4nNBro1sLTV8YZ3.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2021/05/13/Q1jbKi3Us9mL8XA.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2021/05/13/OgqhN9nz1cBwEKF.png" srcset="/img/loading.gif" /></p>
 
             </div>
             <hr>
             <div>
               <div class="post-metas mb-3">
                 
-                  <div class="post-meta mr-3">
-                    <i class="iconfont icon-category"></i>
-                    
-                      <a class="hover-with-bg" href="/categories/Research/">Research</a>
-                    
-                      <a class="hover-with-bg" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
-                    
-                  </div>
-                
-                
-                  <div class="post-meta">
-                    <i class="iconfont icon-tags"></i>
-                    
-                      <a class="hover-with-bg" href="/tags/Anomaly-Detection/">Anomaly Detection</a>
-                    
-                      <a class="hover-with-bg" href="/tags/Representation-Learning/">Representation Learning</a>
-                    
-                  </div>
                 
               </div>
               
@@ -360,18 +319,12 @@ J(\Theta;T)=L(\phi(f_\Theta(\mathbf x^+)|\mathcal Q),\phi(f_\Theta(\mathbf x^-)|
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2020/06/01/Cross-dataset-Time-Series-Anomaly-Detection-for-Cloud-Systems/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Cross-dataset Time Series Anomaly Detection for Cloud Systems</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2020/03/30/Deep-Weakly-supervised-Anomaly-Detection/">
-                        <span class="hidden-mobile">Deep Weakly-supervised Anomaly Detection</span>
+                      <a href="/2020/09/23/Unsupervised-Feature-Learning-via-Non-Parametric-Instance-Discrimination/">
+                        <span class="hidden-mobile">Unsupervised Feature Learning via Non-Parametric Instance Discrimination</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

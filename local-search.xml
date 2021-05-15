@@ -4,6 +4,19 @@
   
   
   <entry>
+    <title>Self-supervised Learning Meets Anomaly Detection</title>
+    <link href="/2021/05/12/Self-supervised-Learning-Meets-Anomaly-Detection/"/>
+    <url>/2021/05/12/Self-supervised-Learning-Meets-Anomaly-Detection/</url>
+    
+    <content type="html"><![CDATA[<h1 id="introduction">Introduction</h1><h1 id="distinguishing-geometric-transformations">Distinguishing Geometric Transformations</h1><ol type="1"><li><p><a href="http://hanzawa.me/2020/06/01/Deep-Anomaly-Detection-Using-Geometric-Transformations/">Deep Anomaly Detection Using Geometric Transformations - Hanzawa の 部屋</a></p></li><li><p><a href="http://hanzawa.me/2020/06/02/Classification-based-Anomaly-Detection-for-General-Data/">Classification-based Anomaly Detection for General Data - Hanzawa の 部屋</a></p></li><li><p><a href="http://hanzawa.me/2020/07/14/Effective-End-to-end-Unsupervised-Outlier-Detection-via-Linear-Priority-of-Discriminative-Network/">Effective End-to-end Unsupervised Outlier Detection via Linear Priority of Discriminative Network - Hanzawa の 部屋</a></p></li></ol><h1 id="csi-novelty-detection-via-contrastive-learning-on-distributionally-shifted-instances">CSI: Novelty Detection via Contrastive Learning on Distributionally Shifted Instances</h1><h2 id="methodology">Methodology</h2><p><span class="math display">\[\mathcal L_\texttt{con-SI}=\mathcal L_\texttt{SimCLR}\left(\bigcup_{S\in\mathcal S}\mathcal B_S;\mathcal T\right)\]</span> 其中<span class="math inline">\(\mathcal B_S=\{S(x_i)\}_{i=1}^B\)</span> <span class="math display">\[\mathcal L_\textrm{cls-SI}=\frac{1}{2B}\frac{1}{K}\sum_{S\in\mathcal S}\sum_{\widetilde{x}_S\in\widetilde{\mathcal B}_S}-\log p_\textrm{cls-SI}(y^{\mathcal S}=S|\widetilde x_S)\]</span></p><p><span class="math display">\[\mathcal s_\textrm{con}(x;\{x_m\}) = \max_m\text{sim}(z(x_m),z(x))\cdot\parallel z(x)\parallel\]</span></p><p><span class="math display">\[\mathcal s_\textrm{con-SI}(x;\{x_m\})=\sum_{S\in\mathcal S}\lambda_S^\textrm{con}s_\textrm{con}(S(x);\{S(x_m\})\]</span></p><p><span class="math display">\[\mathcal s_\textrm{cls-SI}(x)=\sum_{S\in\mathcal S}\lambda_S^\textrm{cls}W_S f_\theta(S(x))\]</span></p><p><span class="math display">\[\mathcal s_\textrm{CSI}(x;\{x_m\})=\mathcal s_\textrm{con-SI}(x;\{x_m\})+\mathcal s_\textrm{cls-SI}(x)\]</span></p><p><span class="math display">\[\mathcal S_\textrm{SupCLR}(\mathcal C;\mathcal T)=\frac{1}{2B}\sum_{j=1}^{2B}\mathcal L_\textrm{con}(\widetilde x_j,\widetilde {\mathcal C}_{y_j}\backslash \{\widetilde x_j\},\widetilde{\mathcal C}_{-y_j})\]</span></p><p><span class="math display">\[\mathcal L_\textrm{sup-CSI}=\mathcal L_\textrm{SupCLR}\left(\bigcup_{S\in\mathcal S}\mathcal C_S;\mathcal T\right)\]</span> 其中<span class="math inline">\(\mathcal C_S=\{(S(x_i),(y_i,S))\}_{i=1}^B\)</span></p><p><span class="math display">\[p_\textrm{CSI-ens}(y|x) = \sigma\left(\frac{1}{K}\sum_k l(S_k(x))_k\right)\]</span></p><h2 id="experiments">Experiments</h2><p><img src="https://i.loli.net/2021/05/13/t4KBzSLxovWh5aD.png" /></p><p><img src="https://i.loli.net/2021/05/13/Xt21qONbZxsTpAJ.png" /></p><p><img src="https://i.loli.net/2021/05/13/FomE2l6fqzyCkJi.png" /></p><h1 id="ssd-a-unified-framework-for-self-supervised-outlier-detection">SSD: A Unified Framework For Self-supervised Outlier Detection</h1><h2 id="methodology-1">Methodology</h2><p>第一步，使用对比学习进行预训练，： <span class="math display">\[\mathcal L_\text{batch} = \frac{1}{2N}\sum_{i=1}^{2N}-\log\frac{e^{u_i^\top u_j/\tau}}{\sum_{k=1}^{2N}\boldsymbol 1(k\neq i)e^{u_i^\top u_k/\tau}}\]</span> 其中<span class="math inline">\(u_i\)</span>都经过归一化。</p><p>之后，在学到的特征上使用K-Means算法将 <span class="math display">\[s_x = \min_m(z_x-\mu_m)^\top \Sigma_m^{-1}(z_x-\mu_m)\]</span></p><p><span class="math display">\[s_x=(z_x-\mu_\text{in})^\top\Sigma_\text{in}^{-1}(z_x-\mu_\text{in})-(z_x-\mu_\text{ood})^\top \Sigma_\text{ood}^{-1}(z_x-\mu_\text{ood})\]</span></p><p><span class="math display">\[s_x=(z_x-\mu_\text{in})^\top \Sigma_\text{in}^{-1}(z_x-\mu_\text{in})-(z_x-\mu_U)^\top S_U^{-1}(z_x-\mu_U)\]</span></p><p><span class="math display">\[\mathcal L_\text{batch}=\frac{1}{2N}\sum_{i=1}^{2N}-\log\frac{\frac{1}{2N_{y_i}-1}\sum_{k=1}^{2N}\boldsymbol 1(k\neq i)\boldsymbol 1(y_k=y_i)e^{u_i^\top u_k/\tau}}{\sum_{k=1}^{2N}\boldsymbol 1(k\neq i)e^{u_i^\top u_k/\tau}}\]</span></p><p><img src="https://i.loli.net/2021/05/13/yTw7jYDv2kPmZVr.png" /></p><h2 id="experiments-1">Experiments</h2><p><img src="https://i.loli.net/2021/05/13/UhAxS4KRV6gZjqC.png" /></p><p><img src="https://i.loli.net/2021/05/13/4nNBro1sLTV8YZ3.png" /></p><p><img src="https://i.loli.net/2021/05/13/Q1jbKi3Us9mL8XA.png" /></p><p><img src="https://i.loli.net/2021/05/13/OgqhN9nz1cBwEKF.png" /></p>]]></content>
+    
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Unsupervised Feature Learning via Non-Parametric Instance Discrimination</title>
     <link href="/2020/09/23/Unsupervised-Feature-Learning-via-Non-Parametric-Instance-Discrimination/"/>
     <url>/2020/09/23/Unsupervised-Feature-Learning-via-Non-Parametric-Instance-Discrimination/</url>
@@ -600,9 +613,9 @@
     
     <tags>
       
-      <tag>Anomaly Detection</tag>
-      
       <tag>Deep Learning</tag>
+      
+      <tag>Anomaly Detection</tag>
       
     </tags>
     
@@ -656,9 +669,9 @@
     
     <tags>
       
-      <tag>Anomaly Detection</tag>
-      
       <tag>VAE</tag>
+      
+      <tag>Anomaly Detection</tag>
       
     </tags>
     
@@ -716,11 +729,11 @@
     
     <tags>
       
-      <tag>Deep Learning</tag>
-      
       <tag>Variational Inference</tag>
       
       <tag>VAE</tag>
+      
+      <tag>Deep Learning</tag>
       
     </tags>
     
@@ -747,9 +760,9 @@
     
     <tags>
       
-      <tag>Time Series</tag>
-      
       <tag>Deep Learning</tag>
+      
+      <tag>Time Series</tag>
       
       <tag>RNN</tag>
       
@@ -778,15 +791,15 @@
     
     <tags>
       
+      <tag>VAE</tag>
+      
+      <tag>Deep Learning</tag>
+      
       <tag>Time Series</tag>
       
       <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
-      
-      <tag>Deep Learning</tag>
-      
-      <tag>VAE</tag>
       
       <tag>RNN</tag>
       
@@ -817,9 +830,9 @@
     
     <tags>
       
-      <tag>Time Series</tag>
-      
       <tag>Deep Learning</tag>
+      
+      <tag>Time Series</tag>
       
       <tag>GAN</tag>
       
@@ -848,13 +861,13 @@
     
     <tags>
       
+      <tag>Deep Learning</tag>
+      
       <tag>Time Series</tag>
       
       <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
-      
-      <tag>Deep Learning</tag>
       
     </tags>
     
@@ -881,13 +894,13 @@
     
     <tags>
       
+      <tag>Deep Learning</tag>
+      
       <tag>Time Series</tag>
       
       <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
-      
-      <tag>Deep Learning</tag>
       
     </tags>
     
@@ -914,15 +927,15 @@
     
     <tags>
       
+      <tag>VAE</tag>
+      
+      <tag>Deep Learning</tag>
+      
       <tag>Time Series</tag>
       
       <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
-      
-      <tag>Deep Learning</tag>
-      
-      <tag>VAE</tag>
       
     </tags>
     
@@ -949,13 +962,13 @@
     
     <tags>
       
+      <tag>Deep Learning</tag>
+      
       <tag>Time Series</tag>
       
       <tag>Anomaly Detection</tag>
       
       <tag>Machine Learning</tag>
-      
-      <tag>Deep Learning</tag>
       
       <tag>Spectral</tag>
       
