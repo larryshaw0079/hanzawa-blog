@@ -179,64 +179,6 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/" target="_self">
-          <img src="https://i.loli.net/2020/06/25/KW2YgScfVZN7Fjz.png" srcset="/img/loading.gif" alt="Transfer Anomaly Detection by Inferring Latent Domain Representations">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/">Transfer Anomaly Detection by Inferring Latent Domain Representations</a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/">
-          
-          
-            
-          
-          Introduction作者提出了一种利用迁移学习提升target domain异常检测性能的算法。文中指出现有的基于迁移学习的异常检测算法需要对每个 target domain 进行单独训练，这样做会带来很大的计算开销。本文通过latent domain vectors来实现无需重新训练的异常检测。latent domain vectors是domain的一种隐含表示，通过该domain中的正常
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2020-02-27 20:02" pubdate>
-              2020-02-27
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/Research/">Research</a>
-            
-              <a href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Anomaly-Detection/">Anomaly Detection</a>
-            
-              <a href="/tags/Transfer-Learning/">Transfer Learning</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2020/02/24/Deep-Anomaly-Detection-with-Deviation-Networks/" target="_self">
           <img src="https://i.loli.net/2020/06/25/ZuE1mb2Ytv6Jdl7.png" srcset="/img/loading.gif" alt="Deep Anomaly Detection with Deviation Networks">
         </a>
@@ -254,7 +196,8 @@
           
             
           
-          Introduction本文关注Deep Anomaly Detection，也就是用深度学习的方法来进行异常检测。文中提到现有的Deep Anomaly Detection存在两个弊端：一个是采用深度学习方法来进行特征学习，然后通过下游任务得到Anomaly Score，相比文中End-to-End的Anomaly Score学习，存在优化不充分的风险；另一个是现有的方法主要是无监督学习，无法利
+          Introduction
+本文关注Deep Anomaly Detection，也就是用深度学习的方法来进行异常检测。文中提到现有的Deep Anomaly Detection存在两个弊端：一个是采用深度学习方法来进行特征学习，然后通过下游任务得到Anomaly Score，相比文中End-to-End的Anomaly Score学习，存在优化不充分的风险；另一个是现有的方法主要是无监督学习，无
         </a>
       </p>
 
@@ -312,8 +255,10 @@
           
             
           
-          IntroductionGeant4安装的教程很多，版本都很旧了，这里写一个新版本（10.6）基于Ubuntu的安装教程，并且开启CLion IDE调试。
-Step 1: Download Packages首先进入官网(http://geant4.web.cern.ch/support/download)下载源代码（推荐tar.gz格式）及数据文件，解压。新建一个文件夹专门用来放Geant4相关文
+          Introduction
+Geant4安装的教程很多，版本都很旧了，这里写一个新版本（10.6）基于Ubuntu的安装教程，并且开启CLion IDE调试。
+Step 1: Download Packages
+首先进入官网(http://geant4.web.cern.ch/support/download)下载源代码（推荐tar.gz格式）及数据文件，解压。新建一个文件夹专门用来放Gean
         </a>
       </p>
 
@@ -369,9 +314,12 @@ Step 1: Download Packages首先进入官网(http://geant4.web.cern.ch/support/do
           
             
           
-          Introduction对于异常检测问题，异常的模式是多种多样的。有监督模型能够较好地处理训练集中出现过的模式，无监督模型能够处理训练集中未出现过的模式，但对于训练集中出现过的异常模型并没有学习。本文提出了一种既能学习训练集中出现过的异常模式，同时能处理未出现过的异常模式的方法。
-Proposed ModelConventional VAE首先回顾一下原始的VAE。
-原始VAE中的损失函数为：$$
+          Introduction
+对于异常检测问题，异常的模式是多种多样的。有监督模型能够较好地处理训练集中出现过的模式，无监督模型能够处理训练集中未出现过的模式，但对于训练集中出现过的异常模型并没有学习。本文提出了一种既能学习训练集中出现过的异常模式，同时能处理未出现过的异常模式的方法。
+Proposed Model
+Conventional VAE
+首先回顾一下原始的VAE。
+原始VAE中的
         </a>
       </p>
 
@@ -429,9 +377,11 @@ Proposed ModelConventional VAE首先回顾一下原始的VAE。
           
             
           
-          Introduction本文基于Extreme Value Theory提出了一种不需要手动设置阈值也不需要对数据分布作任何假设的时间序列异常检测方法。除此之外，本方法可以用在通用的自动阈值选择的场合中。
+          Introduction
+本文基于Extreme Value Theory提出了一种不需要手动设置阈值也不需要对数据分布作任何假设的时间序列异常检测方法。除此之外，本方法可以用在通用的自动阈值选择的场合中。
 原文
-Background在很多情况下我们需要进行阈值的选择。阈值的选择可以通过实验的方法或者对数据分布进行假设的方法来得到，不过这样做通常不准确。借助Extreme Value Theory我
+Background
+在很多情况下我们需要进行阈值的选择。阈值的选择可以通过实验的方法或者对数据分布进行假设的方法来得到，不过这样做通常不准确。借助Extreme Value T
         </a>
       </p>
 
@@ -491,7 +441,8 @@ Background在很多情况下我们需要进行阈值的选择。阈值的选择�
           
             
           
-          Deep Generative Models生成模型是指一系列用于随机生成可观测数据的模型。假设在一个高维空间$\mathcal{X}$中，存在一个随机向量$\mathbf{X}$服从一个未知的分布$p_r(x),x\in \mathcal{X}$。生成模型就是根据一些可观测的样本$x^{(1)},x^{(2)},\cdots,x^{(N)}$来学习一个参数化的模型$p_\theta(x)$来近似
+          Deep Generative Models
+生成模型是指一系列用于随机生成可观测数据的模型。假设在一个高维空间\(\mathcal{X}\)中，存在一个随机向量\(\mathbf{X}\)服从一个未知的分布\(p_r(x),x\in \mathcal{X}\)。生成模型就是根据一些可观测的样本\(x^{(1)},x^{(2)},\cdots,x^{(N)}\)来学习一个参数化的模型\(p_\t
         </a>
       </p>
 
@@ -551,9 +502,12 @@ Background在很多情况下我们需要进行阈值的选择。阈值的选择�
           
             
           
-          Abstract文中提出了一种可以处理带缺失值多为时间序列的GRU模型：GRU-D。本模型不仅可以捕捉时间序列中的长期依赖模式，并且还能利用时间序列中的缺失模式来达到更好的时间序列预测效果。
+          Abstract
+文中提出了一种可以处理带缺失值多为时间序列的GRU模型：GRU-D。本模型不仅可以捕捉时间序列中的长期依赖模式，并且还能利用时间序列中的缺失模式来达到更好的时间序列预测效果。
 原文
-MethodologyNotations记包含$D$个变量的多变量时间序列为$X=(x_1,x_2,\cdots,x_T)^T\in\mathbb{R}^{T\times D}$，其中对于每个$t\in
+Methodology
+Notations
+记包含\(D\)个变量的多变量时间序列为\(X=(x_1,x_2,\cdots,x_T)^T\in\mathbb{R}^{T\times D}\)
         </a>
       </p>
 
@@ -613,12 +567,13 @@ MethodologyNotations记包含$D$个变量的多变量时间序列为$X=(x_1,x_2,
           
             
           
-          Abstract本文提出了OmniAnomaly：一种针对多变量时间序列的随机循环神经网络异常检测算法。该模型运用了一系列技术来捕捉多变量时间序列的正常模式，并在检测阶段基于重构误差来检测异常，同时本文还提供了一定的理论解释。
+          Abstract
+本文提出了OmniAnomaly：一种针对多变量时间序列的随机循环神经网络异常检测算法。该模型运用了一系列技术来捕捉多变量时间序列的正常模式，并在检测阶段基于重构误差来检测异常，同时本文还提供了一定的理论解释。
 原文
 Contribution
+
 提出了OmniAnomaly，一种基于随机循环神经网络的多变量时间序列异常检测算法；
-提出了针对多变量时间序列异常检测的解释方法；
-通过实验
+提出了针对多变量时间序列异常检测的解释
         </a>
       </p>
 
@@ -686,9 +641,11 @@ Contribution
           
             
           
-          Abstract本文基于GAN提出了一种时间序列缺失值填充（Time Series Imputation）的方法。其主要的思路为生成器$G$从隐空间$Z$生成完整的样本，而判别器$D$则输出样本中不同部分为真实的概率。除此之外，作者提出了使用Hint Vector来揭示原始数据中缺失部分的信息，来优化训练过程。
+          Abstract
+本文基于GAN提出了一种时间序列缺失值填充（Time Series Imputation）的方法。其主要的思路为生成器\(G\)从隐空间\(Z\)生成完整的样本，而判别器\(D\)则输出样本中不同部分为真实的概率。除此之外，作者提出了使用Hint Vector来揭示原始数据中缺失部分的信息，来优化训练过程。
 原文
-MethodologyProblem Formulation考虑一个$d$维的空
+Methodology
+Problem Formulati
         </a>
       </p>
 
@@ -748,14 +705,17 @@ MethodologyProblem Formulation考虑一个$d$维的空
           
             
           
-          Introduction这篇文章提出了一个基于GAN的时间序列异常检测模型。
+          Introduction
+这篇文章提出了一个基于GAN的时间序列异常检测模型。
 原文
 Contribution
+
 提出了基于GAN的时间序列无监督异常检测模型
 我们使用基于LSTM的GAN来对多变量时间序列进行建模
 结合使用了Residual Loss和Discrimination Loss来进行异常的判断
 
-BackgroundGenerative Adversarial NetworksGANs 
+Background
+Generative Adversarial 
         </a>
       </p>
 
@@ -764,6 +724,74 @@ BackgroundGenerative Adversarial NetworksGANs
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
             <time datetime="2019-09-22 22:32" pubdate>
+              2019-09-22
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/Research/">Research</a>
+            
+              <a href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Time-Series/">Time Series</a>
+            
+              <a href="/tags/Anomaly-Detection/">Anomaly Detection</a>
+            
+              <a href="/tags/Machine-Learning/">Machine Learning</a>
+            
+              <a href="/tags/Deep-Learning/">Deep Learning</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2019/09/22/ALSR-An-adaptive-label-screening-and-relearning-approach-for-interval-oriented-anomaly-detection/" target="_self">
+          <img src="https://i.loli.net/2020/06/24/YgRwavDIn7izLPX.png" srcset="/img/loading.gif" alt="ALSR: An Adaptive Label Screening and Relearning Approach for Interval-Oriented Anomaly Detection">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2019/09/22/ALSR-An-adaptive-label-screening-and-relearning-approach-for-interval-oriented-anomaly-detection/">ALSR: An Adaptive Label Screening and Relearning Approach for Interval-Oriented Anomaly Detection</a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2019/09/22/ALSR-An-adaptive-label-screening-and-relearning-approach-for-interval-oriented-anomaly-detection/">
+          
+          
+            
+          
+          Introduction
+本文针对面向区间的KPI异常检测提出了Label Screening方法和Relearning Algorithm.
+原文
+Contribution
+
+提出了一种Label Screening方法来对区间内不同重要性进行过滤
+提出了一种Relearning Algorithm来对FP和TP进行Relearning，在不减少Recall的条件下增大Precisi
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2019-09-22 22:29" pubdate>
               2019-09-22
             </time>
           </div>

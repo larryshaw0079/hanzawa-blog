@@ -178,45 +178,6 @@
   <div class="row mx-auto index-card">
     
     
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2021/05/12/Self-supervised-Learning-Meets-Anomaly-Detection/">Self-supervised Learning Meets Anomaly Detection</a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2021/05/12/Self-supervised-Learning-Meets-Anomaly-Detection/">
-          
-          
-            
-          
-          IntroductionDistinguishing Geometric Transformations
-Deep Anomaly Detection Using Geometric Transformations - Hanzawa の 部屋
-
-Classification-based Anomaly Detection for General Data - Hanzawa の 部屋
-
-Effe
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2021-05-12 14:40" pubdate>
-              2021-05-12
-            </time>
-          </div>
-        
-        
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
       <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2020/09/23/Unsupervised-Feature-Learning-via-Non-Parametric-Instance-Discrimination/" target="_self">
           <img src="https://i.loli.net/2020/07/26/WICKVkhrBu6Mci5.png" srcset="/img/loading.gif" alt="Unsupervised Feature Learning via Non-Parametric Instance Discrimination">
@@ -235,10 +196,10 @@ Effe
           
             
           
-          Introduction本文基于样本分类和噪声对比估计提出了一个无监督表示学习算法。下图展示了一个Intuition Example：
+          Introduction
+本文基于样本分类和噪声对比估计提出了一个无监督表示学习算法。下图展示了一个Intuition Example：
 
-
-对于一个有监督的分类器，输入一张图片，作者观察到分类器的Softmax Response中较高的那些类都是在视觉上看起来比较接近的（美洲豹Leopard，美洲虎Jaguar，印度豹Cheetah），也就是说网络捕捉到了类间的视觉相似性，不过这是在有标签的情况下
+对于一个有监督的分类器，输入一张图片，作者观察到分类器的Softmax Response中较高的那些类都是在视觉上看起来比较接近的（美洲豹Leopard，美洲虎Jaguar，印度豹Cheetah），也就是说网络捕捉到了类间的视觉相似性，不过这是在有标签的
         </a>
       </p>
 
@@ -296,9 +257,13 @@ Effe
           
             
           
-          Introduction这篇文章算是Contrastive Learning的开山之作之一了，本文提出了表示学习框架：Contrastive Predictive Coding（CPC）和InfoNCE Loss。
+          Introduction
+这篇文章算是Contrastive Learning的开山之作之一了，本文提出了表示学习框架：Contrastive Predictive Coding（CPC）和InfoNCE Loss。
 原文
-Proposed MethodContrastive Predictive CodingN-pair Loss:$$\mathcal L=-\log\frac{\exp(f^+\
+Proposed Method
+Contrastive Predictive Coding
+N-pair Loss: \[
+\mathcal L=-\log\fra
         </a>
       </p>
 
@@ -358,7 +323,8 @@ Proposed MethodContrastive Predictive CodingN-pair Loss:$$\mathcal L=-\log\frac{
           
             
           
-          Overfitting我们将模型输出与真实值之间的差异称为误差，如对于分类问题，我们可以使用模型分类错误的样本数量占总样本数的比例。模型在训练集（我们收集到的数据）上的误差称作是训练误差 (training error)**，而在新样本（这里指的是新的样本而不是测试集，训练集测试集是从我们收集到的数据上人为划分出来的）上的误差称作是泛化误差 (generalization error)**。对于机
+          Overfitting
+我们将模型输出与真实值之间的差异称为误差，如对于分类问题，我们可以使用模型分类错误的样本数量占总样本数的比例。模型在训练集（我们收集到的数据）上的误差称作是训练误差 (training error)，而在新样本（这里指的是新的样本而不是测试集，训练集测试集是从我们收集到的数据上人为划分出来的）上的误差称作是泛化误差 (generalization error)。对于机器学
         </a>
       </p>
 
@@ -418,9 +384,10 @@ Proposed MethodContrastive Predictive CodingN-pair Loss:$$\mathcal L=-\log\frac{
           
             
           
-          Introduction（PS：本文内容是学习高级树模型（GBDT，XGBoost）的基础，强烈建议在看那些内容之前先了解本文的内容！）
+          Introduction
+（PS：本文内容是学习高级树模型（GBDT，XGBoost）的基础，强烈建议在看那些内容之前先了解本文的内容！）
 本文主要是介绍常用的三种决策树模型：ID3、C4.5和CART。决策树（Decision Tree）是一种有监督分类模型（稍加改造可进行回归任务）。
-比如我们要判断一个瓜是不是好瓜，对于人来说，要判断一个瓜是不是好瓜，可能会先去看看色泽，然后看看根蒂，然后再敲一
+比如我们要判断一个瓜是不是好瓜，对于人来说，要判断一个瓜是不是好瓜，可能会先去看看色泽，然后看看根蒂，然
         </a>
       </p>
 
@@ -480,12 +447,14 @@ Proposed MethodContrastive Predictive CodingN-pair Loss:$$\mathcal L=-\log\frac{
           
             
           
-          IntroductionStill working on it😅…
+          Introduction
+Still working on it😅...
 blog
-Hyperplane超平面可以从代数和几何两方面来理解。超平面的代数定义可以看作是方程：$$a_1x_1+\cdots+a_nx_n=d$$的所有解形成的集合，其中$a_1,\cdots,a_n$为不全为$0$的实数，$d$也是实数。
-从几何上来说，超平面可以看作是除空间$R^n$自身外维度最大的仿射空间。
-
-Maxi
+Hyperplane
+超平面可以从代数和几何两方面来理解。超平面的代数定义可以看作是方程： \[
+a_1x_1+\cdots+a_nx_n=d
+\] 的所有解形成的集合，其中\(a_1,\cdots,a_n\)为不全为\(0\)的实数，\(d\)也是实数。
+从几何上来说，超平面可以看作是除空间\(R
         </a>
       </p>
 
@@ -541,7 +510,8 @@ Maxi
           
             
           
-          Introduction本文主要介绍GBDT和XGBoost，在学习本文内容之前建议先学习决策树相关内容。
+          Introduction
+本文主要介绍GBDT和XGBoost，在学习本文内容之前建议先学习决策树相关内容。
 下面是一些有用的参考链接：
 XGBoost Documentation
 AdaBoost blog
@@ -550,7 +520,8 @@ slide
 陈天奇slide
 blog
 blog
-Preliminaries实际上，GBDT和梯度下降、XGBoost和牛顿法之间是存在密切关系的，这里我们先回顾一下梯度下
+Preliminaries
+实际上，GBDT和梯度下降、XGBoost和牛顿法之间是存在密切关系的
         </a>
       </p>
 
@@ -608,9 +579,12 @@ Preliminaries实际上，GBDT和梯度下降、XGBoost和牛顿法之间是存�
           
             
           
-          Introduction针对高维表格数据的表示学习，作者提出了基于预测预计变换后的距离的无监督表示学习框架RDP，并进行了理论上的讨论。To be finished…
-论文地址         代码地址
-Proposed MethodRandom Distance Prediction Model对于很多下游任务来说，高维数据对模型效率和性能都很大，所以学习低维的有意义（能够最大限度保存原始空间的
+          Introduction
+针对高维表格数据的表示学习，作者提出了基于预测预计变换后的距离的无监督表示学习框架RDP，并进行了理论上的讨论。To be finished...
+论文地址 代码地址
+Proposed Method
+Random Distance Prediction Model
+对于很多下游任务来说，高维数据对模型效率和性能都很大，所以学习低维的有意义（能够最大限度保存原始空
         </a>
       </p>
 
@@ -668,7 +642,8 @@ Proposed MethodRandom Distance Prediction Model对于很多下游任务来说，
           
             
           
-          Introduction本文针对无监督异常检测提出了$E^3\space{Outlier}$。作者使用自监督学习的方法，通过构建有监督任务在没有标签的情况下学习高层语义特征。PS：这篇文章的方法和NIPS18上的Deep Anomaly Detection Using Geometric Transformations（后面简称GEOM）颇为相似，但是不知为啥没有在实验中进行比较。后面我会分析一些
+          Introduction
+本文针对无监督异常检测提出了\(E^3\space{Outlier}\)。作者使用自监督学习的方法，通过构建有监督任务在没有标签的情况下学习高层语义特征。PS：这篇文章的方法和NIPS18上的Deep Anomaly Detection Using Geometric Transformations（后面简称GEOM）颇为相似，但是不知为啥没有在实验中进行比较。后面我会
         </a>
       </p>
 
@@ -724,8 +699,9 @@ Proposed MethodRandom Distance Prediction Model对于很多下游任务来说，
           
             
           
-          Overview本文主要是介绍一些机器学习中常用的分布，内容主要来自PRML (Pattern Recognition and Machine Learning) 第二章Probability Distributions笔记的第一部分，主要包括2.1. Binary Variables和2.2. Multinomial Variables这两节。
-Probability Distributions
+          Overview
+本文主要是介绍一些机器学习中常用的分布，内容主要来自PRML (Pattern Recognition and Machine Learning) 第二章Probability Distributions笔记的第一部分，主要包括2.1. Binary Variables和2.2. Multinomial Variables这两节。
+Probability Distributi
         </a>
       </p>
 
@@ -755,6 +731,65 @@ Probability Distributions
               <a href="/tags/Statistics/">Statistics</a>
             
               <a href="/tags/Probability/">Probability</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2020/06/13/Time2Graph-Revisiting-Time-Series-Modeling-with-Dynamic-Shapelets/" target="_self">
+          <img src="https://i.loli.net/2020/06/25/mKJH4c2EMAljavG.png" srcset="/img/loading.gif" alt="Time2Graph: Revisiting Time Series Modeling with Dynamic Shapelets">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2020/06/13/Time2Graph-Revisiting-Time-Series-Modeling-with-Dynamic-Shapelets/">Time2Graph: Revisiting Time Series Modeling with Dynamic Shapelets</a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2020/06/13/Time2Graph-Revisiting-Time-Series-Modeling-with-Dynamic-Shapelets/">
+          
+          
+            
+          
+          Introduction
+本文旨在提供一种可解释的高效的时间序列建模（表示学习）方法来更好地服务分类任务。Shapelet在时间序列分类任务上体现了良好的可解释性。不过传统的基于Shapelet的方法忽略了Shapelet在不同时间片段上的动态性，即整个时间维度上不同的时间片段可能适合用不同的Shapelet。作者基于此设计了动态的time-aware shapelet，并且定义了shapele
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-06-13 16:42" pubdate>
+              2020-06-13
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/Research/">Research</a>
+            
+              <a href="/categories/Research/Time-Series-Modeling/">Time Series Modeling</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Time-Series/">Time Series</a>
+            
+              <a href="/tags/Shapelet/">Shapelet</a>
             
           </div>
         

@@ -9,13 +9,6 @@
   </url>
   
   <url>
-    <loc>http://qfxiao.me/2021/05/12/Self-supervised-Learning-Meets-Anomaly-Detection/</loc>
-    
-    <lastmod>2021-05-13</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://qfxiao.me/2020/08/26/Machine-Learning-Ensemble-Algorithms-GBDT-and-XGBoost/</loc>
     
     <lastmod>2021-02-28</lastmod>
@@ -312,13 +305,6 @@
   </url>
   
   <url>
-    <loc>http://qfxiao.me/tags/Geant4/</loc>
-    <lastmod>2021-05-15</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>http://qfxiao.me/tags/GAN/</loc>
     <lastmod>2021-05-15</lastmod>
     <changefreq>daily</changefreq>
@@ -327,6 +313,13 @@
   
   <url>
     <loc>http://qfxiao.me/tags/Novelty-Detection/</loc>
+    <lastmod>2021-05-15</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/tags/Geant4/</loc>
     <lastmod>2021-05-15</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -410,6 +403,13 @@
   </url>
   
   <url>
+    <loc>http://qfxiao.me/tags/RNN/</loc>
+    <lastmod>2021-05-15</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>http://qfxiao.me/tags/Contrastive-Learning/</loc>
     <lastmod>2021-05-15</lastmod>
     <changefreq>daily</changefreq>
@@ -418,13 +418,6 @@
   
   <url>
     <loc>http://qfxiao.me/tags/Self-supervised-Learning/</loc>
-    <lastmod>2021-05-15</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://qfxiao.me/tags/RNN/</loc>
     <lastmod>2021-05-15</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -445,6 +438,13 @@
   </url>
   
   <url>
+    <loc>http://qfxiao.me/tags/Shapelet/</loc>
+    <lastmod>2021-05-15</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>http://qfxiao.me/tags/Pytorch/</loc>
     <lastmod>2021-05-15</lastmod>
     <changefreq>daily</changefreq>
@@ -453,13 +453,6 @@
   
   <url>
     <loc>http://qfxiao.me/tags/Tensorflow/</loc>
-    <lastmod>2021-05-15</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://qfxiao.me/tags/Shapelet/</loc>
     <lastmod>2021-05-15</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -503,14 +496,14 @@
   </url>
   
   <url>
-    <loc>http://qfxiao.me/categories/Technical-Notes/</loc>
+    <loc>http://qfxiao.me/categories/Research/Time-Series-Imputation/</loc>
     <lastmod>2021-05-15</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>http://qfxiao.me/categories/Research/Time-Series-Imputation/</loc>
+    <loc>http://qfxiao.me/categories/Technical-Notes/</loc>
     <lastmod>2021-05-15</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -524,14 +517,14 @@
   </url>
   
   <url>
-    <loc>http://qfxiao.me/categories/Research/Self-supervised-Learning/</loc>
+    <loc>http://qfxiao.me/categories/Research/RNN/</loc>
     <lastmod>2021-05-15</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>http://qfxiao.me/categories/Research/RNN/</loc>
+    <loc>http://qfxiao.me/categories/Research/Self-supervised-Learning/</loc>
     <lastmod>2021-05-15</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
