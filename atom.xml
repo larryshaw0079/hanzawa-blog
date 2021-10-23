@@ -3,11 +3,11 @@
   <title>Hanzawa の 部屋</title>
   
   
-  <link href="https://larryshaw0079.github.io/hanzawa-blog/atom.xml" rel="self"/>
+  <link href="https://larryshaw0079.github.io/atom.xml" rel="self"/>
   
-  <link href="https://larryshaw0079.github.io/hanzawa-blog/"/>
+  <link href="https://larryshaw0079.github.io/"/>
   <updated>2021-02-28T04:58:08.309Z</updated>
-  <id>https://larryshaw0079.github.io/hanzawa-blog/</id>
+  <id>https://larryshaw0079.github.io/</id>
   
   <author>
     <name>Hanzawa</name>
@@ -18,8 +18,8 @@
   
   <entry>
     <title>Unsupervised Feature Learning via Non-Parametric Instance Discrimination</title>
-    <link href="https://larryshaw0079.github.io/hanzawa-blog/2020/09/23/Unsupervised-Feature-Learning-via-Non-Parametric-Instance-Discrimination/"/>
-    <id>https://larryshaw0079.github.io/hanzawa-blog/2020/09/23/Unsupervised-Feature-Learning-via-Non-Parametric-Instance-Discrimination/</id>
+    <link href="https://larryshaw0079.github.io/2020/09/23/Unsupervised-Feature-Learning-via-Non-Parametric-Instance-Discrimination/"/>
+    <id>https://larryshaw0079.github.io/2020/09/23/Unsupervised-Feature-Learning-via-Non-Parametric-Instance-Discrimination/</id>
     <published>2020-09-23T12:36:57.000Z</published>
     <updated>2021-02-28T04:58:08.309Z</updated>
     
@@ -35,21 +35,21 @@
     
     
     
-    <category term="Research" scheme="https://larryshaw0079.github.io/hanzawa-blog/categories/Research/"/>
+    <category term="Research" scheme="https://larryshaw0079.github.io/categories/Research/"/>
     
-    <category term="Self-supervised Learning" scheme="https://larryshaw0079.github.io/hanzawa-blog/categories/Research/Self-supervised-Learning/"/>
+    <category term="Self-supervised Learning" scheme="https://larryshaw0079.github.io/categories/Research/Self-supervised-Learning/"/>
     
     
-    <category term="Representation Learning" scheme="https://larryshaw0079.github.io/hanzawa-blog/tags/Representation-Learning/"/>
+    <category term="Representation Learning" scheme="https://larryshaw0079.github.io/tags/Representation-Learning/"/>
     
-    <category term="Self-supervised Learning" scheme="https://larryshaw0079.github.io/hanzawa-blog/tags/Self-supervised-Learning/"/>
+    <category term="Self-supervised Learning" scheme="https://larryshaw0079.github.io/tags/Self-supervised-Learning/"/>
     
   </entry>
   
   <entry>
     <title>Representation Learning with Contrastive Predictive Coding</title>
-    <link href="https://larryshaw0079.github.io/hanzawa-blog/2020/09/17/Representation-Learning-with-Contrastive-Predictive-Coding/"/>
-    <id>https://larryshaw0079.github.io/hanzawa-blog/2020/09/17/Representation-Learning-with-Contrastive-Predictive-Coding/</id>
+    <link href="https://larryshaw0079.github.io/2020/09/17/Representation-Learning-with-Contrastive-Predictive-Coding/"/>
+    <id>https://larryshaw0079.github.io/2020/09/17/Representation-Learning-with-Contrastive-Predictive-Coding/</id>
     <published>2020-09-17T12:08:53.000Z</published>
     <updated>2021-02-19T10:20:26.291Z</updated>
     
@@ -64,23 +64,23 @@
     
     
     
-    <category term="Research" scheme="https://larryshaw0079.github.io/hanzawa-blog/categories/Research/"/>
+    <category term="Research" scheme="https://larryshaw0079.github.io/categories/Research/"/>
     
-    <category term="Self-supervised Learning" scheme="https://larryshaw0079.github.io/hanzawa-blog/categories/Research/Self-supervised-Learning/"/>
+    <category term="Self-supervised Learning" scheme="https://larryshaw0079.github.io/categories/Research/Self-supervised-Learning/"/>
     
     
-    <category term="Deep Learning" scheme="https://larryshaw0079.github.io/hanzawa-blog/tags/Deep-Learning/"/>
+    <category term="Deep Learning" scheme="https://larryshaw0079.github.io/tags/Deep-Learning/"/>
     
-    <category term="Contrastive Learning" scheme="https://larryshaw0079.github.io/hanzawa-blog/tags/Contrastive-Learning/"/>
+    <category term="Contrastive Learning" scheme="https://larryshaw0079.github.io/tags/Contrastive-Learning/"/>
     
-    <category term="Self-supervised Learning" scheme="https://larryshaw0079.github.io/hanzawa-blog/tags/Self-supervised-Learning/"/>
+    <category term="Self-supervised Learning" scheme="https://larryshaw0079.github.io/tags/Self-supervised-Learning/"/>
     
   </entry>
   
   <entry>
     <title>Model Selection and Evaluation: Machine Learning Basics</title>
-    <link href="https://larryshaw0079.github.io/hanzawa-blog/2020/09/09/Model-Selection-and-Evaluation-Machine-Learning-Basics/"/>
-    <id>https://larryshaw0079.github.io/hanzawa-blog/2020/09/09/Model-Selection-and-Evaluation-Machine-Learning-Basics/</id>
+    <link href="https://larryshaw0079.github.io/2020/09/09/Model-Selection-and-Evaluation-Machine-Learning-Basics/"/>
+    <id>https://larryshaw0079.github.io/2020/09/09/Model-Selection-and-Evaluation-Machine-Learning-Basics/</id>
     <published>2020-09-09T03:33:25.000Z</published>
     <updated>2021-02-19T10:21:57.175Z</updated>
     
@@ -95,23 +95,23 @@
     
     
     
-    <category term="Technical Notes" scheme="https://larryshaw0079.github.io/hanzawa-blog/categories/Technical-Notes/"/>
+    <category term="Technical Notes" scheme="https://larryshaw0079.github.io/categories/Technical-Notes/"/>
     
-    <category term="Machine Learning" scheme="https://larryshaw0079.github.io/hanzawa-blog/categories/Technical-Notes/Machine-Learning/"/>
+    <category term="Machine Learning" scheme="https://larryshaw0079.github.io/categories/Technical-Notes/Machine-Learning/"/>
     
     
-    <category term="Overfitting" scheme="https://larryshaw0079.github.io/hanzawa-blog/tags/Overfitting/"/>
+    <category term="Overfitting" scheme="https://larryshaw0079.github.io/tags/Overfitting/"/>
     
-    <category term="Bias" scheme="https://larryshaw0079.github.io/hanzawa-blog/tags/Bias/"/>
+    <category term="Bias" scheme="https://larryshaw0079.github.io/tags/Bias/"/>
     
-    <category term="Variance" scheme="https://larryshaw0079.github.io/hanzawa-blog/tags/Variance/"/>
+    <category term="Variance" scheme="https://larryshaw0079.github.io/tags/Variance/"/>
     
   </entry>
   
   <entry>
     <title>Machine Learning Classification Algorithms: Decision Trees</title>
-    <link href="https://larryshaw0079.github.io/hanzawa-blog/2020/09/02/Machine-Learning-Classification-Algorithms-Decision-Trees/"/>
-    <id>https://larryshaw0079.github.io/hanzawa-blog/2020/09/02/Machine-Learning-Classification-Algorithms-Decision-Trees/</id>
+    <link href="https://larryshaw0079.github.io/2020/09/02/Machine-Learning-Classification-Algorithms-Decision-Trees/"/>
+    <id>https://larryshaw0079.github.io/2020/09/02/Machine-Learning-Classification-Algorithms-Decision-Trees/</id>
     <published>2020-09-02T10:47:55.000Z</published>
     <updated>2021-02-19T10:22:31.857Z</updated>
     
@@ -127,23 +127,23 @@
     
     
     
-    <category term="Technical Notes" scheme="https://larryshaw0079.github.io/hanzawa-blog/categories/Technical-Notes/"/>
+    <category term="Technical Notes" scheme="https://larryshaw0079.github.io/categories/Technical-Notes/"/>
     
-    <category term="Machine Learning" scheme="https://larryshaw0079.github.io/hanzawa-blog/categories/Technical-Notes/Machine-Learning/"/>
+    <category term="Machine Learning" scheme="https://larryshaw0079.github.io/categories/Technical-Notes/Machine-Learning/"/>
     
     
-    <category term="ID3" scheme="https://larryshaw0079.github.io/hanzawa-blog/tags/ID3/"/>
+    <category term="ID3" scheme="https://larryshaw0079.github.io/tags/ID3/"/>
     
-    <category term="C4.5" scheme="https://larryshaw0079.github.io/hanzawa-blog/tags/C4-5/"/>
+    <category term="C4.5" scheme="https://larryshaw0079.github.io/tags/C4-5/"/>
     
-    <category term="CART" scheme="https://larryshaw0079.github.io/hanzawa-blog/tags/CART/"/>
+    <category term="CART" scheme="https://larryshaw0079.github.io/tags/CART/"/>
     
   </entry>
   
   <entry>
     <title>Machine Learning Classification Algorithms: Support Vector Machine</title>
-    <link href="https://larryshaw0079.github.io/hanzawa-blog/2020/08/26/Machine-Learning-Classification-Algorithms-Support-Vector-Machine/"/>
-    <id>https://larryshaw0079.github.io/hanzawa-blog/2020/08/26/Machine-Learning-Classification-Algorithms-Support-Vector-Machine/</id>
+    <link href="https://larryshaw0079.github.io/2020/08/26/Machine-Learning-Classification-Algorithms-Support-Vector-Machine/"/>
+    <id>https://larryshaw0079.github.io/2020/08/26/Machine-Learning-Classification-Algorithms-Support-Vector-Machine/</id>
     <published>2020-08-25T18:09:24.000Z</published>
     <updated>2021-02-19T10:23:31.925Z</updated>
     
@@ -160,19 +160,19 @@
     
     
     
-    <category term="Technical Notes" scheme="https://larryshaw0079.github.io/hanzawa-blog/categories/Technical-Notes/"/>
+    <category term="Technical Notes" scheme="https://larryshaw0079.github.io/categories/Technical-Notes/"/>
     
-    <category term="Machine Learning" scheme="https://larryshaw0079.github.io/hanzawa-blog/categories/Technical-Notes/Machine-Learning/"/>
+    <category term="Machine Learning" scheme="https://larryshaw0079.github.io/categories/Technical-Notes/Machine-Learning/"/>
     
     
-    <category term="SVM" scheme="https://larryshaw0079.github.io/hanzawa-blog/tags/SVM/"/>
+    <category term="SVM" scheme="https://larryshaw0079.github.io/tags/SVM/"/>
     
   </entry>
   
   <entry>
     <title>Machine Learning Ensemble Algorithms: GBDT and XGBoost</title>
-    <link href="https://larryshaw0079.github.io/hanzawa-blog/2020/08/26/Machine-Learning-Ensemble-Algorithms-GBDT-and-XGBoost/"/>
-    <id>https://larryshaw0079.github.io/hanzawa-blog/2020/08/26/Machine-Learning-Ensemble-Algorithms-GBDT-and-XGBoost/</id>
+    <link href="https://larryshaw0079.github.io/2020/08/26/Machine-Learning-Ensemble-Algorithms-GBDT-and-XGBoost/"/>
+    <id>https://larryshaw0079.github.io/2020/08/26/Machine-Learning-Ensemble-Algorithms-GBDT-and-XGBoost/</id>
     <published>2020-08-25T16:28:26.000Z</published>
     <updated>2021-02-28T05:38:18.079Z</updated>
     
@@ -187,21 +187,21 @@
     
     
     
-    <category term="Technical Notes" scheme="https://larryshaw0079.github.io/hanzawa-blog/categories/Technical-Notes/"/>
+    <category term="Technical Notes" scheme="https://larryshaw0079.github.io/categories/Technical-Notes/"/>
     
-    <category term="Machine Learning" scheme="https://larryshaw0079.github.io/hanzawa-blog/categories/Technical-Notes/Machine-Learning/"/>
+    <category term="Machine Learning" scheme="https://larryshaw0079.github.io/categories/Technical-Notes/Machine-Learning/"/>
     
     
-    <category term="GBDT" scheme="https://larryshaw0079.github.io/hanzawa-blog/tags/GBDT/"/>
+    <category term="GBDT" scheme="https://larryshaw0079.github.io/tags/GBDT/"/>
     
-    <category term="XGBoost" scheme="https://larryshaw0079.github.io/hanzawa-blog/tags/XGBoost/"/>
+    <category term="XGBoost" scheme="https://larryshaw0079.github.io/tags/XGBoost/"/>
     
   </entry>
   
   <entry>
     <title>Unsupervised Representation Learning by Predicting Random Distances</title>
-    <link href="https://larryshaw0079.github.io/hanzawa-blog/2020/08/24/Unsupervised-Representation-Learning-by-Predicting-Random-Distances/"/>
-    <id>https://larryshaw0079.github.io/hanzawa-blog/2020/08/24/Unsupervised-Representation-Learning-by-Predicting-Random-Distances/</id>
+    <link href="https://larryshaw0079.github.io/2020/08/24/Unsupervised-Representation-Learning-by-Predicting-Random-Distances/"/>
+    <id>https://larryshaw0079.github.io/2020/08/24/Unsupervised-Representation-Learning-by-Predicting-Random-Distances/</id>
     <published>2020-08-24T08:17:36.000Z</published>
     <updated>2020-08-24T10:25:42.220Z</updated>
     
@@ -217,21 +217,21 @@
     
     
     
-    <category term="Research" scheme="https://larryshaw0079.github.io/hanzawa-blog/categories/Research/"/>
+    <category term="Research" scheme="https://larryshaw0079.github.io/categories/Research/"/>
     
-    <category term="Representation Learning" scheme="https://larryshaw0079.github.io/hanzawa-blog/categories/Research/Representation-Learning/"/>
+    <category term="Representation Learning" scheme="https://larryshaw0079.github.io/categories/Research/Representation-Learning/"/>
     
     
-    <category term="Anomaly Detection" scheme="https://larryshaw0079.github.io/hanzawa-blog/tags/Anomaly-Detection/"/>
+    <category term="Anomaly Detection" scheme="https://larryshaw0079.github.io/tags/Anomaly-Detection/"/>
     
-    <category term="Representation Learning" scheme="https://larryshaw0079.github.io/hanzawa-blog/tags/Representation-Learning/"/>
+    <category term="Representation Learning" scheme="https://larryshaw0079.github.io/tags/Representation-Learning/"/>
     
   </entry>
   
   <entry>
     <title>Effective End-to-end Unsupervised Outlier Detection via Linear Priority of Discriminative Network</title>
-    <link href="https://larryshaw0079.github.io/hanzawa-blog/2020/07/14/Effective-End-to-end-Unsupervised-Outlier-Detection-via-Linear-Priority-of-Discriminative-Network/"/>
-    <id>https://larryshaw0079.github.io/hanzawa-blog/2020/07/14/Effective-End-to-end-Unsupervised-Outlier-Detection-via-Linear-Priority-of-Discriminative-Network/</id>
+    <link href="https://larryshaw0079.github.io/2020/07/14/Effective-End-to-end-Unsupervised-Outlier-Detection-via-Linear-Priority-of-Discriminative-Network/"/>
+    <id>https://larryshaw0079.github.io/2020/07/14/Effective-End-to-end-Unsupervised-Outlier-Detection-via-Linear-Priority-of-Discriminative-Network/</id>
     <published>2020-07-14T10:46:13.000Z</published>
     <updated>2020-07-21T12:35:42.220Z</updated>
     
@@ -246,19 +246,19 @@
     
     
     
-    <category term="Research" scheme="https://larryshaw0079.github.io/hanzawa-blog/categories/Research/"/>
+    <category term="Research" scheme="https://larryshaw0079.github.io/categories/Research/"/>
     
-    <category term="Anomaly Detection" scheme="https://larryshaw0079.github.io/hanzawa-blog/categories/Research/Anomaly-Detection/"/>
+    <category term="Anomaly Detection" scheme="https://larryshaw0079.github.io/categories/Research/Anomaly-Detection/"/>
     
     
-    <category term="Self-Supervised Learning" scheme="https://larryshaw0079.github.io/hanzawa-blog/tags/Self-Supervised-Learning/"/>
+    <category term="Self-Supervised Learning" scheme="https://larryshaw0079.github.io/tags/Self-Supervised-Learning/"/>
     
   </entry>
   
   <entry>
     <title>Probability Distributions - Binary and Multinomial Variables</title>
-    <link href="https://larryshaw0079.github.io/hanzawa-blog/2020/06/22/Probability-Distributions-Binary-and-Multinomial-Variables/"/>
-    <id>https://larryshaw0079.github.io/hanzawa-blog/2020/06/22/Probability-Distributions-Binary-and-Multinomial-Variables/</id>
+    <link href="https://larryshaw0079.github.io/2020/06/22/Probability-Distributions-Binary-and-Multinomial-Variables/"/>
+    <id>https://larryshaw0079.github.io/2020/06/22/Probability-Distributions-Binary-and-Multinomial-Variables/</id>
     <published>2020-06-22T05:43:58.000Z</published>
     <updated>2021-02-19T10:26:08.671Z</updated>
     
@@ -273,21 +273,21 @@
     
     
     
-    <category term="Research" scheme="https://larryshaw0079.github.io/hanzawa-blog/categories/Research/"/>
+    <category term="Research" scheme="https://larryshaw0079.github.io/categories/Research/"/>
     
-    <category term="Notes" scheme="https://larryshaw0079.github.io/hanzawa-blog/categories/Research/Notes/"/>
+    <category term="Notes" scheme="https://larryshaw0079.github.io/categories/Research/Notes/"/>
     
     
-    <category term="Statistics" scheme="https://larryshaw0079.github.io/hanzawa-blog/tags/Statistics/"/>
+    <category term="Statistics" scheme="https://larryshaw0079.github.io/tags/Statistics/"/>
     
-    <category term="Probability" scheme="https://larryshaw0079.github.io/hanzawa-blog/tags/Probability/"/>
+    <category term="Probability" scheme="https://larryshaw0079.github.io/tags/Probability/"/>
     
   </entry>
   
   <entry>
     <title>Time2Graph: Revisiting Time Series Modeling with Dynamic Shapelets</title>
-    <link href="https://larryshaw0079.github.io/hanzawa-blog/2020/06/13/Time2Graph-Revisiting-Time-Series-Modeling-with-Dynamic-Shapelets/"/>
-    <id>https://larryshaw0079.github.io/hanzawa-blog/2020/06/13/Time2Graph-Revisiting-Time-Series-Modeling-with-Dynamic-Shapelets/</id>
+    <link href="https://larryshaw0079.github.io/2020/06/13/Time2Graph-Revisiting-Time-Series-Modeling-with-Dynamic-Shapelets/"/>
+    <id>https://larryshaw0079.github.io/2020/06/13/Time2Graph-Revisiting-Time-Series-Modeling-with-Dynamic-Shapelets/</id>
     <published>2020-06-13T08:42:04.000Z</published>
     <updated>2020-07-07T03:15:36.315Z</updated>
     
@@ -302,21 +302,21 @@
     
     
     
-    <category term="Research" scheme="https://larryshaw0079.github.io/hanzawa-blog/categories/Research/"/>
+    <category term="Research" scheme="https://larryshaw0079.github.io/categories/Research/"/>
     
-    <category term="Time Series Modeling" scheme="https://larryshaw0079.github.io/hanzawa-blog/categories/Research/Time-Series-Modeling/"/>
+    <category term="Time Series Modeling" scheme="https://larryshaw0079.github.io/categories/Research/Time-Series-Modeling/"/>
     
     
-    <category term="Time Series" scheme="https://larryshaw0079.github.io/hanzawa-blog/tags/Time-Series/"/>
+    <category term="Time Series" scheme="https://larryshaw0079.github.io/tags/Time-Series/"/>
     
-    <category term="Shapelet" scheme="https://larryshaw0079.github.io/hanzawa-blog/tags/Shapelet/"/>
+    <category term="Shapelet" scheme="https://larryshaw0079.github.io/tags/Shapelet/"/>
     
   </entry>
   
   <entry>
     <title>Generative Probabilistic Novelty Detection with Adversarial Autoencoders</title>
-    <link href="https://larryshaw0079.github.io/hanzawa-blog/2020/06/06/Generative-Probabilistic-Novelty-Detection-with-Adversarial-Autoencoders/"/>
-    <id>https://larryshaw0079.github.io/hanzawa-blog/2020/06/06/Generative-Probabilistic-Novelty-Detection-with-Adversarial-Autoencoders/</id>
+    <link href="https://larryshaw0079.github.io/2020/06/06/Generative-Probabilistic-Novelty-Detection-with-Adversarial-Autoencoders/"/>
+    <id>https://larryshaw0079.github.io/2020/06/06/Generative-Probabilistic-Novelty-Detection-with-Adversarial-Autoencoders/</id>
     <published>2020-06-06T04:03:27.000Z</published>
     <updated>2020-06-25T08:14:29.250Z</updated>
     
@@ -331,23 +331,23 @@
     
     
     
-    <category term="Research" scheme="https://larryshaw0079.github.io/hanzawa-blog/categories/Research/"/>
+    <category term="Research" scheme="https://larryshaw0079.github.io/categories/Research/"/>
     
-    <category term="Anomaly Detection" scheme="https://larryshaw0079.github.io/hanzawa-blog/categories/Research/Anomaly-Detection/"/>
+    <category term="Anomaly Detection" scheme="https://larryshaw0079.github.io/categories/Research/Anomaly-Detection/"/>
     
     
-    <category term="Anomaly Detection" scheme="https://larryshaw0079.github.io/hanzawa-blog/tags/Anomaly-Detection/"/>
+    <category term="Anomaly Detection" scheme="https://larryshaw0079.github.io/tags/Anomaly-Detection/"/>
     
-    <category term="GAN" scheme="https://larryshaw0079.github.io/hanzawa-blog/tags/GAN/"/>
+    <category term="GAN" scheme="https://larryshaw0079.github.io/tags/GAN/"/>
     
-    <category term="Novelty Detection" scheme="https://larryshaw0079.github.io/hanzawa-blog/tags/Novelty-Detection/"/>
+    <category term="Novelty Detection" scheme="https://larryshaw0079.github.io/tags/Novelty-Detection/"/>
     
   </entry>
   
   <entry>
     <title>Classification-based Anomaly Detection for General Data</title>
-    <link href="https://larryshaw0079.github.io/hanzawa-blog/2020/06/02/Classification-based-Anomaly-Detection-for-General-Data/"/>
-    <id>https://larryshaw0079.github.io/hanzawa-blog/2020/06/02/Classification-based-Anomaly-Detection-for-General-Data/</id>
+    <link href="https://larryshaw0079.github.io/2020/06/02/Classification-based-Anomaly-Detection-for-General-Data/"/>
+    <id>https://larryshaw0079.github.io/2020/06/02/Classification-based-Anomaly-Detection-for-General-Data/</id>
     <published>2020-06-02T15:01:34.000Z</published>
     <updated>2020-06-26T12:55:43.589Z</updated>
     
@@ -362,19 +362,19 @@
     
     
     
-    <category term="Research" scheme="https://larryshaw0079.github.io/hanzawa-blog/categories/Research/"/>
+    <category term="Research" scheme="https://larryshaw0079.github.io/categories/Research/"/>
     
-    <category term="Anomaly Detection" scheme="https://larryshaw0079.github.io/hanzawa-blog/categories/Research/Anomaly-Detection/"/>
+    <category term="Anomaly Detection" scheme="https://larryshaw0079.github.io/categories/Research/Anomaly-Detection/"/>
     
     
-    <category term="Anomaly Detection" scheme="https://larryshaw0079.github.io/hanzawa-blog/tags/Anomaly-Detection/"/>
+    <category term="Anomaly Detection" scheme="https://larryshaw0079.github.io/tags/Anomaly-Detection/"/>
     
   </entry>
   
   <entry>
     <title>面向OpenPAI的Docker镜像配置及OpenPAI基本使用方法</title>
-    <link href="https://larryshaw0079.github.io/hanzawa-blog/2020/06/02/%E9%9D%A2%E5%90%91OpenPAI%E7%9A%84Docker%E9%95%9C%E5%83%8F%E9%85%8D%E7%BD%AE%E5%8F%8AOpenPAI%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/"/>
-    <id>https://larryshaw0079.github.io/hanzawa-blog/2020/06/02/%E9%9D%A2%E5%90%91OpenPAI%E7%9A%84Docker%E9%95%9C%E5%83%8F%E9%85%8D%E7%BD%AE%E5%8F%8AOpenPAI%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/</id>
+    <link href="https://larryshaw0079.github.io/2020/06/02/%E9%9D%A2%E5%90%91OpenPAI%E7%9A%84Docker%E9%95%9C%E5%83%8F%E9%85%8D%E7%BD%AE%E5%8F%8AOpenPAI%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/"/>
+    <id>https://larryshaw0079.github.io/2020/06/02/%E9%9D%A2%E5%90%91OpenPAI%E7%9A%84Docker%E9%95%9C%E5%83%8F%E9%85%8D%E7%BD%AE%E5%8F%8AOpenPAI%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/</id>
     <published>2020-06-02T04:26:13.000Z</published>
     <updated>2020-08-01T04:00:16.325Z</updated>
     
@@ -389,23 +389,23 @@
     
     
     
-    <category term="Technical Notes" scheme="https://larryshaw0079.github.io/hanzawa-blog/categories/Technical-Notes/"/>
+    <category term="Technical Notes" scheme="https://larryshaw0079.github.io/categories/Technical-Notes/"/>
     
-    <category term="Misc" scheme="https://larryshaw0079.github.io/hanzawa-blog/categories/Technical-Notes/Misc/"/>
+    <category term="Misc" scheme="https://larryshaw0079.github.io/categories/Technical-Notes/Misc/"/>
     
     
-    <category term="Pytorch" scheme="https://larryshaw0079.github.io/hanzawa-blog/tags/Pytorch/"/>
+    <category term="Pytorch" scheme="https://larryshaw0079.github.io/tags/Pytorch/"/>
     
-    <category term="Tensorflow" scheme="https://larryshaw0079.github.io/hanzawa-blog/tags/Tensorflow/"/>
+    <category term="Tensorflow" scheme="https://larryshaw0079.github.io/tags/Tensorflow/"/>
     
-    <category term="Docker" scheme="https://larryshaw0079.github.io/hanzawa-blog/tags/Docker/"/>
+    <category term="Docker" scheme="https://larryshaw0079.github.io/tags/Docker/"/>
     
   </entry>
   
   <entry>
     <title>Ubuntu20.04LTS 深度学习环境配置 CUDA11 + cuDNN8 + Tensorflow + Pytorch</title>
-    <link href="https://larryshaw0079.github.io/hanzawa-blog/2020/06/02/Ubuntu20-4LTS-%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE-CUDA11-cuDNN8-Tensorflow-Pytorch/"/>
-    <id>https://larryshaw0079.github.io/hanzawa-blog/2020/06/02/Ubuntu20-4LTS-%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE-CUDA11-cuDNN8-Tensorflow-Pytorch/</id>
+    <link href="https://larryshaw0079.github.io/2020/06/02/Ubuntu20-4LTS-%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE-CUDA11-cuDNN8-Tensorflow-Pytorch/"/>
+    <id>https://larryshaw0079.github.io/2020/06/02/Ubuntu20-4LTS-%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE-CUDA11-cuDNN8-Tensorflow-Pytorch/</id>
     <published>2020-06-02T02:26:13.000Z</published>
     <updated>2020-12-21T14:05:52.434Z</updated>
     
@@ -420,21 +420,21 @@
     
     
     
-    <category term="Technical Notes" scheme="https://larryshaw0079.github.io/hanzawa-blog/categories/Technical-Notes/"/>
+    <category term="Technical Notes" scheme="https://larryshaw0079.github.io/categories/Technical-Notes/"/>
     
-    <category term="Misc" scheme="https://larryshaw0079.github.io/hanzawa-blog/categories/Technical-Notes/Misc/"/>
+    <category term="Misc" scheme="https://larryshaw0079.github.io/categories/Technical-Notes/Misc/"/>
     
     
-    <category term="Pytorch" scheme="https://larryshaw0079.github.io/hanzawa-blog/tags/Pytorch/"/>
+    <category term="Pytorch" scheme="https://larryshaw0079.github.io/tags/Pytorch/"/>
     
-    <category term="Tensorflow" scheme="https://larryshaw0079.github.io/hanzawa-blog/tags/Tensorflow/"/>
+    <category term="Tensorflow" scheme="https://larryshaw0079.github.io/tags/Tensorflow/"/>
     
   </entry>
   
   <entry>
     <title>Deep Anomaly Detection Using Geometric Transformations</title>
-    <link href="https://larryshaw0079.github.io/hanzawa-blog/2020/06/01/Deep-Anomaly-Detection-Using-Geometric-Transformations/"/>
-    <id>https://larryshaw0079.github.io/hanzawa-blog/2020/06/01/Deep-Anomaly-Detection-Using-Geometric-Transformations/</id>
+    <link href="https://larryshaw0079.github.io/2020/06/01/Deep-Anomaly-Detection-Using-Geometric-Transformations/"/>
+    <id>https://larryshaw0079.github.io/2020/06/01/Deep-Anomaly-Detection-Using-Geometric-Transformations/</id>
     <published>2020-06-01T15:17:03.000Z</published>
     <updated>2020-06-26T16:25:25.079Z</updated>
     
@@ -449,19 +449,19 @@
     
     
     
-    <category term="Research" scheme="https://larryshaw0079.github.io/hanzawa-blog/categories/Research/"/>
+    <category term="Research" scheme="https://larryshaw0079.github.io/categories/Research/"/>
     
-    <category term="Anomaly Detection" scheme="https://larryshaw0079.github.io/hanzawa-blog/categories/Research/Anomaly-Detection/"/>
+    <category term="Anomaly Detection" scheme="https://larryshaw0079.github.io/categories/Research/Anomaly-Detection/"/>
     
     
-    <category term="Anomaly Detection" scheme="https://larryshaw0079.github.io/hanzawa-blog/tags/Anomaly-Detection/"/>
+    <category term="Anomaly Detection" scheme="https://larryshaw0079.github.io/tags/Anomaly-Detection/"/>
     
   </entry>
   
   <entry>
     <title>Cross-dataset Time Series Anomaly Detection for Cloud Systems</title>
-    <link href="https://larryshaw0079.github.io/hanzawa-blog/2020/06/01/Cross-dataset-Time-Series-Anomaly-Detection-for-Cloud-Systems/"/>
-    <id>https://larryshaw0079.github.io/hanzawa-blog/2020/06/01/Cross-dataset-Time-Series-Anomaly-Detection-for-Cloud-Systems/</id>
+    <link href="https://larryshaw0079.github.io/2020/06/01/Cross-dataset-Time-Series-Anomaly-Detection-for-Cloud-Systems/"/>
+    <id>https://larryshaw0079.github.io/2020/06/01/Cross-dataset-Time-Series-Anomaly-Detection-for-Cloud-Systems/</id>
     <published>2020-06-01T08:14:08.000Z</published>
     <updated>2020-06-25T05:28:22.135Z</updated>
     
@@ -476,21 +476,21 @@
     
     
     
-    <category term="Research" scheme="https://larryshaw0079.github.io/hanzawa-blog/categories/Research/"/>
+    <category term="Research" scheme="https://larryshaw0079.github.io/categories/Research/"/>
     
-    <category term="Anomaly Detection" scheme="https://larryshaw0079.github.io/hanzawa-blog/categories/Research/Anomaly-Detection/"/>
+    <category term="Anomaly Detection" scheme="https://larryshaw0079.github.io/categories/Research/Anomaly-Detection/"/>
     
     
-    <category term="Anomaly Detection" scheme="https://larryshaw0079.github.io/hanzawa-blog/tags/Anomaly-Detection/"/>
+    <category term="Anomaly Detection" scheme="https://larryshaw0079.github.io/tags/Anomaly-Detection/"/>
     
-    <category term="Transfer Learning" scheme="https://larryshaw0079.github.io/hanzawa-blog/tags/Transfer-Learning/"/>
+    <category term="Transfer Learning" scheme="https://larryshaw0079.github.io/tags/Transfer-Learning/"/>
     
   </entry>
   
   <entry>
     <title>Learning Representations of Ultrahigh-dimensional Data for Random Distance-based Outlier Detection</title>
-    <link href="https://larryshaw0079.github.io/hanzawa-blog/2020/05/06/Learning-Representations-of-Ultrahigh-dimensional-Data-for-Random-Distance-based-Outlier-Detection/"/>
-    <id>https://larryshaw0079.github.io/hanzawa-blog/2020/05/06/Learning-Representations-of-Ultrahigh-dimensional-Data-for-Random-Distance-based-Outlier-Detection/</id>
+    <link href="https://larryshaw0079.github.io/2020/05/06/Learning-Representations-of-Ultrahigh-dimensional-Data-for-Random-Distance-based-Outlier-Detection/"/>
+    <id>https://larryshaw0079.github.io/2020/05/06/Learning-Representations-of-Ultrahigh-dimensional-Data-for-Random-Distance-based-Outlier-Detection/</id>
     <published>2020-05-06T03:05:37.000Z</published>
     <updated>2020-06-25T08:15:23.573Z</updated>
     
@@ -505,21 +505,21 @@
     
     
     
-    <category term="Research" scheme="https://larryshaw0079.github.io/hanzawa-blog/categories/Research/"/>
+    <category term="Research" scheme="https://larryshaw0079.github.io/categories/Research/"/>
     
-    <category term="Anomaly Detection" scheme="https://larryshaw0079.github.io/hanzawa-blog/categories/Research/Anomaly-Detection/"/>
+    <category term="Anomaly Detection" scheme="https://larryshaw0079.github.io/categories/Research/Anomaly-Detection/"/>
     
     
-    <category term="Anomaly Detection" scheme="https://larryshaw0079.github.io/hanzawa-blog/tags/Anomaly-Detection/"/>
+    <category term="Anomaly Detection" scheme="https://larryshaw0079.github.io/tags/Anomaly-Detection/"/>
     
-    <category term="Representation Learning" scheme="https://larryshaw0079.github.io/hanzawa-blog/tags/Representation-Learning/"/>
+    <category term="Representation Learning" scheme="https://larryshaw0079.github.io/tags/Representation-Learning/"/>
     
   </entry>
   
   <entry>
     <title>Deep Weakly-supervised Anomaly Detection</title>
-    <link href="https://larryshaw0079.github.io/hanzawa-blog/2020/03/30/Deep-Weakly-supervised-Anomaly-Detection/"/>
-    <id>https://larryshaw0079.github.io/hanzawa-blog/2020/03/30/Deep-Weakly-supervised-Anomaly-Detection/</id>
+    <link href="https://larryshaw0079.github.io/2020/03/30/Deep-Weakly-supervised-Anomaly-Detection/"/>
+    <id>https://larryshaw0079.github.io/2020/03/30/Deep-Weakly-supervised-Anomaly-Detection/</id>
     <published>2020-03-29T16:17:24.000Z</published>
     <updated>2020-06-25T05:33:35.419Z</updated>
     
@@ -534,19 +534,19 @@
     
     
     
-    <category term="Research" scheme="https://larryshaw0079.github.io/hanzawa-blog/categories/Research/"/>
+    <category term="Research" scheme="https://larryshaw0079.github.io/categories/Research/"/>
     
-    <category term="Anomaly Detection" scheme="https://larryshaw0079.github.io/hanzawa-blog/categories/Research/Anomaly-Detection/"/>
+    <category term="Anomaly Detection" scheme="https://larryshaw0079.github.io/categories/Research/Anomaly-Detection/"/>
     
     
-    <category term="Anomaly Detection" scheme="https://larryshaw0079.github.io/hanzawa-blog/tags/Anomaly-Detection/"/>
+    <category term="Anomaly Detection" scheme="https://larryshaw0079.github.io/tags/Anomaly-Detection/"/>
     
   </entry>
   
   <entry>
     <title>Discovering Physical Concepts with Neural Networks</title>
-    <link href="https://larryshaw0079.github.io/hanzawa-blog/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/"/>
-    <id>https://larryshaw0079.github.io/hanzawa-blog/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/</id>
+    <link href="https://larryshaw0079.github.io/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/"/>
+    <id>https://larryshaw0079.github.io/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/</id>
     <published>2020-03-01T14:55:02.000Z</published>
     <updated>2020-06-25T05:35:20.215Z</updated>
     
@@ -562,19 +562,19 @@
     
     
     
-    <category term="Research" scheme="https://larryshaw0079.github.io/hanzawa-blog/categories/Research/"/>
+    <category term="Research" scheme="https://larryshaw0079.github.io/categories/Research/"/>
     
-    <category term="Misc" scheme="https://larryshaw0079.github.io/hanzawa-blog/categories/Research/Misc/"/>
+    <category term="Misc" scheme="https://larryshaw0079.github.io/categories/Research/Misc/"/>
     
     
-    <category term="Deep Learning" scheme="https://larryshaw0079.github.io/hanzawa-blog/tags/Deep-Learning/"/>
+    <category term="Deep Learning" scheme="https://larryshaw0079.github.io/tags/Deep-Learning/"/>
     
   </entry>
   
   <entry>
     <title>Transfer Anomaly Detection by Inferring Latent Domain Representations</title>
-    <link href="https://larryshaw0079.github.io/hanzawa-blog/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/"/>
-    <id>https://larryshaw0079.github.io/hanzawa-blog/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/</id>
+    <link href="https://larryshaw0079.github.io/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/"/>
+    <id>https://larryshaw0079.github.io/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/</id>
     <published>2020-02-27T12:02:18.000Z</published>
     <updated>2020-06-25T09:01:35.786Z</updated>
     
@@ -589,14 +589,14 @@
     
     
     
-    <category term="Research" scheme="https://larryshaw0079.github.io/hanzawa-blog/categories/Research/"/>
+    <category term="Research" scheme="https://larryshaw0079.github.io/categories/Research/"/>
     
-    <category term="Anomaly Detection" scheme="https://larryshaw0079.github.io/hanzawa-blog/categories/Research/Anomaly-Detection/"/>
+    <category term="Anomaly Detection" scheme="https://larryshaw0079.github.io/categories/Research/Anomaly-Detection/"/>
     
     
-    <category term="Anomaly Detection" scheme="https://larryshaw0079.github.io/hanzawa-blog/tags/Anomaly-Detection/"/>
+    <category term="Anomaly Detection" scheme="https://larryshaw0079.github.io/tags/Anomaly-Detection/"/>
     
-    <category term="Transfer Learning" scheme="https://larryshaw0079.github.io/hanzawa-blog/tags/Transfer-Learning/"/>
+    <category term="Transfer Learning" scheme="https://larryshaw0079.github.io/tags/Transfer-Learning/"/>
     
   </entry>
   
