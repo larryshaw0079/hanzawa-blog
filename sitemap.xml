@@ -4,7 +4,7 @@
   <url>
     <loc>https://larryshaw0079.github.io/about/index.html</loc>
     
-    <lastmod>2021-08-30</lastmod>
+    <lastmod>2021-10-23</lastmod>
     
   </url>
   
@@ -242,27 +242,6 @@
 
   
   <url>
-    <loc>https://larryshaw0079.github.io/tags/Variational-Inference/</loc>
-    <lastmod>2021-10-23</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://larryshaw0079.github.io/tags/VAE/</loc>
-    <lastmod>2021-10-23</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://larryshaw0079.github.io/tags/Deep-Learning/</loc>
-    <lastmod>2021-10-23</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://larryshaw0079.github.io/tags/Time-Series/</loc>
     <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
@@ -278,6 +257,27 @@
   
   <url>
     <loc>https://larryshaw0079.github.io/tags/Machine-Learning/</loc>
+    <lastmod>2021-10-23</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://larryshaw0079.github.io/tags/Deep-Learning/</loc>
+    <lastmod>2021-10-23</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://larryshaw0079.github.io/tags/Variational-Inference/</loc>
+    <lastmod>2021-10-23</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://larryshaw0079.github.io/tags/VAE/</loc>
     <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -361,6 +361,20 @@
   </url>
   
   <url>
+    <loc>https://larryshaw0079.github.io/tags/GBDT/</loc>
+    <lastmod>2021-10-23</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://larryshaw0079.github.io/tags/XGBoost/</loc>
+    <lastmod>2021-10-23</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://larryshaw0079.github.io/tags/Overfitting/</loc>
     <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
@@ -382,20 +396,6 @@
   </url>
   
   <url>
-    <loc>https://larryshaw0079.github.io/tags/GBDT/</loc>
-    <lastmod>2021-10-23</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://larryshaw0079.github.io/tags/XGBoost/</loc>
-    <lastmod>2021-10-23</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://larryshaw0079.github.io/tags/Probability/</loc>
     <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
@@ -410,20 +410,6 @@
   </url>
   
   <url>
-    <loc>https://larryshaw0079.github.io/tags/Flow-based-Model/</loc>
-    <lastmod>2021-10-23</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://larryshaw0079.github.io/tags/Spectral/</loc>
-    <lastmod>2021-10-23</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://larryshaw0079.github.io/tags/Contrastive-Learning/</loc>
     <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
@@ -432,6 +418,20 @@
   
   <url>
     <loc>https://larryshaw0079.github.io/tags/Self-supervised-Learning/</loc>
+    <lastmod>2021-10-23</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://larryshaw0079.github.io/tags/Flow-based-Model/</loc>
+    <lastmod>2021-10-23</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://larryshaw0079.github.io/tags/Spectral/</loc>
     <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
