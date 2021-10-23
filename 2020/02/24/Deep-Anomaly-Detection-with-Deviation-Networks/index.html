@@ -1,90 +1,688 @@
-<%
-var subtitle = page.subtitle || page.title
-var banner_img = page.banner_img || theme.index.banner_img
-var banner_img_height = page.banner_img_height || theme.index.banner_img_height
-var banner_mask_alpha = page.banner_mask_alpha || theme.index.banner_mask_alpha
-var colorSchema = theme.dark_mode && theme.dark_mode.enable && theme.dark_mode.default ? theme.dark_mode.default : ''
-%>
+
 
 <!DOCTYPE html>
-<html lang="<%= config.language %>" <%= colorSchema ? `data-default-color-scheme="${colorSchema}"` : '' %>>
+<html lang="zh-CN" data-default-color-scheme=auto>
 
-<%- partial('_partial/head') %>
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="Hanzawa">
+  <meta name="keywords" content="">
+  <meta name="description" content="Introduction 本文关注Deep Anomaly Detection，也就是用深度学习的方法来进行异常检测。文中提到现有的Deep Anomaly Detection存在两个弊端：一个是采用深度学习方法来进行特征学习，然后通过下游任务得到Anomaly Score，相比文中End-to-End的Anomaly Score学习，存在优化不充分的风险；另一个是现有的方法主要是无监督学习，无">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Deep Anomaly Detection with Deviation Networks">
+<meta property="og:url" content="https://larryshaw0079.github.io/hanzawa-blog/2020/02/24/Deep-Anomaly-Detection-with-Deviation-Networks/index.html">
+<meta property="og:site_name" content="Hanzawa の 部屋">
+<meta property="og:description" content="Introduction 本文关注Deep Anomaly Detection，也就是用深度学习的方法来进行异常检测。文中提到现有的Deep Anomaly Detection存在两个弊端：一个是采用深度学习方法来进行特征学习，然后通过下游任务得到Anomaly Score，相比文中End-to-End的Anomaly Score学习，存在优化不充分的风险；另一个是现有的方法主要是无监督学习，无">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2020/06/25/XT7fqQRWEOuocgy.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/25/ZuE1mb2Ytv6Jdl7.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/25/aPbSipCsk2JwNcD.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/25/km9H5DoNRbOQ784.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/25/DKqxJROngML8IS2.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/25/iIWGBPosKCuxbRF.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/25/JCnIjLOc84RFP2V.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/25/5LcyAwGMB8gb2UP.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/25/5gbPdJkB47e3FsV.png">
+<meta property="article:published_time" content="2020-02-24T02:45:08.000Z">
+<meta property="article:modified_time" content="2020-06-25T05:30:55.514Z">
+<meta property="article:author" content="Hanzawa">
+<meta property="article:tag" content="Anomaly Detection">
+<meta property="article:tag" content="Deep Learning">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://i.loli.net/2020/06/25/XT7fqQRWEOuocgy.png">
+  
+  <title>Deep Anomaly Detection with Deviation Networks - Hanzawa の 部屋</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"larryshaw0079.github.io","root":"/","version":"1.8.12","typing":{"enable":true,"typeSpeed":30,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Hanzawa の 部屋" type="application/atom+xml">
+</head>
+
 
 <body>
-  <header style="height: <%- banner_img_height %>vh;">
-    <%- partial('_partial/nav') %>
-    <div class="banner" id="banner" <%- theme.banner && theme.banner.parallax && 'parallax=true' %>
-         style="background: url('<%- url_for(banner_img) %>') no-repeat center center;
+  <header style="height: 60vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Hanzawa</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
            background-size: cover;">
       <div class="full-bg-img">
-        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, <%= parseFloat(banner_mask_alpha) %>)">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="<%- subtitle %>">
-              <% if(!theme.fun_features.typing.enable) { %>
-                <%- subtitle %>
-              <% } %>
+            <span class="h2" id="subtitle" title="Deep Anomaly Detection with Deviation Networks">
+              
             </span>
 
-            <% if(is_post() && page.meta !== false) { %>
-              <%- partial('_partial/post-meta') %>
-            <% } %>
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-02-24 10:45" pubdate>
+        2020年2月24日 上午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      4.9k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      15 分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
           </div>
 
-          <% if (theme.scroll_down_arrow.enable && theme.scroll_down_arrow.banner_height_limit <= banner_img_height && page.layout !== '404') { %>
-            <div class="scroll-down-bar">
-              <i class="iconfont icon-arrowdown"></i>
-            </div>
-          <% } %>
+          
         </div>
       </div>
     </div>
   </header>
 
   <main>
-    <% if(is_post() || page.layout === '404') { %>
-      <%- body %>
-    <% } else { %>
-      <div class="container nopadding-x-md">
-        <div class="py-5" id="board"
-          <%- banner_img_height >= 100 && theme.banner && theme.banner.parallax ? 'style=margin-top:0' : '' %>>
-          <% if(page.layout === 'about') { %>
-            <div class="about-avatar">
-              <img src="<%- url_for(theme.about.avatar) %>" srcset="/img/loading.gif"
-                   class="img-fluid" alt="avatar">
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Deep Anomaly Detection with Deviation Networks</h1>
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：1 年前
+                
+              </p>
+            
+            <div class="markdown-body">
+              <h1 id="introduction">Introduction</h1>
+<p>本文关注<code>Deep Anomaly Detection</code>，也就是用深度学习的方法来进行异常检测。文中提到现有的<code>Deep Anomaly Detection</code>存在两个弊端：一个是采用深度学习方法来进行特征学习，然后通过下游任务得到<code>Anomaly Score</code>，相比文中End-to-End的<code>Anomaly Score</code>学习，存在优化不充分的风险；另一个是现有的方法主要是无监督学习，无法利用已知的信息（如少量标签）。为此，本文提出了一种端到端的异常检测框架，来解决上述问题。</p>
+<p>本文的主要贡献如下：</p>
+<ul>
+<li>提出了一种端到端的异常检测框架，直接学习<code>Anomaly Score</code>并且可以利用已知信息；</li>
+<li>基于提出的框架，文中提出了一种实例方法 (DevNet)。</li>
+</ul>
+<p><img src="https://i.loli.net/2020/06/25/XT7fqQRWEOuocgy.png" srcset="/img/loading.gif" lazyload style="zoom:67%;" /></p>
+<h1 id="proposed-model">Proposed Model</h1>
+<h2 id="end-to-end-anomaly-score-learning">End-To-End Anomaly Score Learning</h2>
+<h3 id="problem-statement">Problem Statement</h3>
+<p>为了区别于传统的两阶段异常检测（先学习特征表示，然后在学到的特征上定义一个<code>anomaly measure</code>来得到<code>anomaly score</code>），作者对端到端的异常检测问题重新进行形式化。</p>
+<p>给定<span class="math inline">\(N+K\)</span>个样本<span class="math inline">\(\mathcal{X}=\{\boldsymbol x_1,\boldsymbol x_2,\cdots,\boldsymbol x_N,\boldsymbol x_{N+1},\cdots,\boldsymbol x_{N+K}\}\)</span>，其中<span class="math inline">\(\boldsymbol x_i\in\mathbb{R}^D\)</span>，无标签样本集<span class="math inline">\(\mathcal{U}=\{\boldsymbol x_1,\boldsymbol x_2,\cdots,\boldsymbol x_N\}\)</span>，有标签样本集<span class="math inline">\(\mathcal{K}=\{\boldsymbol x_{N+1},\cdots,\boldsymbol x_{N+K}\}\)</span>，且<span class="math inline">\(K\ll N\)</span>。异常检测的目标是学习一个<code>anomaly scoring function</code><span class="math inline">\(\phi:\mathcal{X}\mapsto\mathbb{R}\)</span>使得<span class="math inline">\(\phi(\boldsymbol x_i)&gt;\phi(\boldsymbol x_j)\)</span>，其中<span class="math inline">\(\boldsymbol x_i\)</span>为异常样本，<span class="math inline">\(\boldsymbol x_j\)</span>为正常样本。</p>
+<h3 id="the-proposed-framework">The Proposed Framework</h3>
+<p>为了解决这个问题，文中提出了一种通用异常检测框架，模型框架如下图所示：</p>
+<p>模型框架如下图所示：</p>
+<p><img src="https://i.loli.net/2020/06/25/ZuE1mb2Ytv6Jdl7.png" srcset="/img/loading.gif" lazyload style="zoom:50%;" /></p>
+<p>主要包含三个部分：</p>
+<ol type="1">
+<li><em>anomaly scoring network</em>. 图中左边的部分，一个函数<span class="math inline">\(\phi\)</span>，输入样本<span class="math inline">\(\mathbf{x}\)</span>，输出<code>anomaly score</code></li>
+<li><em>reference score generator</em>. 图中右边的部分。只有一个<em>anomaly scoring network</em>并不能进行训练，需要训练的目标。为此加入<em>reference score generator</em>，输入为随机选择的<span class="math inline">\(l\)</span>个正常样本，输出<code>reference score</code>（这<span class="math inline">\(l\)</span>个正常样本<code>anomaly score</code>的均值，记为<span class="math inline">\(\mu_\mathcal{R}\)</span>）</li>
+<li><em>deviation loss</em>. <span class="math inline">\(\phi(\mathbf{x})\)</span>，<span class="math inline">\(\mu_\mathcal{R}\)</span>及对应的标准差<span class="math inline">\(\sigma_\mathcal{R}\)</span>作为<code>deviation loss</code>函数的输入。因为<span class="math inline">\(\mu_\mathcal{R}\)</span>和<span class="math inline">\(\sigma_\mathcal{R}\)</span>对应正常样本集的均值和方差，那么异常样本的<code>anomaly score</code>应该和<span class="math inline">\(\mu_\mathcal{R}\)</span>差别比较大，而正常样本则应该接近<span class="math inline">\(\mu_\mathcal{R}\)</span>。</li>
+</ol>
+<h2 id="deviation-networks">Deviation Networks</h2>
+<p>下面是上述三个部件的具体实现。</p>
+<h3 id="end-to-end-anomaly-scoring-network">End-To-End Anomaly Scoring Network</h3>
+<p>记<span class="math inline">\(\mathcal{Q}\in\mathbb{R}^M\)</span>为中间表示空间，<code>anomaly scoring network</code><span class="math inline">\(\phi(\cdot;\Theta):\mathcal{X}\mapsto\mathbb{R}\)</span>可以定义为数据表示学习<span class="math inline">\(\psi(\cdot;\Theta_t):\mathcal{X}\mapsto\mathcal{Q}\)</span>和异常分数学习<span class="math inline">\(\eta(\cdot;\Theta_s):\mathcal{Q}\mapsto\mathbb{R}\)</span>两阶段的组合，其中<span class="math inline">\(\Theta=\{\Theta_t,\Theta_s\}\)</span>。</p>
+<p><span class="math inline">\(\psi(\cdot;\Theta_t)\)</span>可以用一个<span class="math inline">\(H\)</span>层神经网络来实现： <span class="math display">\[
+\mathrm{q}=\psi(\mathbf{x};\Theta_t)
+\]</span> 其中<span class="math inline">\(\mathbf{x}\in\mathcal{X}\)</span>，<span class="math inline">\(\mathrm{q}\in\mathcal{Q}\)</span>。</p>
+<p><span class="math inline">\(\eta(\cdot;\Theta_s)\)</span>可以用一个单层的神经网络来实现： <span class="math display">\[
+\eta(\mathrm q;\Theta_s)=\sum\limits_{i=1}^M w_i^oq_i+w_{M+1}^o
+\]</span> 其中<span class="math inline">\(\mathrm q\in\mathcal Q\)</span>，<span class="math inline">\(\Theta_s=\{\mathbf{w}^o\}\)</span>。</p>
+<p>所以有： <span class="math display">\[
+\phi(\mathbf{x};\Theta)=\eta(\psi(\mathbf{x};\Theta_t);\Theta_s)
+\]</span></p>
+<h3 id="gaussian-prior-based-reference-scores">Gaussian Prior-based Reference Scores</h3>
+<p>有两种方法来获得<span class="math inline">\(\mu_\mathcal{R}\)</span>，一种是data-driven，一种是prior-driven。如果是data-driven的话则采用另一个神经网络，文中表示为了更好的解释性和计算效率，所以采用的是prior-driven。 <span class="math display">\[
+\begin{align}
+r_1,r_2,\cdots,r_l\sim \mathcal{N}(\mu,\sigma^2),\\
+\mu_\mathcal{R}=\frac{1}{l}\sum\limits_{i=1}^l r_i
+\end{align}
+\]</span> 在文中，采用的prior是标准高斯分布。</p>
+<h2 id="z-score-based-deviation-loss">Z-Score Based Deviation Loss</h2>
+<p><em>anomaly scoring network</em>的优化目标可以定义为Z-Score的方式： <span class="math display">\[
+dev(\boldsymbol x)=\frac{\phi(\boldsymbol x;\Theta)-\mu_{\mathcal{R}}}{\sigma_{\mathcal{R}}}
+\]</span> <span class="math inline">\(dev(\boldsymbol x)\)</span>可以看作是样本偏离标准的程度，而我们肯定希望异常样本偏离标准越大，正常样本越接近标准。文中采用的损失函数是<code>Contrastive Loss</code>： <span class="math display">\[
+L(\phi(\boldsymbol x;\Theta),\mu_\mathcal{R},\sigma_\mathcal{R})=(1-y)|dev(\boldsymbol x)| + y \max(0, a - dev(\boldsymbol x))
+\]</span> <code>Contrastive Loss</code>的直观解释可以看下图：</p>
+<p><img src="https://i.loli.net/2020/06/25/aPbSipCsk2JwNcD.png" srcset="/img/loading.gif" lazyload style="zoom: 33%;" /></p>
+<p>对于负例（正常），优化过程将他们尽量向原点靠近，对于正例（异常），优化过程将他们拉向边界。</p>
+<h2 id="the-devnet-algorithm">The DevNet Algorithm</h2>
+<p><code>DevNet</code>的算法流程图如下：</p>
+<p><img src="https://i.loli.net/2020/06/25/km9H5DoNRbOQ784.png" srcset="/img/loading.gif" lazyload style="zoom:67%;" /></p>
+<h2 id="interpretability-of-anomaly-scores">Interpretability of Anomaly Scores</h2>
+<p>因为<em>reference score generator</em>选择的是确定的高斯分布，于是可以用概率论给出一些解释性。作者给出了一个结论，</p>
+<blockquote>
+<p><strong>PROPOSITION</strong>： 设<span class="math inline">\(\boldsymbol x\in\mathcal{X}\)</span>，<span class="math inline">\(z_p\)</span>为<span class="math inline">\(\mathcal{N}(\mu,\sigma^2)\)</span>的分位数，那么<span class="math inline">\(\phi(\boldsymbol x)\)</span>在区间<span class="math inline">\(\mu\pm z_p\sigma\)</span>的概率为<span class="math inline">\(2(1-p)\)</span>。</p>
+</blockquote>
+<p>例如，假设<span class="math inline">\(p=0.95\)</span>，那么<span class="math inline">\(z_{0.95}=1.96\)</span>，表示异常分数高于1.96的样本将以0.95的置信度为异常。</p>
+<h1 id="experiment">Experiment</h1>
+<p>实验用到了9个数据集，4个Baseline (REPEN，DSVDD，FSNET，iForest)，以及ROC和PR曲线两种评测标准。</p>
+<h2 id="effectiveness-in-real-world-data-sets">Effectiveness in Real-world Data Sets</h2>
+<h3 id="experiment-settings">Experiment Settings</h3>
+<p>这一个实验主要是为了验证算法在真实场景下的效果，即大量无标签数据和极少量标签数据。训练集包含两部分，一部分是无标签数据<span class="math inline">\(\mathcal{U}\)</span>,包含<span class="math inline">\(2\%\)</span>的异常样本，另一部分是有标签数据<span class="math inline">\(\mathcal{K}\)</span>，由随机采样<span class="math inline">\(0.005\%-1\%\)</span>的训练数据和<span class="math inline">\(0.08\%-6\%\)</span>的异常样本组成。</p>
+<h3 id="findings">Findings</h3>
+<p>实验结果如下表所示：</p>
+<p><img src="https://i.loli.net/2020/06/25/DKqxJROngML8IS2.png" srcset="/img/loading.gif" lazyload style="zoom: 50%;" /></p>
+<p>从结果上看来，本文提出的方法在所有数据集上都比Baseline好，说明<code>DevNet</code>端到端直接优化<code>Anomaly Score</code>的方式是有效的。</p>
+<h2 id="data-efficiency">Data Efficiency</h2>
+<h3 id="experiment-settings-1">Experiment Settings</h3>
+<p>这一个实验主要是为了探究基于深度的异常检测方法的<em>data efficiency</em>。和上一个实验一样，无标签数据集包含<span class="math inline">\(2\%\)</span>的异常，而有标签的异常数量从<span class="math inline">\(5\)</span>到<span class="math inline">\(120\)</span>不等。本实验试图回答以下两个问题：</p>
+<ul>
+<li><code>DevNet</code>的<em>data efficiency</em>如何？</li>
+<li>基于深度的方法在多大程度上能够利用标签信息？</li>
+</ul>
+<h3 id="findings-1">Findings</h3>
+<p>在几个基于深度的Baseline中，<code>DevNet</code>的效果是最好的，同时在有标签异常非常有限的情况下，<code>DevNet</code>也能很好的利用标签信息，达到更好的效果。</p>
+<p><img src="https://i.loli.net/2020/06/25/iIWGBPosKCuxbRF.png" srcset="/img/loading.gif" lazyload style="zoom:67%;" /></p>
+<h2 id="robustness-w.r.t.-anomaly-contamination">Robustness w.r.t. Anomaly Contamination</h2>
+<h3 id="experiment-settings-2">Experiment Settings</h3>
+<p>在第一个实验中，无标签数据集<span class="math inline">\(\mathcal{U}\)</span>包含的是固定的异常比例<span class="math inline">\(2\%\)</span>，而在这个实验中，作者测试了从<span class="math inline">\(0\%\)</span>到<span class="math inline">\(20\%\)</span>之间不同异常比例来测试算法的鲁棒性（即使<span class="math inline">\(\mathcal{U}\)</span>中包含异常，由于没有标签，在训练的时候仍然假设都为正常来进行训练）。本实验试图回答以下问题：</p>
+<ul>
+<li>基于深度的异常检测方法的鲁棒性如何？</li>
+<li>当训练集中异常污染的比例较高的时候基于深度的方法能否打败无监督的方法？</li>
+</ul>
+<h3 id="findings-2">Findings</h3>
+<p>下图为实验结果：</p>
+<p><img src="https://i.loli.net/2020/06/25/JCnIjLOc84RFP2V.png" srcset="/img/loading.gif" lazyload style="zoom:67%;" /></p>
+<p>从结果上来看，<code>DevNet</code>比其他基于深度的方法鲁棒性更好，同时在高异常污染的情况下仍然比纯无监督方法效果要好。</p>
+<h2 id="ablation-study">Ablation Study</h2>
+<p>本实验设置了<code>DevNet</code>的三个变体（默认的<code>DevNet-Def</code>为单层隐层加上一个输出层）来进行消融实验，分别是：</p>
+<ul>
+<li><code>DevNet-Rep</code>，去掉了<em>anomaly scoring network</em>网络的输出层，对应<em>end-to-end learning of anomaly scores</em>和<em>deviation loss</em>；</li>
+<li><code>DevNet-Linear</code>，去掉了网络中的非线性层，对应<em>learning of non-linear features</em>；</li>
+<li><code>DevNet-3HL</code>，隐层数量为3层。</li>
+</ul>
+<p>对比结果如下：</p>
+<p><img src="https://i.loli.net/2020/06/25/5LcyAwGMB8gb2UP.png" srcset="/img/loading.gif" lazyload style="zoom:67%;" /></p>
+<p>通过实验可以发现，<code>DevNet-Rep</code>说明了<em>end-to-end learning of anomaly scores</em>和<em>deviation loss</em>的有效性，而<code>DevNet-Linear</code>说明了<em>learning of non-linear features</em>的重要性。<code>DevNet-3HL</code>说明了加深网络并不总能带来性能的提升。</p>
+<h2 id="scalability-test">Scalability Test</h2>
+<p>这一个实验使用合成的数据来测试算法对大规模数据的处理能力，分别从<em>Data Size</em>和<em>Data Dimensionality</em>两方面来测试。结果如下：</p>
+<p><img src="https://i.loli.net/2020/06/25/5gbPdJkB47e3FsV.png" srcset="/img/loading.gif" lazyload style="zoom:67%;" /></p>
+<p>可以看出，<code>DevNet</code>对<em>Data Size</em>并不敏感，同时，面对高维数据，<code>DevNet</code>也没有表现出劣势。</p>
+
             </div>
-          <% } %>
-          <div class="container">
-            <div class="row">
-              <div class="col-12 col-md-10 m-auto">
-                <%- body %>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Research/">Research</a>
+                    
+                      <a class="hover-with-bg" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Anomaly-Detection/">Anomaly Detection</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Deep-Learning/">Deep Learning</a>
+                    
+                  </div>
+                
               </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Transfer Anomaly Detection by Inferring Latent Domain Representations</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/01/31/Geant4-%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/">
+                        <span class="hidden-mobile">Geant4 安装教程与调试环境配置</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
             </div>
-          </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div class="disqus" style="width:100%">
+    <div id="disqus_thread"></div>
+    
+      <script>
+        Fluid.utils.loadComments('#disqus_thread', function() {
+          Fluid.utils.createCssLink('https://cdn.jsdelivr.net/npm/disqusjs@1/dist/disqusjs.css');
+          Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/disqusjs@1/dist/disqus.js', function() {
+            new DisqusJS({
+              shortname: 'http-larryshaw0079-coding-me-blog',
+              apikey: ''
+            });
+          });
+        });
+      </script>
+    
+    <noscript>Please enable JavaScript to view the comments</noscript>
+  </div>
+
+
+              </article>
+            
+          </article>
         </div>
       </div>
-    <% } %>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
 
-    <% if (theme.scroll_top_arrow.enable) { %>
-      <a id="scroll-top-button" href="#" role="button">
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
         <i class="iconfont icon-arrowup" aria-hidden="true"></i>
       </a>
-    <% } %>
+    
 
-    <% if (theme.search.enable) { %>
-      <%- partial('_partial/search') %>
-    <% } %>
-
-    <% if (theme.custom_html) { %>
-      <div class="col-lg-7 mx-auto nopadding-x-md">
-        <div class="container custom mx-auto">
-          <%- theme.custom_html %>
-        </div>
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
-    <% } %>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
   </main>
 
-  <%- partial('_partial/footer', { params: { subtitle: subtitle } }) %>
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        loader: {
+          load: ['ui/lazy']
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" ></script>
+
+  
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
 
 </body>
 </html>

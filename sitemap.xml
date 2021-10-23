@@ -305,13 +305,6 @@
   </url>
   
   <url>
-    <loc>https://larryshaw0079.github.io/hanzawa-blog/tags/GAN/</loc>
-    <lastmod>2021-10-23</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://larryshaw0079.github.io/hanzawa-blog/tags/Geant4/</loc>
     <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
@@ -319,7 +312,21 @@
   </url>
   
   <url>
+    <loc>https://larryshaw0079.github.io/hanzawa-blog/tags/GAN/</loc>
+    <lastmod>2021-10-23</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://larryshaw0079.github.io/hanzawa-blog/tags/Novelty-Detection/</loc>
+    <lastmod>2021-10-23</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://larryshaw0079.github.io/hanzawa-blog/tags/Representation-Learning/</loc>
     <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -347,7 +354,7 @@
   </url>
   
   <url>
-    <loc>https://larryshaw0079.github.io/hanzawa-blog/tags/Representation-Learning/</loc>
+    <loc>https://larryshaw0079.github.io/hanzawa-blog/tags/SVM/</loc>
     <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -362,13 +369,6 @@
   
   <url>
     <loc>https://larryshaw0079.github.io/hanzawa-blog/tags/XGBoost/</loc>
-    <lastmod>2021-10-23</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://larryshaw0079.github.io/hanzawa-blog/tags/SVM/</loc>
     <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -403,6 +403,13 @@
   </url>
   
   <url>
+    <loc>https://larryshaw0079.github.io/hanzawa-blog/tags/RNN/</loc>
+    <lastmod>2021-10-23</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://larryshaw0079.github.io/hanzawa-blog/tags/Contrastive-Learning/</loc>
     <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
@@ -411,13 +418,6 @@
   
   <url>
     <loc>https://larryshaw0079.github.io/hanzawa-blog/tags/Self-supervised-Learning/</loc>
-    <lastmod>2021-10-23</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://larryshaw0079.github.io/hanzawa-blog/tags/RNN/</loc>
     <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -496,14 +496,14 @@
   </url>
   
   <url>
-    <loc>https://larryshaw0079.github.io/hanzawa-blog/categories/Research/Time-Series-Imputation/</loc>
+    <loc>https://larryshaw0079.github.io/hanzawa-blog/categories/Technical-Notes/</loc>
     <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://larryshaw0079.github.io/hanzawa-blog/categories/Technical-Notes/</loc>
+    <loc>https://larryshaw0079.github.io/hanzawa-blog/categories/Research/Time-Series-Imputation/</loc>
     <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -517,14 +517,14 @@
   </url>
   
   <url>
-    <loc>https://larryshaw0079.github.io/hanzawa-blog/categories/Research/Self-supervised-Learning/</loc>
+    <loc>https://larryshaw0079.github.io/hanzawa-blog/categories/Research/RNN/</loc>
     <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://larryshaw0079.github.io/hanzawa-blog/categories/Research/RNN/</loc>
+    <loc>https://larryshaw0079.github.io/hanzawa-blog/categories/Research/Self-supervised-Learning/</loc>
     <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>

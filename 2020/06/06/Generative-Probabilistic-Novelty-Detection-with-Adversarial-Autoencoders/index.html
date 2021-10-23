@@ -1,90 +1,655 @@
-<%
-var subtitle = page.subtitle || page.title
-var banner_img = page.banner_img || theme.index.banner_img
-var banner_img_height = page.banner_img_height || theme.index.banner_img_height
-var banner_mask_alpha = page.banner_mask_alpha || theme.index.banner_mask_alpha
-var colorSchema = theme.dark_mode && theme.dark_mode.enable && theme.dark_mode.default ? theme.dark_mode.default : ''
-%>
+
 
 <!DOCTYPE html>
-<html lang="<%= config.language %>" <%= colorSchema ? `data-default-color-scheme="${colorSchema}"` : '' %>>
+<html lang="zh-CN" data-default-color-scheme=auto>
 
-<%- partial('_partial/head') %>
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="Hanzawa">
+  <meta name="keywords" content="">
+  <meta name="description" content="Introduction 这篇文章介绍了一种基于概率分布的异常检测方法。其基本思想是假设正常样本服从定义在流形\(M\)上的分布，而对于任意一点\(\bar x\)，通过投影到流形\(M\)上\(x^\parallel\)，可以分解为平行于切空间的部分\(x^\parallel\)和正交与切空间的部分\(x^\bot\)。原始的坐标\(\bar x\)被转换到\(x^\parallel\)局部坐">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Generative Probabilistic Novelty Detection with Adversarial Autoencoders">
+<meta property="og:url" content="https://larryshaw0079.github.io/hanzawa-blog/2020/06/06/Generative-Probabilistic-Novelty-Detection-with-Adversarial-Autoencoders/index.html">
+<meta property="og:site_name" content="Hanzawa の 部屋">
+<meta property="og:description" content="Introduction 这篇文章介绍了一种基于概率分布的异常检测方法。其基本思想是假设正常样本服从定义在流形\(M\)上的分布，而对于任意一点\(\bar x\)，通过投影到流形\(M\)上\(x^\parallel\)，可以分解为平行于切空间的部分\(x^\parallel\)和正交与切空间的部分\(x^\bot\)。原始的坐标\(\bar x\)被转换到\(x^\parallel\)局部坐">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2020/06/25/oi9xKMO3ID7jANJ.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/25/sQhO3D4gKJqBPXv.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/25/i7ytlgjoIbYV6uF.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/25/5a71oidmK2ZGLyh.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/25/4lcGeHDrhbdKN5W.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/25/ofVGBgR7a3WmyvU.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/25/avURoBw6ny8SIEq.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/25/piteKy1m9kvQ6EU.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/25/xgni9wBtYkheGZq.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/25/idhqkCbAKvzMt68.png">
+<meta property="article:published_time" content="2020-06-06T04:03:27.000Z">
+<meta property="article:modified_time" content="2020-06-25T08:14:29.250Z">
+<meta property="article:author" content="Hanzawa">
+<meta property="article:tag" content="Anomaly Detection">
+<meta property="article:tag" content="GAN">
+<meta property="article:tag" content="Novelty Detection">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://i.loli.net/2020/06/25/oi9xKMO3ID7jANJ.png">
+  
+  <title>Generative Probabilistic Novelty Detection with Adversarial Autoencoders - Hanzawa の 部屋</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"larryshaw0079.github.io","root":"/","version":"1.8.12","typing":{"enable":true,"typeSpeed":30,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Hanzawa の 部屋" type="application/atom+xml">
+</head>
+
 
 <body>
-  <header style="height: <%- banner_img_height %>vh;">
-    <%- partial('_partial/nav') %>
-    <div class="banner" id="banner" <%- theme.banner && theme.banner.parallax && 'parallax=true' %>
-         style="background: url('<%- url_for(banner_img) %>') no-repeat center center;
+  <header style="height: 60vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Hanzawa</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
            background-size: cover;">
       <div class="full-bg-img">
-        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, <%= parseFloat(banner_mask_alpha) %>)">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="<%- subtitle %>">
-              <% if(!theme.fun_features.typing.enable) { %>
-                <%- subtitle %>
-              <% } %>
+            <span class="h2" id="subtitle" title="Generative Probabilistic Novelty Detection with Adversarial Autoencoders">
+              
             </span>
 
-            <% if(is_post() && page.meta !== false) { %>
-              <%- partial('_partial/post-meta') %>
-            <% } %>
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-06-06 12:03" pubdate>
+        2020年6月6日 中午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      3.4k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      10 分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
           </div>
 
-          <% if (theme.scroll_down_arrow.enable && theme.scroll_down_arrow.banner_height_limit <= banner_img_height && page.layout !== '404') { %>
-            <div class="scroll-down-bar">
-              <i class="iconfont icon-arrowdown"></i>
-            </div>
-          <% } %>
+          
         </div>
       </div>
     </div>
   </header>
 
   <main>
-    <% if(is_post() || page.layout === '404') { %>
-      <%- body %>
-    <% } else { %>
-      <div class="container nopadding-x-md">
-        <div class="py-5" id="board"
-          <%- banner_img_height >= 100 && theme.banner && theme.banner.parallax ? 'style=margin-top:0' : '' %>>
-          <% if(page.layout === 'about') { %>
-            <div class="about-avatar">
-              <img src="<%- url_for(theme.about.avatar) %>" srcset="/img/loading.gif"
-                   class="img-fluid" alt="avatar">
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Generative Probabilistic Novelty Detection with Adversarial Autoencoders</h1>
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：1 年前
+                
+              </p>
+            
+            <div class="markdown-body">
+              <h1 id="introduction">Introduction</h1>
+<p>这篇文章介绍了一种基于概率分布的异常检测方法。其基本思想是假设正常样本服从定义在流形<span class="math inline">\(M\)</span>上的分布，而对于任意一点<span class="math inline">\(\bar x\)</span>，通过投影到流形<span class="math inline">\(M\)</span>上<span class="math inline">\(x^\parallel\)</span>，可以分解为平行于切空间的部分<span class="math inline">\(x^\parallel\)</span>和正交与切空间的部分<span class="math inline">\(x^\bot\)</span>。原始的坐标<span class="math inline">\(\bar x\)</span>被转换到<span class="math inline">\(x^\parallel\)</span>局部坐标系中，然后似然通过转换后的坐标系进行计算。</p>
+<h1 id="methodology">Methodology</h1>
+<h2 id="generative-probabilistic-novelty-detection">Generative Probabilistic Novelty Detection</h2>
+<p>我们假设训练数据<span class="math inline">\(x_1,\cdots,x_N\)</span>，其中<span class="math inline">\(x_i\in\mathbb{R}^m\)</span>，从一个分布采样的来，并带有随机噪声<span class="math inline">\(\xi\)</span>： <span class="math display">\[
+x_i=f(z_i)+\xi_i, \space\space\space i=1,\cdots,N
+\]</span> 其中<span class="math inline">\(z_i\in\mathbb{R}^n\)</span>，<span class="math inline">\(f:\Omega\mapsto\mathbb{R}^m\)</span>定义了一个<span class="math inline">\(n\)</span>维带参流形<span class="math inline">\(\mathcal{M}\equiv f(\Omega)\)</span>。注意这里噪声的加入使得样本的值域扩展到了整个实数空间。同时假设存在<span class="math inline">\(g:\mathbb{R}^m\mapsto\mathbb{R}^n\)</span>，对任意<span class="math inline">\(x\in\mathcal{M}\)</span>都有<span class="math inline">\(f(g(x))=x\)</span>。<span class="math inline">\(f\)</span>和<span class="math inline">\(g\)</span>后面会通过神经网络实现。</p>
+<p>对于一个测试样本<span class="math inline">\(\bar{x}\in\mathbb{R}^m\)</span>，我们可以得到其在<span class="math inline">\(M\)</span>上的投影，这是通过逆变换<span class="math inline">\(\bar z = g(\bar x)\)</span>得到对应<span class="math inline">\(z\)</span>的然后再通过<span class="math inline">\(\bar x^{\parallel}=f(\bar z)\)</span>得到。<span class="math inline">\(f\)</span>在<span class="math inline">\(\bar z\)</span>的一阶泰勒展开为： <span class="math display">\[
+f(z)=f(\bar z)+J_f(\bar z)(z-\bar z)+O(\parallel z-\bar z\parallel ^2)
+\]</span> <img src="https://i.loli.net/2020/06/25/oi9xKMO3ID7jANJ.png" srcset="/img/loading.gif" lazyload style="zoom:67%;" /></p>
+<p>其中<span class="math inline">\(J_f(\bar z)\)</span>为<span class="math inline">\(f\)</span>在点<span class="math inline">\(\bar z\)</span>的雅各比矩阵。<span class="math inline">\(\mathcal T=\text{span}(J_f(\bar z))\)</span>代表点<span class="math inline">\(\bar z\)</span>处由<span class="math inline">\(J_f(\bar z)\)</span>的<span class="math inline">\(n\)</span>个独立向量组成的切空间。通过对<span class="math inline">\(J_f(\bar z)\)</span>进行奇异值分解<span class="math inline">\(J_f(\bar z)=U^\parallel SV^\top\)</span>。 <span class="math display">\[
+\bar w=U^\top\bar x=\left[\begin{matrix}U^{\parallel^\top}\bar x\\ U^{\bot^\top}\bar x\end{matrix}\right]=\left[\begin{matrix}\bar w^\parallel\\ \bar w^\bot\end{matrix}\right]
+\]</span> 坐标<span class="math inline">\(\bar w\)</span>可以分解为平行于<span class="math inline">\(\mathcal T\)</span>和正交于<span class="math inline">\(\mathcal T\)</span>两部分。</p>
+<p>定义在施加变换前后的坐标系上的概率分布<span class="math inline">\(p_X(x)\)</span>和<span class="math inline">\(p_W(w)\)</span>是等价的，不过对于<span class="math inline">\(p_W(w)\)</span>，我们假设平行部分和正交部分是独立的，即： <span class="math display">\[
+p_X(x)=p_W(w)=p_W(w^\parallel,w^\bot)=p_{W^\parallel}(w^\parallel)p_{W^\bot}(w^\bot)
+\]</span> 这一假设的依据是随机噪声部分假设主要是往流形之外偏离的，即与<span class="math inline">\(\mathcal T\)</span>正交，所以<span class="math inline">\(W^\bot\)</span>主要是反映噪声的部分。而噪声与样本分布相独立的假设是合理的。于是，异常分数可以定义为： <span class="math display">\[
+p_X(\bar x)=p_{W^\parallel}(\bar w^\parallel)p_{W^\bot}(\bar w^\bot)=\begin{cases}\geq \gamma \Rightarrow \text{Inlier}\\&lt;\gamma\Rightarrow\text{Outlier}\end{cases}
+\]</span></p>
+<h2 id="computing-the-distribution-of-data-samples">Computing the Distribution of Data Samples</h2>
+<p>上面的异常分数需要计算<span class="math inline">\(p_{W^\parallel}(\bar w^\parallel)\)</span>和<span class="math inline">\(p_{W^\bot}(\bar w^\bot)\)</span>。给定测试样本<span class="math inline">\(\bar x\)</span>，投影到流形<span class="math inline">\(\bar x^\parallel=f(g(\bar x))\)</span>。<span class="math inline">\(\bar w^\parallel\)</span>可以重写为<span class="math inline">\(\bar w^\parallel=U^{\parallel^\top}\bar x=U^{\parallel^\top}(\bar x-\bar x^{\parallel})+U^{\parallel^\top}\bar x^\parallel=U^{\parallel^\top}\bar x^\parallel\)</span>，即我们假设<span class="math inline">\(U^{\parallel^\top}(\bar x-\bar x^\parallel)\approx 0\)</span>。于是有<span class="math inline">\(w^\parallel(z)=U^{\parallel^\top}f(\bar z)+SV^\top(z-\bar z)+O(\parallel z-\bar z\parallel^2)\)</span>。</p>
+<p>如果<span class="math inline">\(Z\)</span>为定义在流形上的概率分布，那么： <span class="math display">\[
+p_{W^\parallel}(w^\parallel)=|\text{det}S^{-1}|p_Z(z)
+\]</span> <span class="math inline">\(p_{W^\bot}(w^\bot)\)</span>由半径为<span class="math inline">\(\parallel w^\bot\parallel\)</span>的超球体<span class="math inline">\(\mathcal S^{m-n-1}\)</span>来进行估计： <span class="math display">\[
+p_{W^\bot}(w^\bot)\approx\frac{\Gamma(\frac{m-n}{2})}{2\pi^{\frac{m-n}{2}}\parallel w^\bot\parallel^{m-n}}p_{\parallel W^\bot\parallel}(\parallel w^\bot\parallel)
+\]</span></p>
+<p>其中<span class="math inline">\(\Gamma(\cdot)\)</span>代表Gamma函数。</p>
+<h2 id="manifold-learning-with-adversarial-autoencoders">Manifold Learning with Adversarial Autoencoders</h2>
+<p>为了学习映射<span class="math inline">\(f\)</span>和<span class="math inline">\(g\)</span>，我们使用了AAE框架，如下图所示：</p>
+<p><img src="https://i.loli.net/2020/06/25/sQhO3D4gKJqBPXv.png" srcset="/img/loading.gif" lazyload style="zoom: 67%;" /></p>
+<p>除了常规的AAE外，我们还为<span class="math inline">\(x\)</span>添加了一个额外的判别器。</p>
+<h3 id="adversarial-losses">Adversarial Losses</h3>
+<p>对于隐变量<span class="math inline">\(z\)</span>，对抗损失函数为： <span class="math display">\[
+\mathcal L_{adv-d_z}(x,g,D_z)=E[\log(D_z(\mathcal N(0,1)))]+E[\log(1-D_z(g(x)))]
+\]</span> 对于样本<span class="math inline">\(x\)</span>，对抗损失函数为： <span class="math display">\[
+\mathcal L_{adv-d_x}(x,D_x,f)=E[\log(D_x(x))]+E[\log(1-D_x(f(\mathcal N(0,1))))]
+\]</span></p>
+<h3 id="autoencoder-loss">Autoencoder Loss</h3>
+<p><span class="math display">\[
+\mathcal L_\text{error}(x,g,f)=-E_z[\log(p(f(g(x))|x))]
+\]</span></p>
+<h3 id="full-objective">Full Objective</h3>
+<p><span class="math display">\[
+\mathcal L(x,g,D_z,D_x,f)=\mathcal L_{adv-d_z}+\mathcal L_{adv-d_x}+\lambda \mathcal L_\text{error}
+\]</span></p>
+<p>下图为模型重构的例子：</p>
+<p><img src="https://i.loli.net/2020/06/25/i7ytlgjoIbYV6uF.png" srcset="/img/loading.gif" lazyload style="zoom:67%;" /></p>
+<h1 id="experiments">Experiments</h1>
+<h2 id="datasets">Datasets</h2>
+<ul>
+<li><strong>MNIST. </strong> 手册数字识别数据集。</li>
+<li><strong>The Coil-100. </strong>包含7200张100个不同物体的不同角度的图片。</li>
+<li><strong>Fashion-MNIST. </strong> 手册数字识别数据集彩色版。</li>
+<li><strong>Others. </strong> 前三个数据集都是采用一个类作为inlier，而其他类作为outlier。在这一设置中inlier采样自数据集CIFAR-10(CIFAR-100)，而outlier采样自TinyImageNet、LSUN和iSUN。</li>
+</ul>
+<h2 id="results">Results</h2>
+<h3 id="mnist-dataset">MNIST Dataset</h3>
+<p><img src="https://i.loli.net/2020/06/25/5a71oidmK2ZGLyh.png" srcset="/img/loading.gif" lazyload /></p>
+<p><img src="https://i.loli.net/2020/06/25/4lcGeHDrhbdKN5W.png" srcset="/img/loading.gif" lazyload style="zoom:67%;" /></p>
+<h3 id="coil-100-dataset">Coil-100 Dataset</h3>
+<p><img src="https://i.loli.net/2020/06/25/ofVGBgR7a3WmyvU.png" srcset="/img/loading.gif" lazyload style="zoom:67%;" /></p>
+<h3 id="fashion-mnist">Fashion-MNIST</h3>
+<p><img src="https://i.loli.net/2020/06/25/avURoBw6ny8SIEq.png" srcset="/img/loading.gif" lazyload /></p>
+<h3 id="cifar-10-cifar-100">CIFAR-10 (CIFAR-100)</h3>
+<p><img src="https://i.loli.net/2020/06/25/piteKy1m9kvQ6EU.png" srcset="/img/loading.gif" lazyload style="zoom: 67%;" /></p>
+<h3 id="ablation">Ablation</h3>
+<p><img src="https://i.loli.net/2020/06/25/xgni9wBtYkheGZq.png" srcset="/img/loading.gif" lazyload /></p>
+<p><img src="https://i.loli.net/2020/06/25/idhqkCbAKvzMt68.png" srcset="/img/loading.gif" lazyload style="zoom:67%;" /></p>
+
             </div>
-          <% } %>
-          <div class="container">
-            <div class="row">
-              <div class="col-12 col-md-10 m-auto">
-                <%- body %>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Research/">Research</a>
+                    
+                      <a class="hover-with-bg" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Anomaly-Detection/">Anomaly Detection</a>
+                    
+                      <a class="hover-with-bg" href="/tags/GAN/">GAN</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Novelty-Detection/">Novelty Detection</a>
+                    
+                  </div>
+                
               </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/06/13/Time2Graph-Revisiting-Time-Series-Modeling-with-Dynamic-Shapelets/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Time2Graph: Revisiting Time Series Modeling with Dynamic Shapelets</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/06/02/Classification-based-Anomaly-Detection-for-General-Data/">
+                        <span class="hidden-mobile">Classification-based Anomaly Detection for General Data</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
             </div>
-          </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div class="disqus" style="width:100%">
+    <div id="disqus_thread"></div>
+    
+      <script>
+        Fluid.utils.loadComments('#disqus_thread', function() {
+          Fluid.utils.createCssLink('https://cdn.jsdelivr.net/npm/disqusjs@1/dist/disqusjs.css');
+          Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/disqusjs@1/dist/disqus.js', function() {
+            new DisqusJS({
+              shortname: 'http-larryshaw0079-coding-me-blog',
+              apikey: ''
+            });
+          });
+        });
+      </script>
+    
+    <noscript>Please enable JavaScript to view the comments</noscript>
+  </div>
+
+
+              </article>
+            
+          </article>
         </div>
       </div>
-    <% } %>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
 
-    <% if (theme.scroll_top_arrow.enable) { %>
-      <a id="scroll-top-button" href="#" role="button">
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
         <i class="iconfont icon-arrowup" aria-hidden="true"></i>
       </a>
-    <% } %>
+    
 
-    <% if (theme.search.enable) { %>
-      <%- partial('_partial/search') %>
-    <% } %>
-
-    <% if (theme.custom_html) { %>
-      <div class="col-lg-7 mx-auto nopadding-x-md">
-        <div class="container custom mx-auto">
-          <%- theme.custom_html %>
-        </div>
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
-    <% } %>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
   </main>
 
-  <%- partial('_partial/footer', { params: { subtitle: subtitle } }) %>
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        loader: {
+          load: ['ui/lazy']
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" ></script>
+
+  
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
 
 </body>
 </html>

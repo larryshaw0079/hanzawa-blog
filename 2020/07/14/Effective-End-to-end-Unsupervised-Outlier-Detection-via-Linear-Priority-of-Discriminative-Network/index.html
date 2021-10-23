@@ -1,90 +1,644 @@
-<%
-var subtitle = page.subtitle || page.title
-var banner_img = page.banner_img || theme.index.banner_img
-var banner_img_height = page.banner_img_height || theme.index.banner_img_height
-var banner_mask_alpha = page.banner_mask_alpha || theme.index.banner_mask_alpha
-var colorSchema = theme.dark_mode && theme.dark_mode.enable && theme.dark_mode.default ? theme.dark_mode.default : ''
-%>
+
 
 <!DOCTYPE html>
-<html lang="<%= config.language %>" <%= colorSchema ? `data-default-color-scheme="${colorSchema}"` : '' %>>
+<html lang="zh-CN" data-default-color-scheme=auto>
 
-<%- partial('_partial/head') %>
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="Hanzawa">
+  <meta name="keywords" content="">
+  <meta name="description" content="Introduction 本文针对无监督异常检测提出了\(E^3\space{Outlier}\)。作者使用自监督学习的方法，通过构建有监督任务在没有标签的情况下学习高层语义特征。PS：这篇文章的方法和NIPS18上的Deep Anomaly Detection Using Geometric Transformations（后面简称GEOM）颇为相似，但是不知为啥没有在实验中进行比较。后面我会">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Effective End-to-end Unsupervised Outlier Detection via Linear Priority of Discriminative Network">
+<meta property="og:url" content="https://larryshaw0079.github.io/hanzawa-blog/2020/07/14/Effective-End-to-end-Unsupervised-Outlier-Detection-via-Linear-Priority-of-Discriminative-Network/index.html">
+<meta property="og:site_name" content="Hanzawa の 部屋">
+<meta property="og:description" content="Introduction 本文针对无监督异常检测提出了\(E^3\space{Outlier}\)。作者使用自监督学习的方法，通过构建有监督任务在没有标签的情况下学习高层语义特征。PS：这篇文章的方法和NIPS18上的Deep Anomaly Detection Using Geometric Transformations（后面简称GEOM）颇为相似，但是不知为啥没有在实验中进行比较。后面我会">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2020/07/14/ULAdYpzsoGfFwtD.png">
+<meta property="og:image" content="https://i.loli.net/2020/07/16/iPa7h9HWqrnZvgx.png">
+<meta property="og:image" content="https://i.loli.net/2020/07/16/U5fVk8YOEGPx3Q7.png">
+<meta property="og:image" content="https://i.loli.net/2020/07/16/PgzqXIdJ67s3BtG.png">
+<meta property="og:image" content="https://i.loli.net/2020/07/16/G3agKPuJBowFmIW.png">
+<meta property="og:image" content="https://i.loli.net/2020/07/16/h6iYjBkrwQdFvMJ.png">
+<meta property="og:image" content="https://i.loli.net/2020/07/16/waWAi7zI3QpOcf6.png">
+<meta property="article:published_time" content="2020-07-14T10:46:13.000Z">
+<meta property="article:modified_time" content="2020-07-21T12:35:42.220Z">
+<meta property="article:author" content="Hanzawa">
+<meta property="article:tag" content="Self-Supervised Learning">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://i.loli.net/2020/07/14/ULAdYpzsoGfFwtD.png">
+  
+  <title>Effective End-to-end Unsupervised Outlier Detection via Linear Priority of Discriminative Network - Hanzawa の 部屋</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"larryshaw0079.github.io","root":"/","version":"1.8.12","typing":{"enable":true,"typeSpeed":30,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Hanzawa の 部屋" type="application/atom+xml">
+</head>
+
 
 <body>
-  <header style="height: <%- banner_img_height %>vh;">
-    <%- partial('_partial/nav') %>
-    <div class="banner" id="banner" <%- theme.banner && theme.banner.parallax && 'parallax=true' %>
-         style="background: url('<%- url_for(banner_img) %>') no-repeat center center;
+  <header style="height: 60vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Hanzawa</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
            background-size: cover;">
       <div class="full-bg-img">
-        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, <%= parseFloat(banner_mask_alpha) %>)">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="<%- subtitle %>">
-              <% if(!theme.fun_features.typing.enable) { %>
-                <%- subtitle %>
-              <% } %>
+            <span class="h2" id="subtitle" title="Effective End-to-end Unsupervised Outlier Detection via Linear Priority of Discriminative Network">
+              
             </span>
 
-            <% if(is_post() && page.meta !== false) { %>
-              <%- partial('_partial/post-meta') %>
-            <% } %>
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-07-14 18:46" pubdate>
+        2020年7月14日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      4.5k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      14 分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
           </div>
 
-          <% if (theme.scroll_down_arrow.enable && theme.scroll_down_arrow.banner_height_limit <= banner_img_height && page.layout !== '404') { %>
-            <div class="scroll-down-bar">
-              <i class="iconfont icon-arrowdown"></i>
-            </div>
-          <% } %>
+          
         </div>
       </div>
     </div>
   </header>
 
   <main>
-    <% if(is_post() || page.layout === '404') { %>
-      <%- body %>
-    <% } else { %>
-      <div class="container nopadding-x-md">
-        <div class="py-5" id="board"
-          <%- banner_img_height >= 100 && theme.banner && theme.banner.parallax ? 'style=margin-top:0' : '' %>>
-          <% if(page.layout === 'about') { %>
-            <div class="about-avatar">
-              <img src="<%- url_for(theme.about.avatar) %>" srcset="/img/loading.gif"
-                   class="img-fluid" alt="avatar">
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Effective End-to-end Unsupervised Outlier Detection via Linear Priority of Discriminative Network</h1>
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：1 年前
+                
+              </p>
+            
+            <div class="markdown-body">
+              <h1 id="introduction">Introduction</h1>
+<p>本文针对无监督异常检测提出了<span class="math inline">\(E^3\space{Outlier}\)</span>。作者使用自监督学习的方法，通过构建有监督任务在没有标签的情况下学习高层语义特征。PS：这篇文章的方法和NIPS18上的<em>Deep Anomaly Detection Using Geometric Transformations</em>（后面简称GEOM）颇为相似，但是不知为啥没有在实验中进行比较。后面我会分析一些两篇文章方法上的异同。</p>
+<h1 id="proposed-method">Proposed Method</h1>
+<h2 id="surrogate-supervision-based-effective-representation-learning-for-uod">Surrogate Supervision Based Effective Representation Learning for UOD</h2>
+<p>这里作者提到了使用重构的模型来进行异常检测的不足：重构模型采用像素级别的损失函数（如mean square error），而这太过于严格和细节，并不能学到高层语义特征。</p>
+<p>为此，作者提出了<em>surrogate supervision based discriminative network</em> (SSD)。具体操作和GEOM类似，首先预定义大小为<span class="math inline">\(K\)</span>的几何变换集合<span class="math inline">\(\mathcal O=\{O(\cdot|y)\}_{y=1}^K\)</span>。对每一个样本<span class="math inline">\(\mathbf x\)</span>，在经过<span class="math inline">\(K\)</span>个集合变换之后会得到<span class="math inline">\(K\)</span>个变换后的样本（第<span class="math inline">\(y\)</span>个变换产生的样本即记为<span class="math inline">\(\mathbf x^{(y)}=O(\mathbf x|y)\)</span>），每个样本对应的pseudo label即为变换的序号或者说种类。之后在新的数据集上（大小为原来的<span class="math inline">\(K\)</span>倍）训练<span class="math inline">\(K\)</span>分类网络。网络的输出为<span class="math inline">\(P(\mathbf x^{(y^\prime)}|\boldsymbol\theta)=[P^{(y)}(\mathbf x^{(y^\prime)}|\boldsymbol\theta)]_{y=1}^K\)</span>，每个维度代表输入样本对应的变换的概率。总的损失函数为： <span class="math display">\[
+\min_\theta\frac{1}{N}\sum_{i=1}^{N}\mathcal L_{SS}(\mathbf x_i|\theta)
+\]</span></p>
+<p>其中<span class="math inline">\(\mathcal L_{SS}(\mathbf x_i|\theta)\)</span>代表每个样本对应的Loss，这个Loss可以由分类器在<span class="math inline">\(K\)</span>个变换上的交叉熵损失来确定：</p>
+<p><span class="math display">\[
+\mathcal L_{SS}(\mathbf x_i|\boldsymbol\theta)=-\frac{1}{K}\sum_{y=1}^K\log(P^{(y)}(\mathbf x_i^{(y)}|\boldsymbol\theta))=-\frac{1}{K}\sum_{y=1}^K\log(P^{(y)}(O(\mathbf x_i|y)|\boldsymbol\theta))
+\]</span> <img src="https://i.loli.net/2020/07/14/ULAdYpzsoGfFwtD.png" srcset="/img/loading.gif" lazyload /></p>
+<p>变换集合<span class="math inline">\(\mathcal O\)</span>由一系列基本变换的组合确定。作者将这些基本变换分为了：1) 旋转 2) 翻转 3) 平移，包括横向和纵向 4) Patch置换（参考图1(a)中的Patch Re-arranging）。最终的变换集合<span class="math inline">\(\mathcal O\)</span>由三个子集组成，分别是<span class="math inline">\(\mathcal O_{RA}\)</span>（代表Regular Affine，其中每个变换为旋转<span class="math inline">\(90°\)</span>的倍数、翻转、横向平移和纵向平移这四个基本变换的叠加），<span class="math inline">\(\mathcal O_{IA}\)</span>（代表Irregular Affine，其中每个变换为进行<span class="math inline">\(30°\)</span>的倍数且不为<span class="math inline">\(90°\)</span>的倍数角度的旋转、翻转这两个基本变换的叠加）和<span class="math inline">\(\mathcal O_{PR}\)</span>（只包含Patch Re-arranging）。</p>
+<p>为了验证SSD学到的特征的有效性，作者将CAE提取的特征和SSD提取的特征分别用孤立森林进行异常检测，发现SSD效果更好（见图1(b)）。</p>
+<p>到这里为止本文和GEOM基本没有大的区别。值得注意的是在所采用的几何变换中，采用了非线性变换（进行<span class="math inline">\(30°\)</span>的倍数且不为<span class="math inline">\(90°\)</span>的倍数角度的旋转）。而在GEOM中，提到过使用非线性变换的话效果会比较差，至于具体的影响如何，可能需要实验来确定。</p>
+<h2 id="inlier-priority-the-foundation-of-end-to-end-uod">Inlier Priority: The Foundation of End-to-end UOD</h2>
+<p>在这里作者主要对在训练集包含少量异常的情况下做出的理论分析，作者将其称为<em>Inlier Priority</em>，原句如下：</p>
+<blockquote>
+<p><em>Inlier Priority</em>: Despite that inliers/outliersare indiscriminately fed into SSD for training, SSD will prioritize the minimization of inliers’ loss.</p>
+</blockquote>
+<h3 id="priority-by-gradient-magnitude">Priority by Gradient Magnitude</h3>
+<p>对于第<span class="math inline">\(c\)</span>个类来说，设<code>softmax</code>层和倒数第二层之间的权重矩阵为<span class="math inline">\(\mathbf w_c=[w_{s,c}]^{(L+1)}_{s=1}\)</span>，损失函数记为<span class="math inline">\(\mathcal L\)</span>，梯度记为<span class="math inline">\(\nabla_{\mathbf w_c}\mathcal L=[\nabla_{w_{s,c}}\mathcal L]^{(L+1)}_{s=1}\)</span>。设训练集<span class="math inline">\(X^{(c)}\)</span>包含<span class="math inline">\(N_{in}\)</span>个正常样本，<span class="math inline">\(N_{out}\)</span>个异常样本。记正常样本和异常样本对应的梯度分别为<span class="math inline">\(\parallel\nabla^{(in)}_{\mathbf w_c}\mathcal L\parallel\)</span>和<span class="math inline">\(\parallel\nabla^{(out)}_{\mathbf w_c}\mathcal L\parallel\)</span>，在网络只有一个隐层且采用<code>Sigmoid</code>作为激活函数时，两者梯度的期望之比有如下关系：</p>
+<p><span class="math display">\[
+\frac{E(\parallel\nabla^{(in)}_{\mathbf w_c}\mathcal L\parallel^2)}{E(\parallel\nabla^{(out)}_{\mathbf w_c}\mathcal L\parallel^2)}\approx\frac{N^2_{in}}{N^2_{out}}
+\]</span></p>
+<p>在训练集中，正常样本和异常样本的数量是极不均衡的，<span class="math inline">\(N_{in}\gg N_{out}\)</span>，所以有<span class="math inline">\(E(\parallel\nabla^{(in)}_{\mathbf w_c}\mathcal L\parallel^2)\gg E(\parallel\nabla^{(out)}_{\mathbf w_c}\mathcal L\parallel^2)\)</span>。</p>
+<p>在使用更复杂的网络时，作者通过实验展示了正常样本和异常样本对应的梯度大小的比较：</p>
+<p><img src="https://i.loli.net/2020/07/16/iPa7h9HWqrnZvgx.png" srcset="/img/loading.gif" lazyload /></p>
+<h3 id="priority-by-network-updating-direction">Priority by Network Updating Direction</h3>
+<p>这里作者通过梯度更新的方向来进行了理论上的解释。对于一个Batch的数据<span class="math inline">\(X\)</span>，梯度为<span class="math inline">\(-\nabla_\theta\mathcal L(X)=-\frac{1}{N}\sum_i\nabla_\theta\mathcal L(\mathbf x_i)\)</span>，如果将该梯度在Batch中某一样本<span class="math inline">\(\mathbf x_i\)</span>对应的梯度的方向上进行分解<span class="math inline">\(-\nabla_\theta\mathcal L(\mathbf x_i):d_i=-\nabla_\theta\mathcal L(X)\cdot\frac{-\nabla_\theta\mathcal L(\mathbf x_i)}{\parallel -\nabla_\theta\mathcal L(\mathbf x_i)\parallel}\)</span>，这代表了总的Loss在多大程度上减小样本<span class="math inline">\(\mathbf x_i\)</span>对应的Loss，由于一个Batch即包含正常样本，也可能包含异常样本，所以作者将两者对应的梯度方向贡献进行了可视化：</p>
+<p><img src="https://i.loli.net/2020/07/16/U5fVk8YOEGPx3Q7.png" srcset="/img/loading.gif" lazyload /></p>
+<p>可以看到随着训练的进行，正常样本对应的贡献更高。</p>
+<p>PS: 我以为作者会对基于几何变换的异常检测为什么有效做一些理论上的解释，不过却没有。这里只是对在训练集包含少量异常的情况下做出的理论分析，而这个实际上直觉上就很显然了。</p>
+<h2 id="scoring-strategies-for-uod">Scoring Strategies for UOD</h2>
+<p>作者采用了三种方法来计算异常分数：</p>
+<h3 id="pseudo-label-based-score-pl">Pseudo Label based Score (PL)</h3>
+<p>对于一个测试样本<span class="math inline">\(\mathbf x\)</span>，对其进行<span class="math inline">\(K\)</span>个几何变换，通过分类器会得到<span class="math inline">\(K\)</span>个输出，对于第<span class="math inline">\(k\)</span>个输出，我们只取其第<span class="math inline">\(k\)</span>个分量，最后把他们加起来除以<span class="math inline">\(K\)</span>：</p>
+<p><span class="math display">\[
+S_{pl}(\mathbf x)=\frac{1}{K}\sum_{y=1}^K P^{(y)}(\mathbf x^{(y)}|\boldsymbol\theta)
+\]</span></p>
+<h3 id="maximum-probability-based-score-mp">Maximum Probability based Score (MP)</h3>
+<p>这里稍有不同，对于第<span class="math inline">\(k\)</span>个输出，我们取其值最大的分量，而不是第<span class="math inline">\(k\)</span>个分量：</p>
+<p><span class="math display">\[
+S_{mp}(\mathbf x)=\frac{1}{K}\sum_{y=1}^K\max_t P^{(t)}(\mathbf x^{(y)}|\boldsymbol\theta)
+\]</span></p>
+<h3 id="negative-entropy-based-score-ne">Negative Entropy based Score (NE)</h3>
+<p>作者认为，标签为One-Hot向量，分类器的输出分布越“尖峰”就越接近于正常样本，而越“平均”就越接近于异常样本，所以作者提出使用熵来描述分类器输出的“尖锐度”： <span class="math display">\[
+S_{ne}(\mathbf x)=-\frac{1}{K}\sum_{y=1}^K H(P(\mathbf x^{(y)}|\boldsymbol\theta))=\frac{1}{K}\sum_{y=1}^K\sum_{t=1}^K P^{(t)}(\mathbf x^{(y)}|\boldsymbol\theta)\log(P^{(t)}(\mathbf x^{(y)}|\boldsymbol\theta))
+\]</span> 这里作者对第一种方法得到的结果进行了可视化：</p>
+<p><img src="https://i.loli.net/2020/07/16/PgzqXIdJ67s3BtG.png" srcset="/img/loading.gif" lazyload /></p>
+<p>PS：对比NIPS18 的Dirichlet Normality Score</p>
+<ol type="1">
+<li>也用到了全部<span class="math inline">\(K\)</span>个维度的信息</li>
+<li>相当于对分类器的输出做了迪利克雷分布的先验假设，然后通过训练集的输出估计分布参数。因为直觉上对于正常分布来说，分类器的输出分布形状上都类似一个尖峰，但对于不同的数据集来说具体形状还是会有所差异</li>
+</ol>
+<h1 id="experiments">Experiments</h1>
+<h2 id="experiment-setup">Experiment Setup</h2>
+<p>数据集用到了MNIST, Fashion-MNIST (F-MNIST) , CIFAR10, SVHN和CIFAR100。为了模拟无监督异常检测的环境，人为在训练集中加入异常样本，异常的比例<span class="math inline">\(\rho\)</span>从<span class="math inline">\(5\%\)</span>到<span class="math inline">\(25\%\)</span>以<span class="math inline">\(5\%\)</span>的步长递增。评测标准采用AUPR和AUROC。</p>
+<h2 id="uod-performance-comparison-and-discussion">UOD Performance Comparison and Discussion</h2>
+<p>下表展示了模型性能对比结果：</p>
+<p><img src="https://i.loli.net/2020/07/16/G3agKPuJBowFmIW.png" srcset="/img/loading.gif" lazyload /></p>
+<p>下图展示了在不同的Outlier Ratio下的性能对比：</p>
+<p><img src="https://i.loli.net/2020/07/16/h6iYjBkrwQdFvMJ.png" srcset="/img/loading.gif" lazyload /></p>
+<p>下图展示了在不同的变换集合，网络结构，异常分数的条件下的性能：</p>
+<p><img src="https://i.loli.net/2020/07/16/waWAi7zI3QpOcf6.png" srcset="/img/loading.gif" lazyload /></p>
+
             </div>
-          <% } %>
-          <div class="container">
-            <div class="row">
-              <div class="col-12 col-md-10 m-auto">
-                <%- body %>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Research/">Research</a>
+                    
+                      <a class="hover-with-bg" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Self-Supervised-Learning/">Self-Supervised Learning</a>
+                    
+                  </div>
+                
               </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/08/24/Unsupervised-Representation-Learning-by-Predicting-Random-Distances/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Unsupervised Representation Learning by Predicting Random Distances</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/06/22/Probability-Distributions-Binary-and-Multinomial-Variables/">
+                        <span class="hidden-mobile">Probability Distributions - Binary and Multinomial Variables</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
             </div>
-          </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div class="disqus" style="width:100%">
+    <div id="disqus_thread"></div>
+    
+      <script>
+        Fluid.utils.loadComments('#disqus_thread', function() {
+          Fluid.utils.createCssLink('https://cdn.jsdelivr.net/npm/disqusjs@1/dist/disqusjs.css');
+          Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/disqusjs@1/dist/disqus.js', function() {
+            new DisqusJS({
+              shortname: 'http-larryshaw0079-coding-me-blog',
+              apikey: ''
+            });
+          });
+        });
+      </script>
+    
+    <noscript>Please enable JavaScript to view the comments</noscript>
+  </div>
+
+
+              </article>
+            
+          </article>
         </div>
       </div>
-    <% } %>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
 
-    <% if (theme.scroll_top_arrow.enable) { %>
-      <a id="scroll-top-button" href="#" role="button">
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
         <i class="iconfont icon-arrowup" aria-hidden="true"></i>
       </a>
-    <% } %>
+    
 
-    <% if (theme.search.enable) { %>
-      <%- partial('_partial/search') %>
-    <% } %>
-
-    <% if (theme.custom_html) { %>
-      <div class="col-lg-7 mx-auto nopadding-x-md">
-        <div class="container custom mx-auto">
-          <%- theme.custom_html %>
-        </div>
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
-    <% } %>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
   </main>
 
-  <%- partial('_partial/footer', { params: { subtitle: subtitle } }) %>
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        loader: {
+          load: ['ui/lazy']
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" ></script>
+
+  
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
 
 </body>
 </html>

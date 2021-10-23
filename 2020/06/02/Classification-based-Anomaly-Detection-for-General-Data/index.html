@@ -1,90 +1,635 @@
-<%
-var subtitle = page.subtitle || page.title
-var banner_img = page.banner_img || theme.index.banner_img
-var banner_img_height = page.banner_img_height || theme.index.banner_img_height
-var banner_mask_alpha = page.banner_mask_alpha || theme.index.banner_mask_alpha
-var colorSchema = theme.dark_mode && theme.dark_mode.enable && theme.dark_mode.default ? theme.dark_mode.default : ''
-%>
+
 
 <!DOCTYPE html>
-<html lang="<%= config.language %>" <%= colorSchema ? `data-default-color-scheme="${colorSchema}"` : '' %>>
+<html lang="zh-CN" data-default-color-scheme=auto>
 
-<%- partial('_partial/head') %>
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="Hanzawa">
+  <meta name="keywords" content="">
+  <meta name="description" content="Introduction 本文主要是对NIPS18这篇异常检测文章的改进，首先是利用了标签信息来提升算法的表现，其次是将算法扩展到了非图像数据。作者对现有的异常检测算法进行了回顾：  Reconstruction Methods： 这一部分方法假设异常样本和正常样本能够通过重构任务来进行区分。通过在正常样本上学习重构任务，之后对于正常样本，模型能够很好地进行重构，而异常样本则会有较高的重构误">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Classification-based Anomaly Detection for General Data">
+<meta property="og:url" content="https://larryshaw0079.github.io/hanzawa-blog/2020/06/02/Classification-based-Anomaly-Detection-for-General-Data/index.html">
+<meta property="og:site_name" content="Hanzawa の 部屋">
+<meta property="og:description" content="Introduction 本文主要是对NIPS18这篇异常检测文章的改进，首先是利用了标签信息来提升算法的表现，其次是将算法扩展到了非图像数据。作者对现有的异常检测算法进行了回顾：  Reconstruction Methods： 这一部分方法假设异常样本和正常样本能够通过重构任务来进行区分。通过在正常样本上学习重构任务，之后对于正常样本，模型能够很好地进行重构，而异常样本则会有较高的重构误">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2020/06/24/r48h1RJxcXF6YDM.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/24/j4Y29tB6k1Aipgo.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/24/D3opwrLnSGmcsyM.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/24/e6PfIDOVwlzrSWi.png">
+<meta property="article:published_time" content="2020-06-02T15:01:34.000Z">
+<meta property="article:modified_time" content="2020-06-26T12:55:43.589Z">
+<meta property="article:author" content="Hanzawa">
+<meta property="article:tag" content="Anomaly Detection">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://i.loli.net/2020/06/24/r48h1RJxcXF6YDM.png">
+  
+  <title>Classification-based Anomaly Detection for General Data - Hanzawa の 部屋</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"larryshaw0079.github.io","root":"/","version":"1.8.12","typing":{"enable":true,"typeSpeed":30,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Hanzawa の 部屋" type="application/atom+xml">
+</head>
+
 
 <body>
-  <header style="height: <%- banner_img_height %>vh;">
-    <%- partial('_partial/nav') %>
-    <div class="banner" id="banner" <%- theme.banner && theme.banner.parallax && 'parallax=true' %>
-         style="background: url('<%- url_for(banner_img) %>') no-repeat center center;
+  <header style="height: 60vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Hanzawa</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
            background-size: cover;">
       <div class="full-bg-img">
-        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, <%= parseFloat(banner_mask_alpha) %>)">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="<%- subtitle %>">
-              <% if(!theme.fun_features.typing.enable) { %>
-                <%- subtitle %>
-              <% } %>
+            <span class="h2" id="subtitle" title="Classification-based Anomaly Detection for General Data">
+              
             </span>
 
-            <% if(is_post() && page.meta !== false) { %>
-              <%- partial('_partial/post-meta') %>
-            <% } %>
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-06-02 23:01" pubdate>
+        2020年6月2日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      3.5k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      11 分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
           </div>
 
-          <% if (theme.scroll_down_arrow.enable && theme.scroll_down_arrow.banner_height_limit <= banner_img_height && page.layout !== '404') { %>
-            <div class="scroll-down-bar">
-              <i class="iconfont icon-arrowdown"></i>
-            </div>
-          <% } %>
+          
         </div>
       </div>
     </div>
   </header>
 
   <main>
-    <% if(is_post() || page.layout === '404') { %>
-      <%- body %>
-    <% } else { %>
-      <div class="container nopadding-x-md">
-        <div class="py-5" id="board"
-          <%- banner_img_height >= 100 && theme.banner && theme.banner.parallax ? 'style=margin-top:0' : '' %>>
-          <% if(page.layout === 'about') { %>
-            <div class="about-avatar">
-              <img src="<%- url_for(theme.about.avatar) %>" srcset="/img/loading.gif"
-                   class="img-fluid" alt="avatar">
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Classification-based Anomaly Detection for General Data</h1>
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：1 年前
+                
+              </p>
+            
+            <div class="markdown-body">
+              <h1 id="introduction">Introduction</h1>
+<p>本文主要是对<a target="_blank" rel="noopener" href="http://qfxiao.me/2020/06/01/Deep-Anomaly-Detection-Using-Geometric-Transformations/">NIPS18这篇异常检测文章</a>的改进，首先是利用了标签信息来提升算法的表现，其次是将算法扩展到了非图像数据。作者对现有的异常检测算法进行了回顾：</p>
+<ul>
+<li><strong>Reconstruction Methods： </strong>这一部分方法假设异常样本和正常样本能够通过重构任务来进行区分。通过在正常样本上学习重构任务，之后对于正常样本，模型能够很好地进行重构，而异常样本则会有较高的重构误差。</li>
+<li><strong>Distributional Methods： </strong>这一部分方法将异常检测看作是密度估计问题。通过对正常样本的分布进行估计，异常样本在该正常分布下的似然将会很低。</li>
+<li><strong>Classification-based Methods： </strong>这一部分方法主要是指的单分类方法和通过几何变换构造分类任务的方法。本文使用的就是这类方法。</li>
+</ul>
+<h1 id="proposed-method">Proposed Method</h1>
+<h2 id="classification-based-anomaly-detection">Classification-based Anomaly Detection</h2>
+<p>假设所有数据位于空间<span class="math inline">\(R^L\)</span>内，而正常数据位于子空间<span class="math inline">\(X\subset R^L\)</span>内。我们假设所有的异常样本位于<span class="math inline">\(X\)</span>之外。为了检测异常，我们希望学习一个分类器<span class="math inline">\(C\)</span>使得对于所有的<span class="math inline">\(x\in X\)</span>有<span class="math inline">\(C(x)=1\)</span>，而对所有的<span class="math inline">\(x\in R^L\backslash X\)</span>有<span class="math inline">\(C(x)=0\)</span>。</p>
+<p>单分类方法的思想是直接学习<span class="math inline">\(P(x\in X)\)</span>，代表的方法有One-Class SVM，DSVDD等。传统的OC-SVM直接在原始空间或者核空间学习分类器。比较新的方法，如Deep-SVDD则是先将样本转换到一个特征空间，然后在这个特征空间上学习使得半径<span class="math inline">\(R\)</span>最小的超球体（球心<span class="math inline">\(c_0\)</span>），来覆盖住所有正常样本。异常的判定则通过计算<span class="math inline">\(\parallel f(x)-c_0\parallel^2-R^2\)</span>来实现。不过学习一个好的样本到特征空间的变换并不是一件容易的事情，比如说<span class="math inline">\(f(x)=0, \forall x \in X\)</span>就是一个使得超球体最小的解。所以需要很多trick来避免诸如此类的情况。</p>
+<p><em>Geometric-transformation classification</em> (GEOM) 则将数据空间<span class="math inline">\(X\)</span>通过<span class="math inline">\(M\)</span>个几何变换转换到一系列子空间<span class="math inline">\(X_1,\cdots,X_M\)</span>。之后训练一个分类器来预测样本<span class="math inline">\(T(x,m)\)</span>对应的几何变换的种类<span class="math inline">\(m\)</span>。转换后的正常图片空间记为<span class="math inline">\(\cup_m X_m\)</span>，所以该方法尝试估计以下条件概率： <span class="math display">\[
+P(m^\prime|T(x,m))=\frac{P(T(x,m)\in X_{m^\prime})P(m^\prime)}{\sum_{\bar{m}}P(T(x,m)\in X_{\bar{m}})P(\tilde{m})}-\frac{P(T(x,m)\in X_{m^\prime})}{\sum_{\bar{m}}P(T(x,m)\in X_{\bar{m}})}
+\]</span></p>
+<p>对于异常的样本<span class="math inline">\(x\in R^L\backslash X\)</span>，在经过几何变换之后，都不会位于正确的子空间中，即<span class="math inline">\(T(x,m)\in R^L\backslash X_m\)</span>。之后，使用<span class="math inline">\(P(m|T(x,m))\)</span>来判定异常。</p>
+<p>作者认为，这种方法的问题是分类器<span class="math inline">\(P(m^\prime|T(x,m))\)</span>只在正常数据上训练，而对于异常样本的异常分数会出现方差很大的问题。</p>
+<p>一种解决方式是加入异常样本进行训练，但是作者认为在有的任务中标签很难获取，于是作者使用了另外一种方法来解决这个问题。</p>
+<h2 id="distance-based-multiple-transformation-classification">Distance-based Multiple Transformation Classification</h2>
+<p>和GEOM一样，先对每个样本进行<span class="math inline">\(M\)</span>个几何变换，然后学习一个特征提取器<span class="math inline">\(f(x)\)</span>，将<span class="math inline">\(X_m\)</span>映射到特征空间。之后和OC-SVM类似，假设特征<span class="math inline">\(\{f(x)|x\in X_m\}\)</span>为球心为<span class="math inline">\(c_m=\frac{1}{N}\sum_{x\in X} f(T(x,m))\)</span>的超球体。样本属于某一类<span class="math inline">\(m^\prime\)</span>的概率由下式给出：</p>
+<p><span class="math display">\[
+P(m^\prime|T(x,m))=\frac{e^{-\parallel f(T(x,m))-c_{m^\prime}\parallel^2}}{\sum_{\bar m}e^{-\parallel f(T(x,m))-c_{\bar m}\parallel^2}}
+\]</span></p>
+<p>目标函数采用的是Triplet Loss：</p>
+<p><span class="math display">\[
+L=\sum_i\max(\parallel f(T(x_i,m))-c_m\parallel^2+s-\min_{m^\prime\neq m}\parallel f(T(x_i,m))-c_{m^\prime}\parallel^2,0)
+\]</span></p>
+<p><span class="math inline">\(\parallel f(T(x_i,m))-c_m\parallel^2\)</span>相当于最小化了类内距离，<span class="math inline">\(\min_{m^\prime\neq m}\parallel f(T(x_i,m))-c_{m^\prime}\parallel^2\)</span>最大化了每个类对应的集簇间距离。在检测阶段，为了避免一些数值问题，作者做了一些平滑操作：</p>
+<p><span class="math display">\[
+\tilde P(m^\prime|T(x,m))=\frac{e^{-\parallel f(T(x,m))-c_{m^\prime}\parallel^2+\epsilon}}{\sum_{\tilde m}e^{-\parallel f(T(x,m))-c_{\tilde m}\parallel^2+M\cdot\epsilon}}
+\]</span></p>
+<p>最后的评判分数由下式给出：</p>
+<p><span class="math display">\[
+Score(x)=-\log P(x\in X)=-\sum_m\log \tilde{P}(T(x,m)\in X_m)=-\sum_m\log\tilde{P}(m|T(x,m))
+\]</span></p>
+<p>算法流程图如下：</p>
+<p><img src="https://i.loli.net/2020/06/24/r48h1RJxcXF6YDM.png" srcset="/img/loading.gif" lazyload style="zoom:67%;" /></p>
+<h2 id="parameterizing-the-set-of-transformations">Parameterizing the Set of Transformations</h2>
+<p>在GEOM中，由于使用的几何变换都是针对图像的，所以对于其他类型的数据并不适用。本文中作者对非图像数据设计了以下变换：</p>
+<p><span class="math display">\[
+T(x,m)=W_mx+b_m
+\]</span></p>
+<p>不同的参数<span class="math inline">\(W_m\)</span>和<span class="math inline">\(b_m\)</span>即为不同的几何变换，可以考虑采用随机采样的方式。</p>
+<h1 id="experiments">Experiments</h1>
+<h2 id="image-experiments">Image Experiments</h2>
+<p>对于图像数据的异常检测实验，作者采用了CIFAR10、FasionMNIST这两个数据集，实验结果如下：</p>
+<p><img src="https://i.loli.net/2020/06/24/j4Y29tB6k1Aipgo.png" srcset="/img/loading.gif" lazyload style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/24/D3opwrLnSGmcsyM.png" srcset="/img/loading.gif" lazyload style="zoom:67%;" /></p>
+<h2 id="tabular-data-experiments">Tabular Data Experiments</h2>
+<p>对于非图像数据，作者采用了几个小的数据集：Arrhythmia、Thyroid、KDD和KDDRev。采用的Baseline包括OC-SVM、E2E-AE、LOF、DAGMM和FB-AE (Feature Bagging Autoencoder)。对于几何变换的参数，采样自标准正态分布。结果如下：</p>
+<p><img src="https://i.loli.net/2020/06/24/e6PfIDOVwlzrSWi.png" srcset="/img/loading.gif" lazyload style="zoom:67%;" /></p>
+<h1 id="remark">Remark</h1>
+<p>结合<a target="_blank" rel="noopener" href="https://openreview.net/forum?id=H1lK_lBtvS">OpenReview</a>上的一些讨论，这里提出一些问题和总结：</p>
+<ul>
+<li>KDD数据集太简单了，正常、异常样本能够很容易被分开；</li>
+<li>对于图像数据作者只使用了CIFAR10和FashionMNIST这两个比较小的数据集，而在GEOM中还使用了CIFAR100和CatsVsDogs。并且GEOM原文中提到数据集（指图像大小）越大，GEOM的优势就越明显，所以在本文的实验中只使用这两个数据集说服力略显不够；</li>
+<li>关于评测标准的问题，作者在图像数据中用的是AUROC，而非图像数据用的是F1 score。像AUPR、AUROC这种评测标准往往更加全面，而F1 score依赖于阈值的选取。如果是遍历阈值找到最好的那个F1 score，则无法全面考察模型的鲁棒性，模型有可能只是在特定的阈值下表现很好，而阈值稍微偏差一下性能可能就会大幅下降。我看到的大多数异常检测文章都是使用AUROC或者F1加上AUROC作为评测指标；</li>
+<li>文中在第二节“CLASSIFICATION-BASED ANOMALY DETECTION”的末尾两段关于GEOM方法的缺点说的很模糊。异常分数的方差大到底指的是什么；</li>
+<li>关于作者提出的变换<span class="math inline">\(T(x,m)=W_mx+b_m\)</span>并没有用到图像数据的实验上，而且在实验中<span class="math inline">\(b_m\)</span>这个参数实际上是被忽略掉了的，<span class="math inline">\(b_m\)</span>的作用究竟如何不得而知。而且GEOM中的几何变换的Motivation在原文中是做了实验充分讨论了的，GEOM的作者认为这些几何变换保留了图像的高阶语义信息。而本文中的变换中的参数只是随机采样而来，并不存在说保留原始数据中的结构信息。如果忽略掉这一层变换，那就类似于加了神经网络提取特征的OC-SVM。</li>
+</ul>
+
             </div>
-          <% } %>
-          <div class="container">
-            <div class="row">
-              <div class="col-12 col-md-10 m-auto">
-                <%- body %>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Research/">Research</a>
+                    
+                      <a class="hover-with-bg" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Anomaly-Detection/">Anomaly Detection</a>
+                    
+                  </div>
+                
               </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/06/06/Generative-Probabilistic-Novelty-Detection-with-Adversarial-Autoencoders/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Generative Probabilistic Novelty Detection with Adversarial Autoencoders</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/06/02/%E9%9D%A2%E5%90%91OpenPAI%E7%9A%84Docker%E9%95%9C%E5%83%8F%E9%85%8D%E7%BD%AE%E5%8F%8AOpenPAI%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/">
+                        <span class="hidden-mobile">面向OpenPAI的Docker镜像配置及OpenPAI基本使用方法</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
             </div>
-          </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div class="disqus" style="width:100%">
+    <div id="disqus_thread"></div>
+    
+      <script>
+        Fluid.utils.loadComments('#disqus_thread', function() {
+          Fluid.utils.createCssLink('https://cdn.jsdelivr.net/npm/disqusjs@1/dist/disqusjs.css');
+          Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/disqusjs@1/dist/disqus.js', function() {
+            new DisqusJS({
+              shortname: 'http-larryshaw0079-coding-me-blog',
+              apikey: ''
+            });
+          });
+        });
+      </script>
+    
+    <noscript>Please enable JavaScript to view the comments</noscript>
+  </div>
+
+
+              </article>
+            
+          </article>
         </div>
       </div>
-    <% } %>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
 
-    <% if (theme.scroll_top_arrow.enable) { %>
-      <a id="scroll-top-button" href="#" role="button">
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
         <i class="iconfont icon-arrowup" aria-hidden="true"></i>
       </a>
-    <% } %>
+    
 
-    <% if (theme.search.enable) { %>
-      <%- partial('_partial/search') %>
-    <% } %>
-
-    <% if (theme.custom_html) { %>
-      <div class="col-lg-7 mx-auto nopadding-x-md">
-        <div class="container custom mx-auto">
-          <%- theme.custom_html %>
-        </div>
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
-    <% } %>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
   </main>
 
-  <%- partial('_partial/footer', { params: { subtitle: subtitle } }) %>
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        loader: {
+          load: ['ui/lazy']
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" ></script>
+
+  
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
 
 </body>
 </html>
