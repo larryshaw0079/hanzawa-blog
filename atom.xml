@@ -3,11 +3,11 @@
   <title>Hanzawa の 部屋</title>
   
   
-  <link href="http://qfxiao.me/atom.xml" rel="self"/>
+  <link href="http://hanzawa.me/atom.xml" rel="self"/>
   
-  <link href="http://qfxiao.me/"/>
+  <link href="http://hanzawa.me/"/>
   <updated>2021-02-28T04:58:08.309Z</updated>
-  <id>http://qfxiao.me/</id>
+  <id>http://hanzawa.me/</id>
   
   <author>
     <name>Hanzawa</name>
@@ -18,8 +18,8 @@
   
   <entry>
     <title>Unsupervised Feature Learning via Non-Parametric Instance Discrimination</title>
-    <link href="http://qfxiao.me/2020/09/23/Unsupervised-Feature-Learning-via-Non-Parametric-Instance-Discrimination/"/>
-    <id>http://qfxiao.me/2020/09/23/Unsupervised-Feature-Learning-via-Non-Parametric-Instance-Discrimination/</id>
+    <link href="http://hanzawa.me/2020/09/23/Unsupervised-Feature-Learning-via-Non-Parametric-Instance-Discrimination/"/>
+    <id>http://hanzawa.me/2020/09/23/Unsupervised-Feature-Learning-via-Non-Parametric-Instance-Discrimination/</id>
     <published>2020-09-23T12:36:57.000Z</published>
     <updated>2021-02-28T04:58:08.309Z</updated>
     
@@ -35,21 +35,21 @@
     
     
     
-    <category term="Research" scheme="http://qfxiao.me/categories/Research/"/>
+    <category term="Research" scheme="http://hanzawa.me/categories/Research/"/>
     
-    <category term="Self-supervised Learning" scheme="http://qfxiao.me/categories/Research/Self-supervised-Learning/"/>
+    <category term="Self-supervised Learning" scheme="http://hanzawa.me/categories/Research/Self-supervised-Learning/"/>
     
     
-    <category term="Representation Learning" scheme="http://qfxiao.me/tags/Representation-Learning/"/>
+    <category term="Representation Learning" scheme="http://hanzawa.me/tags/Representation-Learning/"/>
     
-    <category term="Self-supervised Learning" scheme="http://qfxiao.me/tags/Self-supervised-Learning/"/>
+    <category term="Self-supervised Learning" scheme="http://hanzawa.me/tags/Self-supervised-Learning/"/>
     
   </entry>
   
   <entry>
     <title>Representation Learning with Contrastive Predictive Coding</title>
-    <link href="http://qfxiao.me/2020/09/17/Representation-Learning-with-Contrastive-Predictive-Coding/"/>
-    <id>http://qfxiao.me/2020/09/17/Representation-Learning-with-Contrastive-Predictive-Coding/</id>
+    <link href="http://hanzawa.me/2020/09/17/Representation-Learning-with-Contrastive-Predictive-Coding/"/>
+    <id>http://hanzawa.me/2020/09/17/Representation-Learning-with-Contrastive-Predictive-Coding/</id>
     <published>2020-09-17T12:08:53.000Z</published>
     <updated>2021-02-19T10:20:26.291Z</updated>
     
@@ -64,23 +64,23 @@
     
     
     
-    <category term="Research" scheme="http://qfxiao.me/categories/Research/"/>
+    <category term="Research" scheme="http://hanzawa.me/categories/Research/"/>
     
-    <category term="Self-supervised Learning" scheme="http://qfxiao.me/categories/Research/Self-supervised-Learning/"/>
+    <category term="Self-supervised Learning" scheme="http://hanzawa.me/categories/Research/Self-supervised-Learning/"/>
     
     
-    <category term="Deep Learning" scheme="http://qfxiao.me/tags/Deep-Learning/"/>
+    <category term="Deep Learning" scheme="http://hanzawa.me/tags/Deep-Learning/"/>
     
-    <category term="Contrastive Learning" scheme="http://qfxiao.me/tags/Contrastive-Learning/"/>
+    <category term="Contrastive Learning" scheme="http://hanzawa.me/tags/Contrastive-Learning/"/>
     
-    <category term="Self-supervised Learning" scheme="http://qfxiao.me/tags/Self-supervised-Learning/"/>
+    <category term="Self-supervised Learning" scheme="http://hanzawa.me/tags/Self-supervised-Learning/"/>
     
   </entry>
   
   <entry>
     <title>Model Selection and Evaluation: Machine Learning Basics</title>
-    <link href="http://qfxiao.me/2020/09/09/Model-Selection-and-Evaluation-Machine-Learning-Basics/"/>
-    <id>http://qfxiao.me/2020/09/09/Model-Selection-and-Evaluation-Machine-Learning-Basics/</id>
+    <link href="http://hanzawa.me/2020/09/09/Model-Selection-and-Evaluation-Machine-Learning-Basics/"/>
+    <id>http://hanzawa.me/2020/09/09/Model-Selection-and-Evaluation-Machine-Learning-Basics/</id>
     <published>2020-09-09T03:33:25.000Z</published>
     <updated>2021-02-19T10:21:57.175Z</updated>
     
@@ -95,23 +95,23 @@
     
     
     
-    <category term="Technical Notes" scheme="http://qfxiao.me/categories/Technical-Notes/"/>
+    <category term="Technical Notes" scheme="http://hanzawa.me/categories/Technical-Notes/"/>
     
-    <category term="Machine Learning" scheme="http://qfxiao.me/categories/Technical-Notes/Machine-Learning/"/>
+    <category term="Machine Learning" scheme="http://hanzawa.me/categories/Technical-Notes/Machine-Learning/"/>
     
     
-    <category term="Overfitting" scheme="http://qfxiao.me/tags/Overfitting/"/>
+    <category term="Overfitting" scheme="http://hanzawa.me/tags/Overfitting/"/>
     
-    <category term="Bias" scheme="http://qfxiao.me/tags/Bias/"/>
+    <category term="Bias" scheme="http://hanzawa.me/tags/Bias/"/>
     
-    <category term="Variance" scheme="http://qfxiao.me/tags/Variance/"/>
+    <category term="Variance" scheme="http://hanzawa.me/tags/Variance/"/>
     
   </entry>
   
   <entry>
     <title>Machine Learning Classification Algorithms: Decision Trees</title>
-    <link href="http://qfxiao.me/2020/09/02/Machine-Learning-Classification-Algorithms-Decision-Trees/"/>
-    <id>http://qfxiao.me/2020/09/02/Machine-Learning-Classification-Algorithms-Decision-Trees/</id>
+    <link href="http://hanzawa.me/2020/09/02/Machine-Learning-Classification-Algorithms-Decision-Trees/"/>
+    <id>http://hanzawa.me/2020/09/02/Machine-Learning-Classification-Algorithms-Decision-Trees/</id>
     <published>2020-09-02T10:47:55.000Z</published>
     <updated>2021-02-19T10:22:31.857Z</updated>
     
@@ -127,23 +127,23 @@
     
     
     
-    <category term="Technical Notes" scheme="http://qfxiao.me/categories/Technical-Notes/"/>
+    <category term="Technical Notes" scheme="http://hanzawa.me/categories/Technical-Notes/"/>
     
-    <category term="Machine Learning" scheme="http://qfxiao.me/categories/Technical-Notes/Machine-Learning/"/>
+    <category term="Machine Learning" scheme="http://hanzawa.me/categories/Technical-Notes/Machine-Learning/"/>
     
     
-    <category term="ID3" scheme="http://qfxiao.me/tags/ID3/"/>
+    <category term="ID3" scheme="http://hanzawa.me/tags/ID3/"/>
     
-    <category term="C4.5" scheme="http://qfxiao.me/tags/C4-5/"/>
+    <category term="C4.5" scheme="http://hanzawa.me/tags/C4-5/"/>
     
-    <category term="CART" scheme="http://qfxiao.me/tags/CART/"/>
+    <category term="CART" scheme="http://hanzawa.me/tags/CART/"/>
     
   </entry>
   
   <entry>
     <title>Machine Learning Classification Algorithms: Support Vector Machine</title>
-    <link href="http://qfxiao.me/2020/08/26/Machine-Learning-Classification-Algorithms-Support-Vector-Machine/"/>
-    <id>http://qfxiao.me/2020/08/26/Machine-Learning-Classification-Algorithms-Support-Vector-Machine/</id>
+    <link href="http://hanzawa.me/2020/08/26/Machine-Learning-Classification-Algorithms-Support-Vector-Machine/"/>
+    <id>http://hanzawa.me/2020/08/26/Machine-Learning-Classification-Algorithms-Support-Vector-Machine/</id>
     <published>2020-08-25T18:09:24.000Z</published>
     <updated>2021-02-19T10:23:31.925Z</updated>
     
@@ -160,19 +160,19 @@
     
     
     
-    <category term="Technical Notes" scheme="http://qfxiao.me/categories/Technical-Notes/"/>
+    <category term="Technical Notes" scheme="http://hanzawa.me/categories/Technical-Notes/"/>
     
-    <category term="Machine Learning" scheme="http://qfxiao.me/categories/Technical-Notes/Machine-Learning/"/>
+    <category term="Machine Learning" scheme="http://hanzawa.me/categories/Technical-Notes/Machine-Learning/"/>
     
     
-    <category term="SVM" scheme="http://qfxiao.me/tags/SVM/"/>
+    <category term="SVM" scheme="http://hanzawa.me/tags/SVM/"/>
     
   </entry>
   
   <entry>
     <title>Machine Learning Ensemble Algorithms: GBDT and XGBoost</title>
-    <link href="http://qfxiao.me/2020/08/26/Machine-Learning-Ensemble-Algorithms-GBDT-and-XGBoost/"/>
-    <id>http://qfxiao.me/2020/08/26/Machine-Learning-Ensemble-Algorithms-GBDT-and-XGBoost/</id>
+    <link href="http://hanzawa.me/2020/08/26/Machine-Learning-Ensemble-Algorithms-GBDT-and-XGBoost/"/>
+    <id>http://hanzawa.me/2020/08/26/Machine-Learning-Ensemble-Algorithms-GBDT-and-XGBoost/</id>
     <published>2020-08-25T16:28:26.000Z</published>
     <updated>2021-02-28T05:38:18.079Z</updated>
     
@@ -187,21 +187,21 @@
     
     
     
-    <category term="Technical Notes" scheme="http://qfxiao.me/categories/Technical-Notes/"/>
+    <category term="Technical Notes" scheme="http://hanzawa.me/categories/Technical-Notes/"/>
     
-    <category term="Machine Learning" scheme="http://qfxiao.me/categories/Technical-Notes/Machine-Learning/"/>
+    <category term="Machine Learning" scheme="http://hanzawa.me/categories/Technical-Notes/Machine-Learning/"/>
     
     
-    <category term="GBDT" scheme="http://qfxiao.me/tags/GBDT/"/>
+    <category term="GBDT" scheme="http://hanzawa.me/tags/GBDT/"/>
     
-    <category term="XGBoost" scheme="http://qfxiao.me/tags/XGBoost/"/>
+    <category term="XGBoost" scheme="http://hanzawa.me/tags/XGBoost/"/>
     
   </entry>
   
   <entry>
     <title>Unsupervised Representation Learning by Predicting Random Distances</title>
-    <link href="http://qfxiao.me/2020/08/24/Unsupervised-Representation-Learning-by-Predicting-Random-Distances/"/>
-    <id>http://qfxiao.me/2020/08/24/Unsupervised-Representation-Learning-by-Predicting-Random-Distances/</id>
+    <link href="http://hanzawa.me/2020/08/24/Unsupervised-Representation-Learning-by-Predicting-Random-Distances/"/>
+    <id>http://hanzawa.me/2020/08/24/Unsupervised-Representation-Learning-by-Predicting-Random-Distances/</id>
     <published>2020-08-24T08:17:36.000Z</published>
     <updated>2020-08-24T10:25:42.220Z</updated>
     
@@ -217,21 +217,21 @@
     
     
     
-    <category term="Research" scheme="http://qfxiao.me/categories/Research/"/>
+    <category term="Research" scheme="http://hanzawa.me/categories/Research/"/>
     
-    <category term="Representation Learning" scheme="http://qfxiao.me/categories/Research/Representation-Learning/"/>
+    <category term="Representation Learning" scheme="http://hanzawa.me/categories/Research/Representation-Learning/"/>
     
     
-    <category term="Anomaly Detection" scheme="http://qfxiao.me/tags/Anomaly-Detection/"/>
+    <category term="Anomaly Detection" scheme="http://hanzawa.me/tags/Anomaly-Detection/"/>
     
-    <category term="Representation Learning" scheme="http://qfxiao.me/tags/Representation-Learning/"/>
+    <category term="Representation Learning" scheme="http://hanzawa.me/tags/Representation-Learning/"/>
     
   </entry>
   
   <entry>
     <title>Effective End-to-end Unsupervised Outlier Detection via Linear Priority of Discriminative Network</title>
-    <link href="http://qfxiao.me/2020/07/14/Effective-End-to-end-Unsupervised-Outlier-Detection-via-Linear-Priority-of-Discriminative-Network/"/>
-    <id>http://qfxiao.me/2020/07/14/Effective-End-to-end-Unsupervised-Outlier-Detection-via-Linear-Priority-of-Discriminative-Network/</id>
+    <link href="http://hanzawa.me/2020/07/14/Effective-End-to-end-Unsupervised-Outlier-Detection-via-Linear-Priority-of-Discriminative-Network/"/>
+    <id>http://hanzawa.me/2020/07/14/Effective-End-to-end-Unsupervised-Outlier-Detection-via-Linear-Priority-of-Discriminative-Network/</id>
     <published>2020-07-14T10:46:13.000Z</published>
     <updated>2020-07-21T12:35:42.220Z</updated>
     
@@ -246,19 +246,19 @@
     
     
     
-    <category term="Research" scheme="http://qfxiao.me/categories/Research/"/>
+    <category term="Research" scheme="http://hanzawa.me/categories/Research/"/>
     
-    <category term="Anomaly Detection" scheme="http://qfxiao.me/categories/Research/Anomaly-Detection/"/>
+    <category term="Anomaly Detection" scheme="http://hanzawa.me/categories/Research/Anomaly-Detection/"/>
     
     
-    <category term="Self-Supervised Learning" scheme="http://qfxiao.me/tags/Self-Supervised-Learning/"/>
+    <category term="Self-Supervised Learning" scheme="http://hanzawa.me/tags/Self-Supervised-Learning/"/>
     
   </entry>
   
   <entry>
     <title>Probability Distributions - Binary and Multinomial Variables</title>
-    <link href="http://qfxiao.me/2020/06/22/Probability-Distributions-Binary-and-Multinomial-Variables/"/>
-    <id>http://qfxiao.me/2020/06/22/Probability-Distributions-Binary-and-Multinomial-Variables/</id>
+    <link href="http://hanzawa.me/2020/06/22/Probability-Distributions-Binary-and-Multinomial-Variables/"/>
+    <id>http://hanzawa.me/2020/06/22/Probability-Distributions-Binary-and-Multinomial-Variables/</id>
     <published>2020-06-22T05:43:58.000Z</published>
     <updated>2021-02-19T10:26:08.671Z</updated>
     
@@ -273,21 +273,21 @@
     
     
     
-    <category term="Research" scheme="http://qfxiao.me/categories/Research/"/>
+    <category term="Research" scheme="http://hanzawa.me/categories/Research/"/>
     
-    <category term="Notes" scheme="http://qfxiao.me/categories/Research/Notes/"/>
+    <category term="Notes" scheme="http://hanzawa.me/categories/Research/Notes/"/>
     
     
-    <category term="Statistics" scheme="http://qfxiao.me/tags/Statistics/"/>
+    <category term="Statistics" scheme="http://hanzawa.me/tags/Statistics/"/>
     
-    <category term="Probability" scheme="http://qfxiao.me/tags/Probability/"/>
+    <category term="Probability" scheme="http://hanzawa.me/tags/Probability/"/>
     
   </entry>
   
   <entry>
     <title>Time2Graph: Revisiting Time Series Modeling with Dynamic Shapelets</title>
-    <link href="http://qfxiao.me/2020/06/13/Time2Graph-Revisiting-Time-Series-Modeling-with-Dynamic-Shapelets/"/>
-    <id>http://qfxiao.me/2020/06/13/Time2Graph-Revisiting-Time-Series-Modeling-with-Dynamic-Shapelets/</id>
+    <link href="http://hanzawa.me/2020/06/13/Time2Graph-Revisiting-Time-Series-Modeling-with-Dynamic-Shapelets/"/>
+    <id>http://hanzawa.me/2020/06/13/Time2Graph-Revisiting-Time-Series-Modeling-with-Dynamic-Shapelets/</id>
     <published>2020-06-13T08:42:04.000Z</published>
     <updated>2020-07-07T03:15:36.315Z</updated>
     
@@ -302,21 +302,21 @@
     
     
     
-    <category term="Research" scheme="http://qfxiao.me/categories/Research/"/>
+    <category term="Research" scheme="http://hanzawa.me/categories/Research/"/>
     
-    <category term="Time Series Modeling" scheme="http://qfxiao.me/categories/Research/Time-Series-Modeling/"/>
+    <category term="Time Series Modeling" scheme="http://hanzawa.me/categories/Research/Time-Series-Modeling/"/>
     
     
-    <category term="Time Series" scheme="http://qfxiao.me/tags/Time-Series/"/>
+    <category term="Time Series" scheme="http://hanzawa.me/tags/Time-Series/"/>
     
-    <category term="Shapelet" scheme="http://qfxiao.me/tags/Shapelet/"/>
+    <category term="Shapelet" scheme="http://hanzawa.me/tags/Shapelet/"/>
     
   </entry>
   
   <entry>
     <title>Generative Probabilistic Novelty Detection with Adversarial Autoencoders</title>
-    <link href="http://qfxiao.me/2020/06/06/Generative-Probabilistic-Novelty-Detection-with-Adversarial-Autoencoders/"/>
-    <id>http://qfxiao.me/2020/06/06/Generative-Probabilistic-Novelty-Detection-with-Adversarial-Autoencoders/</id>
+    <link href="http://hanzawa.me/2020/06/06/Generative-Probabilistic-Novelty-Detection-with-Adversarial-Autoencoders/"/>
+    <id>http://hanzawa.me/2020/06/06/Generative-Probabilistic-Novelty-Detection-with-Adversarial-Autoencoders/</id>
     <published>2020-06-06T04:03:27.000Z</published>
     <updated>2020-06-25T08:14:29.250Z</updated>
     
@@ -331,23 +331,23 @@
     
     
     
-    <category term="Research" scheme="http://qfxiao.me/categories/Research/"/>
+    <category term="Research" scheme="http://hanzawa.me/categories/Research/"/>
     
-    <category term="Anomaly Detection" scheme="http://qfxiao.me/categories/Research/Anomaly-Detection/"/>
+    <category term="Anomaly Detection" scheme="http://hanzawa.me/categories/Research/Anomaly-Detection/"/>
     
     
-    <category term="Anomaly Detection" scheme="http://qfxiao.me/tags/Anomaly-Detection/"/>
+    <category term="Anomaly Detection" scheme="http://hanzawa.me/tags/Anomaly-Detection/"/>
     
-    <category term="GAN" scheme="http://qfxiao.me/tags/GAN/"/>
+    <category term="GAN" scheme="http://hanzawa.me/tags/GAN/"/>
     
-    <category term="Novelty Detection" scheme="http://qfxiao.me/tags/Novelty-Detection/"/>
+    <category term="Novelty Detection" scheme="http://hanzawa.me/tags/Novelty-Detection/"/>
     
   </entry>
   
   <entry>
     <title>Classification-based Anomaly Detection for General Data</title>
-    <link href="http://qfxiao.me/2020/06/02/Classification-based-Anomaly-Detection-for-General-Data/"/>
-    <id>http://qfxiao.me/2020/06/02/Classification-based-Anomaly-Detection-for-General-Data/</id>
+    <link href="http://hanzawa.me/2020/06/02/Classification-based-Anomaly-Detection-for-General-Data/"/>
+    <id>http://hanzawa.me/2020/06/02/Classification-based-Anomaly-Detection-for-General-Data/</id>
     <published>2020-06-02T15:01:34.000Z</published>
     <updated>2020-06-26T12:55:43.589Z</updated>
     
@@ -362,19 +362,19 @@
     
     
     
-    <category term="Research" scheme="http://qfxiao.me/categories/Research/"/>
+    <category term="Research" scheme="http://hanzawa.me/categories/Research/"/>
     
-    <category term="Anomaly Detection" scheme="http://qfxiao.me/categories/Research/Anomaly-Detection/"/>
+    <category term="Anomaly Detection" scheme="http://hanzawa.me/categories/Research/Anomaly-Detection/"/>
     
     
-    <category term="Anomaly Detection" scheme="http://qfxiao.me/tags/Anomaly-Detection/"/>
+    <category term="Anomaly Detection" scheme="http://hanzawa.me/tags/Anomaly-Detection/"/>
     
   </entry>
   
   <entry>
     <title>面向OpenPAI的Docker镜像配置及OpenPAI基本使用方法</title>
-    <link href="http://qfxiao.me/2020/06/02/%E9%9D%A2%E5%90%91OpenPAI%E7%9A%84Docker%E9%95%9C%E5%83%8F%E9%85%8D%E7%BD%AE%E5%8F%8AOpenPAI%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/"/>
-    <id>http://qfxiao.me/2020/06/02/%E9%9D%A2%E5%90%91OpenPAI%E7%9A%84Docker%E9%95%9C%E5%83%8F%E9%85%8D%E7%BD%AE%E5%8F%8AOpenPAI%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/</id>
+    <link href="http://hanzawa.me/2020/06/02/%E9%9D%A2%E5%90%91OpenPAI%E7%9A%84Docker%E9%95%9C%E5%83%8F%E9%85%8D%E7%BD%AE%E5%8F%8AOpenPAI%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/"/>
+    <id>http://hanzawa.me/2020/06/02/%E9%9D%A2%E5%90%91OpenPAI%E7%9A%84Docker%E9%95%9C%E5%83%8F%E9%85%8D%E7%BD%AE%E5%8F%8AOpenPAI%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/</id>
     <published>2020-06-02T04:26:13.000Z</published>
     <updated>2020-08-01T04:00:16.325Z</updated>
     
@@ -389,23 +389,23 @@
     
     
     
-    <category term="Technical Notes" scheme="http://qfxiao.me/categories/Technical-Notes/"/>
+    <category term="Technical Notes" scheme="http://hanzawa.me/categories/Technical-Notes/"/>
     
-    <category term="Misc" scheme="http://qfxiao.me/categories/Technical-Notes/Misc/"/>
+    <category term="Misc" scheme="http://hanzawa.me/categories/Technical-Notes/Misc/"/>
     
     
-    <category term="Pytorch" scheme="http://qfxiao.me/tags/Pytorch/"/>
+    <category term="Pytorch" scheme="http://hanzawa.me/tags/Pytorch/"/>
     
-    <category term="Tensorflow" scheme="http://qfxiao.me/tags/Tensorflow/"/>
+    <category term="Tensorflow" scheme="http://hanzawa.me/tags/Tensorflow/"/>
     
-    <category term="Docker" scheme="http://qfxiao.me/tags/Docker/"/>
+    <category term="Docker" scheme="http://hanzawa.me/tags/Docker/"/>
     
   </entry>
   
   <entry>
     <title>Ubuntu20.04LTS 深度学习环境配置 CUDA11 + cuDNN8 + Tensorflow + Pytorch</title>
-    <link href="http://qfxiao.me/2020/06/02/Ubuntu20-4LTS-%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE-CUDA11-cuDNN8-Tensorflow-Pytorch/"/>
-    <id>http://qfxiao.me/2020/06/02/Ubuntu20-4LTS-%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE-CUDA11-cuDNN8-Tensorflow-Pytorch/</id>
+    <link href="http://hanzawa.me/2020/06/02/Ubuntu20-4LTS-%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE-CUDA11-cuDNN8-Tensorflow-Pytorch/"/>
+    <id>http://hanzawa.me/2020/06/02/Ubuntu20-4LTS-%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE-CUDA11-cuDNN8-Tensorflow-Pytorch/</id>
     <published>2020-06-02T02:26:13.000Z</published>
     <updated>2020-12-21T14:05:52.434Z</updated>
     
@@ -420,21 +420,21 @@
     
     
     
-    <category term="Technical Notes" scheme="http://qfxiao.me/categories/Technical-Notes/"/>
+    <category term="Technical Notes" scheme="http://hanzawa.me/categories/Technical-Notes/"/>
     
-    <category term="Misc" scheme="http://qfxiao.me/categories/Technical-Notes/Misc/"/>
+    <category term="Misc" scheme="http://hanzawa.me/categories/Technical-Notes/Misc/"/>
     
     
-    <category term="Pytorch" scheme="http://qfxiao.me/tags/Pytorch/"/>
+    <category term="Pytorch" scheme="http://hanzawa.me/tags/Pytorch/"/>
     
-    <category term="Tensorflow" scheme="http://qfxiao.me/tags/Tensorflow/"/>
+    <category term="Tensorflow" scheme="http://hanzawa.me/tags/Tensorflow/"/>
     
   </entry>
   
   <entry>
     <title>Deep Anomaly Detection Using Geometric Transformations</title>
-    <link href="http://qfxiao.me/2020/06/01/Deep-Anomaly-Detection-Using-Geometric-Transformations/"/>
-    <id>http://qfxiao.me/2020/06/01/Deep-Anomaly-Detection-Using-Geometric-Transformations/</id>
+    <link href="http://hanzawa.me/2020/06/01/Deep-Anomaly-Detection-Using-Geometric-Transformations/"/>
+    <id>http://hanzawa.me/2020/06/01/Deep-Anomaly-Detection-Using-Geometric-Transformations/</id>
     <published>2020-06-01T15:17:03.000Z</published>
     <updated>2020-06-26T16:25:25.079Z</updated>
     
@@ -449,19 +449,19 @@
     
     
     
-    <category term="Research" scheme="http://qfxiao.me/categories/Research/"/>
+    <category term="Research" scheme="http://hanzawa.me/categories/Research/"/>
     
-    <category term="Anomaly Detection" scheme="http://qfxiao.me/categories/Research/Anomaly-Detection/"/>
+    <category term="Anomaly Detection" scheme="http://hanzawa.me/categories/Research/Anomaly-Detection/"/>
     
     
-    <category term="Anomaly Detection" scheme="http://qfxiao.me/tags/Anomaly-Detection/"/>
+    <category term="Anomaly Detection" scheme="http://hanzawa.me/tags/Anomaly-Detection/"/>
     
   </entry>
   
   <entry>
     <title>Cross-dataset Time Series Anomaly Detection for Cloud Systems</title>
-    <link href="http://qfxiao.me/2020/06/01/Cross-dataset-Time-Series-Anomaly-Detection-for-Cloud-Systems/"/>
-    <id>http://qfxiao.me/2020/06/01/Cross-dataset-Time-Series-Anomaly-Detection-for-Cloud-Systems/</id>
+    <link href="http://hanzawa.me/2020/06/01/Cross-dataset-Time-Series-Anomaly-Detection-for-Cloud-Systems/"/>
+    <id>http://hanzawa.me/2020/06/01/Cross-dataset-Time-Series-Anomaly-Detection-for-Cloud-Systems/</id>
     <published>2020-06-01T08:14:08.000Z</published>
     <updated>2020-06-25T05:28:22.135Z</updated>
     
@@ -476,21 +476,21 @@
     
     
     
-    <category term="Research" scheme="http://qfxiao.me/categories/Research/"/>
+    <category term="Research" scheme="http://hanzawa.me/categories/Research/"/>
     
-    <category term="Anomaly Detection" scheme="http://qfxiao.me/categories/Research/Anomaly-Detection/"/>
+    <category term="Anomaly Detection" scheme="http://hanzawa.me/categories/Research/Anomaly-Detection/"/>
     
     
-    <category term="Anomaly Detection" scheme="http://qfxiao.me/tags/Anomaly-Detection/"/>
+    <category term="Anomaly Detection" scheme="http://hanzawa.me/tags/Anomaly-Detection/"/>
     
-    <category term="Transfer Learning" scheme="http://qfxiao.me/tags/Transfer-Learning/"/>
+    <category term="Transfer Learning" scheme="http://hanzawa.me/tags/Transfer-Learning/"/>
     
   </entry>
   
   <entry>
     <title>Learning Representations of Ultrahigh-dimensional Data for Random Distance-based Outlier Detection</title>
-    <link href="http://qfxiao.me/2020/05/06/Learning-Representations-of-Ultrahigh-dimensional-Data-for-Random-Distance-based-Outlier-Detection/"/>
-    <id>http://qfxiao.me/2020/05/06/Learning-Representations-of-Ultrahigh-dimensional-Data-for-Random-Distance-based-Outlier-Detection/</id>
+    <link href="http://hanzawa.me/2020/05/06/Learning-Representations-of-Ultrahigh-dimensional-Data-for-Random-Distance-based-Outlier-Detection/"/>
+    <id>http://hanzawa.me/2020/05/06/Learning-Representations-of-Ultrahigh-dimensional-Data-for-Random-Distance-based-Outlier-Detection/</id>
     <published>2020-05-06T03:05:37.000Z</published>
     <updated>2020-06-25T08:15:23.573Z</updated>
     
@@ -505,21 +505,21 @@
     
     
     
-    <category term="Research" scheme="http://qfxiao.me/categories/Research/"/>
+    <category term="Research" scheme="http://hanzawa.me/categories/Research/"/>
     
-    <category term="Anomaly Detection" scheme="http://qfxiao.me/categories/Research/Anomaly-Detection/"/>
+    <category term="Anomaly Detection" scheme="http://hanzawa.me/categories/Research/Anomaly-Detection/"/>
     
     
-    <category term="Anomaly Detection" scheme="http://qfxiao.me/tags/Anomaly-Detection/"/>
+    <category term="Anomaly Detection" scheme="http://hanzawa.me/tags/Anomaly-Detection/"/>
     
-    <category term="Representation Learning" scheme="http://qfxiao.me/tags/Representation-Learning/"/>
+    <category term="Representation Learning" scheme="http://hanzawa.me/tags/Representation-Learning/"/>
     
   </entry>
   
   <entry>
     <title>Deep Weakly-supervised Anomaly Detection</title>
-    <link href="http://qfxiao.me/2020/03/30/Deep-Weakly-supervised-Anomaly-Detection/"/>
-    <id>http://qfxiao.me/2020/03/30/Deep-Weakly-supervised-Anomaly-Detection/</id>
+    <link href="http://hanzawa.me/2020/03/30/Deep-Weakly-supervised-Anomaly-Detection/"/>
+    <id>http://hanzawa.me/2020/03/30/Deep-Weakly-supervised-Anomaly-Detection/</id>
     <published>2020-03-29T16:17:24.000Z</published>
     <updated>2020-06-25T05:33:35.419Z</updated>
     
@@ -534,19 +534,19 @@
     
     
     
-    <category term="Research" scheme="http://qfxiao.me/categories/Research/"/>
+    <category term="Research" scheme="http://hanzawa.me/categories/Research/"/>
     
-    <category term="Anomaly Detection" scheme="http://qfxiao.me/categories/Research/Anomaly-Detection/"/>
+    <category term="Anomaly Detection" scheme="http://hanzawa.me/categories/Research/Anomaly-Detection/"/>
     
     
-    <category term="Anomaly Detection" scheme="http://qfxiao.me/tags/Anomaly-Detection/"/>
+    <category term="Anomaly Detection" scheme="http://hanzawa.me/tags/Anomaly-Detection/"/>
     
   </entry>
   
   <entry>
     <title>Discovering Physical Concepts with Neural Networks</title>
-    <link href="http://qfxiao.me/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/"/>
-    <id>http://qfxiao.me/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/</id>
+    <link href="http://hanzawa.me/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/"/>
+    <id>http://hanzawa.me/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/</id>
     <published>2020-03-01T14:55:02.000Z</published>
     <updated>2020-06-25T05:35:20.215Z</updated>
     
@@ -562,19 +562,19 @@
     
     
     
-    <category term="Research" scheme="http://qfxiao.me/categories/Research/"/>
+    <category term="Research" scheme="http://hanzawa.me/categories/Research/"/>
     
-    <category term="Misc" scheme="http://qfxiao.me/categories/Research/Misc/"/>
+    <category term="Misc" scheme="http://hanzawa.me/categories/Research/Misc/"/>
     
     
-    <category term="Deep Learning" scheme="http://qfxiao.me/tags/Deep-Learning/"/>
+    <category term="Deep Learning" scheme="http://hanzawa.me/tags/Deep-Learning/"/>
     
   </entry>
   
   <entry>
     <title>Transfer Anomaly Detection by Inferring Latent Domain Representations</title>
-    <link href="http://qfxiao.me/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/"/>
-    <id>http://qfxiao.me/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/</id>
+    <link href="http://hanzawa.me/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/"/>
+    <id>http://hanzawa.me/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/</id>
     <published>2020-02-27T12:02:18.000Z</published>
     <updated>2020-06-25T09:01:35.786Z</updated>
     
@@ -589,14 +589,14 @@
     
     
     
-    <category term="Research" scheme="http://qfxiao.me/categories/Research/"/>
+    <category term="Research" scheme="http://hanzawa.me/categories/Research/"/>
     
-    <category term="Anomaly Detection" scheme="http://qfxiao.me/categories/Research/Anomaly-Detection/"/>
+    <category term="Anomaly Detection" scheme="http://hanzawa.me/categories/Research/Anomaly-Detection/"/>
     
     
-    <category term="Anomaly Detection" scheme="http://qfxiao.me/tags/Anomaly-Detection/"/>
+    <category term="Anomaly Detection" scheme="http://hanzawa.me/tags/Anomaly-Detection/"/>
     
-    <category term="Transfer Learning" scheme="http://qfxiao.me/tags/Transfer-Learning/"/>
+    <category term="Transfer Learning" scheme="http://hanzawa.me/tags/Transfer-Learning/"/>
     
   </entry>
   
