@@ -1,93 +1,145 @@
 <!doctype html>
 <html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><title>分类: Self-supervised Learning - Hanzawa の 部屋</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Hanzawa の 部屋"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Hanzawa の 部屋"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta property="og:type" content="website"><meta property="og:title" content="Hanzawa の 部屋"><meta property="og:url" content="https://larryshaw0079.github.io/hanzawa-blog"><meta property="og:site_name" content="Hanzawa の 部屋"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="https://larryshaw0079.github.io/img/og_image.png"><meta property="article:author" content="Hanzawa"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="/img/og_image.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://larryshaw0079.github.io/hanzawa-blog"},"headline":"Hanzawa の 部屋","image":["https://larryshaw0079.github.io/img/og_image.png"],"author":{"@type":"Person","name":"Hanzawa"},"publisher":{"@type":"Organization","name":"Hanzawa の 部屋","logo":{"@type":"ImageObject"}},"description":null}</script><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><!--!--><meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Hanzawa の 部屋" type="application/atom+xml">
-</head><body class="is-1-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/">Hanzawa の 部屋</a></div><div class="navbar-menu"><div class="navbar-end"></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-12"><div class="card"><div class="card-content"><nav class="breadcrumb" aria-label="breadcrumbs"><ul><li><a href="/categories">分类</a></li><li><a href="/categories/Research/">Research</a></li><li class="is-active"><a href="#" aria-current="page">Self-supervised Learning</a></li></ul></nav></div></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-09-23T12:36:57.000Z" title="2020-9-23 8:36:57 ├F10: PM┤">2020-09-23</time>发表</span><span class="level-item"><time dateTime="2021-02-28T04:58:08.309Z" title="2021-2-28 12:58:08 ├F10: PM┤">2021-02-28</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Self-supervised-Learning/">Self-supervised Learning</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2020/09/23/Unsupervised-Feature-Learning-via-Non-Parametric-Instance-Discrimination/">Unsupervised Feature Learning via Non-Parametric Instance Discrimination</a></h1><div class="content"><h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>本文基于样本分类和噪声对比估计提出了一个无监督表示学习算法。下图展示了一个Intuition Example：</p>
-<img src="https://i.loli.net/2020/07/28/AimfJM7gtuDsPGQ.png"  />
-
+</head><body class="is-1-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/">Hanzawa の 部屋</a></div><div class="navbar-menu"><div class="navbar-end"></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-12"><div class="card"><div class="card-content"><nav class="breadcrumb" aria-label="breadcrumbs"><ul><li><a href="/categories">分类</a></li><li><a href="/categories/Research/">Research</a></li><li class="is-active"><a href="#" aria-current="page">Self-supervised Learning</a></li></ul></nav></div></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-09-23T12:36:57.000Z" title="2020-9-23 8:36:57 ├F10: PM┤">2020-09-23</time>发表</span><span class="level-item"><time dateTime="2021-02-28T04:58:08.309Z" title="2021-2-28 12:58:08 ├F10: PM┤">2021-02-28</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Self-supervised-Learning/">Self-supervised Learning</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2020/09/23/Unsupervised-Feature-Learning-via-Non-Parametric-Instance-Discrimination/">Unsupervised Feature Learning via Non-Parametric Instance Discrimination</a></h1><div class="content"><h1 id="introduction">Introduction</h1>
+<p>本文基于样本分类和噪声对比估计提出了一个无监督表示学习算法。下图展示了一个Intuition Example：</p>
+<p><img src="https://i.loli.net/2020/07/28/AimfJM7gtuDsPGQ.png"  /></p>
 <p>对于一个有监督的分类器，输入一张图片，作者观察到分类器的Softmax Response中较高的那些类都是在视觉上看起来比较接近的（美洲豹Leopard，美洲虎Jaguar，印度豹Cheetah），也就是说网络捕捉到了类间的视觉相似性，不过这是在有标签的情况下。对于无监督表示学习任务，作者将这个观察推广到了一个极端情况，就是把每一个样本都视作不同的类，然后让分类器来学习样本（类）间的视觉相似性。不过直接这么做会有严重的效率问题，所以作者还利用了Memory Bank机制和噪声对比估计来提高效率。</p>
-<h1 id="Proposed-Method"><a href="#Proposed-Method" class="headerlink" title="Proposed Method"></a>Proposed Method</h1><p>学习一个嵌入表示函数$\mathbf v=f_\theta(x)$。在表示空间中$d_\theta(x,y)=\parallel f_\theta(x)-f_\theta(y)\parallel$</p>
-<p><img src="https://i.loli.net/2020/07/26/WICKVkhrBu6Mci5.png"></p>
-<h2 id="Non-Parametric-Softmax-Classifier"><a href="#Non-Parametric-Softmax-Classifier" class="headerlink" title="Non-Parametric Softmax Classifier"></a>Non-Parametric Softmax Classifier</h2><h3 id="Parametric-Classifier"><a href="#Parametric-Classifier" class="headerlink" title="Parametric Classifier"></a>Parametric Classifier</h3><p>在经过嵌入表示函数之后，得到表示向量$\mathbf v_i=f_\theta(\mathbf x_i)$。要基于这个向量进行分类，<br>$$<br>P(i|\mathbf v)=\frac{\exp(\mathbf w_i^\top\mathbf v)}{\sum_j\exp(\mathbf w_j^\top\mathbf v)}<br>$$</p>
-<h3 id="Non-Parametric-Classifier"><a href="#Non-Parametric-Classifier" class="headerlink" title="Non-Parametric Classifier"></a>Non-Parametric Classifier</h3><p>$$<br>P(i|\mathbf v)=\frac{\exp(\mathbf v_i^\top\mathbf v/\tau)}{\sum_j\exp(\mathbf v_j^\top\mathbf v/\tau)}<br>$$</p>
-<p>同时约束$\parallel \mathbf v\parallel=1$</p>
-<p>最后的损失函数为负对数似然损失（negative log-likelihood）：<br>$$<br>J(\theta)=-\sum_{i=1}^n\log P(i|f_\theta(x_i))<br>$$</p>
+<h1 id="proposed-method">Proposed Method</h1>
+<p>学习一个嵌入表示函数<span class="math inline">\(\mathbf v=f_\theta(x)\)</span>。在表示空间中<span class="math inline">\(d_\theta(x,y)=\parallel f_\theta(x)-f_\theta(y)\parallel\)</span></p>
+<p><img src="https://i.loli.net/2020/07/26/WICKVkhrBu6Mci5.png" /></p>
+<h2 id="non-parametric-softmax-classifier">Non-Parametric Softmax Classifier</h2>
+<h3 id="parametric-classifier">Parametric Classifier</h3>
+<p>在经过嵌入表示函数之后，得到表示向量<span class="math inline">\(\mathbf v_i=f_\theta(\mathbf x_i)\)</span>。要基于这个向量进行分类， <span class="math display">\[
+P(i|\mathbf v)=\frac{\exp(\mathbf w_i^\top\mathbf v)}{\sum_j\exp(\mathbf w_j^\top\mathbf v)}
+\]</span> ### Non-Parametric Classifier</p>
+<p><span class="math display">\[
+P(i|\mathbf v)=\frac{\exp(\mathbf v_i^\top\mathbf v/\tau)}{\sum_j\exp(\mathbf v_j^\top\mathbf v/\tau)}
+\]</span></p>
+<p>同时约束<span class="math inline">\(\parallel \mathbf v\parallel=1\)</span></p>
+<p>最后的损失函数为负对数似然损失（negative log-likelihood）： <span class="math display">\[
+J(\theta)=-\sum_{i=1}^n\log P(i|f_\theta(x_i))
+\]</span></p>
 <p>到这里，算法的大框架就确定下来了，剩下的就是解决两个效率上的问题。一个是损失函数的计算每次都需要计算整个训练集的表示，同时Softmax函数由于分母对应的项目很多（等于训练集大小）在效率上也有问题。</p>
-<h3 id="Learning-with-A-Memory-Bank"><a href="#Learning-with-A-Memory-Bank" class="headerlink" title="Learning with A Memory Bank"></a>Learning with A Memory Bank</h3><p>这里解决第一个效率问题。要计算损失函数，需要遍历整个训练集获得对应的表示，而在训练的时候是一批一批的数据，每次重新计算表示效率很低。为了解决这个问题，作者引入了缓存机制，即加入一个memory bank $V$，用来保存计算好的表示$\mathbf f_i=f_\theta(x_i)$。一开始$V$采用单位随机向量初始化，之后在训练的时候不断更新$\mathbf f_i\rightarrow \mathbf v_i$。</p>
-<h2 id="Noise-Contrastive-Estimation"><a href="#Noise-Contrastive-Estimation" class="headerlink" title="Noise Contrastive Estimation"></a>Noise Contrastive Estimation</h2><p>第二个效率问题很容易想到使用噪声对比估计（Noise Contrastive Estimation, NCE）来做。NCE主要是将计算复杂的分母作为一个参数来进行优化：<br>$$<br>P(i|\mathbf v)=\frac{\exp(\mathbf v^\top\mathbf f_i/\tau)}{Z_i}<br>$$</p>
-<p>其中$Z_i=\sum_{j=1}^n\exp(\mathbf v^\top_j\mathbf f_i/\tau)$，噪声分布$P_n=1/n$，如果噪声样本数量是真实数据的$m$倍，那么随意给定一个样本，其属于真实样本的后验概率为：<br>$$<br>h(i,\mathbf v)=P(D=1|i,\mathbf v)=\frac{P(i|\mathbf v)}{P(i|\mathbf v)+mP_n(i)}=\sigma\left(s(\mathbf v)-\log {m P_n(i)}\right)<br>$$<br>其中$\Delta s=s(\mathbf v)-\log [m P_n(i)]$。这里的真实数据分布$P_d$为。NCE的损失函数就是要最大化$h(i,\mathbf v)$，最小化$h(i,\mathbf v^\prime)$<br>$$<br>J_{NCE}(\theta)=-E_{P_d}[\log h(i,\mathbf v)]-m\cdot E_{P_n}[\log(1-h(i,\mathbf v^\prime))]<br>$$<br>为了计算$Z_i$<br>$$<br>Z\simeq Z_i\simeq nE_j[\exp(\mathbf v_j^\top\mathbf f_i/\tau)]=\frac{n}{m}\sum_{k=1}^m\exp(\mathbf v_{j_k}^\top\mathbf f_i/\tau)<br>$$</p>
-<h2 id="Proximal-Regularization"><a href="#Proximal-Regularization" class="headerlink" title="Proximal Regularization"></a>Proximal Regularization</h2><p>每个类别只有一个样本<br>$$<br>-\log h(i,\mathbf v_i^{(t-1)})+\lambda\parallel\mathbf v_i^{(i)}-\mathbf v_i^{(i-1)}\parallel^2_2<br>$$</p>
+<h3 id="learning-with-a-memory-bank">Learning with A Memory Bank</h3>
+<p>这里解决第一个效率问题。要计算损失函数，需要遍历整个训练集获得对应的表示，而在训练的时候是一批一批的数据，每次重新计算表示效率很低。为了解决这个问题，作者引入了缓存机制，即加入一个memory bank <span class="math inline">\(V\)</span>，用来保存计算好的表示<span class="math inline">\(\mathbf f_i=f_\theta(x_i)\)</span>。一开始<span class="math inline">\(V\)</span>采用单位随机向量初始化，之后在训练的时候不断更新<span class="math inline">\(\mathbf f_i\rightarrow \mathbf v_i\)</span>。</p>
+<h2 id="noise-contrastive-estimation">Noise Contrastive Estimation</h2>
+<p>第二个效率问题很容易想到使用噪声对比估计（Noise Contrastive Estimation, NCE）来做。NCE主要是将计算复杂的分母作为一个参数来进行优化： <span class="math display">\[
+P(i|\mathbf v)=\frac{\exp(\mathbf v^\top\mathbf f_i/\tau)}{Z_i}
+\]</span></p>
+<p>其中<span class="math inline">\(Z_i=\sum_{j=1}^n\exp(\mathbf v^\top_j\mathbf f_i/\tau)\)</span>，噪声分布<span class="math inline">\(P_n=1/n\)</span>，如果噪声样本数量是真实数据的<span class="math inline">\(m\)</span>倍，那么随意给定一个样本，其属于真实样本的后验概率为： <span class="math display">\[
+h(i,\mathbf v)=P(D=1|i,\mathbf v)=\frac{P(i|\mathbf v)}{P(i|\mathbf v)+mP_n(i)}=\sigma\left(s(\mathbf v)-\log \{m P_n(i)\}\right)
+\]</span> 其中<span class="math inline">\(\Delta s=s(\mathbf v)-\log [m P_n(i)]\)</span>。这里的真实数据分布<span class="math inline">\(P_d\)</span>为。NCE的损失函数就是要最大化<span class="math inline">\(h(i,\mathbf v)\)</span>，最小化<span class="math inline">\(h(i,\mathbf v^\prime)\)</span> <span class="math display">\[
+J_{NCE}(\theta)=-E_{P_d}[\log h(i,\mathbf v)]-m\cdot E_{P_n}[\log(1-h(i,\mathbf v^\prime))]
+\]</span> 为了计算<span class="math inline">\(Z_i\)</span> <span class="math display">\[
+Z\simeq Z_i\simeq nE_j[\exp(\mathbf v_j^\top\mathbf f_i/\tau)]=\frac{n}{m}\sum_{k=1}^m\exp(\mathbf v_{j_k}^\top\mathbf f_i/\tau)
+\]</span></p>
+<h2 id="proximal-regularization">Proximal Regularization</h2>
+<p>每个类别只有一个样本 <span class="math display">\[
+-\log h(i,\mathbf v_i^{(t-1)})+\lambda\parallel\mathbf v_i^{(i)}-\mathbf v_i^{(i-1)}\parallel^2_2
+\]</span></p>
 <p>最终的损失函数：</p>
-<p>$$<br>J_{NCE}(\theta)=-E_{P_d}\left[\log h(i,\mathbf v_i^{(t-1)})-\lambda\parallel\mathbf v_i^{(t)}-\mathbf v_i^{(t-1)}\parallel^2_2\right]\<br>-m\cdot E_{P_n}\left[\log(1-h(i,\mathbf v^{\prime(t-1)}))\right]<br>$$</p>
-<img src="https://i.loli.net/2020/08/06/nvS3Z7jEldVcCep.png" style="zoom:67%;" />
-
-<h2 id="Weighted-k-Nearest-Neighbor-Classifier"><a href="#Weighted-k-Nearest-Neighbor-Classifier" class="headerlink" title="Weighted k-Nearest Neighbor Classifier"></a>Weighted k-Nearest Neighbor Classifier</h2><p>$s_i=\cos(\mathbf v_i,\hat{\mathbf f})$。记$\mathcal N_k$。$w_c=\sum_{i\in\mathcal N_k}\alpha_i\cdot 1(c_i=c)$。</p>
-<img src="https://i.loli.net/2020/07/29/Cl8xHeFZzXpvosL.png" style="zoom:67%;" />
-
-<h1 id="Experiments"><a href="#Experiments" class="headerlink" title="Experiments"></a>Experiments</h1><img src="https://i.loli.net/2020/08/07/Zj628R7WYixJGog.png" style="zoom:67%;" />
-
-
-
-<img src="https://i.loli.net/2020/08/07/k6rx1LoaZiFYGpQ.png" style="zoom:67%;" />
-
-
-
-
-
-<p><img src="https://i.loli.net/2020/08/07/a3tNMQ7I2xmGdYA.png"></p>
-<img src="https://i.loli.net/2020/08/07/CK7s3wHbmgnv2j4.png" style="zoom:80%;" />
-
-
-
-<img src="https://i.loli.net/2020/08/07/rM7n3jhOiBbvJXf.png" style="zoom:67%;" />
-
-
-
-<img src="https://i.loli.net/2020/08/07/PVL4nlGFtqOdyRh.png" style="zoom:67%;" />
-
-
-
-<img src="https://i.loli.net/2020/08/07/F3miMXyOqg1DUtK.png" style="zoom:67%;" /></div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-09-17T12:08:53.000Z" title="2020-9-17 8:08:53 ├F10: PM┤">2020-09-17</time>发表</span><span class="level-item"><time dateTime="2021-02-19T10:20:26.291Z" title="2021-2-19 6:20:26 ├F10: PM┤">2021-02-19</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Self-supervised-Learning/">Self-supervised Learning</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2020/09/17/Representation-Learning-with-Contrastive-Predictive-Coding/">Representation Learning with Contrastive Predictive Coding</a></h1><div class="content"><h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>这篇文章算是Contrastive Learning的开山之作之一了，本文提出了表示学习框架：Contrastive Predictive Coding（CPC）和InfoNCE Loss。</p>
+<p><span class="math display">\[
+J_{NCE}(\theta)=-E_{P_d}\left[\log h(i,\mathbf v_i^{(t-1)})-\lambda\parallel\mathbf v_i^{(t)}-\mathbf v_i^{(t-1)}\parallel^2_2\right]\\
+-m\cdot E_{P_n}\left[\log(1-h(i,\mathbf v^{\prime(t-1)}))\right]
+\]</span></p>
+<p><img src="https://i.loli.net/2020/08/06/nvS3Z7jEldVcCep.png" style="zoom:67%;" /></p>
+<h2 id="weighted-k-nearest-neighbor-classifier">Weighted k-Nearest Neighbor Classifier</h2>
+<p><span class="math inline">\(s_i=\cos(\mathbf v_i,\hat{\mathbf f})\)</span>。记<span class="math inline">\(\mathcal N_k\)</span>。<span class="math inline">\(w_c=\sum_{i\in\mathcal N_k}\alpha_i\cdot 1(c_i=c)\)</span>。</p>
+<p><img src="https://i.loli.net/2020/07/29/Cl8xHeFZzXpvosL.png" style="zoom:67%;" /></p>
+<h1 id="experiments">Experiments</h1>
+<p><img src="https://i.loli.net/2020/08/07/Zj628R7WYixJGog.png" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/08/07/k6rx1LoaZiFYGpQ.png" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/08/07/a3tNMQ7I2xmGdYA.png" /></p>
+<p><img src="https://i.loli.net/2020/08/07/CK7s3wHbmgnv2j4.png" style="zoom:80%;" /></p>
+<p><img src="https://i.loli.net/2020/08/07/rM7n3jhOiBbvJXf.png" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/08/07/PVL4nlGFtqOdyRh.png" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/08/07/F3miMXyOqg1DUtK.png" style="zoom:67%;" /></p>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-09-17T12:08:53.000Z" title="2020-9-17 8:08:53 ├F10: PM┤">2020-09-17</time>发表</span><span class="level-item"><time dateTime="2021-02-19T10:20:26.291Z" title="2021-2-19 6:20:26 ├F10: PM┤">2021-02-19</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Self-supervised-Learning/">Self-supervised Learning</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2020/09/17/Representation-Learning-with-Contrastive-Predictive-Coding/">Representation Learning with Contrastive Predictive Coding</a></h1><div class="content"><h1 id="introduction">Introduction</h1>
+<p>这篇文章算是Contrastive Learning的开山之作之一了，本文提出了表示学习框架：Contrastive Predictive Coding（CPC）和InfoNCE Loss。</p>
 <p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1807.03748">原文</a></p>
-<h1 id="Proposed-Method"><a href="#Proposed-Method" class="headerlink" title="Proposed Method"></a>Proposed Method</h1><h2 id="Contrastive-Predictive-Coding"><a href="#Contrastive-Predictive-Coding" class="headerlink" title="Contrastive Predictive Coding"></a>Contrastive Predictive Coding</h2><p>N-pair Loss:<br>$$<br>\mathcal L=-\log\frac{\exp(f^+\cdot f^\top)}{\exp(f^+\cdot f^\top)+\sum_{f_j\neq f^\top}\exp(f^+\cdot f_j)}<br>$$<br>你有N个样本${x_1,x_2,\cdots,x_N}$，然后对应的表示为$f_j$。假设当前样本为$f^+$，在所有的$f_j$中只有一个表示与$f^+$ match，记为$f^\top$（可以理解为属于同一类，或者两个相似），其他的都是负样本。我们优化上面的优化公式就会拉近$f^+$和$f^\top$之间的距离（拉近同类），疏远$f^+$和所有其他负样本$f_j$的距离（疏远异类）。不过在N-pair Loss中，正负样本是根据标签来选取的，然而在这里我们没有标签。</p>
+<h1 id="proposed-method">Proposed Method</h1>
+<h2 id="contrastive-predictive-coding">Contrastive Predictive Coding</h2>
+<p>N-pair Loss: <span class="math display">\[
+\mathcal L=-\log\frac{\exp(f^+\cdot f^\top)}{\exp(f^+\cdot f^\top)+\sum_{f_j\neq f^\top}\exp(f^+\cdot f_j)}
+\]</span> 你有N个样本<span class="math inline">\(\{x_1,x_2,\cdots,x_N\}\)</span>，然后对应的表示为<span class="math inline">\(f_j\)</span>。假设当前样本为<span class="math inline">\(f^+\)</span>，在所有的<span class="math inline">\(f_j\)</span>中只有一个表示与<span class="math inline">\(f^+\)</span> match，记为<span class="math inline">\(f^\top\)</span>（可以理解为属于同一类，或者两个相似），其他的都是负样本。我们优化上面的优化公式就会拉近<span class="math inline">\(f^+\)</span>和<span class="math inline">\(f^\top\)</span>之间的距离（拉近同类），疏远<span class="math inline">\(f^+\)</span>和所有其他负样本<span class="math inline">\(f_j\)</span>的距离（疏远异类）。不过在N-pair Loss中，正负样本是根据标签来选取的，然而在这里我们没有标签。</p>
 <p>下图展示了Contrastive Predictive Coding的结构：</p>
-<img src="https://i.loli.net/2020/07/07/mcFYnVGasjkHrw5.png" style="zoom:67%;" />
-
-<p>对比学习<br>$$<br>\mathcal L(f_i)=-\log\frac{\exp(f_i\cdot f^\top)}{\sum_j\exp(f_i\cdot f_j)}<br>$$<br>设数据集（一个Batch）为$\mathbf X={x_1,x_2,\cdots,x_N}$，正样本对为，负样本对。</p>
-<p>至于$f(\cdot,\cdot)$的具体形式，其实$\frac{p(x_{t+k}|c_t)}{p(x_{t+k})}$这个式子我们也是没法直接优化的，因为这个Density Ratio无法直接算出来。在这里，作者使用了一个替代的办法，就是用$\mathbf c_t$来预测未来的隐变量$\hat{\mathbf z}<em>{t+1},\hat{\mathbf z}</em>{t+2},\cdots$，而真实的隐变量$\mathbf z_{t+1},\mathbf z_{t+2},\cdots$我们是知道的。这里预测直接使用权重矩阵和$\mathbf c_t$相乘：<br>$$<br>f_k(\mathbf x_{t+k},\mathbf c_t)=\exp\left(\mathbf z_{t+k}^T \cdot \mathbf W_k\mathbf c_t\right)<br>$$</p>
-<p>上式有点难以理解，实际上预测值$\hat{\mathbf z}<em>{t+k}=\mathbf W_k\mathbf c_t$，而$\mathbf z</em>{t+k}\hat{\mathbf z}_{t+k}$相当于计算两者的距离，即相似性。所以$f_k(\cdot,\cdot)$其实是在计算预测值和真实值的相似性。现在大家先接受这个$f(\cdot,\cdot)$的定义，因为后面会证明优化这个$f(\cdot,\cdot)$就相当于在优化Density Ratio $\frac{p(x_{t+k}|c_t)}{p(x_{t+k})}$。</p>
-<p>一个来自$p(x_{t+k}|c_t)$的正例和$N-1$个来自$p(x_{t+k})$的负例，目标函数（文中称为CPC Loss）为：<br>$$<br>\mathcal L_N=-\mathop{\mathbb E}\limits_X\left[\log\frac{f_k(x_{t+k},c_t)}{\sum_{x_j\in X}f_k(x_j,c_t)}\right]<br>$$</p>
-<p>这里相当于做了个$N$分类，因为这里损失函数等价于$N$分类交叉熵损失函数。</p>
+<p><img src="https://i.loli.net/2020/07/07/mcFYnVGasjkHrw5.png" style="zoom:67%;" /></p>
+<p>对比学习 <span class="math display">\[
+\mathcal L(f_i)=-\log\frac{\exp(f_i\cdot f^\top)}{\sum_j\exp(f_i\cdot f_j)}
+\]</span> 设数据集（一个Batch）为<span class="math inline">\(\mathbf X=\{x_1,x_2,\cdots,x_N\}\)</span>，正样本对为，负样本对。</p>
+<p>至于<span class="math inline">\(f(\cdot,\cdot)\)</span>的具体形式，其实<span class="math inline">\(\frac{p(x_{t+k}|c_t)}{p(x_{t+k})}\)</span>这个式子我们也是没法直接优化的，因为这个Density Ratio无法直接算出来。在这里，作者使用了一个替代的办法，就是用<span class="math inline">\(\mathbf c_t\)</span>来预测未来的隐变量<span class="math inline">\(\hat{\mathbf z}_{t+1},\hat{\mathbf z}_{t+2},\cdots\)</span>，而真实的隐变量<span class="math inline">\(\mathbf z_{t+1},\mathbf z_{t+2},\cdots\)</span>我们是知道的。这里预测直接使用权重矩阵和<span class="math inline">\(\mathbf c_t\)</span>相乘： <span class="math display">\[
+f_k(\mathbf x_{t+k},\mathbf c_t)=\exp\left(\mathbf z_{t+k}^T \cdot \mathbf W_k\mathbf c_t\right)
+\]</span></p>
+<p>上式有点难以理解，实际上预测值<span class="math inline">\(\hat{\mathbf z}_{t+k}=\mathbf W_k\mathbf c_t\)</span>，而<span class="math inline">\(\mathbf z_{t+k}\hat{\mathbf z}_{t+k}\)</span>相当于计算两者的距离，即相似性。所以<span class="math inline">\(f_k(\cdot,\cdot)\)</span>其实是在计算预测值和真实值的相似性。现在大家先接受这个<span class="math inline">\(f(\cdot,\cdot)\)</span>的定义，因为后面会证明优化这个<span class="math inline">\(f(\cdot,\cdot)\)</span>就相当于在优化Density Ratio <span class="math inline">\(\frac{p(x_{t+k}|c_t)}{p(x_{t+k})}\)</span>。</p>
+<p>一个来自<span class="math inline">\(p(x_{t+k}|c_t)\)</span>的正例和<span class="math inline">\(N-1\)</span>个来自<span class="math inline">\(p(x_{t+k})\)</span>的负例，目标函数（文中称为CPC Loss）为： <span class="math display">\[
+\mathcal L_N=-\mathop{\mathbb E}\limits_X\left[\log\frac{f_k(x_{t+k},c_t)}{\sum_{x_j\in X}f_k(x_j,c_t)}\right]
+\]</span></p>
+<p>这里相当于做了个<span class="math inline">\(N\)</span>分类，因为这里损失函数等价于<span class="math inline">\(N\)</span>分类交叉熵损失函数。</p>
 <blockquote>
-<p>两个离散随机变量的交叉熵的定义为：<br>$$<br>H(p,q) = -\sum_{x\in\mathcal X}p(x)\log q(x)<br>$$<br>对于交叉熵损失函数，设$i$为真实标签，$\hat{\boldsymbol y}$为分类器的输出。$\frac{\exp(\hat y_i)}{\sum_j\exp(\hat y_j)}$为经过<code>Softmax</code>归一化之后的输出，其每个分量$\hat y_j$相当于输入样本$x$的预测类别为$j$的概率。不过由于对于真实标签$y$来说，只有$y_i=1$，其他的分量都为$0$，所以最后交叉熵只剩下一项：<br>$$<br>\mathcal L=-\log\left(\frac{\exp(\hat y_i)}{\sum_j\exp(\hat y_j)}\right)<br>$$</p>
+<p>两个离散随机变量的交叉熵的定义为： <span class="math display">\[
+H(p,q) = -\sum_{x\in\mathcal X}p(x)\log q(x)
+\]</span> 对于交叉熵损失函数，设<span class="math inline">\(i\)</span>为真实标签，<span class="math inline">\(\hat{\boldsymbol y}\)</span>为分类器的输出。<span class="math inline">\(\frac{\exp(\hat y_i)}{\sum_j\exp(\hat y_j)}\)</span>为经过<code>Softmax</code>归一化之后的输出，其每个分量<span class="math inline">\(\hat y_j\)</span>相当于输入样本<span class="math inline">\(x\)</span>的预测类别为<span class="math inline">\(j\)</span>的概率。不过由于对于真实标签<span class="math inline">\(y\)</span>来说，只有<span class="math inline">\(y_i=1\)</span>，其他的分量都为<span class="math inline">\(0\)</span>，所以最后交叉熵只剩下一项： <span class="math display">\[
+\mathcal L=-\log\left(\frac{\exp(\hat y_i)}{\sum_j\exp(\hat y_j)}\right)
+\]</span></p>
 </blockquote>
-<p>$$<br>I(x;c)=\sum_{x,c}p(x,c)\log\frac{p(x|c)}{p(x)}<br>$$</p>
-<p>编码器$g_{enc}$将观测值$\boldsymbol x_t$编码到隐变量$\boldsymbol z_t=g_\text{enc}(\boldsymbol x_t)$（对应于局部信息），之后自回归模型$g_{ar}$将所有$t$之前的（包括$t$）隐变量$z_{\leq t}$压缩到一个上下文隐变量$\boldsymbol c_t=g_\text{ar}(\boldsymbol z_{\leq  t})$（希望具有预测性质，捕获了长时依赖性）。不过本文并不是基于$\boldsymbol c_t$来预测未来的观测值$\boldsymbol x_{t+k}$，即估计分布$p_k(\boldsymbol x_{t+k}|\boldsymbol c_t)$，而这样的话又要用到MSE之类的Loss。文中利用的是最大化$\boldsymbol c_t$和$\boldsymbol x_{t+k}$之间的互信息$\log \frac{p(x_{t+k}|c_t)}{p(x_{t+k})}$（这种形式的互信息被称为是点互信息，详见<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Pointwise_mutual_information">维基</a>）。定义一个度量函数$f(\cdot,\cdot)$，要求其具有与$\frac{p(x_{t+k}|c_t)}{p(x_{t+k})}$成比例的性质：<br>$$<br>f_k(x_{t+k},c_t)\propto\frac{p(x_{t+k}|c_t)}{p(x_{t+k})}<br>$$<br>这时最大化$f(\cdot,\cdot)$就相当于最大化两者的互信息。</p>
-<h2 id="Mutual-Information-Estimation-Explanation"><a href="#Mutual-Information-Estimation-Explanation" class="headerlink" title="Mutual Information Estimation Explanation"></a>Mutual Information Estimation Explanation</h2><p>现在回到公式$I(x;c)=\sum_{x,c}p(x,c)\log\frac{p(x|c)}{p(x)}$，</p>
-<h2 id="Multual-Information"><a href="#Multual-Information" class="headerlink" title="Multual Information"></a>Multual Information</h2><p>互信息是衡量已知一个变量时，另一个变量不确定性的减少程度的度量。对于离散随机变量，互信息的定义为：<br>$$<br>I(X,Y)=\sum_{y\in\mathcal Y}\sum_{x\in\mathcal X}p(x,y)\log\frac{p(x,y)}{p(x)p(y)}=\sum_{y\in\mathcal Y}\sum_{x\in\mathcal X}p(x,y)\log\frac{p(y|x)}{p(y)}<br>$$<br>对于连续随机变量，互信息的定义为：<br>$$<br>I(X,Y)=\int_{\mathcal Y}\int_{\mathcal X}p(x,y)\log\frac{p(x,y)}{p(x)p(y)}\mathrm dx\mathrm d y=\int_{\mathcal Y}\int_{\mathcal X}p(x,y)\log\frac{p(y|x)}{p(y)}\mathrm dx\mathrm d y<br>$$<br>互信息与熵之间的关系：<br>$$<br>\begin{align}<br>I(X,Y)&amp;=H(X)-H(X|Y)\<br>&amp;=H(Y)-H(Y|X)\<br>&amp;=H(X)+H(Y)-H(X,Y)\<br>&amp;=H(X,Y)-H(X|Y)-H(Y|X)<br>\end{align}<br>$$<br>互信息与KL散之间的关系：<br>$$<br>I(X,Y)=\mathbb E_Y[D_{KL}(p(x|y)\parallel p(x))]<br>$$<br>从图中可以很容易看出互信息相当于$X$和$Y$两者的熵的“重叠”的部分：</p>
-<img src="https://i.loli.net/2020/07/17/orRXnpugEzsZDwq.png" style="zoom:67%;" />
+<p><span class="math display">\[
+I(x;c)=\sum_{x,c}p(x,c)\log\frac{p(x|c)}{p(x)}
+\]</span></p>
+<p>编码器<span class="math inline">\(g_{enc}\)</span>将观测值<span class="math inline">\(\boldsymbol x_t\)</span>编码到隐变量<span class="math inline">\(\boldsymbol z_t=g_\text{enc}(\boldsymbol x_t)\)</span>（对应于局部信息），之后自回归模型<span class="math inline">\(g_{ar}\)</span>将所有<span class="math inline">\(t\)</span>之前的（包括<span class="math inline">\(t\)</span>）隐变量<span class="math inline">\(z_{\leq t}\)</span>压缩到一个上下文隐变量<span class="math inline">\(\boldsymbol c_t=g_\text{ar}(\boldsymbol z_{\leq t})\)</span>（希望具有预测性质，捕获了长时依赖性）。不过本文并不是基于<span class="math inline">\(\boldsymbol c_t\)</span>来预测未来的观测值<span class="math inline">\(\boldsymbol x_{t+k}\)</span>，即估计分布<span class="math inline">\(p_k(\boldsymbol x_{t+k}|\boldsymbol c_t)\)</span>，而这样的话又要用到MSE之类的Loss。文中利用的是最大化<span class="math inline">\(\boldsymbol c_t\)</span>和<span class="math inline">\(\boldsymbol x_{t+k}\)</span>之间的互信息<span class="math inline">\(\log \frac{p(x_{t+k}|c_t)}{p(x_{t+k})}\)</span>（这种形式的互信息被称为是点互信息，详见<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Pointwise_mutual_information">维基</a>）。定义一个度量函数<span class="math inline">\(f(\cdot,\cdot)\)</span>，要求其具有与<span class="math inline">\(\frac{p(x_{t+k}|c_t)}{p(x_{t+k})}\)</span>成比例的性质： <span class="math display">\[
+f_k(x_{t+k},c_t)\propto\frac{p(x_{t+k}|c_t)}{p(x_{t+k})}
+\]</span> 这时最大化<span class="math inline">\(f(\cdot,\cdot)\)</span>就相当于最大化两者的互信息。</p>
+<h2 id="mutual-information-estimation-explanation">Mutual Information Estimation Explanation</h2>
+<p>现在回到公式<span class="math inline">\(I(x;c)=\sum_{x,c}p(x,c)\log\frac{p(x|c)}{p(x)}\)</span>，</p>
+<h2 id="multual-information">Multual Information</h2>
+<p>互信息是衡量已知一个变量时，另一个变量不确定性的减少程度的度量。对于离散随机变量，互信息的定义为： <span class="math display">\[
+I(X,Y)=\sum_{y\in\mathcal Y}\sum_{x\in\mathcal X}p(x,y)\log\frac{p(x,y)}{p(x)p(y)}=\sum_{y\in\mathcal Y}\sum_{x\in\mathcal X}p(x,y)\log\frac{p(y|x)}{p(y)}
+\]</span> 对于连续随机变量，互信息的定义为： <span class="math display">\[
+I(X,Y)=\int_{\mathcal Y}\int_{\mathcal X}p(x,y)\log\frac{p(x,y)}{p(x)p(y)}\mathrm dx\mathrm d y=\int_{\mathcal Y}\int_{\mathcal X}p(x,y)\log\frac{p(y|x)}{p(y)}\mathrm dx\mathrm d y
+\]</span> 互信息与熵之间的关系： <span class="math display">\[
+\begin{align}
+I(X,Y)&amp;=H(X)-H(X|Y)\\
+&amp;=H(Y)-H(Y|X)\\
+&amp;=H(X)+H(Y)-H(X,Y)\\
+&amp;=H(X,Y)-H(X|Y)-H(Y|X)
+\end{align}
+\]</span> 互信息与KL散之间的关系： <span class="math display">\[
+I(X,Y)=\mathbb E_Y[D_{KL}(p(x|y)\parallel p(x))]
+\]</span> 从图中可以很容易看出互信息相当于<span class="math inline">\(X\)</span>和<span class="math inline">\(Y\)</span>两者的熵的“重叠”的部分：</p>
+<p><img src="https://i.loli.net/2020/07/17/orRXnpugEzsZDwq.png" style="zoom:67%;" /></p>
+<p>在表示学习中，互信息的应用越来越广泛。对于输入的数据<span class="math inline">\(X\)</span>，表示学习的目的是尽可能学到“好“的表示<span class="math inline">\(Z\)</span>，保留原始数据尽可能多的重要信息。如果使用基于重构的模型，我们就会要求最小化重构误差<span class="math inline">\(\parallel X-\hat{X}\parallel^2_2\)</span>，但是这种”逐像素“式的损失函数过于严苛，不利于模型学习高层语义信息。如果加入一个判别器来自动学习一个度量，首先增大了计算开销，同时GAN本身也有诸多问题。</p>
+<p>现阶段很多工作使用互信息来判定学到的表示<span class="math inline">\(Z\)</span>的好坏，即最大化原始数据<span class="math inline">\(X\)</span>与表示<span class="math inline">\(Z\)</span>之间的互信息： <span class="math display">\[
+Z^*=\mathop{\arg\max}_{p(z|x)}I(X,Z)
+\]</span> 互信息越大意味着<span class="math inline">\(\log\frac{p(z|x)}{p(z)}\)</span>越大，即<span class="math inline">\(p(z|x)\)</span>要大于<span class="math inline">\(p(z)\)</span>。<span class="math inline">\(p(z)\)</span>可以看作是<span class="math inline">\(Z\)</span>的先验，而<span class="math inline">\(p(z|x)\gg p(z)\)</span>可以理解为在得知输入<span class="math inline">\(X\)</span>之后，我们能找到专属<span class="math inline">\(X\)</span>的那个编码<span class="math inline">\(Z\)</span>。</p>
+<p>接下来作者证明优化<span class="math inline">\(\mathcal L_N\)</span>会使得<span class="math inline">\(f_k(\mathbf x_{t+k},\mathbf c_t)\)</span>和互信息接近。这里的<span class="math inline">\(p(\mathbf x_{t+k}|\mathbf c_t)\)</span>。设<span class="math inline">\(p(d=i|X,c_t)\)</span>为给定数据集（或者Batch）<span class="math inline">\(X\)</span>和context向量<span class="math inline">\(c_t\)</span>的条件下，样本<span class="math inline">\(x_i\)</span>为正样本的概率，有： <span class="math display">\[
+\begin{align}
+p(d=i|X,c_t)&amp;=\frac{p(x_i|c_t)\prod_{l\neq i}p(x_l)}{\sum^N_{j=1} p(x_j|c_t)\prod_{l\neq j}p(x_l)}\\
+&amp;=\frac{\frac{p(x_i|c_t)}{p(x_i)}}{\sum^N_{j=1}\frac{p(x_j|c_t)}{p(x_j)}}
+\end{align}
+\]</span></p>
+<p>$$ <span class="math display">\[\begin{align}
+\mathcal L_\text{N}^\text{opt}&amp;=-\mathop{\mathbb E}\limits_X\log\left[\frac{\frac{p(x_{t+k}|c_t)}{p(x_{t+k})}}{\frac{p(x_{t+k}|c_t)}{p(x_{t+k})}+\sum_{x_j\in X_\text{neg}}\frac{p(x_j|c_t)}{x_j}}\right]\\
 
-<p>在表示学习中，互信息的应用越来越广泛。对于输入的数据$X$，表示学习的目的是尽可能学到“好“的表示$Z$，保留原始数据尽可能多的重要信息。如果使用基于重构的模型，我们就会要求最小化重构误差$\parallel X-\hat{X}\parallel^2_2$，但是这种”逐像素“式的损失函数过于严苛，不利于模型学习高层语义信息。如果加入一个判别器来自动学习一个度量，首先增大了计算开销，同时GAN本身也有诸多问题。</p>
-<p>现阶段很多工作使用互信息来判定学到的表示$Z$的好坏，即最大化原始数据$X$与表示$Z$之间的互信息：<br>$$<br>Z^*=\mathop{\arg\max}_{p(z|x)}I(X,Z)<br>$$<br>互信息越大意味着$\log\frac{p(z|x)}{p(z)}$越大，即$p(z|x)$要大于$p(z)$。$p(z)$可以看作是$Z$的先验，而$p(z|x)\gg p(z)$可以理解为在得知输入$X$之后，我们能找到专属$X$的那个编码$Z$。</p>
-<p>接下来作者证明优化$\mathcal L_N$会使得$f_k(\mathbf x_{t+k},\mathbf c_t)$和互信息接近。这里的$p(\mathbf x_{t+k}|\mathbf c_t)$。设$p(d=i|X,c_t)$为给定数据集（或者Batch）$X$和context向量$c_t$的条件下，样本$x_i$为正样本的概率，有：<br>$$<br>\begin{align}<br>p(d=i|X,c_t)&amp;=\frac{p(x_i|c_t)\prod_{l\neq i}p(x_l)}{\sum^N_{j=1} p(x_j|c_t)\prod_{l\neq j}p(x_l)}\<br>&amp;=\frac{\frac{p(x_i|c_t)}{p(x_i)}}{\sum^N_{j=1}\frac{p(x_j|c_t)}{p(x_j)}}<br>\end{align}<br>$$</p>
-<p>$$<br>\begin{align}<br>\mathcal L_\text{N}^\text{opt}&amp;=-\mathop{\mathbb E}\limits_X\log\left[\frac{\frac{p(x_{t+k}|c_t)}{p(x_{t+k})}}{\frac{p(x_{t+k}|c_t)}{p(x_{t+k})}+\sum_{x_j\in X_\text{neg}}\frac{p(x_j|c_t)}{x_j}}\right]\</p>
-<p>\end{align}<br>$$</p>
-<p>$$<br>I(x_{t+k},c_t)\geq \log(N)-\mathcal L_N<br>$$</p>
-<p>可以说$\mathcal L_N$作为互信息$I(x_{t+k},c_t)$的一个下界。</p>
-<h2 id="Implementation-Details"><a href="#Implementation-Details" class="headerlink" title="Implementation Details"></a>Implementation Details</h2><h1 id="Experiments"><a href="#Experiments" class="headerlink" title="Experiments"></a>Experiments</h1><h2 id="Audio"><a href="#Audio" class="headerlink" title="Audio"></a>Audio</h2><p><img src="https://i.loli.net/2020/07/07/kWectjL27MKy1dA.png"></p>
-<p><img src="https://i.loli.net/2020/07/07/vhBRmpntw2Xx6J9.png"></p>
-<p><img src="https://i.loli.net/2020/07/07/5QaDOCFvxLE6wqT.png"></p>
-<p><img src="https://i.loli.net/2020/07/07/nA49kE1WP73oGQJ.png"></p>
-<h2 id="Vision"><a href="#Vision" class="headerlink" title="Vision"></a>Vision</h2><img src="https://i.loli.net/2020/07/07/gkNnWo4zyUeBRCa.png" style="zoom:67%;" />
-
-
-
-<img src="https://i.loli.net/2020/07/07/qH6BAJnhMcP9bKy.png" style="zoom:67%;" />
-
-
-
-<p><img src="https://i.loli.net/2020/07/07/ezO1IibwvC5Mus8.png"></p>
-<p><img src="https://i.loli.net/2020/07/07/sWNGXqv1n38kgcf.png"></p>
-<h2 id="Natural-Language"><a href="#Natural-Language" class="headerlink" title="Natural Language"></a>Natural Language</h2><p><img src="https://i.loli.net/2020/07/07/Ly86Xu9n4KSOJge.png"></p>
-<h2 id="Reinforcement-Learning"><a href="#Reinforcement-Learning" class="headerlink" title="Reinforcement Learning"></a>Reinforcement Learning</h2><p><img src="https://i.loli.net/2020/07/07/92XzLqltMUfCgTs.png"></p>
+\end{align}\]</span> $$</p>
+<p><span class="math display">\[
+I(x_{t+k},c_t)\geq \log(N)-\mathcal L_N
+\]</span></p>
+<p>可以说<span class="math inline">\(\mathcal L_N\)</span>作为互信息<span class="math inline">\(I(x_{t+k},c_t)\)</span>的一个下界。</p>
+<h2 id="implementation-details">Implementation Details</h2>
+<h1 id="experiments">Experiments</h1>
+<h2 id="audio">Audio</h2>
+<p><img src="https://i.loli.net/2020/07/07/kWectjL27MKy1dA.png" /></p>
+<p><img src="https://i.loli.net/2020/07/07/vhBRmpntw2Xx6J9.png" /></p>
+<p><img src="https://i.loli.net/2020/07/07/5QaDOCFvxLE6wqT.png" /></p>
+<p><img src="https://i.loli.net/2020/07/07/nA49kE1WP73oGQJ.png" /></p>
+<h2 id="vision">Vision</h2>
+<p><img src="https://i.loli.net/2020/07/07/gkNnWo4zyUeBRCa.png" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/07/07/qH6BAJnhMcP9bKy.png" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/07/07/ezO1IibwvC5Mus8.png" /></p>
+<p><img src="https://i.loli.net/2020/07/07/sWNGXqv1n38kgcf.png" /></p>
+<h2 id="natural-language">Natural Language</h2>
+<p><img src="https://i.loli.net/2020/07/07/Ly86Xu9n4KSOJge.png" /></p>
+<h2 id="reinforcement-learning">Reinforcement Learning</h2>
+<p><img src="https://i.loli.net/2020/07/07/92XzLqltMUfCgTs.png" /></p>
 </div></article></div></div><!--!--><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/">Hanzawa の 部屋</a><p class="is-size-7"><span>&copy; 2021 Hanzawa</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("zh-CN");</script><script>var IcarusThemeSettings = {
             article: {
                 highlight: {

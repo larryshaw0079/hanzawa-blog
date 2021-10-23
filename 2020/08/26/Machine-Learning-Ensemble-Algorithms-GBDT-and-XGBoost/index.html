@@ -1,6 +1,7 @@
 <!doctype html>
-<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><title>Machine Learning Ensemble Algorithms: GBDT and XGBoost - Hanzawa の 部屋</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Hanzawa の 部屋"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Hanzawa の 部屋"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="Introduction本文主要介绍GBDT和XGBoost，在学习本文内容之前建议先学习决策树相关内容。 下面是一些有用的参考链接： XGBoost Documentation AdaBoost blog GBDT blog slide 陈天奇slide blog blog Preliminaries实际上，GBDT和梯度下降、XGBoost和牛顿法之间是存在密切关系的，这里我们先回顾一下梯度下"><meta property="og:type" content="article"><meta property="og:title" content="Machine Learning Ensemble Algorithms: GBDT and XGBoost"><meta property="og:url" content="https://larryshaw0079.github.io/hanzawa-blog/2020/08/26/Machine-Learning-Ensemble-Algorithms-GBDT-and-XGBoost/"><meta property="og:site_name" content="Hanzawa の 部屋"><meta property="og:description" content="Introduction本文主要介绍GBDT和XGBoost，在学习本文内容之前建议先学习决策树相关内容。 下面是一些有用的参考链接： XGBoost Documentation AdaBoost blog GBDT blog slide 陈天奇slide blog blog Preliminaries实际上，GBDT和梯度下降、XGBoost和牛顿法之间是存在密切关系的，这里我们先回顾一下梯度下"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="https://i.loli.net/2020/09/10/HoPR9XlpZSm1Gju.png"><meta property="og:image" content="https://i.loli.net/2020/09/15/nxloKNmTHwJRqI9.png"><meta property="article:published_time" content="2020-08-25T16:28:26.000Z"><meta property="article:modified_time" content="2021-02-28T05:38:18.079Z"><meta property="article:author" content="Hanzawa"><meta property="article:tag" content="GBDT"><meta property="article:tag" content="XGBoost"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="https://i.loli.net/2020/09/10/HoPR9XlpZSm1Gju.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://larryshaw0079.github.io/hanzawa-blog/2020/08/26/Machine-Learning-Ensemble-Algorithms-GBDT-and-XGBoost/"},"headline":"Machine Learning Ensemble Algorithms: GBDT and XGBoost","image":["https://i.loli.net/2020/09/10/HoPR9XlpZSm1Gju.png","https://i.loli.net/2020/09/15/nxloKNmTHwJRqI9.png"],"datePublished":"2020-08-25T16:28:26.000Z","dateModified":"2021-02-28T05:38:18.079Z","author":{"@type":"Person","name":"Hanzawa"},"publisher":{"@type":"Organization","name":"Hanzawa の 部屋","logo":{"@type":"ImageObject"}},"description":"Introduction本文主要介绍GBDT和XGBoost，在学习本文内容之前建议先学习决策树相关内容。 下面是一些有用的参考链接： XGBoost Documentation AdaBoost blog GBDT blog slide 陈天奇slide blog blog Preliminaries实际上，GBDT和梯度下降、XGBoost和牛顿法之间是存在密切关系的，这里我们先回顾一下梯度下"}</script><link rel="canonical" href="https://larryshaw0079.github.io/hanzawa-blog/2020/08/26/Machine-Learning-Ensemble-Algorithms-GBDT-and-XGBoost/"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><!--!--><meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Hanzawa の 部屋" type="application/atom+xml">
-</head><body class="is-1-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/">Hanzawa の 部屋</a></div><div class="navbar-menu"><div class="navbar-end"></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-12"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-08-25T16:28:26.000Z" title="2020-8-26 12:28:26 ├F10: AM┤">2020-08-26</time>发表</span><span class="level-item"><time dateTime="2021-02-28T05:38:18.079Z" title="2021-2-28 1:38:18 ├F10: PM┤">2021-02-28</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Technical-Notes/">Technical Notes</a><span> / </span><a class="link-muted" href="/categories/Technical-Notes/Machine-Learning/">Machine Learning</a></span></div></div><h1 class="title is-3 is-size-4-mobile">Machine Learning Ensemble Algorithms: GBDT and XGBoost</h1><div class="content"><h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>本文主要介绍GBDT和XGBoost，在学习本文内容之前建议先学习<a target="_blank" rel="noopener" href="http://hanzawa.me/2020/09/02/Machine-Learning-Classification-Algorithms-Decision-Trees/">决策树相关内容</a>。</p>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><title>Machine Learning Ensemble Algorithms: GBDT and XGBoost - Hanzawa の 部屋</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Hanzawa の 部屋"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Hanzawa の 部屋"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="Introduction 本文主要介绍GBDT和XGBoost，在学习本文内容之前建议先学习决策树相关内容。 下面是一些有用的参考链接： XGBoost Documentation AdaBoost blog GBDT blog slide 陈天奇slide blog blog Preliminaries 实际上，GBDT和梯度下降、XGBoost和牛顿法之间是存在密切关系的"><meta property="og:type" content="article"><meta property="og:title" content="Machine Learning Ensemble Algorithms: GBDT and XGBoost"><meta property="og:url" content="https://larryshaw0079.github.io/hanzawa-blog/2020/08/26/Machine-Learning-Ensemble-Algorithms-GBDT-and-XGBoost/"><meta property="og:site_name" content="Hanzawa の 部屋"><meta property="og:description" content="Introduction 本文主要介绍GBDT和XGBoost，在学习本文内容之前建议先学习决策树相关内容。 下面是一些有用的参考链接： XGBoost Documentation AdaBoost blog GBDT blog slide 陈天奇slide blog blog Preliminaries 实际上，GBDT和梯度下降、XGBoost和牛顿法之间是存在密切关系的"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="https://i.loli.net/2020/09/10/HoPR9XlpZSm1Gju.png"><meta property="og:image" content="https://i.loli.net/2020/09/15/nxloKNmTHwJRqI9.png"><meta property="article:published_time" content="2020-08-25T16:28:26.000Z"><meta property="article:modified_time" content="2021-02-28T05:38:18.079Z"><meta property="article:author" content="Hanzawa"><meta property="article:tag" content="GBDT"><meta property="article:tag" content="XGBoost"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="https://i.loli.net/2020/09/10/HoPR9XlpZSm1Gju.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://larryshaw0079.github.io/hanzawa-blog/2020/08/26/Machine-Learning-Ensemble-Algorithms-GBDT-and-XGBoost/"},"headline":"Machine Learning Ensemble Algorithms: GBDT and XGBoost","image":["https://i.loli.net/2020/09/10/HoPR9XlpZSm1Gju.png","https://i.loli.net/2020/09/15/nxloKNmTHwJRqI9.png"],"datePublished":"2020-08-25T16:28:26.000Z","dateModified":"2021-02-28T05:38:18.079Z","author":{"@type":"Person","name":"Hanzawa"},"publisher":{"@type":"Organization","name":"Hanzawa の 部屋","logo":{"@type":"ImageObject"}},"description":"Introduction\r 本文主要介绍GBDT和XGBoost，在学习本文内容之前建议先学习决策树相关内容。\r 下面是一些有用的参考链接：\r XGBoost Documentation\r AdaBoost blog\r GBDT blog\r slide\r 陈天奇slide\r blog\r blog\r Preliminaries\r 实际上，GBDT和梯度下降、XGBoost和牛顿法之间是存在密切关系的"}</script><link rel="canonical" href="https://larryshaw0079.github.io/hanzawa-blog/2020/08/26/Machine-Learning-Ensemble-Algorithms-GBDT-and-XGBoost/"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><!--!--><meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Hanzawa の 部屋" type="application/atom+xml">
+</head><body class="is-1-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/">Hanzawa の 部屋</a></div><div class="navbar-menu"><div class="navbar-end"></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-12"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-08-25T16:28:26.000Z" title="2020-8-26 12:28:26 ├F10: AM┤">2020-08-26</time>发表</span><span class="level-item"><time dateTime="2021-02-28T05:38:18.079Z" title="2021-2-28 1:38:18 ├F10: PM┤">2021-02-28</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Technical-Notes/">Technical Notes</a><span> / </span><a class="link-muted" href="/categories/Technical-Notes/Machine-Learning/">Machine Learning</a></span></div></div><h1 class="title is-3 is-size-4-mobile">Machine Learning Ensemble Algorithms: GBDT and XGBoost</h1><div class="content"><h1 id="introduction">Introduction</h1>
+<p>本文主要介绍GBDT和XGBoost，在学习本文内容之前建议先学习<a target="_blank" rel="noopener" href="http://hanzawa.me/2020/09/02/Machine-Learning-Classification-Algorithms-Decision-Trees/">决策树相关内容</a>。</p>
 <p>下面是一些有用的参考链接：</p>
 <p><a target="_blank" rel="noopener" href="https://xgboost.readthedocs.io/en/latest/tutorials/model.html">XGBoost Documentation</a></p>
 <p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/pinard/p/6133937.html">AdaBoost blog</a></p>
@@ -9,136 +10,216 @@
 <p><a target="_blank" rel="noopener" href="https://homes.cs.washington.edu/~tqchen/pdf/BoostedTree.pdf">陈天奇slide</a></p>
 <p><a target="_blank" rel="noopener" href="https://snaildove.github.io/2018/10/01/8.Booting-Methods_LiHang-Statistical-Learning-Methods/">blog</a></p>
 <p><a target="_blank" rel="noopener" href="https://snaildove.github.io/2018/10/02/get-started-XGBoost/">blog</a></p>
-<h1 id="Preliminaries"><a href="#Preliminaries" class="headerlink" title="Preliminaries"></a>Preliminaries</h1><p>实际上，GBDT和梯度下降、XGBoost和牛顿法之间是存在密切关系的，这里我们先回顾一下梯度下降算法和牛顿法的基础知识。</p>
-<h2 id="Taylor-Formulation"><a href="#Taylor-Formulation" class="headerlink" title="Taylor Formulation"></a>Taylor Formulation</h2><p>函数$f(x)$在点$x_0$处的泰勒展开为：<br>$$<br>f(x)=\sum_{n=0}^\infty\frac{f^{(n)}(x_0)}{n!}(x-x_0)^n<br>$$<br>特别的，一阶展开为：<br>$$<br>f(x)\approx f(x_0)+f^\prime(x_0)(x-x_0)<br>$$<br>二阶展开为：<br>$$<br>f(x)\approx f(x_0)+f^\prime(x_0)(x-x_0) + f^{\prime\prime}(x_0)\frac{(x-x_0)^2}{2}<br>$$<br>迭代形式：假设$x^t=x^{t-1}+\Delta x$，将$f(x)$在$x^{t-1}$处进行泰勒展开<br>$$<br>\begin{align}<br>f(x^t) &amp;= f(x^{t-1}+\Delta x)\<br>&amp;\approx f(x^{t-1})+f^\prime(x^{t-1})\Delta x + f^{\prime\prime}(x^{t-1})\frac{\Delta x^2}{2}<br>\end{align}<br>$$</p>
-<h2 id="Gradient-Descend-Method"><a href="#Gradient-Descend-Method" class="headerlink" title="Gradient Descend Method"></a>Gradient Descend Method</h2><p>设参数$\theta$，那么参数对应的损失函数为$L(\theta)$，</p>
-<p>设当前步数为$t$，那么$t-1$步时的参数为$\theta^{t-1}$，将$L(\theta^t)$在$\theta^{t-1}$处展开得到：</p>
-<p>$$<br>L(\theta^t) \approx L(\theta^{t-1})+ L^\prime(\theta^{t-1})\Delta\theta<br>$$<br>我们想求的$\theta^t=\theta^{t-1}+\Delta \theta$</p>
-<h2 id="Newton’s-Method"><a href="#Newton’s-Method" class="headerlink" title="Newton’s Method"></a>Newton’s Method</h2><p>将$L(\theta^t)$在$\theta^{t-1}$处进行二阶泰勒展开<br>$$<br>\begin{align}<br>L(\theta^t) &amp;= L(\theta^{t-1}+\Delta \theta)\<br>&amp;\approx L(\theta^{t-1})+L^\prime(\theta^{t-1})\Delta \theta + L^{\prime\prime}(\theta^{t-1})\frac{\Delta \theta^2}{2}<br>\end{align}<br>$$<br>记一阶导数和二阶导数分别为$g$和$H$，那么<br>$$<br>L(\theta^t)=L(\theta^{t-1})+g\Delta \theta + H\frac{\Delta \theta^2}{2}<br>$$<br>要使得迭代后的结果尽量小，即$g\Delta \theta + H\frac{\Delta \theta^2}{2}$尽量小，那么有$\frac{\left(g\Delta \theta + H\frac{\Delta \theta^2}{2}\right)}{\partial\Delta\theta}=0$</p>
-<p>求得$\Delta \theta=H^{-1}g$，故$\theta^{t}=\theta^{t-1}+\Delta \theta=\theta^{t-1}-\frac{g}{h}$。如果$\theta$是一个向量，那么$\theta^{t}=\theta^{t-1}-H^{-1}g$，这里$H$为海森矩阵。</p>
-<h1 id="Gradient-Boosting-Decision-Tree-GBDT"><a href="#Gradient-Boosting-Decision-Tree-GBDT" class="headerlink" title="Gradient Boosting Decision Tree (GBDT)"></a>Gradient Boosting Decision Tree (GBDT)</h1><p>我们首先来看基于树的Boosting模型中，非常经典的梯度提升树 (Gradient Boosting Decision Tree)。</p>
-<h2 id="The-Additive-Model"><a href="#The-Additive-Model" class="headerlink" title="The Additive Model"></a>The Additive Model</h2><p>首先GBDT是一个加法模型，即最终模型由一系列树模型乘以对应权重相加得来：<br>$$<br>F_T(x;w)=\sum_{t=0}^T\alpha_t h_t(x;w_t)=\sum_{t=0}^T f_t(x;w_t)<br>$$<br>我们的目标是使得$F$的损失函数最小化：<br>$$<br>F_T^*=\mathop{\arg\min}\limits_{F}\sum_{i=1}^N L(y_i, F_T(x_i;w))<br>$$</p>
+<h1 id="preliminaries">Preliminaries</h1>
+<p>实际上，GBDT和梯度下降、XGBoost和牛顿法之间是存在密切关系的，这里我们先回顾一下梯度下降算法和牛顿法的基础知识。</p>
+<h2 id="taylor-formulation">Taylor Formulation</h2>
+<p>函数<span class="math inline">\(f(x)\)</span>在点<span class="math inline">\(x_0\)</span>处的泰勒展开为： <span class="math display">\[
+f(x)=\sum_{n=0}^\infty\frac{f^{(n)}(x_0)}{n!}(x-x_0)^n
+\]</span> 特别的，一阶展开为： <span class="math display">\[
+f(x)\approx f(x_0)+f^\prime(x_0)(x-x_0)
+\]</span> 二阶展开为： <span class="math display">\[
+f(x)\approx f(x_0)+f^\prime(x_0)(x-x_0) + f^{\prime\prime}(x_0)\frac{(x-x_0)^2}{2}
+\]</span> 迭代形式：假设<span class="math inline">\(x^t=x^{t-1}+\Delta x\)</span>，将<span class="math inline">\(f(x)\)</span>在<span class="math inline">\(x^{t-1}\)</span>处进行泰勒展开 <span class="math display">\[
+\begin{align}
+f(x^t) &amp;= f(x^{t-1}+\Delta x)\\
+&amp;\approx f(x^{t-1})+f^\prime(x^{t-1})\Delta x + f^{\prime\prime}(x^{t-1})\frac{\Delta x^2}{2}
+\end{align}
+\]</span></p>
+<h2 id="gradient-descend-method">Gradient Descend Method</h2>
+<p>设参数<span class="math inline">\(\theta\)</span>，那么参数对应的损失函数为<span class="math inline">\(L(\theta)\)</span>，</p>
+<p>设当前步数为<span class="math inline">\(t\)</span>，那么<span class="math inline">\(t-1\)</span>步时的参数为<span class="math inline">\(\theta^{t-1}\)</span>，将<span class="math inline">\(L(\theta^t)\)</span>在<span class="math inline">\(\theta^{t-1}\)</span>处展开得到：</p>
+<p><span class="math display">\[
+L(\theta^t) \approx L(\theta^{t-1})+ L^\prime(\theta^{t-1})\Delta\theta
+\]</span> 我们想求的<span class="math inline">\(\theta^t=\theta^{t-1}+\Delta \theta\)</span></p>
+<h2 id="newtons-method">Newton's Method</h2>
+<p>将<span class="math inline">\(L(\theta^t)\)</span>在<span class="math inline">\(\theta^{t-1}\)</span>处进行二阶泰勒展开 <span class="math display">\[
+\begin{align}
+L(\theta^t) &amp;= L(\theta^{t-1}+\Delta \theta)\\
+&amp;\approx L(\theta^{t-1})+L^\prime(\theta^{t-1})\Delta \theta + L^{\prime\prime}(\theta^{t-1})\frac{\Delta \theta^2}{2}
+\end{align}
+\]</span> 记一阶导数和二阶导数分别为<span class="math inline">\(g\)</span>和<span class="math inline">\(H\)</span>，那么 <span class="math display">\[
+L(\theta^t)=L(\theta^{t-1})+g\Delta \theta + H\frac{\Delta \theta^2}{2}
+\]</span> 要使得迭代后的结果尽量小，即<span class="math inline">\(g\Delta \theta + H\frac{\Delta \theta^2}{2}\)</span>尽量小，那么有<span class="math inline">\(\frac{\left(g\Delta \theta + H\frac{\Delta \theta^2}{2}\right)}{\partial\Delta\theta}=0\)</span></p>
+<p>求得<span class="math inline">\(\Delta \theta=H^{-1}g\)</span>，故<span class="math inline">\(\theta^{t}=\theta^{t-1}+\Delta \theta=\theta^{t-1}-\frac{g}{h}\)</span>。如果<span class="math inline">\(\theta\)</span>是一个向量，那么<span class="math inline">\(\theta^{t}=\theta^{t-1}-H^{-1}g\)</span>，这里<span class="math inline">\(H\)</span>为海森矩阵。</p>
+<h1 id="gradient-boosting-decision-tree-gbdt">Gradient Boosting Decision Tree (GBDT)</h1>
+<p>我们首先来看基于树的Boosting模型中，非常经典的梯度提升树 (Gradient Boosting Decision Tree)。</p>
+<h2 id="the-additive-model">The Additive Model</h2>
+<p>首先GBDT是一个加法模型，即最终模型由一系列树模型乘以对应权重相加得来： <span class="math display">\[
+F_T(x;w)=\sum_{t=0}^T\alpha_t h_t(x;w_t)=\sum_{t=0}^T f_t(x;w_t)
+\]</span> 我们的目标是使得<span class="math inline">\(F\)</span>的损失函数最小化： <span class="math display">\[
+F_T^*=\mathop{\arg\min}\limits_{F}\sum_{i=1}^N L(y_i, F_T(x_i;w))
+\]</span></p>
 <p>直接优化这个损失函数复杂度是很高的，GBDT实际上运用了一种类似贪心的策略来优化这个函数，将优化过程分解成了迭代的步骤。</p>
-<p>回想梯度下降算法进行优化的步骤，我们有参数$\theta$，损失函数$L(\theta)$是$\theta$的函数，我们希望找到最优的$\theta^*$使得$L(\theta^*)$最小，于是我们使用了迭代优化的步骤。假设迭代执行到第$t$步，也就是说我们现在的参数$\theta^{t-1}$为前面$t-1$步增量之和：$\theta^{t-1}=\sum_{j=1}^{t-1}\Delta \theta_j$，每一步的增量记为$\Delta \theta_t$。当前的增量$\Delta \theta_{t}$是怎么计算得到的呢？大家都知道是采用的损失函数在$\theta^{t-1}$的负梯度乘以一个步长，即$\Delta \theta_t=-\alpha_t \frac{\partial L(\theta)}{\partial \theta^{t-1}}$。</p>
-<p>梯度下降相当于是在参数空间$\theta$找到最合适的参数$\theta^*$使得损失函数$L(\theta)$最小化，如果我们把模型$F_T$看作是函数空间，我们的目的是在函数空间中找到最优的$F_T^*$使得损失函数最小化，在这一个角度上GBDT和梯度下降就统一起来了。每一步的基模型$f_t$就相当于梯度下降中的增量$\Delta \theta$，所以我们就得到了GBDT每一的优化目标，即损失函数$L$对于$F_{t-1}$的负梯度。</p>
+<p>回想梯度下降算法进行优化的步骤，我们有参数<span class="math inline">\(\theta\)</span>，损失函数<span class="math inline">\(L(\theta)\)</span>是<span class="math inline">\(\theta\)</span>的函数，我们希望找到最优的<span class="math inline">\(\theta^*\)</span>使得<span class="math inline">\(L(\theta^*)\)</span>最小，于是我们使用了迭代优化的步骤。假设迭代执行到第<span class="math inline">\(t\)</span>步，也就是说我们现在的参数<span class="math inline">\(\theta^{t-1}\)</span>为前面<span class="math inline">\(t-1\)</span>步增量之和：<span class="math inline">\(\theta^{t-1}=\sum_{j=1}^{t-1}\Delta \theta_j\)</span>，每一步的增量记为<span class="math inline">\(\Delta \theta_t\)</span>。当前的增量<span class="math inline">\(\Delta \theta_{t}\)</span>是怎么计算得到的呢？大家都知道是采用的损失函数在<span class="math inline">\(\theta^{t-1}\)</span>的负梯度乘以一个步长，即<span class="math inline">\(\Delta \theta_t=-\alpha_t \frac{\partial L(\theta)}{\partial \theta^{t-1}}\)</span>。</p>
+<p>梯度下降相当于是在参数空间<span class="math inline">\(\theta\)</span>找到最合适的参数<span class="math inline">\(\theta^*\)</span>使得损失函数<span class="math inline">\(L(\theta)\)</span>最小化，如果我们把模型<span class="math inline">\(F_T\)</span>看作是函数空间，我们的目的是在函数空间中找到最优的<span class="math inline">\(F_T^*\)</span>使得损失函数最小化，在这一个角度上GBDT和梯度下降就统一起来了。每一步的基模型<span class="math inline">\(f_t\)</span>就相当于梯度下降中的增量<span class="math inline">\(\Delta \theta\)</span>，所以我们就得到了GBDT每一的优化目标，即损失函数<span class="math inline">\(L\)</span>对于<span class="math inline">\(F_{t-1}\)</span>的负梯度。</p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th></th>
 <th>梯度下降</th>
 <th>GBDT</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr class="odd">
 <td>损失函数</td>
-<td>$L(\theta)$</td>
-<td>$L(F_t)$</td>
+<td><span class="math inline">\(L(\theta)\)</span></td>
+<td><span class="math inline">\(L(F_t)\)</span></td>
 </tr>
-<tr>
+<tr class="even">
 <td>参数</td>
-<td>$\theta^t$</td>
-<td>$F_t$</td>
+<td><span class="math inline">\(\theta^t\)</span></td>
+<td><span class="math inline">\(F_t\)</span></td>
 </tr>
-<tr>
+<tr class="odd">
 <td>增量</td>
-<td>$\Delta \theta_t=-\alpha_t g_t$</td>
-<td>$f_t=-\alpha_t g_t$</td>
+<td><span class="math inline">\(\Delta \theta_t=-\alpha_t g_t\)</span></td>
+<td><span class="math inline">\(f_t=-\alpha_t g_t\)</span></td>
 </tr>
-<tr>
+<tr class="even">
 <td>步长</td>
-<td>$\alpha_t$</td>
-<td>$\alpha_t$</td>
+<td><span class="math inline">\(\alpha_t\)</span></td>
+<td><span class="math inline">\(\alpha_t\)</span></td>
 </tr>
-<tr>
+<tr class="odd">
 <td>初始值</td>
-<td>$\theta_0$</td>
-<td>$f_0$</td>
+<td><span class="math inline">\(\theta_0\)</span></td>
+<td><span class="math inline">\(f_0\)</span></td>
 </tr>
-</tbody></table>
-<h2 id="Gradient-Boosting-Tree-for-Regression"><a href="#Gradient-Boosting-Tree-for-Regression" class="headerlink" title="Gradient Boosting Tree for Regression"></a>Gradient Boosting Tree for Regression</h2><p>我们先来讨论GBDT解决回归问题的算法。前面我们已经讨论过，在每一步GBDT的优化目标是损失函数的负梯度，那么现在的问题就是如何求得每一步最优的基模型（GBDT的基模型选用的是CART）。GBDT的算法步骤如下：</p>
+</tbody>
+</table>
+<h2 id="gradient-boosting-tree-for-regression">Gradient Boosting Tree for Regression</h2>
+<p>我们先来讨论GBDT解决回归问题的算法。前面我们已经讨论过，在每一步GBDT的优化目标是损失函数的负梯度，那么现在的问题就是如何求得每一步最优的基模型（GBDT的基模型选用的是CART）。GBDT的算法步骤如下：</p>
 <blockquote>
 <p><strong>Gradient Boosting Tree Algorithm</strong></p>
-<p>INPUT: 训练样本${(x_1,y_1),\cdots,(x_m,y_m)}$，迭代轮数$T$，损失函数$L$</p>
-<p>OUTPUT: 强模型$F_T$</p>
-<ol>
-<li>初始化弱学习器$f_0$，直接使用一个基模型在训练集上进行训练</li>
-<li>在步骤$t=1…T$，对于每个样本计算负梯度$r_{ti}=\left[\frac{\partial L(y_i,F_{t-1}(x_i))}{\partial F_{t-1}}\right]$</li>
-<li>在$(x_i,r_{ti})$上训练得到一个CART回归树，确定树的结构</li>
-<li>假设一共有$J$个叶子节点，那么对每个叶子节点计算最佳输出值$c_{tj}=\mathop{\arg\min}\limits_{c_{tj}}\sum_{x_i\in R_{tj}} L(y_i,F_{t-1}(x_i)+c_{tj})$（其中$c_{tj}$代表第$j$个叶子的输出，$R_{tj}$代表第$j$个叶子对应的样本集合），确定每个叶子节点的输出</li>
-<li>更新强学习器$F_t=F_{t-1}+f_t$，回到步骤2直到达到迭代轮数</li>
-<li>最终得到强学习器的表达式：$f(x)=f_0(x)+\sum\limits_{t=1}^T\sum\limits_{j=1}^J c_{tj}\mathrm I(x\in R_{tj})$</li>
+<p>INPUT: 训练样本<span class="math inline">\(\{(x_1,y_1),\cdots,(x_m,y_m)\}\)</span>，迭代轮数<span class="math inline">\(T\)</span>，损失函数<span class="math inline">\(L\)</span></p>
+<p>OUTPUT: 强模型<span class="math inline">\(F_T\)</span></p>
+<ol type="1">
+<li>初始化弱学习器<span class="math inline">\(f_0\)</span>，直接使用一个基模型在训练集上进行训练</li>
+<li>在步骤<span class="math inline">\(t=1...T\)</span>，对于每个样本计算负梯度<span class="math inline">\(r_{ti}=\left[\frac{\partial L(y_i,F_{t-1}(x_i))}{\partial F_{t-1}}\right]\)</span></li>
+<li>在<span class="math inline">\((x_i,r_{ti})\)</span>上训练得到一个CART回归树，确定树的结构</li>
+<li>假设一共有<span class="math inline">\(J\)</span>个叶子节点，那么对每个叶子节点计算最佳输出值<span class="math inline">\(c_{tj}=\mathop{\arg\min}\limits_{c_{tj}}\sum_{x_i\in R_{tj}} L(y_i,F_{t-1}(x_i)+c_{tj})\)</span>（其中<span class="math inline">\(c_{tj}\)</span>代表第<span class="math inline">\(j\)</span>个叶子的输出，<span class="math inline">\(R_{tj}\)</span>代表第<span class="math inline">\(j\)</span>个叶子对应的样本集合），确定每个叶子节点的输出</li>
+<li>更新强学习器<span class="math inline">\(F_t=F_{t-1}+f_t\)</span>，回到步骤2直到达到迭代轮数</li>
+<li>最终得到强学习器的表达式：<span class="math inline">\(f(x)=f_0(x)+\sum\limits_{t=1}^T\sum\limits_{j=1}^J c_{tj}\mathrm I(x\in R_{tj})\)</span></li>
 </ol>
 </blockquote>
-<p>于是我们就得到了最终模型$F_T$。</p>
-<h2 id="Gradient-Boosting-Tree-for-Classification"><a href="#Gradient-Boosting-Tree-for-Classification" class="headerlink" title="Gradient Boosting Tree for Classification"></a>Gradient Boosting Tree for Classification</h2><p>在处理分类任务时，由于输出是离散的值</p>
+<p>于是我们就得到了最终模型<span class="math inline">\(F_T\)</span>。</p>
+<h2 id="gradient-boosting-tree-for-classification">Gradient Boosting Tree for Classification</h2>
+<p>在处理分类任务时，由于输出是离散的值</p>
 <p>一种方法是使用指数损失函数，此时GBDT退化为AdaBoost；另一种方法是借鉴逻辑回归的方法，去建模真实值的概率</p>
-<h3 id="Binary-Classification"><a href="#Binary-Classification" class="headerlink" title="Binary Classification"></a>Binary Classification</h3><h3 id="Multi-class-Classfication"><a href="#Multi-class-Classfication" class="headerlink" title="Multi-class Classfication"></a>Multi-class Classfication</h3><h2 id="GBDT-Sumarry"><a href="#GBDT-Sumarry" class="headerlink" title="GBDT Sumarry"></a>GBDT Sumarry</h2><p>优点：</p>
-<ol>
+<h3 id="binary-classification">Binary Classification</h3>
+<h3 id="multi-class-classfication">Multi-class Classfication</h3>
+<h2 id="gbdt-sumarry">GBDT Sumarry</h2>
+<p>优点：</p>
+<ol type="1">
 <li>可以灵活处理</li>
 <li>相对SVM，调参较少</li>
 <li>使用某些损失函数对异常值的鲁棒性高</li>
 </ol>
 <p>缺点：</p>
-<ol>
+<ol type="1">
 <li>难以并行训练</li>
 </ol>
-<h1 id="XGBoost"><a href="#XGBoost" class="headerlink" title="XGBoost"></a>XGBoost</h1><p>前面我们讲了梯度下降和牛顿法，刚才又讨论了GBDT和梯度下降的关系，那么XGBoost是否和牛顿法有什么关系呢？答案是肯定的。GBDT利用了损失函数在$F_{t-1}$的一阶展开（即一阶导数信息），而XGBoost则利用了损失函数在$F_{t-1}$的二阶展开，这也是XGBoost和GBDT最根本的区别。下面我们将详细讲解XGBoost算法。</p>
+<h1 id="xgboost">XGBoost</h1>
+<p>前面我们讲了梯度下降和牛顿法，刚才又讨论了GBDT和梯度下降的关系，那么XGBoost是否和牛顿法有什么关系呢？答案是肯定的。GBDT利用了损失函数在<span class="math inline">\(F_{t-1}\)</span>的一阶展开（即一阶导数信息），而XGBoost则利用了损失函数在<span class="math inline">\(F_{t-1}\)</span>的二阶展开，这也是XGBoost和GBDT最根本的区别。下面我们将详细讲解XGBoost算法。</p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th></th>
 <th>牛顿法</th>
 <th>XGBoost</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr class="odd">
 <td>损失函数</td>
-<td>$L(\theta)$</td>
-<td>$L(F_t)$</td>
+<td><span class="math inline">\(L(\theta)\)</span></td>
+<td><span class="math inline">\(L(F_t)\)</span></td>
 </tr>
-<tr>
+<tr class="even">
 <td>参数</td>
-<td>$\theta^t$</td>
-<td>$F_t$</td>
+<td><span class="math inline">\(\theta^t\)</span></td>
+<td><span class="math inline">\(F_t\)</span></td>
 </tr>
-<tr>
+<tr class="odd">
 <td>增量</td>
-<td>$\Delta \theta_t=-\alpha_t H^{-1}_tg_t$</td>
-<td>$f_t=-\alpha_t H^{-1}_tg_t$</td>
+<td><span class="math inline">\(\Delta \theta_t=-\alpha_t H^{-1}_tg_t\)</span></td>
+<td><span class="math inline">\(f_t=-\alpha_t H^{-1}_tg_t\)</span></td>
 </tr>
-<tr>
+<tr class="even">
 <td>步长</td>
-<td>$\alpha_t$</td>
-<td>$\alpha_t$</td>
+<td><span class="math inline">\(\alpha_t\)</span></td>
+<td><span class="math inline">\(\alpha_t\)</span></td>
 </tr>
-<tr>
+<tr class="odd">
 <td>初始值</td>
-<td>$\theta_0$</td>
-<td>$f_0$</td>
+<td><span class="math inline">\(\theta_0\)</span></td>
+<td><span class="math inline">\(f_0\)</span></td>
 </tr>
-</tbody></table>
-<h2 id="Regularization"><a href="#Regularization" class="headerlink" title="Regularization"></a>Regularization</h2><p>XGBoost相比GBDT的另一大改进是加入了正则化项，即控制每个树的复杂度。衡量树的复杂度的度量有很多，XGBoost采用的是每棵树叶子节点的个数$T$和每个叶子节点输出$w$的平方和：<br>$$<br>\Omega(f)=\gamma T+\frac{1}{2}\lambda\parallel w\parallel^2<br>$$</p>
+</tbody>
+</table>
+<h2 id="regularization">Regularization</h2>
+<p>XGBoost相比GBDT的另一大改进是加入了正则化项，即控制每个树的复杂度。衡量树的复杂度的度量有很多，XGBoost采用的是每棵树叶子节点的个数<span class="math inline">\(T\)</span>和每个叶子节点输出<span class="math inline">\(w\)</span>的平方和： <span class="math display">\[
+\Omega(f)=\gamma T+\frac{1}{2}\lambda\parallel w\parallel^2
+\]</span></p>
 <p>这一步主要是为了进一步降低每个弱学习器的方差。</p>
-<h2 id="Objective-Function"><a href="#Objective-Function" class="headerlink" title="Objective Function"></a>Objective Function</h2><p>加上正则项之后总的损失函数变为：<br>$$<br>L=\sum_{i=1}^N \ell(y_i, F_T(x_i))+\Omega(F_T)<br>$$<br>和GBDT类似，我们来推导第$t$步的优化公式，对于第$t$步，我们的损失函数为：<br>$$<br>\begin{align}<br>L_t&amp;=\sum_{i=1}^N \ell(y_i,F_t(x_i))+\Omega(F_t)\<br>&amp;=\sum_{i=1}^N \ell(y_i, F_{t-1}(x_i) + f_t(x_i))+\Omega(F_t)<br>\end{align}<br>$$<br>将损失函数在$F_{t-1}$处进行二阶泰勒展开，得到<br>$$<br>L_t \approx \left[\sum_{i=1}^N \ell(y_i, F_{t-1}) + g_i f_t(x_i) + \frac{1}{2}h_i f_t^2(x_i) \right] + \Omega(F_t)<br>$$<br>其中$g_i=\frac{\partial \ell(y_i, F_{t-1})}{\partial F_{t-1}}$，$h_i=\frac{\partial \ell(y_i, F_{t-1}) ^2}{\partial^2 F_{t-1}}$，分别代表损失函数对$F_{t-1}$的一阶导和二阶导。</p>
-<p>由于我们要优化的是本轮的基模型$f_t$，$\ell(y_i, F_{t-1})$已经是固定的了，相当于常数，把常数项去掉，得到：<br>$$<br>\begin{align}<br>\tilde L_t &amp;= \left[\sum_{i=1}^N  g_i f_t(x_i) + \frac{1}{2}h_i f_t^2(x_i) \right] + \Omega(f_t)\<br>&amp;=\left[\sum_{i=1}^N  g_i f_t(x_i) + \frac{1}{2}h_i f_t^2(x_i) \right] + \gamma T + \frac{1}{2}\lambda \parallel w \parallel^2<br>\end{align}<br>$$<br>我们都知道样本$x_i$在树$f_t$上的输出取决于$x_i$在哪个叶子节点。假设树$f_t$一共有$J$个叶节点，记$q(x_i)=j$代表样本$x_i$经过决策树对应的叶节点是$j$，$I_j$代表叶子节点$j$的所有样本下标集合，$w_j$代表叶子节点$j$的输出，我们可以将损失函数改写为：<br>$$<br>\begin{align}<br>\tilde L_t &amp;= \sum_{j=1}^J\left[\sum_{i\in I_j}g_i w_j+\frac{1}{2}(\sum_{i\in I_j}h_i +\lambda)w_j^2\right]+\gamma T\<br>&amp;= \sum_{j=1}^J\left[G_j w_j + \frac{1}{2}(H_j+\lambda)w_j^2 \right] + \gamma T<br>\end{align}<br>$$<br>其中$G_j=\sum_{i\in I_j}g_i$和$H_j=\sum_{i\in I_j}h_i$为简记，分别代表损失函数在叶子节点$j$对应的所有样本上的一阶导之和与二阶导之和。</p>
-<p>到现在，我们还剩两个问题需要解决，一个是确定树$f_t$的最优结构，也就是怎么去分裂节点，另一个是确定每个叶子节点的最优输出。我们可以先确定下一个问题，找到另一个问题的最优答案，再来确定剩下的问题。</p>
-<p>这里先去寻找树$f_t$每一个叶子节点对应的最优输出。和牛顿法的推导类似，为了使损失函数下降的最快，我们令$G_j w_j + \frac{1}{2}(H_j+\lambda)w_j^2$的导数为$0$，得到：<br>$$<br>w_j^*=-\frac{G_j}{H_j + \lambda}<br>$$<br>加上正则项有：<br>$$<br>\tilde L_t^*=-\frac{1}{2}\sum_{j=1}^J\frac{G_j^2}{H_j+\lambda}+\gamma T<br>$$</p>
-<h2 id="Splitting-Strategy"><a href="#Splitting-Strategy" class="headerlink" title="Splitting Strategy"></a>Splitting Strategy</h2><p>现在来确定树$f_t$的最优结构。最优结构的确定实际上使用了一种类似贪心的策略，和决策树类似，我们从一个只有根节点的树出发（所有样本都在根节点这一叶子节点上），不断分裂节点来降低$\tilde L_t^*$。在每一步的分裂中，我们会希望$\frac{G_j^2}{H_j+\lambda}$越大越好，于是：<br>$$<br>Gain = \frac{G_L^2}{H_L+\lambda} + \frac{G_R^2}{H_R+\lambda} - \frac{(G_L+G_R)^2}{H_L+H_R+\lambda} - \gamma<br>$$</p>
-<p>我们希望挑选能使得$Gain$最大的特征和特征分裂点，而选择的策略又有很多种，下面介绍三种。</p>
-<h3 id="Exact-Greedy-Algorithm-for-Split-Finding"><a href="#Exact-Greedy-Algorithm-for-Split-Finding" class="headerlink" title="Exact Greedy Algorithm for Split Finding"></a>Exact Greedy Algorithm for Split Finding</h3><p>最简单的方法是枚举所有特征，然后对于这个特征下的所有可能取值进行排序，然后遍历分裂点，找到使得$gain$最高的那个。这样做的好处是找到的分裂点确定是最好的，不过坏处是时间复杂度过高。</p>
-<h3 id="Approximate-Algorithm-for-Split-Finding"><a href="#Approximate-Algorithm-for-Split-Finding" class="headerlink" title="Approximate Algorithm for Split Finding"></a>Approximate Algorithm for Split Finding</h3><p>一个比较容易想到的优化方案是不去遍历所有可能的分裂点，而是只考察其中的分位数，如下图展示了三分位数方法：</p>
-<p><img src="https://i.loli.net/2020/09/10/HoPR9XlpZSm1Gju.png"></p>
+<h2 id="objective-function">Objective Function</h2>
+<p>加上正则项之后总的损失函数变为： <span class="math display">\[
+L=\sum_{i=1}^N \ell(y_i, F_T(x_i))+\Omega(F_T)
+\]</span> 和GBDT类似，我们来推导第<span class="math inline">\(t\)</span>步的优化公式，对于第<span class="math inline">\(t\)</span>步，我们的损失函数为： <span class="math display">\[
+\begin{align}
+L_t&amp;=\sum_{i=1}^N \ell(y_i,F_t(x_i))+\Omega(F_t)\\
+&amp;=\sum_{i=1}^N \ell(y_i, F_{t-1}(x_i) + f_t(x_i))+\Omega(F_t)
+\end{align}
+\]</span> 将损失函数在<span class="math inline">\(F_{t-1}\)</span>处进行二阶泰勒展开，得到 <span class="math display">\[
+L_t \approx \left[\sum_{i=1}^N \ell(y_i, F_{t-1}) + g_i f_t(x_i) + \frac{1}{2}h_i f_t^2(x_i) \right] + \Omega(F_t)
+\]</span> 其中<span class="math inline">\(g_i=\frac{\partial \ell(y_i, F_{t-1})}{\partial F_{t-1}}\)</span>，<span class="math inline">\(h_i=\frac{\partial \ell(y_i, F_{t-1}) ^2}{\partial^2 F_{t-1}}\)</span>，分别代表损失函数对<span class="math inline">\(F_{t-1}\)</span>的一阶导和二阶导。</p>
+<p>由于我们要优化的是本轮的基模型<span class="math inline">\(f_t\)</span>，<span class="math inline">\(\ell(y_i, F_{t-1})\)</span>已经是固定的了，相当于常数，把常数项去掉，得到： <span class="math display">\[
+\begin{align}
+\tilde L_t &amp;= \left[\sum_{i=1}^N  g_i f_t(x_i) + \frac{1}{2}h_i f_t^2(x_i) \right] + \Omega(f_t)\\
+&amp;=\left[\sum_{i=1}^N  g_i f_t(x_i) + \frac{1}{2}h_i f_t^2(x_i) \right] + \gamma T + \frac{1}{2}\lambda \parallel w \parallel^2
+\end{align}
+\]</span> 我们都知道样本<span class="math inline">\(x_i\)</span>在树<span class="math inline">\(f_t\)</span>上的输出取决于<span class="math inline">\(x_i\)</span>在哪个叶子节点。假设树<span class="math inline">\(f_t\)</span>一共有<span class="math inline">\(J\)</span>个叶节点，记<span class="math inline">\(q(x_i)=j\)</span>代表样本<span class="math inline">\(x_i\)</span>经过决策树对应的叶节点是<span class="math inline">\(j\)</span>，<span class="math inline">\(I_j\)</span>代表叶子节点<span class="math inline">\(j\)</span>的所有样本下标集合，<span class="math inline">\(w_j\)</span>代表叶子节点<span class="math inline">\(j\)</span>的输出，我们可以将损失函数改写为： <span class="math display">\[
+\begin{align}
+\tilde L_t &amp;= \sum_{j=1}^J\left[\sum_{i\in I_j}g_i w_j+\frac{1}{2}(\sum_{i\in I_j}h_i +\lambda)w_j^2\right]+\gamma T\\
+&amp;= \sum_{j=1}^J\left[G_j w_j + \frac{1}{2}(H_j+\lambda)w_j^2 \right] + \gamma T
+\end{align}
+\]</span> 其中<span class="math inline">\(G_j=\sum_{i\in I_j}g_i\)</span>和<span class="math inline">\(H_j=\sum_{i\in I_j}h_i\)</span>为简记，分别代表损失函数在叶子节点<span class="math inline">\(j\)</span>对应的所有样本上的一阶导之和与二阶导之和。</p>
+<p>到现在，我们还剩两个问题需要解决，一个是确定树<span class="math inline">\(f_t\)</span>的最优结构，也就是怎么去分裂节点，另一个是确定每个叶子节点的最优输出。我们可以先确定下一个问题，找到另一个问题的最优答案，再来确定剩下的问题。</p>
+<p>这里先去寻找树<span class="math inline">\(f_t\)</span>每一个叶子节点对应的最优输出。和牛顿法的推导类似，为了使损失函数下降的最快，我们令<span class="math inline">\(G_j w_j + \frac{1}{2}(H_j+\lambda)w_j^2\)</span>的导数为<span class="math inline">\(0\)</span>，得到： <span class="math display">\[
+w_j^*=-\frac{G_j}{H_j + \lambda}
+\]</span> 加上正则项有： <span class="math display">\[
+\tilde L_t^*=-\frac{1}{2}\sum_{j=1}^J\frac{G_j^2}{H_j+\lambda}+\gamma T
+\]</span></p>
+<h2 id="splitting-strategy">Splitting Strategy</h2>
+<p>现在来确定树<span class="math inline">\(f_t\)</span>的最优结构。最优结构的确定实际上使用了一种类似贪心的策略，和决策树类似，我们从一个只有根节点的树出发（所有样本都在根节点这一叶子节点上），不断分裂节点来降低<span class="math inline">\(\tilde L_t^*\)</span>。在每一步的分裂中，我们会希望<span class="math inline">\(\frac{G_j^2}{H_j+\lambda}\)</span>越大越好，于是： <span class="math display">\[
+Gain = \frac{G_L^2}{H_L+\lambda} + \frac{G_R^2}{H_R+\lambda} - \frac{(G_L+G_R)^2}{H_L+H_R+\lambda} - \gamma
+\]</span></p>
+<p>我们希望挑选能使得<span class="math inline">\(Gain\)</span>最大的特征和特征分裂点，而选择的策略又有很多种，下面介绍三种。</p>
+<h3 id="exact-greedy-algorithm-for-split-finding">Exact Greedy Algorithm for Split Finding</h3>
+<p>最简单的方法是枚举所有特征，然后对于这个特征下的所有可能取值进行排序，然后遍历分裂点，找到使得<span class="math inline">\(gain\)</span>最高的那个。这样做的好处是找到的分裂点确定是最好的，不过坏处是时间复杂度过高。</p>
+<h3 id="approximate-algorithm-for-split-finding">Approximate Algorithm for Split Finding</h3>
+<p>一个比较容易想到的优化方案是不去遍历所有可能的分裂点，而是只考察其中的分位数，如下图展示了三分位数方法：</p>
+<p><img src="https://i.loli.net/2020/09/10/HoPR9XlpZSm1Gju.png" /></p>
 <p>这样需要考察的点就大大减少。</p>
 <p>同时分位数的选择由有global和local之分，global是指在训练之前我们就可以提前对每个特征的分位数进行预处理，local是指每次分裂前计算分位数点。直观上来说global需要更多的分位点数，而local则需要更多的计算量。</p>
-<p>实际上，XGBoost还会使用二阶导信息$h_i$对样本进行夹权，如下图所示：</p>
-<p><img src="https://i.loli.net/2020/09/15/nxloKNmTHwJRqI9.png"></p>
-<h3 id="Sparsity-aware-Split-Finding"><a href="#Sparsity-aware-Split-Finding" class="headerlink" title="Sparsity-aware Split Finding"></a>Sparsity-aware Split Finding</h3><p>稀疏感知分裂算法 (Sparsity-aware Split Finding) </p>
-<h2 id="Other-Features"><a href="#Other-Features" class="headerlink" title="Other Features"></a>Other Features</h2><p>除了上面提到的之外，XGBoost还有很多工程优化。</p>
-<h3 id="Block-Structure-and-Parallelism"><a href="#Block-Structure-and-Parallelism" class="headerlink" title="Block Structure and Parallelism"></a>Block Structure and Parallelism</h3><p>XGBoost预先对特征进行了排序，</p>
+<p>实际上，XGBoost还会使用二阶导信息<span class="math inline">\(h_i\)</span>对样本进行夹权，如下图所示：</p>
+<p><img src="https://i.loli.net/2020/09/15/nxloKNmTHwJRqI9.png" /></p>
+<h3 id="sparsity-aware-split-finding">Sparsity-aware Split Finding</h3>
+<p>稀疏感知分裂算法 (Sparsity-aware Split Finding)</p>
+<h2 id="other-features">Other Features</h2>
+<p>除了上面提到的之外，XGBoost还有很多工程优化。</p>
+<h3 id="block-structure-and-parallelism">Block Structure and Parallelism</h3>
+<p>XGBoost预先对特征进行了排序，</p>
 <p>每个特征的增益的计算可以并行进行</p>
-<h3 id="Column-Sample"><a href="#Column-Sample" class="headerlink" title="Column Sample"></a>Column Sample</h3><p>借鉴随机森林，即每次只用一部分特征进行特征选择，进一步降低过拟合</p>
-<h3 id="Shrinkage"><a href="#Shrinkage" class="headerlink" title="Shrinkage"></a>Shrinkage</h3><p>在每次迭代会对叶子节点的权总乘以一个系数，让后面的树有更大的学习空间。</p>
-<h3 id="Custom-Loss-Function"><a href="#Custom-Loss-Function" class="headerlink" title="Custom Loss Function"></a>Custom Loss Function</h3><h3 id="Missing-Values"><a href="#Missing-Values" class="headerlink" title="Missing Values"></a>Missing Values</h3><h1 id="LightGBM"><a href="#LightGBM" class="headerlink" title="LightGBM"></a>LightGBM</h1><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/227782064">parameter tuning</a></p>
+<h3 id="column-sample">Column Sample</h3>
+<p>借鉴随机森林，即每次只用一部分特征进行特征选择，进一步降低过拟合</p>
+<h3 id="shrinkage">Shrinkage</h3>
+<p>在每次迭代会对叶子节点的权总乘以一个系数，让后面的树有更大的学习空间。</p>
+<h3 id="custom-loss-function">Custom Loss Function</h3>
+<h3 id="missing-values">Missing Values</h3>
+<h1 id="lightgbm">LightGBM</h1>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/227782064">parameter tuning</a></p>
 </div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/GBDT/">GBDT</a><a class="link-muted mr-2" rel="tag" href="/tags/XGBoost/">XGBoost</a></div><!--!--></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2020/08/26/Machine-Learning-Classification-Algorithms-Support-Vector-Machine/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">Machine Learning Classification Algorithms: Support Vector Machine</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2020/08/24/Unsupervised-Representation-Learning-by-Predicting-Random-Distances/"><span class="level-item">Unsupervised Representation Learning by Predicting Random Distances</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><!--!--></div><!--!--><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/">Hanzawa の 部屋</a><p class="is-size-7"><span>&copy; 2021 Hanzawa</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("zh-CN");</script><script>var IcarusThemeSettings = {
             article: {
                 highlight: {

@@ -1,441 +1,639 @@
 <!doctype html>
 <html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><title>分类: Anomaly Detection - Hanzawa の 部屋</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Hanzawa の 部屋"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Hanzawa の 部屋"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta property="og:type" content="website"><meta property="og:title" content="Hanzawa の 部屋"><meta property="og:url" content="https://larryshaw0079.github.io/hanzawa-blog"><meta property="og:site_name" content="Hanzawa の 部屋"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="https://larryshaw0079.github.io/img/og_image.png"><meta property="article:author" content="Hanzawa"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="/img/og_image.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://larryshaw0079.github.io/hanzawa-blog"},"headline":"Hanzawa の 部屋","image":["https://larryshaw0079.github.io/img/og_image.png"],"author":{"@type":"Person","name":"Hanzawa"},"publisher":{"@type":"Organization","name":"Hanzawa の 部屋","logo":{"@type":"ImageObject"}},"description":null}</script><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><!--!--><meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Hanzawa の 部屋" type="application/atom+xml">
-</head><body class="is-1-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/">Hanzawa の 部屋</a></div><div class="navbar-menu"><div class="navbar-end"></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-12"><div class="card"><div class="card-content"><nav class="breadcrumb" aria-label="breadcrumbs"><ul><li><a href="/categories">分类</a></li><li><a href="/categories/Research/">Research</a></li><li class="is-active"><a href="#" aria-current="page">Anomaly Detection</a></li></ul></nav></div></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2019-10-29T03:36:22.000Z" title="2019-10-29 11:36:22 ├F10: AM┤">2019-10-29</time>发表</span><span class="level-item"><time dateTime="2020-06-25T05:20:44.374Z" title="2020-6-25 1:20:44 ├F10: PM┤">2020-06-25</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2019/10/29/Anomaly-Detection-in-Streams-with-Extreme-Value-Theory/">Anomaly Detection in Streams with Extreme Value Theory</a></h1><div class="content"><h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>本文基于<strong>Extreme Value Theory</strong>提出了一种不需要手动设置阈值也不需要对数据分布作任何假设的时间序列异常检测方法。除此之外，本方法可以用在通用的自动阈值选择的场合中。</p>
+</head><body class="is-1-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/">Hanzawa の 部屋</a></div><div class="navbar-menu"><div class="navbar-end"></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-12"><div class="card"><div class="card-content"><nav class="breadcrumb" aria-label="breadcrumbs"><ul><li><a href="/categories">分类</a></li><li><a href="/categories/Research/">Research</a></li><li class="is-active"><a href="#" aria-current="page">Anomaly Detection</a></li></ul></nav></div></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2019-10-29T03:36:22.000Z" title="2019-10-29 11:36:22 ├F10: AM┤">2019-10-29</time>发表</span><span class="level-item"><time dateTime="2020-06-25T05:20:44.374Z" title="2020-6-25 1:20:44 ├F10: PM┤">2020-06-25</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2019/10/29/Anomaly-Detection-in-Streams-with-Extreme-Value-Theory/">Anomaly Detection in Streams with Extreme Value Theory</a></h1><div class="content"><h1 id="introduction">Introduction</h1>
+<p>本文基于<strong>Extreme Value Theory</strong>提出了一种不需要手动设置阈值也不需要对数据分布作任何假设的时间序列异常检测方法。除此之外，本方法可以用在通用的自动阈值选择的场合中。</p>
 <p><a target="_blank" rel="noopener" href="https://www.kdd.org/kdd2017/papers/view/anomaly-detection-in-streams-with-extreme-value-theory">原文</a></p>
-<h1 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h1><p>在很多情况下我们需要进行阈值的选择。阈值的选择可以通过实验的方法或者对数据分布进行假设的方法来得到，不过这样做通常不准确。借助<strong>Extreme Value Theory</strong>我们可以在不需要对原始数据的分布作很强的假设的情况下，推断我们想要的极端事件的分布（在异常检测中就是异常值）。</p>
-<p>下面给出一些数学符号，$X$为随机变量，$F$为累积分布函数，即$F(x)=\mathbb{P}(X\leq x)$。记$F$的“末尾”分布$\bar{F}(x)=1-F(x)=\mathbb{P}(X&gt;x)$。对于一个随机变量$X$和给定的概率$q$，记$z_q$为在$1-q$水平的分位数，即$z_q$为满足$\mathbb{P}(X\leq z_q)\geq 1-q$最小的值。</p>
-<h2 id="Extreme-Value-Distributions"><a href="#Extreme-Value-Distributions" class="headerlink" title="Extreme Value Distributions"></a>Extreme Value Distributions</h2><p><strong>Extreme Value Theory</strong>主要是为了找出极端事件发生的规律，有学者证明，在很弱的条件下，所有极端事件都服从一个特定的分布，而不管原始分布如何。具体形式如下：</p>
-<p>$$<br>G_\gamma:x\mapsto \exp(-(1+\gamma x)^{-\frac{1}{\gamma}}), \space\space\space\space\space\gamma\in\mathbb{R}, \space\space\space\space\space 1+\gamma x&gt;0<br>$$</p>
-<p>其中$\gamma$称为<strong>Extreme Value Index</strong>，由原始分布决定。</p>
+<h1 id="background">Background</h1>
+<p>在很多情况下我们需要进行阈值的选择。阈值的选择可以通过实验的方法或者对数据分布进行假设的方法来得到，不过这样做通常不准确。借助<strong>Extreme Value Theory</strong>我们可以在不需要对原始数据的分布作很强的假设的情况下，推断我们想要的极端事件的分布（在异常检测中就是异常值）。</p>
+<p>下面给出一些数学符号，<span class="math inline">\(X\)</span>为随机变量，<span class="math inline">\(F\)</span>为累积分布函数，即<span class="math inline">\(F(x)=\mathbb{P}(X\leq x)\)</span>。记<span class="math inline">\(F\)</span>的“末尾”分布<span class="math inline">\(\bar{F}(x)=1-F(x)=\mathbb{P}(X&gt;x)\)</span>。对于一个随机变量<span class="math inline">\(X\)</span>和给定的概率<span class="math inline">\(q\)</span>，记<span class="math inline">\(z_q\)</span>为在<span class="math inline">\(1-q\)</span>水平的分位数，即<span class="math inline">\(z_q\)</span>为满足<span class="math inline">\(\mathbb{P}(X\leq z_q)\geq 1-q\)</span>最小的值。</p>
+<h2 id="extreme-value-distributions">Extreme Value Distributions</h2>
+<p><strong>Extreme Value Theory</strong>主要是为了找出极端事件发生的规律，有学者证明，在很弱的条件下，所有极端事件都服从一个特定的分布，而不管原始分布如何。具体形式如下：</p>
+<p><span class="math display">\[
+G_\gamma:x\mapsto \exp(-(1+\gamma x)^{-\frac{1}{\gamma}}), \space\space\space\space\space\gamma\in\mathbb{R}, \space\space\space\space\space 1+\gamma x&gt;0
+\]</span></p>
+<p>其中<span class="math inline">\(\gamma\)</span>称为<strong>Extreme Value Index</strong>，由原始分布决定。</p>
 <p>更严谨的说法是Fisher-Tippett-Gnedenko定理（极值理论第一定理）：</p>
 <blockquote>
-<p>**THEOREM: **(Fisher-Tippett-Gnedenko). 令$X_1,X_2,\cdots,X_n,\cdots$为独立同分布的随机变量序列，$M_n=\max {X_1,\cdots,X_n}$。如果实数对序列$(a_n,b_n)$存在且满足$a_n&gt;0$和$\lim\limits_{n\rightarrow \infty}P\left(\frac{M_n-b_n}{a_n}\leq x\right)=F(x)$，其中$F$为非退化分布函数，那么$F$属于Gumbel、Fréchet或Weibull分布族（或总称Generalized Extreme Value Distribution）中的一种。</p>
+<p><strong>THEOREM: </strong>(Fisher-Tippett-Gnedenko). 令<span class="math inline">\(X_1,X_2,\cdots,X_n,\cdots\)</span>为独立同分布的随机变量序列，<span class="math inline">\(M_n=\max \{X_1,\cdots,X_n\}\)</span>。如果实数对序列<span class="math inline">\((a_n,b_n)\)</span>存在且满足<span class="math inline">\(a_n&gt;0\)</span>和<span class="math inline">\(\lim\limits_{n\rightarrow \infty}P\left(\frac{M_n-b_n}{a_n}\leq x\right)=F(x)\)</span>，其中<span class="math inline">\(F\)</span>为非退化分布函数，那么<span class="math inline">\(F\)</span>属于Gumbel、Fréchet或Weibull分布族（或总称Generalized Extreme Value Distribution）中的一种。</p>
 </blockquote>
-<p>这是一个反直觉的结论，但是想到当事件发生变得极端时，即$\mathbb{P}(X&gt;x)\rightarrow 0$，$\bar{F}(x)=\mathbb{P}(X&gt;x)$分布的形状其实并没有很多种选择。Table 1展示了几种不同分布对应的$\gamma$：</p>
-<p><img src="https://i.loli.net/2020/06/24/jyhoWZGc2gFTrJv.png"></p>
-<p>Figure 1展示了几种不同$\gamma$情况下的“末尾”分布：</p>
-<p><img src="https://i.loli.net/2020/06/24/4rmZL1AMcBJ2Vzq.png"></p>
-<h2 id="Power-of-EVT"><a href="#Power-of-EVT" class="headerlink" title="Power of EVT"></a>Power of EVT</h2><p>根据<strong>Extreme Value Theory</strong>，我们可以在原始分布未知的情况下计算极端事件的概率。但是$\bar{G}_\gamma$分布中参数$\gamma$是未知的，我们需要一种高效的方法来进行估计。<strong>The Peaks-Over-Threshold</strong> (POT) 方法是本文介绍的一种方法。</p>
-<p><img src="https://i.loli.net/2020/06/24/hX2T1IkMAqfioZl.png"></p>
-<h2 id="Peaks-Over-Threshold-Approach"><a href="#Peaks-Over-Threshold-Approach" class="headerlink" title="Peaks-Over-Threshold Approach"></a>Peaks-Over-Threshold Approach</h2><p>POT方法依赖于Pickands-Balkema-De Haan定理（极值理论第二定理），维基百科版：</p>
+<p>这是一个反直觉的结论，但是想到当事件发生变得极端时，即<span class="math inline">\(\mathbb{P}(X&gt;x)\rightarrow 0\)</span>，<span class="math inline">\(\bar{F}(x)=\mathbb{P}(X&gt;x)\)</span>分布的形状其实并没有很多种选择。Table 1展示了几种不同分布对应的<span class="math inline">\(\gamma\)</span>：</p>
+<p><img src="https://i.loli.net/2020/06/24/jyhoWZGc2gFTrJv.png" /></p>
+<p>Figure 1展示了几种不同<span class="math inline">\(\gamma\)</span>情况下的“末尾”分布：</p>
+<p><img src="https://i.loli.net/2020/06/24/4rmZL1AMcBJ2Vzq.png" /></p>
+<h2 id="power-of-evt">Power of EVT</h2>
+<p>根据<strong>Extreme Value Theory</strong>，我们可以在原始分布未知的情况下计算极端事件的概率。但是<span class="math inline">\(\bar{G}_\gamma\)</span>分布中参数<span class="math inline">\(\gamma\)</span>是未知的，我们需要一种高效的方法来进行估计。<strong>The Peaks-Over-Threshold</strong> (POT) 方法是本文介绍的一种方法。</p>
+<p><img src="https://i.loli.net/2020/06/24/hX2T1IkMAqfioZl.png" /></p>
+<h2 id="peaks-over-threshold-approach">Peaks-Over-Threshold Approach</h2>
+<p>POT方法依赖于Pickands-Balkema-De Haan定理（极值理论第二定理），维基百科版：</p>
 <blockquote>
-<p>考虑一个未知分布$F$和随机变量$X$，我们的目标是估计$X$在超过确定阈值$u$下的条件分布$F_u$，定义为：<br>$$<br>F_u(y)=P(X-u\leq y|X&gt;u)=\frac{F(u+y)-F(u)}{1-F(u)}<br>$$<br>其中$0\leq y\leq x_F-u$，$x_F$为$F$的右端点。$F_u$描述了超过特征阈值$u$的分布，称为<strong>Conditional Excess Distribution Function</strong>。</p>
-<p>**STATEMENT: **(Pickands-Balkema-De Haan). 设$(X_1,X_2,\cdots)$为独立同分布随机变量序列，$F_u$为相应的Conditional Excess Distribution Function。对于一大类的$F$和很大的$u$，$F_u$能够很好的被Generalized Pareto Distribution所拟合：<br>$$<br>F_u(y)\rightarrow G_{k,\sigma}(y),\space\space \text{as } u\rightarrow \infty<br>$$<br>其中：<br>$$<br>G_{k,\sigma}(y)=<br>\begin{cases}<br>1-(1+ky/\sigma)^{-1/k}, &amp;\text{if }k\neq 0\<br>1-e^{-y/\sigma}, &amp;\text{if }k=0<br>\end{cases}<br>$$<br>当$k\geq 0$时$\sigma&gt;0, y\geq 0$，$k&lt;0$时$0\leq y\leq -\sigma/k$。</p>
+<p>考虑一个未知分布<span class="math inline">\(F\)</span>和随机变量<span class="math inline">\(X\)</span>，我们的目标是估计<span class="math inline">\(X\)</span>在超过确定阈值<span class="math inline">\(u\)</span>下的条件分布<span class="math inline">\(F_u\)</span>，定义为： <span class="math display">\[
+F_u(y)=P(X-u\leq y|X&gt;u)=\frac{F(u+y)-F(u)}{1-F(u)}
+\]</span> 其中<span class="math inline">\(0\leq y\leq x_F-u\)</span>，<span class="math inline">\(x_F\)</span>为<span class="math inline">\(F\)</span>的右端点。<span class="math inline">\(F_u\)</span>描述了超过特征阈值<span class="math inline">\(u\)</span>的分布，称为<strong>Conditional Excess Distribution Function</strong>。</p>
+<p><strong>STATEMENT: </strong>(Pickands-Balkema-De Haan). 设<span class="math inline">\((X_1,X_2,\cdots)\)</span>为独立同分布随机变量序列，<span class="math inline">\(F_u\)</span>为相应的Conditional Excess Distribution Function。对于一大类的<span class="math inline">\(F\)</span>和很大的<span class="math inline">\(u\)</span>，<span class="math inline">\(F_u\)</span>能够很好的被Generalized Pareto Distribution所拟合： <span class="math display">\[
+F_u(y)\rightarrow G_{k,\sigma}(y),\space\space \text{as } u\rightarrow \infty
+\]</span> 其中： <span class="math display">\[
+G_{k,\sigma}(y)=
+\begin{cases}
+1-(1+ky/\sigma)^{-1/k}, &amp;\text{if }k\neq 0\\
+1-e^{-y/\sigma}, &amp;\text{if }k=0
+\end{cases}
+\]</span> 当<span class="math inline">\(k\geq 0\)</span>时<span class="math inline">\(\sigma&gt;0, y\geq 0\)</span>，<span class="math inline">\(k&lt;0\)</span>时<span class="math inline">\(0\leq y\leq -\sigma/k\)</span>。</p>
 </blockquote>
 <p>论文中给出的定理如下：</p>
 <blockquote>
-<p>**THEOREM: **(Pickands-Balkema-De Haan). 累积概率密度函数$F\in\mathcal{D}<em>\gamma$当且仅当函数$\sigma$存在时，对所有$x\in\mathbb{R}$在$1+\gamma x&gt;0$的条件下有：<br>$$<br>\frac{\bar{F}(t+\sigma(t)x)}{\bar{F}(t)}\mathop{\rightarrow}\limits</em>{t\rightarrow\tau}(1+\gamma x)^{-\frac{1}{\gamma}}<br>$$</p>
+<p><strong>THEOREM: </strong>(Pickands-Balkema-De Haan). 累积概率密度函数<span class="math inline">\(F\in\mathcal{D}_\gamma\)</span>当且仅当函数<span class="math inline">\(\sigma\)</span>存在时，对所有<span class="math inline">\(x\in\mathbb{R}\)</span>在<span class="math inline">\(1+\gamma x&gt;0\)</span>的条件下有： <span class="math display">\[
+\frac{\bar{F}(t+\sigma(t)x)}{\bar{F}(t)}\mathop{\rightarrow}\limits_{t\rightarrow\tau}(1+\gamma x)^{-\frac{1}{\gamma}}
+\]</span></p>
 </blockquote>
-<p>上式可以写成如下形式：<br>$$<br>\bar{F}<em>t(x)=\mathbb{P}(X-t&gt;x|X&gt;t)\mathop{\sim}\limits</em>{t\rightarrow\tau}\left(1+\frac{\gamma x}{\sigma(t)}\right)^{-\frac{1}{\gamma}}<br>$$<br>该式表明$X$超过阈值$t$的概率（写为$X-t$）服从<strong>Generalized Pareto Distribution</strong> (GPD)，参数为$\gamma$和$\sigma$。POT主要是拟合GPD而不是EVT分布。</p>
-<p>如果我们要估计参数$\hat{\gamma}$和$\hat{\sigma}$，分位数可以通过下式计算得到：<br>$$<br>z_q\simeq t+\frac{\hat{\sigma}}{\hat{\gamma}}\left(\left(\frac{qn}{N_t}\right)^{-\hat{\gamma}}-1\right)<br>$$</p>
-<p>其中$t$是一个“很高”的阈值，$q$是给定的概率值，$n$是所有观测样本的数量，$N_t$是peaks的数量，即$X_i&gt;t$的数量。为了进行高效的参数估计，文中使用了极大似然估计。</p>
-<h2 id="Maximum-Likelihood-Estimation"><a href="#Maximum-Likelihood-Estimation" class="headerlink" title="Maximum Likelihood Estimation"></a>Maximum Likelihood Estimation</h2><p>设$X_1,\cdots,X_n$为独立同分布的随机变量，概率密度函数记为$f_\theta$，$\theta$为分布中的参数，那么似然函数可以写为：</p>
-<p>$$<br>\mathcal{L}(X_1,\cdots,X_n;\theta)=\prod\limits_{i=1}^n f_\theta(X_i)<br>$$</p>
-<p>在极大似然估计中，我们需要找到合适的参数使得似然函数最大化。在我们的问题中，似然函数如下：<br>$$<br>\log\mathcal{L}(\gamma,\sigma)=-N_t\log\sigma-\left(1+\frac{1}{\gamma}\right)\sum\limits_{i=1}^{N_t}\log\left(1+\frac{\gamma}{\sigma}Y_i\right)<br>$$<br>其中$Y_i&gt;0$表示$X_i$超过阈值$t$的部分。</p>
-<p>文中使用了<strong>Grimshaw’s Trick</strong>来将含两个参数的优化问题转换为只含一个参数的优化问题。记$\ell(\gamma,\sigma)=\log\mathcal{L}(\gamma,\sigma)$，对于所有极值来说有$\nabla \ell(\gamma, \sigma)=0$。Grimshaw’s Trick表明对于满足$\nabla \ell(\gamma, \sigma)=0$的一对$(\gamma^*,\sigma^*)$，$x^*=\frac{\gamma^*}{\sigma^*}$为等式$u(X)v(X)=1$的解，其中：<br>$$<br>\begin{align}<br>u(x)&amp;=\frac{1}{N_t}\sum\limits_{i=1}^{N_t}\frac{1}{1+xY_i}\<br>v(x)&amp;=1+\frac{1}{N_t}\sum\limits_{i=1}^{N_t}\log(1+xY_i)<br>\end{align}<br>$$<br>在找到满足该等式的解$x^*$后，我们可以得到$\gamma^*=v(x^*)-1$和$\sigma^*=\gamma^*/x^*$，于是问题就变成了如何寻找方程的所有根。</p>
-<p>因为$\log$的存在，所以有$1+xY_i&gt;0$。而$Y_i$是正数，所以$x^*$的范围一定在$\left(-\frac{1}{Y^M},+\infty\right)$，其中$Y^M=\max Y_i$。</p>
-<p>Grimshaw（作者参考的一篇<a target="_blank" rel="noopener" href="https://www.tandfonline.com/doi/abs/10.1080/00401706.1993.10485040">论文</a>）还给出了一个上界：<br>$$<br>x^*_{\text{max}}=2\frac{\bar{Y}-Y^m}{(Y^m)^2}<br>$$<br>其中$Y^m=\min Y_i$，$\bar{Y}$为$Y_i$的均值。详细的优化方法会在下文讨论。</p>
+<p>上式可以写成如下形式： <span class="math display">\[
+\bar{F}_t(x)=\mathbb{P}(X-t&gt;x|X&gt;t)\mathop{\sim}\limits_{t\rightarrow\tau}\left(1+\frac{\gamma x}{\sigma(t)}\right)^{-\frac{1}{\gamma}}
+\]</span> 该式表明<span class="math inline">\(X\)</span>超过阈值<span class="math inline">\(t\)</span>的概率（写为<span class="math inline">\(X-t\)</span>）服从<strong>Generalized Pareto Distribution</strong> (GPD)，参数为<span class="math inline">\(\gamma\)</span>和<span class="math inline">\(\sigma\)</span>。POT主要是拟合GPD而不是EVT分布。</p>
+<p>如果我们要估计参数<span class="math inline">\(\hat{\gamma}\)</span>和<span class="math inline">\(\hat{\sigma}\)</span>，分位数可以通过下式计算得到： <span class="math display">\[
+z_q\simeq t+\frac{\hat{\sigma}}{\hat{\gamma}}\left(\left(\frac{qn}{N_t}\right)^{-\hat{\gamma}}-1\right)
+\]</span></p>
+<p>其中<span class="math inline">\(t\)</span>是一个“很高”的阈值，<span class="math inline">\(q\)</span>是给定的概率值，<span class="math inline">\(n\)</span>是所有观测样本的数量，<span class="math inline">\(N_t\)</span>是peaks的数量，即<span class="math inline">\(X_i&gt;t\)</span>的数量。为了进行高效的参数估计，文中使用了极大似然估计。</p>
+<h2 id="maximum-likelihood-estimation">Maximum Likelihood Estimation</h2>
+<p>设<span class="math inline">\(X_1,\cdots,X_n\)</span>为独立同分布的随机变量，概率密度函数记为<span class="math inline">\(f_\theta\)</span>，<span class="math inline">\(\theta\)</span>为分布中的参数，那么似然函数可以写为：</p>
+<p><span class="math display">\[
+\mathcal{L}(X_1,\cdots,X_n;\theta)=\prod\limits_{i=1}^n f_\theta(X_i)
+\]</span></p>
+<p>在极大似然估计中，我们需要找到合适的参数使得似然函数最大化。在我们的问题中，似然函数如下： <span class="math display">\[
+\log\mathcal{L}(\gamma,\sigma)=-N_t\log\sigma-\left(1+\frac{1}{\gamma}\right)\sum\limits_{i=1}^{N_t}\log\left(1+\frac{\gamma}{\sigma}Y_i\right)
+\]</span> 其中<span class="math inline">\(Y_i&gt;0\)</span>表示<span class="math inline">\(X_i\)</span>超过阈值<span class="math inline">\(t\)</span>的部分。</p>
+<p>文中使用了<strong>Grimshaw's Trick</strong>来将含两个参数的优化问题转换为只含一个参数的优化问题。记<span class="math inline">\(\ell(\gamma,\sigma)=\log\mathcal{L}(\gamma,\sigma)\)</span>，对于所有极值来说有<span class="math inline">\(\nabla \ell(\gamma, \sigma)=0\)</span>。Grimshaw's Trick表明对于满足<span class="math inline">\(\nabla \ell(\gamma, \sigma)=0\)</span>的一对<span class="math inline">\((\gamma^*,\sigma^*)\)</span>，<span class="math inline">\(x^*=\frac{\gamma^*}{\sigma^*}\)</span>为等式<span class="math inline">\(u(X)v(X)=1\)</span>的解，其中： <span class="math display">\[
+\begin{align}
+u(x)&amp;=\frac{1}{N_t}\sum\limits_{i=1}^{N_t}\frac{1}{1+xY_i}\\
+v(x)&amp;=1+\frac{1}{N_t}\sum\limits_{i=1}^{N_t}\log(1+xY_i)
+\end{align}
+\]</span> 在找到满足该等式的解<span class="math inline">\(x^*\)</span>后，我们可以得到<span class="math inline">\(\gamma^*=v(x^*)-1\)</span>和<span class="math inline">\(\sigma^*=\gamma^*/x^*\)</span>，于是问题就变成了如何寻找方程的所有根。</p>
+<p>因为<span class="math inline">\(\log\)</span>的存在，所以有<span class="math inline">\(1+xY_i&gt;0\)</span>。而<span class="math inline">\(Y_i\)</span>是正数，所以<span class="math inline">\(x^*\)</span>的范围一定在<span class="math inline">\(\left(-\frac{1}{Y^M},+\infty\right)\)</span>，其中<span class="math inline">\(Y^M=\max Y_i\)</span>。</p>
+<p>Grimshaw（作者参考的一篇<a target="_blank" rel="noopener" href="https://www.tandfonline.com/doi/abs/10.1080/00401706.1993.10485040">论文</a>）还给出了一个上界： <span class="math display">\[
+x^*_{\text{max}}=2\frac{\bar{Y}-Y^m}{(Y^m)^2}
+\]</span> 其中<span class="math inline">\(Y^m=\min Y_i\)</span>，<span class="math inline">\(\bar{Y}\)</span>为<span class="math inline">\(Y_i\)</span>的均值。详细的优化方法会在下文讨论。</p>
 <p>背景部分到此结束，接下来的部分就是作者提出的新方法。</p>
-<h1 id="Methodology"><a href="#Methodology" class="headerlink" title="Methodology"></a>Methodology</h1><p>Extreme Value Theory给出了在对原始分布未知的情况下估计使得$\mathbb{P}(X&gt;z_q)&lt;q$的$z_q$的方法。</p>
-<p>本文据此提出了时间序列流的异常检测方法。首先根据已知的观测值$X_1,\cdots,X_n$得到阈值$z_q$，然后根据数据的特性运用两种不同方法来更新$z_q$。对于平稳时间序列，使用SPOT；对于非平稳时间序列，使用DSPOT。</p>
-<h2 id="Initialization-Step"><a href="#Initialization-Step" class="headerlink" title="Initialization Step"></a>Initialization Step</h2><p>在进行异常检测之前，需要根据已有的观测数据进行$z_q$的估计。给定$n$个观测值$X_1,\cdots,X_n$和一个固定的概率值$q$，我们的目标是估计阈值$z_q$使得$\mathbb{P}(X&gt;z_q)&lt;q$。其主要流程是首先设定一个较大的阈值$t$，然后通过拟合GPD分布来计算$z_q$。过程如下图所示：</p>
-<p><img src="https://i.loli.net/2020/06/24/fzeC8vuDtA6mEdl.png"></p>
+<h1 id="methodology">Methodology</h1>
+<p>Extreme Value Theory给出了在对原始分布未知的情况下估计使得<span class="math inline">\(\mathbb{P}(X&gt;z_q)&lt;q\)</span>的<span class="math inline">\(z_q\)</span>的方法。</p>
+<p>本文据此提出了时间序列流的异常检测方法。首先根据已知的观测值<span class="math inline">\(X_1,\cdots,X_n\)</span>得到阈值<span class="math inline">\(z_q\)</span>，然后根据数据的特性运用两种不同方法来更新<span class="math inline">\(z_q\)</span>。对于平稳时间序列，使用SPOT；对于非平稳时间序列，使用DSPOT。</p>
+<h2 id="initialization-step">Initialization Step</h2>
+<p>在进行异常检测之前，需要根据已有的观测数据进行<span class="math inline">\(z_q\)</span>的估计。给定<span class="math inline">\(n\)</span>个观测值<span class="math inline">\(X_1,\cdots,X_n\)</span>和一个固定的概率值<span class="math inline">\(q\)</span>，我们的目标是估计阈值<span class="math inline">\(z_q\)</span>使得<span class="math inline">\(\mathbb{P}(X&gt;z_q)&lt;q\)</span>。其主要流程是首先设定一个较大的阈值<span class="math inline">\(t\)</span>，然后通过拟合GPD分布来计算<span class="math inline">\(z_q\)</span>。过程如下图所示：</p>
+<p><img src="https://i.loli.net/2020/06/24/fzeC8vuDtA6mEdl.png" /></p>
 <p>算法流程如下所示：</p>
-<p><img src="https://i.loli.net/2020/06/24/AEQpnZPiW3C4mr7.png"></p>
-<p>$Y_t$代表大于$t$的观测值的集合，GPD分布的拟合使用了前文提到的Grimshaw’s Trick。</p>
-<h2 id="Finding-Anomalies-in-a-Stream"><a href="#Finding-Anomalies-in-a-Stream" class="headerlink" title="Finding Anomalies in a Stream"></a>Finding Anomalies in a Stream</h2><p>通过Initialization Step使用POT算法得到的$z_q$，我们定义其为”Normality Bound”，用于后面的检测。在后面的步骤中，我们会根据新得到的观测值来更新$z_q$。</p>
-<h3 id="Stationary-Case"><a href="#Stationary-Case" class="headerlink" title="Stationary Case"></a>Stationary Case</h3><p>我们首先来讨论时间序列没有时间依赖性的情况（$X_1,\cdots,X_n$之间独立同分布）。通过POT算法对所有观测值得到$z_q$之后，Streaming POT (SPOT) 算法会检查$X_n$之后的值（数据流场景，$X_1,\cdots,X_n$是历史数据，还会有新的数据进来），如果大于$z_q$，则将$X_i$加入异常点集合中；如果大于$t$但小于$z_q$，则将$X_i$加入观测值集合中，更新$z_q$；其他情况我们$X_i$是正常情况。算法流程图如下：</p>
-<p><img src="https://i.loli.net/2020/06/24/h5yKnlCAYxbHu2R.png"></p>
-<h3 id="Drifting-Case"><a href="#Drifting-Case" class="headerlink" title="Drifting Case"></a>Drifting Case</h3><p>SPOT算法只适用于平稳分布的情况，但在现实生活中这样的假设过强了。于是作者提出了能处理时间依赖性的Streaming POT with Drift (DSPOT) 算法。</p>
-<p><img src="https://i.loli.net/2020/06/25/O49XwQvVGH7k1ri.png"></p>
-<p>在DSPOT中，我们不使用$X_i$的绝对值，而是用相对值$X^\prime_i=X_i-M_i$，其中$M_i$是$i$时刻的局部特征，如Figure 4所示。最简单的实现是使用局部均值，即$M_i=(1/d)\cdot\sum\limits_{k=1}^d X_{i-k}^*$，$X_{i-1}^*,\cdots,X_{i-d}^*$是长度为$d$的窗口。我们假设$X^\prime_i$服从平稳分布的假设。</p>
+<p><img src="https://i.loli.net/2020/06/24/AEQpnZPiW3C4mr7.png" /></p>
+<p><span class="math inline">\(Y_t\)</span>代表大于<span class="math inline">\(t\)</span>的观测值的集合，GPD分布的拟合使用了前文提到的Grimshaw's Trick。</p>
+<h2 id="finding-anomalies-in-a-stream">Finding Anomalies in a Stream</h2>
+<p>通过Initialization Step使用POT算法得到的<span class="math inline">\(z_q\)</span>，我们定义其为"Normality Bound"，用于后面的检测。在后面的步骤中，我们会根据新得到的观测值来更新<span class="math inline">\(z_q\)</span>。</p>
+<h3 id="stationary-case">Stationary Case</h3>
+<p>我们首先来讨论时间序列没有时间依赖性的情况（<span class="math inline">\(X_1,\cdots,X_n\)</span>之间独立同分布）。通过POT算法对所有观测值得到<span class="math inline">\(z_q\)</span>之后，Streaming POT (SPOT) 算法会检查<span class="math inline">\(X_n\)</span>之后的值（数据流场景，<span class="math inline">\(X_1,\cdots,X_n\)</span>是历史数据，还会有新的数据进来），如果大于<span class="math inline">\(z_q\)</span>，则将<span class="math inline">\(X_i\)</span>加入异常点集合中；如果大于<span class="math inline">\(t\)</span>但小于<span class="math inline">\(z_q\)</span>，则将<span class="math inline">\(X_i\)</span>加入观测值集合中，更新<span class="math inline">\(z_q\)</span>；其他情况我们<span class="math inline">\(X_i\)</span>是正常情况。算法流程图如下：</p>
+<p><img src="https://i.loli.net/2020/06/24/h5yKnlCAYxbHu2R.png" /></p>
+<h3 id="drifting-case">Drifting Case</h3>
+<p>SPOT算法只适用于平稳分布的情况，但在现实生活中这样的假设过强了。于是作者提出了能处理时间依赖性的Streaming POT with Drift (DSPOT) 算法。</p>
+<p><img src="https://i.loli.net/2020/06/25/O49XwQvVGH7k1ri.png" /></p>
+<p>在DSPOT中，我们不使用<span class="math inline">\(X_i\)</span>的绝对值，而是用相对值<span class="math inline">\(X^\prime_i=X_i-M_i\)</span>，其中<span class="math inline">\(M_i\)</span>是<span class="math inline">\(i\)</span>时刻的局部特征，如Figure 4所示。最简单的实现是使用局部均值，即<span class="math inline">\(M_i=(1/d)\cdot\sum\limits_{k=1}^d X_{i-k}^*\)</span>，<span class="math inline">\(X_{i-1}^*,\cdots,X_{i-d}^*\)</span>是长度为<span class="math inline">\(d\)</span>的窗口。我们假设<span class="math inline">\(X^\prime_i\)</span>服从平稳分布的假设。</p>
 <p>算法流程图如下所示：</p>
-<p><img src="https://i.loli.net/2020/06/25/P6hOsD9dnNIHvUV.png"></p>
-<h2 id="Numerical-Optimization"><a href="#Numerical-Optimization" class="headerlink" title="Numerical Optimization"></a>Numerical Optimization</h2><p>现在剩下的问题就是优化了，前文已经提到对GPD的拟合已经被优化成一个参数的优化问题，下面将会详细讨论优化算法。</p>
-<h3 id="Reduction-of-the-Optimal-Parameters-Search"><a href="#Reduction-of-the-Optimal-Parameters-Search" class="headerlink" title="Reduction of the Optimal Parameters Search"></a>Reduction of the Optimal Parameters Search</h3><p>前文已经得到了一个初步的$x^*$的Bound，即$x^*&gt;-\frac{1}{Y^M}$和$x^*\leq 2\frac{\bar{Y}-Y^m}{(Y^m)^2}$，下面将给出一个更严格的Bound。</p>
+<p><img src="https://i.loli.net/2020/06/25/P6hOsD9dnNIHvUV.png" /></p>
+<h2 id="numerical-optimization">Numerical Optimization</h2>
+<p>现在剩下的问题就是优化了，前文已经提到对GPD的拟合已经被优化成一个参数的优化问题，下面将会详细讨论优化算法。</p>
+<h3 id="reduction-of-the-optimal-parameters-search">Reduction of the Optimal Parameters Search</h3>
+<p>前文已经得到了一个初步的<span class="math inline">\(x^*\)</span>的Bound，即<span class="math inline">\(x^*&gt;-\frac{1}{Y^M}\)</span>和<span class="math inline">\(x^*\leq 2\frac{\bar{Y}-Y^m}{(Y^m)^2}\)</span>，下面将给出一个更严格的Bound。</p>
 <blockquote>
-<p>*<em>PROPOSITION: **如果$x^</em>$是$u(x)v(x)=1$的解，那么：<br>$$<br>x^<em>\leq 0 \text{ or } x^</em>\geq 2\frac{\bar{Y}-Y^m}{\bar{Y}Y^m}<br>$$</p>
+<p><strong>PROPOSITION: </strong>如果<span class="math inline">\(x^*\)</span>是<span class="math inline">\(u(x)v(x)=1\)</span>的解，那么： <span class="math display">\[
+x^*\leq 0 \text{ or } x^*\geq 2\frac{\bar{Y}-Y^m}{\bar{Y}Y^m}
+\]</span></p>
 </blockquote>
 <p>证明见论文原文。</p>
-<p>这样$x^*$的范围就进一步缩小了，于是有$u(x)v(X)=1$的解$x^*$在以下范围之内：<br>$$<br>\left(-\frac{1}{Y^M},0\right]\text{ and }\left[2\frac{\bar{Y}-Y^m}{\bar{Y}Y^m},2\frac{\bar{Y}-Y^m}{(Y^m)^2}\right]<br>$$</p>
-<h3 id="How-Can-We-Maximize-the-Likelihood-Function"><a href="#How-Can-We-Maximize-the-Likelihood-Function" class="headerlink" title="How Can We Maximize the Likelihood Function?"></a>How Can We Maximize the Likelihood Function?</h3><p>接下来是优化的具体实现问题。文中首先设定了一个很小的值$\epsilon&gt;0\space(\sim 10^{-8})$，然后在下面的范围内寻找函数$w:x\mapsto u(x)v(x)-1$的根：<br>$$<br>\left[-\frac{1}{Y^M}+\epsilon,-\epsilon\right]\text{ and }\left[2\frac{\bar{Y}-Y^m}{\bar{Y}Y^m},2\frac{\bar{Y}-Y^m}{(Y^m)^2}\right]<br>$$<br>作者没有使用现有的寻找函数根的算法，而是转换为如下优化问题：<br>$$<br>\min\limits_{x_1,\cdots,x_k\in I}\sum\limits_{i=1}^k w(x_k)^2<br>$$<br>其中$I$就是$x^*$的Bound。该问题是一个很典型的优化问题，可以被很多成熟的算法所解决。</p>
-<h3 id="Initial-Threshold"><a href="#Initial-Threshold" class="headerlink" title="Initial Threshold"></a>Initial Threshold</h3><p>在算法的Initialization Step，需要事先设定一个阈值$t$，如果设定的太大，那么$Y_t$的数量就会很少。作者给出的建议是保证$t&lt;z_q$，即$t$对应的概率值应该小于$1-q$。</p>
-<h1 id="Experiments"><a href="#Experiments" class="headerlink" title="Experiments"></a>Experiments</h1><p>在实验部分，作者在合成数据和真实数据上试验了SPOT算法和DSPOT算法的有效性。</p>
-<h2 id="D-SPOT-Reliability"><a href="#D-SPOT-Reliability" class="headerlink" title="(D)SPOT Reliability"></a>(D)SPOT Reliability</h2><p>作者首先在合成数据上验证SPOT的有效性。具体做法是使用高斯分布生成数据（高斯分布的分位数能够直接计算），然后将SPOT得出的$z_q$和理论值进行对比。误差定义如下：<br>$$<br>\text{error rate}=\left|\frac{z^{\text{SPOT}}-z^{\text{th}}}{z^{\text{th}}}\right|<br>$$<br>下图是采用不同数量观测值的结果：</p>
-<p><img src="https://i.loli.net/2020/06/25/GXlu2MAJaoqxyd4.png"></p>
-<h2 id="Finding-Anomalies-with-SPOT"><a href="#Finding-Anomalies-with-SPOT" class="headerlink" title="Finding Anomalies with SPOT"></a>Finding Anomalies with SPOT</h2><p>在这一节作者在真实数据集上进行了实验以验证SPOT算法的有效性，结果如下图：</p>
-<p><img src="https://i.loli.net/2020/06/25/wTkZxKarFVDOlp6.png"></p>
-<p>在文中作者说算法的True Positive达到了$86%$，False Positive小于$4%$。</p>
-<p><img src="https://i.loli.net/2020/06/25/RcUnwtHud7DjNXv.png"></p>
-<h2 id="Finding-Anomalies-with-DSPOT"><a href="#Finding-Anomalies-with-DSPOT" class="headerlink" title="Finding Anomalies with DSPOT"></a>Finding Anomalies with DSPOT</h2><p>在这一节作者使用DSPOT在真实数据集上进行了实验。窗口大小$d=450$，预设的风险概率值$q=10^{-3}$。结果如下图所示：</p>
-<p><img src="https://i.loli.net/2020/06/25/lIxqpnGtL7feVKs.png"></p>
-<p>在图中可以看出在$8000$ Minutes之后上界显著提高，作者分析了原因，认为是因为超过阈值$t$的点$Y_t$的存储是全局的，在前$8000$ Minutes算法存储了很多较高的$Y_t$值，而在$8000$ Minutes之后，真实数据的趋势开始下降，但算法仍是根据全局的$Y_t$来进行$z_q$的计算（这一段没有特别明白）。作者给出的修正方法是只保存固定数量的Peaks。</p>
+<p>这样<span class="math inline">\(x^*\)</span>的范围就进一步缩小了，于是有<span class="math inline">\(u(x)v(X)=1\)</span>的解<span class="math inline">\(x^*\)</span>在以下范围之内： <span class="math display">\[
+\left(-\frac{1}{Y^M},0\right]\text{ and }\left[2\frac{\bar{Y}-Y^m}{\bar{Y}Y^m},2\frac{\bar{Y}-Y^m}{(Y^m)^2}\right]
+\]</span></p>
+<h3 id="how-can-we-maximize-the-likelihood-function">How Can We Maximize the Likelihood Function?</h3>
+<p>接下来是优化的具体实现问题。文中首先设定了一个很小的值<span class="math inline">\(\epsilon&gt;0\space(\sim 10^{-8})\)</span>，然后在下面的范围内寻找函数<span class="math inline">\(w:x\mapsto u(x)v(x)-1\)</span>的根： <span class="math display">\[
+\left[-\frac{1}{Y^M}+\epsilon,-\epsilon\right]\text{ and }\left[2\frac{\bar{Y}-Y^m}{\bar{Y}Y^m},2\frac{\bar{Y}-Y^m}{(Y^m)^2}\right]
+\]</span> 作者没有使用现有的寻找函数根的算法，而是转换为如下优化问题： <span class="math display">\[
+\min\limits_{x_1,\cdots,x_k\in I}\sum\limits_{i=1}^k w(x_k)^2
+\]</span> 其中<span class="math inline">\(I\)</span>就是<span class="math inline">\(x^*\)</span>的Bound。该问题是一个很典型的优化问题，可以被很多成熟的算法所解决。</p>
+<h3 id="initial-threshold">Initial Threshold</h3>
+<p>在算法的Initialization Step，需要事先设定一个阈值<span class="math inline">\(t\)</span>，如果设定的太大，那么<span class="math inline">\(Y_t\)</span>的数量就会很少。作者给出的建议是保证<span class="math inline">\(t&lt;z_q\)</span>，即<span class="math inline">\(t\)</span>对应的概率值应该小于<span class="math inline">\(1-q\)</span>。</p>
+<h1 id="experiments">Experiments</h1>
+<p>在实验部分，作者在合成数据和真实数据上试验了SPOT算法和DSPOT算法的有效性。</p>
+<h2 id="dspot-reliability">(D)SPOT Reliability</h2>
+<p>作者首先在合成数据上验证SPOT的有效性。具体做法是使用高斯分布生成数据（高斯分布的分位数能够直接计算），然后将SPOT得出的<span class="math inline">\(z_q\)</span>和理论值进行对比。误差定义如下： <span class="math display">\[
+\text{error rate}=\left|\frac{z^{\text{SPOT}}-z^{\text{th}}}{z^{\text{th}}}\right|
+\]</span> 下图是采用不同数量观测值的结果：</p>
+<p><img src="https://i.loli.net/2020/06/25/GXlu2MAJaoqxyd4.png" /></p>
+<h2 id="finding-anomalies-with-spot">Finding Anomalies with SPOT</h2>
+<p>在这一节作者在真实数据集上进行了实验以验证SPOT算法的有效性，结果如下图：</p>
+<p><img src="https://i.loli.net/2020/06/25/wTkZxKarFVDOlp6.png" /></p>
+<p>在文中作者说算法的True Positive达到了<span class="math inline">\(86\%\)</span>，False Positive小于<span class="math inline">\(4\%\)</span>。</p>
+<p><img src="https://i.loli.net/2020/06/25/RcUnwtHud7DjNXv.png" /></p>
+<h2 id="finding-anomalies-with-dspot">Finding Anomalies with DSPOT</h2>
+<p>在这一节作者使用DSPOT在真实数据集上进行了实验。窗口大小<span class="math inline">\(d=450\)</span>，预设的风险概率值<span class="math inline">\(q=10^{-3}\)</span>。结果如下图所示：</p>
+<p><img src="https://i.loli.net/2020/06/25/lIxqpnGtL7feVKs.png" /></p>
+<p>在图中可以看出在<span class="math inline">\(8000\)</span> Minutes之后上界显著提高，作者分析了原因，认为是因为超过阈值<span class="math inline">\(t\)</span>的点<span class="math inline">\(Y_t\)</span>的存储是全局的，在前<span class="math inline">\(8000\)</span> Minutes算法存储了很多较高的<span class="math inline">\(Y_t\)</span>值，而在<span class="math inline">\(8000\)</span> Minutes之后，真实数据的趋势开始下降，但算法仍是根据全局的<span class="math inline">\(Y_t\)</span>来进行<span class="math inline">\(z_q\)</span>的计算（这一段没有特别明白）。作者给出的修正方法是只保存固定数量的Peaks。</p>
 <p>下图是作者在股票数据上得到的实验结果：</p>
-<p><img src="https://i.loli.net/2020/06/25/VeEo8OPbzyUxXrR.png"></p>
-<h2 id="Performances"><a href="#Performances" class="headerlink" title="Performances"></a>Performances</h2><p>作者还验证了算法的时间效率。</p>
-<p><img src="https://i.loli.net/2020/06/25/Egh7CxsU2TtL6az.png"></p>
-<p>表中T代表的是每个Iteration的时间，M代表的是Peaks的比例，”bi-“前缀代表的是同时计算上界和下界。</p>
-</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2019-10-18T15:00:57.000Z" title="2019-10-18 11:00:57 ├F10: PM┤">2019-10-18</time>发表</span><span class="level-item"><time dateTime="2020-09-12T02:54:14.061Z" title="2020-9-12 10:54:14 ├F10: AM┤">2020-09-12</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2019/10/18/Robust-Anomaly-Detection-for-Multivariate-Time-Series-through-Stochastic-Recurrent-Neural-Network/">Robust Anomaly Detection for Multivariate Time Series through Stochastic Recurrent Neural Network</a></h1><div class="content"><h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><p>本文提出了<em>OmniAnomaly</em>：一种针对多变量时间序列的随机循环神经网络异常检测算法。该模型运用了一系列技术来捕捉多变量时间序列的正常模式，并在检测阶段基于重构误差来检测异常，同时本文还提供了一定的理论解释。</p>
+<p><img src="https://i.loli.net/2020/06/25/VeEo8OPbzyUxXrR.png" /></p>
+<h2 id="performances">Performances</h2>
+<p>作者还验证了算法的时间效率。</p>
+<p><img src="https://i.loli.net/2020/06/25/Egh7CxsU2TtL6az.png" /></p>
+<p>表中T代表的是每个Iteration的时间，M代表的是Peaks的比例，"bi-"前缀代表的是同时计算上界和下界。</p>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2019-10-18T15:00:57.000Z" title="2019-10-18 11:00:57 ├F10: PM┤">2019-10-18</time>发表</span><span class="level-item"><time dateTime="2020-09-12T02:54:14.061Z" title="2020-9-12 10:54:14 ├F10: AM┤">2020-09-12</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2019/10/18/Robust-Anomaly-Detection-for-Multivariate-Time-Series-through-Stochastic-Recurrent-Neural-Network/">Robust Anomaly Detection for Multivariate Time Series through Stochastic Recurrent Neural Network</a></h1><div class="content"><h1 id="abstract">Abstract</h1>
+<p>本文提出了<em>OmniAnomaly</em>：一种针对多变量时间序列的随机循环神经网络异常检测算法。该模型运用了一系列技术来捕捉多变量时间序列的正常模式，并在检测阶段基于重构误差来检测异常，同时本文还提供了一定的理论解释。</p>
 <p><a target="_blank" rel="noopener" href="https://www.kdd.org/kdd2019/accepted-papers/view/robust-anomaly-detection-for-multivariate-time-series-through-stochastic-re">原文</a></p>
-<h1 id="Contribution"><a href="#Contribution" class="headerlink" title="Contribution"></a>Contribution</h1><ol>
+<h1 id="contribution">Contribution</h1>
+<ol type="1">
 <li>提出了<em>OmniAnomaly</em>，一种基于随机循环神经网络的多变量时间序列异常检测算法；</li>
 <li>提出了针对多变量时间序列异常检测的解释方法；</li>
 <li>通过实验证明了<em>OmniAnomaly</em>中所用的关键技术的有效性，包括GRU，planar NF, stochastic variable connection和adjusted Peaks-Over-Threshold method；</li>
 <li>通过大量的实验我们证明了<em>OmniAnomaly</em>的有效性；</li>
 <li>发布了代码和数据集。</li>
 </ol>
-<h1 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h1><h2 id="Linear-Gaussian-State-Space-Model"><a href="#Linear-Gaussian-State-Space-Model" class="headerlink" title="Linear Gaussian State Space Model"></a>Linear Gaussian State Space Model</h2><p>状态空间模型（State Space Model, SSM）的概念来自于控制理论，在这里我们主要讨论其在时间序列中的应用。其大概思想是我们认为时间序列在时刻$t$的观测值$z_t$是一个隐含状态$\boldsymbol{l}<em>t$的条件分布$p(z_t|\boldsymbol{l}_t)$，而这个隐含状态$\boldsymbol{l}_t$刻画了时间序列的内在规律，同时隐含状态会随着时间更新，即服从条件分布$p(\boldsymbol{l}_t|\boldsymbol{l}</em>{t-1})$。</p>
-<p>在线性状态空间模型（Linear State Space Model）中我们以如下的方式刻画隐含状态的更新：<br>$$<br>\boldsymbol{l}_t=\boldsymbol{F}<em>t\boldsymbol{l}</em>{t-1}+\boldsymbol{g}_t\varepsilon_t, \space\space\space\varepsilon_t\sim\mathcal{N}(0,1)<br>$$<br>$\boldsymbol{F}_t$为确定的状态转移矩阵，而$\boldsymbol{g}_t\varepsilon_t$则表示了状态转移的随机性。</p>
-<p>观测值$z_t$从隐含状态$\boldsymbol{l}<em>t$计算而来：<br>$$<br>\begin{align}<br>z_t&amp;=y_t+\sigma_t\epsilon_t,\<br>y_t&amp;=\boldsymbol{a}_t^\top\boldsymbol{l}</em>{t-1}+b_t,\<br>\epsilon_t&amp;\sim\mathcal{N}(0,1)<br>\end{align}<br>$$<br>其中$\boldsymbol{a}_t\in\mathbb{R}^L,\sigma_t\in \mathbb{R},b_t\in\mathbb{R}$都是额外的参数。初始状态$\boldsymbol{l}_0$则从一个独立的高斯分布得来，即$\boldsymbol{l}_0\sim N(\boldsymbol\mu_0,\text{diag}(\boldsymbol{\sigma}_0^2))$。</p>
-<p>令参数集合$\Theta_t=(\boldsymbol{\mu}<em>0,\boldsymbol{\Sigma}<em>0,\boldsymbol{F}_t,\boldsymbol{g}_t,\boldsymbol{a}_t,b_t,\sigma_t),\forall t&gt;0$，一般来说参数集合不会随着时间变化，即每个时刻$t$共享同样的参数$\Theta_t=\Theta,\forall t&gt;0$。对参数的估计可以采用极大似然估计：<br>$$<br>\begin{align}<br>\Theta^*</em>{1:T}&amp;=\arg\max</em>{\Theta_{1:T}}p(z_{1:T}|\Theta_{1:T}),\<br>\end{align}<br>$$<br>其中：<br>$$<br>\begin{align}<br>p(z_{1:T}|\Theta_{1:T})&amp;=p(z_1|\Theta_1)\prod\limits_{t=2}^T p(z_t|z_{1:t-1},\Theta_{1:t})\<br>&amp;=\int p(\boldsymbol{l}<em>0)\left[\prod\limits</em>{t=1}^T p(z_t|\boldsymbol{l}<em>t)p(\boldsymbol{l}<em>t|\boldsymbol{l}</em>{t-1})\right]\mathrm{d}\boldsymbol{l}</em>{0:T}<br>\end{align}<br>$$</p>
-<h2 id="Planar-Normalizing-Flow"><a href="#Planar-Normalizing-Flow" class="headerlink" title="Planar Normalizing Flow"></a>Planar Normalizing Flow</h2><h3 id="Normalizing-Flows"><a href="#Normalizing-Flows" class="headerlink" title="Normalizing Flows"></a>Normalizing Flows</h3><p>VAE采用一个变分分布$q_\phi(z|x)$来近似真实的后验分布$p(z|x)$，并推导出$\log p_\theta(x)$的下界（称为ELBO）来作为优化目标函数：<br>$$<br>\begin{align}<br>\log p_\theta(x)&amp;=\log \int p_\theta(x|z)p(z)\mathrm{d}z\<br>&amp;=\log\int\frac{q_\phi(z|x)}{q_\phi(z|x)}p_\theta(x|z)p(z)\mathrm{d}z\<br>&amp;\geq-D_{KL}[q_\phi(z|x)\parallel p(z)]+\mathbb{E}<em>q[\log p_\theta(x|z)]<br>\end{align}<br>$$<br>$\log p_\theta(x)$与ELBO取等的条件是$D</em>{KL}[q_\phi(z|x)\parallel p(z)]$，表明变分分布完全匹配了真实的后验分布。但在实际应用中，真实的后验分布可能会非常复杂，而我们的变分分布通常是一个确定的较为简单的分布，如高斯分布。这样变分分布可能很难对真实后验分布得到一个很好的拟合。</p>
+<h1 id="background">Background</h1>
+<h2 id="linear-gaussian-state-space-model">Linear Gaussian State Space Model</h2>
+<p>状态空间模型（State Space Model, SSM）的概念来自于控制理论，在这里我们主要讨论其在时间序列中的应用。其大概思想是我们认为时间序列在时刻<span class="math inline">\(t\)</span>的观测值<span class="math inline">\(z_t\)</span>是一个隐含状态<span class="math inline">\(\boldsymbol{l}_t\)</span>的条件分布<span class="math inline">\(p(z_t|\boldsymbol{l}_t)\)</span>，而这个隐含状态<span class="math inline">\(\boldsymbol{l}_t\)</span>刻画了时间序列的内在规律，同时隐含状态会随着时间更新，即服从条件分布<span class="math inline">\(p(\boldsymbol{l}_t|\boldsymbol{l}_{t-1})\)</span>。</p>
+<p>在线性状态空间模型（Linear State Space Model）中我们以如下的方式刻画隐含状态的更新： <span class="math display">\[
+\boldsymbol{l}_t=\boldsymbol{F}_t\boldsymbol{l}_{t-1}+\boldsymbol{g}_t\varepsilon_t, \space\space\space\varepsilon_t\sim\mathcal{N}(0,1)
+\]</span> <span class="math inline">\(\boldsymbol{F}_t\)</span>为确定的状态转移矩阵，而<span class="math inline">\(\boldsymbol{g}_t\varepsilon_t\)</span>则表示了状态转移的随机性。</p>
+<p>观测值<span class="math inline">\(z_t\)</span>从隐含状态<span class="math inline">\(\boldsymbol{l}_t\)</span>计算而来： <span class="math display">\[
+\begin{align}
+z_t&amp;=y_t+\sigma_t\epsilon_t,\\
+y_t&amp;=\boldsymbol{a}_t^\top\boldsymbol{l}_{t-1}+b_t,\\
+\epsilon_t&amp;\sim\mathcal{N}(0,1)
+\end{align}
+\]</span> 其中<span class="math inline">\(\boldsymbol{a}_t\in\mathbb{R}^L,\sigma_t\in \mathbb{R},b_t\in\mathbb{R}\)</span>都是额外的参数。初始状态<span class="math inline">\(\boldsymbol{l}_0\)</span>则从一个独立的高斯分布得来，即<span class="math inline">\(\boldsymbol{l}_0\sim N(\boldsymbol\mu_0,\text{diag}(\boldsymbol{\sigma}_0^2))\)</span>。</p>
+<p>令参数集合<span class="math inline">\(\Theta_t=(\boldsymbol{\mu}_0,\boldsymbol{\Sigma}_0,\boldsymbol{F}_t,\boldsymbol{g}_t,\boldsymbol{a}_t,b_t,\sigma_t),\forall t&gt;0\)</span>，一般来说参数集合不会随着时间变化，即每个时刻<span class="math inline">\(t\)</span>共享同样的参数<span class="math inline">\(\Theta_t=\Theta,\forall t&gt;0\)</span>。对参数的估计可以采用极大似然估计： <span class="math display">\[
+\begin{align}
+\Theta^*_{1:T}&amp;=\arg\max_{\Theta_{1:T}}p(z_{1:T}|\Theta_{1:T}),\\
+\end{align}
+\]</span> 其中： <span class="math display">\[
+\begin{align}
+p(z_{1:T}|\Theta_{1:T})&amp;=p(z_1|\Theta_1)\prod\limits_{t=2}^T p(z_t|z_{1:t-1},\Theta_{1:t})\\
+&amp;=\int p(\boldsymbol{l}_0)\left[\prod\limits_{t=1}^T p(z_t|\boldsymbol{l}_t)p(\boldsymbol{l}_t|\boldsymbol{l}_{t-1})\right]\mathrm{d}\boldsymbol{l}_{0:T}
+\end{align}
+\]</span></p>
+<h2 id="planar-normalizing-flow">Planar Normalizing Flow</h2>
+<h3 id="normalizing-flows">Normalizing Flows</h3>
+<p>VAE采用一个变分分布<span class="math inline">\(q_\phi(z|x)\)</span>来近似真实的后验分布<span class="math inline">\(p(z|x)\)</span>，并推导出<span class="math inline">\(\log p_\theta(x)\)</span>的下界（称为ELBO）来作为优化目标函数： <span class="math display">\[
+\begin{align}
+\log p_\theta(x)&amp;=\log \int p_\theta(x|z)p(z)\mathrm{d}z\\
+&amp;=\log\int\frac{q_\phi(z|x)}{q_\phi(z|x)}p_\theta(x|z)p(z)\mathrm{d}z\\
+&amp;\geq-D_{KL}[q_\phi(z|x)\parallel p(z)]+\mathbb{E}_q[\log p_\theta(x|z)]
+\end{align}
+\]</span> <span class="math inline">\(\log p_\theta(x)\)</span>与ELBO取等的条件是<span class="math inline">\(D_{KL}[q_\phi(z|x)\parallel p(z)]\)</span>，表明变分分布完全匹配了真实的后验分布。但在实际应用中，真实的后验分布可能会非常复杂，而我们的变分分布通常是一个确定的较为简单的分布，如高斯分布。这样变分分布可能很难对真实后验分布得到一个很好的拟合。</p>
 <p>一个解决方案是使用标准化流（Normalizing Flows）。标准化流是从一个相对简单的分布出发，执行一系列可逆的映射，将原始简单的分布转化为一个复杂的分布。</p>
-<p>首先考虑一个光滑的、可逆的映射$f:\mathbb{R}^d\mapsto \mathbb{R}^d$，记$g=f^{-1}$，那么$g\circ f(\mathbf{z})=\mathbf{z}$。令$\mathbf{z}^\prime=f(\mathbf{z})$，那么$\mathbf{z}^\prime$的分布为：<br>$$<br>q(\mathbf{z}^\prime)=q(\mathbf{z})\left|\text{det}\frac{\partial f^{-1}}{\partial \mathbf{z}^\prime}\right|=q(z)\left|\text{det}\frac{\partial f}{\partial \mathbf{z}}\right|^{-1}<br>$$<br>式中$q(\mathbf{z}^\prime)=q(z)\left|\text{det}\frac{\partial f}{\partial \mathbf{z}}\right|^{-1}$说明了$\mathbf{z}^\prime$的分布等于$\mathbf{z}$的分布乘上$f$的Jacobian矩阵的行列式的倒数。那么对于映射多次的情况：<br>$$<br>\mathbf{z}_K=f_K\circ\cdots\circ f_2\circ f_1(\mathbf{z}_0)<br>$$<br>$\mathbf{z}<em>K$的分布可以通过链式计算得到：<br>$$<br>\ln q_K(\mathbf{z}_K)=\ln q_0(\mathbf{z}_0)-\sum\limits</em>{k=1}^K\ln\left|\text{det}\frac{\partial f_k}{\partial \mathbf{z}_{k-1}}\right|<br>$$</p>
-<h3 id="Planar-Flows"><a href="#Planar-Flows" class="headerlink" title="Planar Flows"></a>Planar Flows</h3><p>考虑一个变换族：<br>$$<br>f(\mathbf{z})=\mathbf{z}+\mathbf{u}h(\mathbf{w}^\top\mathbf{z}+b)<br>$$<br>其中$\lambda={\mathbf{w}\in \mathbb{R}^d,\mathbf{u}\in\mathbb{R}^d,b\in\mathbb{R}}$为参数集合，$h(\cdot)$为元素级的非线性函数（如各种激活函数）。令$\psi(\mathbf{z})=h^\prime(\mathbf{w}^\top\mathbf{z}+b)\mathbf{w}$，则$f$的Jacobian矩阵行列式绝对值等于：<br>$$<br>\left|\text{det}\frac{\partial f}{\partial \mathbf{z}}\right|=\left|\text{det}(\mathbf{I}+\mathbf{u}\psi(\mathbf{z})^\top)\right|=\left|1+\mathbf{u}^\top\psi(\mathbf{z})\right|<br>$$<br>但是$f$并不保证总是可逆的，如$h(x)=\tanh(x)$时，$f$可逆的条件是$\mathbf{w}^\top \mathbf{u}\geq-1$。</p>
-<p>下面讨论如何保证可逆的条件。考虑将$\mathbf{z}$分解为$\mathbf{z}=\mathbf{z}_\bot+\mathbf{z}_\parallel$，其中$\mathbf{z}_\bot$与$\mathbf{w}$正交，$\mathbf{z}_\parallel$与$\mathbf{w}$平行，那么：<br>$$<br>f(z)=\mathbf{z}_\bot+\mathbf{z}_\parallel+\mathbf{u}h(\mathbf{w}^\top \mathbf{z}_\parallel +b)<br>$$<br>实际上得到$\mathbf{z}_\parallel$之后可以很容易的得到$\mathbf{z}_\bot$，令$\mathbf{y}=f(\mathbf{z})$，有：<br>$$<br>\mathbf{z}_\bot=\mathbf{y}-\mathbf{z}_\parallel-\mathbf{u}h(\mathbf{w}^\top\mathbf{z}_\parallel+b)<br>$$<br>而$\mathbf{z}_\parallel$与$\mathbf{w}$平行，易知$\mathbf{z}_\parallel=\alpha\frac{\mathbf{w}}{\parallel\mathbf{w}\parallel^2}$，其中$\alpha\in\mathbb{R}$。</p>
-<p>对式(16)两边同时乘以$\mathbf{w}^\top$可得：<br>$$<br>\mathbf{w}^\top f(\mathbf{z})=\alpha+\mathbf{w}^\top\mathbf{u} h(\alpha+b)<br>$$<br>当$\alpha+\mathbf{w}^\top\mathbf{u} h(\alpha+b)$对于$\alpha$是非递减函数的时候，$f$是可逆的。因为$\alpha+\mathbf{w}^\top\mathbf{u} h(\alpha+b)$是非递减函数时有$1+\mathbf{w}^\top\mathbf{u}h^\prime(\alpha+b)\geq 0\equiv \mathbf{w}^\top \mathbf{u}\geq -\frac{1}{h^\prime(\alpha + b)}$，而$0\leq h^\prime(\alpha + b) \leq 1$（$\tanh$函数的性质），所以总是有$\mathbf{w}^\top \mathbf{u}\geq-1$。</p>
-<p>对于任意一个$\mathbf{u}$，我们可以通过特定的方式构造一个$\hat{\mathbf{u}}$使得$\mathbf{w}^\top\hat{\mathbf{u}}&gt;-1$，即令$\hat{\mathbf{u}}(\mathbf{w},\mathbf{u})=\mathbf{u}+[m(\mathbf{w}^\top\mathbf{u})-(\mathbf{w}^\top\mathbf{u})]\frac{\mathbf{w}}{\parallel\mathbf{w}\parallel^2}$，其中$m(x)=-1+\log(1+e^x)$。</p>
-<p><img src="https://i.loli.net/2020/06/25/uPyplhWBazROEw4.png"></p>
-<h1 id="Methodology"><a href="#Methodology" class="headerlink" title="Methodology"></a>Methodology</h1><h2 id="Problem-Statement"><a href="#Problem-Statement" class="headerlink" title="Problem Statement"></a>Problem Statement</h2><p>本文针对的是多变量时间序列$x={x_1,x_2,\cdots,x_N}\in R^{M\times N}$，$N$为时间长度，其中某一时刻的观测值$x_t\in R^M$为一个$M$维的向量。作者使用$x_{t-T:t}\in R^{M\times(T+1)}$来表示$t-T$到$t$之间的时间序列。</p>
-<p><img src="https://i.loli.net/2020/06/25/4eHhs82uOzI5tG3.png"></p>
-<h2 id="Overall-Structure"><a href="#Overall-Structure" class="headerlink" title="Overall Structure"></a>Overall Structure</h2><p>算法的总体框架如下图所示：</p>
-<p><img src="https://i.loli.net/2020/06/25/wd8maAoVb3Fk9vP.png"></p>
+<p>首先考虑一个光滑的、可逆的映射<span class="math inline">\(f:\mathbb{R}^d\mapsto \mathbb{R}^d\)</span>，记<span class="math inline">\(g=f^{-1}\)</span>，那么<span class="math inline">\(g\circ f(\mathbf{z})=\mathbf{z}\)</span>。令<span class="math inline">\(\mathbf{z}^\prime=f(\mathbf{z})\)</span>，那么<span class="math inline">\(\mathbf{z}^\prime\)</span>的分布为： <span class="math display">\[
+q(\mathbf{z}^\prime)=q(\mathbf{z})\left|\text{det}\frac{\partial f^{-1}}{\partial \mathbf{z}^\prime}\right|=q(z)\left|\text{det}\frac{\partial f}{\partial \mathbf{z}}\right|^{-1}
+\]</span> 式中<span class="math inline">\(q(\mathbf{z}^\prime)=q(z)\left|\text{det}\frac{\partial f}{\partial \mathbf{z}}\right|^{-1}\)</span>说明了<span class="math inline">\(\mathbf{z}^\prime\)</span>的分布等于<span class="math inline">\(\mathbf{z}\)</span>的分布乘上<span class="math inline">\(f\)</span>的Jacobian矩阵的行列式的倒数。那么对于映射多次的情况： <span class="math display">\[
+\mathbf{z}_K=f_K\circ\cdots\circ f_2\circ f_1(\mathbf{z}_0)
+\]</span> <span class="math inline">\(\mathbf{z}_K\)</span>的分布可以通过链式计算得到： <span class="math display">\[
+\ln q_K(\mathbf{z}_K)=\ln q_0(\mathbf{z}_0)-\sum\limits_{k=1}^K\ln\left|\text{det}\frac{\partial f_k}{\partial \mathbf{z}_{k-1}}\right|
+\]</span></p>
+<h3 id="planar-flows">Planar Flows</h3>
+<p>考虑一个变换族： <span class="math display">\[
+f(\mathbf{z})=\mathbf{z}+\mathbf{u}h(\mathbf{w}^\top\mathbf{z}+b)
+\]</span> 其中<span class="math inline">\(\lambda=\{\mathbf{w}\in \mathbb{R}^d,\mathbf{u}\in\mathbb{R}^d,b\in\mathbb{R}\}\)</span>为参数集合，<span class="math inline">\(h(\cdot)\)</span>为元素级的非线性函数（如各种激活函数）。令<span class="math inline">\(\psi(\mathbf{z})=h^\prime(\mathbf{w}^\top\mathbf{z}+b)\mathbf{w}\)</span>，则<span class="math inline">\(f\)</span>的Jacobian矩阵行列式绝对值等于： <span class="math display">\[
+\left|\text{det}\frac{\partial f}{\partial \mathbf{z}}\right|=\left|\text{det}(\mathbf{I}+\mathbf{u}\psi(\mathbf{z})^\top)\right|=\left|1+\mathbf{u}^\top\psi(\mathbf{z})\right|
+\]</span> 但是<span class="math inline">\(f\)</span>并不保证总是可逆的，如<span class="math inline">\(h(x)=\tanh(x)\)</span>时，<span class="math inline">\(f\)</span>可逆的条件是<span class="math inline">\(\mathbf{w}^\top \mathbf{u}\geq-1\)</span>。</p>
+<p>下面讨论如何保证可逆的条件。考虑将<span class="math inline">\(\mathbf{z}\)</span>分解为<span class="math inline">\(\mathbf{z}=\mathbf{z}_\bot+\mathbf{z}_\parallel\)</span>，其中<span class="math inline">\(\mathbf{z}_\bot\)</span>与<span class="math inline">\(\mathbf{w}\)</span>正交，<span class="math inline">\(\mathbf{z}_\parallel\)</span>与<span class="math inline">\(\mathbf{w}\)</span>平行，那么： <span class="math display">\[
+f(z)=\mathbf{z}_\bot+\mathbf{z}_\parallel+\mathbf{u}h(\mathbf{w}^\top \mathbf{z}_\parallel +b)
+\]</span> 实际上得到<span class="math inline">\(\mathbf{z}_\parallel\)</span>之后可以很容易的得到<span class="math inline">\(\mathbf{z}_\bot\)</span>，令<span class="math inline">\(\mathbf{y}=f(\mathbf{z})\)</span>，有： <span class="math display">\[
+\mathbf{z}_\bot=\mathbf{y}-\mathbf{z}_\parallel-\mathbf{u}h(\mathbf{w}^\top\mathbf{z}_\parallel+b)
+\]</span> 而<span class="math inline">\(\mathbf{z}_\parallel\)</span>与<span class="math inline">\(\mathbf{w}\)</span>平行，易知<span class="math inline">\(\mathbf{z}_\parallel=\alpha\frac{\mathbf{w}}{\parallel\mathbf{w}\parallel^2}\)</span>，其中<span class="math inline">\(\alpha\in\mathbb{R}\)</span>。</p>
+<p>对式(16)两边同时乘以<span class="math inline">\(\mathbf{w}^\top\)</span>可得： <span class="math display">\[
+\mathbf{w}^\top f(\mathbf{z})=\alpha+\mathbf{w}^\top\mathbf{u} h(\alpha+b)
+\]</span> 当<span class="math inline">\(\alpha+\mathbf{w}^\top\mathbf{u} h(\alpha+b)\)</span>对于<span class="math inline">\(\alpha\)</span>是非递减函数的时候，<span class="math inline">\(f\)</span>是可逆的。因为<span class="math inline">\(\alpha+\mathbf{w}^\top\mathbf{u} h(\alpha+b)\)</span>是非递减函数时有<span class="math inline">\(1+\mathbf{w}^\top\mathbf{u}h^\prime(\alpha+b)\geq 0\equiv \mathbf{w}^\top \mathbf{u}\geq -\frac{1}{h^\prime(\alpha + b)}\)</span>，而<span class="math inline">\(0\leq h^\prime(\alpha + b) \leq 1\)</span>（<span class="math inline">\(\tanh\)</span>函数的性质），所以总是有<span class="math inline">\(\mathbf{w}^\top \mathbf{u}\geq-1\)</span>。</p>
+<p>对于任意一个<span class="math inline">\(\mathbf{u}\)</span>，我们可以通过特定的方式构造一个<span class="math inline">\(\hat{\mathbf{u}}\)</span>使得<span class="math inline">\(\mathbf{w}^\top\hat{\mathbf{u}}&gt;-1\)</span>，即令<span class="math inline">\(\hat{\mathbf{u}}(\mathbf{w},\mathbf{u})=\mathbf{u}+[m(\mathbf{w}^\top\mathbf{u})-(\mathbf{w}^\top\mathbf{u})]\frac{\mathbf{w}}{\parallel\mathbf{w}\parallel^2}\)</span>，其中<span class="math inline">\(m(x)=-1+\log(1+e^x)\)</span>。</p>
+<p><img src="https://i.loli.net/2020/06/25/uPyplhWBazROEw4.png" /></p>
+<h1 id="methodology">Methodology</h1>
+<h2 id="problem-statement">Problem Statement</h2>
+<p>本文针对的是多变量时间序列<span class="math inline">\(x=\{x_1,x_2,\cdots,x_N\}\in R^{M\times N}\)</span>，<span class="math inline">\(N\)</span>为时间长度，其中某一时刻的观测值<span class="math inline">\(x_t\in R^M\)</span>为一个<span class="math inline">\(M\)</span>维的向量。作者使用<span class="math inline">\(x_{t-T:t}\in R^{M\times(T+1)}\)</span>来表示<span class="math inline">\(t-T\)</span>到<span class="math inline">\(t\)</span>之间的时间序列。</p>
+<p><img src="https://i.loli.net/2020/06/25/4eHhs82uOzI5tG3.png" /></p>
+<h2 id="overall-structure">Overall Structure</h2>
+<p>算法的总体框架如下图所示：</p>
+<p><img src="https://i.loli.net/2020/06/25/wd8maAoVb3Fk9vP.png" /></p>
 <p>预处理模块主要是对数据进行标准化以及窗口切分。训练模块则根据输入的数据对正常模式进行捕捉，输出异常分数。在线检测模块则会定期执行。</p>
-<h2 id="Network-Architecture"><a href="#Network-Architecture" class="headerlink" title="Network Architecture"></a>Network Architecture</h2><p>模型的总体结构如下图所示：</p>
-<p><img src="https://i.loli.net/2020/06/25/Lp7D81EvxVsywXQ.png"></p>
-<p>在qnet中，首先GRU被用来建模样本的时间依赖关系，之后VAE将样本$\mathbf{x}$映射到隐空间$\mathbf{z}$。文中使用了Linear Gaussian State Space Model来建模隐变量之间的时间依赖关系。除此之外，作者还使用了Planar Normalizing Flow来将隐变量映射到复杂的非高斯分布。在pnet中，隐变量$\mathbf{z}<em>{t-T:t}$被用来重建$\mathbf{x}</em>{t-T:t}$，直观上来说，对样本的好的隐变量表示可以带来更好的重构效果。</p>
-<p>从细节上来说，在时间$t$，qnet的输入为$\mathbf{x}<em>t$和$\mathbf{e}</em>{t-1}$，两者经过GRU Cell之后会产生$t$时间的$\mathbf{e_t}$。$\mathbf{e}<em>t$是GRU捕捉时间依赖性的关键，可以认为它包含了$\mathbf{x}</em>{1:t}$的信息。之后$\mathbf{e}<em>t$会和$\mathbf{z}</em>{t-1}$进行拼接，进入标准的VAE变分网络结构，通过网络输出的参数$\mu_{z_t},\sigma_{z_t}$采样得到隐变量$\mathbf{z}_t^0$，此时隐变量可以说捕捉了时间依赖性。</p>
+<h2 id="network-architecture">Network Architecture</h2>
+<p>模型的总体结构如下图所示：</p>
+<p><img src="https://i.loli.net/2020/06/25/Lp7D81EvxVsywXQ.png" /></p>
+<p>在qnet中，首先GRU被用来建模样本的时间依赖关系，之后VAE将样本<span class="math inline">\(\mathbf{x}\)</span>映射到隐空间<span class="math inline">\(\mathbf{z}\)</span>。文中使用了Linear Gaussian State Space Model来建模隐变量之间的时间依赖关系。除此之外，作者还使用了Planar Normalizing Flow来将隐变量映射到复杂的非高斯分布。在pnet中，隐变量<span class="math inline">\(\mathbf{z}_{t-T:t}\)</span>被用来重建<span class="math inline">\(\mathbf{x}_{t-T:t}\)</span>，直观上来说，对样本的好的隐变量表示可以带来更好的重构效果。</p>
+<p>从细节上来说，在时间<span class="math inline">\(t\)</span>，qnet的输入为<span class="math inline">\(\mathbf{x}_t\)</span>和<span class="math inline">\(\mathbf{e}_{t-1}\)</span>，两者经过GRU Cell之后会产生<span class="math inline">\(t\)</span>时间的<span class="math inline">\(\mathbf{e_t}\)</span>。<span class="math inline">\(\mathbf{e}_t\)</span>是GRU捕捉时间依赖性的关键，可以认为它包含了<span class="math inline">\(\mathbf{x}_{1:t}\)</span>的信息。之后<span class="math inline">\(\mathbf{e}_t\)</span>会和<span class="math inline">\(\mathbf{z}_{t-1}\)</span>进行拼接，进入标准的VAE变分网络结构，通过网络输出的参数<span class="math inline">\(\mu_{z_t},\sigma_{z_t}\)</span>采样得到隐变量<span class="math inline">\(\mathbf{z}_t^0\)</span>，此时隐变量可以说捕捉了时间依赖性。</p>
 <p>网络中涉及到的公式如下所示：</p>
-<p>$$<br>\begin{align}<br>e_t&amp;=(1-c_t^e)\circ\text{tanh}(w^ex_t+u^e(r_t^e\circ e_{t-1})+b^e)+c_t^e\circ e_{t-1}\<br>\mu_{z_t}&amp;=w^{\mu_z}h^\phi([z_{t-1},e_t])+b^{\mu_z}\<br>\sigma_{z_t}&amp;=\text{softplus}(w^{\sigma_z}h^\phi([z_{t-1},e_t])+b^{\sigma_z})+\epsilon^{\sigma_z}<br>\end{align}<br>$$</p>
-<p>其中$r_t^e=\text{sigmoid}(\mathbf{w}^{r^e}\mathbf{x}<em>t+\mathbf{u}^{r^e}\mathbf{e}</em>{t-1}+b^{r^e})$是GRU中的重置门，$c_t^e=\text{sigmoid}(\mathbf{w}^{c^e}\mathbf{x}<em>t+\mathbf{u}^{c^e}\mathbf{e}</em>{t-1}+b^{c^e})$是GRU中的更新门。</p>
-<p>此时$\mathbf{z}_t^0$服从高斯分布，为了拟合复杂的后验分布，我们使用Planar Normalizing Flow来对$\mathbf{z}_t^0$进行变换，最后得到经$K$次变换后的随机变量$\mathbf{z}_t^K$。</p>
-<p>在时间$t$，pnet试图通过$\mathbf{z}<em>t^K$来重构$\mathbf{x}_t$。首先$\mathbf{z}$空间中的变量会根据Linear Gaussian State Space Model来进行“连接“，公式为$\mathbf{z}_t=\mathbf{O}_\theta(\mathbf{T}_\theta\mathbf{z}</em>{t-1}+\mathbf{v}<em>t)+\boldsymbol{\epsilon}_t$，其中$\mathbf{O}_\theta$和$\mathbf{T}_\theta$为状态转移矩阵，$\mathbf{v}_t$和$\boldsymbol{\epsilon}_t$为随机噪声。之后$\mathbf{z}_t$和$\mathbf{d}</em>{t-1}$会作为GRU的输入，产生$\mathbf{d}<em>t$。之后$\mathbf{d}<em>t$会经过标准VAE中的生成网络，通过网络输出的高斯分布参数$\mu</em>{x_t},\sigma_{x_t}$采样得到重构后的样本$\mathbf{x}^\prime_t$。pnet中涉及到的公式如下所示：<br>$$<br>\begin{align}<br>d_t&amp;=(1-c_t^d)\circ\text{tanh}(w^dz_t+u^d(r_t^d\circ d</em>{t-1})+b^d)+c_t^d\circ d_{t-1}\<br>\mu_{x_t}&amp;=w^{\mu_x}h^\theta(d_t)+b^{\mu_x}\<br>\sigma_{x_t}&amp;=\text{softplus}(w^{\sigma_x}h^\theta(d_t)+b^{\sigma_x})+\epsilon^{\sigma_x}<br>\end{align}<br>$$</p>
-<p>其中$r_t^d=\text{sigmoid}(\mathbf{w}^{r^d}\mathbf{x}<em>t+\mathbf{u}^{r^d}\mathbf{d}</em>{t-1}+b^{r^d})$是GRU中的重置门，$c_t^d=\text{sigmoid}(\mathbf{w}^{c^d}\mathbf{x}<em>t+\mathbf{u}^{c^d}\mathbf{d}</em>{t-1}+b^{c^d})$是GRU中的更新门。</p>
-<h2 id="Offline-Model-Training"><a href="#Offline-Model-Training" class="headerlink" title="Offline Model Training"></a>Offline Model Training</h2><p>和传统VAE类似，模型的训练可以通过优化ELBO来完成。记长度为$T+1$的输入序列为$\mathbf{x}<em>{t-T:t}$，隐空间变量采样次数为$L$，第$l$个隐空间变量为$\mathbf{l}^{(l)}</em>{t-T:t}$，损失函数可以写成如下形式：</p>
-<p>$$<br>\tilde{\mathcal{L}}(\mathbf{x}<em>{t-T:t})\approx\frac{1}{L}\sum</em>{t=1}^L[\log(p_\theta(\mathbf{x}<em>{t-T:t}|\mathbf{z}</em>{t-T:t}^{(l)}))+\log(p_\theta(\mathbf{z}<em>{t-T:t}^{(l)}))-\log(q_\phi(\mathbf{z}_{t-T:t}^{(l)}|\mathbf{x}</em>{t-T:t}))]<br>$$</p>
-<p>第一项$\log(p_\theta(\mathbf{x}<em>{t-T:t}|\mathbf{z}</em>{t-T:t}^{(l)}))$可以看作是重构误差；第二项$\log(p_\theta(\mathbf{z}<em>{t-T:t}))=\sum</em>{i=t-T}^t \log(p_\theta(\mathbf{z}<em>i|\mathbf{z}</em>{i-1}))$通过Linear Gaussian State Space Model计算；第三项$-\log(q_\phi(\mathbf{z}<em>{t-T:t}|\mathbf{x}</em>{t-T:t}))=-\sum_{i=t-T}^t\log(q_\phi(\mathbf{z}<em>i|\mathbf{z}</em>{i-1},\mathbf{x}_{t-T:i}))$为隐变量$\mathbf{z}$后验分布的估计，同时$\mathbf{z}_i$是经Planar Normalizing Flow转换过的。</p>
-<h2 id="Online-Detection"><a href="#Online-Detection" class="headerlink" title="Online Detection"></a>Online Detection</h2><p>在训练好模型之后，就可以进行异常检测了。在时间$t$，我们通过根据长度为$T+1$的序列$\mathbf{x}<em>{t-T:t}$来重构$\mathbf{x}<em>t$，并根据重构概率$\log(p_\theta(\mathbf{x}_t|\mathbf{z}</em>{t-T:t}))$来判定异常。定义$\mathbf{x}_t$对应的异常分数$S_t=\log(p_\theta(\mathbf{x}_t|\mathbf{z}</em>{t-T:t}))$，高异常分数代表样本$\mathbf{x}_t$能够以大概率重构（因为模型是用正常样本训练，可以认为模型建模的是正常样本的分布，重构概率高就代表符合正常分布）。给定阈值之后便可根据异常分数来进行异常的判定。</p>
-<h2 id="Automatic-Threshold-Selection"><a href="#Automatic-Threshold-Selection" class="headerlink" title="Automatic Threshold Selection"></a>Automatic Threshold Selection</h2><p>在异常检测阶段，需要根据设定的阈值和每个样本的异常分数来判断该样本是否为异常，所以阈值的选择十分重要。文中用到了一种根据<strong>Extreme Value Theory</strong>自动选择阈值的算法。对于一个分布，其中的极端事件往往位于分布的末尾，而Extreme Value Theory第一定理给出不管原始分布如何，这些极端事件的分布服从一个带参的分布族。因此，可以在对数据分布未知的情况下估计极端事件的分布。</p>
-<p>除了Extreme Value Theory第一定理之外，Extreme Value Theory第二定理给出随机变量大于特定阈值$t$的分布可以用Generalized Pareto Distribution来描述。作者使用了基于Extreme Value Theory第二定理的Peaks-Over-Threshold算法来进行阈值的选择。因为Extreme Value Theory第二定理给出随机变量大于特定阈值$t$的分布，而在本文的场景中我们需要刻画的异常点的分布应该是小于一个给定阈值的分布，所以需要修改一下公式。</p>
-<p>对于给定的数据，模型会给出对应的异常分数序列${S_1,S_2,\cdots,S_{N^\prime}}$，给定预先设定的阈值$th$，$S_i$极端部分（即小于$th$的部分）的分布符合Generalized Pareto Distribution，公式如下：<br>$$<br>\bar{F}(s)=P(th-S&gt;s|S&lt;th)\sim(1+\frac{\gamma s}{\beta})^{-\frac{1}{\gamma}}<br>$$</p>
-<p>其中$\gamma$和$\beta$为分布的形状参数，本文使用极大似然估计来对参数进行估计。设参数的估计值分别为$\hat{\gamma}$和$\hat{\beta}$，最终的阈值$th_F$由拟合得到的分布的分位数确定：</p>
-<p>$$<br>th_F\simeq th-\frac{\hat{\beta}}{\hat{\gamma}}((\frac{qN^\prime}{N^\prime_{th}})^{-\hat{\gamma}}-1)<br>$$</p>
-<p>其中$q$为期望$S&lt;th$的概率，$N^\prime$为观测值的数量，$N^\prime_{th}$为$S_i&lt;th$的个数。</p>
-<h2 id="Anomaly-Interpretation"><a href="#Anomaly-Interpretation" class="headerlink" title="Anomaly Interpretation"></a>Anomaly Interpretation</h2><p>$$<br>\log(p_\theta(\mathbf{x}<em>t|\mathbf{z}</em>{t-T:t}))=\sum_{i=1}^M\log(p_\theta(x_t^i|\mathbf{z}_{t-T:t}))<br>$$</p>
-<h1 id="Experiments"><a href="#Experiments" class="headerlink" title="Experiments"></a>Experiments</h1><h2 id="Datasets-and-Metrics"><a href="#Datasets-and-Metrics" class="headerlink" title="Datasets and Metrics"></a>Datasets and Metrics</h2><h2 id="Overall-Performance"><a href="#Overall-Performance" class="headerlink" title="Overall Performance"></a>Overall Performance</h2><p><img src="https://i.loli.net/2020/06/25/yYLiWfXBDQklbPU.png"></p>
-<p><img src="https://i.loli.net/2020/06/25/HlORKBEu7ij6Vor.png"></p>
-<h2 id="Effects-of-Major-Techniques"><a href="#Effects-of-Major-Techniques" class="headerlink" title="Effects of Major Techniques"></a>Effects of Major Techniques</h2><p><img src="https://i.loli.net/2020/06/25/eKXGJ9ZlSmq8r4Q.png"></p>
-<p><img src="https://i.loli.net/2020/06/25/dlibhyOBXNmPrkw.png"></p>
-<h2 id="Visualization-on-Z-Space-Representations"><a href="#Visualization-on-Z-Space-Representations" class="headerlink" title="Visualization on Z-Space Representations"></a>Visualization on Z-Space Representations</h2><p><img src="https://i.loli.net/2020/06/25/MQXv5pZAejgVJ9s.png"></p>
-<p><img src="https://i.loli.net/2020/06/25/jCkovq2lWrP6KXy.png"></p>
-<p><img src="https://i.loli.net/2020/06/25/JSZuUkzNyci41DA.png"></p>
-</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2019-09-22T14:32:18.000Z" title="2019-9-22 10:32:18 ├F10: PM┤">2019-09-22</time>发表</span><span class="level-item"><time dateTime="2020-06-25T05:24:46.844Z" title="2020-6-25 1:24:46 ├F10: PM┤">2020-06-25</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2019/09/22/Anomaly-Detection-with-Generative-Adversarial-Networks-for-Multivariate-Time-Series/">Anomaly Detection with Generative Adversarial Networks for Multivariate Time Series</a></h1><div class="content"><h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>这篇文章提出了一个基于GAN的时间序列异常检测模型。</p>
+<p><span class="math display">\[
+\begin{align}
+e_t&amp;=(1-c_t^e)\circ\text{tanh}(w^ex_t+u^e(r_t^e\circ e_{t-1})+b^e)+c_t^e\circ e_{t-1}\\
+\mu_{z_t}&amp;=w^{\mu_z}h^\phi([z_{t-1},e_t])+b^{\mu_z}\\
+\sigma_{z_t}&amp;=\text{softplus}(w^{\sigma_z}h^\phi([z_{t-1},e_t])+b^{\sigma_z})+\epsilon^{\sigma_z}
+\end{align}
+\]</span></p>
+<p>其中<span class="math inline">\(r_t^e=\text{sigmoid}(\mathbf{w}^{r^e}\mathbf{x}_t+\mathbf{u}^{r^e}\mathbf{e}_{t-1}+b^{r^e})\)</span>是GRU中的重置门，<span class="math inline">\(c_t^e=\text{sigmoid}(\mathbf{w}^{c^e}\mathbf{x}_t+\mathbf{u}^{c^e}\mathbf{e}_{t-1}+b^{c^e})\)</span>是GRU中的更新门。</p>
+<p>此时<span class="math inline">\(\mathbf{z}_t^0\)</span>服从高斯分布，为了拟合复杂的后验分布，我们使用Planar Normalizing Flow来对<span class="math inline">\(\mathbf{z}_t^0\)</span>进行变换，最后得到经<span class="math inline">\(K\)</span>次变换后的随机变量<span class="math inline">\(\mathbf{z}_t^K\)</span>。</p>
+<p>在时间<span class="math inline">\(t\)</span>，pnet试图通过<span class="math inline">\(\mathbf{z}_t^K\)</span>来重构<span class="math inline">\(\mathbf{x}_t\)</span>。首先<span class="math inline">\(\mathbf{z}\)</span>空间中的变量会根据Linear Gaussian State Space Model来进行“连接“，公式为<span class="math inline">\(\mathbf{z}_t=\mathbf{O}_\theta(\mathbf{T}_\theta\mathbf{z}_{t-1}+\mathbf{v}_t)+\boldsymbol{\epsilon}_t\)</span>，其中<span class="math inline">\(\mathbf{O}_\theta\)</span>和<span class="math inline">\(\mathbf{T}_\theta\)</span>为状态转移矩阵，<span class="math inline">\(\mathbf{v}_t\)</span>和<span class="math inline">\(\boldsymbol{\epsilon}_t\)</span>为随机噪声。之后<span class="math inline">\(\mathbf{z}_t\)</span>和<span class="math inline">\(\mathbf{d}_{t-1}\)</span>会作为GRU的输入，产生<span class="math inline">\(\mathbf{d}_t\)</span>。之后<span class="math inline">\(\mathbf{d}_t\)</span>会经过标准VAE中的生成网络，通过网络输出的高斯分布参数<span class="math inline">\(\mu_{x_t},\sigma_{x_t}\)</span>采样得到重构后的样本<span class="math inline">\(\mathbf{x}^\prime_t\)</span>。pnet中涉及到的公式如下所示： <span class="math display">\[
+\begin{align}
+d_t&amp;=(1-c_t^d)\circ\text{tanh}(w^dz_t+u^d(r_t^d\circ d_{t-1})+b^d)+c_t^d\circ d_{t-1}\\
+\mu_{x_t}&amp;=w^{\mu_x}h^\theta(d_t)+b^{\mu_x}\\
+\sigma_{x_t}&amp;=\text{softplus}(w^{\sigma_x}h^\theta(d_t)+b^{\sigma_x})+\epsilon^{\sigma_x}
+\end{align}
+\]</span></p>
+<p>其中<span class="math inline">\(r_t^d=\text{sigmoid}(\mathbf{w}^{r^d}\mathbf{x}_t+\mathbf{u}^{r^d}\mathbf{d}_{t-1}+b^{r^d})\)</span>是GRU中的重置门，<span class="math inline">\(c_t^d=\text{sigmoid}(\mathbf{w}^{c^d}\mathbf{x}_t+\mathbf{u}^{c^d}\mathbf{d}_{t-1}+b^{c^d})\)</span>是GRU中的更新门。</p>
+<h2 id="offline-model-training">Offline Model Training</h2>
+<p>和传统VAE类似，模型的训练可以通过优化ELBO来完成。记长度为<span class="math inline">\(T+1\)</span>的输入序列为<span class="math inline">\(\mathbf{x}_{t-T:t}\)</span>，隐空间变量采样次数为<span class="math inline">\(L\)</span>，第<span class="math inline">\(l\)</span>个隐空间变量为<span class="math inline">\(\mathbf{l}^{(l)}_{t-T:t}\)</span>，损失函数可以写成如下形式：</p>
+<p><span class="math display">\[
+\tilde{\mathcal{L}}(\mathbf{x}_{t-T:t})\approx\frac{1}{L}\sum_{t=1}^L[\log(p_\theta(\mathbf{x}_{t-T:t}|\mathbf{z}_{t-T:t}^{(l)}))+\log(p_\theta(\mathbf{z}_{t-T:t}^{(l)}))-\log(q_\phi(\mathbf{z}_{t-T:t}^{(l)}|\mathbf{x}_{t-T:t}))]
+\]</span></p>
+<p>第一项<span class="math inline">\(\log(p_\theta(\mathbf{x}_{t-T:t}|\mathbf{z}_{t-T:t}^{(l)}))\)</span>可以看作是重构误差；第二项<span class="math inline">\(\log(p_\theta(\mathbf{z}_{t-T:t}))=\sum_{i=t-T}^t \log(p_\theta(\mathbf{z}_i|\mathbf{z}_{i-1}))\)</span>通过Linear Gaussian State Space Model计算；第三项<span class="math inline">\(-\log(q_\phi(\mathbf{z}_{t-T:t}|\mathbf{x}_{t-T:t}))=-\sum_{i=t-T}^t\log(q_\phi(\mathbf{z}_i|\mathbf{z}_{i-1},\mathbf{x}_{t-T:i}))\)</span>为隐变量<span class="math inline">\(\mathbf{z}\)</span>后验分布的估计，同时<span class="math inline">\(\mathbf{z}_i\)</span>是经Planar Normalizing Flow转换过的。</p>
+<h2 id="online-detection">Online Detection</h2>
+<p>在训练好模型之后，就可以进行异常检测了。在时间<span class="math inline">\(t\)</span>，我们通过根据长度为<span class="math inline">\(T+1\)</span>的序列<span class="math inline">\(\mathbf{x}_{t-T:t}\)</span>来重构<span class="math inline">\(\mathbf{x}_t\)</span>，并根据重构概率<span class="math inline">\(\log(p_\theta(\mathbf{x}_t|\mathbf{z}_{t-T:t}))\)</span>来判定异常。定义<span class="math inline">\(\mathbf{x}_t\)</span>对应的异常分数<span class="math inline">\(S_t=\log(p_\theta(\mathbf{x}_t|\mathbf{z}_{t-T:t}))\)</span>，高异常分数代表样本<span class="math inline">\(\mathbf{x}_t\)</span>能够以大概率重构（因为模型是用正常样本训练，可以认为模型建模的是正常样本的分布，重构概率高就代表符合正常分布）。给定阈值之后便可根据异常分数来进行异常的判定。</p>
+<h2 id="automatic-threshold-selection">Automatic Threshold Selection</h2>
+<p>在异常检测阶段，需要根据设定的阈值和每个样本的异常分数来判断该样本是否为异常，所以阈值的选择十分重要。文中用到了一种根据<strong>Extreme Value Theory</strong>自动选择阈值的算法。对于一个分布，其中的极端事件往往位于分布的末尾，而Extreme Value Theory第一定理给出不管原始分布如何，这些极端事件的分布服从一个带参的分布族。因此，可以在对数据分布未知的情况下估计极端事件的分布。</p>
+<p>除了Extreme Value Theory第一定理之外，Extreme Value Theory第二定理给出随机变量大于特定阈值<span class="math inline">\(t\)</span>的分布可以用Generalized Pareto Distribution来描述。作者使用了基于Extreme Value Theory第二定理的Peaks-Over-Threshold算法来进行阈值的选择。因为Extreme Value Theory第二定理给出随机变量大于特定阈值<span class="math inline">\(t\)</span>的分布，而在本文的场景中我们需要刻画的异常点的分布应该是小于一个给定阈值的分布，所以需要修改一下公式。</p>
+<p>对于给定的数据，模型会给出对应的异常分数序列<span class="math inline">\(\{S_1,S_2,\cdots,S_{N^\prime}\}\)</span>，给定预先设定的阈值<span class="math inline">\(th\)</span>，<span class="math inline">\(S_i\)</span>极端部分（即小于<span class="math inline">\(th\)</span>的部分）的分布符合Generalized Pareto Distribution，公式如下： <span class="math display">\[
+\bar{F}(s)=P(th-S&gt;s|S&lt;th)\sim(1+\frac{\gamma s}{\beta})^{-\frac{1}{\gamma}}
+\]</span></p>
+<p>其中<span class="math inline">\(\gamma\)</span>和<span class="math inline">\(\beta\)</span>为分布的形状参数，本文使用极大似然估计来对参数进行估计。设参数的估计值分别为<span class="math inline">\(\hat{\gamma}\)</span>和<span class="math inline">\(\hat{\beta}\)</span>，最终的阈值<span class="math inline">\(th_F\)</span>由拟合得到的分布的分位数确定：</p>
+<p><span class="math display">\[
+th_F\simeq th-\frac{\hat{\beta}}{\hat{\gamma}}((\frac{qN^\prime}{N^\prime_{th}})^{-\hat{\gamma}}-1)
+\]</span></p>
+<p>其中<span class="math inline">\(q\)</span>为期望<span class="math inline">\(S&lt;th\)</span>的概率，<span class="math inline">\(N^\prime\)</span>为观测值的数量，<span class="math inline">\(N^\prime_{th}\)</span>为<span class="math inline">\(S_i&lt;th\)</span>的个数。</p>
+<h2 id="anomaly-interpretation">Anomaly Interpretation</h2>
+<p><span class="math display">\[
+\log(p_\theta(\mathbf{x}_t|\mathbf{z}_{t-T:t}))=\sum_{i=1}^M\log(p_\theta(x_t^i|\mathbf{z}_{t-T:t}))
+\]</span></p>
+<h1 id="experiments">Experiments</h1>
+<h2 id="datasets-and-metrics">Datasets and Metrics</h2>
+<h2 id="overall-performance">Overall Performance</h2>
+<p><img src="https://i.loli.net/2020/06/25/yYLiWfXBDQklbPU.png" /></p>
+<p><img src="https://i.loli.net/2020/06/25/HlORKBEu7ij6Vor.png" /></p>
+<h2 id="effects-of-major-techniques">Effects of Major Techniques</h2>
+<p><img src="https://i.loli.net/2020/06/25/eKXGJ9ZlSmq8r4Q.png" /></p>
+<p><img src="https://i.loli.net/2020/06/25/dlibhyOBXNmPrkw.png" /></p>
+<h2 id="visualization-on-z-space-representations">Visualization on Z-Space Representations</h2>
+<p><img src="https://i.loli.net/2020/06/25/MQXv5pZAejgVJ9s.png" /></p>
+<p><img src="https://i.loli.net/2020/06/25/jCkovq2lWrP6KXy.png" /></p>
+<p><img src="https://i.loli.net/2020/06/25/JSZuUkzNyci41DA.png" /></p>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2019-09-22T14:32:18.000Z" title="2019-9-22 10:32:18 ├F10: PM┤">2019-09-22</time>发表</span><span class="level-item"><time dateTime="2020-06-25T05:24:46.844Z" title="2020-6-25 1:24:46 ├F10: PM┤">2020-06-25</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2019/09/22/Anomaly-Detection-with-Generative-Adversarial-Networks-for-Multivariate-Time-Series/">Anomaly Detection with Generative Adversarial Networks for Multivariate Time Series</a></h1><div class="content"><h1 id="introduction">Introduction</h1>
+<p>这篇文章提出了一个基于GAN的时间序列异常检测模型。</p>
 <p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1809.04758">原文</a></p>
-<h2 id="Contribution"><a href="#Contribution" class="headerlink" title="Contribution"></a>Contribution</h2><ol>
+<h2 id="contribution">Contribution</h2>
+<ol type="1">
 <li>提出了基于GAN的时间序列无监督异常检测模型</li>
 <li>我们使用基于LSTM的GAN来对多变量时间序列进行建模</li>
 <li>结合使用了Residual Loss和Discrimination Loss来进行异常的判断</li>
 </ol>
-<h2 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h2><h3 id="Generative-Adversarial-Networks"><a href="#Generative-Adversarial-Networks" class="headerlink" title="Generative Adversarial Networks"></a>Generative Adversarial Networks</h3><h4 id="GANs-In-a-Nutshell-an-extremely-simple-explanation"><a href="#GANs-In-a-Nutshell-an-extremely-simple-explanation" class="headerlink" title="GANs In a Nutshell, an extremely simple explanation"></a>GANs In a Nutshell, an extremely simple explanation</h4><ul>
-<li>我们想要从一个复杂的、高维的数据分布$p_r(x)$上采样得到我们想要的数据点，然而$p_r(x)$无法直接求得</li>
-<li>代替方法：从一个简单的、已知的分布$p_z(z)$上采样，然后学习一个Transformation $G(z): z\rightarrow x$来将$z$映射到$x$</li>
-</ul>
-<img src="https://i.loli.net/2020/06/25/frIYtuao9mexQUT.png" style="zoom:67%;" />
-
-<h4 id="Training-Two-player-Game"><a href="#Training-Two-player-Game" class="headerlink" title="Training: Two-player Game"></a>Training: Two-player Game</h4><ul>
-<li>**Generator Network: ** 从随机分布$p_z(z)$采样$z$，通过映射生成样本$x$，这个生成的样本要尽量“真实”。怎么“真实”？优化生成器参数$\theta_G$最大化判别器对生成样本的评分即可</li>
-<li>**Discriminator Network: **接受一个样本$x$，判断其是生成的样本还是真实的样本。在训练阶段，我们是知道一个样本$x$到底是生成的还是真实的，所以优化判别器参数$\theta_D$最小化判别器对生成样本的评分，最大化对真实样本的评分（即最大化分辨真实样本的能力）</li>
-</ul>
-<img src="https://i.loli.net/2020/06/25/ECP2Dkpq6FrSoef.png" style="zoom:67%;" />
-
-<p>形式化的来讲，优化函数如下：</p>
-<p>$$\min\limits_{\theta_G}\max\limits_{\theta_D}V(G,D)=\mathbb{E}<em>{x\sim p</em>{data}(x)\log(\underbrace{D_{\theta{D}}(x)}<em>{判别器对真实样本的评分})}+\mathbb{E}</em>{z\sim p_z(z)}\log(1-\underbrace{D_{\theta_d}(G_{\theta_G}(z))}_{判别器对生成样本的评分})$$</p>
-<p>训练过程如下：</p>
-<img src="https://i.loli.net/2020/06/25/57N4yUrfoS1cBWd.png" style="zoom:67%;" />
-
-<h3 id="Long-Short-Time-Memory-Networks"><a href="#Long-Short-Time-Memory-Networks" class="headerlink" title="Long Short Time Memory Networks"></a>Long Short Time Memory Networks</h3><h4 id="Vanilla-Recurrent-Neural-Networks"><a href="#Vanilla-Recurrent-Neural-Networks" class="headerlink" title="Vanilla Recurrent Neural Networks"></a>Vanilla Recurrent Neural Networks</h4><p>普通的神经网络：</p>
-<img src="https://i.loli.net/2020/06/25/U5rxdYR4jKoqQOX.png" style="zoom:50%;" />
-
-<p>概括的来讲，可以涵盖为一个公式$\hat{\mathbf{y}}=f(\mathbf{x})$。对于一个样本$\mathbf{x}$，通过多层神经网络映射，输出$\mathbf{y}$。</p>
-<p>对于RNN，我们处理的是序列数据，也就是说所有样本之间并不是相互独立的。对于一个序列中的一个样本$x_t\in{x_1,x_2,\cdots,x_n}$，将其输入到神经网络的时候，为了建模$x_t$之前的子序列对$x_t$的影响关系，需要将这个子序列的信息也输入到神经网络中，怎么做呢？为每一个样本点保存一个State。即定义$h_t=g(\hat{y_t})=g(f(x_t))$，对于当前样本点，$\hat{y_t}=f(x_t,h_{t-1})$。也就是说神经网络的输入不仅包含了当前样本点的特征，也包含了上一个样本点的“状态”(上一个样本点的“状态”又隐含了上上个样本点的“状态”…)，就像是为网络加上了短期记忆。</p>
-<img src="https://i.loli.net/2020/06/25/cxBk6SQTydsOVYt.png" style="zoom: 67%;" />
-
-<img src="https://i.loli.net/2020/06/25/ODKWYBI83tJXurM.png" style="zoom: 33%;" />
-
-<img src="https://i.loli.net/2020/06/25/jq1LAytRKCub3kX.png" style="zoom:33%;" />
-
-<h4 id="Gradient-Flow-of-Vanilla-RNN"><a href="#Gradient-Flow-of-Vanilla-RNN" class="headerlink" title="Gradient Flow of Vanilla RNN"></a>Gradient Flow of Vanilla RNN</h4><p>下面来进行一些形式化的定义，假设在时刻$t$网络输入特征为$x_t$，输出隐含状态为$h_{t}$，其不仅和当前输入$x_t$有关，还和上一个隐含状态$h_{t-1}$有关：</p>
+<h2 id="background">Background</h2>
+<h3 id="generative-adversarial-networks">Generative Adversarial Networks</h3>
+<h4 id="gans-in-a-nutshell-an-extremely-simple-explanation">GANs In a Nutshell, an extremely simple explanation</h4>
 <ul>
-<li>当前时刻总的净输入$z_t=Uh_{t-1}+Wx_t+b$</li>
-<li>当前时刻输出隐含状态$h_t=f(z_t)$</li>
-<li>当前时刻输出$\hat{y}_t=Vh_t$</li>
+<li>我们想要从一个复杂的、高维的数据分布<span class="math inline">\(p_r(x)\)</span>上采样得到我们想要的数据点，然而<span class="math inline">\(p_r(x)\)</span>无法直接求得</li>
+<li>代替方法：从一个简单的、已知的分布<span class="math inline">\(p_z(z)\)</span>上采样，然后学习一个Transformation <span class="math inline">\(G(z): z\rightarrow x\)</span>来将<span class="math inline">\(z\)</span>映射到<span class="math inline">\(x\)</span></li>
+</ul>
+<p><img src="https://i.loli.net/2020/06/25/frIYtuao9mexQUT.png" style="zoom:67%;" /></p>
+<h4 id="training-two-player-game">Training: Two-player Game</h4>
+<ul>
+<li><strong>Generator Network: </strong> 从随机分布<span class="math inline">\(p_z(z)\)</span>采样<span class="math inline">\(z\)</span>，通过映射生成样本<span class="math inline">\(x\)</span>，这个生成的样本要尽量“真实”。怎么“真实”？优化生成器参数<span class="math inline">\(\theta_G\)</span>最大化判别器对生成样本的评分即可</li>
+<li><strong>Discriminator Network: </strong>接受一个样本<span class="math inline">\(x\)</span>，判断其是生成的样本还是真实的样本。在训练阶段，我们是知道一个样本<span class="math inline">\(x\)</span>到底是生成的还是真实的，所以优化判别器参数<span class="math inline">\(\theta_D\)</span>最小化判别器对生成样本的评分，最大化对真实样本的评分（即最大化分辨真实样本的能力）</li>
+</ul>
+<p><img src="https://i.loli.net/2020/06/25/ECP2Dkpq6FrSoef.png" style="zoom:67%;" /></p>
+<p>形式化的来讲，优化函数如下：</p>
+<p><span class="math display">\[\min\limits_{\theta_G}\max\limits_{\theta_D}V(G,D)=\mathbb{E}_{x\sim p_{data}(x)\log(\underbrace{D_{\theta{D}}(x)}_{判别器对真实样本的评分})}+\mathbb{E}_{z\sim p_z(z)}\log(1-\underbrace{D_{\theta_d}(G_{\theta_G}(z))}_{判别器对生成样本的评分})\]</span></p>
+<p>训练过程如下：</p>
+<p><img src="https://i.loli.net/2020/06/25/57N4yUrfoS1cBWd.png" style="zoom:67%;" /></p>
+<h3 id="long-short-time-memory-networks">Long Short Time Memory Networks</h3>
+<h4 id="vanilla-recurrent-neural-networks">Vanilla Recurrent Neural Networks</h4>
+<p>普通的神经网络：</p>
+<p><img src="https://i.loli.net/2020/06/25/U5rxdYR4jKoqQOX.png" style="zoom:50%;" /></p>
+<p>概括的来讲，可以涵盖为一个公式<span class="math inline">\(\hat{\mathbf{y}}=f(\mathbf{x})\)</span>。对于一个样本<span class="math inline">\(\mathbf{x}\)</span>，通过多层神经网络映射，输出<span class="math inline">\(\mathbf{y}\)</span>。</p>
+<p>对于RNN，我们处理的是序列数据，也就是说所有样本之间并不是相互独立的。对于一个序列中的一个样本<span class="math inline">\(x_t\in\{x_1,x_2,\cdots,x_n\}\)</span>，将其输入到神经网络的时候，为了建模<span class="math inline">\(x_t\)</span>之前的子序列对<span class="math inline">\(x_t\)</span>的影响关系，需要将这个子序列的信息也输入到神经网络中，怎么做呢？为每一个样本点保存一个State。即定义<span class="math inline">\(h_t=g(\hat{y_t})=g(f(x_t))\)</span>，对于当前样本点，<span class="math inline">\(\hat{y_t}=f(x_t,h_{t-1})\)</span>。也就是说神经网络的输入不仅包含了当前样本点的特征，也包含了上一个样本点的“状态”(上一个样本点的“状态”又隐含了上上个样本点的“状态”...)，就像是为网络加上了短期记忆。</p>
+<p><img src="https://i.loli.net/2020/06/25/cxBk6SQTydsOVYt.png" style="zoom: 67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/ODKWYBI83tJXurM.png" style="zoom: 33%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/jq1LAytRKCub3kX.png" style="zoom:33%;" /></p>
+<h4 id="gradient-flow-of-vanilla-rnn">Gradient Flow of Vanilla RNN</h4>
+<p>下面来进行一些形式化的定义，假设在时刻<span class="math inline">\(t\)</span>网络输入特征为<span class="math inline">\(x_t\)</span>，输出隐含状态为<span class="math inline">\(h_{t}\)</span>，其不仅和当前输入<span class="math inline">\(x_t\)</span>有关，还和上一个隐含状态<span class="math inline">\(h_{t-1}\)</span>有关：</p>
+<ul>
+<li>当前时刻总的净输入<span class="math inline">\(z_t=Uh_{t-1}+Wx_t+b\)</span></li>
+<li>当前时刻输出隐含状态<span class="math inline">\(h_t=f(z_t)\)</span></li>
+<li>当前时刻输出<span class="math inline">\(\hat{y}_t=Vh_t\)</span></li>
 </ul>
 <p>RNN的梯度更新公式(推导过程比较复杂)：</p>
-<p>$$\frac{\partial{\mathcal{L}}}{\partial U}=\sum\limits_{t=1}^T\sum\limits_{k=1}^t \delta_{t,k}\mathbf{h}_{k-1}^T$$</p>
-<p>$$\frac{\partial{\mathcal{L}}}{\partial{W}}=\sum\limits_{t=1}^T\sum\limits_{k=1}^t \delta_{t,k}x_k^T$$</p>
-<p>$$\frac{\partial\mathcal{L}}{\partial{b}}=\sum\limits_{t=1}^T\sum\limits_{k=1}^t\delta_{t,k}$$</p>
-<p>其中$\delta_{t,k}=\frac{\partial{\mathcal{L}}}{\partial{z_k}}=\text{diag}(f^\prime(z_k))U^T\delta_{t,k+1}$定义为第$t$时刻的损失对第$k$时刻隐藏神经层的净输入$z_k$的导数，且$z_k=Uh_{k-1}+Wx_k+b,1\leq k&lt;t$。</p>
+<p><span class="math display">\[\frac{\partial{\mathcal{L}}}{\partial U}=\sum\limits_{t=1}^T\sum\limits_{k=1}^t \delta_{t,k}\mathbf{h}_{k-1}^T\]</span></p>
+<p><span class="math display">\[\frac{\partial{\mathcal{L}}}{\partial{W}}=\sum\limits_{t=1}^T\sum\limits_{k=1}^t \delta_{t,k}x_k^T\]</span></p>
+<p><span class="math display">\[\frac{\partial\mathcal{L}}{\partial{b}}=\sum\limits_{t=1}^T\sum\limits_{k=1}^t\delta_{t,k}\]</span></p>
+<p>其中<span class="math inline">\(\delta_{t,k}=\frac{\partial{\mathcal{L}}}{\partial{z_k}}=\text{diag}(f^\prime(z_k))U^T\delta_{t,k+1}\)</span>定义为第<span class="math inline">\(t\)</span>时刻的损失对第<span class="math inline">\(k\)</span>时刻隐藏神经层的净输入<span class="math inline">\(z_k\)</span>的导数，且<span class="math inline">\(z_k=Uh_{k-1}+Wx_k+b,1\leq k&lt;t\)</span>。</p>
 <p>RNN的梯度流向如下图红箭头所示：</p>
-<img src="https://i.loli.net/2020/06/25/F5xvo9kCiNl8ehZ.png" style="zoom: 50%;" />
-
-<p>RNN会遇到梯度消失和梯度爆炸的问题。根据前面的公式，$\delta_{t,k}$实际上是递归定义的，展开得到：</p>
-<p>$$\delta_{t,k}=\prod\limits_{\tau=k}^{t-1}(\text{diag}(f^\prime(z_\tau))U^T)\delta_{t,t}$$</p>
-<p>如果定义$\gamma\cong\parallel\text{diag}(f^\prime(z_\tau))U^T\parallel$，那么$\delta_{t,k}\cong\gamma^{t-k}\delta_{t,t}$。在$t-k$很大时，$\gamma&lt;1$会导致梯度消失，$\gamma&gt;1$时会导致梯度爆炸。</p>
-<img src="https://i.loli.net/2020/06/25/RGW4oVtQ7KEFUCA.png" style="zoom:50%;" />
-
-<img src="https://i.loli.net/2020/06/25/i4O9kJQpnZ5GYeq.png" style="zoom:50%;" />
-
-
-
-<h4 id="Long-Short-Time-Memory"><a href="#Long-Short-Time-Memory" class="headerlink" title="Long Short Time Memory"></a>Long Short Time Memory</h4><p>LSTM是一种解决RNN梯度消失问题的改进版本：</p>
-<img src="https://i.loli.net/2020/06/25/B4NXzb6fSdgGowL.png" style="zoom:50%;" />
-
-<p>在LSTM中，维护了两个State，$c_t$和$h_t$。其中$c_t$由遗忘门$f$与上一个$c_{t-1}$相乘(代表继承上一个Cell的信息并加以一定程度的遗忘)，加上输出门$i$与Gate Gate $g$相乘(Gate Gate代表当前的候选状态，输出门$i$控制当前候选状态有多少信息需要保存)。最后，输出门$o$控制当前时刻的Cell State $c_t$有多少信息需要输出给外部状态$h_t$。</p>
-<p>三个门的计算方式为： </p>
-<p>$$i_t=\sigma(W_ix_t+U_ih_{t-1}+b_i)$$</p>
-<p>$$f_t=\sigma(W_fx_t+U_fh_{t-1}+b_f)$$</p>
-<p>$$o_t=\sigma(W_ox_t+U_oh_{t-1}+b_o)$$</p>
-<img src="https://i.loli.net/2020/06/25/PXQMb9vih1yEKrf.png" style="zoom:50%;" />
-
-<img src="https://i.loli.net/2020/06/25/1zZQqlI6r9Yjp47.png" style="zoom:50%;" />
-
-<h2 id="Methodology"><a href="#Methodology" class="headerlink" title="Methodology"></a>Methodology</h2><p>总体框架图如Fig 1所示：</p>
-<img src="https://i.loli.net/2020/06/25/scEA9Ou1Yi7nThG.png" style="zoom: 50%;" />
-
-<h3 id="GAN-with-LSTM-RNN"><a href="#GAN-with-LSTM-RNN" class="headerlink" title="GAN with LSTM-RNN"></a>GAN with LSTM-RNN</h3><p>网络结构上生成器和判别器都是LSTM，优化函数和普通GAN一样：</p>
-<p>$$\min\limits_G\max\limits_D V(D,G)=\mathbb{E}<em>{x\sim p</em>{data}(x)}[\log D(x)]+\mathbb{E}_{z\sim p_z(z)}[\log (1-D(G(z)))]$$</p>
-<h3 id="GAN-based-Anomaly-Score"><a href="#GAN-based-Anomaly-Score" class="headerlink" title="GAN-based Anomaly Score"></a>GAN-based Anomaly Score</h3><p>在测试阶段，需要使用梯度优化寻找一个使得$G_{rnn}(z)$最接近$X^{test}$的$z^k$：</p>
-<p>$$\min\limits_{Z^k}Error(X^{test},G_{rnn}(Z^k))=1-Similarity(X^{test},G_{rnn}(Z^k))$$</p>
+<p><img src="https://i.loli.net/2020/06/25/F5xvo9kCiNl8ehZ.png" style="zoom: 50%;" /></p>
+<p>RNN会遇到梯度消失和梯度爆炸的问题。根据前面的公式，<span class="math inline">\(\delta_{t,k}\)</span>实际上是递归定义的，展开得到：</p>
+<p><span class="math display">\[\delta_{t,k}=\prod\limits_{\tau=k}^{t-1}(\text{diag}(f^\prime(z_\tau))U^T)\delta_{t,t}\]</span></p>
+<p>如果定义<span class="math inline">\(\gamma\cong\parallel\text{diag}(f^\prime(z_\tau))U^T\parallel\)</span>，那么<span class="math inline">\(\delta_{t,k}\cong\gamma^{t-k}\delta_{t,t}\)</span>。在<span class="math inline">\(t-k\)</span>很大时，<span class="math inline">\(\gamma&lt;1\)</span>会导致梯度消失，<span class="math inline">\(\gamma&gt;1\)</span>时会导致梯度爆炸。</p>
+<p><img src="https://i.loli.net/2020/06/25/RGW4oVtQ7KEFUCA.png" style="zoom:50%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/i4O9kJQpnZ5GYeq.png" style="zoom:50%;" /></p>
+<h4 id="long-short-time-memory">Long Short Time Memory</h4>
+<p>LSTM是一种解决RNN梯度消失问题的改进版本：</p>
+<p><img src="https://i.loli.net/2020/06/25/B4NXzb6fSdgGowL.png" style="zoom:50%;" /></p>
+<p>在LSTM中，维护了两个State，<span class="math inline">\(c_t\)</span>和<span class="math inline">\(h_t\)</span>。其中<span class="math inline">\(c_t\)</span>由遗忘门<span class="math inline">\(f\)</span>与上一个<span class="math inline">\(c_{t-1}\)</span>相乘(代表继承上一个Cell的信息并加以一定程度的遗忘)，加上输出门<span class="math inline">\(i\)</span>与Gate Gate <span class="math inline">\(g\)</span>相乘(Gate Gate代表当前的候选状态，输出门<span class="math inline">\(i\)</span>控制当前候选状态有多少信息需要保存)。最后，输出门<span class="math inline">\(o\)</span>控制当前时刻的Cell State <span class="math inline">\(c_t\)</span>有多少信息需要输出给外部状态<span class="math inline">\(h_t\)</span>。</p>
+<p>三个门的计算方式为：</p>
+<p><span class="math display">\[i_t=\sigma(W_ix_t+U_ih_{t-1}+b_i)\]</span></p>
+<p><span class="math display">\[f_t=\sigma(W_fx_t+U_fh_{t-1}+b_f)\]</span></p>
+<p><span class="math display">\[o_t=\sigma(W_ox_t+U_oh_{t-1}+b_o)\]</span></p>
+<p><img src="https://i.loli.net/2020/06/25/PXQMb9vih1yEKrf.png" style="zoom:50%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/1zZQqlI6r9Yjp47.png" style="zoom:50%;" /></p>
+<h2 id="methodology">Methodology</h2>
+<p>总体框架图如Fig 1所示：</p>
+<p><img src="https://i.loli.net/2020/06/25/scEA9Ou1Yi7nThG.png" style="zoom: 50%;" /></p>
+<h3 id="gan-with-lstm-rnn">GAN with LSTM-RNN</h3>
+<p>网络结构上生成器和判别器都是LSTM，优化函数和普通GAN一样：</p>
+<p><span class="math display">\[\min\limits_G\max\limits_D V(D,G)=\mathbb{E}_{x\sim p_{data}(x)}[\log D(x)]+\mathbb{E}_{z\sim p_z(z)}[\log (1-D(G(z)))]\]</span></p>
+<h3 id="gan-based-anomaly-score">GAN-based Anomaly Score</h3>
+<p>在测试阶段，需要使用梯度优化寻找一个使得<span class="math inline">\(G_{rnn}(z)\)</span>最接近<span class="math inline">\(X^{test}\)</span>的<span class="math inline">\(z^k\)</span>：</p>
+<p><span class="math display">\[\min\limits_{Z^k}Error(X^{test},G_{rnn}(Z^k))=1-Similarity(X^{test},G_{rnn}(Z^k))\]</span></p>
 <p>本文定义了两种Anomaly Score，一种是Residual Loss：</p>
-<p>$$Res(X^{test}<em>t)=\sum\limits</em>{i=1}^n|x^{test,i}<em>t-G</em>{rnn}(Z^{k,i}_t)|$$</p>
-<p>一种是Discrimination Loss，即判别器的输出$D_{rnn}(x_t^{test})$。</p>
+<p><span class="math display">\[Res(X^{test}_t)=\sum\limits_{i=1}^n|x^{test,i}_t-G_{rnn}(Z^{k,i}_t)|\]</span></p>
+<p>一种是Discrimination Loss，即判别器的输出<span class="math inline">\(D_{rnn}(x_t^{test})\)</span>。</p>
 <p>总的Anomaly Score：</p>
-<p>$$S^{test}_t=\lambda Res(X^{test}<em>t)+(1-\lambda)D</em>{rnn}(x^{test}_t)$$</p>
-<h3 id="Anomaly-Detection-Framework"><a href="#Anomaly-Detection-Framework" class="headerlink" title="Anomaly Detection Framework"></a>Anomaly Detection Framework</h3><p>模型的算法流程如下：</p>
-<img src="https://i.loli.net/2020/06/25/84ZCT1JOEru53Ue.png" style="zoom:67%;" />
-
+<p><span class="math display">\[S^{test}_t=\lambda Res(X^{test}_t)+(1-\lambda)D_{rnn}(x^{test}_t)\]</span></p>
+<h3 id="anomaly-detection-framework">Anomaly Detection Framework</h3>
+<p>模型的算法流程如下：</p>
+<p><img src="https://i.loli.net/2020/06/25/84ZCT1JOEru53Ue.png" style="zoom:67%;" /></p>
 <p>由于本文是多变量时间序列预测，而且时间序列的长度有可能比较长，作者使用了滑动窗口和PCA来进行预处理。</p>
-<h2 id="Experiments"><a href="#Experiments" class="headerlink" title="Experiments"></a>Experiments</h2><img src="https://i.loli.net/2020/06/25/LGsiMw6IjYUtx8T.png" style="zoom:67%;" /></div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2019-09-22T14:29:18.000Z" title="2019-9-22 10:29:18 ├F10: PM┤">2019-09-22</time>发表</span><span class="level-item"><time dateTime="2020-06-24T07:48:38.792Z" title="2020-6-24 3:48:38 ├F10: PM┤">2020-06-24</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2019/09/22/ALSR-An-adaptive-label-screening-and-relearning-approach-for-interval-oriented-anomaly-detection/">ALSR: An Adaptive Label Screening and Relearning Approach for Interval-Oriented Anomaly Detection</a></h1><div class="content"><h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>本文针对面向区间的KPI异常检测提出了Label Screening方法和Relearning Algorithm.</p>
+<h2 id="experiments">Experiments</h2>
+<p><img src="https://i.loli.net/2020/06/25/LGsiMw6IjYUtx8T.png" style="zoom:67%;" /></p>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2019-09-22T14:29:18.000Z" title="2019-9-22 10:29:18 ├F10: PM┤">2019-09-22</time>发表</span><span class="level-item"><time dateTime="2020-06-24T07:48:38.792Z" title="2020-6-24 3:48:38 ├F10: PM┤">2020-06-24</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2019/09/22/ALSR-An-adaptive-label-screening-and-relearning-approach-for-interval-oriented-anomaly-detection/">ALSR: An Adaptive Label Screening and Relearning Approach for Interval-Oriented Anomaly Detection</a></h1><div class="content"><h1 id="introduction">Introduction</h1>
+<p>本文针对面向区间的KPI异常检测提出了Label Screening方法和Relearning Algorithm.</p>
 <p><a target="_blank" rel="noopener" href="https://www.sciencedirect.com/science/article/pii/S0957417419304282">原文</a></p>
-<h2 id="Contribution"><a href="#Contribution" class="headerlink" title="Contribution"></a>Contribution</h2><ol>
+<h2 id="contribution">Contribution</h2>
+<ol type="1">
 <li>提出了一种Label Screening方法来对区间内不同重要性进行过滤</li>
 <li>提出了一种Relearning Algorithm来对FP和TP进行Relearning，在不减少Recall的条件下增大Precision</li>
 </ol>
-<h2 id="Methodology"><a href="#Methodology" class="headerlink" title="Methodology"></a>Methodology</h2><h3 id="Overall-Structure"><a href="#Overall-Structure" class="headerlink" title="Overall Structure"></a>Overall Structure</h3><p>算法的整体框架如下：</p>
-<p><img src="https://i.loli.net/2020/06/24/yGMWzdgTf43qImp.png"></p>
-<h3 id="Label-Screening-Model"><a href="#Label-Screening-Model" class="headerlink" title="Label Screening Model"></a>Label Screening Model</h3><p>预训练的结果被分为$TP_{po},FP_{po},TN_{po},FN_{po}$四类，$TP_{po}$和$FN_{po}$可以被细分如下：<br>$$<br>\begin{align}TP_{po}&amp;=TP_{po,withinT}+TP_{po,afterT}\&amp;=TP_{po,withinT}+TP_{po,afterT,tpl}+TP_{po,after,fnl}\end{align}<br>$$</p>
-<p>$$<br>\begin{align}FN_{po}&amp;=FN_{po,withinT}+FN_{po,afterT}\&amp;=FN_{po,withinT,tpl}+FN_{po,,withinT,fnl}+FN_{po,afterT,tpl}+FN_{po,afterT,fnl}\end{align}<br>$$</p>
-<p>其中下标${}<em>{withinT}$代表在异常片段第一个点$T$距离内的所有点，下标${}</em>{afterT}$代表$T$距离之后。下标${}<em>{tpl}$和${}</em>{fnl}$分别代表在异常片段中，包含和不包含$TP_{po,withinT}$的点。</p>
-<p>以TP为例，Point-based的TP包含了在T范围之内的（即在Interval-based的标准中也会被认为是TP的点）和T范围之外的点（即在Interval-based的标准中不认为是TP的点）。而在T范围之外的点又可以细分为该异常片段是否包含$TP_{po,withinT}$的点（即该点在Interval-based的标准中不会被判定为TP，但该异常片段有其点会被判定为TP）。</p>
-<p>类似的，$TP_{io}$和$FN_{io}$可以被分解为：<br>$$<br>\begin{align}TP_{io}&amp;=TP_{po,withinT}+TP_{po,afterT,tpl}+FN_{po,withinT,tpl}+FN_{po,afterT,tpl}\&amp;=TP_{po}+FN_{po,withinT,tpl}+FN_{po,afterT,tpl}-TP_{po,afterT,fnl}\end{align}<br>$$</p>
-<p>$$<br>\begin{align}FN_{io}&amp;=FN_{po,withinT,fnl}+FN_{po,afterT,fnl}+TP_{po,afterT,fnl}\&amp;=FN_{po}+TP_{po,afterT,fnl}-FN_{po,withinT,tpl}-FN_{po,afterT,tpl}\end{align}<br>$$</p>
+<h2 id="methodology">Methodology</h2>
+<h3 id="overall-structure">Overall Structure</h3>
+<p>算法的整体框架如下：</p>
+<p><img src="https://i.loli.net/2020/06/24/yGMWzdgTf43qImp.png" /></p>
+<h3 id="label-screening-model">Label Screening Model</h3>
+<p>预训练的结果被分为<span class="math inline">\(TP_{po},FP_{po},TN_{po},FN_{po}\)</span>四类，<span class="math inline">\(TP_{po}\)</span>和<span class="math inline">\(FN_{po}\)</span>可以被细分如下： <span class="math display">\[
+\begin{align}TP_{po}&amp;=TP_{po,withinT}+TP_{po,afterT}\\&amp;=TP_{po,withinT}+TP_{po,afterT,tpl}+TP_{po,after,fnl}\end{align}
+\]</span></p>
+<p><span class="math display">\[
+\begin{align}FN_{po}&amp;=FN_{po,withinT}+FN_{po,afterT}\\&amp;=FN_{po,withinT,tpl}+FN_{po,,withinT,fnl}+FN_{po,afterT,tpl}+FN_{po,afterT,fnl}\end{align}
+\]</span></p>
+<p>其中下标<span class="math inline">\({}_{withinT}\)</span>代表在异常片段第一个点<span class="math inline">\(T\)</span>距离内的所有点，下标<span class="math inline">\({}_{afterT}\)</span>代表<span class="math inline">\(T\)</span>距离之后。下标<span class="math inline">\({}_{tpl}\)</span>和<span class="math inline">\({}_{fnl}\)</span>分别代表在异常片段中，包含和不包含<span class="math inline">\(TP_{po,withinT}\)</span>的点。</p>
+<p>以TP为例，Point-based的TP包含了在T范围之内的（即在Interval-based的标准中也会被认为是TP的点）和T范围之外的点（即在Interval-based的标准中不认为是TP的点）。而在T范围之外的点又可以细分为该异常片段是否包含<span class="math inline">\(TP_{po,withinT}\)</span>的点（即该点在Interval-based的标准中不会被判定为TP，但该异常片段有其点会被判定为TP）。</p>
+<p>类似的，<span class="math inline">\(TP_{io}\)</span>和<span class="math inline">\(FN_{io}\)</span>可以被分解为： <span class="math display">\[
+\begin{align}TP_{io}&amp;=TP_{po,withinT}+TP_{po,afterT,tpl}+FN_{po,withinT,tpl}+FN_{po,afterT,tpl}\\&amp;=TP_{po}+FN_{po,withinT,tpl}+FN_{po,afterT,tpl}-TP_{po,afterT,fnl}\end{align}
+\]</span></p>
+<p><span class="math display">\[
+\begin{align}FN_{io}&amp;=FN_{po,withinT,fnl}+FN_{po,afterT,fnl}+TP_{po,afterT,fnl}\\&amp;=FN_{po}+TP_{po,afterT,fnl}-FN_{po,withinT,tpl}-FN_{po,afterT,tpl}\end{align}
+\]</span></p>
 <p>文中对该部分的分析可以分为以下几点：</p>
-<ol>
-<li>在Interval-oriented的标准中，$FN_{po,tpl}$的点仍会被认为是$TP_{io}$，而$TP_{po,afterT}$（不带${}<em>{tpl}$）不会被认为是$TP</em>{io}$，所以最终$TP_{io}$由所有$TP_{po}$加上那些会被认为是$TP_{io}$的$FN_{po,tpl}$再去掉不带${}<em>{tpl}$的$TP</em>{po,afterT}$组成，即公式(6)</li>
-<li>同时，根据公式(6)，如果$TP_{po}$变为$FN_{po,tpl}$，也不会对最终结果造成影响。但是根据公式(5)和公式(7)，$TP_{po,withinT}$变成$FN_{po,withinT,fnl}$会减小$TP_{io}$同时增大$FN_{io}$</li>
-<li>文章指出，虽然$FN_{po,withinT,tpl}$和$FN_{po,afterT,tpl}$最后都会被认为是$TP_{io}$，但作者假设$FN_{po,withinT,tpl}$更难检测，所以应该保留，而$FN_{po,afterT,tpl}$应该削减</li>
-<li>Label Screening方法去除了$FN_{po,afterT}$的点</li>
+<ol type="1">
+<li>在Interval-oriented的标准中，<span class="math inline">\(FN_{po,tpl}\)</span>的点仍会被认为是<span class="math inline">\(TP_{io}\)</span>，而<span class="math inline">\(TP_{po,afterT}\)</span>（不带<span class="math inline">\({}_{tpl}\)</span>）不会被认为是<span class="math inline">\(TP_{io}\)</span>，所以最终<span class="math inline">\(TP_{io}\)</span>由所有<span class="math inline">\(TP_{po}\)</span>加上那些会被认为是<span class="math inline">\(TP_{io}\)</span>的<span class="math inline">\(FN_{po,tpl}\)</span>再去掉不带<span class="math inline">\({}_{tpl}\)</span>的<span class="math inline">\(TP_{po,afterT}\)</span>组成，即公式(6)</li>
+<li>同时，根据公式(6)，如果<span class="math inline">\(TP_{po}\)</span>变为<span class="math inline">\(FN_{po,tpl}\)</span>，也不会对最终结果造成影响。但是根据公式(5)和公式(7)，<span class="math inline">\(TP_{po,withinT}\)</span>变成<span class="math inline">\(FN_{po,withinT,fnl}\)</span>会减小<span class="math inline">\(TP_{io}\)</span>同时增大<span class="math inline">\(FN_{io}\)</span></li>
+<li>文章指出，虽然<span class="math inline">\(FN_{po,withinT,tpl}\)</span>和<span class="math inline">\(FN_{po,afterT,tpl}\)</span>最后都会被认为是<span class="math inline">\(TP_{io}\)</span>，但作者假设<span class="math inline">\(FN_{po,withinT,tpl}\)</span>更难检测，所以应该保留，而<span class="math inline">\(FN_{po,afterT,tpl}\)</span>应该削减</li>
+<li>Label Screening方法去除了<span class="math inline">\(FN_{po,afterT}\)</span>的点</li>
 <li>Screened之后的训练集被用来训练DNN主模型，但Label Screening的预测结果也会被保留，和DNN主模型的结果进行组合</li>
 </ol>
 <p>算法流程如下：</p>
-<p><img src="https://i.loli.net/2020/06/24/ZDT5fQNojsXm84q.png"></p>
-<h3 id="Relearning-Algorithm"><a href="#Relearning-Algorithm" class="headerlink" title="Relearning Algorithm"></a>Relearning Algorithm</h3><p>Relearning Model的输入是DNN主模型预测出来的异常，其中包括TP和FP。Relearning Model采用的是随机森林，其输入的样本通过采样得到：<br>$$<br>\begin{align}<br>\text{relearning}\space&amp;\text{training set}=\&amp; shuffle{4C\ast\text{randomof}(TP_{po})\&amp;+C\cdot\text{randomof}(FP_{po})+C\cdot\text{randomof}(TN_{po})}<br>\end{align}<br>$$<br>其中$C$为常数。TN和FP都看作是负例(正常样本)，TP看作是正例。</p>
-<p><img src="https://i.loli.net/2020/06/24/qgvINaFu9JLfM4j.png"></p>
-<h3 id="Detection"><a href="#Detection" class="headerlink" title="Detection"></a>Detection</h3><p>对于一个滑动窗口$x_t={x_{t-w+1},\cdots,x_t}$，异常检测算法的目标是输出检测结果$y_t\in{0,1}$来表示时间$t$是否发生异常。实际上算法输出的是$p_{y_t}\in[0,1]$概率值来表示在时间$t$发生异常的概率。文中三个模型会得到三个输出：$y_{t,ls},y_{t,main},y_{t,re}$。最终结果为：<br>$$<br>y_t=y_{t,ls}\space&amp;\space y_{t,main}\space&amp; \space y_{t,re}<br>$$<br>在绘制PR曲线时，采用的公式为：<br>$$<br>\begin{align}<br>p_{y_t}(th)=&amp;(1-sig(p_{y_t,ls},th))\cdot(p_{y_t,ls})\<br>&amp;+sig(p_{y_t,ls},th)\cdot(1-sig(p_{y_t,main},th))\cdot p_{y_t,main}\<br>&amp;+sig(p_{y_t,ls},th)\cdot sig(p_{y_t,main},th)\cdot p_{y_t,re}\<br>\end{align}<br>$$</p>
-<p>$$<br>y_t(th)=sig(p_{y_t}(th),th)<br>$$</p>
+<p><img src="https://i.loli.net/2020/06/24/ZDT5fQNojsXm84q.png" /></p>
+<h3 id="relearning-algorithm">Relearning Algorithm</h3>
+<p>Relearning Model的输入是DNN主模型预测出来的异常，其中包括TP和FP。Relearning Model采用的是随机森林，其输入的样本通过采样得到： <span class="math display">\[
+\begin{align}
+\text{relearning}\space&amp;\text{training set}=\\&amp; shuffle\{4C\ast\text{randomof}(TP_{po})\\&amp;+C\cdot\text{randomof}(FP_{po})+C\cdot\text{randomof}(TN_{po})\}
+\end{align}
+\]</span> 其中<span class="math inline">\(C\)</span>为常数。TN和FP都看作是负例(正常样本)，TP看作是正例。</p>
+<p><img src="https://i.loli.net/2020/06/24/qgvINaFu9JLfM4j.png" /></p>
+<h3 id="detection">Detection</h3>
+<p>对于一个滑动窗口<span class="math inline">\(x_t=\{x_{t-w+1},\cdots,x_t\}\)</span>，异常检测算法的目标是输出检测结果<span class="math inline">\(y_t\in\{0,1\}\)</span>来表示时间<span class="math inline">\(t\)</span>是否发生异常。实际上算法输出的是<span class="math inline">\(p_{y_t}\in[0,1]\)</span>概率值来表示在时间<span class="math inline">\(t\)</span>发生异常的概率。文中三个模型会得到三个输出：<span class="math inline">\(y_{t,ls},y_{t,main},y_{t,re}\)</span>。最终结果为： <span class="math display">\[
+y_t=y_{t,ls}\space\&amp;\space y_{t,main}\space\&amp; \space y_{t,re}
+\]</span> 在绘制PR曲线时，采用的公式为： <span class="math display">\[
+\begin{align}
+p_{y_t}(th)=&amp;(1-sig(p_{y_t,ls},th))\cdot(p_{y_t,ls})\\
+&amp;+sig(p_{y_t,ls},th)\cdot(1-sig(p_{y_t,main},th))\cdot p_{y_t,main}\\
+&amp;+sig(p_{y_t,ls},th)\cdot sig(p_{y_t,main},th)\cdot p_{y_t,re}\\
+\end{align}
+\]</span></p>
+<p><span class="math display">\[
+y_t(th)=sig(p_{y_t}(th),th)
+\]</span></p>
 <p>算法流程如下：</p>
-<p><img src="https://i.loli.net/2020/06/24/LBT59eugKEPymO8.png"></p>
-<h2 id="Experiments"><a href="#Experiments" class="headerlink" title="Experiments"></a>Experiments</h2><h3 id="Datasets"><a href="#Datasets" class="headerlink" title="Datasets"></a>Datasets</h3><p>清华AIOps数据集，选取了25条KPI。</p>
-<h3 id="Preprocessing"><a href="#Preprocessing" class="headerlink" title="Preprocessing"></a>Preprocessing</h3><ol>
+<p><img src="https://i.loli.net/2020/06/24/LBT59eugKEPymO8.png" /></p>
+<h2 id="experiments">Experiments</h2>
+<h3 id="datasets">Datasets</h3>
+<p>清华AIOps数据集，选取了25条KPI。</p>
+<h3 id="preprocessing">Preprocessing</h3>
+<ol type="1">
 <li><strong>Missing Data.</strong> 去除。</li>
 <li><strong>Standardization.</strong> Minmax Standardization，Feature Extraction使用的是Standardization后的数据。</li>
 <li><strong>Feature Extraction.</strong> 使用了12种特征。</li>
 </ol>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th>Group</th>
 <th>Feature Name</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr class="odd">
 <td>Values</td>
 <td>The original values standardized</td>
 </tr>
-<tr>
+<tr class="even">
 <td>Statistical Features</td>
-<td>Mean,  Standard Deviation, Range, Difference…</td>
+<td>Mean, Standard Deviation, Range, Difference...</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>Fitting Features</td>
 <td>EWMA, AR</td>
 </tr>
-<tr>
+<tr class="even">
 <td>Wavelet Features</td>
 <td>Db2 wavelet decomposition</td>
 </tr>
-</tbody></table>
-<h2 id="Results"><a href="#Results" class="headerlink" title="Results"></a>Results</h2><h3 id="AUCPR"><a href="#AUCPR" class="headerlink" title="AUCPR"></a>AUCPR</h3><p><img src="https://i.loli.net/2020/06/24/LAqNMW1zvs8eP7X.png"></p>
-<p><img src="https://i.loli.net/2020/06/24/YgRwavDIn7izLPX.png"></p>
-<h3 id="F1"><a href="#F1" class="headerlink" title="F1"></a>F1</h3><p><img src="https://i.loli.net/2020/06/24/FM3BUhQXtpo7aiu.png"></p>
-<h2 id="Remark"><a href="#Remark" class="headerlink" title="Remark"></a>Remark</h2><ol>
+</tbody>
+</table>
+<h2 id="results">Results</h2>
+<h3 id="aucpr">AUCPR</h3>
+<p><img src="https://i.loli.net/2020/06/24/LAqNMW1zvs8eP7X.png" /></p>
+<p><img src="https://i.loli.net/2020/06/24/YgRwavDIn7izLPX.png" /></p>
+<h3 id="f1">F1</h3>
+<p><img src="https://i.loli.net/2020/06/24/FM3BUhQXtpo7aiu.png" /></p>
+<h2 id="remark">Remark</h2>
+<ol type="1">
 <li>这篇文章的Label Screening方法实际上是在处理样本分类难易度的问题，将异常区间内容易的样本去除了</li>
-<li>对于时间序列的异常检测问题，我们的目标一般是Point-based的异常标签，一个时间点的特征是有限的。如果用窗口的方式，以${x_{t-w+1},\cdots,x_t}$作为时间$t$的输入（当然每个$x_t$可以有多个Channel），然后把预测结果作为时间$t$的输出</li>
+<li>对于时间序列的异常检测问题，我们的目标一般是Point-based的异常标签，一个时间点的特征是有限的。如果用窗口的方式，以<span class="math inline">\(\{x_{t-w+1},\cdots,x_t\}\)</span>作为时间<span class="math inline">\(t\)</span>的输入（当然每个<span class="math inline">\(x_t\)</span>可以有多个Channel），然后把预测结果作为时间<span class="math inline">\(t\)</span>的输出</li>
 </ol>
-</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2019-09-22T12:35:18.000Z" title="2019-9-22 8:35:18 ├F10: PM┤">2019-09-22</time>发表</span><span class="level-item"><time dateTime="2020-06-25T09:11:13.347Z" title="2020-6-25 5:11:13 ├F10: PM┤">2020-06-25</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2019/09/22/Unsupervised-Anomaly-Detection-via-Variational-Auto-Encoder-for-Seasonal-KPIs-in-Web-Applications/">Unsupervised Anomaly Detection via Variational Auto-Encoder for Seasonal KPIs in Web Applications</a></h1><div class="content"><h2 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h2><p>本文提出了Donut，一个基于VAE的无监督时间序列异常检测系统。</p>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2019-09-22T12:35:18.000Z" title="2019-9-22 8:35:18 ├F10: PM┤">2019-09-22</time>发表</span><span class="level-item"><time dateTime="2020-06-25T09:11:13.347Z" title="2020-6-25 5:11:13 ├F10: PM┤">2020-06-25</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2019/09/22/Unsupervised-Anomaly-Detection-via-Variational-Auto-Encoder-for-Seasonal-KPIs-in-Web-Applications/">Unsupervised Anomaly Detection via Variational Auto-Encoder for Seasonal KPIs in Web Applications</a></h1><div class="content"><h2 id="abstract">Abstract</h2>
+<p>本文提出了Donut，一个基于VAE的无监督时间序列异常检测系统。</p>
 <p><a target="_blank" rel="noopener" href="https://dl.acm.org/citation.cfm?id=3185996">原文</a></p>
-<img src="https://i.loli.net/2020/06/25/aoNWpGDLmJzwXOj.png" style="zoom:67%;" />
-
-<h2 id="Contribution"><a href="#Contribution" class="headerlink" title="Contribution"></a>Contribution</h2><ol>
+<p><img src="https://i.loli.net/2020/06/25/aoNWpGDLmJzwXOj.png" style="zoom:67%;" /></p>
+<h2 id="contribution">Contribution</h2>
+<ol type="1">
 <li>Donut中使用到了三个技巧，包括改进后的ELBO、缺失数据注入和MCMC插值；</li>
 <li>提出基于VAE的异常检测训练既需要正常样本也需要异常样本；</li>
 <li>对Donut提出了在z-空间中基于KDE的理论解释。</li>
 </ol>
-<h2 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h2><h3 id="Anomaly-Detection"><a href="#Anomaly-Detection" class="headerlink" title="Anomaly Detection"></a>Anomaly Detection</h3><p>对于任意时间$t$，给定历史观察值$x_{t-T+1},\cdots,x_t$，确定异常是否发生(记为$y_t=1$)。通常来收异常检测算法给出的是发生异常的可能性，如$p(y_t=1|x_{t-T+1},\cdots,x_t)$。</p>
-<h2 id="Methodology"><a href="#Methodology" class="headerlink" title="Methodology"></a>Methodology</h2><h3 id="Problem-Statement"><a href="#Problem-Statement" class="headerlink" title="Problem Statement"></a>Problem Statement</h3><p>本文的目的是<strong>基于深度生成网络开发具有理论解释性的无监督异常检测算法，并且在有标签的情况下能利用标签信息提升性能</strong>。本文基于VAE来构建模型。</p>
-<img src="https://i.loli.net/2020/06/25/PoKJmnIpEqNdtCe.png" style="zoom:67%;" />
-
-<h3 id="Network-Structure"><a href="#Network-Structure" class="headerlink" title="Network Structure"></a>Network Structure</h3><p>算法的总体框架如下图所示：</p>
-<img src="https://i.loli.net/2020/06/25/DFP1boZNzdVG9pH.png" style="zoom: 80%;" />
-
+<h2 id="background">Background</h2>
+<h3 id="anomaly-detection">Anomaly Detection</h3>
+<p>对于任意时间<span class="math inline">\(t\)</span>，给定历史观察值<span class="math inline">\(x_{t-T+1},\cdots,x_t\)</span>，确定异常是否发生(记为<span class="math inline">\(y_t=1\)</span>)。通常来收异常检测算法给出的是发生异常的可能性，如<span class="math inline">\(p(y_t=1|x_{t-T+1},\cdots,x_t)\)</span>。</p>
+<h2 id="methodology">Methodology</h2>
+<h3 id="problem-statement">Problem Statement</h3>
+<p>本文的目的是<strong>基于深度生成网络开发具有理论解释性的无监督异常检测算法，并且在有标签的情况下能利用标签信息提升性能</strong>。本文基于VAE来构建模型。</p>
+<p><img src="https://i.loli.net/2020/06/25/PoKJmnIpEqNdtCe.png" style="zoom:67%;" /></p>
+<h3 id="network-structure">Network Structure</h3>
+<p>算法的总体框架如下图所示：</p>
+<p><img src="https://i.loli.net/2020/06/25/DFP1boZNzdVG9pH.png" style="zoom: 80%;" /></p>
 <p>一共包含了预处理、训练和检测三个部分。</p>
 <p>下图为模型的概率图模型：</p>
-<img src="https://i.loli.net/2020/06/25/HlDXkSeFOruVbac.png" style="zoom:67%;" />
-
-<p>图中双实线的框为本文模型有别于传统VAE的地方，其余地方和VAE一样。先验概率$p_\theta(z)$选为标准正态分布$\mathcal{N}(0,I)$，后验概率$x$和$z$都是对角化高斯分布，即$p_\theta(x|z)=\mathcal{N}(\mu_x,\sigma_x^2 I),q_\phi(z|x)=\mathcal{N}(\mu_z,\sigma_z^2 I)$。如Figure 4所示，推断网络和生成网络中分别都有隐含层$f_\phi(x)$和$f_\theta(z)$对网络的输入进行特征抽取。高斯分布的参数即从这些抽取出来的特征上得到。均值通过线性层得到：$\mu_x=W^T_{\mu_x}f_\theta(z)+b_{\mu_x}, \mu_z=W^T_{\mu_z}f_\theta(x)+b_{\mu_z}$。标准差通过Soft Plus层加一个高斯噪声得到：$\sigma_x=\text{SoftPlus}[W^T_{\sigma_x}f_\theta(z)+b_{\sigma_x}]+\varepsilon，\sigma_x=\text{SoftPlus}[W^T_{\sigma_z}f_\theta(x)+b_{\sigma_z}]+\varepsilon$。</p>
-<p>文中提到因为KPI的局部方差非常小，所以采用直接建模$\sigma_x,\sigma_z$的方式而不是采用对数。除此之外，为了理论上的解释性，文中的神经网络只使用了全连接层。</p>
-<h3 id="Training"><a href="#Training" class="headerlink" title="Training"></a>Training</h3><p>训练可以直接采用经典的SGVB来优化ELBO：<br>$$<br>\begin{align}<br>\log p_\theta(x)&amp;\geq\log p_\theta(x)-\text{KL}[q_\phi(z|x)\parallel p_\theta(z|x)]\<br>&amp;=\mathcal{L}\<br>&amp;=\mathbb{E}<em>{q_\phi(z|x)}[\log p_\theta(x)+\log p_\theta(z|x)-\log q_\phi(z|x)]\<br>&amp;=\mathbb{E}</em>{q_\phi(z|x)}[\log p_\theta(x,z)-\log q_\phi(z|x)]\<br>&amp;=\mathbb{E}<em>{q_\phi(z|x)}[\log p_\theta(x|z)+\log p_\theta(z)-\log q_\phi(z|x)]<br>\end{align}<br>$$<br>但是在实际的训练过程中，训练数据需要保证都是正常样本，但实际上训练样本有可能会包含异常或者是缺失值。一种做法是用缺失值填充的算法来填充这些异常值和缺失值，但作者认为使用缺失值填充算法并不能很好的还原数据的正常模式，从而保证算法的有效性。在文中作者采用了修改ELBO的方法，并将其称之为**Modified ELBO (M-ELBO)**，公式如下：<br>$$<br>\tilde{\mathcal{L}}=\mathbb{E}</em>{q_\phi(z|x)}[\sum\limits_{w=1}^W{\alpha_w\log p_\theta(x_w|z)+\beta\log p_\theta(z)-\log q_\phi(z|x)}]<br>$$<br>其中$\alpha_w$为指示标记，$\alpha_w=1$代表不是异常也不是缺失。$\beta$定义为$\beta=\frac{\sum_{w=1}^W\alpha_w}{W}$。</p>
-<p>在<strong>M-ELBO</strong>中，异常或缺失值对应的$\log p_\theta(x_w|z)$的贡献会被排除，同时$\log p_\theta(z)$在乘以$\beta$后会相应缩小。作者没有修改$\log q_\phi(z|x)$这一项的原因有二：一是$q_\phi(z|x)$仅仅是从$x$到$z$的映射，并不需要考虑“正常模式”；二是$\mathbb{E}_{q_\phi(z|x)}[-\log q_\phi(z|x)]$就是$q_\phi(z|x)$的熵，而这个在后面的理论分析中有特别的含义。</p>
+<p><img src="https://i.loli.net/2020/06/25/HlDXkSeFOruVbac.png" style="zoom:67%;" /></p>
+<p>图中双实线的框为本文模型有别于传统VAE的地方，其余地方和VAE一样。先验概率<span class="math inline">\(p_\theta(z)\)</span>选为标准正态分布<span class="math inline">\(\mathcal{N}(0,I)\)</span>，后验概率<span class="math inline">\(x\)</span>和<span class="math inline">\(z\)</span>都是对角化高斯分布，即<span class="math inline">\(p_\theta(x|z)=\mathcal{N}(\mu_x,\sigma_x^2 I),q_\phi(z|x)=\mathcal{N}(\mu_z,\sigma_z^2 I)\)</span>。如Figure 4所示，推断网络和生成网络中分别都有隐含层<span class="math inline">\(f_\phi(x)\)</span>和<span class="math inline">\(f_\theta(z)\)</span>对网络的输入进行特征抽取。高斯分布的参数即从这些抽取出来的特征上得到。均值通过线性层得到：<span class="math inline">\(\mu_x=W^T_{\mu_x}f_\theta(z)+b_{\mu_x}, \mu_z=W^T_{\mu_z}f_\theta(x)+b_{\mu_z}\)</span>。标准差通过Soft Plus层加一个高斯噪声得到：<span class="math inline">\(\sigma_x=\text{SoftPlus}[W^T_{\sigma_x}f_\theta(z)+b_{\sigma_x}]+\varepsilon，\sigma_x=\text{SoftPlus}[W^T_{\sigma_z}f_\theta(x)+b_{\sigma_z}]+\varepsilon\)</span>。</p>
+<p>文中提到因为KPI的局部方差非常小，所以采用直接建模<span class="math inline">\(\sigma_x,\sigma_z\)</span>的方式而不是采用对数。除此之外，为了理论上的解释性，文中的神经网络只使用了全连接层。</p>
+<h3 id="training">Training</h3>
+<p>训练可以直接采用经典的SGVB来优化ELBO： <span class="math display">\[
+\begin{align}
+\log p_\theta(x)&amp;\geq\log p_\theta(x)-\text{KL}[q_\phi(z|x)\parallel p_\theta(z|x)]\\
+&amp;=\mathcal{L}\\
+&amp;=\mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x)+\log p_\theta(z|x)-\log q_\phi(z|x)]\\
+&amp;=\mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x,z)-\log q_\phi(z|x)]\\
+&amp;=\mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x|z)+\log p_\theta(z)-\log q_\phi(z|x)]
+\end{align}
+\]</span> 但是在实际的训练过程中，训练数据需要保证都是正常样本，但实际上训练样本有可能会包含异常或者是缺失值。一种做法是用缺失值填充的算法来填充这些异常值和缺失值，但作者认为使用缺失值填充算法并不能很好的还原数据的正常模式，从而保证算法的有效性。在文中作者采用了修改ELBO的方法，并将其称之为<strong>Modified ELBO (M-ELBO)</strong>，公式如下： <span class="math display">\[
+\tilde{\mathcal{L}}=\mathbb{E}_{q_\phi(z|x)}[\sum\limits_{w=1}^W{\alpha_w\log p_\theta(x_w|z)+\beta\log p_\theta(z)-\log q_\phi(z|x)}]
+\]</span> 其中<span class="math inline">\(\alpha_w\)</span>为指示标记，<span class="math inline">\(\alpha_w=1\)</span>代表不是异常也不是缺失。<span class="math inline">\(\beta\)</span>定义为<span class="math inline">\(\beta=\frac{\sum_{w=1}^W\alpha_w}{W}\)</span>。</p>
+<p>在<strong>M-ELBO</strong>中，异常或缺失值对应的<span class="math inline">\(\log p_\theta(x_w|z)\)</span>的贡献会被排除，同时<span class="math inline">\(\log p_\theta(z)\)</span>在乘以<span class="math inline">\(\beta\)</span>后会相应缩小。作者没有修改<span class="math inline">\(\log q_\phi(z|x)\)</span>这一项的原因有二：一是<span class="math inline">\(q_\phi(z|x)\)</span>仅仅是从<span class="math inline">\(x\)</span>到<span class="math inline">\(z\)</span>的映射，并不需要考虑“正常模式”；二是<span class="math inline">\(\mathbb{E}_{q_\phi(z|x)}[-\log q_\phi(z|x)]\)</span>就是<span class="math inline">\(q_\phi(z|x)\)</span>的熵，而这个在后面的理论分析中有特别的含义。</p>
 <p>除此之外还有一种解决方法就是把所有包含异常值和缺失值的窗口去除，这种方法的性能在实验中会进行讨论。</p>
-<p>在文中作者还使用了一种<strong>Missing Data Injection</strong>技术，即在每个Epoch随机的按照一个预设比例$\lambda$将正常的数据设为缺失。作者认为这样有助于性能的提升。</p>
-<h3 id="Detection"><a href="#Detection" class="headerlink" title="Detection"></a>Detection</h3><p>在检测阶段，对于一个输入样本，我们需要模型输出其异常的概率。因为我们建模了$p_\theta(x|z)$，一种方法是采样计算$p_\theta(x)=\mathbb{E}<em>{p_\theta(z)}[p_\theta(x|z)]$，但这种方法计算代价十分昂贵。其他的一些方案有计算$\mathbb{E}</em>{q_\phi(z|x)}[p_\theta(x|z)]$或$\mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x|z)]$，其中后者被称为”<strong>Reconstruction Probability</strong>“，作者便采用了这种方案。</p>
-<p>同时，作者认为输入的检测样本的缺失值会对结果造成较大偏差，于是使用了一种<strong>MCMC-based Missing Data Imputation</strong>的方法来对检测样本的缺失值进行填充。具体做法是将测试样本分为已观测和缺失两部分$x=(x_o,x_m)$，然后使用训练好的VAE进行重构得到$(x^\prime_o,x^\prime_m)$，然后用$x^\prime_m$替换$x_m$，这样不断循环如下图所示：</p>
-<img src="https://i.loli.net/2020/06/25/wEenLKz4URfm2FN.png" style="zoom:67%;" />
-
-<p>作者使用了$L$个样本来计算<strong>Reconstruction Probability</strong>，虽然得到的输出是针对整个窗口每个点的，但作者只使用最后一个点。</p>
-<h2 id="Experiments"><a href="#Experiments" class="headerlink" title="Experiments"></a>Experiments</h2><h3 id="Datasets"><a href="#Datasets" class="headerlink" title="Datasets"></a>Datasets</h3><p>作者选择了三条KPI作为测试数据，分别记为$\mathcal{A}$，$\mathcal{B}$，$\mathcal{C}$，其基本数据如下表所示：</p>
-<img src="https://i.loli.net/2020/06/25/A9qajrZtmhcvyHW.png" style="zoom:67%;" />
-
-<h3 id="Metrics"><a href="#Metrics" class="headerlink" title="Metrics"></a>Metrics</h3><p>因为异常检测类别的极不均衡性，传统的性能指标并不太合适（异常样本极少，且异常一般呈连续的片段）。作者认为在实际应用场景中运维人员需要尽量早的获知异常的发生，于是提出了新的评测机制。</p>
-<img src="https://i.loli.net/2020/06/25/6LNwizqrWVe5sRv.png" style="zoom:67%;" />
-
-<p>如上图所示，第一行为真实的标签，第二行为预测的异常概率，第三行为预测的标签。第一行中异常片段被加粗表示，对于每一个异常片段的第一个位置${y}<em>{t^\prime}$，如果预测的标签中存在$\hat{y}</em>{t}$满足$t^\prime&lt;t$且$|t-t^\prime|$小于等于预设的阈值$T$，那么$y_{t^\prime}$对应的整段异常都被认为正确检测，否则整段异常都认为没有被正确检测。然后在此基础上计算F1-score，AUC等指标作为评测手段。</p>
-<h2 id="Results"><a href="#Results" class="headerlink" title="Results"></a>Results</h2><h3 id="Overall-Performance"><a href="#Overall-Performance" class="headerlink" title="Overall Performance"></a>Overall Performance</h3><p>下图展示了不同方法在不同数据集上的表现：</p>
-<img src="https://i.loli.net/2020/06/25/2j1Br45MUxTaYEX.png" style="zoom:67%;" />
-
-<h3 id="Effects-of-Donut-Techniques"><a href="#Effects-of-Donut-Techniques" class="headerlink" title="Effects of Donut Techniques"></a>Effects of Donut Techniques</h3><p>为了探究Donut中所做的各种改进的实际作用，作者做了大量对比实验，结果如下图所示：</p>
-<img src="https://i.loli.net/2020/06/25/raHG6Phyxo1j82n.png" style="zoom:67%;" />
-
+<p>在文中作者还使用了一种<strong>Missing Data Injection</strong>技术，即在每个Epoch随机的按照一个预设比例<span class="math inline">\(\lambda\)</span>将正常的数据设为缺失。作者认为这样有助于性能的提升。</p>
+<h3 id="detection">Detection</h3>
+<p>在检测阶段，对于一个输入样本，我们需要模型输出其异常的概率。因为我们建模了<span class="math inline">\(p_\theta(x|z)\)</span>，一种方法是采样计算<span class="math inline">\(p_\theta(x)=\mathbb{E}_{p_\theta(z)}[p_\theta(x|z)]\)</span>，但这种方法计算代价十分昂贵。其他的一些方案有计算<span class="math inline">\(\mathbb{E}_{q_\phi(z|x)}[p_\theta(x|z)]\)</span>或<span class="math inline">\(\mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x|z)]\)</span>，其中后者被称为"<strong>Reconstruction Probability</strong>"，作者便采用了这种方案。</p>
+<p>同时，作者认为输入的检测样本的缺失值会对结果造成较大偏差，于是使用了一种<strong>MCMC-based Missing Data Imputation</strong>的方法来对检测样本的缺失值进行填充。具体做法是将测试样本分为已观测和缺失两部分<span class="math inline">\(x=(x_o,x_m)\)</span>，然后使用训练好的VAE进行重构得到<span class="math inline">\((x^\prime_o,x^\prime_m)\)</span>，然后用<span class="math inline">\(x^\prime_m\)</span>替换<span class="math inline">\(x_m\)</span>，这样不断循环如下图所示：</p>
+<p><img src="https://i.loli.net/2020/06/25/wEenLKz4URfm2FN.png" style="zoom:67%;" /></p>
+<p>作者使用了<span class="math inline">\(L\)</span>个样本来计算<strong>Reconstruction Probability</strong>，虽然得到的输出是针对整个窗口每个点的，但作者只使用最后一个点。</p>
+<h2 id="experiments">Experiments</h2>
+<h3 id="datasets">Datasets</h3>
+<p>作者选择了三条KPI作为测试数据，分别记为<span class="math inline">\(\mathcal{A}\)</span>，<span class="math inline">\(\mathcal{B}\)</span>，<span class="math inline">\(\mathcal{C}\)</span>，其基本数据如下表所示：</p>
+<p><img src="https://i.loli.net/2020/06/25/A9qajrZtmhcvyHW.png" style="zoom:67%;" /></p>
+<h3 id="metrics">Metrics</h3>
+<p>因为异常检测类别的极不均衡性，传统的性能指标并不太合适（异常样本极少，且异常一般呈连续的片段）。作者认为在实际应用场景中运维人员需要尽量早的获知异常的发生，于是提出了新的评测机制。</p>
+<p><img src="https://i.loli.net/2020/06/25/6LNwizqrWVe5sRv.png" style="zoom:67%;" /></p>
+<p>如上图所示，第一行为真实的标签，第二行为预测的异常概率，第三行为预测的标签。第一行中异常片段被加粗表示，对于每一个异常片段的第一个位置<span class="math inline">\({y}_{t^\prime}\)</span>，如果预测的标签中存在<span class="math inline">\(\hat{y}_{t}\)</span>满足<span class="math inline">\(t^\prime&lt;t\)</span>且<span class="math inline">\(|t-t^\prime|\)</span>小于等于预设的阈值<span class="math inline">\(T\)</span>，那么<span class="math inline">\(y_{t^\prime}\)</span>对应的整段异常都被认为正确检测，否则整段异常都认为没有被正确检测。然后在此基础上计算F1-score，AUC等指标作为评测手段。</p>
+<h2 id="results">Results</h2>
+<h3 id="overall-performance">Overall Performance</h3>
+<p>下图展示了不同方法在不同数据集上的表现：</p>
+<p><img src="https://i.loli.net/2020/06/25/2j1Br45MUxTaYEX.png" style="zoom:67%;" /></p>
+<h3 id="effects-of-donut-techniques">Effects of Donut Techniques</h3>
+<p>为了探究Donut中所做的各种改进的实际作用，作者做了大量对比实验，结果如下图所示：</p>
+<p><img src="https://i.loli.net/2020/06/25/raHG6Phyxo1j82n.png" style="zoom:67%;" /></p>
 <ul>
 <li><strong>M-ELBO</strong> 从图中可以看出<strong>M-ELBO</strong>对性能提升最大。作者在文中提到一开始并没期望<strong>M-ELBO</strong>能带来性能的提升，只是希望它能够Work。这表明在VAE的训练中，只使用正常样本是不够的，也需要加入非正常的信息；</li>
 <li><strong>Missing Data Injection</strong> 该技巧的主要作用是增强<strong>M-ELBO</strong>的效果。从结果上来看作用并不是十分的显著，只是在一些情况下获得了少量的提升；</li>
 <li><strong>MCMC Imputation</strong> 作者认为虽然该技巧只在一部分情况下显著提升了性能，但总体来说值得使用。</li>
 </ul>
-<h3 id="Impact-of-K"><a href="#Impact-of-K" class="headerlink" title="Impact of K"></a>Impact of K</h3><p>该部分作者探究了隐变量$z$的维度$K$对性能的影响，结果如下图：</p>
-<img src="https://i.loli.net/2020/06/25/OXpIRoe4wr7YzuQ.png" style="zoom:67%;" />
-
-<p>从图上来看，对数据集$\mathcal{A}$，$\mathcal{B}$，$\mathcal{C}$最佳的$K$分别是$5$，$4$和$3$，但是设定较大的$K$并不会对性能有严重的损害。作者还发现对于较为平滑的KPI需要较大的$K$。</p>
-<h2 id="Analysis"><a href="#Analysis" class="headerlink" title="Analysis"></a>Analysis</h2><h3 id="KDE-Interpretation"><a href="#KDE-Interpretation" class="headerlink" title="KDE Interpretation"></a>KDE Interpretation</h3><p>在这一节作者对<strong>Reconstruction Probability</strong>的意义进行了深入的探讨。首先作者对$q_\phi(z|x)$进行了可视化，在图中作者将时间维度用颜色来表示。如Figure 11(a) 所示，$z$几乎是按照$x$对应的时间呈一个连续的流形分布，作者将这种现象称为<strong>Time Gradient</strong>。即使Donut没有显式的用到时间信息，不过因为实验用到的数据基本是平滑的，所以说相邻的$x$会比较相似，因此经过映射后的$z$也会比较相似。作者据此提出Donut的一个优势便是对于没有见过的后验分布$q_\phi(z|x)$，只要其位于训练过的两个后验之间，也会产生合理的分布。</p>
-<img src="https://i.loli.net/2020/06/25/BHfP5DUZ48ALnma.png" style="zoom:67%;" />
-
-<p>对于异常的样本$x$，假设其对应的正常模式为$\tilde{x}$，作者认为$q_\phi(z|x)$会在某种程度上对正常的$q_\phi(z|\tilde{x})$进行近似。因为模型是用正常样本进行训练的，隐变量$z$的维度通常来说小于样本$x$，这就导致$z$只会保留一部分主要的信息。对于异常样本，其异常模式在编码时就被丢掉了。作者还指出如果$x$包含的异常太多，那么模型将难以对$x$进行还原。</p>
-<img src="https://i.loli.net/2020/06/25/HcX78lUoG4meJq5.png" style="zoom: 50%;" />
-
-<p>基于上述讨论，作者对使用$\mathbb{E}<em>{q_\phi(z|x)}[\log p_\theta(x|z)]$作为<strong>Reconstruction Probability</strong>的意义进行了阐释。设输入样本为$x$，如果其包含异常，假设其对应的正常样本为$\tilde{x}$，那么$q_\phi(z|x)$部分地和$q_\phi(z|\tilde{x})$相似。如果$x$和$\tilde{x}$相似程度高，那么$\log p_\theta(x|z)$就会很大（其中$z\sim q_\phi(z|\tilde{x})$）。$\log p_\theta(x|z)$类似于一个密度估计器，代表$x$在多大程度上与$\tilde{x}$接近，$\mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x|z)]$相当于对每一个$z$对应的$\log p_\theta(x|z)$乘以一个权重$q_\phi(z|x)$然后相加。于是作者提出了<strong>Reconstruction Probability</strong>的<strong>KDE Interpretation</strong>:在Donut模型中，<strong>Reconstruction Probability</strong> $\mathbb{E}</em>{q_\phi(z|x)}[\log p_\theta(x|z)]$可以看作是以$q_\phi(z|x)$为权重，$\log p_\theta(x|z)$为核的核密度估计 (Kernel Density Estimation)。</p>
+<h3 id="impact-of-k">Impact of K</h3>
+<p>该部分作者探究了隐变量<span class="math inline">\(z\)</span>的维度<span class="math inline">\(K\)</span>对性能的影响，结果如下图：</p>
+<p><img src="https://i.loli.net/2020/06/25/OXpIRoe4wr7YzuQ.png" style="zoom:67%;" /></p>
+<p>从图上来看，对数据集<span class="math inline">\(\mathcal{A}\)</span>，<span class="math inline">\(\mathcal{B}\)</span>，<span class="math inline">\(\mathcal{C}\)</span>最佳的<span class="math inline">\(K\)</span>分别是<span class="math inline">\(5\)</span>，<span class="math inline">\(4\)</span>和<span class="math inline">\(3\)</span>，但是设定较大的<span class="math inline">\(K\)</span>并不会对性能有严重的损害。作者还发现对于较为平滑的KPI需要较大的<span class="math inline">\(K\)</span>。</p>
+<h2 id="analysis">Analysis</h2>
+<h3 id="kde-interpretation">KDE Interpretation</h3>
+<p>在这一节作者对<strong>Reconstruction Probability</strong>的意义进行了深入的探讨。首先作者对<span class="math inline">\(q_\phi(z|x)\)</span>进行了可视化，在图中作者将时间维度用颜色来表示。如Figure 11(a) 所示，<span class="math inline">\(z\)</span>几乎是按照<span class="math inline">\(x\)</span>对应的时间呈一个连续的流形分布，作者将这种现象称为<strong>Time Gradient</strong>。即使Donut没有显式的用到时间信息，不过因为实验用到的数据基本是平滑的，所以说相邻的<span class="math inline">\(x\)</span>会比较相似，因此经过映射后的<span class="math inline">\(z\)</span>也会比较相似。作者据此提出Donut的一个优势便是对于没有见过的后验分布<span class="math inline">\(q_\phi(z|x)\)</span>，只要其位于训练过的两个后验之间，也会产生合理的分布。</p>
+<p><img src="https://i.loli.net/2020/06/25/BHfP5DUZ48ALnma.png" style="zoom:67%;" /></p>
+<p>对于异常的样本<span class="math inline">\(x\)</span>，假设其对应的正常模式为<span class="math inline">\(\tilde{x}\)</span>，作者认为<span class="math inline">\(q_\phi(z|x)\)</span>会在某种程度上对正常的<span class="math inline">\(q_\phi(z|\tilde{x})\)</span>进行近似。因为模型是用正常样本进行训练的，隐变量<span class="math inline">\(z\)</span>的维度通常来说小于样本<span class="math inline">\(x\)</span>，这就导致<span class="math inline">\(z\)</span>只会保留一部分主要的信息。对于异常样本，其异常模式在编码时就被丢掉了。作者还指出如果<span class="math inline">\(x\)</span>包含的异常太多，那么模型将难以对<span class="math inline">\(x\)</span>进行还原。</p>
+<p><img src="https://i.loli.net/2020/06/25/HcX78lUoG4meJq5.png" style="zoom: 50%;" /></p>
+<p>基于上述讨论，作者对使用<span class="math inline">\(\mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x|z)]\)</span>作为<strong>Reconstruction Probability</strong>的意义进行了阐释。设输入样本为<span class="math inline">\(x\)</span>，如果其包含异常，假设其对应的正常样本为<span class="math inline">\(\tilde{x}\)</span>，那么<span class="math inline">\(q_\phi(z|x)\)</span>部分地和<span class="math inline">\(q_\phi(z|\tilde{x})\)</span>相似。如果<span class="math inline">\(x\)</span>和<span class="math inline">\(\tilde{x}\)</span>相似程度高，那么<span class="math inline">\(\log p_\theta(x|z)\)</span>就会很大（其中<span class="math inline">\(z\sim q_\phi(z|\tilde{x})\)</span>）。<span class="math inline">\(\log p_\theta(x|z)\)</span>类似于一个密度估计器，代表<span class="math inline">\(x\)</span>在多大程度上与<span class="math inline">\(\tilde{x}\)</span>接近，<span class="math inline">\(\mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x|z)]\)</span>相当于对每一个<span class="math inline">\(z\)</span>对应的<span class="math inline">\(\log p_\theta(x|z)\)</span>乘以一个权重<span class="math inline">\(q_\phi(z|x)\)</span>然后相加。于是作者提出了<strong>Reconstruction Probability</strong>的<strong>KDE Interpretation</strong>:在Donut模型中，<strong>Reconstruction Probability</strong> <span class="math inline">\(\mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x|z)]\)</span>可以看作是以<span class="math inline">\(q_\phi(z|x)\)</span>为权重，<span class="math inline">\(\log p_\theta(x|z)\)</span>为核的核密度估计 (Kernel Density Estimation)。</p>
 <p>三维可视化如下图所示：</p>
-<img src="https://i.loli.net/2020/06/25/GeWufVlUDo4QtO6.png" style="zoom:67%;" />
-
-<p>作者还对直接计算$p_\theta(x)=\mathbb{E}_{p_\theta(z)}[p_\theta(x|z)]$进行了质疑，因为这种方法直接求$x$的先验，仅仅考虑了$x$的总体模式，而忽略了$x$的个体模式。</p>
-<h3 id="Find-Good-Posteriors-for-Abnormal-x"><a href="#Find-Good-Posteriors-for-Abnormal-x" class="headerlink" title="Find Good Posteriors for Abnormal $x$"></a>Find Good Posteriors for Abnormal $x$</h3><p>通过上面的讨论我们知道了Donut通过找到$x$的正常后验来估计$x$在多大程度上与$\tilde{x}$相似，在这一节作者讨论了文中使用的不同技巧对找到$x$的后验的作用。对于<strong>Missing Data Injection</strong>作者认为该技巧增强了<strong>M-ELBO</strong>的效果。对于<strong>MCMC Imputation</strong>，作者认为该技巧主要是在检测阶段通过不断迭代提供了更好的后验，如下图所示：</p>
-<img src="https://i.loli.net/2020/06/25/8puDRylqZfQkcN6.png" style="zoom:67%;" />
-
+<p><img src="https://i.loli.net/2020/06/25/GeWufVlUDo4QtO6.png" style="zoom:67%;" /></p>
+<p>作者还对直接计算<span class="math inline">\(p_\theta(x)=\mathbb{E}_{p_\theta(z)}[p_\theta(x|z)]\)</span>进行了质疑，因为这种方法直接求<span class="math inline">\(x\)</span>的先验，仅仅考虑了<span class="math inline">\(x\)</span>的总体模式，而忽略了<span class="math inline">\(x\)</span>的个体模式。</p>
+<h3 id="find-good-posteriors-for-abnormal-x">Find Good Posteriors for Abnormal <span class="math inline">\(x\)</span></h3>
+<p>通过上面的讨论我们知道了Donut通过找到<span class="math inline">\(x\)</span>的正常后验来估计<span class="math inline">\(x\)</span>在多大程度上与<span class="math inline">\(\tilde{x}\)</span>相似，在这一节作者讨论了文中使用的不同技巧对找到<span class="math inline">\(x\)</span>的后验的作用。对于<strong>Missing Data Injection</strong>作者认为该技巧增强了<strong>M-ELBO</strong>的效果。对于<strong>MCMC Imputation</strong>，作者认为该技巧主要是在检测阶段通过不断迭代提供了更好的后验，如下图所示：</p>
+<p><img src="https://i.loli.net/2020/06/25/8puDRylqZfQkcN6.png" style="zoom:67%;" /></p>
 <p>作者认为，虽然对于包含大量异常的样本，Donut不能很好的还原，但在运维场景中，只要对大段异常的开始阶段进行准确预测即可。</p>
-<h3 id="Causes-of-Time-Gradient"><a href="#Causes-of-Time-Gradient" class="headerlink" title="Causes of Time Gradient"></a>Causes of Time Gradient</h3><p>在这一节作者讨论了<strong>Time Gradient</strong>出现的原因。首先假设$x$都是正常点，这时$x$的ELBO为：<br>$$<br>\begin{align}<br>\mathcal{L}(x)&amp;=\mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x|z)+\log p_\theta(z)-\log q_\phi(z|x)]\<br>&amp;=\mathbb{E}[\log p_\theta(x|z)]+\mathbb{E}[\log p_\theta(z)]+\text{H}[z|x]<br>\end{align}<br>$$<br>第一项表明在$z\sim q_\phi(z|x)$下尽可能重构$x$。第二项表明$q_\phi(z|x)$尽量与$z$的先验$\mathcal{N}(0,I)$接近。第三项为$q_\phi(z|x)$的熵，表明$q_\phi(z|x)$应尽量分散。然而第二项又限制了这种分散的区域，如 Figure 11(c) 所示。同时考虑这三项的话，第一项使得$z$不能自由地分散，对于不相似的$x$其对应的$z$也是不相似的，因为要最大化$x$的重构概率。然而对于相似的$x$来说，其对应的$q_\phi(z|x)$会出现很多重复的部分。当达到平衡时，<strong>Time Gradient</strong>就出现了。</p>
-<img src="https://i.loli.net/2020/06/25/AaC9oNMShBRHFeY.png" style="zoom:67%;" />
-
-<p>在训练过程中，当$x$越不相似，$q_\phi(z|x)$就会相距越远，如上图所示。然而在一开始，参数经过随机初始化，$q_\phi(z|x)$都是随机散乱的，如 Figure 11(b) 所示。随着训练的进行，$q_\phi(z|x)$将会不断优化。由于KPI数据往往是光滑的，那么在时间上相距越远的样本就会越不相似，对应的$q_\phi(z|x)$也会相距更远。这也说明了，训练结束后，时间上相距越远的，$q_\phi(z|x)$也会相距越远，反之亦然。同时这也表明学习率的设置对本模型的稳定性有至关重要的作用。</p>
-<h3 id="Sub-Optimal-Equilibrium"><a href="#Sub-Optimal-Equilibrium" class="headerlink" title="Sub-Optimal Equilibrium"></a>Sub-Optimal Equilibrium</h3><p>上面我们讨论了随着训练进行$q_\phi(z|x)$的演变，作者提出在训练过程中可能会遇到模型收敛到次优的情况，如下图所示：</p>
-<img src="https://i.loli.net/2020/06/25/udigOl3sJGwSaPz.png" style="zoom:67%;" />
-
+<h3 id="causes-of-time-gradient">Causes of Time Gradient</h3>
+<p>在这一节作者讨论了<strong>Time Gradient</strong>出现的原因。首先假设<span class="math inline">\(x\)</span>都是正常点，这时<span class="math inline">\(x\)</span>的ELBO为： <span class="math display">\[
+\begin{align}
+\mathcal{L}(x)&amp;=\mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x|z)+\log p_\theta(z)-\log q_\phi(z|x)]\\
+&amp;=\mathbb{E}[\log p_\theta(x|z)]+\mathbb{E}[\log p_\theta(z)]+\text{H}[z|x]
+\end{align}
+\]</span> 第一项表明在<span class="math inline">\(z\sim q_\phi(z|x)\)</span>下尽可能重构<span class="math inline">\(x\)</span>。第二项表明<span class="math inline">\(q_\phi(z|x)\)</span>尽量与<span class="math inline">\(z\)</span>的先验<span class="math inline">\(\mathcal{N}(0,I)\)</span>接近。第三项为<span class="math inline">\(q_\phi(z|x)\)</span>的熵，表明<span class="math inline">\(q_\phi(z|x)\)</span>应尽量分散。然而第二项又限制了这种分散的区域，如 Figure 11(c) 所示。同时考虑这三项的话，第一项使得<span class="math inline">\(z\)</span>不能自由地分散，对于不相似的<span class="math inline">\(x\)</span>其对应的<span class="math inline">\(z\)</span>也是不相似的，因为要最大化<span class="math inline">\(x\)</span>的重构概率。然而对于相似的<span class="math inline">\(x\)</span>来说，其对应的<span class="math inline">\(q_\phi(z|x)\)</span>会出现很多重复的部分。当达到平衡时，<strong>Time Gradient</strong>就出现了。</p>
+<p><img src="https://i.loli.net/2020/06/25/AaC9oNMShBRHFeY.png" style="zoom:67%;" /></p>
+<p>在训练过程中，当<span class="math inline">\(x\)</span>越不相似，<span class="math inline">\(q_\phi(z|x)\)</span>就会相距越远，如上图所示。然而在一开始，参数经过随机初始化，<span class="math inline">\(q_\phi(z|x)\)</span>都是随机散乱的，如 Figure 11(b) 所示。随着训练的进行，<span class="math inline">\(q_\phi(z|x)\)</span>将会不断优化。由于KPI数据往往是光滑的，那么在时间上相距越远的样本就会越不相似，对应的<span class="math inline">\(q_\phi(z|x)\)</span>也会相距更远。这也说明了，训练结束后，时间上相距越远的，<span class="math inline">\(q_\phi(z|x)\)</span>也会相距越远，反之亦然。同时这也表明学习率的设置对本模型的稳定性有至关重要的作用。</p>
+<h3 id="sub-optimal-equilibrium">Sub-Optimal Equilibrium</h3>
+<p>上面我们讨论了随着训练进行<span class="math inline">\(q_\phi(z|x)\)</span>的演变，作者提出在训练过程中可能会遇到模型收敛到次优的情况，如下图所示：</p>
+<p><img src="https://i.loli.net/2020/06/25/udigOl3sJGwSaPz.png" style="zoom:67%;" /></p>
 <p>第一行展示的是收敛到最优的情况，第二行展示的是收敛到次优的情况。从第二行的第一个图（Step 100）来看，紫色的点开始穿过绿色的点，随着训练的进行，紫色的点开始将绿色的点推开。到Step 5000的时候，绿色的点已经被分成了两半。下图展示了对应的训练误差和验证误差：</p>
-<img src="https://i.loli.net/2020/06/25/23zsxwurICV7aTj.png" style="zoom:67%;" />
-
-<p>这样的现象会导致在两半绿色区域之间的测试样本会被识别为紫色，从而降低性能。作者提出在$K$较大的时候这种现象不容易发生，但这时训练的收敛又会成为一个问题。</p>
-</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2019-09-22T12:33:18.000Z" title="2019-9-22 8:33:18 ├F10: PM┤">2019-09-22</time>发表</span><span class="level-item"><time dateTime="2020-06-25T08:59:23.758Z" title="2020-6-25 4:59:23 ├F10: PM┤">2020-06-25</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2019/09/22/Time-Series-Anomaly-Detection-Service-at-Microsoft/">Time-Series Anomaly Detection Service at Microsoft</a></h1><div class="content"><h2 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h2><p>本文借鉴计算机视觉中的显著性检测，提出了一种基于Spectral Residual的时间序列异常检测算法。</p>
+<p><img src="https://i.loli.net/2020/06/25/23zsxwurICV7aTj.png" style="zoom:67%;" /></p>
+<p>这样的现象会导致在两半绿色区域之间的测试样本会被识别为紫色，从而降低性能。作者提出在<span class="math inline">\(K\)</span>较大的时候这种现象不容易发生，但这时训练的收敛又会成为一个问题。</p>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2019-09-22T12:33:18.000Z" title="2019-9-22 8:33:18 ├F10: PM┤">2019-09-22</time>发表</span><span class="level-item"><time dateTime="2020-06-25T08:59:23.758Z" title="2020-6-25 4:59:23 ├F10: PM┤">2020-06-25</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2019/09/22/Time-Series-Anomaly-Detection-Service-at-Microsoft/">Time-Series Anomaly Detection Service at Microsoft</a></h1><div class="content"><h2 id="abstract">Abstract</h2>
+<p>本文借鉴计算机视觉中的显著性检测，提出了一种基于Spectral Residual的时间序列异常检测算法。</p>
 <p><a target="_blank" rel="noopener" href="https://www.kdd.org/kdd2019/accepted-papers/view/time-series-anomaly-detection-service-at-microsoft">原文</a></p>
 <p>这篇文章还提出了几个时间序列异常检测落地的难点：</p>
-<ol>
+<ol type="1">
 <li><strong>Lack of Labels.</strong> 在实际生产环境中会产生大量的KPI，而很难对每个KPI进行人工标注。</li>
 <li><strong>Generalization.</strong> 不同KPI所表现出来的模式也不尽相同，如Figure 1所示。现有方法很难在所有模式的KPI上都表现良好。</li>
 <li><strong>Efficiency.</strong> 在实际场景中，会产生大量的时间序列数据，同时对异常检测算法的时间效率有要求。</li>
 </ol>
-<img src="https://i.loli.net/2020/06/25/o21lnTUtcGuwCq6.png" style="zoom:67%;" />
-
-<h2 id="Contribution"><a href="#Contribution" class="headerlink" title="Contribution"></a>Contribution</h2><ul>
+<p><img src="https://i.loli.net/2020/06/25/o21lnTUtcGuwCq6.png" style="zoom:67%;" /></p>
+<h2 id="contribution">Contribution</h2>
+<ul>
 <li>将Visual Saliency Detection的方法引入了时间序列异常检测。</li>
 <li>结合Spectral Residual和CNN提高了异常检测的效果。</li>
 <li>算法具有良好的时间效率和通用性。</li>
 </ul>
-<h2 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h2><h3 id="Spectral-Residual"><a href="#Spectral-Residual" class="headerlink" title="Spectral Residual"></a>Spectral Residual</h3><p>SR(Spectral Residual)算法主要包含三个步骤：</p>
-<ol>
+<h2 id="background">Background</h2>
+<h3 id="spectral-residual">Spectral Residual</h3>
+<p>SR(Spectral Residual)算法主要包含三个步骤：</p>
+<ol type="1">
 <li>通过傅里叶变换得到log amplitude spectrum；</li>
 <li>计算spectral residual；</li>
 <li>通过傅里叶逆变换回到时间域。</li>
 </ol>
 <p>更形式化的表述为如下：</p>
-<p>给定一个序列$\mathbb{x}$，则有：</p>
-<p>$$A(f)=Amplitude(\mathscr{F}(\mathbb{x}))$$</p>
-<p>$$P(f)=Phrase(\mathscr{F}(\mathbb{x}))$$</p>
-<p>$$L(f)=\log(A(f))$$</p>
-<p>$$AL(F)=h_1(f)\cdot L(f)$$</p>
-<p>$$R(f)=L(f)-AL(f)$$</p>
-<p>$$S(\mathbb{x})=\parallel\mathscr{F}^{-1}(\exp(R(f)+iP(f)))\parallel$$</p>
-<p>其中$\mathscr{F}$和$\mathscr{F}^{-1}$分别表示傅里叶变换和傅里叶逆变换；$\mathbb{x}\in \mathbb{R}^{n\times 1}$表示输入序列；$A(f)$为幅度谱，$P(f)$为相位谱，$L(f)$为对数幅度谱，$AL(F)$为均值滤波后的对数幅度谱；$R(f)$为spectral residual；$S(\mathbb{x})$称为saliency map。Figure 4为文中给出的Saliency Map示意图。</p>
-<img src="https://i.loli.net/2020/06/25/OrSlqhBWNdyfEG9.png" style="zoom:67%;" />
-
-<h2 id="Methodology"><a href="#Methodology" class="headerlink" title="Methodology"></a>Methodology</h2><h3 id="Problem-Definition"><a href="#Problem-Definition" class="headerlink" title="Problem Definition"></a>Problem Definition</h3><blockquote>
-<p>给定一系列实数值$\mathbb{x}=x_1,x_2,\cdots,x_n$，时间序列异常检测的任务是产生一个输出序列$\mathbb{y}=y_1,y_2,\cdots,y_n$其中$y_i\in{0,1}$表示$x_i$是否为异常点。</p>
+<p>给定一个序列<span class="math inline">\(\mathbb{x}\)</span>，则有：</p>
+<p><span class="math display">\[A(f)=Amplitude(\mathscr{F}(\mathbb{x}))\]</span></p>
+<p><span class="math display">\[P(f)=Phrase(\mathscr{F}(\mathbb{x}))\]</span></p>
+<p><span class="math display">\[L(f)=\log(A(f))\]</span></p>
+<p><span class="math display">\[AL(F)=h_1(f)\cdot L(f)\]</span></p>
+<p><span class="math display">\[R(f)=L(f)-AL(f)\]</span></p>
+<p><span class="math display">\[S(\mathbb{x})=\parallel\mathscr{F}^{-1}(\exp(R(f)+iP(f)))\parallel\]</span></p>
+<p>其中<span class="math inline">\(\mathscr{F}\)</span>和<span class="math inline">\(\mathscr{F}^{-1}\)</span>分别表示傅里叶变换和傅里叶逆变换；<span class="math inline">\(\mathbb{x}\in \mathbb{R}^{n\times 1}\)</span>表示输入序列；<span class="math inline">\(A(f)\)</span>为幅度谱，<span class="math inline">\(P(f)\)</span>为相位谱，<span class="math inline">\(L(f)\)</span>为对数幅度谱，<span class="math inline">\(AL(F)\)</span>为均值滤波后的对数幅度谱；<span class="math inline">\(R(f)\)</span>为spectral residual；<span class="math inline">\(S(\mathbb{x})\)</span>称为saliency map。Figure 4为文中给出的Saliency Map示意图。</p>
+<p><img src="https://i.loli.net/2020/06/25/OrSlqhBWNdyfEG9.png" style="zoom:67%;" /></p>
+<h2 id="methodology">Methodology</h2>
+<h3 id="problem-definition">Problem Definition</h3>
+<blockquote>
+<p>给定一系列实数值<span class="math inline">\(\mathbb{x}=x_1,x_2,\cdots,x_n\)</span>，时间序列异常检测的任务是产生一个输出序列<span class="math inline">\(\mathbb{y}=y_1,y_2,\cdots,y_n\)</span>其中<span class="math inline">\(y_i\in\{0,1\}\)</span>表示<span class="math inline">\(x_i\)</span>是否为异常点。</p>
 </blockquote>
-<h3 id="SR"><a href="#SR" class="headerlink" title="SR"></a>SR</h3><p>对于给定序列$\mathbb{x}$，计算Saliency Map $S(\mathbb{x})$，输出序列$O(\mathbb{x})$定义为：</p>
-<p>$$O(x_i)=\begin{cases}1,\quad \text{if}\frac{S(x_i)-\overline{S(x_i)}}{\overline{S(x_i)}}&gt;\tau\\0,\quad \text{otherwise}\end{cases}$$</p>
-<p>其中$S(x_i)$为$x_i$对应的Saliency Map的值，$\overline{S(x_i)}$为$x_i$附近Saliency Map局部均值。</p>
-<hr>
-<p>在实际操作中，FFT是在一个滑动窗口中进行的，文中提到SR方法在点位于窗口中央时效果更好，所以在进行测试的时候，按照如下方法对当前点$x_n$(也就是当前序列最后一个点)之后的点进行预测：</p>
-<p>$$\overline{g}=\frac{1}{m}\sum_{i=1}^m g(x_n,x_{n-i})$$</p>
-<p>$$x_{n+1}=x_{n-m+1}+\overline{g}\cdot m$$</p>
-<p>其中$g(x_i,x_j)$代表$x_i$和$x_j$两点构成的直线的梯度；$\overline{g}$代表所处理的点的平均梯度；$m$为所处理的点的数量。在本文中设置$m=5$。文中发现第一个预测的值很重要，所以直接把$x_{n+1}$赋值$k$次添加到序列的末尾。</p>
-<h3 id="SR-CNN"><a href="#SR-CNN" class="headerlink" title="SR-CNN"></a>SR-CNN</h3><p><img src="https://i.loli.net/2020/06/25/9pEWXRD5JM4umHn.png"></p>
+<h3 id="sr">SR</h3>
+<p>对于给定序列<span class="math inline">\(\mathbb{x}\)</span>，计算Saliency Map <span class="math inline">\(S(\mathbb{x})\)</span>，输出序列<span class="math inline">\(O(\mathbb{x})\)</span>定义为：</p>
+<p><span class="math display">\[O(x_i)=\begin{cases}1,\quad \text{if}\frac{S(x_i)-\overline{S(x_i)}}{\overline{S(x_i)}}&gt;\tau\\\\0,\quad \text{otherwise}\end{cases}\]</span></p>
+<p>其中<span class="math inline">\(S(x_i)\)</span>为<span class="math inline">\(x_i\)</span>对应的Saliency Map的值，<span class="math inline">\(\overline{S(x_i)}\)</span>为<span class="math inline">\(x_i\)</span>附近Saliency Map局部均值。</p>
+<hr />
+<p>在实际操作中，FFT是在一个滑动窗口中进行的，文中提到SR方法在点位于窗口中央时效果更好，所以在进行测试的时候，按照如下方法对当前点<span class="math inline">\(x_n\)</span>(也就是当前序列最后一个点)之后的点进行预测：</p>
+<p><span class="math display">\[\overline{g}=\frac{1}{m}\sum_{i=1}^m g(x_n,x_{n-i})\]</span></p>
+<p><span class="math display">\[x_{n+1}=x_{n-m+1}+\overline{g}\cdot m\]</span></p>
+<p>其中<span class="math inline">\(g(x_i,x_j)\)</span>代表<span class="math inline">\(x_i\)</span>和<span class="math inline">\(x_j\)</span>两点构成的直线的梯度；<span class="math inline">\(\overline{g}\)</span>代表所处理的点的平均梯度；<span class="math inline">\(m\)</span>为所处理的点的数量。在本文中设置<span class="math inline">\(m=5\)</span>。文中发现第一个预测的值很重要，所以直接把<span class="math inline">\(x_{n+1}\)</span>赋值<span class="math inline">\(k\)</span>次添加到序列的末尾。</p>
+<h3 id="sr-cnn">SR-CNN</h3>
+<p><img src="https://i.loli.net/2020/06/25/9pEWXRD5JM4umHn.png" /></p>
 <p>本文提到，仅仅使用一个阈值来进行异常的判断太过简单，于是提出使用一个判别模型来进行异常的判断。由于训练数据没有标签，所以使用如下的公式人工加入异常：</p>
-<p>$$x=(\overline{x}+mean)(1+var)\cdot r+x$$</p>
-<p>其中$\overline{x}$所处理的点的局部均值；$mean$和$var$为当前滑动窗口点的均值和方差；$r\sim \mathcal{N}(0,1)$为服从标准正态分布的噪声。</p>
-<hr>
-<p>对于判别模型使用的是CNN，主要包含两个1维卷积层(kernel size等于窗口大小$w$)和两个全连接层。两个卷积层的channel size分别为$w$和$2w$。</p>
-<h2 id="Experiments"><a href="#Experiments" class="headerlink" title="Experiments"></a>Experiments</h2><h3 id="Datasets"><a href="#Datasets" class="headerlink" title="Datasets"></a>Datasets</h3><img src="https://i.loli.net/2020/06/25/dquAjtRpNSY8rLo.png" style="zoom:67%;" />
-
+<p><span class="math display">\[x=(\overline{x}+mean)(1+var)\cdot r+x\]</span></p>
+<p>其中<span class="math inline">\(\overline{x}\)</span>所处理的点的局部均值；<span class="math inline">\(mean\)</span>和<span class="math inline">\(var\)</span>为当前滑动窗口点的均值和方差；<span class="math inline">\(r\sim \mathcal{N}(0,1)\)</span>为服从标准正态分布的噪声。</p>
+<hr />
+<p>对于判别模型使用的是CNN，主要包含两个1维卷积层(kernel size等于窗口大小<span class="math inline">\(w\)</span>)和两个全连接层。两个卷积层的channel size分别为<span class="math inline">\(w\)</span>和<span class="math inline">\(2w\)</span>。</p>
+<h2 id="experiments">Experiments</h2>
+<h3 id="datasets">Datasets</h3>
+<p><img src="https://i.loli.net/2020/06/25/dquAjtRpNSY8rLo.png" style="zoom:67%;" /></p>
 <p>所用数据集包含清华AIOps竞赛数据、Yahoo和Microsoft的KPI数据。</p>
-<h3 id="Evaluation-Metrics"><a href="#Evaluation-Metrics" class="headerlink" title="Evaluation Metrics"></a>Evaluation Metrics</h3><p>算法准确率方面用了precision，recall和$F_1$-score。</p>
-<img src="https://i.loli.net/2020/06/25/EbcjA8X5fYa6Glz.png" style="zoom:67%;" />
-
-<p>由于在实际场景中KPI的异常往往是以一段一段的形式出现，且并不要求某一个时间点出现异常算法就马上检测出来，只要检测出来的时间在一定的容忍范围内即可。本文使用了一些调整的手段，如Figure 6。对于某一段异常，设段首的异常位于时间点$t_{truth}$，预测为异常的结果中时间在$t_{truth}$之后且距$t_{truth}$最近的时间点设为$t_{predict}$，那么对于一个预先设定的容忍范围$k$，只要$t_{predict}-t_{truth}\leq k+1$那么在预测结果中整段异常就会重置为$1$，否则全部重置为$0$。</p>
-<h3 id="Results"><a href="#Results" class="headerlink" title="Results"></a>Results</h3><p>实验部分使用了两种训练方式，一种是cold-start，即把所有数据都用来测试，另一种是把数据分为训练测试两部分，在训练集上训练，最后在测试集上进行测试。两种方法适用的baseline不同，最后结果如Table 2和Table 3所示：</p>
-<img src="https://i.loli.net/2020/06/25/3L9xe5jJGtnR6AQ.png" style="zoom: 50%;" />
-
-<hr>
-<p>在SR的参数设置上，$h_q(f)$中的$q$为3，局部平均所用的点数目$z$为21，阈值$\tau$为3，估计点的数量$k$为5，滑动窗口的大小$w$在KPI、Yahoo、Microsoft三个数据集上分别为1440、64和30。SR-CNN的$q$，$z$，$k$，$w$设置与SR相同。</p>
-<h3 id="Additional-Experiments-with-DNN"><a href="#Additional-Experiments-with-DNN" class="headerlink" title="Additional Experiments with DNN"></a>Additional Experiments with DNN</h3><p>文中还对有监督的情况进行了测试，具体做法是从时间序列提取特征，然后将Saliency Map也作为特征引入，构造一个有监督的Neural Network进行测试。</p>
+<h3 id="evaluation-metrics">Evaluation Metrics</h3>
+<p>算法准确率方面用了precision，recall和<span class="math inline">\(F_1\)</span>-score。</p>
+<p><img src="https://i.loli.net/2020/06/25/EbcjA8X5fYa6Glz.png" style="zoom:67%;" /></p>
+<p>由于在实际场景中KPI的异常往往是以一段一段的形式出现，且并不要求某一个时间点出现异常算法就马上检测出来，只要检测出来的时间在一定的容忍范围内即可。本文使用了一些调整的手段，如Figure 6。对于某一段异常，设段首的异常位于时间点<span class="math inline">\(t_{truth}\)</span>，预测为异常的结果中时间在<span class="math inline">\(t_{truth}\)</span>之后且距<span class="math inline">\(t_{truth}\)</span>最近的时间点设为<span class="math inline">\(t_{predict}\)</span>，那么对于一个预先设定的容忍范围<span class="math inline">\(k\)</span>，只要<span class="math inline">\(t_{predict}-t_{truth}\leq k+1\)</span>那么在预测结果中整段异常就会重置为<span class="math inline">\(1\)</span>，否则全部重置为<span class="math inline">\(0\)</span>。</p>
+<h3 id="results">Results</h3>
+<p>实验部分使用了两种训练方式，一种是cold-start，即把所有数据都用来测试，另一种是把数据分为训练测试两部分，在训练集上训练，最后在测试集上进行测试。两种方法适用的baseline不同，最后结果如Table 2和Table 3所示：</p>
+<p><img src="https://i.loli.net/2020/06/25/3L9xe5jJGtnR6AQ.png" style="zoom: 50%;" /></p>
+<hr />
+<p>在SR的参数设置上，<span class="math inline">\(h_q(f)\)</span>中的<span class="math inline">\(q\)</span>为3，局部平均所用的点数目<span class="math inline">\(z\)</span>为21，阈值<span class="math inline">\(\tau\)</span>为3，估计点的数量<span class="math inline">\(k\)</span>为5，滑动窗口的大小<span class="math inline">\(w\)</span>在KPI、Yahoo、Microsoft三个数据集上分别为1440、64和30。SR-CNN的<span class="math inline">\(q\)</span>，<span class="math inline">\(z\)</span>，<span class="math inline">\(k\)</span>，<span class="math inline">\(w\)</span>设置与SR相同。</p>
+<h3 id="additional-experiments-with-dnn">Additional Experiments with DNN</h3>
+<p>文中还对有监督的情况进行了测试，具体做法是从时间序列提取特征，然后将Saliency Map也作为特征引入，构造一个有监督的Neural Network进行测试。</p>
 <p>提取的特征如Table 5所示：</p>
-<img src="https://i.loli.net/2020/06/25/4flipKbc1OtVGg9.png" style="zoom: 50%;" />
-
-<hr>
-<p>神经网络的结构为两层全连接层，并添加了Dropout Ratio为0.5的Dropout Layer。两个Layer使用了$L_1=L_2=0.0001$的正则化。同时为了处理样本不平衡的情况使用了过采样来使正负样本的比例为$1:2$。结构如Figure 7所示：</p>
-<img src="https://i.loli.net/2020/06/25/bxeluFBHv2i7Y5m.png" style="zoom:67%;" />
-
-<hr>
+<p><img src="https://i.loli.net/2020/06/25/4flipKbc1OtVGg9.png" style="zoom: 50%;" /></p>
+<hr />
+<p>神经网络的结构为两层全连接层，并添加了Dropout Ratio为0.5的Dropout Layer。两个Layer使用了<span class="math inline">\(L_1=L_2=0.0001\)</span>的正则化。同时为了处理样本不平衡的情况使用了过采样来使正负样本的比例为<span class="math inline">\(1:2\)</span>。结构如Figure 7所示：</p>
+<p><img src="https://i.loli.net/2020/06/25/bxeluFBHv2i7Y5m.png" style="zoom:67%;" /></p>
+<hr />
 <p>训练测试集的情况如Table 6所示，最终结果如Table 7所示，P-R曲线如Figure 8所示。可以看到使用了SR特征的DNN效果由于没有使用SR特征的DNN。</p>
-<img src="https://i.loli.net/2020/06/25/E6vapzhCiG9HTPu.png" style="zoom:67%;" />
-
-<img src="https://i.loli.net/2020/06/25/tZAOg74flmE39oI.png" style="zoom:67%;" />
-
+<p><img src="https://i.loli.net/2020/06/25/E6vapzhCiG9HTPu.png" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/tZAOg74flmE39oI.png" style="zoom:67%;" /></p>
 </div></article></div><nav class="pagination" role="navigation" aria-label="pagination"><div class="pagination-previous"><a href="/categories/Research/Anomaly-Detection/">上一页</a></div><div class="pagination-next is-invisible is-hidden-mobile"><a href="/categories/Research/Anomaly-Detection/page/3/">下一页</a></div><ul class="pagination-list is-hidden-mobile"><li><a class="pagination-link" href="/categories/Research/Anomaly-Detection/">1</a></li><li><a class="pagination-link is-current" href="/categories/Research/Anomaly-Detection/page/2/">2</a></li></ul></nav></div><!--!--><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/">Hanzawa の 部屋</a><p class="is-size-7"><span>&copy; 2021 Hanzawa</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("zh-CN");</script><script>var IcarusThemeSettings = {
             article: {
                 highlight: {
