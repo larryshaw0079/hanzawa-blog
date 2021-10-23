@@ -242,6 +242,27 @@
 
   
   <url>
+    <loc>http://qfxiao.me/tags/Variational-Inference/</loc>
+    <lastmod>2021-10-23</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/tags/VAE/</loc>
+    <lastmod>2021-10-23</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/tags/Deep-Learning/</loc>
+    <lastmod>2021-10-23</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>http://qfxiao.me/tags/Time-Series/</loc>
     <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
@@ -257,27 +278,6 @@
   
   <url>
     <loc>http://qfxiao.me/tags/Machine-Learning/</loc>
-    <lastmod>2021-10-23</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://qfxiao.me/tags/Deep-Learning/</loc>
-    <lastmod>2021-10-23</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://qfxiao.me/tags/Variational-Inference/</loc>
-    <lastmod>2021-10-23</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://qfxiao.me/tags/VAE/</loc>
     <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -306,6 +306,13 @@
   
   <url>
     <loc>http://qfxiao.me/tags/GAN/</loc>
+    <lastmod>2021-10-23</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/tags/Geant4/</loc>
     <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -347,14 +354,21 @@
   </url>
   
   <url>
-    <loc>http://qfxiao.me/tags/Geant4/</loc>
+    <loc>http://qfxiao.me/tags/SVM/</loc>
     <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>http://qfxiao.me/tags/SVM/</loc>
+    <loc>http://qfxiao.me/tags/GBDT/</loc>
+    <lastmod>2021-10-23</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/tags/XGBoost/</loc>
     <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -389,14 +403,7 @@
   </url>
   
   <url>
-    <loc>http://qfxiao.me/tags/GBDT/</loc>
-    <lastmod>2021-10-23</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://qfxiao.me/tags/XGBoost/</loc>
+    <loc>http://qfxiao.me/tags/RNN/</loc>
     <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -411,13 +418,6 @@
   
   <url>
     <loc>http://qfxiao.me/tags/Self-supervised-Learning/</loc>
-    <lastmod>2021-10-23</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://qfxiao.me/tags/RNN/</loc>
     <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -517,14 +517,14 @@
   </url>
   
   <url>
-    <loc>http://qfxiao.me/categories/Research/Self-supervised-Learning/</loc>
+    <loc>http://qfxiao.me/categories/Research/RNN/</loc>
     <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>http://qfxiao.me/categories/Research/RNN/</loc>
+    <loc>http://qfxiao.me/categories/Research/Self-supervised-Learning/</loc>
     <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -538,7 +538,7 @@
   </url>
   
   <url>
-    <loc>http://qfxiao.me/categories/Technical-Notes/Machine-Learning/</loc>
+    <loc>http://qfxiao.me/categories/Research/Representation-Learning/</loc>
     <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -552,7 +552,7 @@
   </url>
   
   <url>
-    <loc>http://qfxiao.me/categories/Research/Representation-Learning/</loc>
+    <loc>http://qfxiao.me/categories/Technical-Notes/Machine-Learning/</loc>
     <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
