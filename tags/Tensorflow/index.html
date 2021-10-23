@@ -1,376 +1,198 @@
-
-
-<!DOCTYPE html>
-<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
-
-
-
-<head>
-  <meta charset="UTF-8">
-  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
-  <link rel="icon" href="/img/favicon.png">
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
-  
-  <meta name="theme-color" content="#2f4154">
-  
-    <meta name="description" content="">
-  
-  <meta name="author" content="Hanzawa">
-  <meta name="keywords" content="">
-  
-  <title>标签 - Tensorflow - Hanzawa の 部屋</title>
-
-  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
-
-
-
-<!-- 主题依赖的图标库，不要自行修改 -->
-
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
-
-
-
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
-
-
-<link  rel="stylesheet" href="/css/main.css" />
-
-<!-- 自定义样式保持在最底部 -->
-
-
-  <script id="fluid-configs">
-    var Fluid = window.Fluid || {};
-    var CONFIG = {"hostname":"qfxiao.me","root":"/","version":"1.8.8","typing":{"enable":true,"typeSpeed":30,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
-  </script>
-  <script  src="/js/utils.js" ></script>
-  <script  src="/js/color-schema.js" ></script>
-<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Hanzawa の 部屋" type="application/atom+xml">
-</head>
-
-
-<body>
-  <header style="height: 80vh;">
-    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
-  <div class="container">
-    <a class="navbar-brand"
-       href="/">&nbsp;<strong>Hanzawa</strong>&nbsp;</a>
-
-    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
-            data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <div class="animated-icon"><span></span><span></span><span></span></div>
-    </button>
-
-    <!-- Collapsible content -->
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav ml-auto text-center">
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/">
-                <i class="iconfont icon-home-fill"></i>
-                首页
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/archives/">
-                <i class="iconfont icon-archive-fill"></i>
-                归档
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/categories/">
-                <i class="iconfont icon-category-fill"></i>
-                分类
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/tags/">
-                <i class="iconfont icon-tags-fill"></i>
-                标签
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/about/">
-                <i class="iconfont icon-user-fill"></i>
-                关于
-              </a>
-            </li>
-          
-        
-        
-          <li class="nav-item" id="search-btn">
-            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
-                class="iconfont icon-search"></i>&nbsp;</a>
-          </li>
-        
-        
-          <li class="nav-item" id="color-toggle-btn">
-            <a class="nav-link" href="javascript:">&nbsp;<i
-                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
-</nav>
-
-    <div class="banner" id="banner" parallax=true
-         style="background: url('/img/bg/spotlight.jpg') no-repeat center center;
-           background-size: cover;">
-      <div class="full-bg-img">
-        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
-          <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="标签 - Tensorflow">
-              
-            </span>
-
-            
-          </div>
-
-          
-            <div class="scroll-down-bar">
-              <i class="iconfont icon-arrowdown"></i>
-            </div>
-          
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <main>
-    
-      <div class="container nopadding-x-md">
-        <div class="py-5" id="board"
-          >
-          
-          <div class="container">
-            <div class="row">
-              <div class="col-12 col-md-10 m-auto">
-                
-
-<div class="list-group">
-  <p class="h4">共计 2 篇文章</p>
-  <hr>
-  
-  
-    
-      
-      <p class="h5">2020</p>
-    
-    <a href="/2020/06/02/%E9%9D%A2%E5%90%91OpenPAI%E7%9A%84Docker%E9%95%9C%E5%83%8F%E9%85%8D%E7%BD%AE%E5%8F%8AOpenPAI%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">面向OpenPAI的Docker镜像配置及OpenPAI基本使用方法</span>
-      <time style="float: right;">06-02</time>
-    </a>
-  
-    
-    <a href="/2020/06/02/Ubuntu20-4LTS-%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE-CUDA11-cuDNN8-Tensorflow-Pytorch/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">Ubuntu20.04LTS 深度学习环境配置 CUDA11 + cuDNN8 + Tensorflow + Pytorch</span>
-      <time style="float: right;">06-02</time>
-    </a>
-  
-</div>
-
-
-
-
-
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    
-
-    
-      <a id="scroll-top-button" href="#" role="button">
-        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
-      </a>
-    
-
-    
-      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
-     aria-hidden="true">
-  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
-        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body mx-3">
-        <div class="md-form mb-5">
-          <input type="text" id="local-search-input" class="form-control validate">
-          <label data-error="x" data-success="v"
-                 for="local-search-input">关键词</label>
-        </div>
-        <div class="list-group" id="local-search-result"></div>
-      </div>
-    </div>
-  </div>
-</div>
-    
-
-    
-  </main>
-
-  <footer class="text-center mt-5 py-3">
-  <div class="footer-content">
-     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
-  </div>
-  
-  <div class="statistics">
-    
-    
-
-    
-      
-        <!-- 不蒜子统计PV -->
-        <span id="busuanzi_container_site_pv" style="display: none">
-            总访问量 
-            <span id="busuanzi_value_site_pv"></span>
-             次
-          </span>
-      
-      
-        <!-- 不蒜子统计UV -->
-        <span id="busuanzi_container_site_uv" style="display: none">
-            总访客数 
-            <span id="busuanzi_value_site_uv"></span>
-             人
-          </span>
-      
-    
-  </div>
-
-
-  
-
-  
-</footer>
-
-<!-- SCRIPTS -->
-
-  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
-  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
-
-  <script>
-    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
-    NProgress.start()
-    window.addEventListener('load', function() {
-      NProgress.done();
-    })
-  </script>
-
-
-<script  src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" ></script>
-<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
-<script  src="/js/debouncer.js" ></script>
-<script  src="/js/events.js" ></script>
-<script  src="/js/plugins.js" ></script>
-
-<!-- Plugins -->
-
-
-  
-    <script  src="/js/lazyload.js" ></script>
-  
-
-
-
-  
-
-
-
-
-
-
-
-
-
-  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js" ></script>
-
-
-
-  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
-
-
-
-
-  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11/lib/typed.min.js" ></script>
-  <script>
-    (function (window, document) {
-      var typing = Fluid.plugins.typing;
-      var title = document.getElementById('subtitle').title;
-      
-      typing(title)
-      
-    })(window, document);
-  </script>
-
-
-
-  <script  src="/js/local-search.js" ></script>
-  <script>
-    (function () {
-      var path = "/local-search.xml";
-      $('#local-search-input').on('click', function() {
-        searchFunc(path, 'local-search-input', 'local-search-result');
-      });
-      $('#modalSearch').on('shown.bs.modal', function() {
-        $('#local-search-input').focus();
-      });
-    })()
-  </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- 主题的启动项 保持在最底部 -->
-<script  src="/js/boot.js" ></script>
-
-
-
-</body>
-</html>
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><title>标签: Tensorflow - Hanzawa の 部屋</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Hanzawa の 部屋"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Hanzawa の 部屋"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta property="og:type" content="website"><meta property="og:title" content="Hanzawa の 部屋"><meta property="og:url" content="http://qfxiao.me/"><meta property="og:site_name" content="Hanzawa の 部屋"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="http://qfxiao.me/img/og_image.png"><meta property="article:author" content="Hanzawa"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="/img/og_image.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://qfxiao.me"},"headline":"Hanzawa の 部屋","image":["http://qfxiao.me/img/og_image.png"],"author":{"@type":"Person","name":"Hanzawa"},"publisher":{"@type":"Organization","name":"Hanzawa の 部屋","logo":{"@type":"ImageObject"}},"description":null}</script><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><!--!--><meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Hanzawa の 部屋" type="application/atom+xml">
+</head><body class="is-1-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/">Hanzawa の 部屋</a></div><div class="navbar-menu"><div class="navbar-end"></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-12"><div class="card"><div class="card-content"><nav class="breadcrumb" aria-label="breadcrumbs"><ul><li><a href="/tags">标签</a></li><li class="is-active"><a href="#" aria-current="page">Tensorflow</a></li></ul></nav></div></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-06-02T04:26:13.000Z" title="2020-6-2 12:26:13 ├F10: PM┤">2020-06-02</time>发表</span><span class="level-item"><time dateTime="2020-08-01T04:00:16.325Z" title="2020-8-1 12:00:16 ├F10: PM┤">2020-08-01</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Technical-Notes/">Technical Notes</a><span> / </span><a class="link-muted" href="/categories/Technical-Notes/Misc/">Misc</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2020/06/02/%E9%9D%A2%E5%90%91OpenPAI%E7%9A%84Docker%E9%95%9C%E5%83%8F%E9%85%8D%E7%BD%AE%E5%8F%8AOpenPAI%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/">面向OpenPAI的Docker镜像配置及OpenPAI基本使用方法</a></h1><div class="content"><h1 id="introduction">Introduction</h1>
+<p>实验室服务器集群采用OpenPAI来进行GPU资源的管理，而OpenPAI采用了Docker作为基础，即代码都放在Docker容器中运行。由于Docker的使用、Docker镜像的配置都有一定的门槛，所以这里写一篇Tutorial来进行介绍。本文不是网上资料的拼凑，而是经过本人走弯路踩坑形成的"Best practice"。主要内容包括Docker的介绍、Docker的基本使用、如何配置自己的Docker镜像以及OpenPAI平台的基本使用，但不包括Docker和OpenPAI的安装。</p>
+<blockquote>
+<p>2020.8.1 Update: 加入通过HDFS读取容器保存的文件的方法</p>
+</blockquote>
+<h1 id="docker-from-scratch">Docker from Scratch</h1>
+<p>要理解Docker是什么，从虚拟机开始讲可能会比较好理解。虚拟机大家可能都很熟悉了，比如说我用的系统是Windows，但我需要Linux系统来作为一个Flask编写的网站的服务器，但是又不想单独安装Linux系统，于是可以使用虚拟机来解决这个问题。安装VMWare Workstation，去官网下载Ubuntu系统镜像，然后在VMWare中安装好系统，然后从头配置Flask相关环境。实际上我需要的仅仅是一个Flask运行环境而已，而使用虚拟机却需要如此“大费周章”，这时Docker出现了，网上有大量现成的Flask Docker镜像，配置好了你所需的Flask环境，你只需要下载这些镜像，然后运行它，你就得到了一个Flask运行环境，而与你当前使用的系统无关。如果你需要一个Tomcat的运行环境，那么去找一个Tomcat的Docker镜像就行。Docker将需求或者说服务绑定在了Docker镜像中（<strong>轻量化</strong>，一个需求对应一个Docker镜像，每个镜像都很小），你有什么需求，去找相应的镜像即可（或者自己写一个），镜像的运行是以虚拟机的形式存在，所以他们之间也是互不干扰的。同时，你在写好一个Docker镜像之后，你还可以<strong>分享</strong>给别人，这样其他人就不用重新配置，直接运行你给他的镜像即可。Docker有两个比较关键的概念：</p>
+<ul>
+<li><strong>镜像 Images：</strong> 这里的镜像不是指我们安装系统时下载的ISO镜像，Docker镜像就是把你需要的东西（一个系统+需要的服务）集中到一起，相当于做菜的菜谱；</li>
+<li><strong>容器 Containers：</strong> 如果一个Docker镜像启动了，那么就会有一个Docker容器产生，相当于按照菜谱做出来的菜。</li>
+</ul>
+<p><img src="https://i.loli.net/2020/06/24/H2x9mnPwkVQyO6p.png" alt="img" style="zoom: 33%;" /></p>
+<p><img src="https://i.loli.net/2020/06/24/7k6S3yecX2lbvQY.png" alt="img" style="zoom: 33%;" /></p>
+<p>这一节我们先不讨论如何自己写Docker镜像，只是先讨论Docker的基本操作。</p>
+<h2 id="basic-operations">Basic Operations</h2>
+<p>Docker新安装好当然是没有什么镜像的，首先我们使用<code>docker pull hello-world</code>来下载一个测试镜像。</p>
+<blockquote>
+<p>拉取镜像 <code>docker pull &lt;image_name&gt;</code></p>
+</blockquote>
+<p>在输入之后，Docker会自动在远程服务器上查找对应的镜像进行下载。由于我的电脑上已经有这个镜像了，所以显示是下面的样子：</p>
+<p><img src="https://i.loli.net/2020/06/24/rvqcAwzOYJtF6T8.png" /></p>
+<p>接下来，我们输入<code>docker run hello-world</code>运行这个镜像。</p>
+<blockquote>
+<p>运行镜像<code>docker run &lt;image_name&gt;</code></p>
+</blockquote>
+<p>可以看到，Docker输出了一些信息就自己退出了，这和我们理解的虚拟机不太一样。在Docker里面，我们既可以创建一个完整的系统，用户在运行之后就可以正常使用这个操作系统，也可以创建一个简单的服务，默认运行完一些指令就退出了。这里的<code>hello-world</code>镜像这是输出了一些信息后就自动退出了，因为这就是这个镜像的全部内容。</p>
+<p><img src="https://i.loli.net/2020/06/24/Zb1VKjFyMh8gHf2.png" /></p>
+<p>我们尝试来运行一个完整的系统，先用<code>docker pull ubuntu</code>拉取Ubuntu Docker镜像：</p>
+<p><img src="https://i.loli.net/2020/06/24/zEerb2gPwYWX8O7.png" /></p>
+<p>接下来我们使用：</p>
+<p><img src="https://i.loli.net/2020/06/24/6cMz1WGH4fgpBsS.png" /></p>
+<blockquote>
+<p><code>-it</code>的意思是什么？根据<code>docker run --help</code>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">-i, --interactive                    Keep STDIN open even if not attached</span><br><span class="line">    --ip string                      IPv4 address (e.g., 172.30.100.104)</span><br><span class="line">    --ip6 string                     IPv6 address (e.g., 2001:db8::33)</span><br><span class="line">    --ipc string                     IPC mode to use</span><br><span class="line">    --isolation string               Container isolation technology</span><br><span class="line">    --kernel-memory bytes            Kernel memory limit</span><br><span class="line">-t, --tty                            Allocate a pseudo-TTY</span><br><span class="line">    --ulimit ulimit                  Ulimit options (default [])</span><br><span class="line">Copy</span><br></pre></td></tr></table></figure>
+<p>其实<code>-it</code>是<code>-i</code>和<code>-t</code>的合并写法，意思是运行后进入这个容器并且启用shell，不然运行之后就会放到后台而不会进入容器中。而<code>--rm</code>则代表容器退出之后会被删除（镜像不会被删除），每次运行实际上会创建一个新的容器，如果不加<code>--rm</code>或退出之后不手动删除的话会看到一堆停止运行的容器。</p>
+</blockquote>
+<p>输入<code>cat /etc/issue</code>可以看到默认拉取的是最新的Ubuntu 20.04 LTS：</p>
+<p><img src="https://i.loli.net/2020/06/24/wldBMFtx3eIk98C.png" /></p>
+<h1 id="build-customized-docker-images">Build Customized Docker Images</h1>
+<p>如果没有现成的Docker镜像能满足我们的需求，我们可以考虑自己写一个。要自定义一个Docker镜像需要两步，第一步是编写Dockerfile，第二步是使用<code>docker build</code>命令构建镜像。Dockerfile可以看作是一个脚本，描述了我们构建镜像所需要的全部命令，比如要构建一个用于Python科学计算的Docker镜像，我们需要在Dockerfile中编写安装Python的命令，安装Numpy、Scipy等常用包的命令等等。我们先来上手编写Dockerfile，这里我准备写一个包含<a target="_blank" rel="noopener" href="https://hexo.io/">hexo博客框架</a>的镜像，这个框架需要node作为基础环境，不过我们不需要在Dockerfile里写安装node的命令。因为类似于<code>C++</code>或<code>Python</code>中的对象的继承，Dockerfile也可以“继承”，这意味着我们不必从头写起。我们先来看一下完整的Dockfile和效果，再来一一解释。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">FROM node</span><br><span class="line"></span><br><span class="line">--------------------------------------------------------------</span><br><span class="line"></span><br><span class="line">RUN npm install -g hexo-cli</span><br><span class="line">EXPOSE 4000</span><br><span class="line">CMD hexo init blog &amp;&amp; cd blog &amp;&amp; hexo generate &amp;&amp; hexo serverCopy</span><br></pre></td></tr></table></figure>
+<p>运行结果如下所示，可以看到Docker按照我们写的Dockerfile一行一行的进行镜像的构建：</p>
+<p><img src="https://i.loli.net/2020/06/24/tZ3JW4SPNhxUwEn.png" /></p>
+<p>现在来解释Docerfile里的内容。<code>FROM &lt;docker image&gt;</code>表示继承其他的镜像，这里我们使用node官方的镜像。接下来是安装hexo，<code>RUN &lt;command&gt;</code>表示执行命令，这里我们直接用<code>npm install -g hexo-cli</code>进行安装。由于要浏览博客网页需要开放端口，而Docker容器运行的时候和外部主机是完全隔断的，要使外部主机访问Docker容器端口，需要暴露端口。<code>EXPOSE &lt;port&gt;</code>代表暴露端口，这里用的是4000端口。之后是创建博客和启动本地服务，<code>CMD &lt;command&gt;</code>和<code>RUN &lt;command&gt;</code>的区别是RUN会在构建的时候执行，而CMD是在容器启动之后才会执行。<code>hexo init blog &amp;&amp; cd blog &amp;&amp; hexo generate &amp;&amp; hexo server</code>分别代表初始化博客、进入博客所在文件夹、生成博客网站、启动本地服务器。更多指令可以参考<a target="_blank" rel="noopener" href="https://docs.docker.com/engine/reference/builder/">官方文档</a>。</p>
+<p>然后我们使用<code>docker build -t test_hexo .</code>命令构建镜像。</p>
+<blockquote>
+<p>构建镜像 <code>docker build -t &lt;image_name&gt; &lt;direcotry&gt;</code></p>
+</blockquote>
+<p>运行镜像：</p>
+<p><img src="https://i.loli.net/2020/06/24/m4FSe15kMIDCHXy.png" /></p>
+<p>可以看到容器启动后开始执行博客初始化。</p>
+<p><img src="https://i.loli.net/2020/06/24/BEdibvgPTMz4sn8.png" /></p>
+<p>最后在<code>locahost:4000</code>上启动了一个本地服务器，在浏览器中输入这个地址，可以看到刚刚构建好的博客：</p>
+<p><img src="https://i.loli.net/2020/06/24/vmSUb5QH6l4afzF.png" /></p>
+<p>值得注意的是，在Dockerfile中我们暴露了4000端口，使用<code>-p</code>标签可以达到同样的效果：<code>docker run -p &lt;docker_port&gt;:&lt;local_port&gt; &lt;image_name&gt;</code>。比如<code>docker run -p 9999:8888 xxxx</code>代表将Docker容器中的9999端口转发到外部主机的8888端口。如果你是在远程服务器上使用的Docker，那么端口只是被转发到了远程服务器上，还得手动将远程服务器再转发到你本机上才能直接在本机浏览器上看到页面。</p>
+<h2 id="build-docker-images-with-aliyun-container-registry">Build Docker Images with Aliyun Container Registry</h2>
+<p>因为某些原因，如果在构建镜像的时候需要通过<code>apt-get update</code>更新源，会发现无论如何都会卡住。这个时候可以使用<a target="_blank" rel="noopener" href="https://cr.console.aliyun.com/">阿里云容器镜像服务</a>，在阿里的服务器上构建好镜像，再拉取到自己的机器上。注册好帐号之后，点击创建镜像仓库：</p>
+<p><img src="https://i.loli.net/2020/06/24/u4DGHv3En1iLI5z.png" /></p>
+<p>这里仓库类型如果没有特殊需求建议使用公开，然后填写一些基本信息：</p>
+<p><img src="https://i.loli.net/2020/06/24/Qipw5hAg136afnL.png" /></p>
+<p>之后设置代码源，其实就是告诉阿里云从哪儿获取Dockerfile，我这里用的是Github，所以需要先在阿里云中关联Github账号，然后在Github中创建一个用来放Dockerfile的仓库。构建设置里有一个“海外机器构建”，这正是我们使用阿里云容器服务的主要目的，勾选。</p>
+<p><img src="https://i.loli.net/2020/06/24/ksvZJG9lKfdh6aR.png" /></p>
+<p>镜像仓库创建好之后，点进去，在构建页面点击添加规则：</p>
+<p><img src="https://i.loli.net/2020/06/24/irBm3QcqjVhGMsv.png" /></p>
+<p>按下图进行设置即可，镜像版本就是你想要的镜像名字：</p>
+<p><img src="https://i.loli.net/2020/06/24/7pAFvM8CJQbq6mU.png" /></p>
+<p>点击“立即构建”：</p>
+<p><img src="https://i.loli.net/2020/06/24/GlMwqDInL7zVOpf.png" /></p>
+<p>等待一段时间后，如果构建成功，便可以进行拉取了，在镜像仓库的基本信息页面可以看到地址：</p>
+<p><img src="https://i.loli.net/2020/06/24/57jmEv8PYkr2nQG.png" /></p>
+<p>将阿里云上的镜像拉取到本机之后一般会想要对镜像改名，可以使用<code>docker tag &lt;old_name&gt; &lt;new_name&gt;</code>。</p>
+<h1 id="build-docker-images-for-deep-learning">Build Docker Images for Deep Learning</h1>
+<h2 id="startup">Startup</h2>
+<p>在Docker中配置适用于OpenPAI的深度学习镜像不是一件容易的事，会有很多的坑，这里专门说一下如何配置。推荐在阿里云容器镜像服务中进行构建，会少很多麻烦。</p>
+<p>第一步是初始镜像，由于需要用到CUDA，这里可以根据自己的需求（比如不同CUDA版本支持的GPU驱动版本不一样，还有Tensorflow不同版本对CUDA和cuDNN要求也不一样）从Nvidia的Dockerhub<a target="_blank" rel="noopener" href="https://hub.docker.com/r/nvidia/cuda">官方页面</a>选择合适的CUDA和cuDNN版本：</p>
+<p><img src="https://i.loli.net/2020/06/24/pftdhmHiWkTq8Fj.png" /></p>
+<p>这里我们选择CUDA10.1 + cuDNN7：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FROM nvidia&#x2F;cuda:10.1-cudnn7-devel-ubuntu18.04Copy</span><br></pre></td></tr></table></figure>
+<p>这一条主要是解决乱码问题以及定义用到的软件包的版本，这里Miniconda版本设置为4.5.4的原因是这是最后一个自带Python3.6的版本，我在这儿为了稳定所以用了Python3.6，大家也可以安装最新版的Miniconda：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ENV LANG&#x3D;C.UTF-8 LC_ALL&#x3D;C.UTF-8</span><br><span class="line">ENV HADOOP_VERSION&#x3D;2.7.2</span><br><span class="line">LABEL HADOOP_VERSION&#x3D;2.7.2</span><br><span class="line">ENV MINICONDA_VERSION&#x3D;4.5.4Copy</span><br></pre></td></tr></table></figure>
+<p>接下来安装必须的包，大家可以根据需求自行调整，<code>-y</code>标签代表Yes，即自动同意安装：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">RUN DEBIAN_FRONTEND&#x3D;noninteractive &amp;&amp; \</span><br><span class="line">    apt-get -y update &amp;&amp; \</span><br><span class="line">    apt-get -y install build-essential \</span><br><span class="line">        wget \</span><br><span class="line">        git \</span><br><span class="line">        curl \</span><br><span class="line">        unzip \</span><br><span class="line">        automake \</span><br><span class="line">        openjdk-8-jdk \</span><br><span class="line">        openssh-server \</span><br><span class="line">        openssh-client \</span><br><span class="line">        lsof \</span><br><span class="line">        libcupti-dev &amp;&amp; \</span><br><span class="line">    apt-get clean &amp;&amp; \</span><br><span class="line">    rm -rf &#x2F;var&#x2F;lib&#x2F;apt&#x2F;lists&#x2F;*Copy</span><br></pre></td></tr></table></figure>
+<p>安装Miniconda并设置环境变量，<code>-b</code>标签可以让Miniconda无交互自动安装：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">RUN wget --quiet https:&#x2F;&#x2F;repo.anaconda.com&#x2F;miniconda&#x2F;Miniconda3-$&#123;MINICONDA_VERSION&#125;-Linux-x86_64.sh &amp;&amp; &#x2F;bin&#x2F;bash Miniconda3-$&#123;MINICONDA_VERSION&#125;-Linux-x86_64.sh -b -p &#x2F;opt&#x2F;miniconda \</span><br><span class="line">&amp;&amp; rm Miniconda3-$&#123;MINICONDA_VERSION&#125;-Linux-x86_64.sh</span><br><span class="line">ENV PATH &#x2F;opt&#x2F;miniconda&#x2F;bin:$PATHCopy</span><br></pre></td></tr></table></figure>
+<p>安装Hadoop，OpenPAI平台会用到：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">RUN wget -qO- http:&#x2F;&#x2F;archive.apache.org&#x2F;dist&#x2F;hadoop&#x2F;common&#x2F;hadoop-$&#123;HADOOP_VERSION&#125;&#x2F;hadoop-$&#123;HADOOP_VERSION&#125;.tar.gz | \</span><br><span class="line">    tar xz -C &#x2F;usr&#x2F;local &amp;&amp; \</span><br><span class="line">    mv &#x2F;usr&#x2F;local&#x2F;hadoop-$&#123;HADOOP_VERSION&#125; &#x2F;usr&#x2F;local&#x2F;hadoopCopy</span><br></pre></td></tr></table></figure>
+<p><code>ENV</code>的作用是配置环境变量。配置JAVA和Hadoop环境变量：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">ENV JAVA_HOME&#x3D;&#x2F;usr&#x2F;lib&#x2F;jvm&#x2F;java-8-openjdk-amd64 \</span><br><span class="line">    HADOOP_INSTALL&#x3D;&#x2F;usr&#x2F;local&#x2F;hadoop \</span><br><span class="line">    NVIDIA_VISIBLE_DEVICES&#x3D;all</span><br><span class="line"></span><br><span class="line">ENV HADOOP_PREFIX&#x3D;$&#123;HADOOP_INSTALL&#125; \</span><br><span class="line">    HADOOP_BIN_DIR&#x3D;$&#123;HADOOP_INSTALL&#125;&#x2F;bin \</span><br><span class="line">    HADOOP_SBIN_DIR&#x3D;$&#123;HADOOP_INSTALL&#125;&#x2F;sbin \</span><br><span class="line">    HADOOP_HDFS_HOME&#x3D;$&#123;HADOOP_INSTALL&#125; \</span><br><span class="line">    HADOOP_COMMON_LIB_NATIVE_DIR&#x3D;$&#123;HADOOP_INSTALL&#125;&#x2F;lib&#x2F;native \</span><br><span class="line">    HADOOP_OPTS&#x3D;&quot;-Djava.library.path&#x3D;$&#123;HADOOP_INSTALL&#125;&#x2F;lib&#x2F;native&quot;Copy</span><br></pre></td></tr></table></figure>
+<p>设置PATH环境变量：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ENV PATH&#x3D;&#x2F;usr&#x2F;local&#x2F;nvidia&#x2F;bin:&#x2F;usr&#x2F;local&#x2F;cuda&#x2F;bin:&#x2F;usr&#x2F;local&#x2F;sbin:&#x2F;usr&#x2F;local&#x2F;bin:&#x2F;usr&#x2F;sbin:&#x2F;usr&#x2F;bin:&#x2F;sbin:&#x2F;bin:$&#123;HADOOP_BIN_DIR&#125;:$&#123;HADOOP_SBIN_DIR&#125; \</span><br><span class="line">LD_LIBRARY_PATH&#x3D;&#x2F;usr&#x2F;local&#x2F;cuda&#x2F;extras&#x2F;CUPTI&#x2F;lib:&#x2F;usr&#x2F;local&#x2F;cuda&#x2F;extras&#x2F;CUPTI&#x2F;lib64:&#x2F;usr&#x2F;local&#x2F;nvidia&#x2F;lib:&#x2F;usr&#x2F;local&#x2F;nvidia&#x2F;lib64:&#x2F;usr&#x2F;local&#x2F;cuda&#x2F;lib64:&#x2F;usr&#x2F;local&#x2F;cuda&#x2F;targets&#x2F;x86_64-linux&#x2F;lib&#x2F;stubs:$&#123;JAVA_HOME&#125;&#x2F;jre&#x2F;lib&#x2F;amd64&#x2F;serverCopy</span><br></pre></td></tr></table></figure>
+<p>完整的Dockerfile如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">FROM nvidia&#x2F;cuda:10.1-cudnn7-devel-ubuntu18.04</span><br><span class="line"></span><br><span class="line">ENV LANG&#x3D;C.UTF-8 LC_ALL&#x3D;C.UTF-8</span><br><span class="line">ENV HADOOP_VERSION&#x3D;2.7.2</span><br><span class="line">LABEL HADOOP_VERSION&#x3D;2.7.2</span><br><span class="line">ENV MINICONDA_VERSION&#x3D;4.5.4</span><br><span class="line"></span><br><span class="line">RUN DEBIAN_FRONTEND&#x3D;noninteractive &amp;&amp; \</span><br><span class="line">    apt-get -y update &amp;&amp; \</span><br><span class="line">    apt-get -y install build-essential \</span><br><span class="line">        wget \</span><br><span class="line">        git \</span><br><span class="line">        curl \</span><br><span class="line">        unzip \</span><br><span class="line">        automake \</span><br><span class="line">        openjdk-8-jdk \</span><br><span class="line">        openssh-server \</span><br><span class="line">        openssh-client \</span><br><span class="line">        lsof \</span><br><span class="line">        libcupti-dev &amp;&amp; \</span><br><span class="line">    apt-get clean &amp;&amp; \</span><br><span class="line">    rm -rf &#x2F;var&#x2F;lib&#x2F;apt&#x2F;lists&#x2F;*</span><br><span class="line"></span><br><span class="line">RUN wget --quiet https:&#x2F;&#x2F;repo.anaconda.com&#x2F;miniconda&#x2F;Miniconda3-$&#123;MINICONDA_VERSION&#125;-Linux-x86_64.sh &amp;&amp; &#x2F;bin&#x2F;bash Miniconda3-$&#123;MINICONDA_VERSION&#125;-Linux-x86_64.sh -b -p &#x2F;opt&#x2F;miniconda \</span><br><span class="line">&amp;&amp; rm Miniconda3-$&#123;MINICONDA_VERSION&#125;-Linux-x86_64.sh</span><br><span class="line">ENV PATH &#x2F;opt&#x2F;miniconda&#x2F;bin:$PATH</span><br><span class="line">    </span><br><span class="line">RUN wget -qO- http:&#x2F;&#x2F;archive.apache.org&#x2F;dist&#x2F;hadoop&#x2F;common&#x2F;hadoop-$&#123;HADOOP_VERSION&#125;&#x2F;hadoop-$&#123;HADOOP_VERSION&#125;.tar.gz | \</span><br><span class="line">    tar xz -C &#x2F;usr&#x2F;local &amp;&amp; \</span><br><span class="line">    mv &#x2F;usr&#x2F;local&#x2F;hadoop-$&#123;HADOOP_VERSION&#125; &#x2F;usr&#x2F;local&#x2F;hadoop</span><br><span class="line">    </span><br><span class="line">ENV JAVA_HOME&#x3D;&#x2F;usr&#x2F;lib&#x2F;jvm&#x2F;java-8-openjdk-amd64 \</span><br><span class="line">    HADOOP_INSTALL&#x3D;&#x2F;usr&#x2F;local&#x2F;hadoop \</span><br><span class="line">    NVIDIA_VISIBLE_DEVICES&#x3D;all</span><br><span class="line"></span><br><span class="line">ENV HADOOP_PREFIX&#x3D;$&#123;HADOOP_INSTALL&#125; \</span><br><span class="line">    HADOOP_BIN_DIR&#x3D;$&#123;HADOOP_INSTALL&#125;&#x2F;bin \</span><br><span class="line">    HADOOP_SBIN_DIR&#x3D;$&#123;HADOOP_INSTALL&#125;&#x2F;sbin \</span><br><span class="line">    HADOOP_HDFS_HOME&#x3D;$&#123;HADOOP_INSTALL&#125; \</span><br><span class="line">    HADOOP_COMMON_LIB_NATIVE_DIR&#x3D;$&#123;HADOOP_INSTALL&#125;&#x2F;lib&#x2F;native \</span><br><span class="line">    HADOOP_OPTS&#x3D;&quot;-Djava.library.path&#x3D;$&#123;HADOOP_INSTALL&#125;&#x2F;lib&#x2F;native&quot;</span><br><span class="line"></span><br><span class="line">ENV PATH&#x3D;&#x2F;usr&#x2F;local&#x2F;nvidia&#x2F;bin:&#x2F;usr&#x2F;local&#x2F;cuda&#x2F;bin:&#x2F;usr&#x2F;local&#x2F;sbin:&#x2F;usr&#x2F;local&#x2F;bin:&#x2F;usr&#x2F;sbin:&#x2F;usr&#x2F;bin:&#x2F;sbin:&#x2F;bin:$&#123;HADOOP_BIN_DIR&#125;:$&#123;HADOOP_SBIN_DIR&#125;:$PATH \</span><br><span class="line">LD_LIBRARY_PATH&#x3D;&#x2F;usr&#x2F;local&#x2F;cuda&#x2F;extras&#x2F;CUPTI&#x2F;lib:&#x2F;usr&#x2F;local&#x2F;cuda&#x2F;extras&#x2F;CUPTI&#x2F;lib64:&#x2F;usr&#x2F;local&#x2F;nvidia&#x2F;lib:&#x2F;usr&#x2F;local&#x2F;nvidia&#x2F;lib64:&#x2F;usr&#x2F;local&#x2F;cuda&#x2F;lib64:&#x2F;usr&#x2F;local&#x2F;cuda&#x2F;targets&#x2F;x86_64-linux&#x2F;lib&#x2F;stubs:$&#123;JAVA_HOME&#125;&#x2F;jre&#x2F;lib&#x2F;amd64&#x2F;serverCopy</span><br></pre></td></tr></table></figure>
+<p>建议先把这一部分进行构建，作为基础镜像，后面要配置其他环境（如安装Pytorch框架登），就不用重复构建这部分，还减少了出错的可能性。这里说一下，启动带CUDA的Docker镜像需要在<code>docker run</code>加上额外的参数<code>--runtime nvidia</code>。</p>
+<p>接下来安装深度学习框架。</p>
+<h2 id="configure-pytorch">Configure PyTorch</h2>
+<p>假设上面的镜像我们命名为xiaoqinfeng/base，那么构建PyTorch的Dockerfile可以像下面这么写：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">FROM xiaoqinfeng&#x2F;base</span><br><span class="line"></span><br><span class="line">RUN pip install -U pip</span><br><span class="line">RUN pip install numpy scipy pandas matplotlib tqdm</span><br><span class="line">RUN pip install torch&#x3D;&#x3D;1.5.0+cu101 torchvision&#x3D;&#x3D;0.6.0+cu101 -f https:&#x2F;&#x2F;download.pytorch.org&#x2F;whl&#x2F;torch_stable.htmlCopy</span><br></pre></td></tr></table></figure>
+<p>因为这里我用的CUDA10.1，其他版本的CUDA安装指令可能不太一样，具体可以参考<a target="_blank" rel="noopener" href="https://pytorch.org/get-started/locally/">官网</a>。</p>
+<h2 id="configure-tensorflow">Configure Tensorflow</h2>
+<p>如果是安装Tensorflow，那么构建Tensorflow的Dockerfile可以像下面这么写：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">FROM xiaoqinfeng&#x2F;base</span><br><span class="line"></span><br><span class="line">RUN pip install -U pip</span><br><span class="line">RUN pip install numpy scipy pandas matplotlib tqdm tensorflow-gpuCopy</span><br></pre></td></tr></table></figure>
+<p>这里会自动安装最新版本的Tensorflow2。Tensorflow不同版本对CUDA和cuDNN版本甚至Python版本的支持都不太一样，可以参考<a target="_blank" rel="noopener" href="https://www.tensorflow.org/install/source#linux">官网</a>的说明。</p>
+<h1 id="deep-learning-with-openpai">Deep Learning with OpenPAI</h1>
+<h2 id="what-is-openpai">What is OpenPAI</h2>
+<p>OpenPAI是一个分布式深度学习计算资源管理平台，对于我们用户来说，只需要定义好Docker镜像，然后编写好任务设置，提交到平台之后，平台便会自动分配计算资源来运行任务。</p>
+<p>OpenPAI界面：</p>
+<p><img src="https://i.loli.net/2020/06/24/CDrZjgYR7lNcieh.png" style="zoom: 50%;" /></p>
+<p><img src="https://i.loli.net/2020/06/24/FGJpVCbls7YP4aM.png" style="zoom: 50%;" /></p>
+<p>下面我们来讲讲怎么向OpenPAI平台提交任务。</p>
+<h2 id="submit-jobs-to-openpai">Submit Jobs to OpenPAI</h2>
+<h3 id="pack-code-data-files">Pack Code &amp; Data Files</h3>
+<p>假设你已经完成了代码的编写和测试，你的目录结构可能看起来是这样：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── README.md</span><br><span class="line">├── data</span><br><span class="line">│   └── dataset.csv</span><br><span class="line">├── main.py</span><br><span class="line">└── src</span><br><span class="line">    ├── data.py</span><br><span class="line">    └── net.pyCopy</span><br></pre></td></tr></table></figure>
+<p>因为OpenPAI会创建一个虚拟容器来运行你的代码，所以你的数据和代码必须要以某种方式传送到OpenPAI上的虚拟容器中。我们先来打包，在代码目录下执行<code>tar -cvf files.tar ./</code>。之后，运行<code>python -m http.server &lt;port&gt;</code>。打开浏览器输入<code>&lt;server_ip&gt;:&lt;port&gt;</code>应该就能看到你的文件了：</p>
+<p><img src="https://i.loli.net/2020/06/24/Cbgiw3XKnGYsNHp.png" /></p>
+<p>由于这个http进程需要一直运行，所以建议使用<code>screen</code>放到后台执行。</p>
+<h3 id="configure-tasks">Configure Tasks</h3>
+<p>像OpenPAI提交任务可以采用网页提交也可以使用VSCode插件，这里我们采用网页提交。登入OpenPAI界面，点击Submit Job：</p>
+<p><img src="https://i.loli.net/2020/06/24/bhXAcJfOmo8RtT2.png" /></p>
+<p>可以看到提交任务的界面：</p>
+<p><img src="https://i.loli.net/2020/06/24/KME8GuN49gyY1ph.png" /></p>
+<p>Job name大家可以自己设置。在Command一栏，是执行任务所需的全部命令，首先我们要做的就是将代码数据压缩包下载到容器中并解压：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wget &lt;server_ip&gt;:&lt;port&gt;&#x2F;files.tar</span><br><span class="line"></span><br><span class="line">tar -xvf files.tarCopy</span><br></pre></td></tr></table></figure>
+<p>然后是运行代码，假设我这里的任务比较简单，只有一行main.py的调用：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python main.pyCopy</span><br></pre></td></tr></table></figure>
+<p>如果任务的执行比较复杂，也只需把命令填到Command里即可，OpenPAI会自动执行。接下来是设置配置，可以选GPU的数量，内存大小等等：</p>
+<p><img src="https://i.loli.net/2020/06/24/T7ryOxjpJP4FWYR.png" style="zoom:67%;" /></p>
+<p>然后是镜像的选择：</p>
+<p><img src="https://i.loli.net/2020/06/24/3n7SpNlsLjBRvgE.png" style="zoom:67%;" /></p>
+<p>要注意在本机上构建好镜像之后，需要把镜像重命名为<code>&lt;repository_address&gt;/&lt;image_name&gt;</code>的格式（我们的<code>&lt;repository&gt;</code>是<code>lin-ai-27:5000</code>，假设我的镜像名是<code>xiaoqinfeng/pytorch</code>，那就是改成<code>lin-ai-27:5000/xiaoqinfeng/pytorch</code>），然后执行<code>docker push</code>推送到Docker镜像服务器上才能在OpenPAI上使用。</p>
+<p>提交之后，可以在Jobs界面看到任务的运行情况：</p>
+<p><img src="https://i.loli.net/2020/06/24/ZD4cUgOCIqnyHdB.png" style="zoom: 50%;" /></p>
+<h1 id="misc">Misc</h1>
+<h2 id="store-files-in-containers">Store Files in Containers</h2>
+<p>我们往往需要在程序运行的时候保存文件，如checkpoints等。在OpenPAI上执行程序的话文件是保存在程序中的，如果我们想要在运行完之后把文件复制到本地电脑上呢？这个时候就需要在任务的配置文件里加上复制文件到HDFS的语句。首先确认你的HDFS的URL：如<code>hdfs://172.31.246.52:9000/你的OpenPAI用户名/</code>。</p>
+<p>如果要创建文件夹，则可以使用<code>hdfs dfs -mkdir -p &lt;HDFS URL&gt;+&lt;New Folder&gt;</code>。这里<code>&lt;New Folder&gt;</code>是你要创建的的文件夹的路径，用起来和Linux的<code>mkdir</code>命令其实是差不多的。</p>
+<p>要复制文件（夹）则使用<code>hdfs dfs -cp &lt;Source Dir&gt; &lt;Dest Dir&gt;</code>。</p>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-06-02T02:26:13.000Z" title="2020-6-2 10:26:13 ├F10: AM┤">2020-06-02</time>发表</span><span class="level-item"><time dateTime="2020-12-21T14:05:52.434Z" title="2020-12-21 10:05:52 ├F10: PM┤">2020-12-21</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Technical-Notes/">Technical Notes</a><span> / </span><a class="link-muted" href="/categories/Technical-Notes/Misc/">Misc</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2020/06/02/Ubuntu20-4LTS-%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE-CUDA11-cuDNN8-Tensorflow-Pytorch/">Ubuntu20.04LTS 深度学习环境配置 CUDA11 + cuDNN8 + Tensorflow + Pytorch</a></h1><div class="content"><h1 id="introduction">Introduction</h1>
+<p>Ubuntu的最新LTS版本也更新到了20.04，在给新机器配置深度学习环境的时候发现比以前容易了许多，特此写一篇Tutorial。这里的安装方法只针对Ubuntu20.04LTS，对于其他版本的系统可能不太适用。</p>
+<h1 id="install-gpu-drivers">Install GPU Drivers</h1>
+<p>这里假设安装系统之后已经做好了必要的配置（安装常用软件依赖、修改国内源等）。Ubuntu20.04中GPU驱动可以直接通过GUI界面安装，十分方便，方法是找到软件与更新 (Software &amp; Updates)，在附加驱动 (additional drivers) 选项卡中选择驱动版本，一般是选择“专有，tested” (proprietary, tested) 那个，之后点Apply Changes，重启。</p>
+<p><img src="https://i.loli.net/2020/06/24/xevtVosYOH7D68I.png" /></p>
+<p>如果是服务器的话，也可以采用命令行的安装方法。在命令行输入：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ubuntu-drivers devices</span><br></pre></td></tr></table></figure>
+<p>会列出驱动信息：</p>
+<figure>
+<img src="https://i.loli.net/2020/12/19/CGWnoRFPz23r46K.png" alt="" /><figcaption>image-20201219103330645</figcaption>
+</figure>
+<p>可以看到推荐驱动版本是455，直接使用命令<code>ubuntu-drivers autoinstall</code>就可以自动安装推荐版本的驱动了。</p>
+<h1 id="install-cuda-cudnn">Install CUDA &amp; cuDNN</h1>
+<p>最常用的方式是按照<a href="%5BCUDA%20Toolkit%2011.0%20Download%20%7C%20NVIDIA%20Developer%5D(https://developer.nvidia.com/cuda-11.0-download-archive?target_os=Linux&amp;target_arch=x86_64&amp;target_distro=Ubuntu&amp;target_version=1804&amp;target_type=deblocal)">官网</a>的指导来安装CUDA，之后需要设置环境变量，在<code>~/.bashrc</code>中添加下列指令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> PATH=/usr/<span class="built_in">local</span>/cuda-11.0/bin<span class="variable">$&#123;PATH:+:<span class="variable">$&#123;PATH&#125;</span>&#125;</span></span><br><span class="line"><span class="built_in">export</span> LD_LIBRARY_PATH=/usr/<span class="built_in">local</span>/cuda-11.0/lib64\</span><br><span class="line">                         <span class="variable">$&#123;LD_LIBRARY_PATH:+:<span class="variable">$&#123;LD_LIBRARY_PATH&#125;</span>&#125;</span></span><br></pre></td></tr></table></figure>
+<p>还可以选择简单的方式，直接使用apt-get来安装CUDA：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install nvidia-cuda-toolkit</span><br></pre></td></tr></table></figure>
+<p>不过这样会直接安装最新的CUDA版本，而PyTorch等深度学习框架不一定对最新的CUDA版本都有很好的支持，所以不推荐这种方式。</p>
+<p>安装完CUDA之后输入<code>nvcc --version</code>可以测试是否安装成功，输入<code>nvidia-smi</code>可以看到GPU信息和CUDA版本。</p>
+<p>之后安装cuDNN，进入<a target="_blank" rel="noopener" href="https://developer.nvidia.com/cudnn">官网</a>，选择Download cuDNN：</p>
+<p><img src="https://i.loli.net/2020/06/24/VYBRoINFDC9ObA1.png" /></p>
+<p>会要求登录，如果没有账号的注册一个即可。在这里根据CUDA版本选择适合的cuDNN，我这里是CUDA10.2。我们选择deb包的方式安装，下载下图中圈出来的三个deb包，依次用<code>sudo dpkg -i xxx.deb</code>命令安装。</p>
+<p><img src="https://i.loli.net/2020/06/24/qcDG5t3JY6vfoQM.png" /></p>
+<h1 id="configure-python">Configure Python</h1>
+<p>为了更好地管理Python包和虚拟环境，我们需要安装Anaconda。使用Anaconda之后，我们可以创建虚拟环境，虚拟环境之间互不干扰。做科学实验我们一般需要安装大量的Python包，有的包之间甚至还有冲突，如果我们把他们都安装在同一个环境下就会难以管理，甚至出冲突。而有了虚拟环境之后，我们可以把不同需求放在不同虚拟环境中，比如深度学习开发放在一个虚拟环境中（安装Tensorflow等），网站开发放在一个虚拟环境中（安装Flask等）。Anaconda默认自带大量的包，不过我们一般会创建新的虚拟环境去安装新的包，所以这里我们选用Miniconda。Miniconda和Anaconda唯一的区别是不会自带大量Python包，这里大家自行选择。Anaconda国内镜像下载地址为：https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/，Miniconda国内镜像下载地址为：https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/。</p>
+<p>比如说我们下载的是<code>Miniconda3-py38_4.8.2-Linux-x86_64.sh</code>，执行<code>bash Miniconda3-py38_4.8.2-Linux-x86_64.sh</code>即可安装。显示一大屏用户协议哪儿按<code>q</code>可以直接跳过，其他选项的默认的输入<code>yes</code>即可。在提示是否需要conda init的时候记得输入<code>yes</code>。</p>
+<p>安装成功之后，重开一个终端，可以看到现在处于<code>base</code>环境中：</p>
+<p><img src="https://i.loli.net/2020/06/24/giml1UKzWuyqTjr.png" /></p>
+<p>我们先配置一下国内镜像，执行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim ~/.condarc</span><br></pre></td></tr></table></figure>
+<p>然后粘贴下列文本使用清华源：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">channels:</span><br><span class="line">  - defaults</span><br><span class="line">show_channel_urls: true</span><br><span class="line">channel_alias: https:&#x2F;&#x2F;mirrors.tuna.tsinghua.edu.cn&#x2F;anaconda</span><br><span class="line">default_channels:</span><br><span class="line">  - https:&#x2F;&#x2F;mirrors.tuna.tsinghua.edu.cn&#x2F;anaconda&#x2F;pkgs&#x2F;main</span><br><span class="line">  - https:&#x2F;&#x2F;mirrors.tuna.tsinghua.edu.cn&#x2F;anaconda&#x2F;pkgs&#x2F;free</span><br><span class="line">  - https:&#x2F;&#x2F;mirrors.tuna.tsinghua.edu.cn&#x2F;anaconda&#x2F;pkgs&#x2F;r</span><br><span class="line">  - https:&#x2F;&#x2F;mirrors.tuna.tsinghua.edu.cn&#x2F;anaconda&#x2F;pkgs&#x2F;pro</span><br><span class="line">  - https:&#x2F;&#x2F;mirrors.tuna.tsinghua.edu.cn&#x2F;anaconda&#x2F;pkgs&#x2F;msys2</span><br><span class="line">custom_channels:</span><br><span class="line">  conda-forge: https:&#x2F;&#x2F;mirrors.tuna.tsinghua.edu.cn&#x2F;anaconda&#x2F;cloud</span><br><span class="line">  msys2: https:&#x2F;&#x2F;mirrors.tuna.tsinghua.edu.cn&#x2F;anaconda&#x2F;cloud</span><br><span class="line">  bioconda: https:&#x2F;&#x2F;mirrors.tuna.tsinghua.edu.cn&#x2F;anaconda&#x2F;cloud</span><br><span class="line">  menpo: https:&#x2F;&#x2F;mirrors.tuna.tsinghua.edu.cn&#x2F;anaconda&#x2F;cloud</span><br><span class="line">  pytorch: https:&#x2F;&#x2F;mirrors.tuna.tsinghua.edu.cn&#x2F;anaconda&#x2F;cloud</span><br><span class="line">  simpleitk: https:&#x2F;&#x2F;mirrors.tuna.tsinghua.edu.cn&#x2F;anaconda&#x2F;cloud</span><br></pre></td></tr></table></figure>
+<p>之后我们输入<code>conda create -n &lt;your_name&gt;</code>创建一个新的虚拟环境，如果需要指定Python版本，则<code>conda create --n &lt;your_name&gt; python=&lt;python_version&gt;</code>。之后输入<code>conda activate &lt;your_name&gt;</code>进入虚拟环境，如果需要退出，则使用<code>conda deactivate</code>。</p>
+<p>安装常用包：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda install --yes numpy scipy pandas matplotlib tqdm pip jupyter</span><br></pre></td></tr></table></figure>
+<p><code>--yes</code>的作用是手动输入<code>y</code>来确认是否安装，这里列出的是一些最常用的Python包，大家可以根据自己的需求自行调整。<code>conda install</code>为Anaconda中安装Python包的方式。</p>
+<h1 id="install-pytorch">Install PyTorch</h1>
+<p>这里来安装PyTorch环境，推荐使用<code>conda create -n pytorch</code>创建一个专有虚拟环境，然后使用<code>conda install</code>安装常用包。对于安装PyTorch，我们可以使用<code>conda</code>也可以使用<code>pip</code>安装。<code>pip</code>是另外一个安装Python包的工具，由于不检查依赖所以比<code>conda</code>安装速度快，而且包的数量比<code>conda</code>多，使用也更广泛。同样<code>pip</code>也可以使用国内镜像加速下载，详见https://mirrors.tuna.tsinghua.edu.cn/help/pypi/。</p>
+<p>对于CUDA11.0，官方给出的用<code>conda</code>安装PyTorch的命令（CUDA11.1也是这个）是：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda install pytorch torchvision torchaudio cudatoolkit=11.0 -c pytorch</span><br></pre></td></tr></table></figure>
+<p>用<code>pip</code>安装PyTorch的命令是：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install torch==1.7.1+cu110 torchvision==0.8.2+cu110 torchaudio===0.7.2 -f https://download.pytorch.org/whl/torch_stable.html</span><br></pre></td></tr></table></figure>
+<p>对于其他版本的CUDA安装命令可能不一样，可以去<a target="_blank" rel="noopener" href="https://pytorch.org/get-started/locally/">官网</a>查看。</p>
+<p>可以使用以下命令来测试GPU版本的PyTorch是否正常工作：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python -c <span class="string">&quot;import torch; print(torch.cuda.is_available())&quot;</span></span><br></pre></td></tr></table></figure>
+<h1 id="install-tensorflow">Install Tensorflow</h1>
+<p>安装Tensorflow环境同样推荐创建一个专有虚拟环境。对于Tensorflow2的安装，使用<code>pip</code>十分方便，使用</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install tensorflow tensorflow-gpu</span><br></pre></td></tr></table></figure>
+<p>即可。要安装其他版本的Tensorflow可以使用<code>pip install tensorflow==&lt;tf_version&gt; tensorflow-gpu==&lt;tf_version&gt;</code>来指定版本。不过不同版本的Tensorflow要求的CUDA版本都有所不同，可以参考<a target="_blank" rel="noopener" href="https://www.tensorflow.org/install/source#linux">官网</a>的说明。</p>
+<p>可以使用以下命令来测试GPU版本的Tensorflow是否正常工作：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python -c <span class="string">&quot;import tensorflow as tf; tf.config.list_physical_devices(&#x27;GPU&#x27;)&quot;</span></span><br></pre></td></tr></table></figure>
+</div></article></div></div><!--!--><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/">Hanzawa の 部屋</a><p class="is-size-7"><span>&copy; 2021 Hanzawa</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("zh-CN");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><!--!--><script src="/js/main.js" defer></script><!--!--></body></html>

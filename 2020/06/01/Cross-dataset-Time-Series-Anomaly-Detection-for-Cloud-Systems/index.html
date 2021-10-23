@@ -1,243 +1,6 @@
-
-
-<!DOCTYPE html>
-<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
-
-
-
-<head>
-  <meta charset="UTF-8">
-  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
-  <link rel="icon" href="/img/favicon.png">
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
-  
-  <meta name="theme-color" content="#2f4154">
-  
-    <meta name="description" content="">
-  
-  <meta name="author" content="Hanzawa">
-  <meta name="keywords" content="">
-  
-  <title>Cross-dataset Time Series Anomaly Detection for Cloud Systems - Hanzawa の 部屋</title>
-
-  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
-
-
-  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
-  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
-
-  
-    
-    
-      
-      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.4.0/styles/github-gist.min.css" />
-    
-  
-
-  
-    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
-  
-
-
-
-<!-- 主题依赖的图标库，不要自行修改 -->
-
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
-
-
-
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
-
-
-<link  rel="stylesheet" href="/css/main.css" />
-
-<!-- 自定义样式保持在最底部 -->
-
-
-  <script id="fluid-configs">
-    var Fluid = window.Fluid || {};
-    var CONFIG = {"hostname":"qfxiao.me","root":"/","version":"1.8.8","typing":{"enable":true,"typeSpeed":30,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
-  </script>
-  <script  src="/js/utils.js" ></script>
-  <script  src="/js/color-schema.js" ></script>
-<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Hanzawa の 部屋" type="application/atom+xml">
-</head>
-
-
-<body>
-  <header style="height: 60vh;">
-    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
-  <div class="container">
-    <a class="navbar-brand"
-       href="/">&nbsp;<strong>Hanzawa</strong>&nbsp;</a>
-
-    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
-            data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <div class="animated-icon"><span></span><span></span><span></span></div>
-    </button>
-
-    <!-- Collapsible content -->
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav ml-auto text-center">
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/">
-                <i class="iconfont icon-home-fill"></i>
-                首页
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/archives/">
-                <i class="iconfont icon-archive-fill"></i>
-                归档
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/categories/">
-                <i class="iconfont icon-category-fill"></i>
-                分类
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/tags/">
-                <i class="iconfont icon-tags-fill"></i>
-                标签
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/about/">
-                <i class="iconfont icon-user-fill"></i>
-                关于
-              </a>
-            </li>
-          
-        
-        
-          <li class="nav-item" id="search-btn">
-            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
-                class="iconfont icon-search"></i>&nbsp;</a>
-          </li>
-        
-        
-          <li class="nav-item" id="color-toggle-btn">
-            <a class="nav-link" href="javascript:">&nbsp;<i
-                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
-</nav>
-
-    <div class="banner" id="banner" parallax=true
-         style="background: url('/img/bg/spotlight.jpg') no-repeat center center;
-           background-size: cover;">
-      <div class="full-bg-img">
-        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
-          <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="Cross-dataset Time Series Anomaly Detection for Cloud Systems">
-              
-            </span>
-
-            
-              <div class="mt-3">
-  
-  
-    <span class="post-meta">
-      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2020-06-01 16:14" pubdate>
-        2020年6月1日 下午
-      </time>
-    </span>
-  
-</div>
-
-<div class="mt-1">
-  
-    
-    <span class="post-meta mr-2">
-      <i class="iconfont icon-chart"></i>
-      2.2k 字
-    </span>
-  
-
-  
-    
-    <span class="post-meta mr-2">
-      <i class="iconfont icon-clock-fill"></i>
-      
-      
-      25
-       分钟
-    </span>
-  
-
-  
-  
-</div>
-
-            
-          </div>
-
-          
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <main>
-    
-      
-
-<div class="container-fluid nopadding-x">
-  <div class="row nomargin-x">
-    <div class="d-none d-lg-block col-lg-2"></div>
-    <div class="col-lg-8 nopadding-x-md">
-      <div class="container nopadding-x-md" id="board-ctn">
-        <div class="py-5" id="board">
-          <article class="post-content mx-auto">
-            <!-- SEO header -->
-            <h1 style="display: none">Cross-dataset Time Series Anomaly Detection for Cloud Systems</h1>
-            
-              <p class="note note-info">
-                
-                  本文最后更新于：1 年前
-                
-              </p>
-            
-            <div class="markdown-body">
-              <h1 id="introduction">Introduction</h1>
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><title>Cross-dataset Time Series Anomaly Detection for Cloud Systems - Hanzawa の 部屋</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Hanzawa の 部屋"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Hanzawa の 部屋"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="Introduction 本文介绍了一种用于云计算平台的时间序列异常检测框架。为了解决标签不足的问题，文中使用了迁移学习的方法，即在有标签的source domain上训练模型，在没有标签的target domain上检测。同时，文中还使用了主动学习的方法来挑选最有价值的无标签样本进行标记。 📰Get Paper Background 针对云计算平台数据的异常检测通常是应用在云监控数据，"><meta property="og:type" content="article"><meta property="og:title" content="Cross-dataset Time Series Anomaly Detection for Cloud Systems"><meta property="og:url" content="http://qfxiao.me/2020/06/01/Cross-dataset-Time-Series-Anomaly-Detection-for-Cloud-Systems/"><meta property="og:site_name" content="Hanzawa の 部屋"><meta property="og:description" content="Introduction 本文介绍了一种用于云计算平台的时间序列异常检测框架。为了解决标签不足的问题，文中使用了迁移学习的方法，即在有标签的source domain上训练模型，在没有标签的target domain上检测。同时，文中还使用了主动学习的方法来挑选最有价值的无标签样本进行标记。 📰Get Paper Background 针对云计算平台数据的异常检测通常是应用在云监控数据，"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="https://i.loli.net/2020/06/25/jOB4rC2gnH9VcQW.png"><meta property="og:image" content="https://i.loli.net/2020/06/25/aM7Qvt6DwGXnThm.png"><meta property="og:image" content="https://i.loli.net/2020/06/25/jI9EbCy1XueDViw.png"><meta property="og:image" content="https://i.loli.net/2020/06/25/wRmfHj5xFcsLIXp.png"><meta property="og:image" content="https://i.loli.net/2020/06/25/mnBrzjfgV716yiR.png"><meta property="og:image" content="https://i.loli.net/2020/06/25/nci9PvGDEdjky5R.png"><meta property="og:image" content="https://i.loli.net/2020/06/25/RqonKfQS3IWw6Gb.png"><meta property="og:image" content="https://i.loli.net/2020/06/25/HDNGCrYOxezLwaB.png"><meta property="og:image" content="https://i.loli.net/2020/06/25/HMneBzlkR7Qg4TN.png"><meta property="og:image" content="https://i.loli.net/2020/06/25/fcoXhCL43yVwYes.png"><meta property="og:image" content="https://i.loli.net/2020/06/25/QV2eWzoOxGS6qJd.png"><meta property="og:image" content="https://i.loli.net/2020/06/25/QXYcP9V3xmJeIq5.png"><meta property="og:image" content="https://i.loli.net/2020/06/25/JKFf4XngPBdGm3V.png"><meta property="og:image" content="https://i.loli.net/2020/06/25/jcXphwBmR8J6SeU.png"><meta property="og:image" content="https://i.loli.net/2020/06/25/pe24P9gFJfQVrKM.png"><meta property="og:image" content="https://i.loli.net/2020/06/25/ifRhv85IqaVw7gx.png"><meta property="og:image" content="https://i.loli.net/2020/06/25/5oi3rcGugKXmTha.png"><meta property="article:published_time" content="2020-06-01T08:14:08.000Z"><meta property="article:modified_time" content="2020-06-25T05:28:22.135Z"><meta property="article:author" content="Hanzawa"><meta property="article:tag" content="Anomaly Detection"><meta property="article:tag" content="Transfer Learning"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="https://i.loli.net/2020/06/25/jOB4rC2gnH9VcQW.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://qfxiao.me/2020/06/01/Cross-dataset-Time-Series-Anomaly-Detection-for-Cloud-Systems/"},"headline":"Cross-dataset Time Series Anomaly Detection for Cloud Systems","image":["https://i.loli.net/2020/06/25/jOB4rC2gnH9VcQW.png","https://i.loli.net/2020/06/25/aM7Qvt6DwGXnThm.png","https://i.loli.net/2020/06/25/jI9EbCy1XueDViw.png","https://i.loli.net/2020/06/25/wRmfHj5xFcsLIXp.png","https://i.loli.net/2020/06/25/mnBrzjfgV716yiR.png","https://i.loli.net/2020/06/25/nci9PvGDEdjky5R.png","https://i.loli.net/2020/06/25/RqonKfQS3IWw6Gb.png","https://i.loli.net/2020/06/25/HDNGCrYOxezLwaB.png","https://i.loli.net/2020/06/25/HMneBzlkR7Qg4TN.png","https://i.loli.net/2020/06/25/fcoXhCL43yVwYes.png","https://i.loli.net/2020/06/25/QV2eWzoOxGS6qJd.png","https://i.loli.net/2020/06/25/QXYcP9V3xmJeIq5.png","https://i.loli.net/2020/06/25/JKFf4XngPBdGm3V.png","https://i.loli.net/2020/06/25/jcXphwBmR8J6SeU.png","https://i.loli.net/2020/06/25/pe24P9gFJfQVrKM.png","https://i.loli.net/2020/06/25/ifRhv85IqaVw7gx.png","https://i.loli.net/2020/06/25/5oi3rcGugKXmTha.png"],"datePublished":"2020-06-01T08:14:08.000Z","dateModified":"2020-06-25T05:28:22.135Z","author":{"@type":"Person","name":"Hanzawa"},"publisher":{"@type":"Organization","name":"Hanzawa の 部屋","logo":{"@type":"ImageObject"}},"description":"Introduction\r 本文介绍了一种用于云计算平台的时间序列异常检测框架。为了解决标签不足的问题，文中使用了迁移学习的方法，即在有标签的source domain上训练模型，在没有标签的target domain上检测。同时，文中还使用了主动学习的方法来挑选最有价值的无标签样本进行标记。\r 📰Get Paper\r Background\r 针对云计算平台数据的异常检测通常是应用在云监控数据，"}</script><link rel="canonical" href="http://qfxiao.me/2020/06/01/Cross-dataset-Time-Series-Anomaly-Detection-for-Cloud-Systems/"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><!--!--><meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Hanzawa の 部屋" type="application/atom+xml">
+</head><body class="is-1-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/">Hanzawa の 部屋</a></div><div class="navbar-menu"><div class="navbar-end"></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-12"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-06-01T08:14:08.000Z" title="2020-6-1 4:14:08 ├F10: PM┤">2020-06-01</time>发表</span><span class="level-item"><time dateTime="2020-06-25T05:28:22.135Z" title="2020-6-25 1:28:22 ├F10: PM┤">2020-06-25</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></span></div></div><h1 class="title is-3 is-size-4-mobile">Cross-dataset Time Series Anomaly Detection for Cloud Systems</h1><div class="content"><h1 id="introduction">Introduction</h1>
 <p>本文介绍了一种用于云计算平台的时间序列异常检测框架。为了解决标签不足的问题，文中使用了迁移学习的方法，即在有标签的source domain上训练模型，在没有标签的target domain上检测。同时，文中还使用了主动学习的方法来挑选最有价值的无标签样本进行标记。</p>
 <p><a target="_blank" rel="noopener" href="https://www.usenix.org/system/files/atc19-zhang-xu.pdf">📰Get Paper</a></p>
 <h1 id="background">Background</h1>
@@ -250,7 +13,7 @@
 </ul>
 <h1 id="proposed-approach">Proposed Approach</h1>
 <p>为了解决上述挑战，文中提出了一个时间序列异常检测框架ATAD (Active Transfer Anomaly Detection)。该框架结合了迁移学习技术和主动学习技术，示意图如下：</p>
-<p><img src="https://i.loli.net/2020/06/25/jOB4rC2gnH9VcQW.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/jOB4rC2gnH9VcQW.png" style="zoom:67%;" /></p>
 <p>未标记数据<span class="math inline">\(T_u\)</span>是我们要检测的目标数据 (target domain)，标记数据<span class="math inline">\(T_l\)</span>是我们的源数据 (source domain)，可以是开源数据或者是其他系统的监控数据。</p>
 <h2 id="transfer-learning-component">Transfer Learning Component</h2>
 <p>在应用迁移学习时，我们需要考虑以下几个因素：</p>
@@ -259,22 +22,22 @@
 <li>时间序列的粒度。粗粒度的迁移学习不利于发现异常，本文采用细粒度，即数据点级别的迁移学习；</li>
 <li>迁移学习需要source domain和target domain具有潜在的相似性，所以我们需要对source domain中的样本进行过滤。</li>
 </ul>
-<p><img src="https://i.loli.net/2020/06/25/aM7Qvt6DwGXnThm.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/aM7Qvt6DwGXnThm.png" style="zoom:67%;" /></p>
 <h3 id="feature-identification">Feature Identification</h3>
 <p>这一节描述特征工程中用到的特征。在提取特征之前，文中使用了离散傅里叶变换来识别时间序列的周期<span class="math inline">\(p\)</span>，并为后面滑动窗口的大小原则作参考。</p>
 <h4 id="statistical-features">Statistical Features</h4>
 <p>统计特征包含了一些基本的统计信息，如均值、方差等，用到的特征如下表所示：</p>
-<p><img src="https://i.loli.net/2020/06/25/jI9EbCy1XueDViw.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/jI9EbCy1XueDViw.png" style="zoom:67%;" /></p>
 <p>表中的统计特征都是基于大小等于周期<span class="math inline">\(p\)</span>的滑动窗口的。</p>
 <h4 id="forecasting-error-features">Forecasting Error Features</h4>
 <p>使用预测特征的理由是如果一个数据点偏离预测值很远，那么它很有可能是异常。文中使用了多种时间序列预测模型，如SARIMA、Holt、Holt-Winters、STL等。最终的预测结果使用下式来加权集成： <span class="math display">\[
 \hat{Y}_t=\sum\limits_{m=1}^{M}\frac{\hat{Y}_{m,t}}{M-1}\left(1-\frac{RMSE_{m,t}}{\sum\limits_{n=1}^M RMSE_{n,t}}\right)
 \]</span> <span class="math inline">\(M\)</span>代表<span class="math inline">\(M\)</span>个不同模型，<span class="math inline">\(RMSE_{m,t}\)</span>代表模型<span class="math inline">\(m\)</span>在时间<span class="math inline">\(t\)</span>的<span class="math inline">\(RMSE\)</span>，<span class="math inline">\(\hat{Y}_t\)</span>是在时间<span class="math inline">\(t\)</span>的最终预测结果。之后，使用下表中的Metrics来计算不同预测特征：</p>
-<p><img src="https://i.loli.net/2020/06/25/wRmfHj5xFcsLIXp.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/wRmfHj5xFcsLIXp.png" style="zoom:67%;" /></p>
 <p>同样的，上述特征都是基于窗口的。</p>
 <h4 id="temporal-features">Temporal Features</h4>
 <p>这一部分是一些时间序列相关特征：</p>
-<p><img src="https://i.loli.net/2020/06/25/mnBrzjfgV716yiR.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/mnBrzjfgV716yiR.png" style="zoom:67%;" /></p>
 <p>最后，总共提取了37个特征，并且每个特征都进行了正则化。</p>
 <h3 id="the-transfer-between-source-domain-and-target-domain">The Transfer between Source Domain and Target Domain</h3>
 <p>本文结合了基于实例的迁移学习(<strong>Instance-based Transfer Learning</strong>)和基于特征的迁移学习(<strong>Feature-based Transfer Learning</strong>)。</p>
@@ -295,9 +58,9 @@ Uncertainty=-|Prob(Normal)-Prob(Anomaly)|
 <p>时间上相邻的样本往往也是相似的。</p>
 <p>具体的来说，我们对所有样本按照<strong>Uncertainty</strong>排序，然后进行一次扫描，如果当前样本在候选集中某个样本的<strong>Context</strong>之中，我们则忽略当前样本，因为这代表当前样本和候选集中的那个样本是相似的。如果不在<strong>Context</strong>之中，我们则将该样本加入候选集中。</p>
 <p>判断是否在某个样本的<strong>Context</strong>中，如下图所示，直接判断是否落在区间<span class="math inline">\([t-\alpha,t+\alpha]\)</span>中就是了。</p>
-<p><img src="https://i.loli.net/2020/06/25/nci9PvGDEdjky5R.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/nci9PvGDEdjky5R.png" style="zoom:67%;" /></p>
 <p>主动学习模块的算法流程图如下图所示：</p>
-<p><img src="https://i.loli.net/2020/06/25/RqonKfQS3IWw6Gb.png" srcset="/img/loading.gif" style="zoom: 80%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/RqonKfQS3IWw6Gb.png" style="zoom: 80%;" /></p>
 <h1 id="experiments">Experiments</h1>
 <p>在实验部分，作者试图回答以下问题：</p>
 <ol type="1">
@@ -308,7 +71,7 @@ Uncertainty=-|Prob(Normal)-Prob(Anomaly)|
 </ol>
 <h2 id="dataset-and-setup">Dataset and Setup</h2>
 <p>下表是用到的数据集的一些基本信息：</p>
-<p><img src="https://i.loli.net/2020/06/25/HDNGCrYOxezLwaB.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/HDNGCrYOxezLwaB.png" style="zoom:67%;" /></p>
 <h2 id="evaluation-metric">Evaluation Metric</h2>
 <p>评测标准使用的是F1-score： <span class="math display">\[
 F1=\frac{2\cdot P\cdot R}{P+R}, \space P=\frac{TP}{TP+FP}, \space R=\frac{TP}{TP+FN}
@@ -317,9 +80,9 @@ F1=\frac{2\cdot P\cdot R}{P+R}, \space P=\frac{TP}{TP+FP}, \space R=\frac{TP}{TP
 <h3 id="rq1-how-effective-is-atad">RQ1: How effective is ATAD?</h3>
 <p>Baseline包括孤立森林、K-Sigma、S-H-ESD和随机森林。</p>
 <p>最终结果如下表所示：</p>
-<p><img src="https://i.loli.net/2020/06/25/HMneBzlkR7Qg4TN.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/HMneBzlkR7Qg4TN.png" style="zoom:67%;" /></p>
 <p>为了评测ATAD利用标签的能力，我们比较了RF在达到和ATAD相似F1 score情况下所需标签的数量，如下表所示：</p>
-<p><img src="https://i.loli.net/2020/06/25/fcoXhCL43yVwYes.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/fcoXhCL43yVwYes.png" style="zoom:67%;" /></p>
 <h3 id="rq2-how-effective-is-the-transfer-learning-component">RQ2: How effective is the Transfer Learning Component?</h3>
 <p>我们从以下两个方面来探究模型迁移知识的能力：</p>
 <ul>
@@ -327,307 +90,26 @@ F1=\frac{2\cdot P\cdot R}{P+R}, \space P=\frac{TP}{TP+FP}, \space R=\frac{TP}{TP
 <li>本模型迁移知识的能力</li>
 </ul>
 <p>对于第一点，作者提出传统的方法一般只提取了统计特征，而本文还提取了多种其他特征。作者对提取不同特征进行了比较试验，结果如下表所示：</p>
-<p><img src="https://i.loli.net/2020/06/25/QV2eWzoOxGS6qJd.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/QV2eWzoOxGS6qJd.png" style="zoom:67%;" /></p>
 <p>除此之外，作者还展示了不同数据集下前10有效的特征：</p>
-<p><img src="https://i.loli.net/2020/06/25/QXYcP9V3xmJeIq5.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/QXYcP9V3xmJeIq5.png" style="zoom:67%;" /></p>
 <p>对于第二点，作者比较了是否使用文中的领域适应算法CORAL，在达到相似F1 score下所需的标签数，如下表所示：</p>
-<p><img src="https://i.loli.net/2020/06/25/JKFf4XngPBdGm3V.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/JKFf4XngPBdGm3V.png" style="zoom:67%;" /></p>
 <h3 id="rq3-how-effective-is-the-active-learning-component">RQ3: How effective is the Active Learning component?</h3>
 <p>为了验证本文所用的主动学习的有效性，作者进行了对比试验。第一个模型 (Supervised model) 使用全部标签但不使用迁移学习训练，第二个 (Naïve) 为只使用主动学习而不使用迁移学习，第三个为本文提出的模型。结果如下图所示，为了达到相似的性能，不同模型需要的标签数。</p>
-<p><img src="https://i.loli.net/2020/06/25/jcXphwBmR8J6SeU.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/jcXphwBmR8J6SeU.png" style="zoom:67%;" /></p>
 <p>下表展示了使用不同主动学习策略 (U - conventional uncertainty method, UCD - 本文使用的方法, random - 随机选择) 进行标记得到的结果：</p>
-<p><img src="https://i.loli.net/2020/06/25/pe24P9gFJfQVrKM.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/pe24P9gFJfQVrKM.png" style="zoom:67%;" /></p>
 <p>同时作者还对不同<span class="math inline">\(\alpha\)</span>的选择进行了实验：</p>
-<p><img src="https://i.loli.net/2020/06/25/ifRhv85IqaVw7gx.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/ifRhv85IqaVw7gx.png" style="zoom:67%;" /></p>
 <h3 id="rq4-how-effective-is-atad-in-detecting-anomalies-in-a-companys-local-dataset-based-on-public-datasets">RQ4: How effective is ATAD in detecting anomalies in a company’s local dataset based on public datasets?</h3>
 <p>这里作者对比了不同方法在微软内部数据集上的结果：</p>
-<p><img src="https://i.loli.net/2020/06/25/5oi3rcGugKXmTha.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
-
-            </div>
-            <hr>
-            <div>
-              <div class="post-metas mb-3">
-                
-                  <div class="post-meta mr-3">
-                    <i class="iconfont icon-category"></i>
-                    
-                      <a class="hover-with-bg" href="/categories/Research/">Research</a>
-                    
-                      <a class="hover-with-bg" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
-                    
-                  </div>
-                
-                
-                  <div class="post-meta">
-                    <i class="iconfont icon-tags"></i>
-                    
-                      <a class="hover-with-bg" href="/tags/Anomaly-Detection/">Anomaly Detection</a>
-                    
-                      <a class="hover-with-bg" href="/tags/Transfer-Learning/">Transfer Learning</a>
-                    
-                  </div>
-                
-              </div>
-              
-                <p class="note note-warning">
-                  
-                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
-                  
-                </p>
-              
-              
-                <div class="post-prevnext">
-                  <article class="post-prev col-6">
-                    
-                    
-                      <a href="/2020/06/01/Deep-Anomaly-Detection-Using-Geometric-Transformations/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Deep Anomaly Detection Using Geometric Transformations</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
-                  </article>
-                  <article class="post-next col-6">
-                    
-                    
-                      <a href="/2020/05/06/Learning-Representations-of-Ultrahigh-dimensional-Data-for-Random-Distance-based-Outlier-Detection/">
-                        <span class="hidden-mobile">Learning Representations of Ultrahigh-dimensional Data for Random Distance-based Outlier Detection</span>
-                        <span class="visible-mobile">下一篇</span>
-                        <i class="iconfont icon-arrowright"></i>
-                      </a>
-                    
-                  </article>
-                </div>
-              
-            </div>
-
-            
-          </article>
-        </div>
-      </div>
-    </div>
-    
-      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
-        <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
-  <div class="toc-body" id="toc-body"></div>
-</div>
-
-      </div>
-    
-  </div>
-</div>
-
-<!-- Custom -->
-
-
-    
-
-    
-      <a id="scroll-top-button" href="#" role="button">
-        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
-      </a>
-    
-
-    
-      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
-     aria-hidden="true">
-  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
-        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body mx-3">
-        <div class="md-form mb-5">
-          <input type="text" id="local-search-input" class="form-control validate">
-          <label data-error="x" data-success="v"
-                 for="local-search-input">关键词</label>
-        </div>
-        <div class="list-group" id="local-search-result"></div>
-      </div>
-    </div>
-  </div>
-</div>
-    
-
-    
-  </main>
-
-  <footer class="text-center mt-5 py-3">
-  <div class="footer-content">
-     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
-  </div>
-  
-  <div class="statistics">
-    
-    
-
-    
-      
-        <!-- 不蒜子统计PV -->
-        <span id="busuanzi_container_site_pv" style="display: none">
-            总访问量 
-            <span id="busuanzi_value_site_pv"></span>
-             次
-          </span>
-      
-      
-        <!-- 不蒜子统计UV -->
-        <span id="busuanzi_container_site_uv" style="display: none">
-            总访客数 
-            <span id="busuanzi_value_site_uv"></span>
-             人
-          </span>
-      
-    
-  </div>
-
-
-  
-
-  
-</footer>
-
-<!-- SCRIPTS -->
-
-  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
-  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
-
-  <script>
-    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
-    NProgress.start()
-    window.addEventListener('load', function() {
-      NProgress.done();
-    })
-  </script>
-
-
-<script  src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" ></script>
-<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
-<script  src="/js/debouncer.js" ></script>
-<script  src="/js/events.js" ></script>
-<script  src="/js/plugins.js" ></script>
-
-<!-- Plugins -->
-
-
-  
-    <script  src="/js/lazyload.js" ></script>
-  
-
-
-
-  
-
-
-
-  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js" ></script>
-
-
-
-  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
-
-
-
-  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js" ></script>
-
-
-
-  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js" ></script>
-
-
-
-  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
-
-
-
-
-  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11/lib/typed.min.js" ></script>
-  <script>
-    (function (window, document) {
-      var typing = Fluid.plugins.typing;
-      var title = document.getElementById('subtitle').title;
-      
-      typing(title)
-      
-    })(window, document);
-  </script>
-
-
-
-  <script  src="/js/local-search.js" ></script>
-  <script>
-    (function () {
-      var path = "/local-search.xml";
-      $('#local-search-input').on('click', function() {
-        searchFunc(path, 'local-search-input', 'local-search-result');
-      });
-      $('#modalSearch').on('shown.bs.modal', function() {
-        $('#local-search-input').focus();
-      });
-    })()
-  </script>
-
-
-
-
-
-  
-
-  
-    <!-- MathJax -->
-    <script>
-      MathJax = {
-        tex: {
-          inlineMath: [['$', '$'], ['\\(', '\\)']]
-        },
-        options: {
-          renderActions: {
-            findScript: [10, doc => {
-              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
-                const display = !!node.type.match(/; *mode=display/);
-                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
-                const text = document.createTextNode('');
-                node.parentNode.replaceChild(text, node);
-                math.start = { node: text, delim: '', n: 0 };
-                math.end = { node: text, delim: '', n: 0 };
-                doc.math.push(math);
-              });
-            }, '', false],
-            insertedScript: [200, () => {
-              document.querySelectorAll('mjx-container').forEach(node => {
-                let target = node.parentNode;
-                if (target.nodeName.toLowerCase() === 'li') {
-                  target.parentNode.classList.add('has-jax');
+<p><img src="https://i.loli.net/2020/06/25/5oi3rcGugKXmTha.png" style="zoom:67%;" /></p>
+</div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/Anomaly-Detection/">Anomaly Detection</a><a class="link-muted mr-2" rel="tag" href="/tags/Transfer-Learning/">Transfer Learning</a></div><!--!--></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2020/06/01/Deep-Anomaly-Detection-Using-Geometric-Transformations/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">Deep Anomaly Detection Using Geometric Transformations</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2020/05/06/Learning-Representations-of-Ultrahigh-dimensional-Data-for-Random-Distance-based-Outlier-Detection/"><span class="level-item">Learning Representations of Ultrahigh-dimensional Data for Random Distance-based Outlier Detection</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><!--!--></div><!--!--><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/">Hanzawa の 部屋</a><p class="is-size-7"><span>&copy; 2021 Hanzawa</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("zh-CN");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
                 }
-              });
-            }, '', false]
-          }
-        }
-      };
-    </script>
-
-    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3.1.2/es5/tex-svg.js" ></script>
-
-  
-
-
-
-
-
-
-
-
-
-
-
-<!-- 主题的启动项 保持在最底部 -->
-<script  src="/js/boot.js" ></script>
-
-
-
-</body>
-</html>
+            }
+        };</script><script src="/js/column.js"></script><!--!--><script src="/js/main.js" defer></script><!--!--></body></html>

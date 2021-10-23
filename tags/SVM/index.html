@@ -1,370 +1,188 @@
-
-
-<!DOCTYPE html>
-<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
-
-
-
-<head>
-  <meta charset="UTF-8">
-  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
-  <link rel="icon" href="/img/favicon.png">
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
-  
-  <meta name="theme-color" content="#2f4154">
-  
-    <meta name="description" content="">
-  
-  <meta name="author" content="Hanzawa">
-  <meta name="keywords" content="">
-  
-  <title>标签 - SVM - Hanzawa の 部屋</title>
-
-  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
-
-
-
-<!-- 主题依赖的图标库，不要自行修改 -->
-
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
-
-
-
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
-
-
-<link  rel="stylesheet" href="/css/main.css" />
-
-<!-- 自定义样式保持在最底部 -->
-
-
-  <script id="fluid-configs">
-    var Fluid = window.Fluid || {};
-    var CONFIG = {"hostname":"qfxiao.me","root":"/","version":"1.8.8","typing":{"enable":true,"typeSpeed":30,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
-  </script>
-  <script  src="/js/utils.js" ></script>
-  <script  src="/js/color-schema.js" ></script>
-<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Hanzawa の 部屋" type="application/atom+xml">
-</head>
-
-
-<body>
-  <header style="height: 80vh;">
-    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
-  <div class="container">
-    <a class="navbar-brand"
-       href="/">&nbsp;<strong>Hanzawa</strong>&nbsp;</a>
-
-    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
-            data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <div class="animated-icon"><span></span><span></span><span></span></div>
-    </button>
-
-    <!-- Collapsible content -->
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav ml-auto text-center">
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/">
-                <i class="iconfont icon-home-fill"></i>
-                首页
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/archives/">
-                <i class="iconfont icon-archive-fill"></i>
-                归档
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/categories/">
-                <i class="iconfont icon-category-fill"></i>
-                分类
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/tags/">
-                <i class="iconfont icon-tags-fill"></i>
-                标签
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/about/">
-                <i class="iconfont icon-user-fill"></i>
-                关于
-              </a>
-            </li>
-          
-        
-        
-          <li class="nav-item" id="search-btn">
-            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
-                class="iconfont icon-search"></i>&nbsp;</a>
-          </li>
-        
-        
-          <li class="nav-item" id="color-toggle-btn">
-            <a class="nav-link" href="javascript:">&nbsp;<i
-                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
-</nav>
-
-    <div class="banner" id="banner" parallax=true
-         style="background: url('/img/bg/spotlight.jpg') no-repeat center center;
-           background-size: cover;">
-      <div class="full-bg-img">
-        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
-          <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="标签 - SVM">
-              
-            </span>
-
-            
-          </div>
-
-          
-            <div class="scroll-down-bar">
-              <i class="iconfont icon-arrowdown"></i>
-            </div>
-          
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <main>
-    
-      <div class="container nopadding-x-md">
-        <div class="py-5" id="board"
-          >
-          
-          <div class="container">
-            <div class="row">
-              <div class="col-12 col-md-10 m-auto">
-                
-
-<div class="list-group">
-  <p class="h4">共计 1 篇文章</p>
-  <hr>
-  
-  
-    
-      
-      <p class="h5">2020</p>
-    
-    <a href="/2020/08/26/Machine-Learning-Classification-Algorithms-Support-Vector-Machine/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">Machine Learning Classification Algorithms: Support Vector Machine</span>
-      <time style="float: right;">08-26</time>
-    </a>
-  
-</div>
-
-
-
-
-
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    
-
-    
-      <a id="scroll-top-button" href="#" role="button">
-        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
-      </a>
-    
-
-    
-      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
-     aria-hidden="true">
-  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
-        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body mx-3">
-        <div class="md-form mb-5">
-          <input type="text" id="local-search-input" class="form-control validate">
-          <label data-error="x" data-success="v"
-                 for="local-search-input">关键词</label>
-        </div>
-        <div class="list-group" id="local-search-result"></div>
-      </div>
-    </div>
-  </div>
-</div>
-    
-
-    
-  </main>
-
-  <footer class="text-center mt-5 py-3">
-  <div class="footer-content">
-     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
-  </div>
-  
-  <div class="statistics">
-    
-    
-
-    
-      
-        <!-- 不蒜子统计PV -->
-        <span id="busuanzi_container_site_pv" style="display: none">
-            总访问量 
-            <span id="busuanzi_value_site_pv"></span>
-             次
-          </span>
-      
-      
-        <!-- 不蒜子统计UV -->
-        <span id="busuanzi_container_site_uv" style="display: none">
-            总访客数 
-            <span id="busuanzi_value_site_uv"></span>
-             人
-          </span>
-      
-    
-  </div>
-
-
-  
-
-  
-</footer>
-
-<!-- SCRIPTS -->
-
-  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
-  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
-
-  <script>
-    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
-    NProgress.start()
-    window.addEventListener('load', function() {
-      NProgress.done();
-    })
-  </script>
-
-
-<script  src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" ></script>
-<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
-<script  src="/js/debouncer.js" ></script>
-<script  src="/js/events.js" ></script>
-<script  src="/js/plugins.js" ></script>
-
-<!-- Plugins -->
-
-
-  
-    <script  src="/js/lazyload.js" ></script>
-  
-
-
-
-  
-
-
-
-
-
-
-
-
-
-  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js" ></script>
-
-
-
-  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
-
-
-
-
-  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11/lib/typed.min.js" ></script>
-  <script>
-    (function (window, document) {
-      var typing = Fluid.plugins.typing;
-      var title = document.getElementById('subtitle').title;
-      
-      typing(title)
-      
-    })(window, document);
-  </script>
-
-
-
-  <script  src="/js/local-search.js" ></script>
-  <script>
-    (function () {
-      var path = "/local-search.xml";
-      $('#local-search-input').on('click', function() {
-        searchFunc(path, 'local-search-input', 'local-search-result');
-      });
-      $('#modalSearch').on('shown.bs.modal', function() {
-        $('#local-search-input').focus();
-      });
-    })()
-  </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- 主题的启动项 保持在最底部 -->
-<script  src="/js/boot.js" ></script>
-
-
-
-</body>
-</html>
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><title>标签: SVM - Hanzawa の 部屋</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Hanzawa の 部屋"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Hanzawa の 部屋"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta property="og:type" content="website"><meta property="og:title" content="Hanzawa の 部屋"><meta property="og:url" content="http://qfxiao.me/"><meta property="og:site_name" content="Hanzawa の 部屋"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="http://qfxiao.me/img/og_image.png"><meta property="article:author" content="Hanzawa"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="/img/og_image.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://qfxiao.me"},"headline":"Hanzawa の 部屋","image":["http://qfxiao.me/img/og_image.png"],"author":{"@type":"Person","name":"Hanzawa"},"publisher":{"@type":"Organization","name":"Hanzawa の 部屋","logo":{"@type":"ImageObject"}},"description":null}</script><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><!--!--><meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Hanzawa の 部屋" type="application/atom+xml">
+</head><body class="is-1-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/">Hanzawa の 部屋</a></div><div class="navbar-menu"><div class="navbar-end"></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-12"><div class="card"><div class="card-content"><nav class="breadcrumb" aria-label="breadcrumbs"><ul><li><a href="/tags">标签</a></li><li class="is-active"><a href="#" aria-current="page">SVM</a></li></ul></nav></div></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-08-25T18:09:24.000Z" title="2020-8-26 2:09:24 ├F10: AM┤">2020-08-26</time>发表</span><span class="level-item"><time dateTime="2021-02-19T10:23:31.925Z" title="2021-2-19 6:23:31 ├F10: PM┤">2021-02-19</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Technical-Notes/">Technical Notes</a><span> / </span><a class="link-muted" href="/categories/Technical-Notes/Machine-Learning/">Machine Learning</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2020/08/26/Machine-Learning-Classification-Algorithms-Support-Vector-Machine/">Machine Learning Classification Algorithms: Support Vector Machine</a></h1><div class="content"><h1 id="introduction">Introduction</h1>
+<p>Still working on it😅...</p>
+<p><a target="_blank" rel="noopener" href="http://blog.pluskid.org/?page_id=683">blog</a></p>
+<h1 id="hyperplane">Hyperplane</h1>
+<p>超平面可以从代数和几何两方面来理解。超平面的代数定义可以看作是方程： <span class="math display">\[
+a_1x_1+\cdots+a_nx_n=d
+\]</span> 的所有解形成的集合，其中<span class="math inline">\(a_1,\cdots,a_n\)</span>为不全为<span class="math inline">\(0\)</span>的实数，<span class="math inline">\(d\)</span>也是实数。</p>
+<p>从几何上来说，超平面可以看作是除空间<span class="math inline">\(R^n\)</span>自身外维度最大的仿射空间。</p>
+<p><img src="https://i.loli.net/2020/09/07/WiMJQSe7lN8upfw.jpg" /></p>
+<h1 id="maximum-margin-classifier">Maximum Margin Classifier</h1>
+<p><img src="https://i.loli.net/2020/08/26/vjuyCGXMr4msaUK.png" style="zoom:67%;" /></p>
+<p>要谈SVM就得先谈线性分类器，其设置是这样的。对于<span class="math inline">\(D\)</span>维空间，我们有一堆数据<span class="math inline">\(X\)</span>，进行二分类任务，标签记为<span class="math inline">\(y\)</span>，其中<span class="math inline">\(y=-1\)</span>和<span class="math inline">\(y=1\)</span>分别代表不同的类别。我们的任务就是找到一个超平面，将正负例切分开来（先假设数据是线性可分的），这个超平面的方程可以表示为： <span class="math display">\[
+w^\top x+b=0
+\]</span> 我们令<span class="math inline">\(f(x)=w^\top x+b\)</span>，对于<span class="math inline">\(f(x)&lt;0\)</span>的样本，我们赋予其类别<span class="math inline">\(-1\)</span>，对于<span class="math inline">\(f(x)&gt;0\)</span>的样本，我们可以赋予其类别<span class="math inline">\(1\)</span>。对于相同的分类结果，我们可以找出无限种超平面。不过，对于那些样本特别靠近超平面的情况，鲁棒性并不好。为什么呢？因为这时只要超平面有轻微的变化，样本的分类结果就会发生变化。直观上来说，我们希望样本到超平面的距离越大越好。</p>
+<p>我们先定义函数间隔的概念，函数间隔<span class="math inline">\(\hat \gamma=y(w^\top x+b)\)</span>，乘以<span class="math inline">\(y\)</span>的目的主要是保持非负性，表示起来方便。可见函数间隔的大小并不能表示样本距离，因为同一个超平面，法向量<span class="math inline">\(w\)</span>可以任意增大，函数间隔也会相应增大。</p>
+<p>下面来推导点<span class="math inline">\(x\)</span>到超平面的距离。设<span class="math inline">\(x\)</span>在超平面上的投影为<span class="math inline">\(x_0\)</span>，到超平面的距离为<span class="math inline">\(\gamma\)</span>，<span class="math inline">\(w\)</span>为法向量，那么有： <span class="math display">\[
+x=x_0+\gamma\frac{w}{\parallel w\parallel}
+\]</span> 将上式带入到超平面方程可以得到 <span class="math display">\[
+\gamma=\frac{w^\top}{\parallel w\parallel}x+\frac{b}{\parallel w\parallel}
+\]</span> 我们称<span class="math inline">\(\gamma\)</span>为几何间隔。</p>
+<p><img src="https://i.loli.net/2020/08/26/b6qLJWzHwFAPDne.png" /></p>
+<p>可以很容易看出函数间隔和几何间隔的关系： <span class="math display">\[
+\gamma = \frac{\hat \gamma}{\parallel w\parallel}
+\]</span> 前面提到我们希望几何间隔越大越好，于是可以直接最大化<span class="math inline">\(\gamma\)</span>，得到： <span class="math display">\[
+\begin{align}
+\max \space &amp;\gamma\\
+s.t. \space &amp; y_i(w^\top x_i+b)=\hat\gamma_i\geq\hat\gamma, \space i=1,\cdots,n
+\end{align}
+\]</span> 这里<span class="math inline">\(\hat \gamma=\gamma \parallel w\parallel\)</span>，根据前面的分析我们知道，对于同一个超平面，函数间隔<span class="math inline">\(\hat\gamma\)</span>可以随着<span class="math inline">\(\parallel w\parallel\)</span>的变化而变化，所以为了找到最优的<span class="math inline">\(\gamma\)</span>，我们可以考虑固定<span class="math inline">\(\parallel w\parallel\)</span>或者<span class="math inline">\(\hat\gamma\)</span>，这里我们固定<span class="math inline">\(\hat \gamma=1\)</span>，所以有： <span class="math display">\[
+\begin{align}
+\max &amp; \space \frac{1}{\parallel w\parallel},\\ s.t. \space&amp; y_i(w^\top x_i+b)\geq 1, \space i=1,\cdots,n
+\end{align}
+\]</span></p>
+<p>下面的约束条件代表前提是所有样本分类正确，而<span class="math inline">\(\max\frac{1}{\parallel w\parallel}\)</span>代表最大化间隔。为了方便，我们将其化为等价的最小化形式： <span class="math display">\[
+\begin{align}
+\min &amp; \space \frac{1}{2}\parallel w\parallel^2,\\ s.t. &amp; y_i(w^\top x_i+b)\geq 1, \space i=1,\cdots,n
+\end{align}
+\]</span> 其中那些<span class="math inline">\(y_i(w^\top x_i+b)=1\)</span>的样本就是“支持向量”。这个优化问题是典型的二次凸优化问题，可以调用现成的算法去解决。不过我们可以使用拉格朗日乘子法来更高效的解决。</p>
+<h1 id="dual-problem">Dual Problem</h1>
+<p>拉格朗日乘子法可以将有<span class="math inline">\(d\)</span>个变量和<span class="math inline">\(k\)</span>个约束条件的最优化问题转化成有<span class="math inline">\(d+k\)</span>个变量的无约束最优化问题求解。</p>
+<h2 id="lagrange-multiplier">Lagrange Multiplier</h2>
+<p>对于以下有约束优化问题： <span class="math display">\[
+\begin{align}
+\min_x \space &amp; f(x)\\
+\text{s.t.} \space &amp; h_i(x)=0 \space (i=1,\cdots,m),\\
+&amp;g_j(x) \leq 0 \space (j=1,\cdots,n)
+\end{align}
+\]</span></p>
+<p>引入拉格朗日乘子<span class="math inline">\(\boldsymbol\lambda = (\lambda_1,\lambda_2,\cdots,\lambda_n)^\top\)</span>和<span class="math inline">\(\boldsymbol\mu=(\mu_1,\mu_2,\cdots,\mu_m)^\top\)</span>，相应的广义拉格朗日函数 (generalized Lagrange function) 为： <span class="math display">\[
+L(\boldsymbol x,\boldsymbol\lambda,\boldsymbol\mu)=f(\boldsymbol x)+\sum_{j=1}^n \lambda_j g_j(\boldsymbol x)+\sum_{i=1}^m \mu_i h_i(\boldsymbol x)
+\]</span></p>
+<p>其中<span class="math inline">\(\lambda_j\)</span>，<span class="math inline">\(\mu_i\)</span>被称作是拉格朗日乘子，<span class="math inline">\(\lambda_j \geq 0\)</span>。</p>
+<h3 id="primal-problem">Primal Problem</h3>
+<p>现在我们来讨论原问题的等价性。假设给定某个<span class="math inline">\(x\)</span>，如果<span class="math inline">\(x\)</span>违反约束条件，即存在某个<span class="math inline">\(x\)</span>使得<span class="math inline">\(h_i(x)\neq 0\)</span>或者<span class="math inline">\(g_j(x)&gt;0\)</span>，那么就有： <span class="math display">\[
+\max\limits_{\boldsymbol\lambda,\boldsymbol\mu:\lambda_j\geq 0} L(\boldsymbol x,\boldsymbol\lambda,\boldsymbol\mu)=+\infty
+\]</span> 如果存在某个<span class="math inline">\(x\)</span>使得<span class="math inline">\(h_i(x)\neq 0\)</span>，那么可以令<span class="math inline">\(\lambda_j \rightarrow +\infty\)</span>，如果存在<span class="math inline">\(g_j(x)&gt;0\)</span>，那么可令<span class="math inline">\(\mu_ih_i(x)\rightarrow +\infty\)</span>。</p>
+<p>如果考虑以下极小化问题： <span class="math display">\[
+p^*=\min_x\max\limits_{\boldsymbol\lambda,\boldsymbol\mu:\lambda_j\geq 0} L(\boldsymbol x,\boldsymbol\lambda,\boldsymbol\mu)
+\]</span> 他与原始带约束最优化问题是等价的（因为不符合约束时会有<span class="math inline">\(+\infty\)</span>，而我们考虑的是极小化问题），我们将其记为原问题 (Primal problem)。</p>
+<h3 id="dual-problem-1">Dual Problem</h3>
+<p>如果先考虑最小化<span class="math inline">\(x\)</span>，再考虑最大化<span class="math inline">\(\boldsymbol\lambda\)</span>和<span class="math inline">\(\boldsymbol\mu\)</span>，这时有： <span class="math display">\[
+\max\limits_{\boldsymbol\lambda,\boldsymbol\mu:\lambda_j\geq 0}\min_x L(\boldsymbol x,\boldsymbol\lambda,\boldsymbol\mu)
+\]</span> 对偶问题 (Dual problem) <span class="math display">\[
+d^*=\max\limits_{\boldsymbol\lambda,\boldsymbol\mu:\lambda_j\geq 0}\min_x L(\boldsymbol x,\boldsymbol\lambda,\boldsymbol\mu)
+\]</span> 原问题和对偶问题的关系 <span class="math display">\[
+d^*=\max\limits_{\boldsymbol\lambda,\boldsymbol\mu:\lambda_j\geq 0}\min_x L(\boldsymbol x,\boldsymbol\lambda,\boldsymbol\mu) \leq \min_x\max\limits_{\boldsymbol\lambda,\boldsymbol\mu:\lambda_j\geq 0} L(\boldsymbol x,\boldsymbol\lambda,\boldsymbol\mu) = p^*
+\]</span></p>
+<h3 id="kkt-condition">KKT Condition</h3>
+<blockquote>
+<p>对于原问题和对偶问题，设<span class="math inline">\(f(x)\)</span>和<span class="math inline">\(g_i(x)\)</span>为凸函数，<span class="math inline">\(h_i(x)\)</span>为仿射函数，并且不等式约束<span class="math inline">\(c_i(x)\)</span>是严格可行的，则<span class="math inline">\(x^*\)</span>，<span class="math inline">\(\lambda^*\)</span>，<span class="math inline">\(\mu^*\)</span>分别是原问题和对偶问题的解的充分必要条件是满足下面的Karush-Kuhn-Tucker (KKT) 条件： <span class="math display">\[
+\begin{cases}
+\nabla_x L(x^*,\lambda^*,\mu^*)=0 &amp;\\ 
+\lambda^*_j g_j(x^*)=0 &amp; j=1,\cdots n\\
+g_j(x^*)\leq 0 &amp; j=1,\cdots n\\
+\lambda_j^*\geq 0 &amp; j=1,\cdots n\\
+h_i(x^*) = 0 &amp; i = 1, \cdots m
+\end{cases}
+\]</span></p>
+</blockquote>
+<p>这告诉我们</p>
+<h2 id="dual-form-of-svm-optimization">Dual Form of SVM Optimization</h2>
+<p>支持向量机优化的对偶问题可以写为： <span class="math display">\[
+L(w,b,\alpha)=\frac{1}{2}\parallel w\parallel^2-\sum_{i=1}^n \alpha_i(y_i(w^\top x_i+b)-1)
+\]</span> 我们先令： <span class="math display">\[
+\begin{align}
+\frac{\partial L}{\partial w}=0&amp;\Rightarrow w=\sum_{i=1}^n\alpha_i y_i x_i\\
+\frac{\partial L}{\partial b}=0&amp;\Rightarrow \sum_{i=1}^n\alpha_i y_i =0
+\end{align}
+\]</span> 带回到<span class="math inline">\(L\)</span>得到： <span class="math display">\[
+\begin{align}
+L(w,b,\alpha)&amp;=\frac{1}{2}\sum_{i,j=1}^n\alpha_i\alpha_j y_i y_j x^\top_i x_j-\sum_{i,j=1}^n \alpha_i\alpha_jy_iy_jx^\top_ix_j-b\sum_{i=1}^n\alpha_iy_i+\sum_{i=1}^n\alpha_i\\
+&amp;=\sum_{i=1}^n \alpha_i - \frac{1}{2}\sum_{i,j=1}^n \alpha_i\alpha_j y_i y_j x^\top_i x_j
+\end{align}
+\]</span> 于是得到关于<span class="math inline">\(\alpha\)</span>的对偶优化问题： <span class="math display">\[
+\begin{align}
+\max_\alpha &amp;\sum_{i=1}^n \alpha_i - \frac{1}{2}\sum_{i,j=1}^n \alpha_i\alpha_j y_i y_j x^\top_i x_j\\
+\text{s.t. }&amp; \alpha_i\geq 0, i=1,\cdots,n\\
+&amp; \sum_{i=1}^n \alpha_i y_i = 0
+\end{align}
+\]</span></p>
+<p>前面有提到我们根据<span class="math inline">\(f(x)=w^\top x + b\)</span>的输出来判定样本类别，而刚才得到<span class="math inline">\(w=\sum_{i=1}^n\alpha_i y_i x_i\)</span>，于是： <span class="math display">\[
+\begin{align}
+f(x) &amp;= (\sum_{i=1}^n \alpha_iy_ix_i)^\top x+b\\
+&amp;= \sum_{i=1}^n \alpha_i y_i \langle x_i, x\rangle + b
+\end{align}
+\]</span> 最后的<span class="math inline">\(\sum_{i=1}^n \alpha_i y_i \langle x_i, x\rangle + b\)</span>值得特别注意，这意味着我们对于测试样本<span class="math inline">\(x\)</span>的预测，只需要计算它与训练集的内积即可，同时由于所有非支持向量对应的<span class="math inline">\(\alpha\)</span>都是<span class="math inline">\(0\)</span>，我们只需要求一小部分内积。同时这个内积计算也是后面核方法应用的前提。</p>
+<h1 id="kernel">Kernel</h1>
+<p>到目前为止，我们的讨论都是在数据是线性可分的前提下进行讨论的，那么对于线性不可分的情况呢？答案是使用核方法。</p>
+<p><img src="https://i.loli.net/2020/09/08/kSTVgelDjWqtu8v.png" /></p>
+<p>核方法的思想是，对于原始不可分的数据，我们假设原始数据通过一个映射<span class="math inline">\(\phi(\cdot)\)</span>就变得线性可分了。核方法相当于对数据找到了一种新的表示，如上图没法用一个超平面直接分割，但通过<span class="math inline">\(\phi(\cdot)\)</span>映射之后就变得可分了。原始的分类函数为： <span class="math display">\[
+f(x)= \sum_{i=1}^n \alpha_i y_i \langle x_i, x\rangle + b
+\]</span> 加上映射之后变为： <span class="math display">\[
+f(x)= \sum_{i=1}^n \alpha_i y_i \langle \phi(x_i), \phi(x)\rangle + b
+\]</span> 优化问题也变为： <span class="math display">\[
+\begin{align}
+\max_\alpha &amp;\sum_{i=1}^n \alpha_i - \frac{1}{2}\sum_{i,j=1}^n \alpha_i\alpha_j y_i y_j \langle\phi(x_i), \phi(x_j)\rangle\\
+\text{s.t. }&amp; \alpha_i\geq 0, i=1,\cdots,n\\
+&amp; \sum_{i=1}^n \alpha_i y_i = 0
+\end{align}
+\]</span> 我们把计算两个向量在映射后的空间中的内积的函数叫做核函数 <span class="math display">\[
+f(x)= \sum_{i=1}^n \alpha_i y_i k(x_i, x) + b
+\]</span> 优化问题改为： <span class="math display">\[
+\begin{align}
+\max_\alpha &amp;\sum_{i=1}^n \alpha_i - \frac{1}{2}\sum_{i,j=1}^n \alpha_i\alpha_j y_i y_j k(\phi(x_i), \phi(x_j))\\
+\text{s.t. }&amp; \alpha_i\geq 0, i=1,\cdots,n\\
+&amp; \sum_{i=1}^n \alpha_i y_i = 0
+\end{align}
+\]</span> 实际上，通过核函数，我们隐式地定义了一个映射<span class="math inline">\(\phi(\cdot)\)</span></p>
+<p>常用核函数</p>
+<table>
+<thead>
+<tr class="header">
+<th>名称</th>
+<th>表达式</th>
+<th>参数</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>线性核</td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>多项式核</td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>RBF核</td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>拉普拉斯核</td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>Sigmoid核</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h1 id="soft-margin">Soft Margin</h1>
+<p>数据线性不可分的情况，除了数据本身结构非线性的原因之外（核方法），还有可能是因为噪声或者离群点。为了处理这种情况，我们可以允许一部分点在一定程度上偏离超平面，具体来说就是原来的约束条件<span class="math inline">\(y_i(w^\top x_i+b)\geq 1, \space i=1,\cdots,n\)</span>变成了： <span class="math display">\[
+y_i(w^\top x_i+b)\geq 1-\xi_i, \space i=1,\cdots,n
+\]</span> 其中<span class="math inline">\(\xi_i\geq 0\)</span>称作是松弛变量，代表样本<span class="math inline">\(i\)</span>允许的偏离程度。当然松弛变量不可能无限大，所以我们需要将<span class="math inline">\(\xi_i\)</span>加入到优化目标函数中使其尽量小，于是有： <span class="math display">\[
+\begin{align}
+\min &amp; \space \frac{1}{2}\parallel w\parallel^2+C\sum_{i=1}^n \xi_i,\\ s.t. &amp; y_i(w^\top x_i+b)\geq 1-\xi_i, \space i=1,\cdots,n
+\end{align}
+\]</span> 其中<span class="math inline">\(C\)</span>为控制最优化<span class="math inline">\(\parallel w\parallel\)</span>和松弛变量这两项的权重。这里的优化函数还是对偶问题之前的形式，我们马上会讨论对偶问题。</p>
+<h1 id="numerical-optimization">Numerical Optimization</h1>
+<p>这里讨论SVM高效求解的Sequential Minimal Optimization (SMO)算法。</p>
+<p>坐标下降法是一种非梯度优化算法，</p>
+<p><img src="https://i.loli.net/2020/09/08/I6AonzFRHGVBU3t.png" /></p>
+<p><img src="https://i.loli.net/2020/09/08/Hmr79nMlK4C8GeJ.png" /></p>
+</div></article></div></div><!--!--><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/">Hanzawa の 部屋</a><p class="is-size-7"><span>&copy; 2021 Hanzawa</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("zh-CN");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><!--!--><script src="/js/main.js" defer></script><!--!--></body></html>

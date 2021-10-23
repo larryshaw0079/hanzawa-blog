@@ -1,243 +1,6 @@
-
-
-<!DOCTYPE html>
-<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
-
-
-
-<head>
-  <meta charset="UTF-8">
-  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
-  <link rel="icon" href="/img/favicon.png">
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
-  
-  <meta name="theme-color" content="#2f4154">
-  
-    <meta name="description" content="">
-  
-  <meta name="author" content="Hanzawa">
-  <meta name="keywords" content="">
-  
-  <title>Discovering Physical Concepts with Neural Networks - Hanzawa の 部屋</title>
-
-  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
-
-
-  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
-  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
-
-  
-    
-    
-      
-      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.4.0/styles/github-gist.min.css" />
-    
-  
-
-  
-    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
-  
-
-
-
-<!-- 主题依赖的图标库，不要自行修改 -->
-
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
-
-
-
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
-
-
-<link  rel="stylesheet" href="/css/main.css" />
-
-<!-- 自定义样式保持在最底部 -->
-
-
-  <script id="fluid-configs">
-    var Fluid = window.Fluid || {};
-    var CONFIG = {"hostname":"qfxiao.me","root":"/","version":"1.8.8","typing":{"enable":true,"typeSpeed":30,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
-  </script>
-  <script  src="/js/utils.js" ></script>
-  <script  src="/js/color-schema.js" ></script>
-<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Hanzawa の 部屋" type="application/atom+xml">
-</head>
-
-
-<body>
-  <header style="height: 60vh;">
-    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
-  <div class="container">
-    <a class="navbar-brand"
-       href="/">&nbsp;<strong>Hanzawa</strong>&nbsp;</a>
-
-    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
-            data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <div class="animated-icon"><span></span><span></span><span></span></div>
-    </button>
-
-    <!-- Collapsible content -->
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav ml-auto text-center">
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/">
-                <i class="iconfont icon-home-fill"></i>
-                首页
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/archives/">
-                <i class="iconfont icon-archive-fill"></i>
-                归档
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/categories/">
-                <i class="iconfont icon-category-fill"></i>
-                分类
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/tags/">
-                <i class="iconfont icon-tags-fill"></i>
-                标签
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/about/">
-                <i class="iconfont icon-user-fill"></i>
-                关于
-              </a>
-            </li>
-          
-        
-        
-          <li class="nav-item" id="search-btn">
-            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
-                class="iconfont icon-search"></i>&nbsp;</a>
-          </li>
-        
-        
-          <li class="nav-item" id="color-toggle-btn">
-            <a class="nav-link" href="javascript:">&nbsp;<i
-                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
-</nav>
-
-    <div class="banner" id="banner" parallax=true
-         style="background: url('/img/bg/spotlight.jpg') no-repeat center center;
-           background-size: cover;">
-      <div class="full-bg-img">
-        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
-          <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="Discovering Physical Concepts with Neural Networks">
-              
-            </span>
-
-            
-              <div class="mt-3">
-  
-  
-    <span class="post-meta">
-      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2020-03-01 22:55" pubdate>
-        2020年3月1日 晚上
-      </time>
-    </span>
-  
-</div>
-
-<div class="mt-1">
-  
-    
-    <span class="post-meta mr-2">
-      <i class="iconfont icon-chart"></i>
-      1.9k 字
-    </span>
-  
-
-  
-    
-    <span class="post-meta mr-2">
-      <i class="iconfont icon-clock-fill"></i>
-      
-      
-      23
-       分钟
-    </span>
-  
-
-  
-  
-</div>
-
-            
-          </div>
-
-          
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <main>
-    
-      
-
-<div class="container-fluid nopadding-x">
-  <div class="row nomargin-x">
-    <div class="d-none d-lg-block col-lg-2"></div>
-    <div class="col-lg-8 nopadding-x-md">
-      <div class="container nopadding-x-md" id="board-ctn">
-        <div class="py-5" id="board">
-          <article class="post-content mx-auto">
-            <!-- SEO header -->
-            <h1 style="display: none">Discovering Physical Concepts with Neural Networks</h1>
-            
-              <p class="note note-info">
-                
-                  本文最后更新于：1 年前
-                
-              </p>
-            
-            <div class="markdown-body">
-              <h1 id="introduction">Introduction</h1>
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><title>Discovering Physical Concepts with Neural Networks - Hanzawa の 部屋</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Hanzawa の 部屋"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Hanzawa の 部屋"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="Introduction 如题目所示，本文的目的是利用神经网络来发掘物理概念。其思路是从实验数据学到表示，然后用学到的表示来回答物理问题，由此物理概念可以从学到的表示来提取出。作者进行了4个实验：  在阻尼振动实验中，模型学到了相关的物理参数； 在角动量守恒实验中，模型预测了质点的运动； 给定量子系统的观测数据，模型正确的识别出了量子状态的自由度； 给定从地球观测的太阳和火星的位置时间"><meta property="og:type" content="article"><meta property="og:title" content="Discovering Physical Concepts with Neural Networks"><meta property="og:url" content="http://qfxiao.me/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/"><meta property="og:site_name" content="Hanzawa の 部屋"><meta property="og:description" content="Introduction 如题目所示，本文的目的是利用神经网络来发掘物理概念。其思路是从实验数据学到表示，然后用学到的表示来回答物理问题，由此物理概念可以从学到的表示来提取出。作者进行了4个实验：  在阻尼振动实验中，模型学到了相关的物理参数； 在角动量守恒实验中，模型预测了质点的运动； 给定量子系统的观测数据，模型正确的识别出了量子状态的自由度； 给定从地球观测的太阳和火星的位置时间"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="https://i.loli.net/2020/06/25/yh5Wj9AQmd6nsFC.png"><meta property="og:image" content="https://i.loli.net/2020/06/25/zCnYjVEZHdbqAD3.png"><meta property="og:image" content="https://i.loli.net/2020/06/25/uWd1lOUFxXgQJ7f.png"><meta property="og:image" content="https://i.loli.net/2020/06/25/yWGzxo4eFKmABul.png"><meta property="og:image" content="https://i.loli.net/2020/06/25/Q4PKa3pm2htekqd.png"><meta property="og:image" content="https://i.loli.net/2020/06/25/SKfJLxl1QmuzFt9.png"><meta property="og:image" content="https://i.loli.net/2020/06/25/qimk9ZYBe7UPs3z.png"><meta property="og:image" content="https://i.loli.net/2020/06/25/8lY1LBsQCZUwX2I.png"><meta property="og:image" content="https://i.loli.net/2020/06/25/ZTRKfzb63Jrvk5C.png"><meta property="og:image" content="https://i.loli.net/2020/06/25/vXl3Ae4RpzibrmY.png"><meta property="og:image" content="https://i.loli.net/2020/06/25/XnsYqcRS6izZGEm.png"><meta property="og:image" content="https://i.loli.net/2020/06/25/az3UmkchyFWevP7.png"><meta property="article:published_time" content="2020-03-01T14:55:02.000Z"><meta property="article:modified_time" content="2020-06-25T05:35:20.215Z"><meta property="article:author" content="Hanzawa"><meta property="article:tag" content="Deep Learning"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="https://i.loli.net/2020/06/25/yh5Wj9AQmd6nsFC.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://qfxiao.me/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/"},"headline":"Discovering Physical Concepts with Neural Networks","image":["https://i.loli.net/2020/06/25/yh5Wj9AQmd6nsFC.png","https://i.loli.net/2020/06/25/zCnYjVEZHdbqAD3.png","https://i.loli.net/2020/06/25/uWd1lOUFxXgQJ7f.png","https://i.loli.net/2020/06/25/yWGzxo4eFKmABul.png","https://i.loli.net/2020/06/25/Q4PKa3pm2htekqd.png","https://i.loli.net/2020/06/25/SKfJLxl1QmuzFt9.png","https://i.loli.net/2020/06/25/qimk9ZYBe7UPs3z.png","https://i.loli.net/2020/06/25/8lY1LBsQCZUwX2I.png","https://i.loli.net/2020/06/25/ZTRKfzb63Jrvk5C.png","https://i.loli.net/2020/06/25/vXl3Ae4RpzibrmY.png","https://i.loli.net/2020/06/25/XnsYqcRS6izZGEm.png","https://i.loli.net/2020/06/25/az3UmkchyFWevP7.png"],"datePublished":"2020-03-01T14:55:02.000Z","dateModified":"2020-06-25T05:35:20.215Z","author":{"@type":"Person","name":"Hanzawa"},"publisher":{"@type":"Organization","name":"Hanzawa の 部屋","logo":{"@type":"ImageObject"}},"description":"Introduction\r 如题目所示，本文的目的是利用神经网络来发掘物理概念。其思路是从实验数据学到表示，然后用学到的表示来回答物理问题，由此物理概念可以从学到的表示来提取出。作者进行了4个实验：\r \r 在阻尼振动实验中，模型学到了相关的物理参数；\r 在角动量守恒实验中，模型预测了质点的运动；\r 给定量子系统的观测数据，模型正确的识别出了量子状态的自由度；\r 给定从地球观测的太阳和火星的位置时间"}</script><link rel="canonical" href="http://qfxiao.me/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><!--!--><meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Hanzawa の 部屋" type="application/atom+xml">
+</head><body class="is-1-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/">Hanzawa の 部屋</a></div><div class="navbar-menu"><div class="navbar-end"></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-12"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-03-01T14:55:02.000Z" title="2020-3-1 10:55:02 ├F10: PM┤">2020-03-01</time>发表</span><span class="level-item"><time dateTime="2020-06-25T05:35:20.215Z" title="2020-6-25 1:35:20 ├F10: PM┤">2020-06-25</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Misc/">Misc</a></span></div></div><h1 class="title is-3 is-size-4-mobile">Discovering Physical Concepts with Neural Networks</h1><div class="content"><h1 id="introduction">Introduction</h1>
 <p>如题目所示，本文的目的是利用神经网络来发掘物理概念。其思路是从实验数据学到表示，然后用学到的表示来回答物理问题，由此物理概念可以从学到的表示来提取出。作者进行了4个实验：</p>
 <ol type="1">
 <li>在阻尼振动实验中，模型学到了相关的物理参数；</li>
@@ -247,10 +10,10 @@
 </ol>
 <h1 id="preliminaries">Preliminaries</h1>
 <p>作者在附录中对神经网络的基础知识进行了介绍，这里不再赘述，只截取了一些相对前沿的内容。</p>
-<p><img src="https://i.loli.net/2020/06/25/yh5Wj9AQmd6nsFC.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/yh5Wj9AQmd6nsFC.png" style="zoom:67%;" /></p>
 <h2 id="variational-autoencoders">Variational Autoencoders</h2>
 <p>本文用到的模型基础是VAE：</p>
-<p><img src="https://i.loli.net/2020/06/25/zCnYjVEZHdbqAD3.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/zCnYjVEZHdbqAD3.png" style="zoom:67%;" /></p>
 <h3 id="representation-learning">Representation Learning</h3>
 <p><em>Representation learning</em>的主要目标是将数据映射到一个隐向量 (encoder)，为了保证隐向量包含了所有相关信息， 那么应该能够从隐向量还原原数据 (decoder)。传统的Autoencoder是这个思想的最简单实现，而VAE则将AE和<em>Variational Inference</em>结合了起来，是一种经典的生成式模型。现在很多研究关注<em>Disentangled Representation Learning</em>，也就是说我们希望模型能够无监督地学习数据，从中学到有意义的表示。</p>
 <h3 id="boldsymbol-beta-vae"><span class="math inline">\(\boldsymbol \beta\)</span>-VAE</h3>
@@ -262,7 +25,7 @@ C_\beta(x)=\parallel \hat{x} - x \parallel^2_2-\frac{\beta}{2}\left(\sum\limits_
 <h1 id="network-structure">Network Structure</h1>
 <h2 id="network-structure-scinet">Network Structure: <em>SciNet</em></h2>
 <p>模仿物理学家建模物理问题的过程，作者提出了<em>SciNet</em>，如下图所示：</p>
-<p><img src="https://i.loli.net/2020/06/25/uWd1lOUFxXgQJ7f.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/uWd1lOUFxXgQJ7f.png" style="zoom:67%;" /></p>
 <p>物理学家在建模物理问题的时候，往往是从一些实验数据出发，根据物理常识提取更加精练的表示，然后用学到的表示来回答物理问题。</p>
 <p>对于单纯的输入输出问题，<em>SciNet</em>可以看作是一个映射，<span class="math inline">\(F:\mathcal{O}\times\mathcal{Q}\rightarrow\mathcal{A}\)</span>。<span class="math inline">\(\mathcal{O}\)</span>是可能的实验数据集合，<span class="math inline">\(\mathcal{Q}\)</span>是可能的问题集合，<span class="math inline">\(\mathcal{A}\)</span>是可能的答案集合。可以将其分为两个步骤：编码过程<span class="math inline">\(E:\mathcal{O}\rightarrow\mathcal{R}\)</span>从实验数据学到表示，解码过程<span class="math inline">\(D:\mathcal{R}\times \mathcal{Q}\rightarrow \mathcal{A}\)</span>根据给定的问题从表示来回答问题。由此，<span class="math inline">\(F(o,q)=D(E(o),q)\)</span>。在实现方面，<em>SciNet</em>采用的是全连接网络。</p>
 <h2 id="training-and-testing-scinet">Training and Testing <em>SciNet</em></h2>
@@ -277,9 +40,9 @@ C_\beta(x)=\parallel \hat{x} - x \parallel^2_2-\frac{\beta}{2}\left(\sum\limits_
 <li><p>观测数据：位置时间序列数据<span class="math inline">\(o=[x(t_i)]_{i\in\{1,\cdots,50\}}\in\mathbb{R}^{50}\)</span>，时间间隔相等，质量<span class="math inline">\(m=1\text{kg}\)</span>，振幅<span class="math inline">\(A_0=1\text{m}\)</span>，相位<span class="math inline">\(\delta_0=0\)</span>，弹性模量<span class="math inline">\(k\in[5,10]\text{kg}/\text{s}^2\)</span>，阻尼系数<span class="math inline">\(b\in[0.5,1]\text{kg}/\text{s}\)</span>。</p></li>
 <li><p>问题：预测<span class="math inline">\(q=t_\text{pred}\in\mathbb{R}\)</span></p></li>
 </ul>
-<p><img src="https://i.loli.net/2020/06/25/yWGzxo4eFKmABul.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/yWGzxo4eFKmABul.png" /></p>
 <p>隐变量大小设置为3，结果如下图所示：</p>
-<p><img src="https://i.loli.net/2020/06/25/Q4PKa3pm2htekqd.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/Q4PKa3pm2htekqd.png" style="zoom:67%;" /></p>
 <p>(b)中的三幅图分别是学到的三个隐变量和我们感兴趣的参数<span class="math inline">\(k\)</span>和<span class="math inline">\(b\)</span>的关系图。第一幅图中变量<span class="math inline">\(1\)</span>与<span class="math inline">\(b\)</span>几乎完全线性相关，与<span class="math inline">\(k\)</span>基于线性无关，变量<span class="math inline">\(2\)</span>只和<span class="math inline">\(k\)</span>相关。变量<span class="math inline">\(3\)</span>几乎为一个常数，故不提供额外的信息。由此作者认为<em>SciNet</em>学到了我们关心的两个参数的知识。</p>
 <h2 id="conservation-of-angular-momentum">Conservation of Angular Momentum</h2>
 <p>角动量守恒实验：</p>
@@ -294,9 +57,9 @@ J=m_\text{rot}r^2\omega-rm_\text{free}(\mathbf{v}_\text{free})_x=m_\text{rot}r^2
 <li>观测数据：在撞击之前两个质点的位置数据<span class="math inline">\(o=[(t_i^\text{rot},q_\text{rot}(t_i^\text{rot})),(t_i^\text{free},q_\text{free}(t_i^\text{free}))]_{i\in\{1,\cdots,5\}}\)</span>，质量为固定值，半径<span class="math inline">\(r\)</span>也为固定值。数据添加高斯噪声。</li>
 <li>问题：预测撞击之后自由质点在时间<span class="math inline">\(t_\text{pred}^\prime\)</span>的位置</li>
 </ul>
-<p><img src="https://i.loli.net/2020/06/25/SKfJLxl1QmuzFt9.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/SKfJLxl1QmuzFt9.png" /></p>
 <p>实验室意图如下：</p>
-<p><img src="https://i.loli.net/2020/06/25/qimk9ZYBe7UPs3z.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/qimk9ZYBe7UPs3z.png" style="zoom:67%;" /></p>
 <p>实验结果表明<em>SciNet</em>能够正确预测质点撞击之后的位置，同时对噪音鲁棒。根据(b)，隐变量和角动量存在线性相关关系，作者认为<em>SciNet</em>学到了守恒的动量这一概念。</p>
 <h2 id="representation-of-qubits">Representation of Qubits</h2>
 <p>量子比特实验：</p>
@@ -306,9 +69,9 @@ J=m_\text{rot}r^2\omega-rm_\text{free}(\mathbf{v}_\text{free})_x=m_\text{rot}r^2
 <li>观测数据：状态<span class="math inline">\(\psi: o=[p(\alpha_i,\psi)]_{i\in\{i,\cdots,n_1\}}\)</span>的操作参数化：表示一组固定的随机二元射影测量值<span class="math inline">\(\mathcal{M}_1=\{\alpha_1,\cdots,\alpha_{n_1}\}\)</span>（一个量子位<span class="math inline">\(n_1 = 10\)</span>，两个量子位<span class="math inline">\(n_1 = 30\)</span>）</li>
 <li>问题：对于固定的一组随机二元射影测量<span class="math inline">\(\mathcal{M}_2=\{\beta_1,\cdots,\beta_{n_2}\}\)</span>，测量<span class="math inline">\(\omega:q=[p(\beta_i,\omega)]_{i\in\{1,\cdots,n_2\}}\)</span>的Operational参数化（一个量子位<span class="math inline">\(n_2 = 10\)</span>，两个量子位<span class="math inline">\(n_2 = 30\)</span>）</li>
 </ul>
-<p><img src="https://i.loli.net/2020/06/25/8lY1LBsQCZUwX2I.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/8lY1LBsQCZUwX2I.png" /></p>
 <p>实验结果如下：</p>
-<p><img src="https://i.loli.net/2020/06/25/ZTRKfzb63Jrvk5C.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/ZTRKfzb63Jrvk5C.png" style="zoom:67%;" /></p>
 <p>通过实验发现，<em>SciNet</em>可以在不提供先验物理知识的条件下确定表述状态<span class="math inline">\(\psi\)</span>最小的参数数量。同时，<em>SciNet</em>还能分辨<em>tomographically complete</em>和<em>tomographically incomplete</em>。</p>
 <h2 id="heliocentric-model-of-the-solar-system">Heliocentric Model of the Solar System</h2>
 <p>日心说模型：</p>
@@ -317,296 +80,17 @@ J=m_\text{rot}r^2\omega-rm_\text{free}(\mathbf{v}_\text{free})_x=m_\text{rot}r^2
 <li>物理模型：地球和火星围绕太阳以一定角速度做近似圆周运动</li>
 <li>观测数据：给定初始角度，随机选择周周期的哥白尼的观测数据</li>
 </ul>
-<p><img src="https://i.loli.net/2020/06/25/vXl3Ae4RpzibrmY.png" srcset="/img/loading.gif" /></p>
+<p><img src="https://i.loli.net/2020/06/25/vXl3Ae4RpzibrmY.png" /></p>
 <p>模型的实现稍有变化，如下图所示：</p>
-<p><img src="https://i.loli.net/2020/06/25/XnsYqcRS6izZGEm.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/XnsYqcRS6izZGEm.png" style="zoom:67%;" /></p>
 <p>这样，对于不同时间都对应一个隐变量<span class="math inline">\(r(t_i)\)</span>，而且隐变量是时间依赖的，对于一个隐变量<span class="math inline">\(r(t_i)\)</span>有一个解码器来输出答案。</p>
-<p><img src="https://i.loli.net/2020/06/25/az3UmkchyFWevP7.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/az3UmkchyFWevP7.png" style="zoom:67%;" /></p>
 <p>实验结果表示，<em>SciNet</em>不仅正确预测了太阳和火星相对地球的角度，同时隐变量揭示了火星和地球相对太阳的角度。</p>
-
-            </div>
-            <hr>
-            <div>
-              <div class="post-metas mb-3">
-                
-                  <div class="post-meta mr-3">
-                    <i class="iconfont icon-category"></i>
-                    
-                      <a class="hover-with-bg" href="/categories/Research/">Research</a>
-                    
-                      <a class="hover-with-bg" href="/categories/Research/Misc/">Misc</a>
-                    
-                  </div>
-                
-                
-                  <div class="post-meta">
-                    <i class="iconfont icon-tags"></i>
-                    
-                      <a class="hover-with-bg" href="/tags/Deep-Learning/">Deep Learning</a>
-                    
-                  </div>
-                
-              </div>
-              
-                <p class="note note-warning">
-                  
-                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
-                  
-                </p>
-              
-              
-                <div class="post-prevnext">
-                  <article class="post-prev col-6">
-                    
-                    
-                      <a href="/2020/03/30/Deep-Weakly-supervised-Anomaly-Detection/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Deep Weakly-supervised Anomaly Detection</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
-                  </article>
-                  <article class="post-next col-6">
-                    
-                    
-                      <a href="/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/">
-                        <span class="hidden-mobile">Transfer Anomaly Detection by Inferring Latent Domain Representations</span>
-                        <span class="visible-mobile">下一篇</span>
-                        <i class="iconfont icon-arrowright"></i>
-                      </a>
-                    
-                  </article>
-                </div>
-              
-            </div>
-
-            
-          </article>
-        </div>
-      </div>
-    </div>
-    
-      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
-        <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
-  <div class="toc-body" id="toc-body"></div>
-</div>
-
-      </div>
-    
-  </div>
-</div>
-
-<!-- Custom -->
-
-
-    
-
-    
-      <a id="scroll-top-button" href="#" role="button">
-        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
-      </a>
-    
-
-    
-      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
-     aria-hidden="true">
-  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
-        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body mx-3">
-        <div class="md-form mb-5">
-          <input type="text" id="local-search-input" class="form-control validate">
-          <label data-error="x" data-success="v"
-                 for="local-search-input">关键词</label>
-        </div>
-        <div class="list-group" id="local-search-result"></div>
-      </div>
-    </div>
-  </div>
-</div>
-    
-
-    
-  </main>
-
-  <footer class="text-center mt-5 py-3">
-  <div class="footer-content">
-     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
-  </div>
-  
-  <div class="statistics">
-    
-    
-
-    
-      
-        <!-- 不蒜子统计PV -->
-        <span id="busuanzi_container_site_pv" style="display: none">
-            总访问量 
-            <span id="busuanzi_value_site_pv"></span>
-             次
-          </span>
-      
-      
-        <!-- 不蒜子统计UV -->
-        <span id="busuanzi_container_site_uv" style="display: none">
-            总访客数 
-            <span id="busuanzi_value_site_uv"></span>
-             人
-          </span>
-      
-    
-  </div>
-
-
-  
-
-  
-</footer>
-
-<!-- SCRIPTS -->
-
-  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
-  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
-
-  <script>
-    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
-    NProgress.start()
-    window.addEventListener('load', function() {
-      NProgress.done();
-    })
-  </script>
-
-
-<script  src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" ></script>
-<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
-<script  src="/js/debouncer.js" ></script>
-<script  src="/js/events.js" ></script>
-<script  src="/js/plugins.js" ></script>
-
-<!-- Plugins -->
-
-
-  
-    <script  src="/js/lazyload.js" ></script>
-  
-
-
-
-  
-
-
-
-  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js" ></script>
-
-
-
-  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
-
-
-
-  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js" ></script>
-
-
-
-  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js" ></script>
-
-
-
-  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
-
-
-
-
-  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11/lib/typed.min.js" ></script>
-  <script>
-    (function (window, document) {
-      var typing = Fluid.plugins.typing;
-      var title = document.getElementById('subtitle').title;
-      
-      typing(title)
-      
-    })(window, document);
-  </script>
-
-
-
-  <script  src="/js/local-search.js" ></script>
-  <script>
-    (function () {
-      var path = "/local-search.xml";
-      $('#local-search-input').on('click', function() {
-        searchFunc(path, 'local-search-input', 'local-search-result');
-      });
-      $('#modalSearch').on('shown.bs.modal', function() {
-        $('#local-search-input').focus();
-      });
-    })()
-  </script>
-
-
-
-
-
-  
-
-  
-    <!-- MathJax -->
-    <script>
-      MathJax = {
-        tex: {
-          inlineMath: [['$', '$'], ['\\(', '\\)']]
-        },
-        options: {
-          renderActions: {
-            findScript: [10, doc => {
-              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
-                const display = !!node.type.match(/; *mode=display/);
-                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
-                const text = document.createTextNode('');
-                node.parentNode.replaceChild(text, node);
-                math.start = { node: text, delim: '', n: 0 };
-                math.end = { node: text, delim: '', n: 0 };
-                doc.math.push(math);
-              });
-            }, '', false],
-            insertedScript: [200, () => {
-              document.querySelectorAll('mjx-container').forEach(node => {
-                let target = node.parentNode;
-                if (target.nodeName.toLowerCase() === 'li') {
-                  target.parentNode.classList.add('has-jax');
+</div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/Deep-Learning/">Deep Learning</a></div><!--!--></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2020/03/30/Deep-Weakly-supervised-Anomaly-Detection/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">Deep Weakly-supervised Anomaly Detection</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/"><span class="level-item">Transfer Anomaly Detection by Inferring Latent Domain Representations</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><!--!--></div><!--!--><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/">Hanzawa の 部屋</a><p class="is-size-7"><span>&copy; 2021 Hanzawa</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("zh-CN");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
                 }
-              });
-            }, '', false]
-          }
-        }
-      };
-    </script>
-
-    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3.1.2/es5/tex-svg.js" ></script>
-
-  
-
-
-
-
-
-
-
-
-
-
-
-<!-- 主题的启动项 保持在最底部 -->
-<script  src="/js/boot.js" ></script>
-
-
-
-</body>
-</html>
+            }
+        };</script><script src="/js/column.js"></script><!--!--><script src="/js/main.js" defer></script><!--!--></body></html>

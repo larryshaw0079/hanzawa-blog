@@ -235,232 +235,232 @@
 
   <url>
     <loc>http://qfxiao.me/</loc>
-    <lastmod>2021-08-30</lastmod>
+    <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
 
   
   <url>
-    <loc>http://qfxiao.me/tags/Variational-Inference/</loc>
-    <lastmod>2021-08-30</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://qfxiao.me/tags/VAE/</loc>
-    <lastmod>2021-08-30</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://qfxiao.me/tags/Deep-Learning/</loc>
-    <lastmod>2021-08-30</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>http://qfxiao.me/tags/Time-Series/</loc>
-    <lastmod>2021-08-30</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://qfxiao.me/tags/Statistics/</loc>
-    <lastmod>2021-08-30</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://qfxiao.me/tags/Machine-Learning/</loc>
-    <lastmod>2021-08-30</lastmod>
+    <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://qfxiao.me/tags/Anomaly-Detection/</loc>
-    <lastmod>2021-08-30</lastmod>
+    <lastmod>2021-10-23</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/tags/Machine-Learning/</loc>
+    <lastmod>2021-10-23</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/tags/Deep-Learning/</loc>
+    <lastmod>2021-10-23</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/tags/Variational-Inference/</loc>
+    <lastmod>2021-10-23</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/tags/VAE/</loc>
+    <lastmod>2021-10-23</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/tags/Statistics/</loc>
+    <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://qfxiao.me/tags/Transfer-Learning/</loc>
-    <lastmod>2021-08-30</lastmod>
+    <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://qfxiao.me/tags/Self-Supervised-Learning/</loc>
-    <lastmod>2021-08-30</lastmod>
+    <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://qfxiao.me/tags/GAN/</loc>
-    <lastmod>2021-08-30</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://qfxiao.me/tags/Geant4/</loc>
-    <lastmod>2021-08-30</lastmod>
+    <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://qfxiao.me/tags/Novelty-Detection/</loc>
-    <lastmod>2021-08-30</lastmod>
+    <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://qfxiao.me/tags/Representation-Learning/</loc>
-    <lastmod>2021-08-30</lastmod>
+    <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://qfxiao.me/tags/ID3/</loc>
-    <lastmod>2021-08-30</lastmod>
+    <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://qfxiao.me/tags/C4-5/</loc>
-    <lastmod>2021-08-30</lastmod>
+    <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://qfxiao.me/tags/CART/</loc>
-    <lastmod>2021-08-30</lastmod>
+    <lastmod>2021-10-23</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/tags/Geant4/</loc>
+    <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://qfxiao.me/tags/SVM/</loc>
-    <lastmod>2021-08-30</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://qfxiao.me/tags/GBDT/</loc>
-    <lastmod>2021-08-30</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://qfxiao.me/tags/XGBoost/</loc>
-    <lastmod>2021-08-30</lastmod>
+    <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://qfxiao.me/tags/Overfitting/</loc>
-    <lastmod>2021-08-30</lastmod>
+    <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://qfxiao.me/tags/Bias/</loc>
-    <lastmod>2021-08-30</lastmod>
+    <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://qfxiao.me/tags/Variance/</loc>
-    <lastmod>2021-08-30</lastmod>
+    <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://qfxiao.me/tags/Probability/</loc>
-    <lastmod>2021-08-30</lastmod>
+    <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>http://qfxiao.me/tags/RNN/</loc>
-    <lastmod>2021-08-30</lastmod>
+    <loc>http://qfxiao.me/tags/GBDT/</loc>
+    <lastmod>2021-10-23</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/tags/XGBoost/</loc>
+    <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://qfxiao.me/tags/Contrastive-Learning/</loc>
-    <lastmod>2021-08-30</lastmod>
+    <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://qfxiao.me/tags/Self-supervised-Learning/</loc>
-    <lastmod>2021-08-30</lastmod>
+    <lastmod>2021-10-23</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/tags/RNN/</loc>
+    <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://qfxiao.me/tags/Flow-based-Model/</loc>
-    <lastmod>2021-08-30</lastmod>
+    <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://qfxiao.me/tags/Spectral/</loc>
-    <lastmod>2021-08-30</lastmod>
+    <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://qfxiao.me/tags/Shapelet/</loc>
-    <lastmod>2021-08-30</lastmod>
+    <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://qfxiao.me/tags/Pytorch/</loc>
-    <lastmod>2021-08-30</lastmod>
+    <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://qfxiao.me/tags/Tensorflow/</loc>
-    <lastmod>2021-08-30</lastmod>
+    <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://qfxiao.me/tags/Docker/</loc>
-    <lastmod>2021-08-30</lastmod>
+    <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
@@ -469,91 +469,91 @@
   
   <url>
     <loc>http://qfxiao.me/categories/Research/</loc>
-    <lastmod>2021-08-30</lastmod>
+    <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://qfxiao.me/categories/Research/Anomaly-Detection/</loc>
-    <lastmod>2021-08-30</lastmod>
+    <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://qfxiao.me/categories/Research/Tutorial/</loc>
-    <lastmod>2021-08-30</lastmod>
+    <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://qfxiao.me/categories/Research/Misc/</loc>
-    <lastmod>2021-08-30</lastmod>
+    <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://qfxiao.me/categories/Research/Time-Series-Imputation/</loc>
-    <lastmod>2021-08-30</lastmod>
+    <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://qfxiao.me/categories/Technical-Notes/</loc>
-    <lastmod>2021-08-30</lastmod>
+    <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://qfxiao.me/categories/Research/Notes/</loc>
-    <lastmod>2021-08-30</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://qfxiao.me/categories/Research/RNN/</loc>
-    <lastmod>2021-08-30</lastmod>
+    <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://qfxiao.me/categories/Research/Self-supervised-Learning/</loc>
-    <lastmod>2021-08-30</lastmod>
+    <lastmod>2021-10-23</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/categories/Research/RNN/</loc>
+    <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://qfxiao.me/categories/Research/Time-Series-Modeling/</loc>
-    <lastmod>2021-08-30</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://qfxiao.me/categories/Technical-Notes/Misc/</loc>
-    <lastmod>2021-08-30</lastmod>
+    <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://qfxiao.me/categories/Technical-Notes/Machine-Learning/</loc>
-    <lastmod>2021-08-30</lastmod>
+    <lastmod>2021-10-23</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://qfxiao.me/categories/Technical-Notes/Misc/</loc>
+    <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://qfxiao.me/categories/Research/Representation-Learning/</loc>
-    <lastmod>2021-08-30</lastmod>
+    <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>

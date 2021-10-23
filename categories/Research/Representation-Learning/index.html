@@ -1,366 +1,84 @@
-
-
-<!DOCTYPE html>
-<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
-
-
-
-<head>
-  <meta charset="UTF-8">
-  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
-  <link rel="icon" href="/img/favicon.png">
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
-  
-  <meta name="theme-color" content="#2f4154">
-  
-    <meta name="description" content="">
-  
-  <meta name="author" content="Hanzawa">
-  <meta name="keywords" content="">
-  
-  <title>分类 - Representation Learning - Hanzawa の 部屋</title>
-
-  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
-
-
-
-<!-- 主题依赖的图标库，不要自行修改 -->
-
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
-
-
-
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
-
-
-<link  rel="stylesheet" href="/css/main.css" />
-
-<!-- 自定义样式保持在最底部 -->
-
-
-  <script id="fluid-configs">
-    var Fluid = window.Fluid || {};
-    var CONFIG = {"hostname":"qfxiao.me","root":"/","version":"1.8.8","typing":{"enable":true,"typeSpeed":30,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
-  </script>
-  <script  src="/js/utils.js" ></script>
-  <script  src="/js/color-schema.js" ></script>
-<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Hanzawa の 部屋" type="application/atom+xml">
-</head>
-
-
-<body>
-  <header style="height: 60vh;">
-    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
-  <div class="container">
-    <a class="navbar-brand"
-       href="/">&nbsp;<strong>Hanzawa</strong>&nbsp;</a>
-
-    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
-            data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <div class="animated-icon"><span></span><span></span><span></span></div>
-    </button>
-
-    <!-- Collapsible content -->
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav ml-auto text-center">
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/">
-                <i class="iconfont icon-home-fill"></i>
-                首页
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/archives/">
-                <i class="iconfont icon-archive-fill"></i>
-                归档
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/categories/">
-                <i class="iconfont icon-category-fill"></i>
-                分类
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/tags/">
-                <i class="iconfont icon-tags-fill"></i>
-                标签
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/about/">
-                <i class="iconfont icon-user-fill"></i>
-                关于
-              </a>
-            </li>
-          
-        
-        
-          <li class="nav-item" id="search-btn">
-            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
-                class="iconfont icon-search"></i>&nbsp;</a>
-          </li>
-        
-        
-          <li class="nav-item" id="color-toggle-btn">
-            <a class="nav-link" href="javascript:">&nbsp;<i
-                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
-</nav>
-
-    <div class="banner" id="banner" parallax=true
-         style="background: url('/img/bg/spotlight.jpg') no-repeat center center;
-           background-size: cover;">
-      <div class="full-bg-img">
-        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
-          <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="分类 - Representation Learning">
-              
-            </span>
-
-            
-          </div>
-
-          
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <main>
-    
-      <div class="container nopadding-x-md">
-        <div class="py-5" id="board"
-          >
-          
-          <div class="container">
-            <div class="row">
-              <div class="col-12 col-md-10 m-auto">
-                
-
-<div class="list-group">
-  <p class="h4">共计 1 篇文章</p>
-  <hr>
-  
-  
-    
-      
-      <p class="h5">2020</p>
-    
-    <a href="/2020/08/24/Unsupervised-Representation-Learning-by-Predicting-Random-Distances/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">Unsupervised Representation Learning by Predicting Random Distances</span>
-      <time style="float: right;">08-24</time>
-    </a>
-  
-</div>
-
-
-
-
-
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    
-
-    
-      <a id="scroll-top-button" href="#" role="button">
-        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
-      </a>
-    
-
-    
-      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
-     aria-hidden="true">
-  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
-        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body mx-3">
-        <div class="md-form mb-5">
-          <input type="text" id="local-search-input" class="form-control validate">
-          <label data-error="x" data-success="v"
-                 for="local-search-input">关键词</label>
-        </div>
-        <div class="list-group" id="local-search-result"></div>
-      </div>
-    </div>
-  </div>
-</div>
-    
-
-    
-  </main>
-
-  <footer class="text-center mt-5 py-3">
-  <div class="footer-content">
-     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
-  </div>
-  
-  <div class="statistics">
-    
-    
-
-    
-      
-        <!-- 不蒜子统计PV -->
-        <span id="busuanzi_container_site_pv" style="display: none">
-            总访问量 
-            <span id="busuanzi_value_site_pv"></span>
-             次
-          </span>
-      
-      
-        <!-- 不蒜子统计UV -->
-        <span id="busuanzi_container_site_uv" style="display: none">
-            总访客数 
-            <span id="busuanzi_value_site_uv"></span>
-             人
-          </span>
-      
-    
-  </div>
-
-
-  
-
-  
-</footer>
-
-<!-- SCRIPTS -->
-
-  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
-  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
-
-  <script>
-    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
-    NProgress.start()
-    window.addEventListener('load', function() {
-      NProgress.done();
-    })
-  </script>
-
-
-<script  src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" ></script>
-<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
-<script  src="/js/debouncer.js" ></script>
-<script  src="/js/events.js" ></script>
-<script  src="/js/plugins.js" ></script>
-
-<!-- Plugins -->
-
-
-  
-    <script  src="/js/lazyload.js" ></script>
-  
-
-
-
-  
-
-
-
-
-
-
-
-
-
-  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js" ></script>
-
-
-
-  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
-
-
-
-
-  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11/lib/typed.min.js" ></script>
-  <script>
-    (function (window, document) {
-      var typing = Fluid.plugins.typing;
-      var title = document.getElementById('subtitle').title;
-      
-      typing(title)
-      
-    })(window, document);
-  </script>
-
-
-
-  <script  src="/js/local-search.js" ></script>
-  <script>
-    (function () {
-      var path = "/local-search.xml";
-      $('#local-search-input').on('click', function() {
-        searchFunc(path, 'local-search-input', 'local-search-result');
-      });
-      $('#modalSearch').on('shown.bs.modal', function() {
-        $('#local-search-input').focus();
-      });
-    })()
-  </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- 主题的启动项 保持在最底部 -->
-<script  src="/js/boot.js" ></script>
-
-
-
-</body>
-</html>
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><title>分类: Representation Learning - Hanzawa の 部屋</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Hanzawa の 部屋"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Hanzawa の 部屋"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta property="og:type" content="website"><meta property="og:title" content="Hanzawa の 部屋"><meta property="og:url" content="http://qfxiao.me/"><meta property="og:site_name" content="Hanzawa の 部屋"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="http://qfxiao.me/img/og_image.png"><meta property="article:author" content="Hanzawa"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="/img/og_image.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://qfxiao.me"},"headline":"Hanzawa の 部屋","image":["http://qfxiao.me/img/og_image.png"],"author":{"@type":"Person","name":"Hanzawa"},"publisher":{"@type":"Organization","name":"Hanzawa の 部屋","logo":{"@type":"ImageObject"}},"description":null}</script><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><!--!--><meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Hanzawa の 部屋" type="application/atom+xml">
+</head><body class="is-1-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/">Hanzawa の 部屋</a></div><div class="navbar-menu"><div class="navbar-end"></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-12"><div class="card"><div class="card-content"><nav class="breadcrumb" aria-label="breadcrumbs"><ul><li><a href="/categories">分类</a></li><li><a href="/categories/Research/">Research</a></li><li class="is-active"><a href="#" aria-current="page">Representation Learning</a></li></ul></nav></div></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-08-24T08:17:36.000Z" title="2020-8-24 4:17:36 ├F10: PM┤">2020-08-24</time>发表</span><span class="level-item"><time dateTime="2020-08-24T10:25:42.220Z" title="2020-8-24 6:25:42 ├F10: PM┤">2020-08-24</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Representation-Learning/">Representation Learning</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2020/08/24/Unsupervised-Representation-Learning-by-Predicting-Random-Distances/">Unsupervised Representation Learning by Predicting Random Distances</a></h1><div class="content"><h1 id="introduction">Introduction</h1>
+<p>针对高维表格数据的表示学习，作者提出了基于预测预计变换后的距离的无监督表示学习框架RDP，并进行了理论上的讨论。To be finished...</p>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1912.12186">论文地址</a> <a target="_blank" rel="noopener" href="https://github.com/billhhh/RDP">代码地址</a></p>
+<h1 id="proposed-method">Proposed Method</h1>
+<h2 id="random-distance-prediction-model">Random Distance Prediction Model</h2>
+<p>对于很多下游任务来说，高维数据对模型效率和性能都很大，所以学习低维的有意义（能够最大限度保存原始空间的信息）的表示十分重要。本文的大致思想是给定一个确定的随机映射将样本映射到一个新的空间，然后构造数据集，输入时任意一对样本，标签是两个样本在新的空间的距离，之后训练一个模型来学习这个距离。作者认为通过该任务的训练，模型能够学到有意义的低维表示。模型的框架如下图：</p>
+<p><img src="https://i.loli.net/2020/07/19/vRV32EgLiYkWaQN.png" style="zoom: 50%;" /></p>
+<p>其中<span class="math inline">\(\phi(\mathbf x;\Theta):\mathbb R^D\mapsto\mathbb R^M\)</span>为孪生神经网络（Siamese Neural Network），将数据映射到<span class="math inline">\(M\)</span>的新空间。损失函数为：</p>
+<p><span class="math display">\[
+\mathcal L_{rdp}(\mathbf x_i,\mathbf x_j)=l(\langle \phi(\mathbf x_i;\Theta),\phi(\mathbf x_j;\Theta)\rangle,\langle\eta(\mathbf x_i),\eta(\mathbf x_j)\rangle)
+\]</span></p>
+<p>其中<span class="math inline">\(\eta(\cdot)\)</span>为已知的映射，<span class="math inline">\(l(\cdot)\)</span>为衡量两个输入相似程度的度量。具体的来说，文中选取了简单的实现方案，即采用内积作为映射后的样本的距离度量：</p>
+<p><span class="math display">\[
+\mathcal L_{rdp}(\mathbf x_i,\mathbf x_j)=\left(\phi(\mathbf x_i;\Theta)\cdot\phi(\mathbf x_j;\Theta)-\eta(\mathbf x_i)\cdot\eta(\mathbf x_j)\right)^2
+\]</span></p>
+<p><span class="math inline">\(\eta(\cdot)\)</span>为现成的映射。至于为什么要这么做，可以先接着看下面原文给出的理论分析，然后我再说说我自己的理解。</p>
+<h2 id="incorporating-task-dependent-complementary-auxiliary-loss">Incorporating Task-Dependent Complementary Auxiliary Loss</h2>
+<p>对于特定的下游任务，作者提出可以整合额外的误差函数来提高模型行性能。比如说针对聚类任务可以使用重构误差：</p>
+<p><span class="math display">\[
+\mathcal L_{aux}^{clu}(\mathbf x)=(\mathbf x-\phi^\prime(\phi(\mathbf x;\Theta); \Theta^\prime))^2
+\]</span></p>
+<p>其中<span class="math inline">\(\phi(\cdot)\)</span>和<span class="math inline">\(\phi^\prime(\cdot):\mathbb R^M\mapsto\mathbb R^D\)</span>分别为编码器和解码器。</p>
+<p>对于异常检测任务，可以使用下式： <span class="math display">\[
+\mathcal L_{aux}^{ad}(\mathbf x)=(\phi(\mathbf x;\Theta)-\eta(\mathbf x))^2
+\]</span></p>
+<p>这一个Loss本来是出现在强化学习的论文中，用来检测一个状态<span class="math inline">\(\mathbf x\)</span>出现的频率，如果预测误差较小，说明这个样本之前见过或见过类似的，否则没怎么见过，可以认为是异常。由于本文的目的主要是降维加保留原始空间信息，可以认为使用线性变换的话此目的已经达到了。</p>
+<h2 id="theoretical-analysis">Theoretical Analysis</h2>
+<h3 id="using-linear-projection">Using Linear Projection</h3>
+<p>这里讨论使用线性映射的情况，设数据集<span class="math inline">\(\mathcal X\subset\mathbb R^{N\times D}\)</span>，映射矩阵<span class="math inline">\(\mathbf A\subset\mathbb R^{K\times D}\)</span>为一随机矩阵，映射之后的数据为<span class="math inline">\(\mathbf A\mathcal X^\top\)</span>。对于<span class="math inline">\(\epsilon\in(0,\frac{1}{2})\)</span>和<span class="math inline">\(K=\frac{20\log n}{\epsilon^2}\)</span>，存在<span class="math inline">\(f:\mathbb R^D\mapsto\mathbb R^K\)</span>使得对于所有的<span class="math inline">\(\mathbf x_i,\mathbf x_j\in\mathcal X\)</span>有：</p>
+<p><span class="math display">\[
+(1-\epsilon)\parallel\mathbf x_i-\mathbf x_j \parallel^2\leq \parallel f(\mathbf x_i)-f(\mathbf x_j)\parallel^2\leq (1+\epsilon)\parallel\mathbf x_i-\mathbf x_j\parallel^2
+\]</span></p>
+<p>如果<span class="math inline">\(\mathbf A\)</span>的每个元素独立采样自标准正态分布那么有：</p>
+<p><span class="math display">\[
+\text{Pr}\left((1-\epsilon)\parallel\mathbf x\parallel^2\leq\parallel\frac{1}{\sqrt{K}}\mathbf A\mathbf x\parallel^2\leq(1+\epsilon)\parallel\mathbf x\parallel^2\right)\geq 1-2e^{\frac{-(\epsilon^2-\epsilon^3)K}{4}}
+\]</span></p>
+<p>在该随机映射下有：</p>
+<p><span class="math display">\[
+\text{Pr}(|\hat{\mathbf x}_i\cdot\hat{\mathbf x}_j-f(\hat{\mathbf x}_i)\cdot f(\hat{\mathbf x}_j)|\geq\epsilon)\leq 4e^{\frac{-(\epsilon^2-\epsilon^3)\cdot K}{4}}
+\]</span></p>
+<p>直观的解释就是说使用线性映射的情况下，只要使用的变换矩阵采样自标准正态分布，那么变换之后样本对之间的距离信息能够以一定的概率保留。</p>
+<h3 id="using-non-linear-projection">Using Non-Linear Projection</h3>
+<p>这里作者试图说明，在某些条件下，非线性随机映射的作用和核函数接近。对于一个确定的随机映射函数<span class="math inline">\(g:\mathbb R^D\mapsto\mathbb R^K\)</span>，在某些特定的条件下，函数<span class="math inline">\(g\)</span>和核函数存在下列关系：</p>
+<p><span class="math display">\[
+k(\mathbf x_i,\mathbf x_j)=\langle\psi(\mathbf x_i),\psi(\mathbf x_j)\rangle\approx g(\mathbf x_i)\cdot g(\mathbf x_j)
+\]</span></p>
+<p>这个条件是函数<span class="math inline">\(g\)</span>为一个乘以一个线性矩阵<span class="math inline">\(\mathbf A\)</span>然后在经过一个具备平移不变性的傅里叶基函数（如cosine）。由于核函数能够保留原始空间的信息，所以作者认为使用非线性函数也能保留原始空间的信息。</p>
+<blockquote>
+<p>PS: 感觉作者在理论部分的讨论还是有点模糊，因为把一个随机的映射作为（伪）监督信息来进行学习，神经网络学到的不也就是随机噪声信息吗？对于这个方法work的原因，我在这里不负责任的分析一下。</p>
+</blockquote>
+<h3 id="learning-class-structure-by-random-distance-prediction">Learning Class Structure by Random Distance Prediction</h3>
+<p>这一节主要解释为什么神经网络<span class="math inline">\(\phi(\cdot)\)</span>学到的要比随机映射<span class="math inline">\(\eta(\cdot)\)</span>要好。模型的优化目标可以写成如下的形式：</p>
+<p><span class="math display">\[
+\mathop{\arg\min}_{\Theta}\sum_{\mathbf x_i,\mathbf x_j\in\mathcal X}(\phi(\mathbf x_i;\Theta)\cdot\phi(\mathbf x_j;\Theta)-y_{ij})^2
+\]</span></p>
+<p>其中<span class="math inline">\(y_{ij}=\eta(\mathbf x_i)\cdot\eta(\mathbf x_j)\)</span>。设<span class="math inline">\(\mathbf Y_\eta\in\mathbb R^{N\times N}\)</span>为距离矩阵。这个目标函数是在最小化每一对样本在经过<span class="math inline">\(\phi(\cdot)\)</span>和<span class="math inline">\(\eta(\cdot)\)</span>映射后之间的距离的差距。通过公式(7)和公式(8)我们知道，在合适的条件下，随机映射<span class="math inline">\(\eta(\cdot)\)</span>能够保留原始空间的距离信息（即原始空间相近的样本在映射后也相近）。不过，上述公式的成立都依赖于对数据分布的一定假设，当真实的数据不满足条件时，结论就会有所偏差。</p>
+<h1 id="experiments">Experiments</h1>
+<h2 id="performance-evaluation-in-anomaly-detection">Performance Evaluation in Anomaly Detection</h2>
+<h3 id="experimental-settings">Experimental Settings</h3>
+<p><img src="https://i.loli.net/2020/07/20/3G7DNKjwfQkiIz4.png" /></p>
+<p>异常分数定义为<span class="math inline">\(\mathcal S(\mathbf x)=(\phi(\mathbf x;\Theta)-\eta(\mathbf x))^2\)</span>。</p>
+<h3 id="comparison-to-the-state-of-the-art-competing-methods">Comparison to the State-of-the-art Competing Methods</h3>
+<p><img src="https://i.loli.net/2020/07/20/8Ie2Q3mpdPHtrYF.png" /></p>
+<p><img src="https://i.loli.net/2020/07/20/OEcQSvZmfBz1ACt.png" /></p>
+<h3 id="ablation-study">Ablation Study</h3>
+<p><img src="https://i.loli.net/2020/07/20/7GtKlN8q5Mvygre.png" /></p>
+<h2 id="performance-evaluation-in-clustering">Performance Evaluation in Clustering</h2>
+<h3 id="experimental-settings-1">Experimental Settings</h3>
+<p><img src="https://i.loli.net/2020/07/20/9xW12MVkoXgFZ6J.png" /></p>
+<h3 id="comparison-to-the-state-of-the-art-competing-methods-1">Comparison to the State-of-the-art Competing Methods</h3>
+<p><img src="https://i.loli.net/2020/07/20/pUZ64aX1xWiLf2q.png" /></p>
+<figure>
+<img src="https://i.loli.net/2020/07/20/VrnXuJsymiMItUf.png" alt="" /><figcaption>image-20200720014002063</figcaption>
+</figure>
+</div></article></div></div><!--!--><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/">Hanzawa の 部屋</a><p class="is-size-7"><span>&copy; 2021 Hanzawa</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("zh-CN");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><!--!--><script src="/js/main.js" defer></script><!--!--></body></html>

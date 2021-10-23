@@ -1,243 +1,6 @@
-
-
-<!DOCTYPE html>
-<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
-
-
-
-<head>
-  <meta charset="UTF-8">
-  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
-  <link rel="icon" href="/img/favicon.png">
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
-  
-  <meta name="theme-color" content="#2f4154">
-  
-    <meta name="description" content="">
-  
-  <meta name="author" content="Hanzawa">
-  <meta name="keywords" content="">
-  
-  <title>Anomaly Detection with Generative Adversarial Networks for Multivariate Time Series - Hanzawa の 部屋</title>
-
-  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
-
-
-  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
-  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
-
-  
-    
-    
-      
-      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.4.0/styles/github-gist.min.css" />
-    
-  
-
-  
-    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
-  
-
-
-
-<!-- 主题依赖的图标库，不要自行修改 -->
-
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
-
-
-
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
-
-
-<link  rel="stylesheet" href="/css/main.css" />
-
-<!-- 自定义样式保持在最底部 -->
-
-
-  <script id="fluid-configs">
-    var Fluid = window.Fluid || {};
-    var CONFIG = {"hostname":"qfxiao.me","root":"/","version":"1.8.8","typing":{"enable":true,"typeSpeed":30,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
-  </script>
-  <script  src="/js/utils.js" ></script>
-  <script  src="/js/color-schema.js" ></script>
-<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Hanzawa の 部屋" type="application/atom+xml">
-</head>
-
-
-<body>
-  <header style="height: 60vh;">
-    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
-  <div class="container">
-    <a class="navbar-brand"
-       href="/">&nbsp;<strong>Hanzawa</strong>&nbsp;</a>
-
-    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
-            data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <div class="animated-icon"><span></span><span></span><span></span></div>
-    </button>
-
-    <!-- Collapsible content -->
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav ml-auto text-center">
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/">
-                <i class="iconfont icon-home-fill"></i>
-                首页
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/archives/">
-                <i class="iconfont icon-archive-fill"></i>
-                归档
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/categories/">
-                <i class="iconfont icon-category-fill"></i>
-                分类
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/tags/">
-                <i class="iconfont icon-tags-fill"></i>
-                标签
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/about/">
-                <i class="iconfont icon-user-fill"></i>
-                关于
-              </a>
-            </li>
-          
-        
-        
-          <li class="nav-item" id="search-btn">
-            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
-                class="iconfont icon-search"></i>&nbsp;</a>
-          </li>
-        
-        
-          <li class="nav-item" id="color-toggle-btn">
-            <a class="nav-link" href="javascript:">&nbsp;<i
-                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
-</nav>
-
-    <div class="banner" id="banner" parallax=true
-         style="background: url('/img/bg/spotlight.jpg') no-repeat center center;
-           background-size: cover;">
-      <div class="full-bg-img">
-        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
-          <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="Anomaly Detection with Generative Adversarial Networks for Multivariate Time Series">
-              
-            </span>
-
-            
-              <div class="mt-3">
-  
-  
-    <span class="post-meta">
-      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2019-09-22 22:32" pubdate>
-        2019年9月22日 晚上
-      </time>
-    </span>
-  
-</div>
-
-<div class="mt-1">
-  
-    
-    <span class="post-meta mr-2">
-      <i class="iconfont icon-chart"></i>
-      1.5k 字
-    </span>
-  
-
-  
-    
-    <span class="post-meta mr-2">
-      <i class="iconfont icon-clock-fill"></i>
-      
-      
-      19
-       分钟
-    </span>
-  
-
-  
-  
-</div>
-
-            
-          </div>
-
-          
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <main>
-    
-      
-
-<div class="container-fluid nopadding-x">
-  <div class="row nomargin-x">
-    <div class="d-none d-lg-block col-lg-2"></div>
-    <div class="col-lg-8 nopadding-x-md">
-      <div class="container nopadding-x-md" id="board-ctn">
-        <div class="py-5" id="board">
-          <article class="post-content mx-auto">
-            <!-- SEO header -->
-            <h1 style="display: none">Anomaly Detection with Generative Adversarial Networks for Multivariate Time Series</h1>
-            
-              <p class="note note-info">
-                
-                  本文最后更新于：1 年前
-                
-              </p>
-            
-            <div class="markdown-body">
-              <h1 id="introduction">Introduction</h1>
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><title>Anomaly Detection with Generative Adversarial Networks for Multivariate Time Series - Hanzawa の 部屋</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Hanzawa の 部屋"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Hanzawa の 部屋"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="Introduction 这篇文章提出了一个基于GAN的时间序列异常检测模型。 原文 Contribution  提出了基于GAN的时间序列无监督异常检测模型 我们使用基于LSTM的GAN来对多变量时间序列进行建模 结合使用了Residual Loss和Discrimination Loss来进行异常的判断  Background Generative Adversarial"><meta property="og:type" content="article"><meta property="og:title" content="Anomaly Detection with Generative Adversarial Networks for Multivariate Time Series"><meta property="og:url" content="http://qfxiao.me/2019/09/22/Anomaly-Detection-with-Generative-Adversarial-Networks-for-Multivariate-Time-Series/"><meta property="og:site_name" content="Hanzawa の 部屋"><meta property="og:description" content="Introduction 这篇文章提出了一个基于GAN的时间序列异常检测模型。 原文 Contribution  提出了基于GAN的时间序列无监督异常检测模型 我们使用基于LSTM的GAN来对多变量时间序列进行建模 结合使用了Residual Loss和Discrimination Loss来进行异常的判断  Background Generative Adversarial"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="https://i.loli.net/2020/06/25/frIYtuao9mexQUT.png"><meta property="og:image" content="https://i.loli.net/2020/06/25/ECP2Dkpq6FrSoef.png"><meta property="og:image" content="https://i.loli.net/2020/06/25/57N4yUrfoS1cBWd.png"><meta property="og:image" content="https://i.loli.net/2020/06/25/U5rxdYR4jKoqQOX.png"><meta property="og:image" content="https://i.loli.net/2020/06/25/cxBk6SQTydsOVYt.png"><meta property="og:image" content="https://i.loli.net/2020/06/25/ODKWYBI83tJXurM.png"><meta property="og:image" content="https://i.loli.net/2020/06/25/jq1LAytRKCub3kX.png"><meta property="og:image" content="https://i.loli.net/2020/06/25/F5xvo9kCiNl8ehZ.png"><meta property="og:image" content="https://i.loli.net/2020/06/25/RGW4oVtQ7KEFUCA.png"><meta property="og:image" content="https://i.loli.net/2020/06/25/i4O9kJQpnZ5GYeq.png"><meta property="og:image" content="https://i.loli.net/2020/06/25/B4NXzb6fSdgGowL.png"><meta property="og:image" content="https://i.loli.net/2020/06/25/PXQMb9vih1yEKrf.png"><meta property="og:image" content="https://i.loli.net/2020/06/25/1zZQqlI6r9Yjp47.png"><meta property="og:image" content="https://i.loli.net/2020/06/25/scEA9Ou1Yi7nThG.png"><meta property="og:image" content="https://i.loli.net/2020/06/25/84ZCT1JOEru53Ue.png"><meta property="og:image" content="https://i.loli.net/2020/06/25/LGsiMw6IjYUtx8T.png"><meta property="article:published_time" content="2019-09-22T14:32:18.000Z"><meta property="article:modified_time" content="2020-06-25T05:24:46.844Z"><meta property="article:author" content="Hanzawa"><meta property="article:tag" content="Time Series"><meta property="article:tag" content="Anomaly Detection"><meta property="article:tag" content="Machine Learning"><meta property="article:tag" content="Deep Learning"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="https://i.loli.net/2020/06/25/frIYtuao9mexQUT.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://qfxiao.me/2019/09/22/Anomaly-Detection-with-Generative-Adversarial-Networks-for-Multivariate-Time-Series/"},"headline":"Anomaly Detection with Generative Adversarial Networks for Multivariate Time Series","image":["https://i.loli.net/2020/06/25/frIYtuao9mexQUT.png","https://i.loli.net/2020/06/25/ECP2Dkpq6FrSoef.png","https://i.loli.net/2020/06/25/57N4yUrfoS1cBWd.png","https://i.loli.net/2020/06/25/U5rxdYR4jKoqQOX.png","https://i.loli.net/2020/06/25/cxBk6SQTydsOVYt.png","https://i.loli.net/2020/06/25/ODKWYBI83tJXurM.png","https://i.loli.net/2020/06/25/jq1LAytRKCub3kX.png","https://i.loli.net/2020/06/25/F5xvo9kCiNl8ehZ.png","https://i.loli.net/2020/06/25/RGW4oVtQ7KEFUCA.png","https://i.loli.net/2020/06/25/i4O9kJQpnZ5GYeq.png","https://i.loli.net/2020/06/25/B4NXzb6fSdgGowL.png","https://i.loli.net/2020/06/25/PXQMb9vih1yEKrf.png","https://i.loli.net/2020/06/25/1zZQqlI6r9Yjp47.png","https://i.loli.net/2020/06/25/scEA9Ou1Yi7nThG.png","https://i.loli.net/2020/06/25/84ZCT1JOEru53Ue.png","https://i.loli.net/2020/06/25/LGsiMw6IjYUtx8T.png"],"datePublished":"2019-09-22T14:32:18.000Z","dateModified":"2020-06-25T05:24:46.844Z","author":{"@type":"Person","name":"Hanzawa"},"publisher":{"@type":"Organization","name":"Hanzawa の 部屋","logo":{"@type":"ImageObject"}},"description":"Introduction\r 这篇文章提出了一个基于GAN的时间序列异常检测模型。\r 原文\r Contribution\r \r 提出了基于GAN的时间序列无监督异常检测模型\r 我们使用基于LSTM的GAN来对多变量时间序列进行建模\r 结合使用了Residual Loss和Discrimination Loss来进行异常的判断\r \r Background\r Generative Adversarial"}</script><link rel="canonical" href="http://qfxiao.me/2019/09/22/Anomaly-Detection-with-Generative-Adversarial-Networks-for-Multivariate-Time-Series/"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><!--!--><meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Hanzawa の 部屋" type="application/atom+xml">
+</head><body class="is-1-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/">Hanzawa の 部屋</a></div><div class="navbar-menu"><div class="navbar-end"></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-12"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2019-09-22T14:32:18.000Z" title="2019-9-22 10:32:18 ├F10: PM┤">2019-09-22</time>发表</span><span class="level-item"><time dateTime="2020-06-25T05:24:46.844Z" title="2020-6-25 1:24:46 ├F10: PM┤">2020-06-25</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></span></div></div><h1 class="title is-3 is-size-4-mobile">Anomaly Detection with Generative Adversarial Networks for Multivariate Time Series</h1><div class="content"><h1 id="introduction">Introduction</h1>
 <p>这篇文章提出了一个基于GAN的时间序列异常检测模型。</p>
 <p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1809.04758">原文</a></p>
 <h2 id="contribution">Contribution</h2>
@@ -253,26 +16,26 @@
 <li>我们想要从一个复杂的、高维的数据分布<span class="math inline">\(p_r(x)\)</span>上采样得到我们想要的数据点，然而<span class="math inline">\(p_r(x)\)</span>无法直接求得</li>
 <li>代替方法：从一个简单的、已知的分布<span class="math inline">\(p_z(z)\)</span>上采样，然后学习一个Transformation <span class="math inline">\(G(z): z\rightarrow x\)</span>来将<span class="math inline">\(z\)</span>映射到<span class="math inline">\(x\)</span></li>
 </ul>
-<p><img src="https://i.loli.net/2020/06/25/frIYtuao9mexQUT.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/frIYtuao9mexQUT.png" style="zoom:67%;" /></p>
 <h4 id="training-two-player-game">Training: Two-player Game</h4>
 <ul>
 <li><strong>Generator Network: </strong> 从随机分布<span class="math inline">\(p_z(z)\)</span>采样<span class="math inline">\(z\)</span>，通过映射生成样本<span class="math inline">\(x\)</span>，这个生成的样本要尽量“真实”。怎么“真实”？优化生成器参数<span class="math inline">\(\theta_G\)</span>最大化判别器对生成样本的评分即可</li>
 <li><strong>Discriminator Network: </strong>接受一个样本<span class="math inline">\(x\)</span>，判断其是生成的样本还是真实的样本。在训练阶段，我们是知道一个样本<span class="math inline">\(x\)</span>到底是生成的还是真实的，所以优化判别器参数<span class="math inline">\(\theta_D\)</span>最小化判别器对生成样本的评分，最大化对真实样本的评分（即最大化分辨真实样本的能力）</li>
 </ul>
-<p><img src="https://i.loli.net/2020/06/25/ECP2Dkpq6FrSoef.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/ECP2Dkpq6FrSoef.png" style="zoom:67%;" /></p>
 <p>形式化的来讲，优化函数如下：</p>
 <p><span class="math display">\[\min\limits_{\theta_G}\max\limits_{\theta_D}V(G,D)=\mathbb{E}_{x\sim p_{data}(x)\log(\underbrace{D_{\theta{D}}(x)}_{判别器对真实样本的评分})}+\mathbb{E}_{z\sim p_z(z)}\log(1-\underbrace{D_{\theta_d}(G_{\theta_G}(z))}_{判别器对生成样本的评分})\]</span></p>
 <p>训练过程如下：</p>
-<p><img src="https://i.loli.net/2020/06/25/57N4yUrfoS1cBWd.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/57N4yUrfoS1cBWd.png" style="zoom:67%;" /></p>
 <h3 id="long-short-time-memory-networks">Long Short Time Memory Networks</h3>
 <h4 id="vanilla-recurrent-neural-networks">Vanilla Recurrent Neural Networks</h4>
 <p>普通的神经网络：</p>
-<p><img src="https://i.loli.net/2020/06/25/U5rxdYR4jKoqQOX.png" srcset="/img/loading.gif" style="zoom:50%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/U5rxdYR4jKoqQOX.png" style="zoom:50%;" /></p>
 <p>概括的来讲，可以涵盖为一个公式<span class="math inline">\(\hat{\mathbf{y}}=f(\mathbf{x})\)</span>。对于一个样本<span class="math inline">\(\mathbf{x}\)</span>，通过多层神经网络映射，输出<span class="math inline">\(\mathbf{y}\)</span>。</p>
 <p>对于RNN，我们处理的是序列数据，也就是说所有样本之间并不是相互独立的。对于一个序列中的一个样本<span class="math inline">\(x_t\in\{x_1,x_2,\cdots,x_n\}\)</span>，将其输入到神经网络的时候，为了建模<span class="math inline">\(x_t\)</span>之前的子序列对<span class="math inline">\(x_t\)</span>的影响关系，需要将这个子序列的信息也输入到神经网络中，怎么做呢？为每一个样本点保存一个State。即定义<span class="math inline">\(h_t=g(\hat{y_t})=g(f(x_t))\)</span>，对于当前样本点，<span class="math inline">\(\hat{y_t}=f(x_t,h_{t-1})\)</span>。也就是说神经网络的输入不仅包含了当前样本点的特征，也包含了上一个样本点的“状态”(上一个样本点的“状态”又隐含了上上个样本点的“状态”...)，就像是为网络加上了短期记忆。</p>
-<p><img src="https://i.loli.net/2020/06/25/cxBk6SQTydsOVYt.png" srcset="/img/loading.gif" style="zoom: 67%;" /></p>
-<p><img src="https://i.loli.net/2020/06/25/ODKWYBI83tJXurM.png" srcset="/img/loading.gif" style="zoom: 33%;" /></p>
-<p><img src="https://i.loli.net/2020/06/25/jq1LAytRKCub3kX.png" srcset="/img/loading.gif" style="zoom:33%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/cxBk6SQTydsOVYt.png" style="zoom: 67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/ODKWYBI83tJXurM.png" style="zoom: 33%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/jq1LAytRKCub3kX.png" style="zoom:33%;" /></p>
 <h4 id="gradient-flow-of-vanilla-rnn">Gradient Flow of Vanilla RNN</h4>
 <p>下面来进行一些形式化的定义，假设在时刻<span class="math inline">\(t\)</span>网络输入特征为<span class="math inline">\(x_t\)</span>，输出隐含状态为<span class="math inline">\(h_{t}\)</span>，其不仅和当前输入<span class="math inline">\(x_t\)</span>有关，还和上一个隐含状态<span class="math inline">\(h_{t-1}\)</span>有关：</p>
 <ul>
@@ -286,25 +49,25 @@
 <p><span class="math display">\[\frac{\partial\mathcal{L}}{\partial{b}}=\sum\limits_{t=1}^T\sum\limits_{k=1}^t\delta_{t,k}\]</span></p>
 <p>其中<span class="math inline">\(\delta_{t,k}=\frac{\partial{\mathcal{L}}}{\partial{z_k}}=\text{diag}(f^\prime(z_k))U^T\delta_{t,k+1}\)</span>定义为第<span class="math inline">\(t\)</span>时刻的损失对第<span class="math inline">\(k\)</span>时刻隐藏神经层的净输入<span class="math inline">\(z_k\)</span>的导数，且<span class="math inline">\(z_k=Uh_{k-1}+Wx_k+b,1\leq k&lt;t\)</span>。</p>
 <p>RNN的梯度流向如下图红箭头所示：</p>
-<p><img src="https://i.loli.net/2020/06/25/F5xvo9kCiNl8ehZ.png" srcset="/img/loading.gif" style="zoom: 50%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/F5xvo9kCiNl8ehZ.png" style="zoom: 50%;" /></p>
 <p>RNN会遇到梯度消失和梯度爆炸的问题。根据前面的公式，<span class="math inline">\(\delta_{t,k}\)</span>实际上是递归定义的，展开得到：</p>
 <p><span class="math display">\[\delta_{t,k}=\prod\limits_{\tau=k}^{t-1}(\text{diag}(f^\prime(z_\tau))U^T)\delta_{t,t}\]</span></p>
 <p>如果定义<span class="math inline">\(\gamma\cong\parallel\text{diag}(f^\prime(z_\tau))U^T\parallel\)</span>，那么<span class="math inline">\(\delta_{t,k}\cong\gamma^{t-k}\delta_{t,t}\)</span>。在<span class="math inline">\(t-k\)</span>很大时，<span class="math inline">\(\gamma&lt;1\)</span>会导致梯度消失，<span class="math inline">\(\gamma&gt;1\)</span>时会导致梯度爆炸。</p>
-<p><img src="https://i.loli.net/2020/06/25/RGW4oVtQ7KEFUCA.png" srcset="/img/loading.gif" style="zoom:50%;" /></p>
-<p><img src="https://i.loli.net/2020/06/25/i4O9kJQpnZ5GYeq.png" srcset="/img/loading.gif" style="zoom:50%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/RGW4oVtQ7KEFUCA.png" style="zoom:50%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/i4O9kJQpnZ5GYeq.png" style="zoom:50%;" /></p>
 <h4 id="long-short-time-memory">Long Short Time Memory</h4>
 <p>LSTM是一种解决RNN梯度消失问题的改进版本：</p>
-<p><img src="https://i.loli.net/2020/06/25/B4NXzb6fSdgGowL.png" srcset="/img/loading.gif" style="zoom:50%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/B4NXzb6fSdgGowL.png" style="zoom:50%;" /></p>
 <p>在LSTM中，维护了两个State，<span class="math inline">\(c_t\)</span>和<span class="math inline">\(h_t\)</span>。其中<span class="math inline">\(c_t\)</span>由遗忘门<span class="math inline">\(f\)</span>与上一个<span class="math inline">\(c_{t-1}\)</span>相乘(代表继承上一个Cell的信息并加以一定程度的遗忘)，加上输出门<span class="math inline">\(i\)</span>与Gate Gate <span class="math inline">\(g\)</span>相乘(Gate Gate代表当前的候选状态，输出门<span class="math inline">\(i\)</span>控制当前候选状态有多少信息需要保存)。最后，输出门<span class="math inline">\(o\)</span>控制当前时刻的Cell State <span class="math inline">\(c_t\)</span>有多少信息需要输出给外部状态<span class="math inline">\(h_t\)</span>。</p>
 <p>三个门的计算方式为：</p>
 <p><span class="math display">\[i_t=\sigma(W_ix_t+U_ih_{t-1}+b_i)\]</span></p>
 <p><span class="math display">\[f_t=\sigma(W_fx_t+U_fh_{t-1}+b_f)\]</span></p>
 <p><span class="math display">\[o_t=\sigma(W_ox_t+U_oh_{t-1}+b_o)\]</span></p>
-<p><img src="https://i.loli.net/2020/06/25/PXQMb9vih1yEKrf.png" srcset="/img/loading.gif" style="zoom:50%;" /></p>
-<p><img src="https://i.loli.net/2020/06/25/1zZQqlI6r9Yjp47.png" srcset="/img/loading.gif" style="zoom:50%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/PXQMb9vih1yEKrf.png" style="zoom:50%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/1zZQqlI6r9Yjp47.png" style="zoom:50%;" /></p>
 <h2 id="methodology">Methodology</h2>
 <p>总体框架图如Fig 1所示：</p>
-<p><img src="https://i.loli.net/2020/06/25/scEA9Ou1Yi7nThG.png" srcset="/img/loading.gif" style="zoom: 50%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/scEA9Ou1Yi7nThG.png" style="zoom: 50%;" /></p>
 <h3 id="gan-with-lstm-rnn">GAN with LSTM-RNN</h3>
 <p>网络结构上生成器和判别器都是LSTM，优化函数和普通GAN一样：</p>
 <p><span class="math display">\[\min\limits_G\max\limits_D V(D,G)=\mathbb{E}_{x\sim p_{data}(x)}[\log D(x)]+\mathbb{E}_{z\sim p_z(z)}[\log (1-D(G(z)))]\]</span></p>
@@ -318,300 +81,15 @@
 <p><span class="math display">\[S^{test}_t=\lambda Res(X^{test}_t)+(1-\lambda)D_{rnn}(x^{test}_t)\]</span></p>
 <h3 id="anomaly-detection-framework">Anomaly Detection Framework</h3>
 <p>模型的算法流程如下：</p>
-<p><img src="https://i.loli.net/2020/06/25/84ZCT1JOEru53Ue.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
+<p><img src="https://i.loli.net/2020/06/25/84ZCT1JOEru53Ue.png" style="zoom:67%;" /></p>
 <p>由于本文是多变量时间序列预测，而且时间序列的长度有可能比较长，作者使用了滑动窗口和PCA来进行预处理。</p>
 <h2 id="experiments">Experiments</h2>
-<p><img src="https://i.loli.net/2020/06/25/LGsiMw6IjYUtx8T.png" srcset="/img/loading.gif" style="zoom:67%;" /></p>
-
-            </div>
-            <hr>
-            <div>
-              <div class="post-metas mb-3">
-                
-                  <div class="post-meta mr-3">
-                    <i class="iconfont icon-category"></i>
-                    
-                      <a class="hover-with-bg" href="/categories/Research/">Research</a>
-                    
-                      <a class="hover-with-bg" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a>
-                    
-                  </div>
-                
-                
-                  <div class="post-meta">
-                    <i class="iconfont icon-tags"></i>
-                    
-                      <a class="hover-with-bg" href="/tags/Deep-Learning/">Deep Learning</a>
-                    
-                      <a class="hover-with-bg" href="/tags/Time-Series/">Time Series</a>
-                    
-                      <a class="hover-with-bg" href="/tags/Machine-Learning/">Machine Learning</a>
-                    
-                      <a class="hover-with-bg" href="/tags/Anomaly-Detection/">Anomaly Detection</a>
-                    
-                  </div>
-                
-              </div>
-              
-                <p class="note note-warning">
-                  
-                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
-                  
-                </p>
-              
-              
-                <div class="post-prevnext">
-                  <article class="post-prev col-6">
-                    
-                    
-                      <a href="/2019/10/16/GAIN-Missing-Data-Imputation-using-Generative-Adversarial-Nets/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">GAIN: Missing Data Imputation using Generative Adversarial Nets</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
-                  </article>
-                  <article class="post-next col-6">
-                    
-                    
-                      <a href="/2019/09/22/ALSR-An-adaptive-label-screening-and-relearning-approach-for-interval-oriented-anomaly-detection/">
-                        <span class="hidden-mobile">ALSR: An Adaptive Label Screening and Relearning Approach for Interval-Oriented Anomaly Detection</span>
-                        <span class="visible-mobile">下一篇</span>
-                        <i class="iconfont icon-arrowright"></i>
-                      </a>
-                    
-                  </article>
-                </div>
-              
-            </div>
-
-            
-          </article>
-        </div>
-      </div>
-    </div>
-    
-      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
-        <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
-  <div class="toc-body" id="toc-body"></div>
-</div>
-
-      </div>
-    
-  </div>
-</div>
-
-<!-- Custom -->
-
-
-    
-
-    
-      <a id="scroll-top-button" href="#" role="button">
-        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
-      </a>
-    
-
-    
-      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
-     aria-hidden="true">
-  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
-        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body mx-3">
-        <div class="md-form mb-5">
-          <input type="text" id="local-search-input" class="form-control validate">
-          <label data-error="x" data-success="v"
-                 for="local-search-input">关键词</label>
-        </div>
-        <div class="list-group" id="local-search-result"></div>
-      </div>
-    </div>
-  </div>
-</div>
-    
-
-    
-  </main>
-
-  <footer class="text-center mt-5 py-3">
-  <div class="footer-content">
-     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
-  </div>
-  
-  <div class="statistics">
-    
-    
-
-    
-      
-        <!-- 不蒜子统计PV -->
-        <span id="busuanzi_container_site_pv" style="display: none">
-            总访问量 
-            <span id="busuanzi_value_site_pv"></span>
-             次
-          </span>
-      
-      
-        <!-- 不蒜子统计UV -->
-        <span id="busuanzi_container_site_uv" style="display: none">
-            总访客数 
-            <span id="busuanzi_value_site_uv"></span>
-             人
-          </span>
-      
-    
-  </div>
-
-
-  
-
-  
-</footer>
-
-<!-- SCRIPTS -->
-
-  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
-  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
-
-  <script>
-    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
-    NProgress.start()
-    window.addEventListener('load', function() {
-      NProgress.done();
-    })
-  </script>
-
-
-<script  src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" ></script>
-<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
-<script  src="/js/debouncer.js" ></script>
-<script  src="/js/events.js" ></script>
-<script  src="/js/plugins.js" ></script>
-
-<!-- Plugins -->
-
-
-  
-    <script  src="/js/lazyload.js" ></script>
-  
-
-
-
-  
-
-
-
-  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js" ></script>
-
-
-
-  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
-
-
-
-  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js" ></script>
-
-
-
-  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js" ></script>
-
-
-
-  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
-
-
-
-
-  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11/lib/typed.min.js" ></script>
-  <script>
-    (function (window, document) {
-      var typing = Fluid.plugins.typing;
-      var title = document.getElementById('subtitle').title;
-      
-      typing(title)
-      
-    })(window, document);
-  </script>
-
-
-
-  <script  src="/js/local-search.js" ></script>
-  <script>
-    (function () {
-      var path = "/local-search.xml";
-      $('#local-search-input').on('click', function() {
-        searchFunc(path, 'local-search-input', 'local-search-result');
-      });
-      $('#modalSearch').on('shown.bs.modal', function() {
-        $('#local-search-input').focus();
-      });
-    })()
-  </script>
-
-
-
-
-
-  
-
-  
-    <!-- MathJax -->
-    <script>
-      MathJax = {
-        tex: {
-          inlineMath: [['$', '$'], ['\\(', '\\)']]
-        },
-        options: {
-          renderActions: {
-            findScript: [10, doc => {
-              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
-                const display = !!node.type.match(/; *mode=display/);
-                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
-                const text = document.createTextNode('');
-                node.parentNode.replaceChild(text, node);
-                math.start = { node: text, delim: '', n: 0 };
-                math.end = { node: text, delim: '', n: 0 };
-                doc.math.push(math);
-              });
-            }, '', false],
-            insertedScript: [200, () => {
-              document.querySelectorAll('mjx-container').forEach(node => {
-                let target = node.parentNode;
-                if (target.nodeName.toLowerCase() === 'li') {
-                  target.parentNode.classList.add('has-jax');
+<p><img src="https://i.loli.net/2020/06/25/LGsiMw6IjYUtx8T.png" style="zoom:67%;" /></p>
+</div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/Time-Series/">Time Series</a><a class="link-muted mr-2" rel="tag" href="/tags/Anomaly-Detection/">Anomaly Detection</a><a class="link-muted mr-2" rel="tag" href="/tags/Machine-Learning/">Machine Learning</a><a class="link-muted mr-2" rel="tag" href="/tags/Deep-Learning/">Deep Learning</a></div><!--!--></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2019/10/16/GAIN-Missing-Data-Imputation-using-Generative-Adversarial-Nets/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">GAIN: Missing Data Imputation using Generative Adversarial Nets</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2019/09/22/ALSR-An-adaptive-label-screening-and-relearning-approach-for-interval-oriented-anomaly-detection/"><span class="level-item">ALSR: An Adaptive Label Screening and Relearning Approach for Interval-Oriented Anomaly Detection</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><!--!--></div><!--!--><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/">Hanzawa の 部屋</a><p class="is-size-7"><span>&copy; 2021 Hanzawa</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("zh-CN");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
                 }
-              });
-            }, '', false]
-          }
-        }
-      };
-    </script>
-
-    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3.1.2/es5/tex-svg.js" ></script>
-
-  
-
-
-
-
-
-
-
-
-
-
-
-<!-- 主题的启动项 保持在最底部 -->
-<script  src="/js/boot.js" ></script>
-
-
-
-</body>
-</html>
+            }
+        };</script><script src="/js/column.js"></script><!--!--><script src="/js/main.js" defer></script><!--!--></body></html>

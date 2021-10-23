@@ -1,370 +1,81 @@
-
-
-<!DOCTYPE html>
-<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
-
-
-
-<head>
-  <meta charset="UTF-8">
-  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
-  <link rel="icon" href="/img/favicon.png">
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
-  
-  <meta name="theme-color" content="#2f4154">
-  
-    <meta name="description" content="">
-  
-  <meta name="author" content="Hanzawa">
-  <meta name="keywords" content="">
-  
-  <title>标签 - C4.5 - Hanzawa の 部屋</title>
-
-  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
-
-
-
-<!-- 主题依赖的图标库，不要自行修改 -->
-
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
-
-
-
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
-
-
-<link  rel="stylesheet" href="/css/main.css" />
-
-<!-- 自定义样式保持在最底部 -->
-
-
-  <script id="fluid-configs">
-    var Fluid = window.Fluid || {};
-    var CONFIG = {"hostname":"qfxiao.me","root":"/","version":"1.8.8","typing":{"enable":true,"typeSpeed":30,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
-  </script>
-  <script  src="/js/utils.js" ></script>
-  <script  src="/js/color-schema.js" ></script>
-<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Hanzawa の 部屋" type="application/atom+xml">
-</head>
-
-
-<body>
-  <header style="height: 80vh;">
-    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
-  <div class="container">
-    <a class="navbar-brand"
-       href="/">&nbsp;<strong>Hanzawa</strong>&nbsp;</a>
-
-    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
-            data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <div class="animated-icon"><span></span><span></span><span></span></div>
-    </button>
-
-    <!-- Collapsible content -->
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav ml-auto text-center">
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/">
-                <i class="iconfont icon-home-fill"></i>
-                首页
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/archives/">
-                <i class="iconfont icon-archive-fill"></i>
-                归档
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/categories/">
-                <i class="iconfont icon-category-fill"></i>
-                分类
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/tags/">
-                <i class="iconfont icon-tags-fill"></i>
-                标签
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/about/">
-                <i class="iconfont icon-user-fill"></i>
-                关于
-              </a>
-            </li>
-          
-        
-        
-          <li class="nav-item" id="search-btn">
-            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
-                class="iconfont icon-search"></i>&nbsp;</a>
-          </li>
-        
-        
-          <li class="nav-item" id="color-toggle-btn">
-            <a class="nav-link" href="javascript:">&nbsp;<i
-                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
-</nav>
-
-    <div class="banner" id="banner" parallax=true
-         style="background: url('/img/bg/spotlight.jpg') no-repeat center center;
-           background-size: cover;">
-      <div class="full-bg-img">
-        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
-          <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="标签 - C4.5">
-              
-            </span>
-
-            
-          </div>
-
-          
-            <div class="scroll-down-bar">
-              <i class="iconfont icon-arrowdown"></i>
-            </div>
-          
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <main>
-    
-      <div class="container nopadding-x-md">
-        <div class="py-5" id="board"
-          >
-          
-          <div class="container">
-            <div class="row">
-              <div class="col-12 col-md-10 m-auto">
-                
-
-<div class="list-group">
-  <p class="h4">共计 1 篇文章</p>
-  <hr>
-  
-  
-    
-      
-      <p class="h5">2020</p>
-    
-    <a href="/2020/09/02/Machine-Learning-Classification-Algorithms-Decision-Trees/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">Machine Learning Classification Algorithms: Decision Trees</span>
-      <time style="float: right;">09-02</time>
-    </a>
-  
-</div>
-
-
-
-
-
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    
-
-    
-      <a id="scroll-top-button" href="#" role="button">
-        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
-      </a>
-    
-
-    
-      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
-     aria-hidden="true">
-  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
-        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body mx-3">
-        <div class="md-form mb-5">
-          <input type="text" id="local-search-input" class="form-control validate">
-          <label data-error="x" data-success="v"
-                 for="local-search-input">关键词</label>
-        </div>
-        <div class="list-group" id="local-search-result"></div>
-      </div>
-    </div>
-  </div>
-</div>
-    
-
-    
-  </main>
-
-  <footer class="text-center mt-5 py-3">
-  <div class="footer-content">
-     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
-  </div>
-  
-  <div class="statistics">
-    
-    
-
-    
-      
-        <!-- 不蒜子统计PV -->
-        <span id="busuanzi_container_site_pv" style="display: none">
-            总访问量 
-            <span id="busuanzi_value_site_pv"></span>
-             次
-          </span>
-      
-      
-        <!-- 不蒜子统计UV -->
-        <span id="busuanzi_container_site_uv" style="display: none">
-            总访客数 
-            <span id="busuanzi_value_site_uv"></span>
-             人
-          </span>
-      
-    
-  </div>
-
-
-  
-
-  
-</footer>
-
-<!-- SCRIPTS -->
-
-  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
-  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
-
-  <script>
-    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
-    NProgress.start()
-    window.addEventListener('load', function() {
-      NProgress.done();
-    })
-  </script>
-
-
-<script  src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" ></script>
-<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
-<script  src="/js/debouncer.js" ></script>
-<script  src="/js/events.js" ></script>
-<script  src="/js/plugins.js" ></script>
-
-<!-- Plugins -->
-
-
-  
-    <script  src="/js/lazyload.js" ></script>
-  
-
-
-
-  
-
-
-
-
-
-
-
-
-
-  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js" ></script>
-
-
-
-  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
-
-
-
-
-  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11/lib/typed.min.js" ></script>
-  <script>
-    (function (window, document) {
-      var typing = Fluid.plugins.typing;
-      var title = document.getElementById('subtitle').title;
-      
-      typing(title)
-      
-    })(window, document);
-  </script>
-
-
-
-  <script  src="/js/local-search.js" ></script>
-  <script>
-    (function () {
-      var path = "/local-search.xml";
-      $('#local-search-input').on('click', function() {
-        searchFunc(path, 'local-search-input', 'local-search-result');
-      });
-      $('#modalSearch').on('shown.bs.modal', function() {
-        $('#local-search-input').focus();
-      });
-    })()
-  </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- 主题的启动项 保持在最底部 -->
-<script  src="/js/boot.js" ></script>
-
-
-
-</body>
-</html>
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><title>标签: C4.5 - Hanzawa の 部屋</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Hanzawa の 部屋"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Hanzawa の 部屋"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta property="og:type" content="website"><meta property="og:title" content="Hanzawa の 部屋"><meta property="og:url" content="http://qfxiao.me/"><meta property="og:site_name" content="Hanzawa の 部屋"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="http://qfxiao.me/img/og_image.png"><meta property="article:author" content="Hanzawa"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="/img/og_image.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://qfxiao.me"},"headline":"Hanzawa の 部屋","image":["http://qfxiao.me/img/og_image.png"],"author":{"@type":"Person","name":"Hanzawa"},"publisher":{"@type":"Organization","name":"Hanzawa の 部屋","logo":{"@type":"ImageObject"}},"description":null}</script><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><!--!--><meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Hanzawa の 部屋" type="application/atom+xml">
+</head><body class="is-1-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/">Hanzawa の 部屋</a></div><div class="navbar-menu"><div class="navbar-end"></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-12"><div class="card"><div class="card-content"><nav class="breadcrumb" aria-label="breadcrumbs"><ul><li><a href="/tags">标签</a></li><li class="is-active"><a href="#" aria-current="page">C4.5</a></li></ul></nav></div></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-09-02T10:47:55.000Z" title="2020-9-2 6:47:55 ├F10: PM┤">2020-09-02</time>发表</span><span class="level-item"><time dateTime="2021-02-19T10:22:31.857Z" title="2021-2-19 6:22:31 ├F10: PM┤">2021-02-19</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Technical-Notes/">Technical Notes</a><span> / </span><a class="link-muted" href="/categories/Technical-Notes/Machine-Learning/">Machine Learning</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2020/09/02/Machine-Learning-Classification-Algorithms-Decision-Trees/">Machine Learning Classification Algorithms: Decision Trees</a></h1><div class="content"><h1 id="introduction">Introduction</h1>
+<p>（PS：本文内容是学习高级树模型（GBDT，XGBoost）的基础，强烈建议在看那些内容之前先了解本文的内容！）</p>
+<p>本文主要是介绍常用的三种决策树模型：ID3、C4.5和CART。决策树（Decision Tree）是一种<strong>有监督分类模型</strong>（稍加改造可进行回归任务）。</p>
+<p>比如我们要判断一个瓜是不是好瓜，对于人来说，要判断一个瓜是不是好瓜，可能会先去看看色泽，然后看看根蒂，然后再敲一敲听听声音，这样经过一系列的决策过程。</p>
+<p><img src="https://i.loli.net/2020/09/02/WuGQ79g4NcHqJDh.png" style="zoom:50%;" /></p>
+<p>决策树正是模拟了这样的过程。给定数据集，决策树会不断地选择最佳的特征将数据集进行切分（如选择色泽，然后将数据分为青绿、乌黑、浅白这几个子集），然后递归地进行下去，直到达到停止条件：</p>
+<ol type="1">
+<li>每个叶子节点的样本都属于同一个类别</li>
+<li>没有可供划分的特征，或者集合中每个样本所有特征取值都相同</li>
+<li>决策树达到预先指定的最大深度</li>
+</ol>
+<p>所以决策树算法要解决的关键问题就是如何去选择当前最好的划分特征。</p>
+<h1 id="id3">ID3</h1>
+<p>ID3算法根据信息熵来进行特征的划分。信息熵是衡量一个随机变量信息量的度量，如果把数据集的标签<span class="math inline">\(y\)</span>看作是随机变量，那么<span class="math inline">\(y\)</span>的熵越小代表不确定性越小（集合里几乎都是一种类别的样本），熵越大代表不确定性越大（集合包含不同类别的样本），其公式为： <span class="math display">\[
+Ent(D)=-\sum_{k=1}^{|\mathcal Y|}p_k\log p_k
+\]</span> <span class="math inline">\(Ent(D)\)</span>代表集合<span class="math inline">\(D\)</span>对应的熵，<span class="math inline">\(|\mathcal Y|\)</span>是类别数量，二分类就是<span class="math inline">\(|\mathcal Y|=2\)</span>，<span class="math inline">\(p_k\)</span>为第<span class="math inline">\(k\)</span>个类别对应的概率（频率）。很自然的，我们可以根据划分前后熵的变化来确定划分特征的选择，如果划分之后熵减小的最多，那么这个特征也是最好的。假设我们选定特征<span class="math inline">\(a\)</span>来对集合进行划分，特征<span class="math inline">\(a\)</span>共有<span class="math inline">\(V\)</span>个离散取值，那么划分之后将会产生<span class="math inline">\(V\)</span>个子集，我们记每个子集为<span class="math inline">\(D^v, v=1,\cdots, V\)</span>。那么，信息增益可以写为： <span class="math display">\[
+Gain(D,a)=Ent(D)-\sum_{v=1}^V \frac{|D^v|}{|D|}Ent(D^v)
+\]</span> 不过，ID3存在两个致命的缺点：</p>
+<ol type="1">
+<li>无法对连续取值的特征进行计算</li>
+<li>对取值较多的特征具有很大的偏向性（极端的情况，把样本编号作为特征，由于每个样本的编号都不同，分裂之后每个自己只有一个样本/类别，熵是最小的）</li>
+</ol>
+<h1 id="c4.5">C4.5</h1>
+<p>C4.5算法在ID3的基础上做了诸多改进。C4.5解决了ID3对于取值数目较多的特征的偏向性问题，其采用的方案很直观，即对信息增益除以一个系数，特征取值数目越多的特征系数越大，该划分标准被称作是信息增益率： <span class="math display">\[
+Gain\_ratio(D,a)=\frac{Gain(D,a)}{IV(a)}
+\]</span> 其中<span class="math inline">\(IV(a)=-\sum_{v=1}^V\frac{|D^v|}{|D|}\log \frac{|D^v|}{|D|}\)</span>。其实<span class="math inline">\(IV(a)\)</span>可以看作是“划分之后每个样本属于集合<span class="math inline">\(v\)</span>的概率”这个随机变量的熵，划分的子集越多，划分之后属于哪个集合就越不确定，所以熵就越大。</p>
+<p>不过信息增益率反而会对特征取值数目少的特征有所偏好，所以C4.5算法是先计算信息增益，确定信息增益高于平均值的候选集，再从中选择信息增益率最高的特征。</p>
+<p>除此之外，C4.5还能处理连续取值的特征，其做法是“离散化”，即将连续取值划分为若干个离散的区间，一般二分比较常用。设连续特征<span class="math inline">\(a\)</span>，假设其出现了<span class="math inline">\(n\)</span>个取值，将其排序得到<span class="math inline">\(\{a^1,a^2,\cdots,a^n\}\)</span>，我们考虑每两个相邻节点的中点集合<span class="math inline">\(T_a=\{\frac{a^i+a^{i+1}}{2}|1\leq i \leq n-1\}\)</span>，之后我们就可以像考察离散属性值一样选择最优划分。</p>
+<p>下图是在breast cancer数据上决策树的可视化（图片太大了，可以点开放大🔍看）：</p>
+<p><img src="https://i.loli.net/2020/09/10/RNyxp8EM6BCsOHK.png" /></p>
+<h1 id="cart">CART</h1>
+<p>CART (Classification and Regression Trees) 是一种应用广泛的决策树模型，既可应用于分类任务也可应用于回归任务。</p>
+<h2 id="cart-regression">CART Regression</h2>
+<p>我们先来说说CART怎么进行回归。在回归问题中，CART使用了MSE作为划分准则： <span class="math display">\[
+\frac{1}{N}\sum_{i=1}^N (f(x_i)-y_i)^2
+\]</span> 如果CART有<span class="math inline">\(M\)</span>片叶子，那么相当于CART将输入划分成了<span class="math inline">\(M\)</span>个单元<span class="math inline">\(R_m, m=1,\cdots,M\)</span>，也即有<span class="math inline">\(M\)</span>个输出，那么该CART在数据集上的MSE为： <span class="math display">\[
+\frac{1}{N}\sum_{m=1}^M\sum_{x_i\in R_m} (c_m-y_i)^2
+\]</span> 这里<span class="math inline">\(c_j\)</span>为叶子节点<span class="math inline">\(j\)</span>的输出，一般选为对应样本的均值<span class="math inline">\(c_m=\text{avg}(y_i|x_i\in R_m)\)</span>。这样，剩下的问题就是如何确定每次的切分特征和切分点了。假设选择的特征是<span class="math inline">\(j\)</span>，切分点<span class="math inline">\(s\)</span>，那么该划分方案对应的损失为： <span class="math display">\[
+\min_{c_1}\sum_{x_i\in R_1\{j,s\}}(y_i-c_1)^2+\min_{c_2}\sum_{x_i\in R_2\{j,s\}}(y_i-c_2)^2
+\]</span> 遍历所有的<span class="math inline">\(j\)</span>和<span class="math inline">\(s\)</span>，我们就能找到最佳的特征和切分点： <span class="math display">\[
+\min_{j,s}\left[\min_{c_1}\sum_{x_i\in R_1\{j,s\}}(y_i-c_1)^2+\min_{c_2}\sum_{x_i\in R_2\{j,s\}}(y_i-c_2)^2\right]
+\]</span></p>
+<p>算法流程大致如下：</p>
+<blockquote>
+<p><strong>CART Decision Tree Algorithm</strong></p>
+<p>INPUT: 数据集 <span class="math inline">\(D=\{(x_1,y_1),\cdots,(x_N,y_N)\}\)</span></p>
+<p>OUTPUT: 预测值<span class="math inline">\(\{\hat y_1,\cdots,\hat y_N\}\)</span></p>
+<p>PROCEDURE:</p>
+<p><strong>1. 选取当前最优切分特征变量<span class="math inline">\(j^*\)</span>与最优切分点<span class="math inline">\(s^*\)</span></strong></p>
+<p>设当前选择的切分变量为<span class="math inline">\(j\)</span>，切分点为<span class="math inline">\(s\)</span>那么可以根据切分点将数据集分为两个子集，一个是<span class="math inline">\(R_1(j,s)=\left\{x|x^{(j)}\leq s\right\}\)</span>，另一个是<span class="math inline">\(R_2(j,s)=\left\{x|x^{(j)}&gt; s\right\}\)</span>。 遍历所有的<span class="math inline">\(j\)</span>，求解 <span class="math display">\[
+\min_{j,s}\left[\min_{c_1}\sum\limits_{x_i\in R_1(j,s)}(y_i-c_1)^2+\min\limits_{c_2}\sum\limits_{x_i\in R_2(j,s)}(y_i-c_2)^2\right]
+\]</span> 注意<span class="math inline">\(\hat c_1=\frac{1}{N_1}\sum\limits_{x_i\in R_1(j,s)}y_i\)</span> <strong>2. 用选定的<span class="math inline">\((j^*,s^*)\)</span>来划分区域并计算输出值</strong></p>
+<p>此时，我们还需要确定这两个区域（划分到同一个区域的样本对应的输出是相同的）的输出值<span class="math inline">\(c_1\)</span>和<span class="math inline">\(c_2\)</span>，其确定方式是使得对应区域上的均方误差最小。这样我们相当于得到了给定<span class="math inline">\(j,s\)</span>下的损失，所以只要找出使得损失最小的<span class="math inline">\(j^*,s^*\)</span>即可：</p>
+<p><strong>3. 递归地对划分出来的两个区域重复步骤1和步骤2，直到满足停止条件</strong></p>
+<p><strong>4. 最后将输入空间划分为<span class="math inline">\(M\)</span>，输出<span class="math inline">\(f(x)=\sum_{m=1}^M \hat c_m I(x\in R_m)\)</span></strong></p>
+</blockquote>
+<p>下图是在波士顿房价数据上决策树的可视化（图片太大了，可以点开放大🔍看）：</p>
+<p><img src="https://i.loli.net/2020/09/09/knOHuvsfyorTpxt.png" /></p>
+<h2 id="cart-classification">CART Classification</h2>
+<p>从前面的讨论可以看到，CART回归树是一棵二叉树，对于分类任务，CART也是一棵二叉树。我们先来介绍CART的划分准则，再来介绍它是怎么进行划分的。</p>
+<p>采用基尼系数作为准则，基尼系数的计算依赖于基尼值： <span class="math display">\[
+\begin{align}
+Gini(D)&amp;=1-\sum_{k=1}^{|\mathcal Y|}p_k^2
+\end{align}
+\]</span> 直观上来说，基尼值表示随机抽取两个样本，其类别不一致的概率</p>
+<p>如果说一个特征越好，那么划分之后其每个子集对应的基尼值应该越小越好。基尼系数的定义为： <span class="math display">\[
+Gini\_index(D,a)=\sum_{v=1}^V \frac{|D^v|}{|D|}Gini(D^v)
+\]</span></p>
+<p>对于离散取值特征，CART不会根据不同取值个数进行划分，而是和连续值类似，会确定一个“划分点”，将样本进行二分。比如对于特征<span class="math inline">\(a\)</span>，其对应取值为<span class="math inline">\(\{a^1,a^2,\cdots,a^n\}\)</span>，CART会考察每个取值，将样本集划分为特征<span class="math inline">\(a\)</span>是不是等于<span class="math inline">\(a^i\)</span>两部分，然后计算基尼系数，最终会采用基尼系数最小的取值作为划分点。</p>
+<p>下图是在breast cancer数据上决策树的可视化（图片太大了，可以点开放大🔍看）：</p>
+<p><img src="https://i.loli.net/2020/09/10/mMf2EVkI1NaQLdS.png" /></p>
+</div></article></div></div><!--!--><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/">Hanzawa の 部屋</a><p class="is-size-7"><span>&copy; 2021 Hanzawa</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("zh-CN");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><!--!--><script src="/js/main.js" defer></script><!--!--></body></html>
