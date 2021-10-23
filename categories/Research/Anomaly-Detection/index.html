@@ -1,480 +1,345 @@
 <!doctype html>
 <html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><title>分类: Anomaly Detection - Hanzawa の 部屋</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Hanzawa の 部屋"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Hanzawa の 部屋"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta property="og:type" content="website"><meta property="og:title" content="Hanzawa の 部屋"><meta property="og:url" content="https://larryshaw0079.github.io/hanzawa-blog"><meta property="og:site_name" content="Hanzawa の 部屋"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="https://larryshaw0079.github.io/img/og_image.png"><meta property="article:author" content="Hanzawa"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="/img/og_image.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://larryshaw0079.github.io/hanzawa-blog"},"headline":"Hanzawa の 部屋","image":["https://larryshaw0079.github.io/img/og_image.png"],"author":{"@type":"Person","name":"Hanzawa"},"publisher":{"@type":"Organization","name":"Hanzawa の 部屋","logo":{"@type":"ImageObject"}},"description":null}</script><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><!--!--><meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Hanzawa の 部屋" type="application/atom+xml">
-</head><body class="is-1-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/">Hanzawa の 部屋</a></div><div class="navbar-menu"><div class="navbar-end"></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-12"><div class="card"><div class="card-content"><nav class="breadcrumb" aria-label="breadcrumbs"><ul><li><a href="/categories">分类</a></li><li><a href="/categories/Research/">Research</a></li><li class="is-active"><a href="#" aria-current="page">Anomaly Detection</a></li></ul></nav></div></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-07-14T10:46:13.000Z" title="2020-7-14 6:46:13 ├F10: PM┤">2020-07-14</time>发表</span><span class="level-item"><time dateTime="2020-07-21T12:35:42.220Z" title="2020-7-21 8:35:42 ├F10: PM┤">2020-07-21</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2020/07/14/Effective-End-to-end-Unsupervised-Outlier-Detection-via-Linear-Priority-of-Discriminative-Network/">Effective End-to-end Unsupervised Outlier Detection via Linear Priority of Discriminative Network</a></h1><div class="content"><h1 id="introduction">Introduction</h1>
-<p>本文针对无监督异常检测提出了<span class="math inline">\(E^3\space{Outlier}\)</span>。作者使用自监督学习的方法，通过构建有监督任务在没有标签的情况下学习高层语义特征。PS：这篇文章的方法和NIPS18上的<em>Deep Anomaly Detection Using Geometric Transformations</em>（后面简称GEOM）颇为相似，但是不知为啥没有在实验中进行比较。后面我会分析一些两篇文章方法上的异同。</p>
-<h1 id="proposed-method">Proposed Method</h1>
-<h2 id="surrogate-supervision-based-effective-representation-learning-for-uod">Surrogate Supervision Based Effective Representation Learning for UOD</h2>
-<p>这里作者提到了使用重构的模型来进行异常检测的不足：重构模型采用像素级别的损失函数（如mean square error），而这太过于严格和细节，并不能学到高层语义特征。</p>
-<p>为此，作者提出了<em>surrogate supervision based discriminative network</em> (SSD)。具体操作和GEOM类似，首先预定义大小为<span class="math inline">\(K\)</span>的几何变换集合<span class="math inline">\(\mathcal O=\{O(\cdot|y)\}_{y=1}^K\)</span>。对每一个样本<span class="math inline">\(\mathbf x\)</span>，在经过<span class="math inline">\(K\)</span>个集合变换之后会得到<span class="math inline">\(K\)</span>个变换后的样本（第<span class="math inline">\(y\)</span>个变换产生的样本即记为<span class="math inline">\(\mathbf x^{(y)}=O(\mathbf x|y)\)</span>），每个样本对应的pseudo label即为变换的序号或者说种类。之后在新的数据集上（大小为原来的<span class="math inline">\(K\)</span>倍）训练<span class="math inline">\(K\)</span>分类网络。网络的输出为<span class="math inline">\(P(\mathbf x^{(y^\prime)}|\boldsymbol\theta)=[P^{(y)}(\mathbf x^{(y^\prime)}|\boldsymbol\theta)]_{y=1}^K\)</span>，每个维度代表输入样本对应的变换的概率。总的损失函数为： <span class="math display">\[
-\min_\theta\frac{1}{N}\sum_{i=1}^{N}\mathcal L_{SS}(\mathbf x_i|\theta)
-\]</span></p>
-<p>其中<span class="math inline">\(\mathcal L_{SS}(\mathbf x_i|\theta)\)</span>代表每个样本对应的Loss，这个Loss可以由分类器在<span class="math inline">\(K\)</span>个变换上的交叉熵损失来确定：</p>
-<p><span class="math display">\[
-\mathcal L_{SS}(\mathbf x_i|\boldsymbol\theta)=-\frac{1}{K}\sum_{y=1}^K\log(P^{(y)}(\mathbf x_i^{(y)}|\boldsymbol\theta))=-\frac{1}{K}\sum_{y=1}^K\log(P^{(y)}(O(\mathbf x_i|y)|\boldsymbol\theta))
-\]</span> <img src="https://i.loli.net/2020/07/14/ULAdYpzsoGfFwtD.png" /></p>
-<p>变换集合<span class="math inline">\(\mathcal O\)</span>由一系列基本变换的组合确定。作者将这些基本变换分为了：1) 旋转 2) 翻转 3) 平移，包括横向和纵向 4) Patch置换（参考图1(a)中的Patch Re-arranging）。最终的变换集合<span class="math inline">\(\mathcal O\)</span>由三个子集组成，分别是<span class="math inline">\(\mathcal O_{RA}\)</span>（代表Regular Affine，其中每个变换为旋转<span class="math inline">\(90°\)</span>的倍数、翻转、横向平移和纵向平移这四个基本变换的叠加），<span class="math inline">\(\mathcal O_{IA}\)</span>（代表Irregular Affine，其中每个变换为进行<span class="math inline">\(30°\)</span>的倍数且不为<span class="math inline">\(90°\)</span>的倍数角度的旋转、翻转这两个基本变换的叠加）和<span class="math inline">\(\mathcal O_{PR}\)</span>（只包含Patch Re-arranging）。</p>
+</head><body class="is-1-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/">Hanzawa の 部屋</a></div><div class="navbar-menu"><div class="navbar-end"></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-12"><div class="card"><div class="card-content"><nav class="breadcrumb" aria-label="breadcrumbs"><ul><li><a href="/categories">分类</a></li><li><a href="/categories/Research/">Research</a></li><li class="is-active"><a href="#" aria-current="page">Anomaly Detection</a></li></ul></nav></div></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-07-14T10:46:13.000Z" title="2020-7-14 6:46:13 ├F10: PM┤">2020-07-14</time>发表</span><span class="level-item"><time dateTime="2020-07-21T12:35:42.220Z" title="2020-7-21 8:35:42 ├F10: PM┤">2020-07-21</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2020/07/14/Effective-End-to-end-Unsupervised-Outlier-Detection-via-Linear-Priority-of-Discriminative-Network/">Effective End-to-end Unsupervised Outlier Detection via Linear Priority of Discriminative Network</a></h1><div class="content"><h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>本文针对无监督异常检测提出了$E^3\space{Outlier}$。作者使用自监督学习的方法，通过构建有监督任务在没有标签的情况下学习高层语义特征。PS：这篇文章的方法和NIPS18上的<em>Deep Anomaly Detection Using Geometric Transformations</em>（后面简称GEOM）颇为相似，但是不知为啥没有在实验中进行比较。后面我会分析一些两篇文章方法上的异同。</p>
+<h1 id="Proposed-Method"><a href="#Proposed-Method" class="headerlink" title="Proposed Method"></a>Proposed Method</h1><h2 id="Surrogate-Supervision-Based-Effective-Representation-Learning-for-UOD"><a href="#Surrogate-Supervision-Based-Effective-Representation-Learning-for-UOD" class="headerlink" title="Surrogate Supervision Based Effective Representation Learning for UOD"></a>Surrogate Supervision Based Effective Representation Learning for UOD</h2><p>这里作者提到了使用重构的模型来进行异常检测的不足：重构模型采用像素级别的损失函数（如mean square error），而这太过于严格和细节，并不能学到高层语义特征。</p>
+<p>为此，作者提出了<em>surrogate supervision based discriminative network</em> (SSD)。具体操作和GEOM类似，首先预定义大小为$K$的几何变换集合$\mathcal O={O(\cdot|y)}<em>{y=1}^K$。对每一个样本$\mathbf x$，在经过$K$个集合变换之后会得到$K$个变换后的样本（第$y$个变换产生的样本即记为$\mathbf x^{(y)}=O(\mathbf x|y)$），每个样本对应的pseudo label即为变换的序号或者说种类。之后在新的数据集上（大小为原来的$K$倍）训练$K$分类网络。网络的输出为$P(\mathbf x^{(y^\prime)}|\boldsymbol\theta)=[P^{(y)}(\mathbf x^{(y^\prime)}|\boldsymbol\theta)]</em>{y=1}^K$，每个维度代表输入样本对应的变换的概率。总的损失函数为：<br>$$<br>\min_\theta\frac{1}{N}\sum_{i=1}^{N}\mathcal L_{SS}(\mathbf x_i|\theta)<br>$$</p>
+<p>其中$\mathcal L_{SS}(\mathbf x_i|\theta)$代表每个样本对应的Loss，这个Loss可以由分类器在$K$个变换上的交叉熵损失来确定：</p>
+<p>$$<br>\mathcal L_{SS}(\mathbf x_i|\boldsymbol\theta)=-\frac{1}{K}\sum_{y=1}^K\log(P^{(y)}(\mathbf x_i^{(y)}|\boldsymbol\theta))=-\frac{1}{K}\sum_{y=1}^K\log(P^{(y)}(O(\mathbf x_i|y)|\boldsymbol\theta))<br>$$<br><img src="https://i.loli.net/2020/07/14/ULAdYpzsoGfFwtD.png"></p>
+<p>变换集合$\mathcal O$由一系列基本变换的组合确定。作者将这些基本变换分为了：1) 旋转 2) 翻转 3) 平移，包括横向和纵向 4) Patch置换（参考图1(a)中的Patch Re-arranging）。最终的变换集合$\mathcal O$由三个子集组成，分别是$\mathcal O_{RA}$（代表Regular Affine，其中每个变换为旋转$90°$的倍数、翻转、横向平移和纵向平移这四个基本变换的叠加），$\mathcal O_{IA}$（代表Irregular Affine，其中每个变换为进行$30°$的倍数且不为$90°$的倍数角度的旋转、翻转这两个基本变换的叠加）和$\mathcal O_{PR}$（只包含Patch Re-arranging）。</p>
 <p>为了验证SSD学到的特征的有效性，作者将CAE提取的特征和SSD提取的特征分别用孤立森林进行异常检测，发现SSD效果更好（见图1(b)）。</p>
-<p>到这里为止本文和GEOM基本没有大的区别。值得注意的是在所采用的几何变换中，采用了非线性变换（进行<span class="math inline">\(30°\)</span>的倍数且不为<span class="math inline">\(90°\)</span>的倍数角度的旋转）。而在GEOM中，提到过使用非线性变换的话效果会比较差，至于具体的影响如何，可能需要实验来确定。</p>
-<h2 id="inlier-priority-the-foundation-of-end-to-end-uod">Inlier Priority: The Foundation of End-to-end UOD</h2>
-<p>在这里作者主要对在训练集包含少量异常的情况下做出的理论分析，作者将其称为<em>Inlier Priority</em>，原句如下：</p>
+<p>到这里为止本文和GEOM基本没有大的区别。值得注意的是在所采用的几何变换中，采用了非线性变换（进行$30°$的倍数且不为$90°$的倍数角度的旋转）。而在GEOM中，提到过使用非线性变换的话效果会比较差，至于具体的影响如何，可能需要实验来确定。</p>
+<h2 id="Inlier-Priority-The-Foundation-of-End-to-end-UOD"><a href="#Inlier-Priority-The-Foundation-of-End-to-end-UOD" class="headerlink" title="Inlier Priority: The Foundation of End-to-end UOD"></a>Inlier Priority: The Foundation of End-to-end UOD</h2><p>在这里作者主要对在训练集包含少量异常的情况下做出的理论分析，作者将其称为<em>Inlier Priority</em>，原句如下：</p>
 <blockquote>
 <p><em>Inlier Priority</em>: Despite that inliers/outliersare indiscriminately fed into SSD for training, SSD will prioritize the minimization of inliers’ loss.</p>
 </blockquote>
-<h3 id="priority-by-gradient-magnitude">Priority by Gradient Magnitude</h3>
-<p>对于第<span class="math inline">\(c\)</span>个类来说，设<code>softmax</code>层和倒数第二层之间的权重矩阵为<span class="math inline">\(\mathbf w_c=[w_{s,c}]^{(L+1)}_{s=1}\)</span>，损失函数记为<span class="math inline">\(\mathcal L\)</span>，梯度记为<span class="math inline">\(\nabla_{\mathbf w_c}\mathcal L=[\nabla_{w_{s,c}}\mathcal L]^{(L+1)}_{s=1}\)</span>。设训练集<span class="math inline">\(X^{(c)}\)</span>包含<span class="math inline">\(N_{in}\)</span>个正常样本，<span class="math inline">\(N_{out}\)</span>个异常样本。记正常样本和异常样本对应的梯度分别为<span class="math inline">\(\parallel\nabla^{(in)}_{\mathbf w_c}\mathcal L\parallel\)</span>和<span class="math inline">\(\parallel\nabla^{(out)}_{\mathbf w_c}\mathcal L\parallel\)</span>，在网络只有一个隐层且采用<code>Sigmoid</code>作为激活函数时，两者梯度的期望之比有如下关系：</p>
-<p><span class="math display">\[
-\frac{E(\parallel\nabla^{(in)}_{\mathbf w_c}\mathcal L\parallel^2)}{E(\parallel\nabla^{(out)}_{\mathbf w_c}\mathcal L\parallel^2)}\approx\frac{N^2_{in}}{N^2_{out}}
-\]</span></p>
-<p>在训练集中，正常样本和异常样本的数量是极不均衡的，<span class="math inline">\(N_{in}\gg N_{out}\)</span>，所以有<span class="math inline">\(E(\parallel\nabla^{(in)}_{\mathbf w_c}\mathcal L\parallel^2)\gg E(\parallel\nabla^{(out)}_{\mathbf w_c}\mathcal L\parallel^2)\)</span>。</p>
+<h3 id="Priority-by-Gradient-Magnitude"><a href="#Priority-by-Gradient-Magnitude" class="headerlink" title="Priority by Gradient Magnitude"></a>Priority by Gradient Magnitude</h3><p>对于第$c$个类来说，设<code>softmax</code>层和倒数第二层之间的权重矩阵为$\mathbf w_c=[w_{s,c}]^{(L+1)}<em>{s=1}$，损失函数记为$\mathcal L$，梯度记为$\nabla</em>{\mathbf w_c}\mathcal L=[\nabla_{w_{s,c}}\mathcal L]^{(L+1)}<em>{s=1}$。设训练集$X^{(c)}$包含$N</em>{in}$个正常样本，$N_{out}$个异常样本。记正常样本和异常样本对应的梯度分别为$\parallel\nabla^{(in)}_{\mathbf w_c}\mathcal L\parallel$和$\parallel\nabla^{(out)}_{\mathbf w_c}\mathcal L\parallel$，在网络只有一个隐层且采用<code>Sigmoid</code>作为激活函数时，两者梯度的期望之比有如下关系：</p>
+<p>$$<br>\frac{E(\parallel\nabla^{(in)}<em>{\mathbf w_c}\mathcal L\parallel^2)}{E(\parallel\nabla^{(out)}_{\mathbf w_c}\mathcal L\parallel^2)}\approx\frac{N^2_{in}}{N^2</em>{out}}<br>$$</p>
+<p>在训练集中，正常样本和异常样本的数量是极不均衡的，$N_{in}\gg N_{out}$，所以有$E(\parallel\nabla^{(in)}_{\mathbf w_c}\mathcal L\parallel^2)\gg E(\parallel\nabla^{(out)}_{\mathbf w_c}\mathcal L\parallel^2)$。</p>
 <p>在使用更复杂的网络时，作者通过实验展示了正常样本和异常样本对应的梯度大小的比较：</p>
-<p><img src="https://i.loli.net/2020/07/16/iPa7h9HWqrnZvgx.png" /></p>
-<h3 id="priority-by-network-updating-direction">Priority by Network Updating Direction</h3>
-<p>这里作者通过梯度更新的方向来进行了理论上的解释。对于一个Batch的数据<span class="math inline">\(X\)</span>，梯度为<span class="math inline">\(-\nabla_\theta\mathcal L(X)=-\frac{1}{N}\sum_i\nabla_\theta\mathcal L(\mathbf x_i)\)</span>，如果将该梯度在Batch中某一样本<span class="math inline">\(\mathbf x_i\)</span>对应的梯度的方向上进行分解<span class="math inline">\(-\nabla_\theta\mathcal L(\mathbf x_i):d_i=-\nabla_\theta\mathcal L(X)\cdot\frac{-\nabla_\theta\mathcal L(\mathbf x_i)}{\parallel -\nabla_\theta\mathcal L(\mathbf x_i)\parallel}\)</span>，这代表了总的Loss在多大程度上减小样本<span class="math inline">\(\mathbf x_i\)</span>对应的Loss，由于一个Batch即包含正常样本，也可能包含异常样本，所以作者将两者对应的梯度方向贡献进行了可视化：</p>
-<p><img src="https://i.loli.net/2020/07/16/U5fVk8YOEGPx3Q7.png" /></p>
+<p><img src="https://i.loli.net/2020/07/16/iPa7h9HWqrnZvgx.png"></p>
+<h3 id="Priority-by-Network-Updating-Direction"><a href="#Priority-by-Network-Updating-Direction" class="headerlink" title="Priority by Network Updating Direction"></a>Priority by Network Updating Direction</h3><p>这里作者通过梯度更新的方向来进行了理论上的解释。对于一个Batch的数据$X$，梯度为$-\nabla_\theta\mathcal L(X)=-\frac{1}{N}\sum_i\nabla_\theta\mathcal L(\mathbf x_i)$，如果将该梯度在Batch中某一样本$\mathbf x_i$对应的梯度的方向上进行分解$-\nabla_\theta\mathcal L(\mathbf x_i):d_i=-\nabla_\theta\mathcal L(X)\cdot\frac{-\nabla_\theta\mathcal L(\mathbf x_i)}{\parallel -\nabla_\theta\mathcal L(\mathbf x_i)\parallel}$，这代表了总的Loss在多大程度上减小样本$\mathbf x_i$对应的Loss，由于一个Batch即包含正常样本，也可能包含异常样本，所以作者将两者对应的梯度方向贡献进行了可视化：</p>
+<p><img src="https://i.loli.net/2020/07/16/U5fVk8YOEGPx3Q7.png"></p>
 <p>可以看到随着训练的进行，正常样本对应的贡献更高。</p>
 <p>PS: 我以为作者会对基于几何变换的异常检测为什么有效做一些理论上的解释，不过却没有。这里只是对在训练集包含少量异常的情况下做出的理论分析，而这个实际上直觉上就很显然了。</p>
-<h2 id="scoring-strategies-for-uod">Scoring Strategies for UOD</h2>
-<p>作者采用了三种方法来计算异常分数：</p>
-<h3 id="pseudo-label-based-score-pl">Pseudo Label based Score (PL)</h3>
-<p>对于一个测试样本<span class="math inline">\(\mathbf x\)</span>，对其进行<span class="math inline">\(K\)</span>个几何变换，通过分类器会得到<span class="math inline">\(K\)</span>个输出，对于第<span class="math inline">\(k\)</span>个输出，我们只取其第<span class="math inline">\(k\)</span>个分量，最后把他们加起来除以<span class="math inline">\(K\)</span>：</p>
-<p><span class="math display">\[
-S_{pl}(\mathbf x)=\frac{1}{K}\sum_{y=1}^K P^{(y)}(\mathbf x^{(y)}|\boldsymbol\theta)
-\]</span></p>
-<h3 id="maximum-probability-based-score-mp">Maximum Probability based Score (MP)</h3>
-<p>这里稍有不同，对于第<span class="math inline">\(k\)</span>个输出，我们取其值最大的分量，而不是第<span class="math inline">\(k\)</span>个分量：</p>
-<p><span class="math display">\[
-S_{mp}(\mathbf x)=\frac{1}{K}\sum_{y=1}^K\max_t P^{(t)}(\mathbf x^{(y)}|\boldsymbol\theta)
-\]</span></p>
-<h3 id="negative-entropy-based-score-ne">Negative Entropy based Score (NE)</h3>
-<p>作者认为，标签为One-Hot向量，分类器的输出分布越“尖峰”就越接近于正常样本，而越“平均”就越接近于异常样本，所以作者提出使用熵来描述分类器输出的“尖锐度”： <span class="math display">\[
-S_{ne}(\mathbf x)=-\frac{1}{K}\sum_{y=1}^K H(P(\mathbf x^{(y)}|\boldsymbol\theta))=\frac{1}{K}\sum_{y=1}^K\sum_{t=1}^K P^{(t)}(\mathbf x^{(y)}|\boldsymbol\theta)\log(P^{(t)}(\mathbf x^{(y)}|\boldsymbol\theta))
-\]</span> 这里作者对第一种方法得到的结果进行了可视化：</p>
-<p><img src="https://i.loli.net/2020/07/16/PgzqXIdJ67s3BtG.png" /></p>
+<h2 id="Scoring-Strategies-for-UOD"><a href="#Scoring-Strategies-for-UOD" class="headerlink" title="Scoring Strategies for UOD"></a>Scoring Strategies for UOD</h2><p>作者采用了三种方法来计算异常分数：</p>
+<h3 id="Pseudo-Label-based-Score-PL"><a href="#Pseudo-Label-based-Score-PL" class="headerlink" title="Pseudo Label based Score (PL)"></a>Pseudo Label based Score (PL)</h3><p>对于一个测试样本$\mathbf x$，对其进行$K$个几何变换，通过分类器会得到$K$个输出，对于第$k$个输出，我们只取其第$k$个分量，最后把他们加起来除以$K$：</p>
+<p>$$<br>S_{pl}(\mathbf x)=\frac{1}{K}\sum_{y=1}^K P^{(y)}(\mathbf x^{(y)}|\boldsymbol\theta)<br>$$</p>
+<h3 id="Maximum-Probability-based-Score-MP"><a href="#Maximum-Probability-based-Score-MP" class="headerlink" title="Maximum Probability based Score (MP)"></a>Maximum Probability based Score (MP)</h3><p>这里稍有不同，对于第$k$个输出，我们取其值最大的分量，而不是第$k$个分量：</p>
+<p>$$<br>S_{mp}(\mathbf x)=\frac{1}{K}\sum_{y=1}^K\max_t P^{(t)}(\mathbf x^{(y)}|\boldsymbol\theta)<br>$$</p>
+<h3 id="Negative-Entropy-based-Score-NE"><a href="#Negative-Entropy-based-Score-NE" class="headerlink" title="Negative Entropy based Score (NE)"></a>Negative Entropy based Score (NE)</h3><p>作者认为，标签为One-Hot向量，分类器的输出分布越“尖峰”就越接近于正常样本，而越“平均”就越接近于异常样本，所以作者提出使用熵来描述分类器输出的“尖锐度”：<br>$$<br>S_{ne}(\mathbf x)=-\frac{1}{K}\sum_{y=1}^K H(P(\mathbf x^{(y)}|\boldsymbol\theta))=\frac{1}{K}\sum_{y=1}^K\sum_{t=1}^K P^{(t)}(\mathbf x^{(y)}|\boldsymbol\theta)\log(P^{(t)}(\mathbf x^{(y)}|\boldsymbol\theta))<br>$$<br>这里作者对第一种方法得到的结果进行了可视化：</p>
+<p><img src="https://i.loli.net/2020/07/16/PgzqXIdJ67s3BtG.png"></p>
 <p>PS：对比NIPS18 的Dirichlet Normality Score</p>
-<ol type="1">
-<li>也用到了全部<span class="math inline">\(K\)</span>个维度的信息</li>
+<ol>
+<li>也用到了全部$K$个维度的信息</li>
 <li>相当于对分类器的输出做了迪利克雷分布的先验假设，然后通过训练集的输出估计分布参数。因为直觉上对于正常分布来说，分类器的输出分布形状上都类似一个尖峰，但对于不同的数据集来说具体形状还是会有所差异</li>
 </ol>
-<h1 id="experiments">Experiments</h1>
-<h2 id="experiment-setup">Experiment Setup</h2>
-<p>数据集用到了MNIST, Fashion-MNIST (F-MNIST) , CIFAR10, SVHN和CIFAR100。为了模拟无监督异常检测的环境，人为在训练集中加入异常样本，异常的比例<span class="math inline">\(\rho\)</span>从<span class="math inline">\(5\%\)</span>到<span class="math inline">\(25\%\)</span>以<span class="math inline">\(5\%\)</span>的步长递增。评测标准采用AUPR和AUROC。</p>
-<h2 id="uod-performance-comparison-and-discussion">UOD Performance Comparison and Discussion</h2>
-<p>下表展示了模型性能对比结果：</p>
-<p><img src="https://i.loli.net/2020/07/16/G3agKPuJBowFmIW.png" /></p>
+<h1 id="Experiments"><a href="#Experiments" class="headerlink" title="Experiments"></a>Experiments</h1><h2 id="Experiment-Setup"><a href="#Experiment-Setup" class="headerlink" title="Experiment Setup"></a>Experiment Setup</h2><p> 数据集用到了MNIST, Fashion-MNIST (F-MNIST) , CIFAR10, SVHN和CIFAR100。为了模拟无监督异常检测的环境，人为在训练集中加入异常样本，异常的比例$\rho$从$5%$到$25%$以$5%$的步长递增。评测标准采用AUPR和AUROC。</p>
+<h2 id="UOD-Performance-Comparison-and-Discussion"><a href="#UOD-Performance-Comparison-and-Discussion" class="headerlink" title="UOD Performance Comparison and Discussion"></a>UOD Performance Comparison and Discussion</h2><p>下表展示了模型性能对比结果：</p>
+<p><img src="https://i.loli.net/2020/07/16/G3agKPuJBowFmIW.png"></p>
 <p>下图展示了在不同的Outlier Ratio下的性能对比：</p>
-<p><img src="https://i.loli.net/2020/07/16/h6iYjBkrwQdFvMJ.png" /></p>
+<p><img src="https://i.loli.net/2020/07/16/h6iYjBkrwQdFvMJ.png"></p>
 <p>下图展示了在不同的变换集合，网络结构，异常分数的条件下的性能：</p>
-<p><img src="https://i.loli.net/2020/07/16/waWAi7zI3QpOcf6.png" /></p>
-</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-06-06T04:03:27.000Z" title="2020-6-6 12:03:27 ├F10: PM┤">2020-06-06</time>发表</span><span class="level-item"><time dateTime="2020-06-25T08:14:29.250Z" title="2020-6-25 4:14:29 ├F10: PM┤">2020-06-25</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2020/06/06/Generative-Probabilistic-Novelty-Detection-with-Adversarial-Autoencoders/">Generative Probabilistic Novelty Detection with Adversarial Autoencoders</a></h1><div class="content"><h1 id="introduction">Introduction</h1>
-<p>这篇文章介绍了一种基于概率分布的异常检测方法。其基本思想是假设正常样本服从定义在流形<span class="math inline">\(M\)</span>上的分布，而对于任意一点<span class="math inline">\(\bar x\)</span>，通过投影到流形<span class="math inline">\(M\)</span>上<span class="math inline">\(x^\parallel\)</span>，可以分解为平行于切空间的部分<span class="math inline">\(x^\parallel\)</span>和正交与切空间的部分<span class="math inline">\(x^\bot\)</span>。原始的坐标<span class="math inline">\(\bar x\)</span>被转换到<span class="math inline">\(x^\parallel\)</span>局部坐标系中，然后似然通过转换后的坐标系进行计算。</p>
-<h1 id="methodology">Methodology</h1>
-<h2 id="generative-probabilistic-novelty-detection">Generative Probabilistic Novelty Detection</h2>
-<p>我们假设训练数据<span class="math inline">\(x_1,\cdots,x_N\)</span>，其中<span class="math inline">\(x_i\in\mathbb{R}^m\)</span>，从一个分布采样的来，并带有随机噪声<span class="math inline">\(\xi\)</span>： <span class="math display">\[
-x_i=f(z_i)+\xi_i, \space\space\space i=1,\cdots,N
-\]</span> 其中<span class="math inline">\(z_i\in\mathbb{R}^n\)</span>，<span class="math inline">\(f:\Omega\mapsto\mathbb{R}^m\)</span>定义了一个<span class="math inline">\(n\)</span>维带参流形<span class="math inline">\(\mathcal{M}\equiv f(\Omega)\)</span>。注意这里噪声的加入使得样本的值域扩展到了整个实数空间。同时假设存在<span class="math inline">\(g:\mathbb{R}^m\mapsto\mathbb{R}^n\)</span>，对任意<span class="math inline">\(x\in\mathcal{M}\)</span>都有<span class="math inline">\(f(g(x))=x\)</span>。<span class="math inline">\(f\)</span>和<span class="math inline">\(g\)</span>后面会通过神经网络实现。</p>
-<p>对于一个测试样本<span class="math inline">\(\bar{x}\in\mathbb{R}^m\)</span>，我们可以得到其在<span class="math inline">\(M\)</span>上的投影，这是通过逆变换<span class="math inline">\(\bar z = g(\bar x)\)</span>得到对应<span class="math inline">\(z\)</span>的然后再通过<span class="math inline">\(\bar x^{\parallel}=f(\bar z)\)</span>得到。<span class="math inline">\(f\)</span>在<span class="math inline">\(\bar z\)</span>的一阶泰勒展开为： <span class="math display">\[
-f(z)=f(\bar z)+J_f(\bar z)(z-\bar z)+O(\parallel z-\bar z\parallel ^2)
-\]</span> <img src="https://i.loli.net/2020/06/25/oi9xKMO3ID7jANJ.png" style="zoom:67%;" /></p>
-<p>其中<span class="math inline">\(J_f(\bar z)\)</span>为<span class="math inline">\(f\)</span>在点<span class="math inline">\(\bar z\)</span>的雅各比矩阵。<span class="math inline">\(\mathcal T=\text{span}(J_f(\bar z))\)</span>代表点<span class="math inline">\(\bar z\)</span>处由<span class="math inline">\(J_f(\bar z)\)</span>的<span class="math inline">\(n\)</span>个独立向量组成的切空间。通过对<span class="math inline">\(J_f(\bar z)\)</span>进行奇异值分解<span class="math inline">\(J_f(\bar z)=U^\parallel SV^\top\)</span>。 <span class="math display">\[
-\bar w=U^\top\bar x=\left[\begin{matrix}U^{\parallel^\top}\bar x\\ U^{\bot^\top}\bar x\end{matrix}\right]=\left[\begin{matrix}\bar w^\parallel\\ \bar w^\bot\end{matrix}\right]
-\]</span> 坐标<span class="math inline">\(\bar w\)</span>可以分解为平行于<span class="math inline">\(\mathcal T\)</span>和正交于<span class="math inline">\(\mathcal T\)</span>两部分。</p>
-<p>定义在施加变换前后的坐标系上的概率分布<span class="math inline">\(p_X(x)\)</span>和<span class="math inline">\(p_W(w)\)</span>是等价的，不过对于<span class="math inline">\(p_W(w)\)</span>，我们假设平行部分和正交部分是独立的，即： <span class="math display">\[
-p_X(x)=p_W(w)=p_W(w^\parallel,w^\bot)=p_{W^\parallel}(w^\parallel)p_{W^\bot}(w^\bot)
-\]</span> 这一假设的依据是随机噪声部分假设主要是往流形之外偏离的，即与<span class="math inline">\(\mathcal T\)</span>正交，所以<span class="math inline">\(W^\bot\)</span>主要是反映噪声的部分。而噪声与样本分布相独立的假设是合理的。于是，异常分数可以定义为： <span class="math display">\[
-p_X(\bar x)=p_{W^\parallel}(\bar w^\parallel)p_{W^\bot}(\bar w^\bot)=\begin{cases}\geq \gamma \Rightarrow \text{Inlier}\\&lt;\gamma\Rightarrow\text{Outlier}\end{cases}
-\]</span></p>
-<h2 id="computing-the-distribution-of-data-samples">Computing the Distribution of Data Samples</h2>
-<p>上面的异常分数需要计算<span class="math inline">\(p_{W^\parallel}(\bar w^\parallel)\)</span>和<span class="math inline">\(p_{W^\bot}(\bar w^\bot)\)</span>。给定测试样本<span class="math inline">\(\bar x\)</span>，投影到流形<span class="math inline">\(\bar x^\parallel=f(g(\bar x))\)</span>。<span class="math inline">\(\bar w^\parallel\)</span>可以重写为<span class="math inline">\(\bar w^\parallel=U^{\parallel^\top}\bar x=U^{\parallel^\top}(\bar x-\bar x^{\parallel})+U^{\parallel^\top}\bar x^\parallel=U^{\parallel^\top}\bar x^\parallel\)</span>，即我们假设<span class="math inline">\(U^{\parallel^\top}(\bar x-\bar x^\parallel)\approx 0\)</span>。于是有<span class="math inline">\(w^\parallel(z)=U^{\parallel^\top}f(\bar z)+SV^\top(z-\bar z)+O(\parallel z-\bar z\parallel^2)\)</span>。</p>
-<p>如果<span class="math inline">\(Z\)</span>为定义在流形上的概率分布，那么： <span class="math display">\[
-p_{W^\parallel}(w^\parallel)=|\text{det}S^{-1}|p_Z(z)
-\]</span> <span class="math inline">\(p_{W^\bot}(w^\bot)\)</span>由半径为<span class="math inline">\(\parallel w^\bot\parallel\)</span>的超球体<span class="math inline">\(\mathcal S^{m-n-1}\)</span>来进行估计： <span class="math display">\[
-p_{W^\bot}(w^\bot)\approx\frac{\Gamma(\frac{m-n}{2})}{2\pi^{\frac{m-n}{2}}\parallel w^\bot\parallel^{m-n}}p_{\parallel W^\bot\parallel}(\parallel w^\bot\parallel)
-\]</span></p>
-<p>其中<span class="math inline">\(\Gamma(\cdot)\)</span>代表Gamma函数。</p>
-<h2 id="manifold-learning-with-adversarial-autoencoders">Manifold Learning with Adversarial Autoencoders</h2>
-<p>为了学习映射<span class="math inline">\(f\)</span>和<span class="math inline">\(g\)</span>，我们使用了AAE框架，如下图所示：</p>
-<p><img src="https://i.loli.net/2020/06/25/sQhO3D4gKJqBPXv.png" style="zoom: 67%;" /></p>
-<p>除了常规的AAE外，我们还为<span class="math inline">\(x\)</span>添加了一个额外的判别器。</p>
-<h3 id="adversarial-losses">Adversarial Losses</h3>
-<p>对于隐变量<span class="math inline">\(z\)</span>，对抗损失函数为： <span class="math display">\[
-\mathcal L_{adv-d_z}(x,g,D_z)=E[\log(D_z(\mathcal N(0,1)))]+E[\log(1-D_z(g(x)))]
-\]</span> 对于样本<span class="math inline">\(x\)</span>，对抗损失函数为： <span class="math display">\[
-\mathcal L_{adv-d_x}(x,D_x,f)=E[\log(D_x(x))]+E[\log(1-D_x(f(\mathcal N(0,1))))]
-\]</span></p>
-<h3 id="autoencoder-loss">Autoencoder Loss</h3>
-<p><span class="math display">\[
-\mathcal L_\text{error}(x,g,f)=-E_z[\log(p(f(g(x))|x))]
-\]</span></p>
-<h3 id="full-objective">Full Objective</h3>
-<p><span class="math display">\[
-\mathcal L(x,g,D_z,D_x,f)=\mathcal L_{adv-d_z}+\mathcal L_{adv-d_x}+\lambda \mathcal L_\text{error}
-\]</span></p>
+<p><img src="https://i.loli.net/2020/07/16/waWAi7zI3QpOcf6.png"></p>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-06-06T04:03:27.000Z" title="2020-6-6 12:03:27 ├F10: PM┤">2020-06-06</time>发表</span><span class="level-item"><time dateTime="2020-06-25T08:14:29.250Z" title="2020-6-25 4:14:29 ├F10: PM┤">2020-06-25</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2020/06/06/Generative-Probabilistic-Novelty-Detection-with-Adversarial-Autoencoders/">Generative Probabilistic Novelty Detection with Adversarial Autoencoders</a></h1><div class="content"><h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>这篇文章介绍了一种基于概率分布的异常检测方法。其基本思想是假设正常样本服从定义在流形$M$上的分布，而对于任意一点$\bar x$，通过投影到流形$M$上$x^\parallel$，可以分解为平行于切空间的部分$x^\parallel$和正交与切空间的部分$x^\bot$。原始的坐标$\bar x$被转换到$x^\parallel$局部坐标系中，然后似然通过转换后的坐标系进行计算。</p>
+<h1 id="Methodology"><a href="#Methodology" class="headerlink" title="Methodology"></a>Methodology</h1><h2 id="Generative-Probabilistic-Novelty-Detection"><a href="#Generative-Probabilistic-Novelty-Detection" class="headerlink" title="Generative Probabilistic Novelty Detection"></a>Generative Probabilistic Novelty Detection</h2><p>我们假设训练数据$x_1,\cdots,x_N$，其中$x_i\in\mathbb{R}^m$，从一个分布采样的来，并带有随机噪声$\xi$：<br>$$<br>x_i=f(z_i)+\xi_i, \space\space\space i=1,\cdots,N<br>$$<br>其中$z_i\in\mathbb{R}^n$，$f:\Omega\mapsto\mathbb{R}^m$定义了一个$n$维带参流形$\mathcal{M}\equiv f(\Omega)$。注意这里噪声的加入使得样本的值域扩展到了整个实数空间。同时假设存在$g:\mathbb{R}^m\mapsto\mathbb{R}^n$，对任意$x\in\mathcal{M}$都有$f(g(x))=x$。$f$和$g$后面会通过神经网络实现。</p>
+<p>对于一个测试样本$\bar{x}\in\mathbb{R}^m$，我们可以得到其在$M$上的投影，这是通过逆变换$\bar z = g(\bar x)$得到对应$z$的然后再通过$\bar x^{\parallel}=f(\bar z)$得到。$f$在$\bar z$的一阶泰勒展开为：<br>$$<br>f(z)=f(\bar z)+J_f(\bar z)(z-\bar z)+O(\parallel z-\bar z\parallel ^2)<br>$$<br><img src="https://i.loli.net/2020/06/25/oi9xKMO3ID7jANJ.png" style="zoom:67%;" /></p>
+<p>其中$J_f(\bar z)$为$f$在点$\bar z$的雅各比矩阵。$\mathcal T=\text{span}(J_f(\bar z))$代表点$\bar z$处由$J_f(\bar z)$的$n$个独立向量组成的切空间。通过对$J_f(\bar z)$进行奇异值分解$J_f(\bar z)=U^\parallel SV^\top$。<br>$$<br>\bar w=U^\top\bar x=\left[\begin{matrix}U^{\parallel^\top}\bar x\ U^{\bot^\top}\bar x\end{matrix}\right]=\left[\begin{matrix}\bar w^\parallel\ \bar w^\bot\end{matrix}\right]<br>$$<br>坐标$\bar w$可以分解为平行于$\mathcal T$和正交于$\mathcal T$两部分。</p>
+<p>定义在施加变换前后的坐标系上的概率分布$p_X(x)$和$p_W(w)$是等价的，不过对于$p_W(w)$，我们假设平行部分和正交部分是独立的，即：<br>$$<br>p_X(x)=p_W(w)=p_W(w^\parallel,w^\bot)=p_{W^\parallel}(w^\parallel)p_{W^\bot}(w^\bot)<br>$$<br>这一假设的依据是随机噪声部分假设主要是往流形之外偏离的，即与$\mathcal T$正交，所以$W^\bot$主要是反映噪声的部分。而噪声与样本分布相独立的假设是合理的。于是，异常分数可以定义为：<br>$$<br>p_X(\bar x)=p_{W^\parallel}(\bar w^\parallel)p_{W^\bot}(\bar w^\bot)=\begin{cases}\geq \gamma \Rightarrow \text{Inlier}\&lt;\gamma\Rightarrow\text{Outlier}\end{cases}<br>$$</p>
+<h2 id="Computing-the-Distribution-of-Data-Samples"><a href="#Computing-the-Distribution-of-Data-Samples" class="headerlink" title="Computing the Distribution of Data Samples"></a>Computing the Distribution of Data Samples</h2><p>上面的异常分数需要计算$p_{W^\parallel}(\bar w^\parallel)$和$p_{W^\bot}(\bar w^\bot)$。给定测试样本$\bar x$，投影到流形$\bar x^\parallel=f(g(\bar x))$。$\bar w^\parallel$可以重写为$\bar w^\parallel=U^{\parallel^\top}\bar x=U^{\parallel^\top}(\bar x-\bar x^{\parallel})+U^{\parallel^\top}\bar x^\parallel=U^{\parallel^\top}\bar x^\parallel$，即我们假设$U^{\parallel^\top}(\bar x-\bar x^\parallel)\approx 0$。于是有$w^\parallel(z)=U^{\parallel^\top}f(\bar z)+SV^\top(z-\bar z)+O(\parallel z-\bar z\parallel^2)$。</p>
+<p>如果$Z$为定义在流形上的概率分布，那么：<br>$$<br>p_{W^\parallel}(w^\parallel)=|\text{det}S^{-1}|p_Z(z)<br>$$<br>$p_{W^\bot}(w^\bot)$由半径为$\parallel w^\bot\parallel$的超球体$\mathcal S^{m-n-1}$来进行估计：<br>$$<br>p_{W^\bot}(w^\bot)\approx\frac{\Gamma(\frac{m-n}{2})}{2\pi^{\frac{m-n}{2}}\parallel w^\bot\parallel^{m-n}}p_{\parallel W^\bot\parallel}(\parallel w^\bot\parallel)<br>$$</p>
+<p>其中$\Gamma(\cdot)$代表Gamma函数。</p>
+<h2 id="Manifold-Learning-with-Adversarial-Autoencoders"><a href="#Manifold-Learning-with-Adversarial-Autoencoders" class="headerlink" title="Manifold Learning with Adversarial Autoencoders"></a>Manifold Learning with Adversarial Autoencoders</h2><p>为了学习映射$f$和$g$，我们使用了AAE框架，如下图所示：</p>
+<img src="https://i.loli.net/2020/06/25/sQhO3D4gKJqBPXv.png" style="zoom: 67%;" />
+
+<p>除了常规的AAE外，我们还为$x$添加了一个额外的判别器。</p>
+<h3 id="Adversarial-Losses"><a href="#Adversarial-Losses" class="headerlink" title="Adversarial Losses"></a>Adversarial Losses</h3><p>对于隐变量$z$，对抗损失函数为：<br>$$<br>\mathcal L_{adv-d_z}(x,g,D_z)=E[\log(D_z(\mathcal N(0,1)))]+E[\log(1-D_z(g(x)))]<br>$$<br>对于样本$x$，对抗损失函数为：<br>$$<br>\mathcal L_{adv-d_x}(x,D_x,f)=E[\log(D_x(x))]+E[\log(1-D_x(f(\mathcal N(0,1))))]<br>$$</p>
+<h3 id="Autoencoder-Loss"><a href="#Autoencoder-Loss" class="headerlink" title="Autoencoder Loss"></a>Autoencoder Loss</h3><p>$$<br>\mathcal L_\text{error}(x,g,f)=-E_z[\log(p(f(g(x))|x))]<br>$$</p>
+<h3 id="Full-Objective"><a href="#Full-Objective" class="headerlink" title="Full Objective"></a>Full Objective</h3><p>$$<br>\mathcal L(x,g,D_z,D_x,f)=\mathcal L_{adv-d_z}+\mathcal L_{adv-d_x}+\lambda \mathcal L_\text{error}<br>$$</p>
 <p>下图为模型重构的例子：</p>
-<p><img src="https://i.loli.net/2020/06/25/i7ytlgjoIbYV6uF.png" style="zoom:67%;" /></p>
-<h1 id="experiments">Experiments</h1>
-<h2 id="datasets">Datasets</h2>
-<ul>
-<li><strong>MNIST. </strong> 手册数字识别数据集。</li>
-<li><strong>The Coil-100. </strong>包含7200张100个不同物体的不同角度的图片。</li>
-<li><strong>Fashion-MNIST. </strong> 手册数字识别数据集彩色版。</li>
-<li><strong>Others. </strong> 前三个数据集都是采用一个类作为inlier，而其他类作为outlier。在这一设置中inlier采样自数据集CIFAR-10(CIFAR-100)，而outlier采样自TinyImageNet、LSUN和iSUN。</li>
+<img src="https://i.loli.net/2020/06/25/i7ytlgjoIbYV6uF.png" style="zoom:67%;" />
+
+
+
+<h1 id="Experiments"><a href="#Experiments" class="headerlink" title="Experiments"></a>Experiments</h1><h2 id="Datasets"><a href="#Datasets" class="headerlink" title="Datasets"></a>Datasets</h2><ul>
+<li>**MNIST. ** 手册数字识别数据集。</li>
+<li>**The Coil-100. **包含7200张100个不同物体的不同角度的图片。</li>
+<li>**Fashion-MNIST. ** 手册数字识别数据集彩色版。</li>
+<li>**Others. ** 前三个数据集都是采用一个类作为inlier，而其他类作为outlier。在这一设置中inlier采样自数据集CIFAR-10(CIFAR-100)，而outlier采样自TinyImageNet、LSUN和iSUN。</li>
 </ul>
-<h2 id="results">Results</h2>
-<h3 id="mnist-dataset">MNIST Dataset</h3>
-<p><img src="https://i.loli.net/2020/06/25/5a71oidmK2ZGLyh.png" /></p>
-<p><img src="https://i.loli.net/2020/06/25/4lcGeHDrhbdKN5W.png" style="zoom:67%;" /></p>
-<h3 id="coil-100-dataset">Coil-100 Dataset</h3>
-<p><img src="https://i.loli.net/2020/06/25/ofVGBgR7a3WmyvU.png" style="zoom:67%;" /></p>
-<h3 id="fashion-mnist">Fashion-MNIST</h3>
-<p><img src="https://i.loli.net/2020/06/25/avURoBw6ny8SIEq.png" /></p>
-<h3 id="cifar-10-cifar-100">CIFAR-10 (CIFAR-100)</h3>
-<p><img src="https://i.loli.net/2020/06/25/piteKy1m9kvQ6EU.png" style="zoom: 67%;" /></p>
-<h3 id="ablation">Ablation</h3>
-<p><img src="https://i.loli.net/2020/06/25/xgni9wBtYkheGZq.png" /></p>
-<p><img src="https://i.loli.net/2020/06/25/idhqkCbAKvzMt68.png" style="zoom:67%;" /></p>
-</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-06-02T15:01:34.000Z" title="2020-6-2 11:01:34 ├F10: PM┤">2020-06-02</time>发表</span><span class="level-item"><time dateTime="2020-06-26T12:55:43.589Z" title="2020-6-26 8:55:43 ├F10: PM┤">2020-06-26</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2020/06/02/Classification-based-Anomaly-Detection-for-General-Data/">Classification-based Anomaly Detection for General Data</a></h1><div class="content"><h1 id="introduction">Introduction</h1>
-<p>本文主要是对<a target="_blank" rel="noopener" href="http://qfxiao.me/2020/06/01/Deep-Anomaly-Detection-Using-Geometric-Transformations/">NIPS18这篇异常检测文章</a>的改进，首先是利用了标签信息来提升算法的表现，其次是将算法扩展到了非图像数据。作者对现有的异常检测算法进行了回顾：</p>
+<h2 id="Results"><a href="#Results" class="headerlink" title="Results"></a>Results</h2><h3 id="MNIST-Dataset"><a href="#MNIST-Dataset" class="headerlink" title="MNIST Dataset"></a>MNIST Dataset</h3><p><img src="https://i.loli.net/2020/06/25/5a71oidmK2ZGLyh.png"></p>
+<img src="https://i.loli.net/2020/06/25/4lcGeHDrhbdKN5W.png" style="zoom:67%;" />
+
+<h3 id="Coil-100-Dataset"><a href="#Coil-100-Dataset" class="headerlink" title="Coil-100 Dataset"></a>Coil-100 Dataset</h3><img src="https://i.loli.net/2020/06/25/ofVGBgR7a3WmyvU.png" style="zoom:67%;" />
+
+
+
+<h3 id="Fashion-MNIST"><a href="#Fashion-MNIST" class="headerlink" title="Fashion-MNIST"></a>Fashion-MNIST</h3><p><img src="https://i.loli.net/2020/06/25/avURoBw6ny8SIEq.png"></p>
+<h3 id="CIFAR-10-CIFAR-100"><a href="#CIFAR-10-CIFAR-100" class="headerlink" title="CIFAR-10 (CIFAR-100)"></a>CIFAR-10 (CIFAR-100)</h3><img src="https://i.loli.net/2020/06/25/piteKy1m9kvQ6EU.png" style="zoom: 67%;" />
+
+
+
+<h3 id="Ablation"><a href="#Ablation" class="headerlink" title="Ablation"></a>Ablation</h3><p><img src="https://i.loli.net/2020/06/25/xgni9wBtYkheGZq.png"></p>
+<img src="https://i.loli.net/2020/06/25/idhqkCbAKvzMt68.png" style="zoom:67%;" />
+
+
+
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-06-02T15:01:34.000Z" title="2020-6-2 11:01:34 ├F10: PM┤">2020-06-02</time>发表</span><span class="level-item"><time dateTime="2020-06-26T12:55:43.589Z" title="2020-6-26 8:55:43 ├F10: PM┤">2020-06-26</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2020/06/02/Classification-based-Anomaly-Detection-for-General-Data/">Classification-based Anomaly Detection for General Data</a></h1><div class="content"><h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>本文主要是对<a target="_blank" rel="noopener" href="http://qfxiao.me/2020/06/01/Deep-Anomaly-Detection-Using-Geometric-Transformations/">NIPS18这篇异常检测文章</a>的改进，首先是利用了标签信息来提升算法的表现，其次是将算法扩展到了非图像数据。作者对现有的异常检测算法进行了回顾：</p>
 <ul>
-<li><strong>Reconstruction Methods： </strong>这一部分方法假设异常样本和正常样本能够通过重构任务来进行区分。通过在正常样本上学习重构任务，之后对于正常样本，模型能够很好地进行重构，而异常样本则会有较高的重构误差。</li>
-<li><strong>Distributional Methods： </strong>这一部分方法将异常检测看作是密度估计问题。通过对正常样本的分布进行估计，异常样本在该正常分布下的似然将会很低。</li>
-<li><strong>Classification-based Methods： </strong>这一部分方法主要是指的单分类方法和通过几何变换构造分类任务的方法。本文使用的就是这类方法。</li>
+<li>**Reconstruction Methods： **这一部分方法假设异常样本和正常样本能够通过重构任务来进行区分。通过在正常样本上学习重构任务，之后对于正常样本，模型能够很好地进行重构，而异常样本则会有较高的重构误差。</li>
+<li>**Distributional Methods： **这一部分方法将异常检测看作是密度估计问题。通过对正常样本的分布进行估计，异常样本在该正常分布下的似然将会很低。</li>
+<li>**Classification-based Methods： **这一部分方法主要是指的单分类方法和通过几何变换构造分类任务的方法。本文使用的就是这类方法。</li>
 </ul>
-<h1 id="proposed-method">Proposed Method</h1>
-<h2 id="classification-based-anomaly-detection">Classification-based Anomaly Detection</h2>
-<p>假设所有数据位于空间<span class="math inline">\(R^L\)</span>内，而正常数据位于子空间<span class="math inline">\(X\subset R^L\)</span>内。我们假设所有的异常样本位于<span class="math inline">\(X\)</span>之外。为了检测异常，我们希望学习一个分类器<span class="math inline">\(C\)</span>使得对于所有的<span class="math inline">\(x\in X\)</span>有<span class="math inline">\(C(x)=1\)</span>，而对所有的<span class="math inline">\(x\in R^L\backslash X\)</span>有<span class="math inline">\(C(x)=0\)</span>。</p>
-<p>单分类方法的思想是直接学习<span class="math inline">\(P(x\in X)\)</span>，代表的方法有One-Class SVM，DSVDD等。传统的OC-SVM直接在原始空间或者核空间学习分类器。比较新的方法，如Deep-SVDD则是先将样本转换到一个特征空间，然后在这个特征空间上学习使得半径<span class="math inline">\(R\)</span>最小的超球体（球心<span class="math inline">\(c_0\)</span>），来覆盖住所有正常样本。异常的判定则通过计算<span class="math inline">\(\parallel f(x)-c_0\parallel^2-R^2\)</span>来实现。不过学习一个好的样本到特征空间的变换并不是一件容易的事情，比如说<span class="math inline">\(f(x)=0, \forall x \in X\)</span>就是一个使得超球体最小的解。所以需要很多trick来避免诸如此类的情况。</p>
-<p><em>Geometric-transformation classification</em> (GEOM) 则将数据空间<span class="math inline">\(X\)</span>通过<span class="math inline">\(M\)</span>个几何变换转换到一系列子空间<span class="math inline">\(X_1,\cdots,X_M\)</span>。之后训练一个分类器来预测样本<span class="math inline">\(T(x,m)\)</span>对应的几何变换的种类<span class="math inline">\(m\)</span>。转换后的正常图片空间记为<span class="math inline">\(\cup_m X_m\)</span>，所以该方法尝试估计以下条件概率： <span class="math display">\[
-P(m^\prime|T(x,m))=\frac{P(T(x,m)\in X_{m^\prime})P(m^\prime)}{\sum_{\bar{m}}P(T(x,m)\in X_{\bar{m}})P(\tilde{m})}-\frac{P(T(x,m)\in X_{m^\prime})}{\sum_{\bar{m}}P(T(x,m)\in X_{\bar{m}})}
-\]</span></p>
-<p>对于异常的样本<span class="math inline">\(x\in R^L\backslash X\)</span>，在经过几何变换之后，都不会位于正确的子空间中，即<span class="math inline">\(T(x,m)\in R^L\backslash X_m\)</span>。之后，使用<span class="math inline">\(P(m|T(x,m))\)</span>来判定异常。</p>
-<p>作者认为，这种方法的问题是分类器<span class="math inline">\(P(m^\prime|T(x,m))\)</span>只在正常数据上训练，而对于异常样本的异常分数会出现方差很大的问题。</p>
+<h1 id="Proposed-Method"><a href="#Proposed-Method" class="headerlink" title="Proposed Method"></a>Proposed Method</h1><h2 id="Classification-based-Anomaly-Detection"><a href="#Classification-based-Anomaly-Detection" class="headerlink" title="Classification-based Anomaly Detection"></a>Classification-based Anomaly Detection</h2><p>假设所有数据位于空间$R^L$内，而正常数据位于子空间$X\subset R^L$内。我们假设所有的异常样本位于$X$之外。为了检测异常，我们希望学习一个分类器$C$使得对于所有的$x\in X$有$C(x)=1$，而对所有的$x\in R^L\backslash X$有$C(x)=0$。</p>
+<p>单分类方法的思想是直接学习$P(x\in X)$，代表的方法有One-Class SVM，DSVDD等。传统的OC-SVM直接在原始空间或者核空间学习分类器。比较新的方法，如Deep-SVDD则是先将样本转换到一个特征空间，然后在这个特征空间上学习使得半径$R$最小的超球体（球心$c_0$），来覆盖住所有正常样本。异常的判定则通过计算$\parallel f(x)-c_0\parallel^2-R^2$来实现。不过学习一个好的样本到特征空间的变换并不是一件容易的事情，比如说$f(x)=0, \forall x \in X$就是一个使得超球体最小的解。所以需要很多trick来避免诸如此类的情况。</p>
+<p><em>Geometric-transformation classification</em> (GEOM) 则将数据空间$X$通过$M$个几何变换转换到一系列子空间$X_1,\cdots,X_M$。之后训练一个分类器来预测样本$T(x,m)$对应的几何变换的种类$m$。转换后的正常图片空间记为$\cup_m X_m$，所以该方法尝试估计以下条件概率：<br>$$<br>P(m^\prime|T(x,m))=\frac{P(T(x,m)\in X_{m^\prime})P(m^\prime)}{\sum_{\bar{m}}P(T(x,m)\in X_{\bar{m}})P(\tilde{m})}-\frac{P(T(x,m)\in X_{m^\prime})}{\sum_{\bar{m}}P(T(x,m)\in X_{\bar{m}})}<br>$$</p>
+<p>对于异常的样本$x\in R^L\backslash X$，在经过几何变换之后，都不会位于正确的子空间中，即$T(x,m)\in R^L\backslash X_m$。之后，使用$P(m|T(x,m))$来判定异常。</p>
+<p>作者认为，这种方法的问题是分类器$P(m^\prime|T(x,m))$只在正常数据上训练，而对于异常样本的异常分数会出现方差很大的问题。</p>
 <p>一种解决方式是加入异常样本进行训练，但是作者认为在有的任务中标签很难获取，于是作者使用了另外一种方法来解决这个问题。</p>
-<h2 id="distance-based-multiple-transformation-classification">Distance-based Multiple Transformation Classification</h2>
-<p>和GEOM一样，先对每个样本进行<span class="math inline">\(M\)</span>个几何变换，然后学习一个特征提取器<span class="math inline">\(f(x)\)</span>，将<span class="math inline">\(X_m\)</span>映射到特征空间。之后和OC-SVM类似，假设特征<span class="math inline">\(\{f(x)|x\in X_m\}\)</span>为球心为<span class="math inline">\(c_m=\frac{1}{N}\sum_{x\in X} f(T(x,m))\)</span>的超球体。样本属于某一类<span class="math inline">\(m^\prime\)</span>的概率由下式给出：</p>
-<p><span class="math display">\[
-P(m^\prime|T(x,m))=\frac{e^{-\parallel f(T(x,m))-c_{m^\prime}\parallel^2}}{\sum_{\bar m}e^{-\parallel f(T(x,m))-c_{\bar m}\parallel^2}}
-\]</span></p>
+<h2 id="Distance-based-Multiple-Transformation-Classification"><a href="#Distance-based-Multiple-Transformation-Classification" class="headerlink" title="Distance-based Multiple Transformation Classification"></a>Distance-based Multiple Transformation Classification</h2><p>和GEOM一样，先对每个样本进行$M$个几何变换，然后学习一个特征提取器$f(x)$，将$X_m$映射到特征空间。之后和OC-SVM类似，假设特征${f(x)|x\in X_m}$为球心为$c_m=\frac{1}{N}\sum_{x\in X} f(T(x,m))$的超球体。样本属于某一类$m^\prime$的概率由下式给出：</p>
+<p>$$<br>P(m^\prime|T(x,m))=\frac{e^{-\parallel f(T(x,m))-c_{m^\prime}\parallel^2}}{\sum_{\bar m}e^{-\parallel f(T(x,m))-c_{\bar m}\parallel^2}}<br>$$</p>
 <p>目标函数采用的是Triplet Loss：</p>
-<p><span class="math display">\[
-L=\sum_i\max(\parallel f(T(x_i,m))-c_m\parallel^2+s-\min_{m^\prime\neq m}\parallel f(T(x_i,m))-c_{m^\prime}\parallel^2,0)
-\]</span></p>
-<p><span class="math inline">\(\parallel f(T(x_i,m))-c_m\parallel^2\)</span>相当于最小化了类内距离，<span class="math inline">\(\min_{m^\prime\neq m}\parallel f(T(x_i,m))-c_{m^\prime}\parallel^2\)</span>最大化了每个类对应的集簇间距离。在检测阶段，为了避免一些数值问题，作者做了一些平滑操作：</p>
-<p><span class="math display">\[
-\tilde P(m^\prime|T(x,m))=\frac{e^{-\parallel f(T(x,m))-c_{m^\prime}\parallel^2+\epsilon}}{\sum_{\tilde m}e^{-\parallel f(T(x,m))-c_{\tilde m}\parallel^2+M\cdot\epsilon}}
-\]</span></p>
+<p>$$<br>L=\sum_i\max(\parallel f(T(x_i,m))-c_m\parallel^2+s-\min_{m^\prime\neq m}\parallel f(T(x_i,m))-c_{m^\prime}\parallel^2,0)<br>$$</p>
+<p>$\parallel f(T(x_i,m))-c_m\parallel^2$相当于最小化了类内距离，$\min_{m^\prime\neq m}\parallel f(T(x_i,m))-c_{m^\prime}\parallel^2$最大化了每个类对应的集簇间距离。在检测阶段，为了避免一些数值问题，作者做了一些平滑操作：</p>
+<p>$$<br>\tilde P(m^\prime|T(x,m))=\frac{e^{-\parallel f(T(x,m))-c_{m^\prime}\parallel^2+\epsilon}}{\sum_{\tilde m}e^{-\parallel f(T(x,m))-c_{\tilde m}\parallel^2+M\cdot\epsilon}}<br>$$</p>
 <p>最后的评判分数由下式给出：</p>
-<p><span class="math display">\[
-Score(x)=-\log P(x\in X)=-\sum_m\log \tilde{P}(T(x,m)\in X_m)=-\sum_m\log\tilde{P}(m|T(x,m))
-\]</span></p>
+<p>$$<br>Score(x)=-\log P(x\in X)=-\sum_m\log \tilde{P}(T(x,m)\in X_m)=-\sum_m\log\tilde{P}(m|T(x,m))<br>$$</p>
 <p>算法流程图如下：</p>
-<p><img src="https://i.loli.net/2020/06/24/r48h1RJxcXF6YDM.png" style="zoom:67%;" /></p>
-<h2 id="parameterizing-the-set-of-transformations">Parameterizing the Set of Transformations</h2>
-<p>在GEOM中，由于使用的几何变换都是针对图像的，所以对于其他类型的数据并不适用。本文中作者对非图像数据设计了以下变换：</p>
-<p><span class="math display">\[
-T(x,m)=W_mx+b_m
-\]</span></p>
-<p>不同的参数<span class="math inline">\(W_m\)</span>和<span class="math inline">\(b_m\)</span>即为不同的几何变换，可以考虑采用随机采样的方式。</p>
-<h1 id="experiments">Experiments</h1>
-<h2 id="image-experiments">Image Experiments</h2>
-<p>对于图像数据的异常检测实验，作者采用了CIFAR10、FasionMNIST这两个数据集，实验结果如下：</p>
-<p><img src="https://i.loli.net/2020/06/24/j4Y29tB6k1Aipgo.png" style="zoom:67%;" /></p>
-<p><img src="https://i.loli.net/2020/06/24/D3opwrLnSGmcsyM.png" style="zoom:67%;" /></p>
-<h2 id="tabular-data-experiments">Tabular Data Experiments</h2>
-<p>对于非图像数据，作者采用了几个小的数据集：Arrhythmia、Thyroid、KDD和KDDRev。采用的Baseline包括OC-SVM、E2E-AE、LOF、DAGMM和FB-AE (Feature Bagging Autoencoder)。对于几何变换的参数，采样自标准正态分布。结果如下：</p>
-<p><img src="https://i.loli.net/2020/06/24/e6PfIDOVwlzrSWi.png" style="zoom:67%;" /></p>
-<h1 id="remark">Remark</h1>
-<p>结合<a target="_blank" rel="noopener" href="https://openreview.net/forum?id=H1lK_lBtvS">OpenReview</a>上的一些讨论，这里提出一些问题和总结：</p>
+<img src="https://i.loli.net/2020/06/24/r48h1RJxcXF6YDM.png" style="zoom:67%;" />
+
+<h2 id="Parameterizing-the-Set-of-Transformations"><a href="#Parameterizing-the-Set-of-Transformations" class="headerlink" title="Parameterizing the Set of Transformations"></a>Parameterizing the Set of Transformations</h2><p>在GEOM中，由于使用的几何变换都是针对图像的，所以对于其他类型的数据并不适用。本文中作者对非图像数据设计了以下变换：</p>
+<p>$$<br>T(x,m)=W_mx+b_m<br>$$</p>
+<p>不同的参数$W_m$和$b_m$即为不同的几何变换，可以考虑采用随机采样的方式。</p>
+<h1 id="Experiments"><a href="#Experiments" class="headerlink" title="Experiments"></a>Experiments</h1><h2 id="Image-Experiments"><a href="#Image-Experiments" class="headerlink" title="Image Experiments"></a>Image Experiments</h2><p>对于图像数据的异常检测实验，作者采用了CIFAR10、FasionMNIST这两个数据集，实验结果如下：</p>
+<img src="https://i.loli.net/2020/06/24/j4Y29tB6k1Aipgo.png" style="zoom:67%;" />
+
+<img src="https://i.loli.net/2020/06/24/D3opwrLnSGmcsyM.png" style="zoom:67%;" />
+
+<h2 id="Tabular-Data-Experiments"><a href="#Tabular-Data-Experiments" class="headerlink" title="Tabular Data Experiments"></a>Tabular Data Experiments</h2><p>对于非图像数据，作者采用了几个小的数据集：Arrhythmia、Thyroid、KDD和KDDRev。采用的Baseline包括OC-SVM、E2E-AE、LOF、DAGMM和FB-AE (Feature Bagging Autoencoder)。对于几何变换的参数，采样自标准正态分布。结果如下：</p>
+<img src="https://i.loli.net/2020/06/24/e6PfIDOVwlzrSWi.png" style="zoom:67%;" />
+
+<h1 id="Remark"><a href="#Remark" class="headerlink" title="Remark"></a>Remark</h1><p>结合<a target="_blank" rel="noopener" href="https://openreview.net/forum?id=H1lK_lBtvS">OpenReview</a>上的一些讨论，这里提出一些问题和总结：</p>
 <ul>
 <li>KDD数据集太简单了，正常、异常样本能够很容易被分开；</li>
 <li>对于图像数据作者只使用了CIFAR10和FashionMNIST这两个比较小的数据集，而在GEOM中还使用了CIFAR100和CatsVsDogs。并且GEOM原文中提到数据集（指图像大小）越大，GEOM的优势就越明显，所以在本文的实验中只使用这两个数据集说服力略显不够；</li>
 <li>关于评测标准的问题，作者在图像数据中用的是AUROC，而非图像数据用的是F1 score。像AUPR、AUROC这种评测标准往往更加全面，而F1 score依赖于阈值的选取。如果是遍历阈值找到最好的那个F1 score，则无法全面考察模型的鲁棒性，模型有可能只是在特定的阈值下表现很好，而阈值稍微偏差一下性能可能就会大幅下降。我看到的大多数异常检测文章都是使用AUROC或者F1加上AUROC作为评测指标；</li>
 <li>文中在第二节“CLASSIFICATION-BASED ANOMALY DETECTION”的末尾两段关于GEOM方法的缺点说的很模糊。异常分数的方差大到底指的是什么；</li>
-<li>关于作者提出的变换<span class="math inline">\(T(x,m)=W_mx+b_m\)</span>并没有用到图像数据的实验上，而且在实验中<span class="math inline">\(b_m\)</span>这个参数实际上是被忽略掉了的，<span class="math inline">\(b_m\)</span>的作用究竟如何不得而知。而且GEOM中的几何变换的Motivation在原文中是做了实验充分讨论了的，GEOM的作者认为这些几何变换保留了图像的高阶语义信息。而本文中的变换中的参数只是随机采样而来，并不存在说保留原始数据中的结构信息。如果忽略掉这一层变换，那就类似于加了神经网络提取特征的OC-SVM。</li>
+<li>关于作者提出的变换$T(x,m)=W_mx+b_m$并没有用到图像数据的实验上，而且在实验中$b_m$这个参数实际上是被忽略掉了的，$b_m$的作用究竟如何不得而知。而且GEOM中的几何变换的Motivation在原文中是做了实验充分讨论了的，GEOM的作者认为这些几何变换保留了图像的高阶语义信息。而本文中的变换中的参数只是随机采样而来，并不存在说保留原始数据中的结构信息。如果忽略掉这一层变换，那就类似于加了神经网络提取特征的OC-SVM。</li>
 </ul>
-</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-06-01T15:17:03.000Z" title="2020-6-1 11:17:03 ├F10: PM┤">2020-06-01</time>发表</span><span class="level-item"><time dateTime="2020-06-26T16:25:25.079Z" title="2020-6-27 12:25:25 ├F10: AM┤">2020-06-27</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2020/06/01/Deep-Anomaly-Detection-Using-Geometric-Transformations/">Deep Anomaly Detection Using Geometric Transformations</a></h1><div class="content"><h1 id="introduction">Introduction</h1>
-<p>本文考虑图像数据的异常检测问题。与基于重构的方法不同，本文提出的方法通过对正常图片施加不同的几何变换之后，训练一个多分类器将无监督异常检测问题转化为一个有监督问题。本方法背后的直觉是在训练能够分辨不同变换后的图片之后，分类器一定学得了一些显著的几何特征，这些几何特征是正常类别独有的。</p>
-<h1 id="proposed-method">Proposed Method</h1>
-<h2 id="problem-statement">Problem Statement</h2>
-<p>本文考虑针对图像的异常检测。记<span class="math inline">\(\mathcal X\)</span>为所有自然图像的空间，<span class="math inline">\(X\subseteq\mathcal X\)</span>为正常图像集合。给定数据集<span class="math inline">\(S\subseteq X\)</span>，异常检测的目的是学习一个分类器<span class="math inline">\(h_S(x):\mathcal X\rightarrow\{0,1\}\)</span>，其中<span class="math inline">\(h_S(x)=1\Leftrightarrow x\in X\)</span>。</p>
-<p>为了兼顾查准率和查全率，常用的设置是学习一个打分函数<span class="math inline">\(n_S(x):\mathcal X\rightarrow\mathbb R\)</span>，分数越高代表样本属于<span class="math inline">\(X\)</span>的概率越大。之后，通过设定阈值，便可以构建异常分类器： <span class="math display">\[
-\begin{align}
-h_S^\lambda(x)=
-\begin{cases}
-1 &amp; n_S(x)\leq\lambda\\
-0 &amp; n_S(x)&lt;\lambda
-\end{cases}
-\end{align}
-\]</span></p>
-<h2 id="discriminative-learning-of-an-anomaly-scoring-function-using-geometric-transformations">Discriminative Learning of an Anomaly Scoring Function Using Geometric Transformations</h2>
-<p>有初始数据集<span class="math inline">\(S\)</span>，几何变换集合<span class="math inline">\(\mathcal T\)</span>，通过对<span class="math inline">\(S\)</span>中每个样本施加这<span class="math inline">\(|\mathcal T|\)</span>个几何变换得到新数据集记为<span class="math inline">\(S_\mathcal{T}\)</span>，且<span class="math inline">\(S_\mathcal{T}\)</span>中每个样本的标签为变换的序号。之后，在<span class="math inline">\(S_\mathcal{T}\)</span>上训练一个<span class="math inline">\(|\mathcal T|\)</span>分类器。在测试阶段，对测试样本同样施加<span class="math inline">\(|\mathcal T|\)</span>个几何变换，分类器会给出经过<span class="math inline">\(\mathrm{softmax}\)</span>的输出向量，最终的异常分数由经过输出的向量构造的分布对数似然得来。</p>
-<h3 id="creating-and-learning-the-self-labeled-dataset">Creating and Learning the Self-Labeled Dataset</h3>
-<p>设<span class="math inline">\(\mathcal T=\{T_0,T_1,\cdots,T_{k-1}\}\)</span>为几何变换集合，<span class="math inline">\(1\leq i\leq k-1,\space T_i:\mathcal X\rightarrow \mathcal X\)</span>，且<span class="math inline">\(T_0(x)=x\)</span>。<span class="math inline">\(S_\mathcal{T}\)</span>定义为：</p>
-<p><span class="math display">\[
-S_\mathcal T=\{(T_j(x),j):x\in S,T_j\in\mathcal T\}
-\]</span> 对于每个<span class="math inline">\(x\in S\)</span>，<span class="math inline">\(j\)</span>为<span class="math inline">\(T_j(x)\)</span>的标签。我们直接学习一个<span class="math inline">\(K\)</span>类分类器<span class="math inline">\(f_\theta\)</span>，来预测输入样本对应的几何变换种类，这相当于是一个图像分类问题。</p>
-<p><img src="https://i.loli.net/2020/06/24/XBFKcPio64u3U1C.png" style="zoom:67%;" /></p>
-<h3 id="dirichlet-normality-score">Dirichlet Normality Score</h3>
-<p>接下来要做的是如何定义异常分数，记为<span class="math inline">\(n_S(x)\)</span>，这是文中的一个重要的部分。设几何变换集合<span class="math inline">\(\mathcal T=\{T_0,T_1,\cdots,T_{k-1}\}\)</span>，且<span class="math inline">\(k\)</span>分类器<span class="math inline">\(f_\theta\)</span>在<span class="math inline">\(S_\mathcal{T}\)</span>上完成训练。对于任意一个样本<span class="math inline">\(x\)</span>，令<span class="math inline">\(\mathbf y(x)=\text{softmax}(f_{\theta}(x))\)</span>，即分类器<span class="math inline">\(f_\theta\)</span>输出的<span class="math inline">\(\text{softmax}\)</span>之后的向量。异常分数<span class="math inline">\(n_S(x)\)</span>定义为：</p>
-<p><span class="math display">\[
-n_S(x)=\sum\limits_{i=0}^{k-1}\log p(\mathbf y(T_i(x))|T_i)
-\]</span></p>
-<p>该异常分数定义为每个类别上，在几何变换<span class="math inline">\(T_i\)</span>的条件下，输出的<span class="math inline">\(\mathbf y\)</span>的对数似然之和。在文中，作者假设<span class="math inline">\(\mathbf y(T_i(x)|T_i\)</span>服从迪利克雷分布：<span class="math inline">\(\mathbf y(T_i(x))|T_i\sim\text{Dir}(\boldsymbol \alpha_i)\)</span>，其中<span class="math inline">\(\boldsymbol \alpha_i\in\mathbb R^k_+\)</span>，<span class="math inline">\(x\sim p_X(x)\)</span>，<span class="math inline">\(i\sim\text{Uni}(0,k-1)\)</span>，而<span class="math inline">\(p_X(x)\)</span>代表正常样本的真实数据分布。于是：</p>
-<p><span class="math display">\[
-n_S(x)=\sum_{i=0}^{k-1}\left[\log\Gamma(\sum_{j=0}^{k-1}[\tilde{\boldsymbol\alpha}_i]_j)-\sum_{j=0}^{k-1}\log\Gamma([\tilde{\boldsymbol\alpha}_i]_j)+\sum_{j=0}^{k-1}([\tilde{\boldsymbol\alpha}_i]_j-1)\log\mathbf y(T_i(x))_j\right]
-\]</span></p>
-<p>因为<span class="math inline">\(\tilde{\alpha}_i\)</span>相对于<span class="math inline">\(x\)</span>来说是常数，所以可以直接忽略，于是式子简化为： <span class="math display">\[
-n_S(x)=\sum_{i=0}^{k-1}\sum_{j=0}^{k-1}([\tilde{\boldsymbol\alpha}_i]_j-1)\log\mathbf y(T_i(x))_j=\sum_{i=0}^{k-1}(\tilde{\boldsymbol \alpha}_i-1)\cdot\log\mathbf y(T_i(x))
-\]</span></p>
-<p>注意这里的每个<span class="math inline">\(\boldsymbol \alpha_i\)</span>都是一个向量，即对于每个变换<span class="math inline">\(i\)</span>，都对应一个迪利克雷分布，其参数为<span class="math inline">\(\boldsymbol\alpha_i\)</span>；在对训练集进行第<span class="math inline">\(i\)</span>个几何变换之后，我们得到了<span class="math inline">\(\{T_i(x)\}\)</span>，然后分类器<span class="math inline">\(f_\theta(\cdot)\)</span>的输出<span class="math inline">\(\mathbf y(T_i(x))\)</span>相当于迪利克雷分布的观测值，我们需要根据观测值来估计参数<span class="math inline">\(\boldsymbol \alpha_i\)</span>，然后根据这个参数来计算<span class="math inline">\(n_S(x)\)</span>。对于<span class="math inline">\(\boldsymbol\alpha_i\)</span>，可以知道其第<span class="math inline">\(i\)</span>个分量应该是相对比较大的，下面是运行官方代码得到的<span class="math inline">\(\boldsymbol\alpha_i\)</span>的结果（<span class="math inline">\(i=69\)</span>，<span class="math inline">\(i\)</span>从<span class="math inline">\(0\)</span>开始，总共为<span class="math inline">\(72\)</span>维），可以看到第<span class="math inline">\(69\)</span>个分量是最大的。</p>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-06-01T15:17:03.000Z" title="2020-6-1 11:17:03 ├F10: PM┤">2020-06-01</time>发表</span><span class="level-item"><time dateTime="2020-06-26T16:25:25.079Z" title="2020-6-27 12:25:25 ├F10: AM┤">2020-06-27</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2020/06/01/Deep-Anomaly-Detection-Using-Geometric-Transformations/">Deep Anomaly Detection Using Geometric Transformations</a></h1><div class="content"><h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>本文考虑图像数据的异常检测问题。与基于重构的方法不同，本文提出的方法通过对正常图片施加不同的几何变换之后，训练一个多分类器将无监督异常检测问题转化为一个有监督问题。本方法背后的直觉是在训练能够分辨不同变换后的图片之后，分类器一定学得了一些显著的几何特征，这些几何特征是正常类别独有的。</p>
+<h1 id="Proposed-Method"><a href="#Proposed-Method" class="headerlink" title="Proposed Method"></a>Proposed Method</h1><h2 id="Problem-Statement"><a href="#Problem-Statement" class="headerlink" title="Problem Statement"></a>Problem Statement</h2><p>本文考虑针对图像的异常检测。记$\mathcal X$为所有自然图像的空间，$X\subseteq\mathcal X$为正常图像集合。给定数据集$S\subseteq X$，异常检测的目的是学习一个分类器$h_S(x):\mathcal X\rightarrow{0,1}$，其中$h_S(x)=1\Leftrightarrow x\in X$。</p>
+<p>为了兼顾查准率和查全率，常用的设置是学习一个打分函数$n_S(x):\mathcal X\rightarrow\mathbb R$，分数越高代表样本属于$X$的概率越大。之后，通过设定阈值，便可以构建异常分类器：<br>$$<br>\begin{align}<br>h_S^\lambda(x)=<br>\begin{cases}<br>1 &amp; n_S(x)\leq\lambda\<br>0 &amp; n_S(x)&lt;\lambda<br>\end{cases}<br>\end{align}<br>$$</p>
+<h2 id="Discriminative-Learning-of-an-Anomaly-Scoring-Function-Using-Geometric-Transformations"><a href="#Discriminative-Learning-of-an-Anomaly-Scoring-Function-Using-Geometric-Transformations" class="headerlink" title="Discriminative Learning of an Anomaly Scoring Function Using Geometric Transformations"></a>Discriminative Learning of an Anomaly Scoring Function Using Geometric Transformations</h2><p>有初始数据集$S$，几何变换集合$\mathcal T$，通过对$S$中每个样本施加这$|\mathcal T|$个几何变换得到新数据集记为$S_\mathcal{T}$，且$S_\mathcal{T}$中每个样本的标签为变换的序号。之后，在$S_\mathcal{T}$上训练一个$|\mathcal T|$分类器。在测试阶段，对测试样本同样施加$|\mathcal T|$个几何变换，分类器会给出经过$\mathrm{softmax}$的输出向量，最终的异常分数由经过输出的向量构造的分布对数似然得来。</p>
+<h3 id="Creating-and-Learning-the-Self-Labeled-Dataset"><a href="#Creating-and-Learning-the-Self-Labeled-Dataset" class="headerlink" title="Creating and Learning the Self-Labeled Dataset"></a>Creating and Learning the Self-Labeled Dataset</h3><p>设$\mathcal T={T_0,T_1,\cdots,T_{k-1}}$为几何变换集合，$1\leq i\leq k-1,\space T_i:\mathcal X\rightarrow \mathcal X$，且$T_0(x)=x$。$S_\mathcal{T}$定义为：</p>
+<p>$$<br>S_\mathcal T={(T_j(x),j):x\in S,T_j\in\mathcal T}<br>$$<br>对于每个$x\in S$，$j$为$T_j(x)$的标签。我们直接学习一个$K$类分类器$f_\theta$，来预测输入样本对应的几何变换种类，这相当于是一个图像分类问题。</p>
+<img src="https://i.loli.net/2020/06/24/XBFKcPio64u3U1C.png" style="zoom:67%;" />
+
+<h3 id="Dirichlet-Normality-Score"><a href="#Dirichlet-Normality-Score" class="headerlink" title="Dirichlet Normality Score"></a>Dirichlet Normality Score</h3><p>接下来要做的是如何定义异常分数，记为$n_S(x)$，这是文中的一个重要的部分。设几何变换集合$\mathcal T={T_0,T_1,\cdots,T_{k-1}}$，且$k$分类器$f_\theta$在$S_\mathcal{T}$上完成训练。对于任意一个样本$x$，令$\mathbf y(x)=\text{softmax}(f_{\theta}(x))$，即分类器$f_\theta$输出的$\text{softmax}$之后的向量。异常分数$n_S(x)$定义为：</p>
+<p>$$<br>n_S(x)=\sum\limits_{i=0}^{k-1}\log p(\mathbf y(T_i(x))|T_i)<br>$$</p>
+<p>该异常分数定义为每个类别上，在几何变换$T_i$的条件下，输出的$\mathbf y$的对数似然之和。在文中，作者假设$\mathbf y(T_i(x)|T_i$服从迪利克雷分布：$\mathbf y(T_i(x))|T_i\sim\text{Dir}(\boldsymbol \alpha_i)$，其中$\boldsymbol \alpha_i\in\mathbb R^k_+$，$x\sim p_X(x)$，$i\sim\text{Uni}(0,k-1)$，而$p_X(x)$代表正常样本的真实数据分布。于是：</p>
+<p>$$<br>n_S(x)=\sum_{i=0}^{k-1}\left[\log\Gamma(\sum_{j=0}^{k-1}[\tilde{\boldsymbol\alpha}<em>i]<em>j)-\sum</em>{j=0}^{k-1}\log\Gamma([\tilde{\boldsymbol\alpha}_i]_j)+\sum</em>{j=0}^{k-1}([\tilde{\boldsymbol\alpha}_i]_j-1)\log\mathbf y(T_i(x))_j\right]<br>$$</p>
+<p>因为$\tilde{\alpha}<em>i$相对于$x$来说是常数，所以可以直接忽略，于是式子简化为：<br>$$<br>n_S(x)=\sum_{i=0}^{k-1}\sum</em>{j=0}^{k-1}([\tilde{\boldsymbol\alpha}_i]<em>j-1)\log\mathbf y(T_i(x))_j=\sum</em>{i=0}^{k-1}(\tilde{\boldsymbol \alpha}_i-1)\cdot\log\mathbf y(T_i(x))<br>$$</p>
+<p>注意这里的每个$\boldsymbol \alpha_i$都是一个向量，即对于每个变换$i$，都对应一个迪利克雷分布，其参数为$\boldsymbol\alpha_i$；在对训练集进行第$i$个几何变换之后，我们得到了${T_i(x)}$，然后分类器$f_\theta(\cdot)$的输出$\mathbf y(T_i(x))$相当于迪利克雷分布的观测值，我们需要根据观测值来估计参数$\boldsymbol \alpha_i$，然后根据这个参数来计算$n_S(x)$。对于$\boldsymbol\alpha_i$，可以知道其第$i$个分量应该是相对比较大的，下面是运行官方代码得到的$\boldsymbol\alpha_i$的结果（$i=69$，$i$从$0$开始，总共为$72$维），可以看到第$69$个分量是最大的。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[INFO] value of mle_alpha_t:</span><br><span class="line"> [ 0.10228925  0.08997199  0.13083569  0.10862965  0.09811163  0.08527119</span><br><span class="line">  0.17637901  0.27628416  0.12873376  0.19197053  0.11587154  0.09873095</span><br><span class="line">  0.12700618  0.07688542  0.10488203  0.12499191  0.11637607  0.07739511</span><br><span class="line">  0.13049147  0.51031647  0.20546597  0.15558449  0.09288609  0.12134945</span><br><span class="line">  0.09324992  0.14650162  0.16281216  0.11827823  0.08214853  0.15618336</span><br><span class="line">  0.28129761  0.45293697  0.11485838  1.78598954  0.16556983  0.1141158</span><br><span class="line">  0.10909459  0.13916602  0.11563799  0.07309986  0.11049714  0.12974086</span><br><span class="line">  0.15930642  0.13714361  0.13938356  0.70619553  0.11174039  0.07201538</span><br><span class="line">  0.16626109  0.12153727  0.09548811  0.07940956  0.15832209  0.11035474</span><br><span class="line">  0.12487912  0.16937875  0.23212662  0.37041831  0.08557451  0.0839439</span><br><span class="line">  0.09924258  0.39766872  0.14917286  0.08704662  0.09554555  0.31047109</span><br><span class="line">  0.24504759  0.16812463  0.11508187 63.98878807  0.12971073  0.07972932]</span><br></pre></td></tr></table></figure>
-<p>下图也展示了对于每个变换<span class="math inline">\(i\)</span>，<span class="math inline">\(\mathbf y(T_i(x)|T_i\)</span>分布的情况：</p>
-<p><img src="https://i.loli.net/2020/06/23/fLkst4i7Hu6PhQl.png" style="zoom:67%;" /></p>
-<p>作者还给出了一种简化的形式，<span class="math inline">\(\hat{n}_S(x)=\frac{1}{k}\sum^{k-1}_{j=0}[\mathbf y(T_j(x))]_j\)</span>。相当于说，对于每个变换<span class="math inline">\(T_i\)</span>分类器都会给出一个<span class="math inline">\(\text{softmax}\)</span>向量，取其第<span class="math inline">\(i\)</span>个分量<span class="math inline">\([\mathbf y(T_j(x))]_j\)</span>，然后把每个变换对应的<span class="math inline">\([\mathbf y(T_j(x))]_j\)</span>加起来。</p>
+
+<p>下图也展示了对于每个变换$i$，$\mathbf y(T_i(x)|T_i$分布的情况：</p>
+<img src="https://i.loli.net/2020/06/23/fLkst4i7Hu6PhQl.png" style="zoom:67%;" />
+
+<p>作者还给出了一种简化的形式，$\hat{n}<em>S(x)=\frac{1}{k}\sum^{k-1}</em>{j=0}[\mathbf y(T_j(x))]_j$。相当于说，对于每个变换$T_i$分类器都会给出一个$\text{softmax}$向量，取其第$i$个分量$[\mathbf y(T_j(x))]_j$，然后把每个变换对应的$[\mathbf y(T_j(x))]_j$加起来。</p>
 <p>整个算法的流程如下：</p>
-<p><img src="https://i.loli.net/2020/06/23/z8MpdeoD6ZGavlN.png" style="zoom:67%;" /></p>
+<img src="https://i.loli.net/2020/06/23/z8MpdeoD6ZGavlN.png" style="zoom:67%;" />
+
 <p>这里结合作者的源代码简单说一下检测阶段的流程。</p>
-<hr />
+<hr>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> t_ind <span class="keyword">in</span> <span class="built_in">range</span>(transformer.n_transforms):</span><br><span class="line">        observed_dirichlet = mdl.predict(transformer.transform_batch(observed_data, [t_ind] * <span class="built_in">len</span>(observed_data)), batch_size=<span class="number">1024</span>)</span><br></pre></td></tr></table></figure>
-<p>在训练好模型之后，对于训练集的所有样本，对其进行<span class="math inline">\(K\)</span>个几何变换之后，得到<span class="math inline">\(K\)</span>个样本<span class="math inline">\(\{T_i(x)\}\)</span>，对于所有第<span class="math inline">\(i\)</span>个几何变换对应的样本<span class="math inline">\(\{T_i(x)\}\)</span>，通过分类器<span class="math inline">\(f_\theta\)</span>会给出输出<span class="math inline">\(\mathbf y(T_i(x))\)</span>。这里对应算法中的第<span class="math inline">\(7-8\)</span>行，这个<code>observed_dirichlet</code>就是<span class="math inline">\(S_i\)</span>。</p>
-<hr />
+
+<p>在训练好模型之后，对于训练集的所有样本，对其进行$K$个几何变换之后，得到$K$个样本${T_i(x)}$，对于所有第$i$个几何变换对应的样本${T_i(x)}$，通过分类器$f_\theta$会给出输出$\mathbf y(T_i(x))$。这里对应算法中的第$7-8$行，这个<code>observed_dirichlet</code>就是$S_i$。</p>
+<hr>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">log_p_hat_train = np.log(observed_dirichlet).mean(axis=<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">alpha_sum_approx = calc_approx_alpha_sum(observed_dirichlet)</span><br><span class="line">alpha_0 = observed_dirichlet.mean(axis=<span class="number">0</span>) * alpha_sum_approx</span><br></pre></td></tr></table></figure>
-<p>之后这部分主要对应算法中的<span class="math inline">\(9-11\)</span>行。作者把所有的第<span class="math inline">\(i\)</span>个变换，分类器的输出的集合（也就是变量<code>observed_dirichlet</code>）记为<span class="math inline">\(S_i\)</span>，<span class="math inline">\(\bar s\)</span>为<span class="math inline">\(S_i\)</span>的平均，<span class="math inline">\(\bar l\)</span>为<span class="math inline">\(S_i\)</span>对数的平均（变量<code>log_p_hat_train</code>），初始值<span class="math inline">\(\tilde{\alpha}_i\)</span>由<span class="math inline">\(\bar s\frac{(k-1)(-\Psi(1))}{\bar s\cdot\log\bar s-\bar s\cdot\bar l}\)</span>给出（变量<code>alpha_0</code>）。函数<code>calc_approx_alpha_sum</code>实现的是算法中第<span class="math inline">\(11\)</span>行的<span class="math inline">\(\frac{(k-1)(-\Psi(1))}{\bar s\cdot\log\bar s-\bar s\cdot\bar l}\)</span>，代码如下：</p>
+
+<p>之后这部分主要对应算法中的$9-11$行。作者把所有的第$i$个变换，分类器的输出的集合（也就是变量<code>observed_dirichlet</code>）记为$S_i$，$\bar s$为$S_i$的平均，$\bar l$为$S_i$对数的平均（变量<code>log_p_hat_train</code>），初始值$\tilde{\alpha}_i$由$\bar s\frac{(k-1)(-\Psi(1))}{\bar s\cdot\log\bar s-\bar s\cdot\bar l}$给出（变量<code>alpha_0</code>）。函数<code>calc_approx_alpha_sum</code>实现的是算法中第$11$行的$\frac{(k-1)(-\Psi(1))}{\bar s\cdot\log\bar s-\bar s\cdot\bar l}$，代码如下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">calc_approx_alpha_sum</span>(<span class="params">observations</span>):</span></span><br><span class="line">    N = <span class="built_in">len</span>(observations)</span><br><span class="line">    f = np.mean(observations, axis=<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (N * (<span class="built_in">len</span>(f) - <span class="number">1</span>) * (-psi(<span class="number">1</span>))) / (</span><br><span class="line">        N * np.<span class="built_in">sum</span>(f * np.log(f)) - np.<span class="built_in">sum</span>(f * np.<span class="built_in">sum</span>(np.log(observations), axis=<span class="number">0</span>)))</span><br></pre></td></tr></table></figure>
-<hr />
+
+<hr>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mle_alpha_t = fixed_point_dirichlet_mle(alpha_0, log_p_hat_train)</span><br></pre></td></tr></table></figure>
-<p>这里对应算法中的<span class="math inline">\(12-14\)</span>行，即重复<span class="math inline">\(\tilde\alpha_i\leftarrow\Psi^{-1}\left(\Psi(\sum_j[\alpha_i]_j)+\bar l\right)\)</span>来估计<span class="math inline">\(\alpha\)</span>，函数<code>fixed_point_dirichlet_mle</code>代码如下：</p>
+
+<p>这里对应算法中的$12-14$行，即重复$\tilde\alpha_i\leftarrow\Psi^{-1}\left(\Psi(\sum_j[\alpha_i]_j)+\bar l\right)$来估计$\alpha$，函数<code>fixed_point_dirichlet_mle</code>代码如下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fixed_point_dirichlet_mle</span>(<span class="params">alpha_init, log_p_hat, max_iter=<span class="number">1000</span></span>):</span></span><br><span class="line">    alpha_new = alpha_old = alpha_init</span><br><span class="line">    <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(max_iter):</span><br><span class="line">        alpha_new = inv_psi(psi(np.<span class="built_in">sum</span>(alpha_old)) + log_p_hat)</span><br><span class="line">        <span class="keyword">if</span> np.sqrt(np.<span class="built_in">sum</span>((alpha_old - alpha_new) ** <span class="number">2</span>)) &lt; <span class="number">1e-9</span>:</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        alpha_old = alpha_new</span><br><span class="line">    <span class="keyword">return</span> alpha_new</span><br></pre></td></tr></table></figure>
-<p><span class="math inline">\(\Psi^{-1}(\cdot)\)</span>是通过数值方法来估计的：</p>
+
+<p>$\Psi^{-1}(\cdot)$是通过数值方法来估计的：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">inv_psi</span>(<span class="params">y, iters=<span class="number">5</span></span>):</span></span><br><span class="line">    <span class="comment"># initial estimate</span></span><br><span class="line">    cond = y &gt;= <span class="number">-2.22</span></span><br><span class="line">    x = cond * (np.exp(y) + <span class="number">0.5</span>) + (<span class="number">1</span> - cond) * <span class="number">-1</span> / (y - psi(<span class="number">1</span>))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(iters):</span><br><span class="line">        x = x - (psi(x) - y) / polygamma(<span class="number">1</span>, x)</span><br><span class="line">    <span class="keyword">return</span> x</span><br></pre></td></tr></table></figure>
-<hr />
-<p>最后，在得到对<span class="math inline">\(\alpha\)</span>的估计之后，可以来计算测试样本的分数了。这里对应的是算法中的第<span class="math inline">\(16\)</span>行。</p>
+
+<hr>
+<p>最后，在得到对$\alpha$的估计之后，可以来计算测试样本的分数了。这里对应的是算法中的第$16$行。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">x_test_p = mdl.predict(transformer.transform_batch(x_test, [t_ind] * <span class="built_in">len</span>(x_test)), batch_size=<span class="number">1024</span>)</span><br><span class="line"></span><br><span class="line">scores += dirichlet_normality_score(mle_alpha_t, x_test_p)</span><br></pre></td></tr></table></figure>
+
 <p>函数<code>dirichlet_normality_score</code>代码如下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">dirichlet_normality_score</span>(<span class="params">alpha, p</span>):</span></span><br><span class="line">    <span class="keyword">return</span> np.<span class="built_in">sum</span>((alpha - <span class="number">1</span>) * np.log(p), axis=<span class="number">-1</span>)</span><br></pre></td></tr></table></figure>
-<h1 id="experiments">Experiments</h1>
-<h2 id="baselines">Baselines</h2>
-<p>文中用到了如下的Baseline：</p>
+
+<h1 id="Experiments"><a href="#Experiments" class="headerlink" title="Experiments"></a>Experiments</h1><h2 id="Baselines"><a href="#Baselines" class="headerlink" title="Baselines"></a>Baselines</h2><p>文中用到了如下的Baseline：</p>
 <ul>
-<li><strong>One-class SVM. </strong>单类支持向量机，作者使用了三个变体，分别为<strong>RAW-OC-SVM</strong>——使用原始数据作为输入，<strong>CAE-OC-SVM</strong>——使用一个卷积自编码器来获得低维表示作为输入和<strong>E2E-OC-SVM</strong>——全名为<strong>One-Class Deep Support Vector Data Description</strong>；</li>
-<li><strong>Deep structured energy-based models. </strong></li>
-<li><strong>Deep Autoencoding Gaussian Mixture Model. </strong></li>
-<li><strong>Generative Adversarial Networks. </strong></li>
+<li><strong>One-class SVM. **单类支持向量机，作者使用了三个变体，分别为</strong>RAW-OC-SVM<strong>——使用原始数据作为输入，</strong>CAE-OC-SVM<strong>——使用一个卷积自编码器来获得低维表示作为输入和</strong>E2E-OC-SVM<strong>——全名为</strong>One-Class Deep Support Vector Data Description**；</li>
+<li>**Deep structured energy-based models. **</li>
+<li>**Deep Autoencoding Gaussian Mixture Model. **</li>
+<li>**Generative Adversarial Networks. **</li>
 </ul>
-<h2 id="datasets">Datasets</h2>
-<p>文中用到了一下几个数据集：</p>
+<h2 id="Datasets"><a href="#Datasets" class="headerlink" title="Datasets"></a>Datasets</h2><p>文中用到了一下几个数据集：</p>
 <ul>
 <li><strong>CIFAR-10</strong></li>
 <li><strong>CIFAR-100</strong></li>
 <li><strong>Fashion-MNIST</strong></li>
 <li><strong>CatsVsDogs</strong></li>
 </ul>
-<p>在实验中所有图片都被归一化到<span class="math inline">\([-1,1]\)</span>的范围。</p>
-<h2 id="experimental-protocol">Experimental Protocol</h2>
-<p>设数据集有<span class="math inline">\(C\)</span>个类，我们会进行<span class="math inline">\(C\)</span>次实验，在第<span class="math inline">\(c\)</span>次实验 (<span class="math inline">\(1\leq c \leq C\)</span>)中我们会将第<span class="math inline">\(c\)</span>个类作为正常样本，而其他类作为异常样本。在训练阶段，训练集只包含正常样本，而在测试阶段则会有正常样本和异常样本。在获得异常分数之后，阈值<span class="math inline">\(\lambda\)</span>则根据ROC曲线下面积选择。</p>
+<p>在实验中所有图片都被归一化到$[-1,1]$的范围。</p>
+<h2 id="Experimental-Protocol"><a href="#Experimental-Protocol" class="headerlink" title="Experimental Protocol"></a>Experimental Protocol</h2><p>设数据集有$C$个类，我们会进行$C$次实验，在第$c$次实验 ($1\leq c \leq C$)中我们会将第$c$个类作为正常样本，而其他类作为异常样本。在训练阶段，训练集只包含正常样本，而在测试阶段则会有正常样本和异常样本。在获得异常分数之后，阈值$\lambda$则根据ROC曲线下面积选择。</p>
 <p>实验中使用的几何变换基于以下三种基变换：</p>
 <ul>
-<li><strong>Horizontal flip: </strong> 记为<span class="math inline">\(T_b^{flip}(x)\)</span>，<span class="math inline">\(b\in\{T,F\}\)</span>代表是否翻转；</li>
-<li><strong>Translation: </strong> 记为<span class="math inline">\(T_{s_h,s_w}^{trans}(x)\)</span>，其中<span class="math inline">\(s_h,s_w\in\{-1,0,1\}\)</span>。在长宽两个维度上位移分别为<span class="math inline">\(0.25\)</span>高度和<span class="math inline">\(0.25\)</span>宽度，这两个维度发生位移的方向由<span class="math inline">\(s_h\)</span>和<span class="math inline">\(s_w\)</span>决定，当<span class="math inline">\(s_h=s_w=0\)</span>时代表不移动；</li>
-<li><strong>Rotation by multiples 90 degrees: </strong> 记为<span class="math inline">\(T_k^{rot}(x)\)</span>，<span class="math inline">\(k\in\{0,1,2,3\}\)</span>。旋转<span class="math inline">\(k\times90\)</span>度。</li>
+<li>**Horizontal flip: ** 记为$T_b^{flip}(x)$，$b\in{T,F}$代表是否翻转；</li>
+<li>**Translation: ** 记为$T_{s_h,s_w}^{trans}(x)$，其中$s_h,s_w\in{-1,0,1}$。在长宽两个维度上位移分别为$0.25$高度和$0.25$宽度，这两个维度发生位移的方向由$s_h$和$s_w$决定，当$s_h=s_w=0$时代表不移动；</li>
+<li>**Rotation by multiples 90 degrees: ** 记为$T_k^{rot}(x)$，$k\in{0,1,2,3}$。旋转$k\times90$度。</li>
 </ul>
-<p>将三种基变换叠加有： <span class="math display">\[
-\mathcal T=\left\{
- T_k^{rot}\circ T_{s_h,s_w}^{trans}\circ T_b^{flip} : \begin{matrix}
- b &amp;\in \{T,F\}\\
- s_h,s_w&amp;\in\{-1,0,1\}\\
- k&amp;\in\{0,1,2,3\}
- \end{matrix} 
-\right\}
-\]</span> 最终几何变换种数为<span class="math inline">\(2\times3\times3\times4=72\)</span>种。</p>
+<p>将三种基变换叠加有：<br>$$<br>\mathcal T=\left{<br> T_k^{rot}\circ T_{s_h,s_w}^{trans}\circ T_b^{flip} : \begin{matrix}<br> b &amp;\in {T,F}\<br> s_h,s_w&amp;\in{-1,0,1}\<br> k&amp;\in{0,1,2,3}<br> \end{matrix}<br>\right}<br>$$<br>最终几何变换种数为$2\times3\times3\times4=72$种。</p>
 <p>分类器模型使用的是<strong>Wide Residual Network</strong>，优化器为Adam，Batch size为128，训练轮数为200。</p>
-<h2 id="results">Results</h2>
-<p>下面是不同方法在不同数据集上的实验结果：</p>
-<p><img src="https://i.loli.net/2020/06/24/gHZohrvz9MGYmxi.png" /></p>
+<h2 id="Results"><a href="#Results" class="headerlink" title="Results"></a>Results</h2><p>下面是不同方法在不同数据集上的实验结果：</p>
+<p><img src="https://i.loli.net/2020/06/24/gHZohrvz9MGYmxi.png"></p>
 <p>评测标准使用的是AUROC。作者关于结果的分析主要有以下几点：</p>
-<ol type="1">
-<li>在绝大多数情况下，我们的算法都比Baseline要好，而且是越大的数据集效果越好。CatsVsDogs数据集每张图片的大小比其他几个数据集都要大，而Baseline在这个数据集上的结果都在<span class="math inline">\(50\%\)</span>或不到<span class="math inline">\(50\%\)</span>，这基本等同于瞎猜；</li>
-<li>在CIFAR-100数据集里，由于将这100类聚合为了20类，所以存在类内样本差异大的问题。比如在类<span class="math inline">\(5\)</span>、类<span class="math inline">\(7\)</span>和类<span class="math inline">\(13\)</span>上，模型表现就不够好；</li>
+<ol>
+<li>在绝大多数情况下，我们的算法都比Baseline要好，而且是越大的数据集效果越好。CatsVsDogs数据集每张图片的大小比其他几个数据集都要大，而Baseline在这个数据集上的结果都在$50%$或不到$50%$，这基本等同于瞎猜；</li>
+<li>在CIFAR-100数据集里，由于将这100类聚合为了20类，所以存在类内样本差异大的问题。比如在类$5$、类$7$和类$13$上，模型表现就不够好；</li>
 <li>在Fashion-MNIST数据集上几乎所有方法（除了DAGMM）都表现很好。</li>
 </ol>
-<h2 id="on-the-intuition-for-using-geometric-transformations">On the Intuition for Using Geometric Transformations</h2>
-<p>这里作者对所选用的几何变换做了一些解释。实验中选用的三种基本几何变换都是可逆的线性几何变换（且为双射），作者也试过一些复杂的非线性变换，如高斯模糊、锐化、伽马校正等等，但是效果并不好。</p>
-<p>作者认为分类器能够分辨不同变换的能力与最终性能成正比，为了验证这一点，进行了<span class="math inline">\(3\)</span>个实验。从MNIST数据集选择一个数字作为正常样本，几何变换只采用两个，然后选择另一个数字作为异常样本，结果如下：</p>
+<h2 id="On-the-Intuition-for-Using-Geometric-Transformations"><a href="#On-the-Intuition-for-Using-Geometric-Transformations" class="headerlink" title="On the Intuition for Using Geometric Transformations"></a>On the Intuition for Using Geometric Transformations</h2><p>这里作者对所选用的几何变换做了一些解释。实验中选用的三种基本几何变换都是可逆的线性几何变换（且为双射），作者也试过一些复杂的非线性变换，如高斯模糊、锐化、伽马校正等等，但是效果并不好。</p>
+<p>作者认为分类器能够分辨不同变换的能力与最终性能成正比，为了验证这一点，进行了$3$个实验。从MNIST数据集选择一个数字作为正常样本，几何变换只采用两个，然后选择另一个数字作为异常样本，结果如下：</p>
 <ul>
-<li><strong>Normal digit: 8，Anomaly: 3，Transformations: Identity and horizontal flip. </strong>由于数字<span class="math inline">\(8\)</span>是对称的，所以要让分类器分辨原始的<span class="math inline">\(8\)</span>和翻转之后的<span class="math inline">\(8\)</span>是很难的，AUROC只有<span class="math inline">\(0.646\)</span>；</li>
-<li><strong>Normal digit: 3，Anomaly: 8，Transformations: Identity and horizontal flip. </strong>这里把<span class="math inline">\(3\)</span>作为正常样本，由于<span class="math inline">\(3\)</span>不是对称的，所以两种变换是可以分辨的，AUROC达到了<span class="math inline">\(0.957\)</span>；</li>
-<li><strong>Normal digit: 8，Anomaly: 3，Transformations: Identity and translation by 7 pixels. </strong>同样是把<span class="math inline">\(8\)</span>作为正常样本，但变换用的是平移，AUROC达到了<span class="math inline">\(0.919\)</span>。</li>
+<li>**Normal digit: 8，Anomaly: 3，Transformations: Identity and horizontal flip. **由于数字$8$是对称的，所以要让分类器分辨原始的$8$和翻转之后的$8$是很难的，AUROC只有$0.646$；</li>
+<li>**Normal digit: 3，Anomaly: 8，Transformations: Identity and horizontal flip. **这里把$3$作为正常样本，由于$3$不是对称的，所以两种变换是可以分辨的，AUROC达到了$0.957$；</li>
+<li>**Normal digit: 8，Anomaly: 3，Transformations: Identity and translation by 7 pixels. **同样是把$8$作为正常样本，但变换用的是平移，AUROC达到了$0.919$。</li>
 </ul>
-<p>除此之外，作者还设计了一个实验，目的是测试什么样的图像会获得较高的分数<span class="math inline">\(n_S(x)\)</span>。在给定训练好的分类器的情况下，优化输入的图像，目标函数是最大化分数<span class="math inline">\(n_S(x)\)</span>。下图为实验结果：</p>
-<p><img src="https://i.loli.net/2020/06/24/8Pi4EKCRuBXrYgp.png" /></p>
-<p>在左图中，将数字<span class="math inline">\(3\)</span>作为正常样本训练的分类器、原始输入为数字<span class="math inline">\(0\)</span>的图片时，随着优化的进行，图片慢慢地变得像数字<span class="math inline">\(3\)</span>。在右图中，同样是将数字<span class="math inline">\(3\)</span>作为正常样本训练的分类器，不过原始输入也是数字<span class="math inline">\(3\)</span>，这时图像却没有怎么变化。</p>
-<h1 id="remark">Remark</h1>
-<ul>
+<p>除此之外，作者还设计了一个实验，目的是测试什么样的图像会获得较高的分数$n_S(x)$。在给定训练好的分类器的情况下，优化输入的图像，目标函数是最大化分数$n_S(x)$。下图为实验结果：</p>
+<p><img src="https://i.loli.net/2020/06/24/8Pi4EKCRuBXrYgp.png"></p>
+<p>在左图中，将数字$3$作为正常样本训练的分类器、原始输入为数字$0$的图片时，随着优化的进行，图片慢慢地变得像数字$3$。在右图中，同样是将数字$3$作为正常样本训练的分类器，不过原始输入也是数字$3$，这时图像却没有怎么变化。</p>
+<h1 id="Remark"><a href="#Remark" class="headerlink" title="Remark"></a>Remark</h1><ul>
 <li>文中提到的在CIFAR100数据的实验上，由于类间差异比较大导致效果较差，那么很自然地，不同的变换样本对应的集簇实际上应当足够分开，集簇内的样本要足够进，这样对于分类器来说才能比较好的分类。不过采用的几何变换并没有针对这一点进行特别设计；</li>
 <li>文中强调了所使用的变换为几何变换，其实除此之外，所使用的变换还都是可以用矩阵表示的可逆的变换。</li>
 </ul>
-</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-06-01T08:14:08.000Z" title="2020-6-1 4:14:08 ├F10: PM┤">2020-06-01</time>发表</span><span class="level-item"><time dateTime="2020-06-25T05:28:22.135Z" title="2020-6-25 1:28:22 ├F10: PM┤">2020-06-25</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2020/06/01/Cross-dataset-Time-Series-Anomaly-Detection-for-Cloud-Systems/">Cross-dataset Time Series Anomaly Detection for Cloud Systems</a></h1><div class="content"><h1 id="introduction">Introduction</h1>
-<p>本文介绍了一种用于云计算平台的时间序列异常检测框架。为了解决标签不足的问题，文中使用了迁移学习的方法，即在有标签的source domain上训练模型，在没有标签的target domain上检测。同时，文中还使用了主动学习的方法来挑选最有价值的无标签样本进行标记。</p>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-06-01T08:14:08.000Z" title="2020-6-1 4:14:08 ├F10: PM┤">2020-06-01</time>发表</span><span class="level-item"><time dateTime="2020-06-25T05:28:22.135Z" title="2020-6-25 1:28:22 ├F10: PM┤">2020-06-25</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2020/06/01/Cross-dataset-Time-Series-Anomaly-Detection-for-Cloud-Systems/">Cross-dataset Time Series Anomaly Detection for Cloud Systems</a></h1><div class="content"><h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>本文介绍了一种用于云计算平台的时间序列异常检测框架。为了解决标签不足的问题，文中使用了迁移学习的方法，即在有标签的source domain上训练模型，在没有标签的target domain上检测。同时，文中还使用了主动学习的方法来挑选最有价值的无标签样本进行标记。</p>
 <p><a target="_blank" rel="noopener" href="https://www.usenix.org/system/files/atc19-zhang-xu.pdf">📰Get Paper</a></p>
-<h1 id="background">Background</h1>
-<p>针对云计算平台数据的异常检测通常是应用在云监控数据，如KPI、CPU使用率、系统负载等时序数据上。和传统的异常检测不一样的是，时序异常检测往往更难，文中总结了以下几个挑战：</p>
+<h1 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h1><p>针对云计算平台数据的异常检测通常是应用在云监控数据，如KPI、CPU使用率、系统负载等时序数据上。和传统的异常检测不一样的是，时序异常检测往往更难，文中总结了以下几个挑战：</p>
 <ul>
 <li>异常特征的差异性。在不同的云服务系统中，对异常的容忍度是不同的，所以对每个场景或系统组件设置准确的阈值来进行异常检测是十分困难的；</li>
 <li>时间依赖性。该异常检测问题处理的是时间序列数据，而传统的异常检测并不会考虑时间依赖性；</li>
 <li>无监督学习的性能问题。无监督的异常检测方法的性能有限，会带来大量的误报；</li>
 <li>有监督学习需要大量标签。</li>
 </ul>
-<h1 id="proposed-approach">Proposed Approach</h1>
-<p>为了解决上述挑战，文中提出了一个时间序列异常检测框架ATAD (Active Transfer Anomaly Detection)。该框架结合了迁移学习技术和主动学习技术，示意图如下：</p>
-<p><img src="https://i.loli.net/2020/06/25/jOB4rC2gnH9VcQW.png" style="zoom:67%;" /></p>
-<p>未标记数据<span class="math inline">\(T_u\)</span>是我们要检测的目标数据 (target domain)，标记数据<span class="math inline">\(T_l\)</span>是我们的源数据 (source domain)，可以是开源数据或者是其他系统的监控数据。</p>
-<h2 id="transfer-learning-component">Transfer Learning Component</h2>
-<p>在应用迁移学习时，我们需要考虑以下几个因素：</p>
+<h1 id="Proposed-Approach"><a href="#Proposed-Approach" class="headerlink" title="Proposed Approach"></a>Proposed Approach</h1><p>为了解决上述挑战，文中提出了一个时间序列异常检测框架ATAD (Active Transfer Anomaly Detection)。该框架结合了迁移学习技术和主动学习技术，示意图如下：</p>
+<img src="https://i.loli.net/2020/06/25/jOB4rC2gnH9VcQW.png" style="zoom:67%;" />
+
+<p>未标记数据$T_u$是我们要检测的目标数据 (target domain)，标记数据$T_l$是我们的源数据 (source domain)，可以是开源数据或者是其他系统的监控数据。</p>
+<h2 id="Transfer-Learning-Component"><a href="#Transfer-Learning-Component" class="headerlink" title="Transfer Learning Component"></a>Transfer Learning Component</h2><p>在应用迁移学习时，我们需要考虑以下几个因素：</p>
 <ul>
 <li>我们处理的是时间序列数据，即在不同的时间点上样本之间不是相互独立的。为了解决这个问题，我们提取了不同的特征，每一个时间点被转换为了高维的特征向量，且每个时间点附近的背景信息被保存在了特征向量之中；</li>
 <li>时间序列的粒度。粗粒度的迁移学习不利于发现异常，本文采用细粒度，即数据点级别的迁移学习；</li>
 <li>迁移学习需要source domain和target domain具有潜在的相似性，所以我们需要对source domain中的样本进行过滤。</li>
 </ul>
-<p><img src="https://i.loli.net/2020/06/25/aM7Qvt6DwGXnThm.png" style="zoom:67%;" /></p>
-<h3 id="feature-identification">Feature Identification</h3>
-<p>这一节描述特征工程中用到的特征。在提取特征之前，文中使用了离散傅里叶变换来识别时间序列的周期<span class="math inline">\(p\)</span>，并为后面滑动窗口的大小原则作参考。</p>
-<h4 id="statistical-features">Statistical Features</h4>
-<p>统计特征包含了一些基本的统计信息，如均值、方差等，用到的特征如下表所示：</p>
-<p><img src="https://i.loli.net/2020/06/25/jI9EbCy1XueDViw.png" style="zoom:67%;" /></p>
-<p>表中的统计特征都是基于大小等于周期<span class="math inline">\(p\)</span>的滑动窗口的。</p>
-<h4 id="forecasting-error-features">Forecasting Error Features</h4>
-<p>使用预测特征的理由是如果一个数据点偏离预测值很远，那么它很有可能是异常。文中使用了多种时间序列预测模型，如SARIMA、Holt、Holt-Winters、STL等。最终的预测结果使用下式来加权集成： <span class="math display">\[
-\hat{Y}_t=\sum\limits_{m=1}^{M}\frac{\hat{Y}_{m,t}}{M-1}\left(1-\frac{RMSE_{m,t}}{\sum\limits_{n=1}^M RMSE_{n,t}}\right)
-\]</span> <span class="math inline">\(M\)</span>代表<span class="math inline">\(M\)</span>个不同模型，<span class="math inline">\(RMSE_{m,t}\)</span>代表模型<span class="math inline">\(m\)</span>在时间<span class="math inline">\(t\)</span>的<span class="math inline">\(RMSE\)</span>，<span class="math inline">\(\hat{Y}_t\)</span>是在时间<span class="math inline">\(t\)</span>的最终预测结果。之后，使用下表中的Metrics来计算不同预测特征：</p>
-<p><img src="https://i.loli.net/2020/06/25/wRmfHj5xFcsLIXp.png" style="zoom:67%;" /></p>
+<img src="https://i.loli.net/2020/06/25/aM7Qvt6DwGXnThm.png" style="zoom:67%;" />
+
+<h3 id="Feature-Identification"><a href="#Feature-Identification" class="headerlink" title="Feature Identification"></a>Feature Identification</h3><p>这一节描述特征工程中用到的特征。在提取特征之前，文中使用了离散傅里叶变换来识别时间序列的周期$p$，并为后面滑动窗口的大小原则作参考。</p>
+<h4 id="Statistical-Features"><a href="#Statistical-Features" class="headerlink" title="Statistical Features"></a>Statistical Features</h4><p>统计特征包含了一些基本的统计信息，如均值、方差等，用到的特征如下表所示：</p>
+<img src="https://i.loli.net/2020/06/25/jI9EbCy1XueDViw.png" style="zoom:67%;" />
+
+<p>表中的统计特征都是基于大小等于周期$p$的滑动窗口的。</p>
+<h4 id="Forecasting-Error-Features"><a href="#Forecasting-Error-Features" class="headerlink" title="Forecasting Error Features"></a>Forecasting Error Features</h4><p>使用预测特征的理由是如果一个数据点偏离预测值很远，那么它很有可能是异常。文中使用了多种时间序列预测模型，如SARIMA、Holt、Holt-Winters、STL等。最终的预测结果使用下式来加权集成：<br>$$<br>\hat{Y}<em>t=\sum\limits</em>{m=1}^{M}\frac{\hat{Y}<em>{m,t}}{M-1}\left(1-\frac{RMSE</em>{m,t}}{\sum\limits_{n=1}^M RMSE_{n,t}}\right)<br>$$<br>$M$代表$M$个不同模型，$RMSE_{m,t}$代表模型$m$在时间$t$的$RMSE$，$\hat{Y}_t$是在时间$t$的最终预测结果。之后，使用下表中的Metrics来计算不同预测特征：</p>
+<img src="https://i.loli.net/2020/06/25/wRmfHj5xFcsLIXp.png" style="zoom:67%;" />
+
 <p>同样的，上述特征都是基于窗口的。</p>
-<h4 id="temporal-features">Temporal Features</h4>
-<p>这一部分是一些时间序列相关特征：</p>
-<p><img src="https://i.loli.net/2020/06/25/mnBrzjfgV716yiR.png" style="zoom:67%;" /></p>
+<h4 id="Temporal-Features"><a href="#Temporal-Features" class="headerlink" title="Temporal Features"></a>Temporal Features</h4><p>这一部分是一些时间序列相关特征：</p>
+<img src="https://i.loli.net/2020/06/25/mnBrzjfgV716yiR.png" style="zoom:67%;" />
+
 <p>最后，总共提取了37个特征，并且每个特征都进行了正则化。</p>
-<h3 id="the-transfer-between-source-domain-and-target-domain">The Transfer between Source Domain and Target Domain</h3>
-<p>本文结合了基于实例的迁移学习(<strong>Instance-based Transfer Learning</strong>)和基于特征的迁移学习(<strong>Feature-based Transfer Learning</strong>)。</p>
+<h3 id="The-Transfer-between-Source-Domain-and-Target-Domain"><a href="#The-Transfer-between-Source-Domain-and-Target-Domain" class="headerlink" title="The Transfer between Source Domain and Target Domain"></a>The Transfer between Source Domain and Target Domain</h3><p>本文结合了基于实例的迁移学习(<strong>Instance-based Transfer Learning</strong>)和基于特征的迁移学习(<strong>Feature-based Transfer Learning</strong>)。</p>
 <p>首先，source domain中的数据差异性是比较大的，所以我们需要选择与target domain相似的样本。</p>
-<p>基于实例的迁移学习(<strong>Instance-based Transfer Learning</strong>)的思想是选择source domain中与target domain相似的样本。对于source domain，在将时间序列<span class="math inline">\(T_l\)</span>转换为特征<span class="math inline">\(F_l\)</span>之后，本文使用<span class="math inline">\(K-means\)</span>算法将<span class="math inline">\(F_l\)</span>分成若干个簇。每个簇<span class="math inline">\(F_l^i, i\in[1,K]\)</span>是<span class="math inline">\(F_l\)</span>的不重叠子集。为了选择合适的样本，我们计算了target domain中的样本和每个簇中心点的欧几里得距离，然后样本会和距离最近的簇<span class="math inline">\(F_l^i\)</span>联系起来。</p>
-<p>之后，为了使source domain和target domain在特征空间的差别更小，作者在每个簇上使用了<strong>CORrelation ALignment</strong> (CORAL) 算法。CORAL是一种领域适应算法 (<strong>Domain Adaption</strong>)，其基本思想是对source domain和target domain进行线性变换使其二阶统计信息（即协方差矩阵）的差别最小化： <span class="math display">\[
-\min_A\parallel A^\top C^i_lA-C^i_u\parallel_F^2
-\]</span></p>
-<p>在最后一步，作者在每一个sub source domain <span class="math inline">\(\hat{F}_l^i\)</span>训练了有监督模型（随机森林或SVM），所以最后我们得到了<span class="math inline">\(K\)</span>个基模型。</p>
-<h2 id="active-learning-component">Active Learning Component</h2>
-<p>由于数据的差异性和复杂性太大，仅仅使用迁移学习的技术不足以达到很好的效果。在ATAD中，作者使用了主动学习技术来用较少的成本标注最有价值的样本来提升性能。本文中使用基于<strong>Uncertainty</strong>和<strong>Context Diversity</strong>的主动学习。</p>
-<h3 id="uncertainty">Uncertainty</h3>
-<p>大多数主动学习算法使用不确定性 (Uncertainty) 来作为选择要标记的样本的准则。 <span class="math display">\[
-Uncertainty=-|Prob(Normal)-Prob(Anomaly)|
-\]</span> 其中的<span class="math inline">\(Prob\)</span>由基模型给出。</p>
-<h3 id="context-diversity">Context Diversity</h3>
-<p>多样性 (Diversity) 也是一个选择要标记样本的重要参考。如果有两个相似的样本，那么就没有必要将他们都标记。</p>
+<p>基于实例的迁移学习(<strong>Instance-based Transfer Learning</strong>)的思想是选择source domain中与target domain相似的样本。对于source domain，在将时间序列$T_l$转换为特征$F_l$之后，本文使用$K-means$算法将$F_l$分成若干个簇。每个簇$F_l^i, i\in[1,K]$是$F_l$的不重叠子集。为了选择合适的样本，我们计算了target domain中的样本和每个簇中心点的欧几里得距离，然后样本会和距离最近的簇$F_l^i$联系起来。</p>
+<p>之后，为了使source domain和target domain在特征空间的差别更小，作者在每个簇上使用了<strong>CORrelation ALignment</strong> (CORAL) 算法。CORAL是一种领域适应算法 (<strong>Domain Adaption</strong>)，其基本思想是对source domain和target domain进行线性变换使其二阶统计信息（即协方差矩阵）的差别最小化：<br>$$<br>\min_A\parallel A^\top C^i_lA-C^i_u\parallel_F^2<br>$$</p>
+<p>在最后一步，作者在每一个sub source domain $\hat{F}_l^i$训练了有监督模型（随机森林或SVM），所以最后我们得到了$K$个基模型。</p>
+<h2 id="Active-Learning-Component"><a href="#Active-Learning-Component" class="headerlink" title="Active Learning Component"></a>Active Learning Component</h2><p>由于数据的差异性和复杂性太大，仅仅使用迁移学习的技术不足以达到很好的效果。在ATAD中，作者使用了主动学习技术来用较少的成本标注最有价值的样本来提升性能。本文中使用基于<strong>Uncertainty</strong>和<strong>Context Diversity</strong>的主动学习。</p>
+<h3 id="Uncertainty"><a href="#Uncertainty" class="headerlink" title="Uncertainty"></a>Uncertainty</h3><p>大多数主动学习算法使用不确定性 (Uncertainty) 来作为选择要标记的样本的准则。<br>$$<br>Uncertainty=-|Prob(Normal)-Prob(Anomaly)|<br>$$<br>其中的$Prob$由基模型给出。</p>
+<h3 id="Context-Diversity"><a href="#Context-Diversity" class="headerlink" title="Context Diversity"></a>Context Diversity</h3><p>多样性 (Diversity) 也是一个选择要标记样本的重要参考。如果有两个相似的样本，那么就没有必要将他们都标记。</p>
 <p>时间上相邻的样本往往也是相似的。</p>
 <p>具体的来说，我们对所有样本按照<strong>Uncertainty</strong>排序，然后进行一次扫描，如果当前样本在候选集中某个样本的<strong>Context</strong>之中，我们则忽略当前样本，因为这代表当前样本和候选集中的那个样本是相似的。如果不在<strong>Context</strong>之中，我们则将该样本加入候选集中。</p>
-<p>判断是否在某个样本的<strong>Context</strong>中，如下图所示，直接判断是否落在区间<span class="math inline">\([t-\alpha,t+\alpha]\)</span>中就是了。</p>
-<p><img src="https://i.loli.net/2020/06/25/nci9PvGDEdjky5R.png" style="zoom:67%;" /></p>
+<p>判断是否在某个样本的<strong>Context</strong>中，如下图所示，直接判断是否落在区间$[t-\alpha,t+\alpha]$中就是了。</p>
+<img src="https://i.loli.net/2020/06/25/nci9PvGDEdjky5R.png" style="zoom:67%;" />
+
 <p>主动学习模块的算法流程图如下图所示：</p>
-<p><img src="https://i.loli.net/2020/06/25/RqonKfQS3IWw6Gb.png" style="zoom: 80%;" /></p>
-<h1 id="experiments">Experiments</h1>
-<p>在实验部分，作者试图回答以下问题：</p>
-<ol type="1">
+<img src="https://i.loli.net/2020/06/25/RqonKfQS3IWw6Gb.png" style="zoom: 80%;" />
+
+<h1 id="Experiments"><a href="#Experiments" class="headerlink" title="Experiments"></a>Experiments</h1><p>在实验部分，作者试图回答以下问题：</p>
+<ol>
 <li>ATAD的效果如何？</li>
 <li>迁移学习模块的有效性如何？</li>
 <li>主动学习模块的有效性如何？</li>
 <li>ATAD在基于公开数据时对公司内部数据检测效果如何？</li>
 </ol>
-<h2 id="dataset-and-setup">Dataset and Setup</h2>
-<p>下表是用到的数据集的一些基本信息：</p>
-<p><img src="https://i.loli.net/2020/06/25/HDNGCrYOxezLwaB.png" style="zoom:67%;" /></p>
-<h2 id="evaluation-metric">Evaluation Metric</h2>
-<p>评测标准使用的是F1-score： <span class="math display">\[
-F1=\frac{2\cdot P\cdot R}{P+R}, \space P=\frac{TP}{TP+FP}, \space R=\frac{TP}{TP+FN}
-\]</span></p>
-<h2 id="results">Results</h2>
-<h3 id="rq1-how-effective-is-atad">RQ1: How effective is ATAD?</h3>
-<p>Baseline包括孤立森林、K-Sigma、S-H-ESD和随机森林。</p>
+<h2 id="Dataset-and-Setup"><a href="#Dataset-and-Setup" class="headerlink" title="Dataset and Setup"></a>Dataset and Setup</h2><p>下表是用到的数据集的一些基本信息：</p>
+<img src="https://i.loli.net/2020/06/25/HDNGCrYOxezLwaB.png" style="zoom:67%;" />
+
+<h2 id="Evaluation-Metric"><a href="#Evaluation-Metric" class="headerlink" title="Evaluation Metric"></a>Evaluation Metric</h2><p>评测标准使用的是F1-score：<br>$$<br>F1=\frac{2\cdot P\cdot R}{P+R}, \space P=\frac{TP}{TP+FP}, \space R=\frac{TP}{TP+FN}<br>$$</p>
+<h2 id="Results"><a href="#Results" class="headerlink" title="Results"></a>Results</h2><h3 id="RQ1-How-effective-is-ATAD"><a href="#RQ1-How-effective-is-ATAD" class="headerlink" title="RQ1: How effective is ATAD?"></a>RQ1: How effective is ATAD?</h3><p>Baseline包括孤立森林、K-Sigma、S-H-ESD和随机森林。</p>
 <p>最终结果如下表所示：</p>
-<p><img src="https://i.loli.net/2020/06/25/HMneBzlkR7Qg4TN.png" style="zoom:67%;" /></p>
+<img src="https://i.loli.net/2020/06/25/HMneBzlkR7Qg4TN.png" style="zoom:67%;" />
+
 <p>为了评测ATAD利用标签的能力，我们比较了RF在达到和ATAD相似F1 score情况下所需标签的数量，如下表所示：</p>
-<p><img src="https://i.loli.net/2020/06/25/fcoXhCL43yVwYes.png" style="zoom:67%;" /></p>
-<h3 id="rq2-how-effective-is-the-transfer-learning-component">RQ2: How effective is the Transfer Learning Component?</h3>
-<p>我们从以下两个方面来探究模型迁移知识的能力：</p>
+<img src="https://i.loli.net/2020/06/25/fcoXhCL43yVwYes.png" style="zoom:67%;" />
+
+<h3 id="RQ2-How-effective-is-the-Transfer-Learning-Component"><a href="#RQ2-How-effective-is-the-Transfer-Learning-Component" class="headerlink" title="RQ2:    How  effective  is  the  Transfer  Learning Component?"></a>RQ2:    How  effective  is  the  Transfer  Learning Component?</h3><p>我们从以下两个方面来探究模型迁移知识的能力：</p>
 <ul>
 <li>使用文中所用到的特征的重要性</li>
 <li>本模型迁移知识的能力</li>
 </ul>
 <p>对于第一点，作者提出传统的方法一般只提取了统计特征，而本文还提取了多种其他特征。作者对提取不同特征进行了比较试验，结果如下表所示：</p>
-<p><img src="https://i.loli.net/2020/06/25/QV2eWzoOxGS6qJd.png" style="zoom:67%;" /></p>
+<img src="https://i.loli.net/2020/06/25/QV2eWzoOxGS6qJd.png" style="zoom:67%;" />
+
 <p>除此之外，作者还展示了不同数据集下前10有效的特征：</p>
-<p><img src="https://i.loli.net/2020/06/25/QXYcP9V3xmJeIq5.png" style="zoom:67%;" /></p>
+<img src="https://i.loli.net/2020/06/25/QXYcP9V3xmJeIq5.png" style="zoom:67%;" />
+
 <p>对于第二点，作者比较了是否使用文中的领域适应算法CORAL，在达到相似F1 score下所需的标签数，如下表所示：</p>
-<p><img src="https://i.loli.net/2020/06/25/JKFf4XngPBdGm3V.png" style="zoom:67%;" /></p>
-<h3 id="rq3-how-effective-is-the-active-learning-component">RQ3: How effective is the Active Learning component?</h3>
-<p>为了验证本文所用的主动学习的有效性，作者进行了对比试验。第一个模型 (Supervised model) 使用全部标签但不使用迁移学习训练，第二个 (Naïve) 为只使用主动学习而不使用迁移学习，第三个为本文提出的模型。结果如下图所示，为了达到相似的性能，不同模型需要的标签数。</p>
-<p><img src="https://i.loli.net/2020/06/25/jcXphwBmR8J6SeU.png" style="zoom:67%;" /></p>
+<img src="https://i.loli.net/2020/06/25/JKFf4XngPBdGm3V.png" style="zoom:67%;" />
+
+<h3 id="RQ3-How-effective-is-the-Active-Learning-component"><a href="#RQ3-How-effective-is-the-Active-Learning-component" class="headerlink" title="RQ3:  How effective is the Active Learning component?"></a>RQ3:  How effective is the Active Learning component?</h3><p>为了验证本文所用的主动学习的有效性，作者进行了对比试验。第一个模型 (Supervised model) 使用全部标签但不使用迁移学习训练，第二个 (Naïve) 为只使用主动学习而不使用迁移学习，第三个为本文提出的模型。结果如下图所示，为了达到相似的性能，不同模型需要的标签数。</p>
+<img src="https://i.loli.net/2020/06/25/jcXphwBmR8J6SeU.png" style="zoom:67%;" />
+
 <p>下表展示了使用不同主动学习策略 (U - conventional uncertainty method, UCD - 本文使用的方法, random - 随机选择) 进行标记得到的结果：</p>
-<p><img src="https://i.loli.net/2020/06/25/pe24P9gFJfQVrKM.png" style="zoom:67%;" /></p>
-<p>同时作者还对不同<span class="math inline">\(\alpha\)</span>的选择进行了实验：</p>
-<p><img src="https://i.loli.net/2020/06/25/ifRhv85IqaVw7gx.png" style="zoom:67%;" /></p>
-<h3 id="rq4-how-effective-is-atad-in-detecting-anomalies-in-a-companys-local-dataset-based-on-public-datasets">RQ4: How effective is ATAD in detecting anomalies in a company’s local dataset based on public datasets?</h3>
-<p>这里作者对比了不同方法在微软内部数据集上的结果：</p>
-<p><img src="https://i.loli.net/2020/06/25/5oi3rcGugKXmTha.png" style="zoom:67%;" /></p>
-</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-05-06T03:05:37.000Z" title="2020-5-6 11:05:37 ├F10: AM┤">2020-05-06</time>发表</span><span class="level-item"><time dateTime="2020-06-25T08:15:23.573Z" title="2020-6-25 4:15:23 ├F10: PM┤">2020-06-25</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2020/05/06/Learning-Representations-of-Ultrahigh-dimensional-Data-for-Random-Distance-based-Outlier-Detection/">Learning Representations of Ultrahigh-dimensional Data for Random Distance-based Outlier Detection</a></h1><div class="content"><h1 id="introduction">Introduction</h1>
-<p>本文提出了一种针对高维数据异常检测的表示学习方法。文中提出了<strong>RAMODO</strong>框架，一种基于排序的结合表示学习和异常检测的无监督框架。除此之外，基于<strong>RAMODO</strong>，文中还提出了基于此框架的模型<strong>REPEN</strong>。</p>
+<img src="https://i.loli.net/2020/06/25/pe24P9gFJfQVrKM.png" style="zoom:67%;" />
+
+<p>同时作者还对不同$\alpha$的选择进行了实验：</p>
+<img src="https://i.loli.net/2020/06/25/ifRhv85IqaVw7gx.png" style="zoom:67%;" />
+
+<h3 id="RQ4-How-effective-is-ATAD-in-detecting-anomalies-in-a-company’s-local-dataset-based-on-public-datasets"><a href="#RQ4-How-effective-is-ATAD-in-detecting-anomalies-in-a-company’s-local-dataset-based-on-public-datasets" class="headerlink" title="RQ4: How effective is ATAD in detecting anomalies in a company’s local dataset based on public datasets?"></a>RQ4: How effective is ATAD in detecting anomalies in a company’s local dataset based on public datasets?</h3><p>这里作者对比了不同方法在微软内部数据集上的结果：</p>
+<img src="https://i.loli.net/2020/06/25/5oi3rcGugKXmTha.png" style="zoom:67%;" />
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-05-06T03:05:37.000Z" title="2020-5-6 11:05:37 ├F10: AM┤">2020-05-06</time>发表</span><span class="level-item"><time dateTime="2020-06-25T08:15:23.573Z" title="2020-6-25 4:15:23 ├F10: PM┤">2020-06-25</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2020/05/06/Learning-Representations-of-Ultrahigh-dimensional-Data-for-Random-Distance-based-Outlier-Detection/">Learning Representations of Ultrahigh-dimensional Data for Random Distance-based Outlier Detection</a></h1><div class="content"><h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>本文提出了一种针对高维数据异常检测的表示学习方法。文中提出了<strong>RAMODO</strong>框架，一种基于排序的结合表示学习和异常检测的无监督框架。除此之外，基于<strong>RAMODO</strong>，文中还提出了基于此框架的模型<strong>REPEN</strong>。</p>
 <p><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1806.04808">Paper📰</a></p>
-<h1 id="proposed-method">Proposed Method</h1>
-<h2 id="the-proposed-framework-ramodo">The Proposed Framework: <strong>RAMODO</strong></h2>
-<h3 id="problem-statement">Problem Statement</h3>
-<p>我们的目的是为高维数据学习低维表示，同时在学到的低维表示中能够更好地进行异常检测。设有数据集<span class="math inline">\(\mathcal{X}=\{\mathbf x_1,\mathbf x_2,\cdots, \mathbf x_N\}\)</span> (<span class="math inline">\(\mathbf x_i\in \mathbb{R}^D\)</span>) 和一个基于随机距离的异常检测器<span class="math inline">\(\phi:\mathcal{X}\mapsto \mathbb{R}\)</span>，我们的目标是学习一个表示函数<span class="math inline">\(f:\mathcal{X}\mapsto\mathbb{R}^M (M\ll D)\)</span>使得对于所有异常样本<span class="math inline">\(\mathbf x_i\)</span>和正常样本<span class="math inline">\(\mathbf x_j\)</span>都有<span class="math inline">\(\phi(f(\mathbf x_i))&gt;\phi(f(\mathbf x_j))\)</span>。</p>
-<h3 id="ranking-model-based-representation-learning-framework">Ranking Model-based Representation Learning Framework</h3>
-<p><strong>RAMODO</strong>基于<em>pairwise ranking model</em>。第一步是通过一定的预处理算法（原文中称为<em>outlier thresholding</em>）将数据划分为inlier候选集和outlier候选集；第二步通过随机从inlier候选集采样<span class="math inline">\(n\)</span>个样本生成query set <span class="math inline">\((\mathbf x_i,\cdots,\mathbf x_{i+n-1})\)</span>，从inlier候选集采样一个样本生成<em>positive example</em> <span class="math inline">\((\mathbf x^+)\)</span>，从outlier候选集采样一个样本生成<em>negative example</em> <span class="math inline">\((\mathbf x^-)\)</span>，将三者组合生成 <em>metatriplet</em> <span class="math inline">\(T=(&lt;\mathbf x_i,\cdots,\mathbf x_{i+n-1}&gt;,\mathbf x^+,\mathbf x^-)\)</span>；第三步通过神经网络<span class="math inline">\(f\)</span>学习表示；第四步通过<em>outlier score-based ranking loss</em> <span class="math inline">\(L(\phi(f(\mathbf x^+)|&lt;f(\mathbf x_i),\cdots,f(\mathbf x_{i+n-1})&gt;),\phi(f(\mathbf x^-)|&lt;f(\mathbf x_i),\cdots,f(\mathbf x_{i+n-1})&gt;))\)</span>来进行优化，其中<span class="math inline">\(\phi(\cdot|\cdot)\)</span>为基于距离的异常检测器。</p>
-<p><img src="https://i.loli.net/2020/06/25/4I7fx5ZjBhueUDz.png" /></p>
-<h2 id="a-ramodo-instance-repen">A <strong>RAMODO</strong> Instance: <strong>REPEN</strong></h2>
-<p><strong>REPEN</strong>为<strong>RAMODO</strong>的实例模型，使用Sp作为异常检测器。</p>
-<h3 id="outlier-thresholding-using-state-of-the-art-detectors-and-cantellis-inequality">Outlier Thresholding Using State-of-the-art Detectors and Cantelli's Inequality</h3>
-<p>第一步使用Sp作为基础获得初始anomaly score：</p>
+<h1 id="Proposed-Method"><a href="#Proposed-Method" class="headerlink" title="Proposed Method"></a>Proposed Method</h1><h2 id="The-Proposed-Framework-RAMODO"><a href="#The-Proposed-Framework-RAMODO" class="headerlink" title="The Proposed Framework: RAMODO"></a>The Proposed Framework: <strong>RAMODO</strong></h2><h3 id="Problem-Statement"><a href="#Problem-Statement" class="headerlink" title="Problem Statement"></a>Problem Statement</h3><p>我们的目的是为高维数据学习低维表示，同时在学到的低维表示中能够更好地进行异常检测。设有数据集$\mathcal{X}={\mathbf x_1,\mathbf x_2,\cdots, \mathbf x_N}$ ($\mathbf x_i\in \mathbb{R}^D$) 和一个基于随机距离的异常检测器$\phi:\mathcal{X}\mapsto \mathbb{R}$，我们的目标是学习一个表示函数$f:\mathcal{X}\mapsto\mathbb{R}^M (M\ll D)$使得对于所有异常样本$\mathbf x_i$和正常样本$\mathbf x_j$都有$\phi(f(\mathbf x_i))&gt;\phi(f(\mathbf x_j))$。</p>
+<h3 id="Ranking-Model-based-Representation-Learning-Framework"><a href="#Ranking-Model-based-Representation-Learning-Framework" class="headerlink" title="Ranking Model-based Representation Learning Framework"></a>Ranking Model-based Representation Learning Framework</h3><p><strong>RAMODO</strong>基于<em>pairwise ranking model</em>。第一步是通过一定的预处理算法（原文中称为<em>outlier thresholding</em>）将数据划分为inlier候选集和outlier候选集；第二步通过随机从inlier候选集采样$n$个样本生成query set $(\mathbf x_i,\cdots,\mathbf x_{i+n-1})$，从inlier候选集采样一个样本生成<em>positive example</em> $(\mathbf x^+)$，从outlier候选集采样一个样本生成<em>negative example</em> $(\mathbf x^-)$，将三者组合生成 <em>metatriplet</em> $T=(&lt;\mathbf x_i,\cdots,\mathbf x_{i+n-1}&gt;,\mathbf x^+,\mathbf x^-)$；第三步通过神经网络$f$学习表示；第四步通过<em>outlier score-based ranking loss</em> $L(\phi(f(\mathbf x^+)|&lt;f(\mathbf x_i),\cdots,f(\mathbf x_{i+n-1})&gt;),\phi(f(\mathbf x^-)|&lt;f(\mathbf x_i),\cdots,f(\mathbf x_{i+n-1})&gt;))$来进行优化，其中$\phi(\cdot|\cdot)$为基于距离的异常检测器。</p>
+<p><img src="https://i.loli.net/2020/06/25/4I7fx5ZjBhueUDz.png"></p>
+<h2 id="A-RAMODO-Instance-REPEN"><a href="#A-RAMODO-Instance-REPEN" class="headerlink" title="A RAMODO Instance: REPEN"></a>A <strong>RAMODO</strong> Instance: <strong>REPEN</strong></h2><p><strong>REPEN</strong>为<strong>RAMODO</strong>的实例模型，使用Sp作为异常检测器。</p>
+<h3 id="Outlier-Thresholding-Using-State-of-the-art-Detectors-and-Cantelli’s-Inequality"><a href="#Outlier-Thresholding-Using-State-of-the-art-Detectors-and-Cantelli’s-Inequality" class="headerlink" title="Outlier Thresholding Using State-of-the-art Detectors and Cantelli’s Inequality"></a>Outlier Thresholding Using State-of-the-art Detectors and Cantelli’s Inequality</h3><p>第一步使用Sp作为基础获得初始anomaly score：</p>
 <blockquote>
-<p><strong>Definition 1</strong> (<em>Sp-based Outlier Scoring</em>). 给定样本<span class="math inline">\(x_i\)</span>，Sp 以以下方式定义该样本的异常程度： <span class="math display">\[
-r_i=\frac{1}{m}\sum\limits_{j=1}^m nn\_dist(\mathbf x_i|\mathcal{S}_j)
-\]</span> 其中<span class="math inline">\(\mathcal S_j\subset \mathcal X\)</span>为数据集随机采样的子集，<span class="math inline">\(m\)</span>为集成大小，<span class="math inline">\(nn_dist(\cdot|\cdot)\)</span>为<span class="math inline">\(\mathcal S_j\)</span>中最近邻居的距离。</p>
+<p><strong>Definition 1</strong> (<em>Sp-based Outlier Scoring</em>). 给定样本$x_i$，Sp 以以下方式定义该样本的异常程度：<br>$$<br>r_i=\frac{1}{m}\sum\limits_{j=1}^m nn_dist(\mathbf x_i|\mathcal{S}_j)<br>$$<br>其中$\mathcal S_j\subset \mathcal X$为数据集随机采样的子集，$m$为集成大小，$nn_dist(\cdot|\cdot)$为$\mathcal S_j$中最近邻居的距离。</p>
 </blockquote>
-<p>接着通过<em>Cantelli's Inequality</em>来定义<em>Pseudo Outlier</em>：</p>
+<p>接着通过<em>Cantelli’s Inequality</em>来定义<em>Pseudo Outlier</em>：</p>
 <blockquote>
-<p><strong>Definition 2 </strong>(<em>Cantelli's Inequality-based Outlier Thresholding</em>). 给定异常分数向量<span class="math inline">\(\mathbf r\in\mathbb R^N\)</span>，更高异常分数代表更高的可能性为异常，设<span class="math inline">\(\mu\)</span>和<span class="math inline">\(\delta^2\)</span>分别为均值和方差，<em>Outlier</em>候选集由以下方式确定： <span class="math display">\[
-\mathcal{O}=\{\mathbf x_i|r_i \geq \mu + \alpha\delta\}, \space\forall \mathbf x_i\in\mathcal X, \space r_i\in\mathbf r
-\]</span> 其中<span class="math inline">\(\alpha\geq 0\)</span>为自定义的阈值。</p>
+<p>*<em>Definition 2 **(<em>Cantelli’s Inequality-based Outlier Thresholding</em>). 给定异常分数向量$\mathbf r\in\mathbb R^N$，更高异常分数代表更高的可能性为异常，设$\mu$和$\delta^2$分别为均值和方差，</em>Outlier*候选集由以下方式确定：<br>$$<br>\mathcal{O}={\mathbf x_i|r_i \geq \mu + \alpha\delta}, \space\forall \mathbf x_i\in\mathcal X, \space r_i\in\mathbf r<br>$$<br>其中$\alpha\geq 0$为自定义的阈值。</p>
 </blockquote>
-<p><em>Inlier</em>候选集<span class="math inline">\(\mathcal I=\mathcal X\backslash \mathcal O\)</span>。</p>
-<h3 id="triplet-sampling-based-on-outlier-scores">Triplet Sampling Based on Outlier Scores</h3>
-<p>首先，从<span class="math inline">\(\mathcal I\)</span>采样一定数量的样本组成<em>query set</em>，每个样本被采样的概率与其对应的异常分数有关：</p>
-<p><span class="math display">\[
-p(\mathbf x_i)=\frac{\mathbb Z-r_i}{\sum_{t=1}^{|\mathcal I|}[\mathbb Z-r_t]}
-\]</span></p>
-<p>其中<span class="math inline">\(\mathbb Z=\sum_{t=1}^{|\mathcal I|}r_t\)</span>。</p>
-<p>之后从<em>inlier set</em>中均匀随机采样一个<em>positive sample</em> <span class="math inline">\(\mathbf x^+\)</span>。最后从<em>outlier set</em>中根据以下概率采样一个<em>negative sample</em> <span class="math inline">\(\mathbf x^-\)</span>： <span class="math display">\[
-p(\mathbf x_j)=\frac{r_j}{\sum_{t=1}^{|\mathcal O|}r_t}
-\]</span></p>
-<h3 id="a-shallow-data-representation">A Shallow Data Representation</h3>
-<p>单层神经网络用来获得浅层的表示：</p>
+<p><em>Inlier</em>候选集$\mathcal I=\mathcal X\backslash \mathcal O$。</p>
+<h3 id="Triplet-Sampling-Based-on-Outlier-Scores"><a href="#Triplet-Sampling-Based-on-Outlier-Scores" class="headerlink" title="Triplet Sampling Based on Outlier Scores"></a>Triplet Sampling Based on Outlier Scores</h3><p>首先，从$\mathcal I$采样一定数量的样本组成<em>query set</em>，每个样本被采样的概率与其对应的异常分数有关：</p>
+<p>$$<br>p(\mathbf x_i)=\frac{\mathbb Z-r_i}{\sum_{t=1}^{|\mathcal I|}[\mathbb Z-r_t]}<br>$$</p>
+<p>其中$\mathbb Z=\sum_{t=1}^{|\mathcal I|}r_t$。</p>
+<p>之后从<em>inlier set</em>中均匀随机采样一个<em>positive sample</em> $\mathbf x^+$。最后从<em>outlier set</em>中根据以下概率采样一个<em>negative sample</em> $\mathbf x^-$：<br>$$<br>p(\mathbf x_j)=\frac{r_j}{\sum_{t=1}^{|\mathcal O|}r_t}<br>$$</p>
+<h3 id="A-Shallow-Data-Representation"><a href="#A-Shallow-Data-Representation" class="headerlink" title="A Shallow Data Representation"></a>A Shallow Data Representation</h3><p>单层神经网络用来获得浅层的表示：</p>
 <blockquote>
-<p><strong>Definition 3 </strong>(<em>Single-layer Fully-connected Representations</em>) 给定输入<span class="math inline">\(x\)</span>， <span class="math display">\[
-f_\Theta(\mathbf x)=\{\psi(\mathbf w_1^\top\mathbf x),\psi(\mathbf w_2^\top\mathbf x),\cdots,\psi(\mathbf w_M^\top\mathbf x)\}
-\]</span> 其中<span class="math inline">\(\psi(\cdot)\)</span>为激活函数，<span class="math inline">\(\mathbf w\)</span>为权重矩阵。</p>
+<p>**Definition 3 **(<em>Single-layer Fully-connected Representations</em>) 给定输入$x$，<br>$$<br>f_\Theta(\mathbf x)={\psi(\mathbf w_1^\top\mathbf x),\psi(\mathbf w_2^\top\mathbf x),\cdots,\psi(\mathbf w_M^\top\mathbf x)}<br>$$<br>其中$\psi(\cdot)$为激活函数，$\mathbf w$为权重矩阵。</p>
 </blockquote>
-<h3 id="ranking-loss-using-random-nearest-neighbor-distance-based-outlier-scores">Ranking Loss Using Random Nearest Neighbor Distance-based Outlier Scores</h3>
-<p>设<span class="math inline">\(\mathcal{Q}=&lt;f_\Theta(\mathbf x_i),\cdots,f_\Theta(\mathbf x_{i+n-1})&gt;\)</span>为<em>query set</em>，给定样本<span class="math inline">\(\mathbf x\)</span>，<strong>REPEN</strong>根据最近邻距离定义了<span class="math inline">\(f_\Theta(\mathbf x)\)</span>的异常程度： <span class="math display">\[
-\phi(f_\Theta(\mathbf x)|\mathcal{Q})=nn\_dist(f_\Theta(\mathbf x)|\mathcal Q)
-\]</span> 因此，给定三元组<span class="math inline">\(T=(\mathcal Q,f_\Theta(\mathbf x^+),f_\Theta(\mathbf x^-))\)</span>，我们的目标是学得表示<span class="math inline">\(f(\cdot)\)</span>使得： <span class="math display">\[
-nn\_dist(f_\Theta(\mathbf x^+)|\mathcal Q)&lt;nn\_dist(f_\Theta(\mathbf x^-)|\mathcal Q)
-\]</span> 损失函数： <span class="math display">\[
-J(\Theta;T)=L(\phi(f_\Theta(\mathbf x^+)|\mathcal Q),\phi(f_\Theta(\mathbf x^-)|\mathcal Q))=\\\max\{0, c+nn\_dist(f_\Theta(\mathbf x^+)|\mathcal Q)-nn\_dist(f_\Theta(\mathbf x^-)|\mathcal Q)\}
-\]</span> 其中<span class="math inline">\(c\)</span>为边界参数。给定一系列三元组，最终优化目标如下： <span class="math display">\[
-\mathop{\text{arg min}}\limits_{\Theta}\frac{1}{|\mathcal{T}|}\sum\limits_{i=1}^{|\mathcal T|}J(\Theta;T_i)
-\]</span></p>
-<h3 id="the-algorithm-and-its-time-complexity">The Algorithm and Its Time Complexity</h3>
-<p><img src="https://i.loli.net/2020/06/25/eYtKHBJ7szCgjNa.png" /></p>
-<h3 id="leveraging-a-few-labeled-outliers-to-improve-triplet-sampling">Leveraging A Few Labeled Outliers to Improve Triplet Sampling</h3>
-<h1 id="experiments">Experiments</h1>
-<h2 id="datasets">Datasets</h2>
-<ul>
+<h3 id="Ranking-Loss-Using-Random-Nearest-Neighbor-Distance-based-Outlier-Scores"><a href="#Ranking-Loss-Using-Random-Nearest-Neighbor-Distance-based-Outlier-Scores" class="headerlink" title="Ranking Loss Using Random Nearest Neighbor Distance-based Outlier Scores"></a>Ranking Loss Using Random Nearest Neighbor Distance-based Outlier Scores</h3><p>设$\mathcal{Q}=&lt;f_\Theta(\mathbf x_i),\cdots,f_\Theta(\mathbf x_{i+n-1})&gt;$为<em>query set</em>，给定样本$\mathbf x$，<strong>REPEN</strong>根据最近邻距离定义了$f_\Theta(\mathbf x)$的异常程度：<br>$$<br>\phi(f_\Theta(\mathbf x)|\mathcal{Q})=nn_dist(f_\Theta(\mathbf x)|\mathcal Q)<br>$$<br>因此，给定三元组$T=(\mathcal Q,f_\Theta(\mathbf x^+),f_\Theta(\mathbf x^-))$，我们的目标是学得表示$f(\cdot)$使得：<br>$$<br>nn_dist(f_\Theta(\mathbf x^+)|\mathcal Q)&lt;nn_dist(f_\Theta(\mathbf x^-)|\mathcal Q)<br>$$<br>损失函数：<br>$$<br>J(\Theta;T)=L(\phi(f_\Theta(\mathbf x^+)|\mathcal Q),\phi(f_\Theta(\mathbf x^-)|\mathcal Q))=\\max{0, c+nn_dist(f_\Theta(\mathbf x^+)|\mathcal Q)-nn_dist(f_\Theta(\mathbf x^-)|\mathcal Q)}<br>$$<br>其中$c$为边界参数。给定一系列三元组，最终优化目标如下：<br>$$<br>\mathop{\text{arg min}}\limits_{\Theta}\frac{1}{|\mathcal{T}|}\sum\limits_{i=1}^{|\mathcal T|}J(\Theta;T_i)<br>$$</p>
+<h3 id="The-Algorithm-and-Its-Time-Complexity"><a href="#The-Algorithm-and-Its-Time-Complexity" class="headerlink" title="The Algorithm and Its Time Complexity"></a>The Algorithm and Its Time Complexity</h3><p><img src="https://i.loli.net/2020/06/25/eYtKHBJ7szCgjNa.png"></p>
+<h3 id="Leveraging-A-Few-Labeled-Outliers-to-Improve-Triplet-Sampling"><a href="#Leveraging-A-Few-Labeled-Outliers-to-Improve-Triplet-Sampling" class="headerlink" title="Leveraging A Few Labeled Outliers to Improve Triplet Sampling"></a>Leveraging A Few Labeled Outliers to Improve Triplet Sampling</h3><h1 id="Experiments"><a href="#Experiments" class="headerlink" title="Experiments"></a>Experiments</h1><h2 id="Datasets"><a href="#Datasets" class="headerlink" title="Datasets"></a>Datasets</h2><ul>
 <li>AD：网络广告检测</li>
 <li>LC：肺癌疾病监测</li>
 <li>p53：异常蛋白质活动检测</li>
@@ -483,25 +348,20 @@ J(\Theta;T)=L(\phi(f_\Theta(\mathbf x^+)|\mathcal Q),\phi(f_\Theta(\mathbf x^-)|
 <li>URL：异常网址检测</li>
 <li>Webspam：Pascal Large Scale LearningChallenge</li>
 </ul>
-<h2 id="effectiveness-in-real-world-data-with-thousands-to-millions-of-features">Effectiveness in Real-world Data with Thousands to Millions of Features</h2>
-<p>作者分别使用原始特征和<em>REPEN</em>学到的特征进行异常检测，IMP代表性能提升比例，SU代表加速比例。</p>
-<p><img src="https://i.loli.net/2020/06/25/mvUiE1NzyTwOgV8.png" /></p>
-<h2 id="comparing-to-state-of-the-art-representation-learning-competitors">Comparing to State-of-the-art Representation Learning Competitors</h2>
-<ul>
-<li><strong>AE: </strong>自编码器</li>
-<li><strong>HLLE: </strong> <em>Hessian Locally Linear Embedding</em></li>
-<li><strong>SRP: </strong> <em>Sparse Random Projection</em></li>
-<li><strong>CoP: </strong> <em>Coherent Pursuit</em></li>
+<h2 id="Effectiveness-in-Real-world-Data-with-Thousands-to-Millions-of-Features"><a href="#Effectiveness-in-Real-world-Data-with-Thousands-to-Millions-of-Features" class="headerlink" title="Effectiveness in Real-world Data with Thousands to Millions of Features"></a>Effectiveness in Real-world Data with Thousands to Millions of Features</h2><p>作者分别使用原始特征和<em>REPEN</em>学到的特征进行异常检测，IMP代表性能提升比例，SU代表加速比例。</p>
+<p><img src="https://i.loli.net/2020/06/25/mvUiE1NzyTwOgV8.png"></p>
+<h2 id="Comparing-to-State-of-the-art-Representation-Learning-Competitors"><a href="#Comparing-to-State-of-the-art-Representation-Learning-Competitors" class="headerlink" title="Comparing to State-of-the-art Representation Learning Competitors"></a>Comparing to State-of-the-art Representation Learning Competitors</h2><ul>
+<li>**AE: **自编码器</li>
+<li>**HLLE: ** <em>Hessian Locally Linear Embedding</em></li>
+<li>**SRP: ** <em>Sparse Random Projection</em></li>
+<li>**CoP: ** <em>Coherent Pursuit</em></li>
 </ul>
-<p><img src="https://i.loli.net/2020/06/25/yQumCRNrHAheJ34.png" /></p>
-<h2 id="the-capability-of-leveraging-labeled-outliers-as-prior-knowledge">The Capability of Leveraging Labeled Outliers as Prior Knowledge</h2>
-<p><img src="https://i.loli.net/2020/06/25/NOLfKQd2u1JMPtp.png" /></p>
-<h2 id="sensitivity-test-w.r.t.-the-representation-dimension">Sensitivity Test w.r.t. the Representation Dimension</h2>
-<p><img src="https://i.loli.net/2020/06/25/BoGjY5SEu6vrK3X.png" /></p>
-<p><img src="https://i.loli.net/2020/06/25/Rlx7Df9Hvsjp2Eg.png" /></p>
-<p>文中提到了对于R8、URL、News20这三个数据集在维度<span class="math inline">\(M=1\)</span>的时候表现和其他维度一样好，作者给出的解释是在这几个数据集中异常部分是线性可分的，所以1维就足够了，另一个解释是优化问题。</p>
-<h2 id="scalability-test">Scalability Test</h2>
-<p><img src="https://i.loli.net/2020/06/25/1JfUclWyFYgLdNp.png" /></p>
+<p><img src="https://i.loli.net/2020/06/25/yQumCRNrHAheJ34.png"></p>
+<h2 id="The-Capability-of-Leveraging-Labeled-Outliers-as-Prior-Knowledge"><a href="#The-Capability-of-Leveraging-Labeled-Outliers-as-Prior-Knowledge" class="headerlink" title="The Capability of Leveraging Labeled Outliers as Prior Knowledge"></a>The Capability of Leveraging Labeled Outliers as Prior Knowledge</h2><p><img src="https://i.loli.net/2020/06/25/NOLfKQd2u1JMPtp.png"></p>
+<h2 id="Sensitivity-Test-w-r-t-the-Representation-Dimension"><a href="#Sensitivity-Test-w-r-t-the-Representation-Dimension" class="headerlink" title="Sensitivity Test w.r.t. the Representation Dimension"></a>Sensitivity Test w.r.t. the Representation Dimension</h2><p><img src="https://i.loli.net/2020/06/25/BoGjY5SEu6vrK3X.png"></p>
+<p><img src="https://i.loli.net/2020/06/25/Rlx7Df9Hvsjp2Eg.png"></p>
+<p>文中提到了对于R8、URL、News20这三个数据集在维度$M=1$的时候表现和其他维度一样好，作者给出的解释是在这几个数据集中异常部分是线性可分的，所以1维就足够了，另一个解释是优化问题。</p>
+<h2 id="Scalability-Test"><a href="#Scalability-Test" class="headerlink" title="Scalability Test"></a>Scalability Test</h2><p><img src="https://i.loli.net/2020/06/25/1JfUclWyFYgLdNp.png"></p>
 </div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-03-29T16:17:24.000Z" title="2020-3-30 12:17:24 ├F10: AM┤">2020-03-30</time>发表</span><span class="level-item"><time dateTime="2020-06-25T05:33:35.419Z" title="2020-6-25 1:33:35 ├F10: PM┤">2020-06-25</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2020/03/30/Deep-Weakly-supervised-Anomaly-Detection/">Deep Weakly-supervised Anomaly Detection</a></h1><div class="content"><h1 id="introduction">Introduction</h1>
 <p>在文献中，因为标注成本的昂贵，无监督方法占据了异常检测的主要位置。然而，在现实生活中，我们可能会有少量标签，如何利用这部分标签信息就成为了一个问题，作者将其称之为<em>anomaly-informed modeling</em>。作者提出了两点挑战：</p>
 <ol type="1">
@@ -590,237 +450,153 @@ s_{\mathbf{x}_k}=\frac{1}{2E}\left[\sum\limits_{i=1}^E\phi((\mathbf a_i,\mathbf 
 <li><strong>A2H: </strong>加入了额外的隐藏层，并且加入了<span class="math inline">\(\ell_2\)</span>-norm防止过拟合。</li>
 </ul>
 <p><img src="https://i.loli.net/2020/06/25/oR7qlZWfepFT8jK.png" style="zoom:80%;" /></p>
-</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-02-27T12:02:18.000Z" title="2020-2-27 8:02:18 ├F10: PM┤">2020-02-27</time>发表</span><span class="level-item"><time dateTime="2020-06-25T09:01:35.786Z" title="2020-6-25 5:01:35 ├F10: PM┤">2020-06-25</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/">Transfer Anomaly Detection by Inferring Latent Domain Representations</a></h1><div class="content"><h1 id="introduction">Introduction</h1>
-<p>作者提出了一种利用迁移学习提升target domain异常检测性能的算法。文中指出现有的基于迁移学习的异常检测算法需要对每个 target domain 进行单独训练，这样做会带来很大的计算开销。本文通过<em>latent domain vectors</em>来实现无需重新训练的异常检测。<em>latent domain vectors</em>是domain的一种隐含表示，通过该domain中的正常样本得到。在本文中，<em>anomaly score function</em>通过Auto-encoder得到。</p>
-<h1 id="proposed-method">Proposed Method</h1>
-<h2 id="task">Task</h2>
-<p>令<span class="math inline">\(\mathbf{X}_d^+:=\{\mathbf{x}^+_{dn}\}^{N^+_d}_{n=1}\)</span>为第<span class="math inline">\(d\)</span>个domain的异常样本集，<span class="math inline">\(\mathbf{x}_{dn}^+\in\mathbb{R}^M\)</span>为其中第<span class="math inline">\(n\)</span>个样本的<span class="math inline">\(M\)</span>维特征向量，<span class="math inline">\(N^+_d\)</span>为第<span class="math inline">\(d\)</span>个domain异常样本的数量。</p>
-<p>类似的，令<span class="math inline">\(\mathbf{X}_d^-:=\{\mathbf{x}^-_{dn}\}^{N^-_d}_{n=1}\)</span>为第<span class="math inline">\(d\)</span>个domain的正常样本集。我们假设对于每个domain都有<span class="math inline">\(N^+_d\ll N^-_d\)</span>，且特征向量维度都为<span class="math inline">\(M\)</span>。</p>
-<p>假设在 source domain <span class="math inline">\(D_S\)</span>都有正常样本和异常样本，记为<span class="math inline">\(\{\mathbf{X}^+_d\cup\mathbf{X}_d^-\}^{D_S}_{d=1}\)</span>，在 target domain <span class="math inline">\(D_T\)</span>只有正常样本<span class="math inline">\(\{\mathbf{X}_d^-\}^{D_S+D_T}_{d=D_S+1}\)</span>。我们的目标是得到一个对于 target domain 合适的 domain-specific 的异常打分函数。</p>
-<p><img src="https://i.loli.net/2020/06/25/KW2YgScfVZN7Fjz.png" style="zoom:67%;" /></p>
-<h2 id="domain-specific-anomaly-score-function">Domain-specific Anomaly Score Function</h2>
-<p>我们基于Auto-encoder定义异常打分函数。对于每个domain，我们假设存在一个<span class="math inline">\(K\)</span>维的隐变量<span class="math inline">\(\mathbf{z}_d\in\mathbb{R}^K\)</span>。对于第<span class="math inline">\(d\)</span>个 domain，异常打分函数定义如下： <span class="math display">\[
-s_\theta(\mathbf{x}_{dn}|\mathbf{z}_d):=\parallel\mathbf{x}_{dn}-G_{\theta_G}(F_{\theta_F}(\mathbf{x}_{dn},\mathbf{z}_d))\parallel^2
-\]</span> 其中参数<span class="math inline">\(\theta:=(\theta_G,\theta_F)\)</span>在所有 domain 之间共享。</p>
-<h2 id="models-for-latent-domain-vectors">Models for Latent Domain Vectors</h2>
-<p>隐变量<span class="math inline">\(\mathbf{z}_d\)</span>是无法观测到的，只能通过数据来估计。首先<span class="math inline">\(\mathbf{z}_d\)</span>在<span class="math inline">\(\mathbf{X}_d^-\)</span>条件下的条件分布假设为高斯分布：</p>
-<p><span class="math display">\[
-q_\theta(\mathbf{z}_d|\mathbf{X}_d^-):=\mathcal{N}(\mathbf{z}_d|\mu_\phi(\mathbf{X}_d^-),\text{diag}(\sigma_\phi^2(\mathbf{X}_d^-)))
-\]</span> 其中均值<span class="math inline">\(\mu_\phi(\mathbf{X}_d^-)\in\mathbb{R}^K\)</span>和方差<span class="math inline">\(\sigma^2_\phi(\mathbf{X}_d^-)\in\mathbb{R}^K_+\)</span>由神经网络建模，且在所有 domain 之间共享。在<span class="math inline">\(\mathbf{X}_d^-\)</span>给定的时候，我们便能够推断出该 domain 对应的隐变量，</p>
-<p><span class="math inline">\(q_\phi\)</span>的输入为正常样本的集合，故神经网络需要满足<em>permutation invariant</em>。<span class="math inline">\(\tau(\mathbf{X}_d^-)=\rho(\sum_{n=1}^{N_d^-}\eta(\mathbf{x}_{dn}^-))\)</span>，其中<span class="math inline">\(\tau(\mathbf{X}_d^-)\)</span>表示<span class="math inline">\(\mu_\phi(\mathbf{X_d^-})\)</span>或<span class="math inline">\(\ln\sigma_\phi^2(\mathbf{X}_d^-)\)</span>，<span class="math inline">\(\rho\)</span>和<span class="math inline">\(\eta\)</span>为神经网络，</p>
-<h2 id="objective-function">Objective Function</h2>
-<p>目标函数由anomaly score函数和隐变量组成。第<span class="math inline">\(d\)</span>个domain在对应的隐变量<span class="math inline">\(\mathbf{z}_d\)</span>条件下的目标函数为：</p>
-<p><span class="math display">\[
-L_d(\theta|\mathbf{z}_d):=\frac{1}{N_d^-}\sum\limits_{n=1}^{N_d^-}s_\theta(\mathbf{x}_{dn}^-|\mathbf{z}_d)-\frac{\lambda}{N_d^-N_d^+}\sum\limits_{n,m=1}^{N_d^-,N_d^+}f(s_\theta(\mathbf{x}_{dm}^+|\mathbf{z}_d)-s_\theta(\mathbf{x}_{dn}^-|\mathbf{z}_d))
-\]</span></p>
-<p>其中<span class="math inline">\(\lambda\geq 0\)</span>为超参数，<span class="math inline">\(f\)</span>为sigmoid函数。公式的第一项表示第<span class="math inline">\(d\)</span>个domain正常样本对应的<em>anomaly score</em>。第二项为可微分的AUC。异常样本的<em>anomaly score</em>应当大于正常样本，所以对任何<span class="math inline">\(\mathbf x_{dm}^+\in\mathbf X_d^+, \mathbf x_{dn}^-\in\mathbf X_d^-\)</span>有<span class="math inline">\(s_\theta(\mathbf x_{dm}^+|\mathbf z_d)&gt;s_\theta(\mathbf x_{dn}^-|\mathbf z_d)\)</span>。第二项<span class="math inline">\(\frac{\lambda}{N_d^-N_d^+}\sum\limits_{n,m=1}^{N_d^-,N_d^+}f(s_\theta(\mathbf{x}_{dm}^+|\mathbf{z}_d)-s_\theta(\mathbf{x}_{dn}^-|\mathbf{z}_d))\)</span>的取值范围是<span class="math inline">\([0,1]\)</span>，当所有的<span class="math inline">\(s_\theta(\mathbf{x}_{dm}^+|\mathbf{z}_d)\gg s_\theta(\mathbf{x}_{dm}^-|\mathbf{z}_d)\)</span>时该项为1，当所有的<span class="math inline">\(s_\theta(\mathbf{x}_{dm}^+|\mathbf{z}_d)\ll s_\theta(\mathbf{x}_{dm}^-|\mathbf{z}_d)\)</span>时该项为0，所以最小化该项的相反数相当于鼓励<span class="math inline">\(s_\theta(\mathbf{x}_{dm}^+|\mathbf{z}_d)\gg s_\theta(\mathbf{x}_{dm}^-|\mathbf{z}_d)\)</span>。</p>
-<p>因为隐变量<span class="math inline">\(\mathbf z_d\)</span>包含不确定性，我们应该在目标函数里考虑这一点： <span class="math display">\[
-\mathcal{L}_d(\theta,\phi):=\mathbb{E}_{q_\phi(\mathbf{z}_d|\mathbf{X}_d^-)}\left[L_d(\theta|\mathbf{z}_d)\right]+\beta D_\text{KL}(q_\phi(\mathbf{z}_d|\mathbf{X}_d^-)\parallel p(\mathbf{z_d}))
-\]</span></p>
-<p>第一项是<span class="math inline">\(L_d(\theta|\mathbf z_d)\)</span>关于<span class="math inline">\(q_\phi(\mathbf z_d|\mathbf X_d^-)\)</span>的期望，第二项是<span class="math inline">\(q_\phi(\mathbf z_d|\mathbf X_d^-)\)</span>和<span class="math inline">\(p(\mathbf z_d):=\mathcal{N}(\boldsymbol 0,\boldsymbol I)\)</span>的KL散度。第一项可以用<em>monte carlo</em>估计<span class="math inline">\(\mathbb{E}_{q_\phi(\mathbf{z}_d|\mathbf{X}_d^-)}\left[L_d(\theta|\mathbf{z}_d)\right]\approx\frac{1}{L}\sum_{\ell=1}^L L_d(\theta|\mathbf z_d^{(\ell)})\)</span>，除此之外还需要用到<em>reparametrization trick</em>。</p>
-<p>对于第<span class="math inline">\(d\)</span>个target domain，因为没有异常样本（假设），所以<span class="math inline">\(L_d(\theta|\mathbf{z}_d):=\frac{1}{N_d^-}\sum\limits_{n=1}^{N_d^-}s_\theta(\mathbf{x}_{dn}^-|\mathbf{z}_d)\)</span>，有： <span class="math display">\[
-\mathcal{L}_d(\theta,\phi):=\mathbb{E}_{q_\phi(\mathbf{z}_d|\mathbf{X}_d^-)}\left[\frac{1}{N_d^-}\sum\limits_{n=1}^{N_d^-}s_\theta(\mathbf{x}_{dn}^-|\mathbf{z}_d)\right]+\beta D_\text{KL}(q_\phi(\mathbf{z}_d|\mathbf{X}_d^-)\parallel p(\mathbf{z}_d))
-\]</span></p>
-<p>所以总的损失函数为各domain对应的损失函数之和<span class="math inline">\(\mathcal{L}(\theta,\phi):=\sum_{d=1}^{D_S+D_T}\alpha_d\mathcal{L}_d(\theta,\phi)\)</span>。</p>
-<h2 id="inference">Inference</h2>
-<p>训练好之后，domain-specific的<em>anomaly score</em>可以由下式计算出：</p>
-<p><span class="math display">\[
-s(\mathbf{x}_{d^\prime}):=\int s_{\theta_*}(\mathbf{x_{d^\prime}}|\mathbf{z}_{d^\prime})q_{\phi_*}(\mathbf{z}_{d^\prime}|\mathbf{X}_{d^\prime}^-)\mathrm{d}\mathbf{z}_{d^\prime}\approx\frac{1}{L}\sum\limits_{\ell=1}^L s_{\theta_*}(\mathbf{x}_{d^\prime}|\mathbf{z}_{d^\prime}^{(\ell)})
-\]</span></p>
-<h1 id="experiments">Experiments</h1>
-<h2 id="data">Data</h2>
-<p>实验包含五个数据集，第一个是合成数据集。如下图(a)所示，围绕<span class="math inline">\((0,0)\)</span>有<span class="math inline">\(8\)</span>个圈，每个圈包含了一个内圈作为异常样本，第<span class="math inline">\(7\)</span>个圈被选为target domain，其余的为source domain。第二个是MNIST-r，是加入旋转的MNIST，包含6个domain，其中数字“4”被选为异常样本，其余为正常。第三个为Anuran Calls，包含5个domain。第四个是Landmine，主要用在多任务学习中。第五个是IoT，网络流量数据，包含8个domain。</p>
-<p><img src="https://i.loli.net/2020/06/25/6WLAfMwJPuN5Ov9.png" style="zoom:50%;" /></p>
-<h2 id="comparison-methods">Comparison Methods</h2>
-<p>对比的baseline包括NN（普通多层神经网络），NNAUC（加入可微分AUC作为损失函数），AE（普通Autoencoer），AEAUC（加入可微分AUC的AE），OSVM（单类支持向量机），CCSA，TOSVM和OTL。</p>
-<h2 id="results">Results</h2>
-<p>4个真实数据集的结果如下：</p>
-<p><img src="https://i.loli.net/2020/06/25/nfkwTVexRNqyFMY.png" style="zoom:50%;" /></p>
-<p><img src="https://i.loli.net/2020/06/25/QaMskTZALyeiFI1.png" style="zoom:50%;" /></p>
-<p><img src="https://i.loli.net/2020/06/25/F7VTyeHMz8mK2uJ.png" style="zoom:50%;" /></p>
-<p><img src="https://i.loli.net/2020/06/25/B32UmgXcwGhZYk1.png" style="zoom:50%;" /></p>
-<p>表5为考虑隐变量不确定性的ablation study。将原来的公式<span class="math inline">\(\mathcal{L}_d(\theta,\phi):=\mathbb{E}_{q_\phi(\mathbf{z}_d|\mathbf{X}_d^-)}\left[L_d(\theta|\mathbf{z}_d)\right]+\beta D_\text{KL}(q_\phi(\mathbf{z}_d|\mathbf{X}_d^-)\parallel p(\mathbf{z_d}))\)</span>中<span class="math inline">\(q_\phi(\mathbf z_d|\mathbf X_d^-)\)</span>用迪利克雷分布<span class="math inline">\(q_\phi(\mathbf z_d|\mathbf X_d^-)=\delta(\mathbf z_d-\mu_\phi(\mathbf X_d^-))\)</span>代替并且去掉KL散度。</p>
-<p><img src="https://i.loli.net/2020/06/25/yUHcTBzixsMlY7f.png" style="zoom: 50%;" /></p>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-02-27T12:02:18.000Z" title="2020-2-27 8:02:18 ├F10: PM┤">2020-02-27</time>发表</span><span class="level-item"><time dateTime="2020-06-25T09:01:35.786Z" title="2020-6-25 5:01:35 ├F10: PM┤">2020-06-25</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/">Transfer Anomaly Detection by Inferring Latent Domain Representations</a></h1><div class="content"><h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>作者提出了一种利用迁移学习提升target domain异常检测性能的算法。文中指出现有的基于迁移学习的异常检测算法需要对每个 target domain 进行单独训练，这样做会带来很大的计算开销。本文通过<em>latent domain vectors</em>来实现无需重新训练的异常检测。<em>latent domain vectors</em>是domain的一种隐含表示，通过该domain中的正常样本得到。在本文中，<em>anomaly score function</em>通过Auto-encoder得到。</p>
+<h1 id="Proposed-Method"><a href="#Proposed-Method" class="headerlink" title="Proposed Method"></a>Proposed Method</h1><h2 id="Task"><a href="#Task" class="headerlink" title="Task"></a>Task</h2><p>令$\mathbf{X}<em>d^+:={\mathbf{x}^+</em>{dn}}^{N^+<em>d}</em>{n=1}$为第$d$个domain的异常样本集，$\mathbf{x}_{dn}^+\in\mathbb{R}^M$为其中第$n$个样本的$M$维特征向量，$N^+_d$为第$d$个domain异常样本的数量。</p>
+<p>类似的，令$\mathbf{X}<em>d^-:={\mathbf{x}^-</em>{dn}}^{N^-<em>d}</em>{n=1}$为第$d$个domain的正常样本集。我们假设对于每个domain都有$N^+_d\ll N^-_d$，且特征向量维度都为$M$。</p>
+<p>假设在 source domain $D_S$都有正常样本和异常样本，记为${\mathbf{X}^+<em>d\cup\mathbf{X}_d^-}^{D_S}</em>{d=1}$，在 target domain $D_T$只有正常样本${\mathbf{X}<em>d^-}^{D_S+D_T}</em>{d=D_S+1}$。我们的目标是得到一个对于 target domain 合适的 domain-specific 的异常打分函数。</p>
+<img src="https://i.loli.net/2020/06/25/KW2YgScfVZN7Fjz.png" style="zoom:67%;" />
+
+<h2 id="Domain-specific-Anomaly-Score-Function"><a href="#Domain-specific-Anomaly-Score-Function" class="headerlink" title="Domain-specific Anomaly Score Function"></a>Domain-specific Anomaly Score Function</h2><p>我们基于Auto-encoder定义异常打分函数。对于每个domain，我们假设存在一个$K$维的隐变量$\mathbf{z}<em>d\in\mathbb{R}^K$。对于第$d$个 domain，异常打分函数定义如下：<br>$$<br>s_\theta(\mathbf{x}_{dn}|\mathbf{z}<em>d):=\parallel\mathbf{x}</em>{dn}-G</em>{\theta_G}(F_{\theta_F}(\mathbf{x}_{dn},\mathbf{z}_d))\parallel^2<br>$$<br>其中参数$\theta:=(\theta_G,\theta_F)$在所有 domain 之间共享。</p>
+<h2 id="Models-for-Latent-Domain-Vectors"><a href="#Models-for-Latent-Domain-Vectors" class="headerlink" title="Models for Latent Domain Vectors"></a>Models for Latent Domain Vectors</h2><p>隐变量$\mathbf{z}_d$是无法观测到的，只能通过数据来估计。首先$\mathbf{z}_d$在$\mathbf{X}_d^-$条件下的条件分布假设为高斯分布：</p>
+<p>$$<br>q_\theta(\mathbf{z}<em>d|\mathbf{X}_d^-):=\mathcal{N}(\mathbf{z}_d|\mu_\phi(\mathbf{X}_d^-),\text{diag}(\sigma_\phi^2(\mathbf{X}_d^-)))<br>$$<br>其中均值$\mu_\phi(\mathbf{X}_d^-)\in\mathbb{R}^K$和方差$\sigma^2_\phi(\mathbf{X}_d^-)\in\mathbb{R}^K</em>+$由神经网络建模，且在所有 domain 之间共享。在$\mathbf{X}_d^-$给定的时候，我们便能够推断出该 domain 对应的隐变量，</p>
+<p>$q_\phi$的输入为正常样本的集合，故神经网络需要满足<em>permutation invariant</em>。$\tau(\mathbf{X}<em>d^-)=\rho(\sum</em>{n=1}^{N_d^-}\eta(\mathbf{x}_{dn}^-))$，其中$\tau(\mathbf{X}_d^-)$表示$\mu_\phi(\mathbf{X_d^-})$或$\ln\sigma_\phi^2(\mathbf{X}_d^-)$，$\rho$和$\eta$为神经网络，</p>
+<h2 id="Objective-Function"><a href="#Objective-Function" class="headerlink" title="Objective Function"></a>Objective Function</h2><p>目标函数由anomaly score函数和隐变量组成。第$d$个domain在对应的隐变量$\mathbf{z}_d$条件下的目标函数为：</p>
+<p>$$<br>L_d(\theta|\mathbf{z}<em>d):=\frac{1}{N_d^-}\sum\limits_{n=1}^{N_d^-}s_\theta(\mathbf{x}</em>{dn}^-|\mathbf{z}<em>d)-\frac{\lambda}{N_d^-N_d^+}\sum\limits</em>{n,m=1}^{N_d^-,N_d^+}f(s_\theta(\mathbf{x}<em>{dm}^+|\mathbf{z}_d)-s_\theta(\mathbf{x}</em>{dn}^-|\mathbf{z}_d))<br>$$</p>
+<p>其中$\lambda\geq 0$为超参数，$f$为sigmoid函数。公式的第一项表示第$d$个domain正常样本对应的<em>anomaly score</em>。第二项为可微分的AUC。异常样本的<em>anomaly score</em>应当大于正常样本，所以对任何$\mathbf x_{dm}^+\in\mathbf X_d^+, \mathbf x_{dn}^-\in\mathbf X_d^-$有$s_\theta(\mathbf x_{dm}^+|\mathbf z_d)&gt;s_\theta(\mathbf x_{dn}^-|\mathbf z_d)$。第二项$\frac{\lambda}{N_d^-N_d^+}\sum\limits_{n,m=1}^{N_d^-,N_d^+}f(s_\theta(\mathbf{x}<em>{dm}^+|\mathbf{z}_d)-s_\theta(\mathbf{x}</em>{dn}^-|\mathbf{z}<em>d))$的取值范围是$[0,1]$，当所有的$s_\theta(\mathbf{x}_{dm}^+|\mathbf{z}_d)\gg s_\theta(\mathbf{x}</em>{dm}^-|\mathbf{z}<em>d)$时该项为1，当所有的$s_\theta(\mathbf{x}_{dm}^+|\mathbf{z}_d)\ll s_\theta(\mathbf{x}</em>{dm}^-|\mathbf{z}<em>d)$时该项为0，所以最小化该项的相反数相当于鼓励$s_\theta(\mathbf{x}_{dm}^+|\mathbf{z}_d)\gg s_\theta(\mathbf{x}</em>{dm}^-|\mathbf{z}_d)$。</p>
+<p>因为隐变量$\mathbf z_d$包含不确定性，我们应该在目标函数里考虑这一点：<br>$$<br>\mathcal{L}<em>d(\theta,\phi):=\mathbb{E}</em>{q_\phi(\mathbf{z}_d|\mathbf{X}_d^-)}\left[L_d(\theta|\mathbf{z}_d)\right]+\beta D_\text{KL}(q_\phi(\mathbf{z}_d|\mathbf{X}_d^-)\parallel p(\mathbf{z_d}))<br>$$</p>
+<p>第一项是$L_d(\theta|\mathbf z_d)$关于$q_\phi(\mathbf z_d|\mathbf X_d^-)$的期望，第二项是$q_\phi(\mathbf z_d|\mathbf X_d^-)$和$p(\mathbf z_d):=\mathcal{N}(\boldsymbol 0,\boldsymbol I)$的KL散度。第一项可以用<em>monte carlo</em>估计$\mathbb{E}_{q_\phi(\mathbf{z}_d|\mathbf{X}<em>d^-)}\left[L_d(\theta|\mathbf{z}_d)\right]\approx\frac{1}{L}\sum</em>{\ell=1}^L L_d(\theta|\mathbf z_d^{(\ell)})$，除此之外还需要用到<em>reparametrization trick</em>。</p>
+<p>对于第$d$个target domain，因为没有异常样本（假设），所以$L_d(\theta|\mathbf{z}<em>d):=\frac{1}{N_d^-}\sum\limits_{n=1}^{N_d^-}s_\theta(\mathbf{x}</em>{dn}^-|\mathbf{z}<em>d)$，有：<br>$$<br>\mathcal{L}<em>d(\theta,\phi):=\mathbb{E}</em>{q_\phi(\mathbf{z}_d|\mathbf{X}_d^-)}\left[\frac{1}{N_d^-}\sum\limits</em>{n=1}^{N_d^-}s_\theta(\mathbf{x}_{dn}^-|\mathbf{z}_d)\right]+\beta D_\text{KL}(q_\phi(\mathbf{z}_d|\mathbf{X}_d^-)\parallel p(\mathbf{z}_d))<br>$$</p>
+<p>所以总的损失函数为各domain对应的损失函数之和$\mathcal{L}(\theta,\phi):=\sum_{d=1}^{D_S+D_T}\alpha_d\mathcal{L}_d(\theta,\phi)$。</p>
+<h2 id="Inference"><a href="#Inference" class="headerlink" title="Inference"></a>Inference</h2><p>训练好之后，domain-specific的<em>anomaly score</em>可以由下式计算出：</p>
+<p>$$<br>s(\mathbf{x}<em>{d^\prime}):=\int s</em>{\theta_*}(\mathbf{x_{d^\prime}}|\mathbf{z}<em>{d^\prime})q</em>{\phi_*}(\mathbf{z}<em>{d^\prime}|\mathbf{X}</em>{d^\prime}^-)\mathrm{d}\mathbf{z}<em>{d^\prime}\approx\frac{1}{L}\sum\limits</em>{\ell=1}^L s_{\theta_*}(\mathbf{x}<em>{d^\prime}|\mathbf{z}</em>{d^\prime}^{(\ell)})<br>$$</p>
+<h1 id="Experiments"><a href="#Experiments" class="headerlink" title="Experiments"></a>Experiments</h1><h2 id="Data"><a href="#Data" class="headerlink" title="Data"></a>Data</h2><p>实验包含五个数据集，第一个是合成数据集。如下图(a)所示，围绕$(0,0)$有$8$个圈，每个圈包含了一个内圈作为异常样本，第$7$个圈被选为target domain，其余的为source domain。第二个是MNIST-r，是加入旋转的MNIST，包含6个domain，其中数字“4”被选为异常样本，其余为正常。第三个为Anuran Calls，包含5个domain。第四个是Landmine，主要用在多任务学习中。第五个是IoT，网络流量数据，包含8个domain。</p>
+<img src="https://i.loli.net/2020/06/25/6WLAfMwJPuN5Ov9.png" style="zoom:50%;" />
+
+<h2 id="Comparison-Methods"><a href="#Comparison-Methods" class="headerlink" title="Comparison Methods"></a>Comparison Methods</h2><p>对比的baseline包括NN（普通多层神经网络），NNAUC（加入可微分AUC作为损失函数），AE（普通Autoencoer），AEAUC（加入可微分AUC的AE），OSVM（单类支持向量机），CCSA，TOSVM和OTL。</p>
+<h2 id="Results"><a href="#Results" class="headerlink" title="Results"></a>Results</h2><p>4个真实数据集的结果如下：</p>
+<img src="https://i.loli.net/2020/06/25/nfkwTVexRNqyFMY.png" style="zoom:50%;" />
+
+<img src="https://i.loli.net/2020/06/25/QaMskTZALyeiFI1.png" style="zoom:50%;" />
+
+<img src="https://i.loli.net/2020/06/25/F7VTyeHMz8mK2uJ.png" style="zoom:50%;" />
+
+<img src="https://i.loli.net/2020/06/25/B32UmgXcwGhZYk1.png" style="zoom:50%;" />
+
+<p>表5为考虑隐变量不确定性的ablation study。将原来的公式$\mathcal{L}<em>d(\theta,\phi):=\mathbb{E}</em>{q_\phi(\mathbf{z}_d|\mathbf{X}_d^-)}\left[L_d(\theta|\mathbf{z}_d)\right]+\beta D_\text{KL}(q_\phi(\mathbf{z}_d|\mathbf{X}_d^-)\parallel p(\mathbf{z_d}))$中$q_\phi(\mathbf z_d|\mathbf X_d^-)$用迪利克雷分布$q_\phi(\mathbf z_d|\mathbf X_d^-)=\delta(\mathbf z_d-\mu_\phi(\mathbf X_d^-))$代替并且去掉KL散度。</p>
+<img src="https://i.loli.net/2020/06/25/yUHcTBzixsMlY7f.png" style="zoom: 50%;" />
+
 <p>表6展示了不同异常比例对效果的影响。</p>
-</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-02-24T02:45:08.000Z" title="2020-2-24 10:45:08 ├F10: AM┤">2020-02-24</time>发表</span><span class="level-item"><time dateTime="2020-06-25T05:30:55.514Z" title="2020-6-25 1:30:55 ├F10: PM┤">2020-06-25</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2020/02/24/Deep-Anomaly-Detection-with-Deviation-Networks/">Deep Anomaly Detection with Deviation Networks</a></h1><div class="content"><h1 id="introduction">Introduction</h1>
-<p>本文关注<code>Deep Anomaly Detection</code>，也就是用深度学习的方法来进行异常检测。文中提到现有的<code>Deep Anomaly Detection</code>存在两个弊端：一个是采用深度学习方法来进行特征学习，然后通过下游任务得到<code>Anomaly Score</code>，相比文中End-to-End的<code>Anomaly Score</code>学习，存在优化不充分的风险；另一个是现有的方法主要是无监督学习，无法利用已知的信息（如少量标签）。为此，本文提出了一种端到端的异常检测框架，来解决上述问题。</p>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-02-24T02:45:08.000Z" title="2020-2-24 10:45:08 ├F10: AM┤">2020-02-24</time>发表</span><span class="level-item"><time dateTime="2020-06-25T05:30:55.514Z" title="2020-6-25 1:30:55 ├F10: PM┤">2020-06-25</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2020/02/24/Deep-Anomaly-Detection-with-Deviation-Networks/">Deep Anomaly Detection with Deviation Networks</a></h1><div class="content"><h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>本文关注<code>Deep Anomaly Detection</code>，也就是用深度学习的方法来进行异常检测。文中提到现有的<code>Deep Anomaly Detection</code>存在两个弊端：一个是采用深度学习方法来进行特征学习，然后通过下游任务得到<code>Anomaly Score</code>，相比文中End-to-End的<code>Anomaly Score</code>学习，存在优化不充分的风险；另一个是现有的方法主要是无监督学习，无法利用已知的信息（如少量标签）。为此，本文提出了一种端到端的异常检测框架，来解决上述问题。</p>
 <p>本文的主要贡献如下：</p>
 <ul>
 <li>提出了一种端到端的异常检测框架，直接学习<code>Anomaly Score</code>并且可以利用已知信息；</li>
 <li>基于提出的框架，文中提出了一种实例方法 (DevNet)。</li>
 </ul>
-<p><img src="https://i.loli.net/2020/06/25/XT7fqQRWEOuocgy.png" style="zoom:67%;" /></p>
-<h1 id="proposed-model">Proposed Model</h1>
-<h2 id="end-to-end-anomaly-score-learning">End-To-End Anomaly Score Learning</h2>
-<h3 id="problem-statement">Problem Statement</h3>
-<p>为了区别于传统的两阶段异常检测（先学习特征表示，然后在学到的特征上定义一个<code>anomaly measure</code>来得到<code>anomaly score</code>），作者对端到端的异常检测问题重新进行形式化。</p>
-<p>给定<span class="math inline">\(N+K\)</span>个样本<span class="math inline">\(\mathcal{X}=\{\boldsymbol x_1,\boldsymbol x_2,\cdots,\boldsymbol x_N,\boldsymbol x_{N+1},\cdots,\boldsymbol x_{N+K}\}\)</span>，其中<span class="math inline">\(\boldsymbol x_i\in\mathbb{R}^D\)</span>，无标签样本集<span class="math inline">\(\mathcal{U}=\{\boldsymbol x_1,\boldsymbol x_2,\cdots,\boldsymbol x_N\}\)</span>，有标签样本集<span class="math inline">\(\mathcal{K}=\{\boldsymbol x_{N+1},\cdots,\boldsymbol x_{N+K}\}\)</span>，且<span class="math inline">\(K\ll N\)</span>。异常检测的目标是学习一个<code>anomaly scoring function</code><span class="math inline">\(\phi:\mathcal{X}\mapsto\mathbb{R}\)</span>使得<span class="math inline">\(\phi(\boldsymbol x_i)&gt;\phi(\boldsymbol x_j)\)</span>，其中<span class="math inline">\(\boldsymbol x_i\)</span>为异常样本，<span class="math inline">\(\boldsymbol x_j\)</span>为正常样本。</p>
-<h3 id="the-proposed-framework">The Proposed Framework</h3>
-<p>为了解决这个问题，文中提出了一种通用异常检测框架，模型框架如下图所示：</p>
+<img src="https://i.loli.net/2020/06/25/XT7fqQRWEOuocgy.png" style="zoom:67%;" />
+
+<h1 id="Proposed-Model"><a href="#Proposed-Model" class="headerlink" title="Proposed Model"></a>Proposed Model</h1><h2 id="End-To-End-Anomaly-Score-Learning"><a href="#End-To-End-Anomaly-Score-Learning" class="headerlink" title="End-To-End Anomaly Score Learning"></a>End-To-End Anomaly Score Learning</h2><h3 id="Problem-Statement"><a href="#Problem-Statement" class="headerlink" title="Problem Statement"></a>Problem Statement</h3><p>为了区别于传统的两阶段异常检测（先学习特征表示，然后在学到的特征上定义一个<code>anomaly measure</code>来得到<code>anomaly score</code>），作者对端到端的异常检测问题重新进行形式化。</p>
+<p>给定$N+K$个样本$\mathcal{X}={\boldsymbol x_1,\boldsymbol x_2,\cdots,\boldsymbol x_N,\boldsymbol x_{N+1},\cdots,\boldsymbol x_{N+K}}$，其中$\boldsymbol x_i\in\mathbb{R}^D$，无标签样本集$\mathcal{U}={\boldsymbol x_1,\boldsymbol x_2,\cdots,\boldsymbol x_N}$，有标签样本集$\mathcal{K}={\boldsymbol x_{N+1},\cdots,\boldsymbol x_{N+K}}$，且$K\ll N$。异常检测的目标是学习一个<code>anomaly scoring function</code>$\phi:\mathcal{X}\mapsto\mathbb{R}$使得$\phi(\boldsymbol x_i)&gt;\phi(\boldsymbol x_j)$，其中$\boldsymbol x_i$为异常样本，$\boldsymbol x_j$为正常样本。</p>
+<h3 id="The-Proposed-Framework"><a href="#The-Proposed-Framework" class="headerlink" title="The Proposed Framework"></a>The Proposed Framework</h3><p>为了解决这个问题，文中提出了一种通用异常检测框架，模型框架如下图所示：</p>
 <p>模型框架如下图所示：</p>
-<p><img src="https://i.loli.net/2020/06/25/ZuE1mb2Ytv6Jdl7.png" style="zoom:50%;" /></p>
+<img src="https://i.loli.net/2020/06/25/ZuE1mb2Ytv6Jdl7.png" style="zoom:50%;" />
+
 <p>主要包含三个部分：</p>
-<ol type="1">
-<li><em>anomaly scoring network</em>. 图中左边的部分，一个函数<span class="math inline">\(\phi\)</span>，输入样本<span class="math inline">\(\mathbf{x}\)</span>，输出<code>anomaly score</code></li>
-<li><em>reference score generator</em>. 图中右边的部分。只有一个<em>anomaly scoring network</em>并不能进行训练，需要训练的目标。为此加入<em>reference score generator</em>，输入为随机选择的<span class="math inline">\(l\)</span>个正常样本，输出<code>reference score</code>（这<span class="math inline">\(l\)</span>个正常样本<code>anomaly score</code>的均值，记为<span class="math inline">\(\mu_\mathcal{R}\)</span>）</li>
-<li><em>deviation loss</em>. <span class="math inline">\(\phi(\mathbf{x})\)</span>，<span class="math inline">\(\mu_\mathcal{R}\)</span>及对应的标准差<span class="math inline">\(\sigma_\mathcal{R}\)</span>作为<code>deviation loss</code>函数的输入。因为<span class="math inline">\(\mu_\mathcal{R}\)</span>和<span class="math inline">\(\sigma_\mathcal{R}\)</span>对应正常样本集的均值和方差，那么异常样本的<code>anomaly score</code>应该和<span class="math inline">\(\mu_\mathcal{R}\)</span>差别比较大，而正常样本则应该接近<span class="math inline">\(\mu_\mathcal{R}\)</span>。</li>
+<ol>
+<li><em>anomaly scoring network</em>. 图中左边的部分，一个函数$\phi$，输入样本$\mathbf{x}$，输出<code>anomaly score</code></li>
+<li><em>reference score generator</em>. 图中右边的部分。只有一个<em>anomaly scoring network</em>并不能进行训练，需要训练的目标。为此加入<em>reference score generator</em>，输入为随机选择的$l$个正常样本，输出<code>reference score</code>（这$l$个正常样本<code>anomaly score</code>的均值，记为$\mu_\mathcal{R}$）</li>
+<li><em>deviation loss</em>. $\phi(\mathbf{x})$，$\mu_\mathcal{R}$及对应的标准差$\sigma_\mathcal{R}$作为<code>deviation loss</code>函数的输入。因为$\mu_\mathcal{R}$和$\sigma_\mathcal{R}$对应正常样本集的均值和方差，那么异常样本的<code>anomaly score</code>应该和$\mu_\mathcal{R}$差别比较大，而正常样本则应该接近$\mu_\mathcal{R}$。</li>
 </ol>
-<h2 id="deviation-networks">Deviation Networks</h2>
-<p>下面是上述三个部件的具体实现。</p>
-<h3 id="end-to-end-anomaly-scoring-network">End-To-End Anomaly Scoring Network</h3>
-<p>记<span class="math inline">\(\mathcal{Q}\in\mathbb{R}^M\)</span>为中间表示空间，<code>anomaly scoring network</code><span class="math inline">\(\phi(\cdot;\Theta):\mathcal{X}\mapsto\mathbb{R}\)</span>可以定义为数据表示学习<span class="math inline">\(\psi(\cdot;\Theta_t):\mathcal{X}\mapsto\mathcal{Q}\)</span>和异常分数学习<span class="math inline">\(\eta(\cdot;\Theta_s):\mathcal{Q}\mapsto\mathbb{R}\)</span>两阶段的组合，其中<span class="math inline">\(\Theta=\{\Theta_t,\Theta_s\}\)</span>。</p>
-<p><span class="math inline">\(\psi(\cdot;\Theta_t)\)</span>可以用一个<span class="math inline">\(H\)</span>层神经网络来实现： <span class="math display">\[
-\mathrm{q}=\psi(\mathbf{x};\Theta_t)
-\]</span> 其中<span class="math inline">\(\mathbf{x}\in\mathcal{X}\)</span>，<span class="math inline">\(\mathrm{q}\in\mathcal{Q}\)</span>。</p>
-<p><span class="math inline">\(\eta(\cdot;\Theta_s)\)</span>可以用一个单层的神经网络来实现： <span class="math display">\[
-\eta(\mathrm q;\Theta_s)=\sum\limits_{i=1}^M w_i^oq_i+w_{M+1}^o
-\]</span> 其中<span class="math inline">\(\mathrm q\in\mathcal Q\)</span>，<span class="math inline">\(\Theta_s=\{\mathbf{w}^o\}\)</span>。</p>
-<p>所以有： <span class="math display">\[
-\phi(\mathbf{x};\Theta)=\eta(\psi(\mathbf{x};\Theta_t);\Theta_s)
-\]</span></p>
-<h3 id="gaussian-prior-based-reference-scores">Gaussian Prior-based Reference Scores</h3>
-<p>有两种方法来获得<span class="math inline">\(\mu_\mathcal{R}\)</span>，一种是data-driven，一种是prior-driven。如果是data-driven的话则采用另一个神经网络，文中表示为了更好的解释性和计算效率，所以采用的是prior-driven。 <span class="math display">\[
-\begin{align}
-r_1,r_2,\cdots,r_l\sim \mathcal{N}(\mu,\sigma^2),\\
-\mu_\mathcal{R}=\frac{1}{l}\sum\limits_{i=1}^l r_i
-\end{align}
-\]</span> 在文中，采用的prior是标准高斯分布。</p>
-<h2 id="z-score-based-deviation-loss">Z-Score Based Deviation Loss</h2>
-<p><em>anomaly scoring network</em>的优化目标可以定义为Z-Score的方式： <span class="math display">\[
-dev(\boldsymbol x)=\frac{\phi(\boldsymbol x;\Theta)-\mu_{\mathcal{R}}}{\sigma_{\mathcal{R}}}
-\]</span> <span class="math inline">\(dev(\boldsymbol x)\)</span>可以看作是样本偏离标准的程度，而我们肯定希望异常样本偏离标准越大，正常样本越接近标准。文中采用的损失函数是<code>Contrastive Loss</code>： <span class="math display">\[
-L(\phi(\boldsymbol x;\Theta),\mu_\mathcal{R},\sigma_\mathcal{R})=(1-y)|dev(\boldsymbol x)| + y \max(0, a - dev(\boldsymbol x))
-\]</span> <code>Contrastive Loss</code>的直观解释可以看下图：</p>
-<p><img src="https://i.loli.net/2020/06/25/aPbSipCsk2JwNcD.png" style="zoom: 33%;" /></p>
+<h2 id="Deviation-Networks"><a href="#Deviation-Networks" class="headerlink" title="Deviation Networks"></a>Deviation Networks</h2><p>下面是上述三个部件的具体实现。</p>
+<h3 id="End-To-End-Anomaly-Scoring-Network"><a href="#End-To-End-Anomaly-Scoring-Network" class="headerlink" title="End-To-End Anomaly Scoring Network"></a>End-To-End Anomaly Scoring Network</h3><p>记$\mathcal{Q}\in\mathbb{R}^M$为中间表示空间，<code>anomaly scoring network</code>$\phi(\cdot;\Theta):\mathcal{X}\mapsto\mathbb{R}$可以定义为数据表示学习$\psi(\cdot;\Theta_t):\mathcal{X}\mapsto\mathcal{Q}$和异常分数学习$\eta(\cdot;\Theta_s):\mathcal{Q}\mapsto\mathbb{R}$两阶段的组合，其中$\Theta={\Theta_t,\Theta_s}$。</p>
+<p>$\psi(\cdot;\Theta_t)$可以用一个$H$层神经网络来实现：<br>$$<br>\mathrm{q}=\psi(\mathbf{x};\Theta_t)<br>$$<br>其中$\mathbf{x}\in\mathcal{X}$，$\mathrm{q}\in\mathcal{Q}$。</p>
+<p>$\eta(\cdot;\Theta_s)$可以用一个单层的神经网络来实现：<br>$$<br>\eta(\mathrm q;\Theta_s)=\sum\limits_{i=1}^M w_i^oq_i+w_{M+1}^o<br>$$<br>其中$\mathrm q\in\mathcal Q$，$\Theta_s={\mathbf{w}^o}$。</p>
+<p>所以有：<br>$$<br>\phi(\mathbf{x};\Theta)=\eta(\psi(\mathbf{x};\Theta_t);\Theta_s)<br>$$</p>
+<h3 id="Gaussian-Prior-based-Reference-Scores"><a href="#Gaussian-Prior-based-Reference-Scores" class="headerlink" title="Gaussian Prior-based Reference Scores"></a>Gaussian Prior-based Reference Scores</h3><p>有两种方法来获得$\mu_\mathcal{R}$，一种是data-driven，一种是prior-driven。如果是data-driven的话则采用另一个神经网络，文中表示为了更好的解释性和计算效率，所以采用的是prior-driven。<br>$$<br>\begin{align}<br>r_1,r_2,\cdots,r_l\sim \mathcal{N}(\mu,\sigma^2),\<br>\mu_\mathcal{R}=\frac{1}{l}\sum\limits_{i=1}^l r_i<br>\end{align}<br>$$<br>在文中，采用的prior是标准高斯分布。</p>
+<h2 id="Z-Score-Based-Deviation-Loss"><a href="#Z-Score-Based-Deviation-Loss" class="headerlink" title="Z-Score Based Deviation Loss"></a>Z-Score Based Deviation Loss</h2><p><em>anomaly scoring network</em>的优化目标可以定义为Z-Score的方式：<br>$$<br>dev(\boldsymbol x)=\frac{\phi(\boldsymbol x;\Theta)-\mu_{\mathcal{R}}}{\sigma_{\mathcal{R}}}<br>$$<br>$dev(\boldsymbol x)$可以看作是样本偏离标准的程度，而我们肯定希望异常样本偏离标准越大，正常样本越接近标准。文中采用的损失函数是<code>Contrastive Loss</code>：<br>$$<br>L(\phi(\boldsymbol x;\Theta),\mu_\mathcal{R},\sigma_\mathcal{R})=(1-y)|dev(\boldsymbol x)| + y \max(0, a - dev(\boldsymbol x))<br>$$<br><code>Contrastive Loss</code>的直观解释可以看下图：</p>
+<img src="https://i.loli.net/2020/06/25/aPbSipCsk2JwNcD.png" style="zoom: 33%;" />
+
 <p>对于负例（正常），优化过程将他们尽量向原点靠近，对于正例（异常），优化过程将他们拉向边界。</p>
-<h2 id="the-devnet-algorithm">The DevNet Algorithm</h2>
-<p><code>DevNet</code>的算法流程图如下：</p>
-<p><img src="https://i.loli.net/2020/06/25/km9H5DoNRbOQ784.png" style="zoom:67%;" /></p>
-<h2 id="interpretability-of-anomaly-scores">Interpretability of Anomaly Scores</h2>
-<p>因为<em>reference score generator</em>选择的是确定的高斯分布，于是可以用概率论给出一些解释性。作者给出了一个结论，</p>
+<h2 id="The-DevNet-Algorithm"><a href="#The-DevNet-Algorithm" class="headerlink" title="The DevNet Algorithm"></a>The DevNet Algorithm</h2><p><code>DevNet</code>的算法流程图如下：</p>
+<img src="https://i.loli.net/2020/06/25/km9H5DoNRbOQ784.png" style="zoom:67%;" />
+
+<h2 id="Interpretability-of-Anomaly-Scores"><a href="#Interpretability-of-Anomaly-Scores" class="headerlink" title="Interpretability of Anomaly Scores"></a>Interpretability of Anomaly Scores</h2><p>因为<em>reference score generator</em>选择的是确定的高斯分布，于是可以用概率论给出一些解释性。作者给出了一个结论，</p>
 <blockquote>
-<p><strong>PROPOSITION</strong>： 设<span class="math inline">\(\boldsymbol x\in\mathcal{X}\)</span>，<span class="math inline">\(z_p\)</span>为<span class="math inline">\(\mathcal{N}(\mu,\sigma^2)\)</span>的分位数，那么<span class="math inline">\(\phi(\boldsymbol x)\)</span>在区间<span class="math inline">\(\mu\pm z_p\sigma\)</span>的概率为<span class="math inline">\(2(1-p)\)</span>。</p>
+<p><strong>PROPOSITION</strong>： 设$\boldsymbol x\in\mathcal{X}$，$z_p$为$\mathcal{N}(\mu,\sigma^2)$的分位数，那么$\phi(\boldsymbol x)$在区间$\mu\pm z_p\sigma$的概率为$2(1-p)$。</p>
 </blockquote>
-<p>例如，假设<span class="math inline">\(p=0.95\)</span>，那么<span class="math inline">\(z_{0.95}=1.96\)</span>，表示异常分数高于1.96的样本将以0.95的置信度为异常。</p>
-<h1 id="experiment">Experiment</h1>
-<p>实验用到了9个数据集，4个Baseline (REPEN，DSVDD，FSNET，iForest)，以及ROC和PR曲线两种评测标准。</p>
-<h2 id="effectiveness-in-real-world-data-sets">Effectiveness in Real-world Data Sets</h2>
-<h3 id="experiment-settings">Experiment Settings</h3>
-<p>这一个实验主要是为了验证算法在真实场景下的效果，即大量无标签数据和极少量标签数据。训练集包含两部分，一部分是无标签数据<span class="math inline">\(\mathcal{U}\)</span>,包含<span class="math inline">\(2\%\)</span>的异常样本，另一部分是有标签数据<span class="math inline">\(\mathcal{K}\)</span>，由随机采样<span class="math inline">\(0.005\%-1\%\)</span>的训练数据和<span class="math inline">\(0.08\%-6\%\)</span>的异常样本组成。</p>
-<h3 id="findings">Findings</h3>
-<p>实验结果如下表所示：</p>
-<p><img src="https://i.loli.net/2020/06/25/DKqxJROngML8IS2.png" style="zoom: 50%;" /></p>
+<p>例如，假设$p=0.95$，那么$z_{0.95}=1.96$，表示异常分数高于1.96的样本将以0.95的置信度为异常。</p>
+<h1 id="Experiment"><a href="#Experiment" class="headerlink" title="Experiment"></a>Experiment</h1><p>实验用到了9个数据集，4个Baseline (REPEN，DSVDD，FSNET，iForest)，以及ROC和PR曲线两种评测标准。</p>
+<h2 id="Effectiveness-in-Real-world-Data-Sets"><a href="#Effectiveness-in-Real-world-Data-Sets" class="headerlink" title="Effectiveness in Real-world Data Sets"></a>Effectiveness in Real-world Data Sets</h2><h3 id="Experiment-Settings"><a href="#Experiment-Settings" class="headerlink" title="Experiment Settings"></a>Experiment Settings</h3><p>这一个实验主要是为了验证算法在真实场景下的效果，即大量无标签数据和极少量标签数据。训练集包含两部分，一部分是无标签数据$\mathcal{U}$,包含$2%$的异常样本，另一部分是有标签数据$\mathcal{K}$，由随机采样$0.005%-1%$的训练数据和$0.08%-6%$的异常样本组成。</p>
+<h3 id="Findings"><a href="#Findings" class="headerlink" title="Findings"></a>Findings</h3><p>实验结果如下表所示：</p>
+<img src="https://i.loli.net/2020/06/25/DKqxJROngML8IS2.png" style="zoom: 50%;" />
+
 <p>从结果上看来，本文提出的方法在所有数据集上都比Baseline好，说明<code>DevNet</code>端到端直接优化<code>Anomaly Score</code>的方式是有效的。</p>
-<h2 id="data-efficiency">Data Efficiency</h2>
-<h3 id="experiment-settings-1">Experiment Settings</h3>
-<p>这一个实验主要是为了探究基于深度的异常检测方法的<em>data efficiency</em>。和上一个实验一样，无标签数据集包含<span class="math inline">\(2\%\)</span>的异常，而有标签的异常数量从<span class="math inline">\(5\)</span>到<span class="math inline">\(120\)</span>不等。本实验试图回答以下两个问题：</p>
+<h2 id="Data-Efficiency"><a href="#Data-Efficiency" class="headerlink" title="Data Efficiency"></a>Data Efficiency</h2><h3 id="Experiment-Settings-1"><a href="#Experiment-Settings-1" class="headerlink" title="Experiment Settings"></a>Experiment Settings</h3><p>这一个实验主要是为了探究基于深度的异常检测方法的<em>data efficiency</em>。和上一个实验一样，无标签数据集包含$2%$的异常，而有标签的异常数量从$5$到$120$不等。本实验试图回答以下两个问题：</p>
 <ul>
 <li><code>DevNet</code>的<em>data efficiency</em>如何？</li>
 <li>基于深度的方法在多大程度上能够利用标签信息？</li>
 </ul>
-<h3 id="findings-1">Findings</h3>
-<p>在几个基于深度的Baseline中，<code>DevNet</code>的效果是最好的，同时在有标签异常非常有限的情况下，<code>DevNet</code>也能很好的利用标签信息，达到更好的效果。</p>
-<p><img src="https://i.loli.net/2020/06/25/iIWGBPosKCuxbRF.png" style="zoom:67%;" /></p>
-<h2 id="robustness-w.r.t.-anomaly-contamination">Robustness w.r.t. Anomaly Contamination</h2>
-<h3 id="experiment-settings-2">Experiment Settings</h3>
-<p>在第一个实验中，无标签数据集<span class="math inline">\(\mathcal{U}\)</span>包含的是固定的异常比例<span class="math inline">\(2\%\)</span>，而在这个实验中，作者测试了从<span class="math inline">\(0\%\)</span>到<span class="math inline">\(20\%\)</span>之间不同异常比例来测试算法的鲁棒性（即使<span class="math inline">\(\mathcal{U}\)</span>中包含异常，由于没有标签，在训练的时候仍然假设都为正常来进行训练）。本实验试图回答以下问题：</p>
+<h3 id="Findings-1"><a href="#Findings-1" class="headerlink" title="Findings"></a>Findings</h3><p>在几个基于深度的Baseline中，<code>DevNet</code>的效果是最好的，同时在有标签异常非常有限的情况下，<code>DevNet</code>也能很好的利用标签信息，达到更好的效果。</p>
+<img src="https://i.loli.net/2020/06/25/iIWGBPosKCuxbRF.png" style="zoom:67%;" />
+
+<h2 id="Robustness-w-r-t-Anomaly-Contamination"><a href="#Robustness-w-r-t-Anomaly-Contamination" class="headerlink" title="Robustness w.r.t. Anomaly Contamination"></a>Robustness w.r.t. Anomaly Contamination</h2><h3 id="Experiment-Settings-2"><a href="#Experiment-Settings-2" class="headerlink" title="Experiment Settings"></a>Experiment Settings</h3><p>在第一个实验中，无标签数据集$\mathcal{U}$包含的是固定的异常比例$2%$，而在这个实验中，作者测试了从$0%$到$20%$之间不同异常比例来测试算法的鲁棒性（即使$\mathcal{U}$中包含异常，由于没有标签，在训练的时候仍然假设都为正常来进行训练）。本实验试图回答以下问题：</p>
 <ul>
 <li>基于深度的异常检测方法的鲁棒性如何？</li>
 <li>当训练集中异常污染的比例较高的时候基于深度的方法能否打败无监督的方法？</li>
 </ul>
-<h3 id="findings-2">Findings</h3>
-<p>下图为实验结果：</p>
-<p><img src="https://i.loli.net/2020/06/25/JCnIjLOc84RFP2V.png" style="zoom:67%;" /></p>
+<h3 id="Findings-2"><a href="#Findings-2" class="headerlink" title="Findings"></a>Findings</h3><p>下图为实验结果：</p>
+<img src="https://i.loli.net/2020/06/25/JCnIjLOc84RFP2V.png" style="zoom:67%;" />
+
 <p>从结果上来看，<code>DevNet</code>比其他基于深度的方法鲁棒性更好，同时在高异常污染的情况下仍然比纯无监督方法效果要好。</p>
-<h2 id="ablation-study">Ablation Study</h2>
-<p>本实验设置了<code>DevNet</code>的三个变体（默认的<code>DevNet-Def</code>为单层隐层加上一个输出层）来进行消融实验，分别是：</p>
+<h2 id="Ablation-Study"><a href="#Ablation-Study" class="headerlink" title="Ablation Study"></a>Ablation Study</h2><p>本实验设置了<code>DevNet</code>的三个变体（默认的<code>DevNet-Def</code>为单层隐层加上一个输出层）来进行消融实验，分别是：</p>
 <ul>
 <li><code>DevNet-Rep</code>，去掉了<em>anomaly scoring network</em>网络的输出层，对应<em>end-to-end learning of anomaly scores</em>和<em>deviation loss</em>；</li>
 <li><code>DevNet-Linear</code>，去掉了网络中的非线性层，对应<em>learning of non-linear features</em>；</li>
 <li><code>DevNet-3HL</code>，隐层数量为3层。</li>
 </ul>
 <p>对比结果如下：</p>
-<p><img src="https://i.loli.net/2020/06/25/5LcyAwGMB8gb2UP.png" style="zoom:67%;" /></p>
+<img src="https://i.loli.net/2020/06/25/5LcyAwGMB8gb2UP.png" style="zoom:67%;" />
+
 <p>通过实验可以发现，<code>DevNet-Rep</code>说明了<em>end-to-end learning of anomaly scores</em>和<em>deviation loss</em>的有效性，而<code>DevNet-Linear</code>说明了<em>learning of non-linear features</em>的重要性。<code>DevNet-3HL</code>说明了加深网络并不总能带来性能的提升。</p>
-<h2 id="scalability-test">Scalability Test</h2>
-<p>这一个实验使用合成的数据来测试算法对大规模数据的处理能力，分别从<em>Data Size</em>和<em>Data Dimensionality</em>两方面来测试。结果如下：</p>
-<p><img src="https://i.loli.net/2020/06/25/5gbPdJkB47e3FsV.png" style="zoom:67%;" /></p>
+<h2 id="Scalability-Test"><a href="#Scalability-Test" class="headerlink" title="Scalability Test"></a>Scalability Test</h2><p>这一个实验使用合成的数据来测试算法对大规模数据的处理能力，分别从<em>Data Size</em>和<em>Data Dimensionality</em>两方面来测试。结果如下：</p>
+<img src="https://i.loli.net/2020/06/25/5gbPdJkB47e3FsV.png" style="zoom:67%;" />
+
 <p>可以看出，<code>DevNet</code>对<em>Data Size</em>并不敏感，同时，面对高维数据，<code>DevNet</code>也没有表现出劣势。</p>
-</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-01-09T02:15:03.000Z" title="2020-1-9 10:15:03 ├F10: AM┤">2020-01-09</time>发表</span><span class="level-item"><time dateTime="2020-06-25T05:25:53.385Z" title="2020-6-25 1:25:53 ├F10: PM┤">2020-06-25</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2020/01/09/Complementary-Set-Variational-Autoencoder-for-Supervised-Anomaly-Detection/">Complementary Set Variational Autoencoder for Supervised Anomaly Detection</a></h1><div class="content"><h1 id="introduction">Introduction</h1>
-<p>对于异常检测问题，异常的模式是多种多样的。有监督模型能够较好地处理训练集中出现过的模式，无监督模型能够处理训练集中未出现过的模式，但对于训练集中出现过的异常模型并没有学习。本文提出了一种既能学习训练集中出现过的异常模式，同时能处理未出现过的异常模式的方法。</p>
-<h1 id="proposed-model">Proposed Model</h1>
-<h2 id="conventional-vae">Conventional VAE</h2>
-<p>首先回顾一下原始的VAE。</p>
-<p>原始VAE中的损失函数为： <span class="math display">\[
-\mathcal{L}(\boldsymbol{\theta},\boldsymbol{\phi};\boldsymbol{x})=\mathbb{E}_{q(\boldsymbol{z}|\boldsymbol{x};\boldsymbol{\phi})}[\log p(\boldsymbol{x}|\boldsymbol{z};\boldsymbol{\theta})]-\text{KL}[q(\boldsymbol{z}|\boldsymbol{x};\boldsymbol{\phi}\parallel p(\boldsymbol{z}))]
-\]</span> 原文中作者证明了<span class="math inline">\(\mathcal{L}(\boldsymbol{\theta},\boldsymbol{\phi};\boldsymbol{x})\leq\log p(\boldsymbol{x};\boldsymbol{\theta})\)</span>，所以<span class="math inline">\(\mathcal{L}(\boldsymbol{\theta},\boldsymbol{\phi};\boldsymbol{x})\)</span>可以看作是数据分布<span class="math inline">\(p(\boldsymbol{x})\)</span>对数似然的一个下界。<span class="math inline">\(\mathcal{L}(\boldsymbol{\theta},\boldsymbol{\phi};\boldsymbol{x})\)</span>又被称为证据下界 (ELBO)。<span class="math inline">\(\mathbb{E}_{q(\boldsymbol{z}|\boldsymbol{x};\boldsymbol{\phi})}[\log p(\boldsymbol{x}|\boldsymbol{z};\boldsymbol{\theta})]\)</span>中的期望一般用蒙特卡洛来进行估计： <span class="math display">\[
-\begin{align}
-\mathcal{L}(\boldsymbol{\theta},\boldsymbol{\phi};\boldsymbol{x})\simeq&amp; \frac{1}{L}\sum\limits_l\log p(\boldsymbol{x}|\boldsymbol{z}^{(l)};\boldsymbol{\theta})-\text{KL}[q(\boldsymbol{z}|\boldsymbol{x};\boldsymbol{\phi})\parallel p(\boldsymbol{z})],\\
-\boldsymbol{z}^{(l)}&amp;\sim q(\boldsymbol{z}|\boldsymbol{x};\boldsymbol{\phi}), \space l\in\{1,2,\cdots,L\}
-\end{align}
-\]</span> 对于隐变量<span class="math inline">\(\boldsymbol{z}\)</span>，一般假设先验服从标准高斯分布，后验服从均值为<span class="math inline">\(\mu\)</span>，方差为<span class="math inline">\(\sigma^2\)</span>的高斯分布，故KL散度能直接写出解析式： <span class="math display">\[
-\mathcal{L}(\boldsymbol{\theta},\boldsymbol{\phi};\boldsymbol{x})\simeq \frac{1}{L}\sum\limits_l\log p(\boldsymbol{x}|\boldsymbol{z}^{(l)};\boldsymbol{\theta})-C(-\frac{1}{2}-\log\sigma+\frac{1}{2}\sigma^2+\frac{1}{2}\mu^2)
-\]</span> 使用VAE来做异常检测通常是在正常数据上进行训练，在检测阶段，如果是异常样本，那么VAE不能很好地重构它，这样会导致较大的重构误差。</p>
-<h2 id="prior-distribution-for-anomalies">Prior Distribution for Anomalies</h2>
-<p><img src="https://i.loli.net/2020/06/25/vrxAzRVCtaE3oLc.png" style="zoom:67%;" /></p>
-<p>在原始VAE异常检测中，无论输入样本<span class="math inline">\(\boldsymbol{x}\)</span>是否异常，VAE都会使对应编码的后验<span class="math inline">\(p(\boldsymbol{z}|\boldsymbol{x})\)</span>服从高斯分布，且施加标准高斯分布的约束。在本文中，作者对异常和正常样本对应的隐变量的先验分布做了不同假设。首先，正常先验依然是标准高斯分布，记为<span class="math inline">\(p_n(\boldsymbol{z})\)</span>。而对于异常先验，作者认为异常即为“不正常”，和正常是补集的关系。作者在文中定义异常先验分布<span class="math inline">\(p_a(\boldsymbol{z})\)</span>为： <span class="math display">\[
-p_a(\boldsymbol{z})=\frac{1}{Y^\prime}(\max\limits_{\boldsymbol{z}^\prime}p_n(\boldsymbol{z}^\prime)-p_n(\boldsymbol{z}))
-\]</span></p>
-<p>其中<span class="math inline">\(Y^\prime\)</span>为使<span class="math inline">\(p_a(\boldsymbol{z})\)</span>成为一个概率分布的调节因子。实际上，<span class="math inline">\(Y^\prime\)</span>往往会成为无限大，因为<span class="math inline">\(p(\boldsymbol z)\)</span>在整个定义域上都有定义。为了解决这个问题，作者加入了<span class="math inline">\(p_w(\boldsymbol z)\)</span>，一个在每个维度都足够宽的辅助分布：</p>
-<p><span class="math display">\[
-p_a(\boldsymbol z)=\frac{1}{Y}p_w(\boldsymbol z)\left(\max\limits_{\boldsymbol z^\prime}p_n(\boldsymbol z^\prime)-p_n(\boldsymbol z)\right)
-\]</span></p>
-<p>其中<span class="math inline">\(Y\)</span>为有限的常数。在文中<span class="math inline">\(p_n(\boldsymbol z)\)</span>和<span class="math inline">\(p_w(\boldsymbol z)\)</span>都为高斯分布，那么<span class="math inline">\(p_a(\boldsymbol z)\)</span>的具体形式为：</p>
-<p><span class="math display">\[
-p_a(\boldsymbol z)=\frac{1}{Y}\mathcal{N}(\boldsymbol z;\boldsymbol 0,\boldsymbol s^2)\{\max\limits_{\boldsymbol z^\prime}\mathcal N(\boldsymbol z^\prime;\boldsymbol 0,\boldsymbol 1)-\mathcal N(\boldsymbol z;\boldsymbol 0,\boldsymbol 1)\}
-\]</span></p>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-01-09T02:15:03.000Z" title="2020-1-9 10:15:03 ├F10: AM┤">2020-01-09</time>发表</span><span class="level-item"><time dateTime="2020-06-25T05:25:53.385Z" title="2020-6-25 1:25:53 ├F10: PM┤">2020-06-25</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2020/01/09/Complementary-Set-Variational-Autoencoder-for-Supervised-Anomaly-Detection/">Complementary Set Variational Autoencoder for Supervised Anomaly Detection</a></h1><div class="content"><h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>对于异常检测问题，异常的模式是多种多样的。有监督模型能够较好地处理训练集中出现过的模式，无监督模型能够处理训练集中未出现过的模式，但对于训练集中出现过的异常模型并没有学习。本文提出了一种既能学习训练集中出现过的异常模式，同时能处理未出现过的异常模式的方法。</p>
+<h1 id="Proposed-Model"><a href="#Proposed-Model" class="headerlink" title="Proposed Model"></a>Proposed Model</h1><h2 id="Conventional-VAE"><a href="#Conventional-VAE" class="headerlink" title="Conventional VAE"></a>Conventional VAE</h2><p>首先回顾一下原始的VAE。</p>
+<p>原始VAE中的损失函数为：<br>$$<br>\mathcal{L}(\boldsymbol{\theta},\boldsymbol{\phi};\boldsymbol{x})=\mathbb{E}<em>{q(\boldsymbol{z}|\boldsymbol{x};\boldsymbol{\phi})}[\log p(\boldsymbol{x}|\boldsymbol{z};\boldsymbol{\theta})]-\text{KL}[q(\boldsymbol{z}|\boldsymbol{x};\boldsymbol{\phi}\parallel p(\boldsymbol{z}))]<br>$$<br>原文中作者证明了$\mathcal{L}(\boldsymbol{\theta},\boldsymbol{\phi};\boldsymbol{x})\leq\log p(\boldsymbol{x};\boldsymbol{\theta})$，所以$\mathcal{L}(\boldsymbol{\theta},\boldsymbol{\phi};\boldsymbol{x})$可以看作是数据分布$p(\boldsymbol{x})$对数似然的一个下界。$\mathcal{L}(\boldsymbol{\theta},\boldsymbol{\phi};\boldsymbol{x})$又被称为证据下界 (ELBO)。$\mathbb{E}</em>{q(\boldsymbol{z}|\boldsymbol{x};\boldsymbol{\phi})}[\log p(\boldsymbol{x}|\boldsymbol{z};\boldsymbol{\theta})]$中的期望一般用蒙特卡洛来进行估计：<br>$$<br>\begin{align}<br>\mathcal{L}(\boldsymbol{\theta},\boldsymbol{\phi};\boldsymbol{x})\simeq&amp; \frac{1}{L}\sum\limits_l\log p(\boldsymbol{x}|\boldsymbol{z}^{(l)};\boldsymbol{\theta})-\text{KL}[q(\boldsymbol{z}|\boldsymbol{x};\boldsymbol{\phi})\parallel p(\boldsymbol{z})],\<br>\boldsymbol{z}^{(l)}&amp;\sim q(\boldsymbol{z}|\boldsymbol{x};\boldsymbol{\phi}), \space l\in{1,2,\cdots,L}<br>\end{align}<br>$$<br>对于隐变量$\boldsymbol{z}$，一般假设先验服从标准高斯分布，后验服从均值为$\mu$，方差为$\sigma^2$的高斯分布，故KL散度能直接写出解析式：<br>$$<br>\mathcal{L}(\boldsymbol{\theta},\boldsymbol{\phi};\boldsymbol{x})\simeq \frac{1}{L}\sum\limits_l\log p(\boldsymbol{x}|\boldsymbol{z}^{(l)};\boldsymbol{\theta})-C(-\frac{1}{2}-\log\sigma+\frac{1}{2}\sigma^2+\frac{1}{2}\mu^2)<br>$$<br>使用VAE来做异常检测通常是在正常数据上进行训练，在检测阶段，如果是异常样本，那么VAE不能很好地重构它，这样会导致较大的重构误差。</p>
+<h2 id="Prior-Distribution-for-Anomalies"><a href="#Prior-Distribution-for-Anomalies" class="headerlink" title="Prior Distribution for Anomalies"></a>Prior Distribution for Anomalies</h2><img src="https://i.loli.net/2020/06/25/vrxAzRVCtaE3oLc.png" style="zoom:67%;" />
+
+<p>在原始VAE异常检测中，无论输入样本$\boldsymbol{x}$是否异常，VAE都会使对应编码的后验$p(\boldsymbol{z}|\boldsymbol{x})$服从高斯分布，且施加标准高斯分布的约束。在本文中，作者对异常和正常样本对应的隐变量的先验分布做了不同假设。首先，正常先验依然是标准高斯分布，记为$p_n(\boldsymbol{z})$。而对于异常先验，作者认为异常即为“不正常”，和正常是补集的关系。作者在文中定义异常先验分布$p_a(\boldsymbol{z})$为：<br>$$<br>p_a(\boldsymbol{z})=\frac{1}{Y^\prime}(\max\limits_{\boldsymbol{z}^\prime}p_n(\boldsymbol{z}^\prime)-p_n(\boldsymbol{z}))<br>$$</p>
+<p>其中$Y^\prime$为使$p_a(\boldsymbol{z})$成为一个概率分布的调节因子。实际上，$Y^\prime$往往会成为无限大，因为$p(\boldsymbol z)$在整个定义域上都有定义。为了解决这个问题，作者加入了$p_w(\boldsymbol z)$，一个在每个维度都足够宽的辅助分布：</p>
+<p>$$<br>p_a(\boldsymbol z)=\frac{1}{Y}p_w(\boldsymbol z)\left(\max\limits_{\boldsymbol z^\prime}p_n(\boldsymbol z^\prime)-p_n(\boldsymbol z)\right)<br>$$</p>
+<p>其中$Y$为有限的常数。在文中$p_n(\boldsymbol z)$和$p_w(\boldsymbol z)$都为高斯分布，那么$p_a(\boldsymbol z)$的具体形式为：</p>
+<p>$$<br>p_a(\boldsymbol z)=\frac{1}{Y}\mathcal{N}(\boldsymbol z;\boldsymbol 0,\boldsymbol s^2){\max\limits_{\boldsymbol z^\prime}\mathcal N(\boldsymbol z^\prime;\boldsymbol 0,\boldsymbol 1)-\mathcal N(\boldsymbol z;\boldsymbol 0,\boldsymbol 1)}<br>$$</p>
 <p>其中：</p>
-<p><span class="math display">\[
-\max\limits_{\boldsymbol z^\prime}\mathcal N(\boldsymbol z^\prime;\boldsymbol 0,\boldsymbol 1)=\frac{1}{\sqrt{2\pi}}
-\]</span></p>
-<p><span class="math display">\[
-Y=\int_{-\infty}^{\infty}p_a(\boldsymbol z)\mathrm{d}\boldsymbol z=\frac{1}{\sqrt{2\pi}}\left\{1-\frac{1}{\boldsymbol s^2+1}\right\}
-\]</span></p>
-<p><span class="math inline">\(\boldsymbol s^2\)</span>为超参数，控制分布的宽度。用文中的先验替换VAE原始的KL散度，可写为：</p>
-<p><span class="math display">\[
-\text{KL}\left[q(\boldsymbol z|\boldsymbol x;\phi)\parallel p_a(\boldsymbol z)\right]=\int_{-\infty}^\infty\mathcal{N}(\boldsymbol z;\boldsymbol \mu,\boldsymbol \sigma^2)\log\frac{\mathcal N(\boldsymbol z;\boldsymbol\mu,\boldsymbol\sigma^2)}{\frac{1}{Y}\mathcal N(\boldsymbol z;\boldsymbol 0,\boldsymbol s^2)\left\{\frac{1}{2\pi}-\mathcal N(\boldsymbol z;\boldsymbol0,\boldsymbol 1)\right\}}\mathrm{d}\boldsymbol z
-\]</span></p>
+<p>$$<br>\max\limits_{\boldsymbol z^\prime}\mathcal N(\boldsymbol z^\prime;\boldsymbol 0,\boldsymbol 1)=\frac{1}{\sqrt{2\pi}}<br>$$</p>
+<p>$$<br>Y=\int_{-\infty}^{\infty}p_a(\boldsymbol z)\mathrm{d}\boldsymbol z=\frac{1}{\sqrt{2\pi}}\left{1-\frac{1}{\boldsymbol s^2+1}\right}<br>$$</p>
+<p>$\boldsymbol s^2$为超参数，控制分布的宽度。用文中的先验替换VAE原始的KL散度，可写为：</p>
+<p>$$<br>\text{KL}\left[q(\boldsymbol z|\boldsymbol x;\phi)\parallel p_a(\boldsymbol z)\right]=\int_{-\infty}^\infty\mathcal{N}(\boldsymbol z;\boldsymbol \mu,\boldsymbol \sigma^2)\log\frac{\mathcal N(\boldsymbol z;\boldsymbol\mu,\boldsymbol\sigma^2)}{\frac{1}{Y}\mathcal N(\boldsymbol z;\boldsymbol 0,\boldsymbol s^2)\left{\frac{1}{2\pi}-\mathcal N(\boldsymbol z;\boldsymbol0,\boldsymbol 1)\right}}\mathrm{d}\boldsymbol z<br>$$</p>
 <p>展开后：</p>
-<p><span class="math display">\[
-\begin{align}
-\text{KL}\left[q(\boldsymbol z|\boldsymbol x;\phi)\parallel p_a(\boldsymbol z)\right]&amp;=
-\int_{-\infty}^\infty\mathcal{N}(\boldsymbol z;\boldsymbol \mu,\boldsymbol \sigma^2)\log\mathcal{N}(\boldsymbol z;\boldsymbol\mu,\boldsymbol\sigma^2)\mathrm{d}\boldsymbol z\\
-&amp;+\log Y\\
-&amp;-\int_{-\infty}^\infty\mathcal{N}(\boldsymbol z;\boldsymbol \mu,\boldsymbol \sigma^2)\log\mathcal{N}(\boldsymbol z;\boldsymbol 0,\boldsymbol s^2)\mathrm{d}\boldsymbol z\\
-&amp;-\int_{-\infty}^\infty\mathcal{N}(\boldsymbol z;\boldsymbol \mu,\boldsymbol \sigma^2)\log\left\{\frac{1}{\sqrt{2\pi}}-\mathcal{N}(\boldsymbol z;\boldsymbol 0, \boldsymbol 1)\right\}\mathrm{d}\boldsymbol z
-\end{align}
-\]</span></p>
-<p>使用泰勒展开，<span class="math inline">\(\log (x+\frac{1}{2\pi})\simeq-\log 2\pi+2\pi x\)</span>，KL散度可以用下式估计：</p>
-<p><span class="math display">\[
-\begin{align}
-\text{KL}\left[q(\boldsymbol z|\boldsymbol x;\phi)\parallel p_a(\boldsymbol z)\right]&amp;\simeq\sqrt{\frac{2\pi}{\boldsymbol\sigma^2+1}}\exp\left(\frac{-\boldsymbol\mu^2}{2(\boldsymbol\sigma^2+1)}\right)\\
-&amp;+\frac{\boldsymbol\mu^2+\boldsymbol\sigma^2}{2\boldsymbol s^2}-\log\boldsymbol\sigma+\log\boldsymbol s+\log\left(\sqrt{\boldsymbol s^2+1}-1\right)\\
-&amp;-\frac{\log(\boldsymbol s^2+1)}{2}+\frac{\log(2\pi)-1}{2}
-\end{align}
-\]</span></p>
-<p>下图为一维时<span class="math inline">\(p_n(\boldsymbol z)\)</span>和<span class="math inline">\(p_a(\boldsymbol z)\)</span>的示例：</p>
-<p><img src="https://i.loli.net/2020/06/25/QHXo24cKj9uRwzW.png" style="zoom:67%;" /></p>
-<h3 id="implementation-of-proposed-method">Implementation of proposed method</h3>
-<p>文中使用编码器输出的分布<span class="math inline">\(\mathcal{N}(\boldsymbol z;\boldsymbol \mu, \boldsymbol \sigma^2)\)</span>与标准正态分布之间的KL散度来作为异常分数。在每一轮的训练过程中，加入一轮使用Anomaly Prior的训练。</p>
-<p><img src="https://i.loli.net/2020/06/25/wrmzADXtsyuJ6EZ.png" style="zoom:67%;" /></p>
-<h1 id="experiments">Experiments</h1>
-<h2 id="mnist">MNIST</h2>
-<p>作者设计了两个Task：</p>
-<ol type="1">
-<li>Task 1. <span class="math inline">\(N\)</span> vs. <span class="math inline">\(\bar{N}\)</span>. 将手写数字中的一个作为已知异常，其他作为正常，并加入均匀分布作为未知的异常。</li>
+<p>$$<br>\begin{align}<br>\text{KL}\left[q(\boldsymbol z|\boldsymbol x;\phi)\parallel p_a(\boldsymbol z)\right]&amp;=<br>\int_{-\infty}^\infty\mathcal{N}(\boldsymbol z;\boldsymbol \mu,\boldsymbol \sigma^2)\log\mathcal{N}(\boldsymbol z;\boldsymbol\mu,\boldsymbol\sigma^2)\mathrm{d}\boldsymbol z\<br>&amp;+\log Y\<br>&amp;-\int_{-\infty}^\infty\mathcal{N}(\boldsymbol z;\boldsymbol \mu,\boldsymbol \sigma^2)\log\mathcal{N}(\boldsymbol z;\boldsymbol 0,\boldsymbol s^2)\mathrm{d}\boldsymbol z\<br>&amp;-\int_{-\infty}^\infty\mathcal{N}(\boldsymbol z;\boldsymbol \mu,\boldsymbol \sigma^2)\log\left{\frac{1}{\sqrt{2\pi}}-\mathcal{N}(\boldsymbol z;\boldsymbol 0, \boldsymbol 1)\right}\mathrm{d}\boldsymbol z<br>\end{align}<br>$$</p>
+<p>使用泰勒展开，$\log (x+\frac{1}{2\pi})\simeq-\log 2\pi+2\pi x$，KL散度可以用下式估计：</p>
+<p>$$<br>\begin{align}<br>\text{KL}\left[q(\boldsymbol z|\boldsymbol x;\phi)\parallel p_a(\boldsymbol z)\right]&amp;\simeq\sqrt{\frac{2\pi}{\boldsymbol\sigma^2+1}}\exp\left(\frac{-\boldsymbol\mu^2}{2(\boldsymbol\sigma^2+1)}\right)\<br>&amp;+\frac{\boldsymbol\mu^2+\boldsymbol\sigma^2}{2\boldsymbol s^2}-\log\boldsymbol\sigma+\log\boldsymbol s+\log\left(\sqrt{\boldsymbol s^2+1}-1\right)\<br>&amp;-\frac{\log(\boldsymbol s^2+1)}{2}+\frac{\log(2\pi)-1}{2}<br>\end{align}<br>$$</p>
+<p>下图为一维时$p_n(\boldsymbol z)$和$p_a(\boldsymbol z)$的示例：</p>
+<img src="https://i.loli.net/2020/06/25/QHXo24cKj9uRwzW.png" style="zoom:67%;" />
+
+<h3 id="Implementation-of-proposed-method"><a href="#Implementation-of-proposed-method" class="headerlink" title="Implementation of proposed method"></a>Implementation of proposed method</h3><p>文中使用编码器输出的分布$\mathcal{N}(\boldsymbol z;\boldsymbol \mu, \boldsymbol \sigma^2)$与标准正态分布之间的KL散度来作为异常分数。在每一轮的训练过程中，加入一轮使用Anomaly Prior的训练。</p>
+<img src="https://i.loli.net/2020/06/25/wrmzADXtsyuJ6EZ.png" style="zoom:67%;" />
+
+<h1 id="Experiments"><a href="#Experiments" class="headerlink" title="Experiments"></a>Experiments</h1><h2 id="MNIST"><a href="#MNIST" class="headerlink" title="MNIST"></a>MNIST</h2><p>作者设计了两个Task：</p>
+<ol>
+<li>Task 1. $N$ vs. $\bar{N}$. 将手写数字中的一个作为已知异常，其他作为正常，并加入均匀分布作为未知的异常。</li>
 <li>Task 2. 手写数字被分为3组：已知异常，正常，未知异常。</li>
 </ol>
 <p>细节如下表所示：</p>
-<p><img src="https://i.loli.net/2020/06/25/ifcIxr9zOpEhksA.png" style="zoom:67%;" /></p>
-<p>在实现上，使用Adam优化器，<code>batch_size</code>为100，<code>epochs</code>为200。<code>Encoder</code>和<code>Decoder</code>都由三层感知机组成，超参数<span class="math inline">\(s^2\)</span>设置为400。评测标准使用AUC (area under the receiver characteristic curve)。</p>
+<img src="https://i.loli.net/2020/06/25/ifcIxr9zOpEhksA.png" style="zoom:67%;" />
+
+<p>在实现上，使用Adam优化器，<code>batch_size</code>为100，<code>epochs</code>为200。<code>Encoder</code>和<code>Decoder</code>都由三层感知机组成，超参数$s^2$设置为400。评测标准使用AUC (area under the receiver characteristic curve)。</p>
 <p>下表为实验结果：</p>
-<p><img src="https://i.loli.net/2020/06/25/YTpO98y1ZPmAK3g.png" style="zoom:67%;" /></p>
-</div></article></div><nav class="pagination" role="navigation" aria-label="pagination"><div class="pagination-previous is-invisible is-hidden-mobile"><a href="/categories/Research/Anomaly-Detection/page/0/">上一页</a></div><div class="pagination-next"><a href="/categories/Research/Anomaly-Detection/page/2/">下一页</a></div><ul class="pagination-list is-hidden-mobile"><li><a class="pagination-link is-current" href="/categories/Research/Anomaly-Detection/">1</a></li><li><a class="pagination-link" href="/categories/Research/Anomaly-Detection/page/2/">2</a></li></ul></nav></div><!--!--><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/">Hanzawa の 部屋</a><p class="is-size-7"><span>&copy; 2021 Hanzawa</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("zh-CN");</script><script>var IcarusThemeSettings = {
+<img src="https://i.loli.net/2020/06/25/YTpO98y1ZPmAK3g.png" style="zoom:67%;" /></div></article></div><nav class="pagination" role="navigation" aria-label="pagination"><div class="pagination-previous is-invisible is-hidden-mobile"><a href="/categories/Research/Anomaly-Detection/page/0/">上一页</a></div><div class="pagination-next"><a href="/categories/Research/Anomaly-Detection/page/2/">下一页</a></div><ul class="pagination-list is-hidden-mobile"><li><a class="pagination-link is-current" href="/categories/Research/Anomaly-Detection/">1</a></li><li><a class="pagination-link" href="/categories/Research/Anomaly-Detection/page/2/">2</a></li></ul></nav></div><!--!--><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/">Hanzawa の 部屋</a><p class="is-size-7"><span>&copy; 2021 Hanzawa</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("zh-CN");</script><script>var IcarusThemeSettings = {
             article: {
                 highlight: {
                     clipboard: true,

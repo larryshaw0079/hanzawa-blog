@@ -1,223 +1,145 @@
 <!doctype html>
 <html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><title>Hanzawa の 部屋</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Hanzawa の 部屋"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Hanzawa の 部屋"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta property="og:type" content="website"><meta property="og:title" content="Hanzawa の 部屋"><meta property="og:url" content="https://larryshaw0079.github.io/hanzawa-blog"><meta property="og:site_name" content="Hanzawa の 部屋"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="https://larryshaw0079.github.io/img/og_image.png"><meta property="article:author" content="Hanzawa"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="/img/og_image.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://larryshaw0079.github.io/hanzawa-blog"},"headline":"Hanzawa の 部屋","image":["https://larryshaw0079.github.io/img/og_image.png"],"author":{"@type":"Person","name":"Hanzawa"},"publisher":{"@type":"Organization","name":"Hanzawa の 部屋","logo":{"@type":"ImageObject"}},"description":null}</script><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><!--!--><meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Hanzawa の 部屋" type="application/atom+xml">
-</head><body class="is-1-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/">Hanzawa の 部屋</a></div><div class="navbar-menu"><div class="navbar-end"></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-12"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-09-23T12:36:57.000Z" title="2020-9-23 8:36:57 ├F10: PM┤">2020-09-23</time>发表</span><span class="level-item"><time dateTime="2021-02-28T04:58:08.309Z" title="2021-2-28 12:58:08 ├F10: PM┤">2021-02-28</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Self-supervised-Learning/">Self-supervised Learning</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2020/09/23/Unsupervised-Feature-Learning-via-Non-Parametric-Instance-Discrimination/">Unsupervised Feature Learning via Non-Parametric Instance Discrimination</a></h1><div class="content"><h1 id="introduction">Introduction</h1>
-<p>本文基于样本分类和噪声对比估计提出了一个无监督表示学习算法。下图展示了一个Intuition Example：</p>
-<p><img src="https://i.loli.net/2020/07/28/AimfJM7gtuDsPGQ.png"  /></p>
-<p>对于一个有监督的分类器，输入一张图片，作者观察到分类器的Softmax Response中较高的那些类都是在视觉上看起来比较接近的（美洲豹Leopard，美洲虎Jaguar，印度豹Cheetah），也就是说网络捕捉到了类间的视觉相似性，不过这是在有标签的情况下。对于无监督表示学习任务，作者将这个观察推广到了一个极端情况，就是把每一个样本都视作不同的类，然后让分类器来学习样本（类）间的视觉相似性。不过直接这么做会有严重的效率问题，所以作者还利用了Memory Bank机制和噪声对比估计来提高效率。</p>
-<h1 id="proposed-method">Proposed Method</h1>
-<p>学习一个嵌入表示函数<span class="math inline">\(\mathbf v=f_\theta(x)\)</span>。在表示空间中<span class="math inline">\(d_\theta(x,y)=\parallel f_\theta(x)-f_\theta(y)\parallel\)</span></p>
-<p><img src="https://i.loli.net/2020/07/26/WICKVkhrBu6Mci5.png" /></p>
-<h2 id="non-parametric-softmax-classifier">Non-Parametric Softmax Classifier</h2>
-<h3 id="parametric-classifier">Parametric Classifier</h3>
-<p>在经过嵌入表示函数之后，得到表示向量<span class="math inline">\(\mathbf v_i=f_\theta(\mathbf x_i)\)</span>。要基于这个向量进行分类， <span class="math display">\[
-P(i|\mathbf v)=\frac{\exp(\mathbf w_i^\top\mathbf v)}{\sum_j\exp(\mathbf w_j^\top\mathbf v)}
-\]</span> ### Non-Parametric Classifier</p>
-<p><span class="math display">\[
-P(i|\mathbf v)=\frac{\exp(\mathbf v_i^\top\mathbf v/\tau)}{\sum_j\exp(\mathbf v_j^\top\mathbf v/\tau)}
-\]</span></p>
-<p>同时约束<span class="math inline">\(\parallel \mathbf v\parallel=1\)</span></p>
-<p>最后的损失函数为负对数似然损失（negative log-likelihood）： <span class="math display">\[
-J(\theta)=-\sum_{i=1}^n\log P(i|f_\theta(x_i))
-\]</span></p>
-<p>到这里，算法的大框架就确定下来了，剩下的就是解决两个效率上的问题。一个是损失函数的计算每次都需要计算整个训练集的表示，同时Softmax函数由于分母对应的项目很多（等于训练集大小）在效率上也有问题。</p>
-<h3 id="learning-with-a-memory-bank">Learning with A Memory Bank</h3>
-<p>这里解决第一个效率问题。要计算损失函数，需要遍历整个训练集获得对应的表示，而在训练的时候是一批一批的数据，每次重新计算表示效率很低。为了解决这个问题，作者引入了缓存机制，即加入一个memory bank <span class="math inline">\(V\)</span>，用来保存计算好的表示<span class="math inline">\(\mathbf f_i=f_\theta(x_i)\)</span>。一开始<span class="math inline">\(V\)</span>采用单位随机向量初始化，之后在训练的时候不断更新<span class="math inline">\(\mathbf f_i\rightarrow \mathbf v_i\)</span>。</p>
-<h2 id="noise-contrastive-estimation">Noise Contrastive Estimation</h2>
-<p>第二个效率问题很容易想到使用噪声对比估计（Noise Contrastive Estimation, NCE）来做。NCE主要是将计算复杂的分母作为一个参数来进行优化： <span class="math display">\[
-P(i|\mathbf v)=\frac{\exp(\mathbf v^\top\mathbf f_i/\tau)}{Z_i}
-\]</span></p>
-<p>其中<span class="math inline">\(Z_i=\sum_{j=1}^n\exp(\mathbf v^\top_j\mathbf f_i/\tau)\)</span>，噪声分布<span class="math inline">\(P_n=1/n\)</span>，如果噪声样本数量是真实数据的<span class="math inline">\(m\)</span>倍，那么随意给定一个样本，其属于真实样本的后验概率为： <span class="math display">\[
-h(i,\mathbf v)=P(D=1|i,\mathbf v)=\frac{P(i|\mathbf v)}{P(i|\mathbf v)+mP_n(i)}=\sigma\left(s(\mathbf v)-\log \{m P_n(i)\}\right)
-\]</span> 其中<span class="math inline">\(\Delta s=s(\mathbf v)-\log [m P_n(i)]\)</span>。这里的真实数据分布<span class="math inline">\(P_d\)</span>为。NCE的损失函数就是要最大化<span class="math inline">\(h(i,\mathbf v)\)</span>，最小化<span class="math inline">\(h(i,\mathbf v^\prime)\)</span> <span class="math display">\[
-J_{NCE}(\theta)=-E_{P_d}[\log h(i,\mathbf v)]-m\cdot E_{P_n}[\log(1-h(i,\mathbf v^\prime))]
-\]</span> 为了计算<span class="math inline">\(Z_i\)</span> <span class="math display">\[
-Z\simeq Z_i\simeq nE_j[\exp(\mathbf v_j^\top\mathbf f_i/\tau)]=\frac{n}{m}\sum_{k=1}^m\exp(\mathbf v_{j_k}^\top\mathbf f_i/\tau)
-\]</span></p>
-<h2 id="proximal-regularization">Proximal Regularization</h2>
-<p>每个类别只有一个样本 <span class="math display">\[
--\log h(i,\mathbf v_i^{(t-1)})+\lambda\parallel\mathbf v_i^{(i)}-\mathbf v_i^{(i-1)}\parallel^2_2
-\]</span></p>
-<p>最终的损失函数：</p>
-<p><span class="math display">\[
-J_{NCE}(\theta)=-E_{P_d}\left[\log h(i,\mathbf v_i^{(t-1)})-\lambda\parallel\mathbf v_i^{(t)}-\mathbf v_i^{(t-1)}\parallel^2_2\right]\\
--m\cdot E_{P_n}\left[\log(1-h(i,\mathbf v^{\prime(t-1)}))\right]
-\]</span></p>
-<p><img src="https://i.loli.net/2020/08/06/nvS3Z7jEldVcCep.png" style="zoom:67%;" /></p>
-<h2 id="weighted-k-nearest-neighbor-classifier">Weighted k-Nearest Neighbor Classifier</h2>
-<p><span class="math inline">\(s_i=\cos(\mathbf v_i,\hat{\mathbf f})\)</span>。记<span class="math inline">\(\mathcal N_k\)</span>。<span class="math inline">\(w_c=\sum_{i\in\mathcal N_k}\alpha_i\cdot 1(c_i=c)\)</span>。</p>
-<p><img src="https://i.loli.net/2020/07/29/Cl8xHeFZzXpvosL.png" style="zoom:67%;" /></p>
-<h1 id="experiments">Experiments</h1>
-<p><img src="https://i.loli.net/2020/08/07/Zj628R7WYixJGog.png" style="zoom:67%;" /></p>
-<p><img src="https://i.loli.net/2020/08/07/k6rx1LoaZiFYGpQ.png" style="zoom:67%;" /></p>
-<p><img src="https://i.loli.net/2020/08/07/a3tNMQ7I2xmGdYA.png" /></p>
-<p><img src="https://i.loli.net/2020/08/07/CK7s3wHbmgnv2j4.png" style="zoom:80%;" /></p>
-<p><img src="https://i.loli.net/2020/08/07/rM7n3jhOiBbvJXf.png" style="zoom:67%;" /></p>
-<p><img src="https://i.loli.net/2020/08/07/PVL4nlGFtqOdyRh.png" style="zoom:67%;" /></p>
-<p><img src="https://i.loli.net/2020/08/07/F3miMXyOqg1DUtK.png" style="zoom:67%;" /></p>
-</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-09-17T12:08:53.000Z" title="2020-9-17 8:08:53 ├F10: PM┤">2020-09-17</time>发表</span><span class="level-item"><time dateTime="2021-02-19T10:20:26.291Z" title="2021-2-19 6:20:26 ├F10: PM┤">2021-02-19</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Self-supervised-Learning/">Self-supervised Learning</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2020/09/17/Representation-Learning-with-Contrastive-Predictive-Coding/">Representation Learning with Contrastive Predictive Coding</a></h1><div class="content"><h1 id="introduction">Introduction</h1>
-<p>这篇文章算是Contrastive Learning的开山之作之一了，本文提出了表示学习框架：Contrastive Predictive Coding（CPC）和InfoNCE Loss。</p>
-<p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1807.03748">原文</a></p>
-<h1 id="proposed-method">Proposed Method</h1>
-<h2 id="contrastive-predictive-coding">Contrastive Predictive Coding</h2>
-<p>N-pair Loss: <span class="math display">\[
-\mathcal L=-\log\frac{\exp(f^+\cdot f^\top)}{\exp(f^+\cdot f^\top)+\sum_{f_j\neq f^\top}\exp(f^+\cdot f_j)}
-\]</span> 你有N个样本<span class="math inline">\(\{x_1,x_2,\cdots,x_N\}\)</span>，然后对应的表示为<span class="math inline">\(f_j\)</span>。假设当前样本为<span class="math inline">\(f^+\)</span>，在所有的<span class="math inline">\(f_j\)</span>中只有一个表示与<span class="math inline">\(f^+\)</span> match，记为<span class="math inline">\(f^\top\)</span>（可以理解为属于同一类，或者两个相似），其他的都是负样本。我们优化上面的优化公式就会拉近<span class="math inline">\(f^+\)</span>和<span class="math inline">\(f^\top\)</span>之间的距离（拉近同类），疏远<span class="math inline">\(f^+\)</span>和所有其他负样本<span class="math inline">\(f_j\)</span>的距离（疏远异类）。不过在N-pair Loss中，正负样本是根据标签来选取的，然而在这里我们没有标签。</p>
-<p>下图展示了Contrastive Predictive Coding的结构：</p>
-<p><img src="https://i.loli.net/2020/07/07/mcFYnVGasjkHrw5.png" style="zoom:67%;" /></p>
-<p>对比学习 <span class="math display">\[
-\mathcal L(f_i)=-\log\frac{\exp(f_i\cdot f^\top)}{\sum_j\exp(f_i\cdot f_j)}
-\]</span> 设数据集（一个Batch）为<span class="math inline">\(\mathbf X=\{x_1,x_2,\cdots,x_N\}\)</span>，正样本对为，负样本对。</p>
-<p>至于<span class="math inline">\(f(\cdot,\cdot)\)</span>的具体形式，其实<span class="math inline">\(\frac{p(x_{t+k}|c_t)}{p(x_{t+k})}\)</span>这个式子我们也是没法直接优化的，因为这个Density Ratio无法直接算出来。在这里，作者使用了一个替代的办法，就是用<span class="math inline">\(\mathbf c_t\)</span>来预测未来的隐变量<span class="math inline">\(\hat{\mathbf z}_{t+1},\hat{\mathbf z}_{t+2},\cdots\)</span>，而真实的隐变量<span class="math inline">\(\mathbf z_{t+1},\mathbf z_{t+2},\cdots\)</span>我们是知道的。这里预测直接使用权重矩阵和<span class="math inline">\(\mathbf c_t\)</span>相乘： <span class="math display">\[
-f_k(\mathbf x_{t+k},\mathbf c_t)=\exp\left(\mathbf z_{t+k}^T \cdot \mathbf W_k\mathbf c_t\right)
-\]</span></p>
-<p>上式有点难以理解，实际上预测值<span class="math inline">\(\hat{\mathbf z}_{t+k}=\mathbf W_k\mathbf c_t\)</span>，而<span class="math inline">\(\mathbf z_{t+k}\hat{\mathbf z}_{t+k}\)</span>相当于计算两者的距离，即相似性。所以<span class="math inline">\(f_k(\cdot,\cdot)\)</span>其实是在计算预测值和真实值的相似性。现在大家先接受这个<span class="math inline">\(f(\cdot,\cdot)\)</span>的定义，因为后面会证明优化这个<span class="math inline">\(f(\cdot,\cdot)\)</span>就相当于在优化Density Ratio <span class="math inline">\(\frac{p(x_{t+k}|c_t)}{p(x_{t+k})}\)</span>。</p>
-<p>一个来自<span class="math inline">\(p(x_{t+k}|c_t)\)</span>的正例和<span class="math inline">\(N-1\)</span>个来自<span class="math inline">\(p(x_{t+k})\)</span>的负例，目标函数（文中称为CPC Loss）为： <span class="math display">\[
-\mathcal L_N=-\mathop{\mathbb E}\limits_X\left[\log\frac{f_k(x_{t+k},c_t)}{\sum_{x_j\in X}f_k(x_j,c_t)}\right]
-\]</span></p>
-<p>这里相当于做了个<span class="math inline">\(N\)</span>分类，因为这里损失函数等价于<span class="math inline">\(N\)</span>分类交叉熵损失函数。</p>
-<blockquote>
-<p>两个离散随机变量的交叉熵的定义为： <span class="math display">\[
-H(p,q) = -\sum_{x\in\mathcal X}p(x)\log q(x)
-\]</span> 对于交叉熵损失函数，设<span class="math inline">\(i\)</span>为真实标签，<span class="math inline">\(\hat{\boldsymbol y}\)</span>为分类器的输出。<span class="math inline">\(\frac{\exp(\hat y_i)}{\sum_j\exp(\hat y_j)}\)</span>为经过<code>Softmax</code>归一化之后的输出，其每个分量<span class="math inline">\(\hat y_j\)</span>相当于输入样本<span class="math inline">\(x\)</span>的预测类别为<span class="math inline">\(j\)</span>的概率。不过由于对于真实标签<span class="math inline">\(y\)</span>来说，只有<span class="math inline">\(y_i=1\)</span>，其他的分量都为<span class="math inline">\(0\)</span>，所以最后交叉熵只剩下一项： <span class="math display">\[
-\mathcal L=-\log\left(\frac{\exp(\hat y_i)}{\sum_j\exp(\hat y_j)}\right)
-\]</span></p>
-</blockquote>
-<p><span class="math display">\[
-I(x;c)=\sum_{x,c}p(x,c)\log\frac{p(x|c)}{p(x)}
-\]</span></p>
-<p>编码器<span class="math inline">\(g_{enc}\)</span>将观测值<span class="math inline">\(\boldsymbol x_t\)</span>编码到隐变量<span class="math inline">\(\boldsymbol z_t=g_\text{enc}(\boldsymbol x_t)\)</span>（对应于局部信息），之后自回归模型<span class="math inline">\(g_{ar}\)</span>将所有<span class="math inline">\(t\)</span>之前的（包括<span class="math inline">\(t\)</span>）隐变量<span class="math inline">\(z_{\leq t}\)</span>压缩到一个上下文隐变量<span class="math inline">\(\boldsymbol c_t=g_\text{ar}(\boldsymbol z_{\leq t})\)</span>（希望具有预测性质，捕获了长时依赖性）。不过本文并不是基于<span class="math inline">\(\boldsymbol c_t\)</span>来预测未来的观测值<span class="math inline">\(\boldsymbol x_{t+k}\)</span>，即估计分布<span class="math inline">\(p_k(\boldsymbol x_{t+k}|\boldsymbol c_t)\)</span>，而这样的话又要用到MSE之类的Loss。文中利用的是最大化<span class="math inline">\(\boldsymbol c_t\)</span>和<span class="math inline">\(\boldsymbol x_{t+k}\)</span>之间的互信息<span class="math inline">\(\log \frac{p(x_{t+k}|c_t)}{p(x_{t+k})}\)</span>（这种形式的互信息被称为是点互信息，详见<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Pointwise_mutual_information">维基</a>）。定义一个度量函数<span class="math inline">\(f(\cdot,\cdot)\)</span>，要求其具有与<span class="math inline">\(\frac{p(x_{t+k}|c_t)}{p(x_{t+k})}\)</span>成比例的性质： <span class="math display">\[
-f_k(x_{t+k},c_t)\propto\frac{p(x_{t+k}|c_t)}{p(x_{t+k})}
-\]</span> 这时最大化<span class="math inline">\(f(\cdot,\cdot)\)</span>就相当于最大化两者的互信息。</p>
-<h2 id="mutual-information-estimation-explanation">Mutual Information Estimation Explanation</h2>
-<p>现在回到公式<span class="math inline">\(I(x;c)=\sum_{x,c}p(x,c)\log\frac{p(x|c)}{p(x)}\)</span>，</p>
-<h2 id="multual-information">Multual Information</h2>
-<p>互信息是衡量已知一个变量时，另一个变量不确定性的减少程度的度量。对于离散随机变量，互信息的定义为： <span class="math display">\[
-I(X,Y)=\sum_{y\in\mathcal Y}\sum_{x\in\mathcal X}p(x,y)\log\frac{p(x,y)}{p(x)p(y)}=\sum_{y\in\mathcal Y}\sum_{x\in\mathcal X}p(x,y)\log\frac{p(y|x)}{p(y)}
-\]</span> 对于连续随机变量，互信息的定义为： <span class="math display">\[
-I(X,Y)=\int_{\mathcal Y}\int_{\mathcal X}p(x,y)\log\frac{p(x,y)}{p(x)p(y)}\mathrm dx\mathrm d y=\int_{\mathcal Y}\int_{\mathcal X}p(x,y)\log\frac{p(y|x)}{p(y)}\mathrm dx\mathrm d y
-\]</span> 互信息与熵之间的关系： <span class="math display">\[
-\begin{align}
-I(X,Y)&amp;=H(X)-H(X|Y)\\
-&amp;=H(Y)-H(Y|X)\\
-&amp;=H(X)+H(Y)-H(X,Y)\\
-&amp;=H(X,Y)-H(X|Y)-H(Y|X)
-\end{align}
-\]</span> 互信息与KL散之间的关系： <span class="math display">\[
-I(X,Y)=\mathbb E_Y[D_{KL}(p(x|y)\parallel p(x))]
-\]</span> 从图中可以很容易看出互信息相当于<span class="math inline">\(X\)</span>和<span class="math inline">\(Y\)</span>两者的熵的“重叠”的部分：</p>
-<p><img src="https://i.loli.net/2020/07/17/orRXnpugEzsZDwq.png" style="zoom:67%;" /></p>
-<p>在表示学习中，互信息的应用越来越广泛。对于输入的数据<span class="math inline">\(X\)</span>，表示学习的目的是尽可能学到“好“的表示<span class="math inline">\(Z\)</span>，保留原始数据尽可能多的重要信息。如果使用基于重构的模型，我们就会要求最小化重构误差<span class="math inline">\(\parallel X-\hat{X}\parallel^2_2\)</span>，但是这种”逐像素“式的损失函数过于严苛，不利于模型学习高层语义信息。如果加入一个判别器来自动学习一个度量，首先增大了计算开销，同时GAN本身也有诸多问题。</p>
-<p>现阶段很多工作使用互信息来判定学到的表示<span class="math inline">\(Z\)</span>的好坏，即最大化原始数据<span class="math inline">\(X\)</span>与表示<span class="math inline">\(Z\)</span>之间的互信息： <span class="math display">\[
-Z^*=\mathop{\arg\max}_{p(z|x)}I(X,Z)
-\]</span> 互信息越大意味着<span class="math inline">\(\log\frac{p(z|x)}{p(z)}\)</span>越大，即<span class="math inline">\(p(z|x)\)</span>要大于<span class="math inline">\(p(z)\)</span>。<span class="math inline">\(p(z)\)</span>可以看作是<span class="math inline">\(Z\)</span>的先验，而<span class="math inline">\(p(z|x)\gg p(z)\)</span>可以理解为在得知输入<span class="math inline">\(X\)</span>之后，我们能找到专属<span class="math inline">\(X\)</span>的那个编码<span class="math inline">\(Z\)</span>。</p>
-<p>接下来作者证明优化<span class="math inline">\(\mathcal L_N\)</span>会使得<span class="math inline">\(f_k(\mathbf x_{t+k},\mathbf c_t)\)</span>和互信息接近。这里的<span class="math inline">\(p(\mathbf x_{t+k}|\mathbf c_t)\)</span>。设<span class="math inline">\(p(d=i|X,c_t)\)</span>为给定数据集（或者Batch）<span class="math inline">\(X\)</span>和context向量<span class="math inline">\(c_t\)</span>的条件下，样本<span class="math inline">\(x_i\)</span>为正样本的概率，有： <span class="math display">\[
-\begin{align}
-p(d=i|X,c_t)&amp;=\frac{p(x_i|c_t)\prod_{l\neq i}p(x_l)}{\sum^N_{j=1} p(x_j|c_t)\prod_{l\neq j}p(x_l)}\\
-&amp;=\frac{\frac{p(x_i|c_t)}{p(x_i)}}{\sum^N_{j=1}\frac{p(x_j|c_t)}{p(x_j)}}
-\end{align}
-\]</span></p>
-<p>$$ <span class="math display">\[\begin{align}
-\mathcal L_\text{N}^\text{opt}&amp;=-\mathop{\mathbb E}\limits_X\log\left[\frac{\frac{p(x_{t+k}|c_t)}{p(x_{t+k})}}{\frac{p(x_{t+k}|c_t)}{p(x_{t+k})}+\sum_{x_j\in X_\text{neg}}\frac{p(x_j|c_t)}{x_j}}\right]\\
+</head><body class="is-1-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/">Hanzawa の 部屋</a></div><div class="navbar-menu"><div class="navbar-end"></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-12"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-09-23T12:36:57.000Z" title="2020-9-23 8:36:57 ├F10: PM┤">2020-09-23</time>发表</span><span class="level-item"><time dateTime="2021-02-28T04:58:08.309Z" title="2021-2-28 12:58:08 ├F10: PM┤">2021-02-28</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Self-supervised-Learning/">Self-supervised Learning</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2020/09/23/Unsupervised-Feature-Learning-via-Non-Parametric-Instance-Discrimination/">Unsupervised Feature Learning via Non-Parametric Instance Discrimination</a></h1><div class="content"><h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>本文基于样本分类和噪声对比估计提出了一个无监督表示学习算法。下图展示了一个Intuition Example：</p>
+<img src="https://i.loli.net/2020/07/28/AimfJM7gtuDsPGQ.png"  />
 
-\end{align}\]</span> $$</p>
-<p><span class="math display">\[
-I(x_{t+k},c_t)\geq \log(N)-\mathcal L_N
-\]</span></p>
-<p>可以说<span class="math inline">\(\mathcal L_N\)</span>作为互信息<span class="math inline">\(I(x_{t+k},c_t)\)</span>的一个下界。</p>
-<h2 id="implementation-details">Implementation Details</h2>
-<h1 id="experiments">Experiments</h1>
-<h2 id="audio">Audio</h2>
-<p><img src="https://i.loli.net/2020/07/07/kWectjL27MKy1dA.png" /></p>
-<p><img src="https://i.loli.net/2020/07/07/vhBRmpntw2Xx6J9.png" /></p>
-<p><img src="https://i.loli.net/2020/07/07/5QaDOCFvxLE6wqT.png" /></p>
-<p><img src="https://i.loli.net/2020/07/07/nA49kE1WP73oGQJ.png" /></p>
-<h2 id="vision">Vision</h2>
-<p><img src="https://i.loli.net/2020/07/07/gkNnWo4zyUeBRCa.png" style="zoom:67%;" /></p>
-<p><img src="https://i.loli.net/2020/07/07/qH6BAJnhMcP9bKy.png" style="zoom:67%;" /></p>
-<p><img src="https://i.loli.net/2020/07/07/ezO1IibwvC5Mus8.png" /></p>
-<p><img src="https://i.loli.net/2020/07/07/sWNGXqv1n38kgcf.png" /></p>
-<h2 id="natural-language">Natural Language</h2>
-<p><img src="https://i.loli.net/2020/07/07/Ly86Xu9n4KSOJge.png" /></p>
-<h2 id="reinforcement-learning">Reinforcement Learning</h2>
-<p><img src="https://i.loli.net/2020/07/07/92XzLqltMUfCgTs.png" /></p>
-</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-09-09T03:33:25.000Z" title="2020-9-9 11:33:25 ├F10: AM┤">2020-09-09</time>发表</span><span class="level-item"><time dateTime="2021-02-19T10:21:57.175Z" title="2021-2-19 6:21:57 ├F10: PM┤">2021-02-19</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Technical-Notes/">Technical Notes</a><span> / </span><a class="link-muted" href="/categories/Technical-Notes/Machine-Learning/">Machine Learning</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2020/09/09/Model-Selection-and-Evaluation-Machine-Learning-Basics/">Model Selection and Evaluation: Machine Learning Basics</a></h1><div class="content"><h1 id="overfitting">Overfitting</h1>
-<p>我们将模型输出与真实值之间的差异称为误差，如对于分类问题，我们可以使用模型分类错误的样本数量占总样本数的比例。模型在训练集（我们收集到的数据）上的误差称作是<strong>训练误差 (training error)</strong>，而在新样本（这里指的是新的样本而不是测试集，训练集测试集是从我们收集到的数据上人为划分出来的）上的误差称作是<strong>泛化误差 (generalization error)</strong>。对于机器学习算法，我们希望算法能学到数据背后的普遍规律，所以我们总是希望模型的泛化误差越小越好。</p>
-<p>不过测试集对训练过程来说是未知的，所以模型只能尽量从训练集中发掘数据的普遍规律，要是模型把训练集学得”太好“了，很可能把训练集中不属于普遍规律的部分特点作为了一般性质，这就会导致泛化性能下降，我们称这种情况为<strong>过拟合 (overfitting)</strong>。反之，模型对训练集的特性学得不够，就会出现<strong>欠拟合 (underfitting)</strong>。关于过拟合和欠拟合，周志华老师的《机器学习》中有一张很好的图：</p>
-<p><img src="https://i.loli.net/2020/09/09/tVPeQfu9CWLaSi6.png" style="zoom:67%;" /></p>
+<p>对于一个有监督的分类器，输入一张图片，作者观察到分类器的Softmax Response中较高的那些类都是在视觉上看起来比较接近的（美洲豹Leopard，美洲虎Jaguar，印度豹Cheetah），也就是说网络捕捉到了类间的视觉相似性，不过这是在有标签的情况下。对于无监督表示学习任务，作者将这个观察推广到了一个极端情况，就是把每一个样本都视作不同的类，然后让分类器来学习样本（类）间的视觉相似性。不过直接这么做会有严重的效率问题，所以作者还利用了Memory Bank机制和噪声对比估计来提高效率。</p>
+<h1 id="Proposed-Method"><a href="#Proposed-Method" class="headerlink" title="Proposed Method"></a>Proposed Method</h1><p>学习一个嵌入表示函数$\mathbf v=f_\theta(x)$。在表示空间中$d_\theta(x,y)=\parallel f_\theta(x)-f_\theta(y)\parallel$</p>
+<p><img src="https://i.loli.net/2020/07/26/WICKVkhrBu6Mci5.png"></p>
+<h2 id="Non-Parametric-Softmax-Classifier"><a href="#Non-Parametric-Softmax-Classifier" class="headerlink" title="Non-Parametric Softmax Classifier"></a>Non-Parametric Softmax Classifier</h2><h3 id="Parametric-Classifier"><a href="#Parametric-Classifier" class="headerlink" title="Parametric Classifier"></a>Parametric Classifier</h3><p>在经过嵌入表示函数之后，得到表示向量$\mathbf v_i=f_\theta(\mathbf x_i)$。要基于这个向量进行分类，<br>$$<br>P(i|\mathbf v)=\frac{\exp(\mathbf w_i^\top\mathbf v)}{\sum_j\exp(\mathbf w_j^\top\mathbf v)}<br>$$</p>
+<h3 id="Non-Parametric-Classifier"><a href="#Non-Parametric-Classifier" class="headerlink" title="Non-Parametric Classifier"></a>Non-Parametric Classifier</h3><p>$$<br>P(i|\mathbf v)=\frac{\exp(\mathbf v_i^\top\mathbf v/\tau)}{\sum_j\exp(\mathbf v_j^\top\mathbf v/\tau)}<br>$$</p>
+<p>同时约束$\parallel \mathbf v\parallel=1$</p>
+<p>最后的损失函数为负对数似然损失（negative log-likelihood）：<br>$$<br>J(\theta)=-\sum_{i=1}^n\log P(i|f_\theta(x_i))<br>$$</p>
+<p>到这里，算法的大框架就确定下来了，剩下的就是解决两个效率上的问题。一个是损失函数的计算每次都需要计算整个训练集的表示，同时Softmax函数由于分母对应的项目很多（等于训练集大小）在效率上也有问题。</p>
+<h3 id="Learning-with-A-Memory-Bank"><a href="#Learning-with-A-Memory-Bank" class="headerlink" title="Learning with A Memory Bank"></a>Learning with A Memory Bank</h3><p>这里解决第一个效率问题。要计算损失函数，需要遍历整个训练集获得对应的表示，而在训练的时候是一批一批的数据，每次重新计算表示效率很低。为了解决这个问题，作者引入了缓存机制，即加入一个memory bank $V$，用来保存计算好的表示$\mathbf f_i=f_\theta(x_i)$。一开始$V$采用单位随机向量初始化，之后在训练的时候不断更新$\mathbf f_i\rightarrow \mathbf v_i$。</p>
+<h2 id="Noise-Contrastive-Estimation"><a href="#Noise-Contrastive-Estimation" class="headerlink" title="Noise Contrastive Estimation"></a>Noise Contrastive Estimation</h2><p>第二个效率问题很容易想到使用噪声对比估计（Noise Contrastive Estimation, NCE）来做。NCE主要是将计算复杂的分母作为一个参数来进行优化：<br>$$<br>P(i|\mathbf v)=\frac{\exp(\mathbf v^\top\mathbf f_i/\tau)}{Z_i}<br>$$</p>
+<p>其中$Z_i=\sum_{j=1}^n\exp(\mathbf v^\top_j\mathbf f_i/\tau)$，噪声分布$P_n=1/n$，如果噪声样本数量是真实数据的$m$倍，那么随意给定一个样本，其属于真实样本的后验概率为：<br>$$<br>h(i,\mathbf v)=P(D=1|i,\mathbf v)=\frac{P(i|\mathbf v)}{P(i|\mathbf v)+mP_n(i)}=\sigma\left(s(\mathbf v)-\log {m P_n(i)}\right)<br>$$<br>其中$\Delta s=s(\mathbf v)-\log [m P_n(i)]$。这里的真实数据分布$P_d$为。NCE的损失函数就是要最大化$h(i,\mathbf v)$，最小化$h(i,\mathbf v^\prime)$<br>$$<br>J_{NCE}(\theta)=-E_{P_d}[\log h(i,\mathbf v)]-m\cdot E_{P_n}[\log(1-h(i,\mathbf v^\prime))]<br>$$<br>为了计算$Z_i$<br>$$<br>Z\simeq Z_i\simeq nE_j[\exp(\mathbf v_j^\top\mathbf f_i/\tau)]=\frac{n}{m}\sum_{k=1}^m\exp(\mathbf v_{j_k}^\top\mathbf f_i/\tau)<br>$$</p>
+<h2 id="Proximal-Regularization"><a href="#Proximal-Regularization" class="headerlink" title="Proximal Regularization"></a>Proximal Regularization</h2><p>每个类别只有一个样本<br>$$<br>-\log h(i,\mathbf v_i^{(t-1)})+\lambda\parallel\mathbf v_i^{(i)}-\mathbf v_i^{(i-1)}\parallel^2_2<br>$$</p>
+<p>最终的损失函数：</p>
+<p>$$<br>J_{NCE}(\theta)=-E_{P_d}\left[\log h(i,\mathbf v_i^{(t-1)})-\lambda\parallel\mathbf v_i^{(t)}-\mathbf v_i^{(t-1)}\parallel^2_2\right]\<br>-m\cdot E_{P_n}\left[\log(1-h(i,\mathbf v^{\prime(t-1)}))\right]<br>$$</p>
+<img src="https://i.loli.net/2020/08/06/nvS3Z7jEldVcCep.png" style="zoom:67%;" />
+
+<h2 id="Weighted-k-Nearest-Neighbor-Classifier"><a href="#Weighted-k-Nearest-Neighbor-Classifier" class="headerlink" title="Weighted k-Nearest Neighbor Classifier"></a>Weighted k-Nearest Neighbor Classifier</h2><p>$s_i=\cos(\mathbf v_i,\hat{\mathbf f})$。记$\mathcal N_k$。$w_c=\sum_{i\in\mathcal N_k}\alpha_i\cdot 1(c_i=c)$。</p>
+<img src="https://i.loli.net/2020/07/29/Cl8xHeFZzXpvosL.png" style="zoom:67%;" />
+
+<h1 id="Experiments"><a href="#Experiments" class="headerlink" title="Experiments"></a>Experiments</h1><img src="https://i.loli.net/2020/08/07/Zj628R7WYixJGog.png" style="zoom:67%;" />
+
+
+
+<img src="https://i.loli.net/2020/08/07/k6rx1LoaZiFYGpQ.png" style="zoom:67%;" />
+
+
+
+
+
+<p><img src="https://i.loli.net/2020/08/07/a3tNMQ7I2xmGdYA.png"></p>
+<img src="https://i.loli.net/2020/08/07/CK7s3wHbmgnv2j4.png" style="zoom:80%;" />
+
+
+
+<img src="https://i.loli.net/2020/08/07/rM7n3jhOiBbvJXf.png" style="zoom:67%;" />
+
+
+
+<img src="https://i.loli.net/2020/08/07/PVL4nlGFtqOdyRh.png" style="zoom:67%;" />
+
+
+
+<img src="https://i.loli.net/2020/08/07/F3miMXyOqg1DUtK.png" style="zoom:67%;" /></div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-09-17T12:08:53.000Z" title="2020-9-17 8:08:53 ├F10: PM┤">2020-09-17</time>发表</span><span class="level-item"><time dateTime="2021-02-19T10:20:26.291Z" title="2021-2-19 6:20:26 ├F10: PM┤">2021-02-19</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Self-supervised-Learning/">Self-supervised Learning</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2020/09/17/Representation-Learning-with-Contrastive-Predictive-Coding/">Representation Learning with Contrastive Predictive Coding</a></h1><div class="content"><h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>这篇文章算是Contrastive Learning的开山之作之一了，本文提出了表示学习框架：Contrastive Predictive Coding（CPC）和InfoNCE Loss。</p>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1807.03748">原文</a></p>
+<h1 id="Proposed-Method"><a href="#Proposed-Method" class="headerlink" title="Proposed Method"></a>Proposed Method</h1><h2 id="Contrastive-Predictive-Coding"><a href="#Contrastive-Predictive-Coding" class="headerlink" title="Contrastive Predictive Coding"></a>Contrastive Predictive Coding</h2><p>N-pair Loss:<br>$$<br>\mathcal L=-\log\frac{\exp(f^+\cdot f^\top)}{\exp(f^+\cdot f^\top)+\sum_{f_j\neq f^\top}\exp(f^+\cdot f_j)}<br>$$<br>你有N个样本${x_1,x_2,\cdots,x_N}$，然后对应的表示为$f_j$。假设当前样本为$f^+$，在所有的$f_j$中只有一个表示与$f^+$ match，记为$f^\top$（可以理解为属于同一类，或者两个相似），其他的都是负样本。我们优化上面的优化公式就会拉近$f^+$和$f^\top$之间的距离（拉近同类），疏远$f^+$和所有其他负样本$f_j$的距离（疏远异类）。不过在N-pair Loss中，正负样本是根据标签来选取的，然而在这里我们没有标签。</p>
+<p>下图展示了Contrastive Predictive Coding的结构：</p>
+<img src="https://i.loli.net/2020/07/07/mcFYnVGasjkHrw5.png" style="zoom:67%;" />
+
+<p>对比学习<br>$$<br>\mathcal L(f_i)=-\log\frac{\exp(f_i\cdot f^\top)}{\sum_j\exp(f_i\cdot f_j)}<br>$$<br>设数据集（一个Batch）为$\mathbf X={x_1,x_2,\cdots,x_N}$，正样本对为，负样本对。</p>
+<p>至于$f(\cdot,\cdot)$的具体形式，其实$\frac{p(x_{t+k}|c_t)}{p(x_{t+k})}$这个式子我们也是没法直接优化的，因为这个Density Ratio无法直接算出来。在这里，作者使用了一个替代的办法，就是用$\mathbf c_t$来预测未来的隐变量$\hat{\mathbf z}<em>{t+1},\hat{\mathbf z}</em>{t+2},\cdots$，而真实的隐变量$\mathbf z_{t+1},\mathbf z_{t+2},\cdots$我们是知道的。这里预测直接使用权重矩阵和$\mathbf c_t$相乘：<br>$$<br>f_k(\mathbf x_{t+k},\mathbf c_t)=\exp\left(\mathbf z_{t+k}^T \cdot \mathbf W_k\mathbf c_t\right)<br>$$</p>
+<p>上式有点难以理解，实际上预测值$\hat{\mathbf z}<em>{t+k}=\mathbf W_k\mathbf c_t$，而$\mathbf z</em>{t+k}\hat{\mathbf z}_{t+k}$相当于计算两者的距离，即相似性。所以$f_k(\cdot,\cdot)$其实是在计算预测值和真实值的相似性。现在大家先接受这个$f(\cdot,\cdot)$的定义，因为后面会证明优化这个$f(\cdot,\cdot)$就相当于在优化Density Ratio $\frac{p(x_{t+k}|c_t)}{p(x_{t+k})}$。</p>
+<p>一个来自$p(x_{t+k}|c_t)$的正例和$N-1$个来自$p(x_{t+k})$的负例，目标函数（文中称为CPC Loss）为：<br>$$<br>\mathcal L_N=-\mathop{\mathbb E}\limits_X\left[\log\frac{f_k(x_{t+k},c_t)}{\sum_{x_j\in X}f_k(x_j,c_t)}\right]<br>$$</p>
+<p>这里相当于做了个$N$分类，因为这里损失函数等价于$N$分类交叉熵损失函数。</p>
+<blockquote>
+<p>两个离散随机变量的交叉熵的定义为：<br>$$<br>H(p,q) = -\sum_{x\in\mathcal X}p(x)\log q(x)<br>$$<br>对于交叉熵损失函数，设$i$为真实标签，$\hat{\boldsymbol y}$为分类器的输出。$\frac{\exp(\hat y_i)}{\sum_j\exp(\hat y_j)}$为经过<code>Softmax</code>归一化之后的输出，其每个分量$\hat y_j$相当于输入样本$x$的预测类别为$j$的概率。不过由于对于真实标签$y$来说，只有$y_i=1$，其他的分量都为$0$，所以最后交叉熵只剩下一项：<br>$$<br>\mathcal L=-\log\left(\frac{\exp(\hat y_i)}{\sum_j\exp(\hat y_j)}\right)<br>$$</p>
+</blockquote>
+<p>$$<br>I(x;c)=\sum_{x,c}p(x,c)\log\frac{p(x|c)}{p(x)}<br>$$</p>
+<p>编码器$g_{enc}$将观测值$\boldsymbol x_t$编码到隐变量$\boldsymbol z_t=g_\text{enc}(\boldsymbol x_t)$（对应于局部信息），之后自回归模型$g_{ar}$将所有$t$之前的（包括$t$）隐变量$z_{\leq t}$压缩到一个上下文隐变量$\boldsymbol c_t=g_\text{ar}(\boldsymbol z_{\leq  t})$（希望具有预测性质，捕获了长时依赖性）。不过本文并不是基于$\boldsymbol c_t$来预测未来的观测值$\boldsymbol x_{t+k}$，即估计分布$p_k(\boldsymbol x_{t+k}|\boldsymbol c_t)$，而这样的话又要用到MSE之类的Loss。文中利用的是最大化$\boldsymbol c_t$和$\boldsymbol x_{t+k}$之间的互信息$\log \frac{p(x_{t+k}|c_t)}{p(x_{t+k})}$（这种形式的互信息被称为是点互信息，详见<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Pointwise_mutual_information">维基</a>）。定义一个度量函数$f(\cdot,\cdot)$，要求其具有与$\frac{p(x_{t+k}|c_t)}{p(x_{t+k})}$成比例的性质：<br>$$<br>f_k(x_{t+k},c_t)\propto\frac{p(x_{t+k}|c_t)}{p(x_{t+k})}<br>$$<br>这时最大化$f(\cdot,\cdot)$就相当于最大化两者的互信息。</p>
+<h2 id="Mutual-Information-Estimation-Explanation"><a href="#Mutual-Information-Estimation-Explanation" class="headerlink" title="Mutual Information Estimation Explanation"></a>Mutual Information Estimation Explanation</h2><p>现在回到公式$I(x;c)=\sum_{x,c}p(x,c)\log\frac{p(x|c)}{p(x)}$，</p>
+<h2 id="Multual-Information"><a href="#Multual-Information" class="headerlink" title="Multual Information"></a>Multual Information</h2><p>互信息是衡量已知一个变量时，另一个变量不确定性的减少程度的度量。对于离散随机变量，互信息的定义为：<br>$$<br>I(X,Y)=\sum_{y\in\mathcal Y}\sum_{x\in\mathcal X}p(x,y)\log\frac{p(x,y)}{p(x)p(y)}=\sum_{y\in\mathcal Y}\sum_{x\in\mathcal X}p(x,y)\log\frac{p(y|x)}{p(y)}<br>$$<br>对于连续随机变量，互信息的定义为：<br>$$<br>I(X,Y)=\int_{\mathcal Y}\int_{\mathcal X}p(x,y)\log\frac{p(x,y)}{p(x)p(y)}\mathrm dx\mathrm d y=\int_{\mathcal Y}\int_{\mathcal X}p(x,y)\log\frac{p(y|x)}{p(y)}\mathrm dx\mathrm d y<br>$$<br>互信息与熵之间的关系：<br>$$<br>\begin{align}<br>I(X,Y)&amp;=H(X)-H(X|Y)\<br>&amp;=H(Y)-H(Y|X)\<br>&amp;=H(X)+H(Y)-H(X,Y)\<br>&amp;=H(X,Y)-H(X|Y)-H(Y|X)<br>\end{align}<br>$$<br>互信息与KL散之间的关系：<br>$$<br>I(X,Y)=\mathbb E_Y[D_{KL}(p(x|y)\parallel p(x))]<br>$$<br>从图中可以很容易看出互信息相当于$X$和$Y$两者的熵的“重叠”的部分：</p>
+<img src="https://i.loli.net/2020/07/17/orRXnpugEzsZDwq.png" style="zoom:67%;" />
+
+<p>在表示学习中，互信息的应用越来越广泛。对于输入的数据$X$，表示学习的目的是尽可能学到“好“的表示$Z$，保留原始数据尽可能多的重要信息。如果使用基于重构的模型，我们就会要求最小化重构误差$\parallel X-\hat{X}\parallel^2_2$，但是这种”逐像素“式的损失函数过于严苛，不利于模型学习高层语义信息。如果加入一个判别器来自动学习一个度量，首先增大了计算开销，同时GAN本身也有诸多问题。</p>
+<p>现阶段很多工作使用互信息来判定学到的表示$Z$的好坏，即最大化原始数据$X$与表示$Z$之间的互信息：<br>$$<br>Z^*=\mathop{\arg\max}_{p(z|x)}I(X,Z)<br>$$<br>互信息越大意味着$\log\frac{p(z|x)}{p(z)}$越大，即$p(z|x)$要大于$p(z)$。$p(z)$可以看作是$Z$的先验，而$p(z|x)\gg p(z)$可以理解为在得知输入$X$之后，我们能找到专属$X$的那个编码$Z$。</p>
+<p>接下来作者证明优化$\mathcal L_N$会使得$f_k(\mathbf x_{t+k},\mathbf c_t)$和互信息接近。这里的$p(\mathbf x_{t+k}|\mathbf c_t)$。设$p(d=i|X,c_t)$为给定数据集（或者Batch）$X$和context向量$c_t$的条件下，样本$x_i$为正样本的概率，有：<br>$$<br>\begin{align}<br>p(d=i|X,c_t)&amp;=\frac{p(x_i|c_t)\prod_{l\neq i}p(x_l)}{\sum^N_{j=1} p(x_j|c_t)\prod_{l\neq j}p(x_l)}\<br>&amp;=\frac{\frac{p(x_i|c_t)}{p(x_i)}}{\sum^N_{j=1}\frac{p(x_j|c_t)}{p(x_j)}}<br>\end{align}<br>$$</p>
+<p>$$<br>\begin{align}<br>\mathcal L_\text{N}^\text{opt}&amp;=-\mathop{\mathbb E}\limits_X\log\left[\frac{\frac{p(x_{t+k}|c_t)}{p(x_{t+k})}}{\frac{p(x_{t+k}|c_t)}{p(x_{t+k})}+\sum_{x_j\in X_\text{neg}}\frac{p(x_j|c_t)}{x_j}}\right]\</p>
+<p>\end{align}<br>$$</p>
+<p>$$<br>I(x_{t+k},c_t)\geq \log(N)-\mathcal L_N<br>$$</p>
+<p>可以说$\mathcal L_N$作为互信息$I(x_{t+k},c_t)$的一个下界。</p>
+<h2 id="Implementation-Details"><a href="#Implementation-Details" class="headerlink" title="Implementation Details"></a>Implementation Details</h2><h1 id="Experiments"><a href="#Experiments" class="headerlink" title="Experiments"></a>Experiments</h1><h2 id="Audio"><a href="#Audio" class="headerlink" title="Audio"></a>Audio</h2><p><img src="https://i.loli.net/2020/07/07/kWectjL27MKy1dA.png"></p>
+<p><img src="https://i.loli.net/2020/07/07/vhBRmpntw2Xx6J9.png"></p>
+<p><img src="https://i.loli.net/2020/07/07/5QaDOCFvxLE6wqT.png"></p>
+<p><img src="https://i.loli.net/2020/07/07/nA49kE1WP73oGQJ.png"></p>
+<h2 id="Vision"><a href="#Vision" class="headerlink" title="Vision"></a>Vision</h2><img src="https://i.loli.net/2020/07/07/gkNnWo4zyUeBRCa.png" style="zoom:67%;" />
+
+
+
+<img src="https://i.loli.net/2020/07/07/qH6BAJnhMcP9bKy.png" style="zoom:67%;" />
+
+
+
+<p><img src="https://i.loli.net/2020/07/07/ezO1IibwvC5Mus8.png"></p>
+<p><img src="https://i.loli.net/2020/07/07/sWNGXqv1n38kgcf.png"></p>
+<h2 id="Natural-Language"><a href="#Natural-Language" class="headerlink" title="Natural Language"></a>Natural Language</h2><p><img src="https://i.loli.net/2020/07/07/Ly86Xu9n4KSOJge.png"></p>
+<h2 id="Reinforcement-Learning"><a href="#Reinforcement-Learning" class="headerlink" title="Reinforcement Learning"></a>Reinforcement Learning</h2><p><img src="https://i.loli.net/2020/07/07/92XzLqltMUfCgTs.png"></p>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-09-09T03:33:25.000Z" title="2020-9-9 11:33:25 ├F10: AM┤">2020-09-09</time>发表</span><span class="level-item"><time dateTime="2021-02-19T10:21:57.175Z" title="2021-2-19 6:21:57 ├F10: PM┤">2021-02-19</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Technical-Notes/">Technical Notes</a><span> / </span><a class="link-muted" href="/categories/Technical-Notes/Machine-Learning/">Machine Learning</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2020/09/09/Model-Selection-and-Evaluation-Machine-Learning-Basics/">Model Selection and Evaluation: Machine Learning Basics</a></h1><div class="content"><h1 id="Overfitting"><a href="#Overfitting" class="headerlink" title="Overfitting"></a>Overfitting</h1><p>我们将模型输出与真实值之间的差异称为误差，如对于分类问题，我们可以使用模型分类错误的样本数量占总样本数的比例。模型在训练集（我们收集到的数据）上的误差称作是<strong>训练误差 (training error)**，而在新样本（这里指的是新的样本而不是测试集，训练集测试集是从我们收集到的数据上人为划分出来的）上的误差称作是</strong>泛化误差 (generalization error)**。对于机器学习算法，我们希望算法能学到数据背后的普遍规律，所以我们总是希望模型的泛化误差越小越好。</p>
+<p>不过测试集对训练过程来说是未知的，所以模型只能尽量从训练集中发掘数据的普遍规律，要是模型把训练集学得”太好“了，很可能把训练集中不属于普遍规律的部分特点作为了一般性质，这就会导致泛化性能下降，我们称这种情况为<strong>过拟合 (overfitting)**。反之，模型对训练集的特性学得不够，就会出现</strong>欠拟合 (underfitting)**。关于过拟合和欠拟合，周志华老师的《机器学习》中有一张很好的图：</p>
+<img src="https://i.loli.net/2020/09/09/tVPeQfu9CWLaSi6.png" style="zoom:67%;" />
+
 <p>一般来说，欠拟合比较容易克服，可以通过增加模型的复杂度来实现。而过拟合则比较难解决，一般而言可以通过增加数据量、加正则化约束来改善。</p>
-<h1 id="model-selection">Model Selection</h1>
-<p>对于一个机器学习任务，一般我们有多种模型供我们选择，并且模型也有不同的超参数，我们希望得到泛化性能尽可能高的模型。不过根据前面的讨论，新样本是未知的，所以没法直接得到泛化误差，而过拟合的存在使得我们不能贸然的根据模型在我们收集到的数据上的表现来选择模型（训练误差低不代表泛化误差低）。</p>
+<h1 id="Model-Selection"><a href="#Model-Selection" class="headerlink" title="Model Selection"></a>Model Selection</h1><p>对于一个机器学习任务，一般我们有多种模型供我们选择，并且模型也有不同的超参数，我们希望得到泛化性能尽可能高的模型。不过根据前面的讨论，新样本是未知的，所以没法直接得到泛化误差，而过拟合的存在使得我们不能贸然的根据模型在我们收集到的数据上的表现来选择模型（训练误差低不代表泛化误差低）。</p>
 <p>我们假设无论是我们收集到的数据还是新样本都是从数据的真实分布中独立同分布采样得来，为此我们可以从数据中划分出一部分”测试集“，然后将模型在测试集上的表现作为泛化误差的近似，而剩下的部分用来模型训练。</p>
-<p>那么如何划分训练集和测试集呢？比较常见的方法是”<span class="math inline">\(k\)</span>折交叉验证法“ (<span class="math inline">\(k\)</span>-fold cross validation)，一般<span class="math inline">\(k\)</span>常取<span class="math inline">\(10\)</span>，其基本思想如下图所示：</p>
-<p><img src="https://i.loli.net/2020/09/09/8KEWDe3qMTsQoUx.png" style="zoom: 50%;" /></p>
-<p><span class="math inline">\(k\)</span>折交叉验证法首先将数据集均匀地划分为<span class="math inline">\(k\)</span>个部分，然后进行<span class="math inline">\(k\)</span>个循环，在每个循环中将第<span class="math inline">\(k\)</span>份作为测试集，其余的作为训练集，最后得到的结果进行平均。</p>
-<h1 id="evaluation-metrics">Evaluation Metrics</h1>
-<p>前面我们讨论了评测的框架，但是没有说具体的评测指标。实际上评测指标要根据任务来确定，并且不同的评测指标也有自己的特点。</p>
-<h2 id="regression">Regression</h2>
-<p>回归任务比较常用的评测标准是<strong>均方误差 (Mean Squared Error)</strong>： <span class="math display">\[
-\text{MSE}(f;D)=\frac{1}{m}\sum_{i=1}^m (f(x_i)-y_i)^2
-\]</span> 和<strong>平均绝对误差 (Mean Absolute Error)</strong>： <span class="math display">\[
-\text{MAE}(f;D)=\frac{1}{m}\sum_{i=1}^m |f(x_i)-y_i|
-\]</span></p>
-<h2 id="classification">Classification</h2>
-<h3 id="binary-classification">Binary Classification</h3>
-<p>对于分类任务，最简单的想法是使用模型分类正确的比例来作为评测标准，我们称之为<strong>准确率 (Accuracy)</strong>： <span class="math display">\[
-\text{ACC}(f;D)=\frac{1}{m}\sum_{i=1}^m \mathbb{I}(f(x_i)=y_i)
-\]</span> 但准确率并不能满足我们的所有要求，比如说对于新冠病毒的分类任务，我们可能会更关注于对于所有患有新冠的病人，模型到底查出来了多少，而对于模型误把正常病人当作是患病的情况没有那么关注。对于二分类问题，我们可以将样例根据其真实类别与模型预测的类别划分为真正例 (true positive, TP)、假正例 (false positive, FP)、真反例 (true negative, TN) 和假反例 (false negative, FN) 四种，形成<strong>混淆矩阵 (Confusion Matrix)</strong>：</p>
-<p><img src="https://i.loli.net/2020/09/09/xY8KAldMZSRwHnB.jpg" /></p>
+<p>那么如何划分训练集和测试集呢？比较常见的方法是”$k$折交叉验证法“ ($k$-fold cross validation)，一般$k$常取$10$，其基本思想如下图所示：</p>
+<img src="https://i.loli.net/2020/09/09/8KEWDe3qMTsQoUx.png" style="zoom: 50%;" />
+
+<p>$k$折交叉验证法首先将数据集均匀地划分为$k$个部分，然后进行$k$个循环，在每个循环中将第$k$份作为测试集，其余的作为训练集，最后得到的结果进行平均。</p>
+<h1 id="Evaluation-Metrics"><a href="#Evaluation-Metrics" class="headerlink" title="Evaluation Metrics"></a>Evaluation Metrics</h1><p>前面我们讨论了评测的框架，但是没有说具体的评测指标。实际上评测指标要根据任务来确定，并且不同的评测指标也有自己的特点。</p>
+<h2 id="Regression"><a href="#Regression" class="headerlink" title="Regression"></a>Regression</h2><p>回归任务比较常用的评测标准是<strong>均方误差 (Mean Squared Error)**：<br>$$<br>\text{MSE}(f;D)=\frac{1}{m}\sum_{i=1}^m (f(x_i)-y_i)^2<br>$$<br>和</strong>平均绝对误差 (Mean Absolute Error)**：<br>$$<br>\text{MAE}(f;D)=\frac{1}{m}\sum_{i=1}^m |f(x_i)-y_i|<br>$$</p>
+<h2 id="Classification"><a href="#Classification" class="headerlink" title="Classification"></a>Classification</h2><h3 id="Binary-Classification"><a href="#Binary-Classification" class="headerlink" title="Binary Classification"></a>Binary Classification</h3><p>对于分类任务，最简单的想法是使用模型分类正确的比例来作为评测标准，我们称之为<strong>准确率 (Accuracy)**：<br>$$<br>\text{ACC}(f;D)=\frac{1}{m}\sum_{i=1}^m \mathbb{I}(f(x_i)=y_i)<br>$$<br>但准确率并不能满足我们的所有要求，比如说对于新冠病毒的分类任务，我们可能会更关注于对于所有患有新冠的病人，模型到底查出来了多少，而对于模型误把正常病人当作是患病的情况没有那么关注。对于二分类问题，我们可以将样例根据其真实类别与模型预测的类别划分为真正例 (true positive, TP)、假正例 (false positive, FP)、真反例 (true negative, TN) 和假反例 (false negative, FN) 四种，形成</strong>混淆矩阵 (Confusion Matrix)**：</p>
+<p><img src="https://i.loli.net/2020/09/09/xY8KAldMZSRwHnB.jpg"></p>
 <p>下面给一个具体的例子：</p>
-<p><img src="https://i.loli.net/2020/09/09/tCLxvZfNoEgqWID.png" /></p>
-<p>比如我们的任务是预测一张手写数字图片是不是<span class="math inline">\(5\)</span>，根据上图，右下角就是我们正确预测的是<span class="math inline">\(5\)</span>的图片，左下角就是本来是<span class="math inline">\(5\)</span>，但被预测成不是<span class="math inline">\(5\)</span>的图片；左上角是本来不是<span class="math inline">\(5\)</span>，我们也正确地预测出其不是<span class="math inline">\(5\)</span>的，右上角是本来不是<span class="math inline">\(5\)</span>却被预测成是<span class="math inline">\(5\)</span>的。是不是有点被绕晕了😀，只要记住T和F代表的是预测结果对还是不对，P和N代表的是模型预测当前样本是正例还是负例。</p>
+<p><img src="https://i.loli.net/2020/09/09/tCLxvZfNoEgqWID.png"></p>
+<p>比如我们的任务是预测一张手写数字图片是不是$5$，根据上图，右下角就是我们正确预测的是$5$的图片，左下角就是本来是$5$，但被预测成不是$5$的图片；左上角是本来不是$5$，我们也正确地预测出其不是$5$的，右上角是本来不是$5$却被预测成是$5$的。是不是有点被绕晕了😀，只要记住T和F代表的是预测结果对还是不对，P和N代表的是模型预测当前样本是正例还是负例。</p>
 <p>基于混淆矩阵，我们可以定义<strong>查准率 (Precision)</strong> 和<strong>查全率 (Recall)</strong> 这两个评测标准。</p>
-<p>查准率，顾名思义，对于检测出来的正例，有多少是真正的正例，即查的准不准，公式为： <span class="math display">\[
-\text{Precision}=\frac{TP}{TP+FP}
-\]</span> 分母就是模型预测为正例的样本总数。</p>
-<p>查全率，就对应刚才举的新冠的例子，我们比较在乎对于数据集中的正例，有多少被查出来了，公式为： <span class="math display">\[
-\text{Recall} = \frac{TP}{TP+FN}
-\]</span> 分母就是真实类别为正例的样本总数。一般来说，查准率和查全率是相互矛盾的，除非是特别简单的任务，很难兼顾查准率和查全率。</p>
-<p><strong>F1分数 (F1 Score)</strong> 综合了查准率和查全率： <span class="math display">\[
-\text{F}1=\frac{2\cdot\text{Precision}\cdot\text{Recall}}{\text{Precision}+\text{Recall}}
-\]</span> 查准率和查全率中任意一项较低都会导致F1分数较低。有时候我们对待查准率和查全率的权重不同，这时候可以使用F<span class="math inline">\(_\beta\)</span>分数： <span class="math display">\[
-\text{F}_\beta=\frac{(1+\beta^2)\cdot \text{Precision}\cdot\text{Recall}}{(\beta^2\cdot\text{Precision})+\text{Recall}}
-\]</span> <span class="math inline">\(\beta=1\)</span>时等价于F1分数，<span class="math inline">\(\beta&gt;1\)</span>代表偏重查全率，<span class="math inline">\(\beta&lt;1\)</span>代表偏重查准率。</p>
-<h3 id="multi-classification">Multi-classification</h3>
-<p>前面的讨论都是基于二分类任务，如果是多分类任务的话， 对于每一类，我们将该类作为正例，其他类别作为负例，都能得到一个混淆矩阵。如果我们在每个混淆矩阵上计算评测指标，然后进行平均，这样就得到宏查准率 (macro-Precision)、宏查全率 (macro-Recall) 和宏F1分数 (macro-F1)。如果我们事先将混淆矩阵的TP、FP、TN、FN先进行平均，再计算评测指标，就得到了微查准率 (micro-Precision)、微查全率 (micro-Recall) 和微F1分数 (micro-F1)。</p>
-<h3 id="pr-curve">PR-Curve</h3>
-<p>很多情况下模型的输出是样本为正例的“概率值”或者是分数，分数越高的样本代表越可能是正例。这种时候需要人为划定阈值，规定高于阈值的样本是正例。不过阈值的划分相当于超参数的选取，同时我们会认为一个鲁棒的模型的性能应该不受阈值选取的左右。这个时候我们可以使用<strong>PR曲线 (Precision-Recall Curve)</strong>，即遍历所有可能的阈值，对于每个阈值，计算其对应的Precision和Recall，然后画在图上，最后会得到一系列离散的点（理论上应该是连续曲线，不过阈值是连续值，我们只能取离散值），形成PR-曲线。</p>
-<p><img src="https://i.loli.net/2020/09/09/ecP8flTYZIDUBrV.png" alt="2-class Precision-Recall curve: AP=0.88" style="zoom:67%;" /></p>
+<p>查准率，顾名思义，对于检测出来的正例，有多少是真正的正例，即查的准不准，公式为：<br>$$<br>\text{Precision}=\frac{TP}{TP+FP}<br>$$<br>分母就是模型预测为正例的样本总数。</p>
+<p>查全率，就对应刚才举的新冠的例子，我们比较在乎对于数据集中的正例，有多少被查出来了，公式为：<br>$$<br>\text{Recall} = \frac{TP}{TP+FN}<br>$$<br>分母就是真实类别为正例的样本总数。一般来说，查准率和查全率是相互矛盾的，除非是特别简单的任务，很难兼顾查准率和查全率。</p>
+<p><strong>F1分数 (F1 Score)</strong> 综合了查准率和查全率：<br>$$<br>\text{F}1=\frac{2\cdot\text{Precision}\cdot\text{Recall}}{\text{Precision}+\text{Recall}}<br>$$<br>查准率和查全率中任意一项较低都会导致F1分数较低。有时候我们对待查准率和查全率的权重不同，这时候可以使用F$_\beta$分数：<br>$$<br>\text{F}_\beta=\frac{(1+\beta^2)\cdot \text{Precision}\cdot\text{Recall}}{(\beta^2\cdot\text{Precision})+\text{Recall}}<br>$$<br>$\beta=1$时等价于F1分数，$\beta&gt;1$代表偏重查全率，$\beta&lt;1$代表偏重查准率。</p>
+<h3 id="Multi-classification"><a href="#Multi-classification" class="headerlink" title="Multi-classification"></a>Multi-classification</h3><p>前面的讨论都是基于二分类任务，如果是多分类任务的话， 对于每一类，我们将该类作为正例，其他类别作为负例，都能得到一个混淆矩阵。如果我们在每个混淆矩阵上计算评测指标，然后进行平均，这样就得到宏查准率 (macro-Precision)、宏查全率 (macro-Recall) 和宏F1分数 (macro-F1)。如果我们事先将混淆矩阵的TP、FP、TN、FN先进行平均，再计算评测指标，就得到了微查准率 (micro-Precision)、微查全率 (micro-Recall) 和微F1分数 (micro-F1)。</p>
+<h3 id="PR-Curve"><a href="#PR-Curve" class="headerlink" title="PR-Curve"></a>PR-Curve</h3><p>很多情况下模型的输出是样本为正例的“概率值”或者是分数，分数越高的样本代表越可能是正例。这种时候需要人为划定阈值，规定高于阈值的样本是正例。不过阈值的划分相当于超参数的选取，同时我们会认为一个鲁棒的模型的性能应该不受阈值选取的左右。这个时候我们可以使用**PR曲线 (Precision-Recall Curve)**，即遍历所有可能的阈值，对于每个阈值，计算其对应的Precision和Recall，然后画在图上，最后会得到一系列离散的点（理论上应该是连续曲线，不过阈值是连续值，我们只能取离散值），形成PR-曲线。</p>
+<img src="https://i.loli.net/2020/09/09/ecP8flTYZIDUBrV.png" alt="2-class Precision-Recall curve: AP=0.88" style="zoom:67%;" />
+
 <p>模型性能越好，曲线就会越接近右上角的点，我们可以把PR曲线的曲线下面积 (PR-AUC) 作为评测标准。</p>
-<h3 id="roc-curve">ROC-Curve</h3>
-<p>ROC全称是<strong>受试者工作特征 (Receiver Operating Characteristic) 曲线</strong>, 和PR曲线类似，ROC曲线也是遍历不同的阈值计算点，不过ROC曲线计算的是真正例率 (True Positive Rate, TPR) 和假正例率 (False Positive Rate, FPR)，两者定义分别是： <span class="math display">\[
-\begin{align}
-\text{TPR}=\frac{TP}{TP+FN}\\
-\text{FPR}=\frac{FP}{TN+FP}
-\end{align}
-\]</span> 其中TPR就是查全率，而FPR是所有负例中没有检测出来的比例，这一项是越低越好。</p>
-<p><img src="https://i.loli.net/2020/09/09/CdHrDaKAns4EN93.png" style="zoom:67%;" /></p>
+<h3 id="ROC-Curve"><a href="#ROC-Curve" class="headerlink" title="ROC-Curve"></a>ROC-Curve</h3><p>ROC全称是<strong>受试者工作特征 (Receiver Operating Characteristic) 曲线</strong>, 和PR曲线类似，ROC曲线也是遍历不同的阈值计算点，不过ROC曲线计算的是真正例率 (True Positive Rate, TPR) 和假正例率 (False Positive Rate, FPR)，两者定义分别是：<br>$$<br>\begin{align}<br>\text{TPR}=\frac{TP}{TP+FN}\<br>\text{FPR}=\frac{FP}{TN+FP}<br>\end{align}<br>$$<br>其中TPR就是查全率，而FPR是所有负例中没有检测出来的比例，这一项是越低越好。</p>
+<img src="https://i.loli.net/2020/09/09/CdHrDaKAns4EN93.png" style="zoom:67%;" />
+
 <p>模型性能越好，曲线就会越接近左上角的点，我们可以把ROC曲线的曲线下面积 (ROC-AUC) 作为评测标准。</p>
 <p>下面来总结一下PR曲线和ROC曲线之间的优缺点。</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th></th>
 <th>纵轴</th>
 <th>横轴</th>
 </tr>
 </thead>
-<tbody>
-<tr class="odd">
+<tbody><tr>
 <td><strong>PR</strong></td>
-<td><span class="math inline">\(\text{Precision}=\frac{TP}{TP+FP}\)</span></td>
-<td><span class="math inline">\(\text{Recall} = \frac{TP}{TP+FN}\)</span></td>
+<td>$\text{Precision}=\frac{TP}{TP+FP}$</td>
+<td>$\text{Recall} = \frac{TP}{TP+FN}$</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>ROC</strong></td>
-<td><span class="math inline">\(\text{TPR}=\frac{TP}{TP+FN}\)</span></td>
-<td><span class="math inline">\(\text{FPR}=\frac{FP}{TN+FP}\)</span></td>
+<td>$\text{TPR}=\frac{TP}{TP+FN}$</td>
+<td>$\text{FPR}=\frac{FP}{TN+FP}$</td>
 </tr>
-</tbody>
-</table>
-<p><img src="https://i.loli.net/2020/09/09/xY8KAldMZSRwHnB.jpg" /></p>
+</tbody></table>
+<p><img src="https://i.loli.net/2020/09/09/xY8KAldMZSRwHnB.jpg"></p>
 <p>ROC的优点：</p>
 <ul>
 <li>相比PR仅关注正例，ROC同时关注正例和负例</li>
@@ -228,276 +150,137 @@ I(x_{t+k},c_t)\geq \log(N)-\mathcal L_N
 <li>对于类别不平衡问题，存在大量负例，这样会带来大量的FP，而ROC的FPR却不会因为FP的大幅增长而剧烈改变，结果是这一类错误很难在ROC曲线中体现出来。所以ROC会呈现出一个过于乐观的评价。</li>
 </ul>
 <p>我们来尝试下是否如此，下面是用随机森林分类器，测试样本正负例数量比为1:1的情况下的ROC曲线和PR曲线：</p>
-<p><img src="https://i.loli.net/2020/09/10/yqMDQh5oTs96SJm.png" style="zoom:50%;" /></p>
-<p><img src="https://i.loli.net/2020/09/10/zFW941YTMl8yxiP.png" style="zoom:50%;" /></p>
+<img src="https://i.loli.net/2020/09/10/yqMDQh5oTs96SJm.png" style="zoom:50%;" />
+
+<img src="https://i.loli.net/2020/09/10/zFW941YTMl8yxiP.png" style="zoom:50%;" />
+
 <p>在我们将正负例数量比调整为1:9之后（总数量相同），可以看到ROC曲线比较稳定，没出现较大变化，而PR曲线则出现了剧烈变化：</p>
-<p><img src="https://i.loli.net/2020/09/10/HbnLtfGsiVc17q5.png" style="zoom:50%;" /></p>
-<p><img src="https://i.loli.net/2020/09/10/FfYrb3SnkeZ9JTv.png" alt="4" style="zoom:50%;" /></p>
-<h1 id="bias-and-variance">Bias and Variance</h1>
-<p>在机器学习中，偏差-方差分解是解释学习算法泛化性能的重要工具。假设我们要预测某一个地区的房子的房价，每一套房子都是一个样本，我们认为每个样本都是从总体分布<span class="math inline">\(P(X)\)</span>独立同分布采样得来的。不过我们不可能得到所有的样本，我们采样得到的训练集只是其中一个子集。那么，即使对于同样的测试样本，使用不同的训练集（训练集大小相同）训练出来的模型对测试样本的预测也是不一样的，我们将这一部分模型自身的不稳定性用<strong>方差 (Variance) </strong>来描述：<span class="math inline">\(\text{Var}(X)=E_D\left[(\hat f(X)-E[\hat f(X)])^2\right]\)</span>，方差越小代表模型稳定性越强。模型输出的期望与真实值之间的差距我们用<strong>偏差 (Bias) </strong>来描述：<span class="math inline">\(\text{Bias}(X)=E[\hat f(X)]-f(X)\)</span>。</p>
-<p>泛化误差与方差、偏差有下列关系： <span class="math display">\[
-\begin{align}
-\text{Err}(X)&amp;=E\left[(y-\hat f(X))^2\right]\\
-&amp;=E\left[(f(X)+\varepsilon-\hat f(X))^2\right]\\
-&amp;= (E[\hat f(X)]-f(X))^2 + E\left[(\hat f(X)-E[\hat f(X)])^2\right]+\sigma_{\varepsilon}^2\\
-&amp;=\text{Bias}^2 + \text{Variance} + \text{Random Error}
-\end{align}
-\]</span> 也就是说泛化误差可以分解为方差、偏差和随机噪声之和。偏差刻画了模型的期望预测与真实值之间的偏离程度，方差刻画了不同训练集对模型性能的影响，他们之间的关系如下图所示：</p>
-<p><img src="https://i.loli.net/2020/09/09/2IpmrwJGfqORU3z.png" style="zoom: 33%;" /></p>
+<img src="https://i.loli.net/2020/09/10/HbnLtfGsiVc17q5.png" style="zoom:50%;" />
+
+<img src="https://i.loli.net/2020/09/10/FfYrb3SnkeZ9JTv.png" alt="4" style="zoom:50%;" />
+
+<h1 id="Bias-and-Variance"><a href="#Bias-and-Variance" class="headerlink" title="Bias and Variance"></a>Bias and Variance</h1><p>在机器学习中，偏差-方差分解是解释学习算法泛化性能的重要工具。假设我们要预测某一个地区的房子的房价，每一套房子都是一个样本，我们认为每个样本都是从总体分布$P(X)$独立同分布采样得来的。不过我们不可能得到所有的样本，我们采样得到的训练集只是其中一个子集。那么，即使对于同样的测试样本，使用不同的训练集（训练集大小相同）训练出来的模型对测试样本的预测也是不一样的，我们将这一部分模型自身的不稳定性用<strong>方差 (Variance) **来描述：$\text{Var}(X)=E_D\left[(\hat f(X)-E[\hat f(X)])^2\right]$，方差越小代表模型稳定性越强。模型输出的期望与真实值之间的差距我们用</strong>偏差 (Bias) **来描述：$\text{Bias}(X)=E[\hat f(X)]-f(X)$。</p>
+<p>泛化误差与方差、偏差有下列关系：<br>$$<br>\begin{align}<br>\text{Err}(X)&amp;=E\left[(y-\hat f(X))^2\right]\<br>&amp;=E\left[(f(X)+\varepsilon-\hat f(X))^2\right]\<br>&amp;= (E[\hat f(X)]-f(X))^2 + E\left[(\hat f(X)-E[\hat f(X)])^2\right]+\sigma_{\varepsilon}^2\<br>&amp;=\text{Bias}^2 + \text{Variance} + \text{Random Error}<br>\end{align}<br>$$<br>也就是说泛化误差可以分解为方差、偏差和随机噪声之和。偏差刻画了模型的期望预测与真实值之间的偏离程度，方差刻画了不同训练集对模型性能的影响，他们之间的关系如下图所示：</p>
+<img src="https://i.loli.net/2020/09/09/2IpmrwJGfqORU3z.png" style="zoom: 33%;" />
+
 <p>图中左上角的部分是比较理想的情况，即方差和偏差都较小。但实际上方差和偏差往往是相互冲突的，如下图所示：</p>
-<p><img src="https://i.loli.net/2020/09/09/GsREiklKYfuX3Ub.png" style="zoom:67%;" /></p>
+<img src="https://i.loli.net/2020/09/09/GsREiklKYfuX3Ub.png" style="zoom:67%;" />
+
 <p>模型复杂度不足的时候，模型的拟合能力不够强，偏差主导了泛化误差，而随着模型复杂度的提高，模型的拟合能力逐渐提高，训练数据的扰动会造成模型发生显著变化，这时方差逐渐主导了泛化误差。</p>
-</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-09-02T10:47:55.000Z" title="2020-9-2 6:47:55 ├F10: PM┤">2020-09-02</time>发表</span><span class="level-item"><time dateTime="2021-02-19T10:22:31.857Z" title="2021-2-19 6:22:31 ├F10: PM┤">2021-02-19</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Technical-Notes/">Technical Notes</a><span> / </span><a class="link-muted" href="/categories/Technical-Notes/Machine-Learning/">Machine Learning</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2020/09/02/Machine-Learning-Classification-Algorithms-Decision-Trees/">Machine Learning Classification Algorithms: Decision Trees</a></h1><div class="content"><h1 id="introduction">Introduction</h1>
-<p>（PS：本文内容是学习高级树模型（GBDT，XGBoost）的基础，强烈建议在看那些内容之前先了解本文的内容！）</p>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-09-02T10:47:55.000Z" title="2020-9-2 6:47:55 ├F10: PM┤">2020-09-02</time>发表</span><span class="level-item"><time dateTime="2021-02-19T10:22:31.857Z" title="2021-2-19 6:22:31 ├F10: PM┤">2021-02-19</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Technical-Notes/">Technical Notes</a><span> / </span><a class="link-muted" href="/categories/Technical-Notes/Machine-Learning/">Machine Learning</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2020/09/02/Machine-Learning-Classification-Algorithms-Decision-Trees/">Machine Learning Classification Algorithms: Decision Trees</a></h1><div class="content"><h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>（PS：本文内容是学习高级树模型（GBDT，XGBoost）的基础，强烈建议在看那些内容之前先了解本文的内容！）</p>
 <p>本文主要是介绍常用的三种决策树模型：ID3、C4.5和CART。决策树（Decision Tree）是一种<strong>有监督分类模型</strong>（稍加改造可进行回归任务）。</p>
 <p>比如我们要判断一个瓜是不是好瓜，对于人来说，要判断一个瓜是不是好瓜，可能会先去看看色泽，然后看看根蒂，然后再敲一敲听听声音，这样经过一系列的决策过程。</p>
-<p><img src="https://i.loli.net/2020/09/02/WuGQ79g4NcHqJDh.png" style="zoom:50%;" /></p>
+<img src="https://i.loli.net/2020/09/02/WuGQ79g4NcHqJDh.png" style="zoom:50%;" />
+
 <p>决策树正是模拟了这样的过程。给定数据集，决策树会不断地选择最佳的特征将数据集进行切分（如选择色泽，然后将数据分为青绿、乌黑、浅白这几个子集），然后递归地进行下去，直到达到停止条件：</p>
-<ol type="1">
+<ol>
 <li>每个叶子节点的样本都属于同一个类别</li>
 <li>没有可供划分的特征，或者集合中每个样本所有特征取值都相同</li>
 <li>决策树达到预先指定的最大深度</li>
 </ol>
 <p>所以决策树算法要解决的关键问题就是如何去选择当前最好的划分特征。</p>
-<h1 id="id3">ID3</h1>
-<p>ID3算法根据信息熵来进行特征的划分。信息熵是衡量一个随机变量信息量的度量，如果把数据集的标签<span class="math inline">\(y\)</span>看作是随机变量，那么<span class="math inline">\(y\)</span>的熵越小代表不确定性越小（集合里几乎都是一种类别的样本），熵越大代表不确定性越大（集合包含不同类别的样本），其公式为： <span class="math display">\[
-Ent(D)=-\sum_{k=1}^{|\mathcal Y|}p_k\log p_k
-\]</span> <span class="math inline">\(Ent(D)\)</span>代表集合<span class="math inline">\(D\)</span>对应的熵，<span class="math inline">\(|\mathcal Y|\)</span>是类别数量，二分类就是<span class="math inline">\(|\mathcal Y|=2\)</span>，<span class="math inline">\(p_k\)</span>为第<span class="math inline">\(k\)</span>个类别对应的概率（频率）。很自然的，我们可以根据划分前后熵的变化来确定划分特征的选择，如果划分之后熵减小的最多，那么这个特征也是最好的。假设我们选定特征<span class="math inline">\(a\)</span>来对集合进行划分，特征<span class="math inline">\(a\)</span>共有<span class="math inline">\(V\)</span>个离散取值，那么划分之后将会产生<span class="math inline">\(V\)</span>个子集，我们记每个子集为<span class="math inline">\(D^v, v=1,\cdots, V\)</span>。那么，信息增益可以写为： <span class="math display">\[
-Gain(D,a)=Ent(D)-\sum_{v=1}^V \frac{|D^v|}{|D|}Ent(D^v)
-\]</span> 不过，ID3存在两个致命的缺点：</p>
-<ol type="1">
+<h1 id="ID3"><a href="#ID3" class="headerlink" title="ID3"></a>ID3</h1><p>ID3算法根据信息熵来进行特征的划分。信息熵是衡量一个随机变量信息量的度量，如果把数据集的标签$y$看作是随机变量，那么$y$的熵越小代表不确定性越小（集合里几乎都是一种类别的样本），熵越大代表不确定性越大（集合包含不同类别的样本），其公式为：<br>$$<br>Ent(D)=-\sum_{k=1}^{|\mathcal Y|}p_k\log p_k<br>$$<br>$Ent(D)$代表集合$D$对应的熵，$|\mathcal Y|$是类别数量，二分类就是$|\mathcal Y|=2$，$p_k$为第$k$个类别对应的概率（频率）。很自然的，我们可以根据划分前后熵的变化来确定划分特征的选择，如果划分之后熵减小的最多，那么这个特征也是最好的。假设我们选定特征$a$来对集合进行划分，特征$a$共有$V$个离散取值，那么划分之后将会产生$V$个子集，我们记每个子集为$D^v, v=1,\cdots, V$。那么，信息增益可以写为：<br>$$<br>Gain(D,a)=Ent(D)-\sum_{v=1}^V \frac{|D^v|}{|D|}Ent(D^v)<br>$$<br>不过，ID3存在两个致命的缺点：</p>
+<ol>
 <li>无法对连续取值的特征进行计算</li>
 <li>对取值较多的特征具有很大的偏向性（极端的情况，把样本编号作为特征，由于每个样本的编号都不同，分裂之后每个自己只有一个样本/类别，熵是最小的）</li>
 </ol>
-<h1 id="c4.5">C4.5</h1>
-<p>C4.5算法在ID3的基础上做了诸多改进。C4.5解决了ID3对于取值数目较多的特征的偏向性问题，其采用的方案很直观，即对信息增益除以一个系数，特征取值数目越多的特征系数越大，该划分标准被称作是信息增益率： <span class="math display">\[
-Gain\_ratio(D,a)=\frac{Gain(D,a)}{IV(a)}
-\]</span> 其中<span class="math inline">\(IV(a)=-\sum_{v=1}^V\frac{|D^v|}{|D|}\log \frac{|D^v|}{|D|}\)</span>。其实<span class="math inline">\(IV(a)\)</span>可以看作是“划分之后每个样本属于集合<span class="math inline">\(v\)</span>的概率”这个随机变量的熵，划分的子集越多，划分之后属于哪个集合就越不确定，所以熵就越大。</p>
+<h1 id="C4-5"><a href="#C4-5" class="headerlink" title="C4.5"></a>C4.5</h1><p>C4.5算法在ID3的基础上做了诸多改进。C4.5解决了ID3对于取值数目较多的特征的偏向性问题，其采用的方案很直观，即对信息增益除以一个系数，特征取值数目越多的特征系数越大，该划分标准被称作是信息增益率：<br>$$<br>Gain_ratio(D,a)=\frac{Gain(D,a)}{IV(a)}<br>$$<br>其中$IV(a)=-\sum_{v=1}^V\frac{|D^v|}{|D|}\log \frac{|D^v|}{|D|}$。其实$IV(a)$可以看作是“划分之后每个样本属于集合$v$的概率”这个随机变量的熵，划分的子集越多，划分之后属于哪个集合就越不确定，所以熵就越大。</p>
 <p>不过信息增益率反而会对特征取值数目少的特征有所偏好，所以C4.5算法是先计算信息增益，确定信息增益高于平均值的候选集，再从中选择信息增益率最高的特征。</p>
-<p>除此之外，C4.5还能处理连续取值的特征，其做法是“离散化”，即将连续取值划分为若干个离散的区间，一般二分比较常用。设连续特征<span class="math inline">\(a\)</span>，假设其出现了<span class="math inline">\(n\)</span>个取值，将其排序得到<span class="math inline">\(\{a^1,a^2,\cdots,a^n\}\)</span>，我们考虑每两个相邻节点的中点集合<span class="math inline">\(T_a=\{\frac{a^i+a^{i+1}}{2}|1\leq i \leq n-1\}\)</span>，之后我们就可以像考察离散属性值一样选择最优划分。</p>
+<p>除此之外，C4.5还能处理连续取值的特征，其做法是“离散化”，即将连续取值划分为若干个离散的区间，一般二分比较常用。设连续特征$a$，假设其出现了$n$个取值，将其排序得到${a^1,a^2,\cdots,a^n}$，我们考虑每两个相邻节点的中点集合$T_a={\frac{a^i+a^{i+1}}{2}|1\leq i \leq n-1}$，之后我们就可以像考察离散属性值一样选择最优划分。</p>
 <p>下图是在breast cancer数据上决策树的可视化（图片太大了，可以点开放大🔍看）：</p>
-<p><img src="https://i.loli.net/2020/09/10/RNyxp8EM6BCsOHK.png" /></p>
-<h1 id="cart">CART</h1>
-<p>CART (Classification and Regression Trees) 是一种应用广泛的决策树模型，既可应用于分类任务也可应用于回归任务。</p>
-<h2 id="cart-regression">CART Regression</h2>
-<p>我们先来说说CART怎么进行回归。在回归问题中，CART使用了MSE作为划分准则： <span class="math display">\[
-\frac{1}{N}\sum_{i=1}^N (f(x_i)-y_i)^2
-\]</span> 如果CART有<span class="math inline">\(M\)</span>片叶子，那么相当于CART将输入划分成了<span class="math inline">\(M\)</span>个单元<span class="math inline">\(R_m, m=1,\cdots,M\)</span>，也即有<span class="math inline">\(M\)</span>个输出，那么该CART在数据集上的MSE为： <span class="math display">\[
-\frac{1}{N}\sum_{m=1}^M\sum_{x_i\in R_m} (c_m-y_i)^2
-\]</span> 这里<span class="math inline">\(c_j\)</span>为叶子节点<span class="math inline">\(j\)</span>的输出，一般选为对应样本的均值<span class="math inline">\(c_m=\text{avg}(y_i|x_i\in R_m)\)</span>。这样，剩下的问题就是如何确定每次的切分特征和切分点了。假设选择的特征是<span class="math inline">\(j\)</span>，切分点<span class="math inline">\(s\)</span>，那么该划分方案对应的损失为： <span class="math display">\[
-\min_{c_1}\sum_{x_i\in R_1\{j,s\}}(y_i-c_1)^2+\min_{c_2}\sum_{x_i\in R_2\{j,s\}}(y_i-c_2)^2
-\]</span> 遍历所有的<span class="math inline">\(j\)</span>和<span class="math inline">\(s\)</span>，我们就能找到最佳的特征和切分点： <span class="math display">\[
-\min_{j,s}\left[\min_{c_1}\sum_{x_i\in R_1\{j,s\}}(y_i-c_1)^2+\min_{c_2}\sum_{x_i\in R_2\{j,s\}}(y_i-c_2)^2\right]
-\]</span></p>
+<p><img src="https://i.loli.net/2020/09/10/RNyxp8EM6BCsOHK.png"></p>
+<h1 id="CART"><a href="#CART" class="headerlink" title="CART"></a>CART</h1><p>CART (Classification and Regression Trees) 是一种应用广泛的决策树模型，既可应用于分类任务也可应用于回归任务。</p>
+<h2 id="CART-Regression"><a href="#CART-Regression" class="headerlink" title="CART Regression"></a>CART Regression</h2><p>我们先来说说CART怎么进行回归。在回归问题中，CART使用了MSE作为划分准则：<br>$$<br>\frac{1}{N}\sum_{i=1}^N (f(x_i)-y_i)^2<br>$$<br>如果CART有$M$片叶子，那么相当于CART将输入划分成了$M$个单元$R_m, m=1,\cdots,M$，也即有$M$个输出，那么该CART在数据集上的MSE为：<br>$$<br>\frac{1}{N}\sum_{m=1}^M\sum_{x_i\in R_m} (c_m-y_i)^2<br>$$<br>这里$c_j$为叶子节点$j$的输出，一般选为对应样本的均值$c_m=\text{avg}(y_i|x_i\in R_m)$。这样，剩下的问题就是如何确定每次的切分特征和切分点了。假设选择的特征是$j$，切分点$s$，那么该划分方案对应的损失为：<br>$$<br>\min_{c_1}\sum_{x_i\in R_1{j,s}}(y_i-c_1)^2+\min_{c_2}\sum_{x_i\in R_2{j,s}}(y_i-c_2)^2<br>$$<br>遍历所有的$j$和$s$，我们就能找到最佳的特征和切分点：<br>$$<br>\min_{j,s}\left[\min_{c_1}\sum_{x_i\in R_1{j,s}}(y_i-c_1)^2+\min_{c_2}\sum_{x_i\in R_2{j,s}}(y_i-c_2)^2\right]<br>$$</p>
 <p>算法流程大致如下：</p>
 <blockquote>
 <p><strong>CART Decision Tree Algorithm</strong></p>
-<p>INPUT: 数据集 <span class="math inline">\(D=\{(x_1,y_1),\cdots,(x_N,y_N)\}\)</span></p>
-<p>OUTPUT: 预测值<span class="math inline">\(\{\hat y_1,\cdots,\hat y_N\}\)</span></p>
+<p>INPUT: 数据集 $D={(x_1,y_1),\cdots,(x_N,y_N)}$</p>
+<p>OUTPUT: 预测值${\hat y_1,\cdots,\hat y_N}$</p>
 <p>PROCEDURE:</p>
-<p><strong>1. 选取当前最优切分特征变量<span class="math inline">\(j^*\)</span>与最优切分点<span class="math inline">\(s^*\)</span></strong></p>
-<p>设当前选择的切分变量为<span class="math inline">\(j\)</span>，切分点为<span class="math inline">\(s\)</span>那么可以根据切分点将数据集分为两个子集，一个是<span class="math inline">\(R_1(j,s)=\left\{x|x^{(j)}\leq s\right\}\)</span>，另一个是<span class="math inline">\(R_2(j,s)=\left\{x|x^{(j)}&gt; s\right\}\)</span>。 遍历所有的<span class="math inline">\(j\)</span>，求解 <span class="math display">\[
-\min_{j,s}\left[\min_{c_1}\sum\limits_{x_i\in R_1(j,s)}(y_i-c_1)^2+\min\limits_{c_2}\sum\limits_{x_i\in R_2(j,s)}(y_i-c_2)^2\right]
-\]</span> 注意<span class="math inline">\(\hat c_1=\frac{1}{N_1}\sum\limits_{x_i\in R_1(j,s)}y_i\)</span> <strong>2. 用选定的<span class="math inline">\((j^*,s^*)\)</span>来划分区域并计算输出值</strong></p>
-<p>此时，我们还需要确定这两个区域（划分到同一个区域的样本对应的输出是相同的）的输出值<span class="math inline">\(c_1\)</span>和<span class="math inline">\(c_2\)</span>，其确定方式是使得对应区域上的均方误差最小。这样我们相当于得到了给定<span class="math inline">\(j,s\)</span>下的损失，所以只要找出使得损失最小的<span class="math inline">\(j^*,s^*\)</span>即可：</p>
+<p><strong>1. 选取当前最优切分特征变量$j^*$与最优切分点$s^*$</strong></p>
+<p>设当前选择的切分变量为$j$，切分点为$s$那么可以根据切分点将数据集分为两个子集，一个是$R_1(j,s)=\left{x|x^{(j)}\leq s\right}$，另一个是$R_2(j,s)=\left{x|x^{(j)}&gt; s\right}$。<br>遍历所有的$j$，求解<br>$$<br>\min_{j,s}\left[\min_{c_1}\sum\limits_{x_i\in R_1(j,s)}(y_i-c_1)^2+\min\limits_{c_2}\sum\limits_{x_i\in R_2(j,s)}(y_i-c_2)^2\right]<br>$$<br>注意$\hat c_1=\frac{1}{N_1}\sum\limits_{x_i\in R_1(j,s)}y_i$<br><strong>2. 用选定的$(j^*,s^*)$来划分区域并计算输出值</strong></p>
+<p>此时，我们还需要确定这两个区域（划分到同一个区域的样本对应的输出是相同的）的输出值$c_1$和$c_2$，其确定方式是使得对应区域上的均方误差最小。这样我们相当于得到了给定$j,s$下的损失，所以只要找出使得损失最小的$j^*,s^*$即可：</p>
 <p><strong>3. 递归地对划分出来的两个区域重复步骤1和步骤2，直到满足停止条件</strong></p>
-<p><strong>4. 最后将输入空间划分为<span class="math inline">\(M\)</span>，输出<span class="math inline">\(f(x)=\sum_{m=1}^M \hat c_m I(x\in R_m)\)</span></strong></p>
+<p><strong>4. 最后将输入空间划分为$M$，输出$f(x)=\sum_{m=1}^M \hat c_m I(x\in R_m)$</strong></p>
 </blockquote>
 <p>下图是在波士顿房价数据上决策树的可视化（图片太大了，可以点开放大🔍看）：</p>
-<p><img src="https://i.loli.net/2020/09/09/knOHuvsfyorTpxt.png" /></p>
-<h2 id="cart-classification">CART Classification</h2>
-<p>从前面的讨论可以看到，CART回归树是一棵二叉树，对于分类任务，CART也是一棵二叉树。我们先来介绍CART的划分准则，再来介绍它是怎么进行划分的。</p>
-<p>采用基尼系数作为准则，基尼系数的计算依赖于基尼值： <span class="math display">\[
-\begin{align}
-Gini(D)&amp;=1-\sum_{k=1}^{|\mathcal Y|}p_k^2
-\end{align}
-\]</span> 直观上来说，基尼值表示随机抽取两个样本，其类别不一致的概率</p>
-<p>如果说一个特征越好，那么划分之后其每个子集对应的基尼值应该越小越好。基尼系数的定义为： <span class="math display">\[
-Gini\_index(D,a)=\sum_{v=1}^V \frac{|D^v|}{|D|}Gini(D^v)
-\]</span></p>
-<p>对于离散取值特征，CART不会根据不同取值个数进行划分，而是和连续值类似，会确定一个“划分点”，将样本进行二分。比如对于特征<span class="math inline">\(a\)</span>，其对应取值为<span class="math inline">\(\{a^1,a^2,\cdots,a^n\}\)</span>，CART会考察每个取值，将样本集划分为特征<span class="math inline">\(a\)</span>是不是等于<span class="math inline">\(a^i\)</span>两部分，然后计算基尼系数，最终会采用基尼系数最小的取值作为划分点。</p>
+<p><img src="https://i.loli.net/2020/09/09/knOHuvsfyorTpxt.png"></p>
+<h2 id="CART-Classification"><a href="#CART-Classification" class="headerlink" title="CART Classification"></a>CART Classification</h2><p>从前面的讨论可以看到，CART回归树是一棵二叉树，对于分类任务，CART也是一棵二叉树。我们先来介绍CART的划分准则，再来介绍它是怎么进行划分的。</p>
+<p>采用基尼系数作为准则，基尼系数的计算依赖于基尼值：<br>$$<br>\begin{align}<br>Gini(D)&amp;=1-\sum_{k=1}^{|\mathcal Y|}p_k^2<br>\end{align}<br>$$<br>直观上来说，基尼值表示随机抽取两个样本，其类别不一致的概率</p>
+<p>如果说一个特征越好，那么划分之后其每个子集对应的基尼值应该越小越好。基尼系数的定义为：<br>$$<br>Gini_index(D,a)=\sum_{v=1}^V \frac{|D^v|}{|D|}Gini(D^v)<br>$$</p>
+<p>对于离散取值特征，CART不会根据不同取值个数进行划分，而是和连续值类似，会确定一个“划分点”，将样本进行二分。比如对于特征$a$，其对应取值为${a^1,a^2,\cdots,a^n}$，CART会考察每个取值，将样本集划分为特征$a$是不是等于$a^i$两部分，然后计算基尼系数，最终会采用基尼系数最小的取值作为划分点。</p>
 <p>下图是在breast cancer数据上决策树的可视化（图片太大了，可以点开放大🔍看）：</p>
-<p><img src="https://i.loli.net/2020/09/10/mMf2EVkI1NaQLdS.png" /></p>
-</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-08-25T18:09:24.000Z" title="2020-8-26 2:09:24 ├F10: AM┤">2020-08-26</time>发表</span><span class="level-item"><time dateTime="2021-02-19T10:23:31.925Z" title="2021-2-19 6:23:31 ├F10: PM┤">2021-02-19</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Technical-Notes/">Technical Notes</a><span> / </span><a class="link-muted" href="/categories/Technical-Notes/Machine-Learning/">Machine Learning</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2020/08/26/Machine-Learning-Classification-Algorithms-Support-Vector-Machine/">Machine Learning Classification Algorithms: Support Vector Machine</a></h1><div class="content"><h1 id="introduction">Introduction</h1>
-<p>Still working on it😅...</p>
+<p><img src="https://i.loli.net/2020/09/10/mMf2EVkI1NaQLdS.png"></p>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-08-25T18:09:24.000Z" title="2020-8-26 2:09:24 ├F10: AM┤">2020-08-26</time>发表</span><span class="level-item"><time dateTime="2021-02-19T10:23:31.925Z" title="2021-2-19 6:23:31 ├F10: PM┤">2021-02-19</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Technical-Notes/">Technical Notes</a><span> / </span><a class="link-muted" href="/categories/Technical-Notes/Machine-Learning/">Machine Learning</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2020/08/26/Machine-Learning-Classification-Algorithms-Support-Vector-Machine/">Machine Learning Classification Algorithms: Support Vector Machine</a></h1><div class="content"><h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>Still working on it😅…</p>
 <p><a target="_blank" rel="noopener" href="http://blog.pluskid.org/?page_id=683">blog</a></p>
-<h1 id="hyperplane">Hyperplane</h1>
-<p>超平面可以从代数和几何两方面来理解。超平面的代数定义可以看作是方程： <span class="math display">\[
-a_1x_1+\cdots+a_nx_n=d
-\]</span> 的所有解形成的集合，其中<span class="math inline">\(a_1,\cdots,a_n\)</span>为不全为<span class="math inline">\(0\)</span>的实数，<span class="math inline">\(d\)</span>也是实数。</p>
-<p>从几何上来说，超平面可以看作是除空间<span class="math inline">\(R^n\)</span>自身外维度最大的仿射空间。</p>
-<p><img src="https://i.loli.net/2020/09/07/WiMJQSe7lN8upfw.jpg" /></p>
-<h1 id="maximum-margin-classifier">Maximum Margin Classifier</h1>
-<p><img src="https://i.loli.net/2020/08/26/vjuyCGXMr4msaUK.png" style="zoom:67%;" /></p>
-<p>要谈SVM就得先谈线性分类器，其设置是这样的。对于<span class="math inline">\(D\)</span>维空间，我们有一堆数据<span class="math inline">\(X\)</span>，进行二分类任务，标签记为<span class="math inline">\(y\)</span>，其中<span class="math inline">\(y=-1\)</span>和<span class="math inline">\(y=1\)</span>分别代表不同的类别。我们的任务就是找到一个超平面，将正负例切分开来（先假设数据是线性可分的），这个超平面的方程可以表示为： <span class="math display">\[
-w^\top x+b=0
-\]</span> 我们令<span class="math inline">\(f(x)=w^\top x+b\)</span>，对于<span class="math inline">\(f(x)&lt;0\)</span>的样本，我们赋予其类别<span class="math inline">\(-1\)</span>，对于<span class="math inline">\(f(x)&gt;0\)</span>的样本，我们可以赋予其类别<span class="math inline">\(1\)</span>。对于相同的分类结果，我们可以找出无限种超平面。不过，对于那些样本特别靠近超平面的情况，鲁棒性并不好。为什么呢？因为这时只要超平面有轻微的变化，样本的分类结果就会发生变化。直观上来说，我们希望样本到超平面的距离越大越好。</p>
-<p>我们先定义函数间隔的概念，函数间隔<span class="math inline">\(\hat \gamma=y(w^\top x+b)\)</span>，乘以<span class="math inline">\(y\)</span>的目的主要是保持非负性，表示起来方便。可见函数间隔的大小并不能表示样本距离，因为同一个超平面，法向量<span class="math inline">\(w\)</span>可以任意增大，函数间隔也会相应增大。</p>
-<p>下面来推导点<span class="math inline">\(x\)</span>到超平面的距离。设<span class="math inline">\(x\)</span>在超平面上的投影为<span class="math inline">\(x_0\)</span>，到超平面的距离为<span class="math inline">\(\gamma\)</span>，<span class="math inline">\(w\)</span>为法向量，那么有： <span class="math display">\[
-x=x_0+\gamma\frac{w}{\parallel w\parallel}
-\]</span> 将上式带入到超平面方程可以得到 <span class="math display">\[
-\gamma=\frac{w^\top}{\parallel w\parallel}x+\frac{b}{\parallel w\parallel}
-\]</span> 我们称<span class="math inline">\(\gamma\)</span>为几何间隔。</p>
-<p><img src="https://i.loli.net/2020/08/26/b6qLJWzHwFAPDne.png" /></p>
-<p>可以很容易看出函数间隔和几何间隔的关系： <span class="math display">\[
-\gamma = \frac{\hat \gamma}{\parallel w\parallel}
-\]</span> 前面提到我们希望几何间隔越大越好，于是可以直接最大化<span class="math inline">\(\gamma\)</span>，得到： <span class="math display">\[
-\begin{align}
-\max \space &amp;\gamma\\
-s.t. \space &amp; y_i(w^\top x_i+b)=\hat\gamma_i\geq\hat\gamma, \space i=1,\cdots,n
-\end{align}
-\]</span> 这里<span class="math inline">\(\hat \gamma=\gamma \parallel w\parallel\)</span>，根据前面的分析我们知道，对于同一个超平面，函数间隔<span class="math inline">\(\hat\gamma\)</span>可以随着<span class="math inline">\(\parallel w\parallel\)</span>的变化而变化，所以为了找到最优的<span class="math inline">\(\gamma\)</span>，我们可以考虑固定<span class="math inline">\(\parallel w\parallel\)</span>或者<span class="math inline">\(\hat\gamma\)</span>，这里我们固定<span class="math inline">\(\hat \gamma=1\)</span>，所以有： <span class="math display">\[
-\begin{align}
-\max &amp; \space \frac{1}{\parallel w\parallel},\\ s.t. \space&amp; y_i(w^\top x_i+b)\geq 1, \space i=1,\cdots,n
-\end{align}
-\]</span></p>
-<p>下面的约束条件代表前提是所有样本分类正确，而<span class="math inline">\(\max\frac{1}{\parallel w\parallel}\)</span>代表最大化间隔。为了方便，我们将其化为等价的最小化形式： <span class="math display">\[
-\begin{align}
-\min &amp; \space \frac{1}{2}\parallel w\parallel^2,\\ s.t. &amp; y_i(w^\top x_i+b)\geq 1, \space i=1,\cdots,n
-\end{align}
-\]</span> 其中那些<span class="math inline">\(y_i(w^\top x_i+b)=1\)</span>的样本就是“支持向量”。这个优化问题是典型的二次凸优化问题，可以调用现成的算法去解决。不过我们可以使用拉格朗日乘子法来更高效的解决。</p>
-<h1 id="dual-problem">Dual Problem</h1>
-<p>拉格朗日乘子法可以将有<span class="math inline">\(d\)</span>个变量和<span class="math inline">\(k\)</span>个约束条件的最优化问题转化成有<span class="math inline">\(d+k\)</span>个变量的无约束最优化问题求解。</p>
-<h2 id="lagrange-multiplier">Lagrange Multiplier</h2>
-<p>对于以下有约束优化问题： <span class="math display">\[
-\begin{align}
-\min_x \space &amp; f(x)\\
-\text{s.t.} \space &amp; h_i(x)=0 \space (i=1,\cdots,m),\\
-&amp;g_j(x) \leq 0 \space (j=1,\cdots,n)
-\end{align}
-\]</span></p>
-<p>引入拉格朗日乘子<span class="math inline">\(\boldsymbol\lambda = (\lambda_1,\lambda_2,\cdots,\lambda_n)^\top\)</span>和<span class="math inline">\(\boldsymbol\mu=(\mu_1,\mu_2,\cdots,\mu_m)^\top\)</span>，相应的广义拉格朗日函数 (generalized Lagrange function) 为： <span class="math display">\[
-L(\boldsymbol x,\boldsymbol\lambda,\boldsymbol\mu)=f(\boldsymbol x)+\sum_{j=1}^n \lambda_j g_j(\boldsymbol x)+\sum_{i=1}^m \mu_i h_i(\boldsymbol x)
-\]</span></p>
-<p>其中<span class="math inline">\(\lambda_j\)</span>，<span class="math inline">\(\mu_i\)</span>被称作是拉格朗日乘子，<span class="math inline">\(\lambda_j \geq 0\)</span>。</p>
-<h3 id="primal-problem">Primal Problem</h3>
-<p>现在我们来讨论原问题的等价性。假设给定某个<span class="math inline">\(x\)</span>，如果<span class="math inline">\(x\)</span>违反约束条件，即存在某个<span class="math inline">\(x\)</span>使得<span class="math inline">\(h_i(x)\neq 0\)</span>或者<span class="math inline">\(g_j(x)&gt;0\)</span>，那么就有： <span class="math display">\[
-\max\limits_{\boldsymbol\lambda,\boldsymbol\mu:\lambda_j\geq 0} L(\boldsymbol x,\boldsymbol\lambda,\boldsymbol\mu)=+\infty
-\]</span> 如果存在某个<span class="math inline">\(x\)</span>使得<span class="math inline">\(h_i(x)\neq 0\)</span>，那么可以令<span class="math inline">\(\lambda_j \rightarrow +\infty\)</span>，如果存在<span class="math inline">\(g_j(x)&gt;0\)</span>，那么可令<span class="math inline">\(\mu_ih_i(x)\rightarrow +\infty\)</span>。</p>
-<p>如果考虑以下极小化问题： <span class="math display">\[
-p^*=\min_x\max\limits_{\boldsymbol\lambda,\boldsymbol\mu:\lambda_j\geq 0} L(\boldsymbol x,\boldsymbol\lambda,\boldsymbol\mu)
-\]</span> 他与原始带约束最优化问题是等价的（因为不符合约束时会有<span class="math inline">\(+\infty\)</span>，而我们考虑的是极小化问题），我们将其记为原问题 (Primal problem)。</p>
-<h3 id="dual-problem-1">Dual Problem</h3>
-<p>如果先考虑最小化<span class="math inline">\(x\)</span>，再考虑最大化<span class="math inline">\(\boldsymbol\lambda\)</span>和<span class="math inline">\(\boldsymbol\mu\)</span>，这时有： <span class="math display">\[
-\max\limits_{\boldsymbol\lambda,\boldsymbol\mu:\lambda_j\geq 0}\min_x L(\boldsymbol x,\boldsymbol\lambda,\boldsymbol\mu)
-\]</span> 对偶问题 (Dual problem) <span class="math display">\[
-d^*=\max\limits_{\boldsymbol\lambda,\boldsymbol\mu:\lambda_j\geq 0}\min_x L(\boldsymbol x,\boldsymbol\lambda,\boldsymbol\mu)
-\]</span> 原问题和对偶问题的关系 <span class="math display">\[
-d^*=\max\limits_{\boldsymbol\lambda,\boldsymbol\mu:\lambda_j\geq 0}\min_x L(\boldsymbol x,\boldsymbol\lambda,\boldsymbol\mu) \leq \min_x\max\limits_{\boldsymbol\lambda,\boldsymbol\mu:\lambda_j\geq 0} L(\boldsymbol x,\boldsymbol\lambda,\boldsymbol\mu) = p^*
-\]</span></p>
-<h3 id="kkt-condition">KKT Condition</h3>
-<blockquote>
-<p>对于原问题和对偶问题，设<span class="math inline">\(f(x)\)</span>和<span class="math inline">\(g_i(x)\)</span>为凸函数，<span class="math inline">\(h_i(x)\)</span>为仿射函数，并且不等式约束<span class="math inline">\(c_i(x)\)</span>是严格可行的，则<span class="math inline">\(x^*\)</span>，<span class="math inline">\(\lambda^*\)</span>，<span class="math inline">\(\mu^*\)</span>分别是原问题和对偶问题的解的充分必要条件是满足下面的Karush-Kuhn-Tucker (KKT) 条件： <span class="math display">\[
-\begin{cases}
-\nabla_x L(x^*,\lambda^*,\mu^*)=0 &amp;\\ 
-\lambda^*_j g_j(x^*)=0 &amp; j=1,\cdots n\\
-g_j(x^*)\leq 0 &amp; j=1,\cdots n\\
-\lambda_j^*\geq 0 &amp; j=1,\cdots n\\
-h_i(x^*) = 0 &amp; i = 1, \cdots m
-\end{cases}
-\]</span></p>
+<h1 id="Hyperplane"><a href="#Hyperplane" class="headerlink" title="Hyperplane"></a>Hyperplane</h1><p>超平面可以从代数和几何两方面来理解。超平面的代数定义可以看作是方程：<br>$$<br>a_1x_1+\cdots+a_nx_n=d<br>$$<br>的所有解形成的集合，其中$a_1,\cdots,a_n$为不全为$0$的实数，$d$也是实数。</p>
+<p>从几何上来说，超平面可以看作是除空间$R^n$自身外维度最大的仿射空间。</p>
+<p><img src="https://i.loli.net/2020/09/07/WiMJQSe7lN8upfw.jpg"></p>
+<h1 id="Maximum-Margin-Classifier"><a href="#Maximum-Margin-Classifier" class="headerlink" title="Maximum Margin Classifier"></a>Maximum Margin Classifier</h1><img src="https://i.loli.net/2020/08/26/vjuyCGXMr4msaUK.png" style="zoom:67%;" />
+
+<p>要谈SVM就得先谈线性分类器，其设置是这样的。对于$D$维空间，我们有一堆数据$X$，进行二分类任务，标签记为$y$，其中$y=-1$和$y=1$分别代表不同的类别。我们的任务就是找到一个超平面，将正负例切分开来（先假设数据是线性可分的），这个超平面的方程可以表示为：<br>$$<br>w^\top x+b=0<br>$$<br>我们令$f(x)=w^\top x+b$，对于$f(x)&lt;0$的样本，我们赋予其类别$-1$，对于$f(x)&gt;0$的样本，我们可以赋予其类别$1$。对于相同的分类结果，我们可以找出无限种超平面。不过，对于那些样本特别靠近超平面的情况，鲁棒性并不好。为什么呢？因为这时只要超平面有轻微的变化，样本的分类结果就会发生变化。直观上来说，我们希望样本到超平面的距离越大越好。</p>
+<p>我们先定义函数间隔的概念，函数间隔$\hat \gamma=y(w^\top x+b)$，乘以$y$的目的主要是保持非负性，表示起来方便。可见函数间隔的大小并不能表示样本距离，因为同一个超平面，法向量$w$可以任意增大，函数间隔也会相应增大。</p>
+<p>下面来推导点$x$到超平面的距离。设$x$在超平面上的投影为$x_0$，到超平面的距离为$\gamma$，$w$为法向量，那么有：<br>$$<br>x=x_0+\gamma\frac{w}{\parallel w\parallel}<br>$$<br>将上式带入到超平面方程可以得到<br>$$<br>\gamma=\frac{w^\top}{\parallel w\parallel}x+\frac{b}{\parallel w\parallel}<br>$$<br>我们称$\gamma$为几何间隔。</p>
+<p><img src="https://i.loli.net/2020/08/26/b6qLJWzHwFAPDne.png"></p>
+<p>可以很容易看出函数间隔和几何间隔的关系：<br>$$<br>\gamma = \frac{\hat \gamma}{\parallel w\parallel}<br>$$<br>前面提到我们希望几何间隔越大越好，于是可以直接最大化$\gamma$，得到：<br>$$<br>\begin{align}<br>\max \space &amp;\gamma\<br>s.t. \space &amp; y_i(w^\top x_i+b)=\hat\gamma_i\geq\hat\gamma, \space i=1,\cdots,n<br>\end{align}<br>$$<br>这里$\hat \gamma=\gamma \parallel w\parallel$，根据前面的分析我们知道，对于同一个超平面，函数间隔$\hat\gamma$可以随着$\parallel w\parallel$的变化而变化，所以为了找到最优的$\gamma$，我们可以考虑固定$\parallel w\parallel$或者$\hat\gamma$，这里我们固定$\hat \gamma=1$，所以有：<br>$$<br>\begin{align}<br>\max &amp; \space \frac{1}{\parallel w\parallel},\ s.t. \space&amp; y_i(w^\top x_i+b)\geq 1, \space i=1,\cdots,n<br>\end{align}<br>$$</p>
+<p>下面的约束条件代表前提是所有样本分类正确，而$\max\frac{1}{\parallel w\parallel}$代表最大化间隔。为了方便，我们将其化为等价的最小化形式：<br>$$<br>\begin{align}<br>\min &amp; \space \frac{1}{2}\parallel w\parallel^2,\ s.t. &amp; y_i(w^\top x_i+b)\geq 1, \space i=1,\cdots,n<br>\end{align}<br>$$<br>其中那些$y_i(w^\top x_i+b)=1$的样本就是“支持向量”。这个优化问题是典型的二次凸优化问题，可以调用现成的算法去解决。不过我们可以使用拉格朗日乘子法来更高效的解决。</p>
+<h1 id="Dual-Problem"><a href="#Dual-Problem" class="headerlink" title="Dual Problem"></a>Dual Problem</h1><p>拉格朗日乘子法可以将有$d$个变量和$k$个约束条件的最优化问题转化成有$d+k$个变量的无约束最优化问题求解。</p>
+<h2 id="Lagrange-Multiplier"><a href="#Lagrange-Multiplier" class="headerlink" title="Lagrange Multiplier"></a>Lagrange Multiplier</h2><p>对于以下有约束优化问题：<br>$$<br>\begin{align}<br>\min_x \space &amp; f(x)\<br>\text{s.t.} \space &amp; h_i(x)=0 \space (i=1,\cdots,m),\<br>&amp;g_j(x) \leq 0 \space (j=1,\cdots,n)<br>\end{align}<br>$$</p>
+<p>引入拉格朗日乘子$\boldsymbol\lambda = (\lambda_1,\lambda_2,\cdots,\lambda_n)^\top$和$\boldsymbol\mu=(\mu_1,\mu_2,\cdots,\mu_m)^\top$，相应的广义拉格朗日函数 (generalized Lagrange function) 为：<br>$$<br>L(\boldsymbol x,\boldsymbol\lambda,\boldsymbol\mu)=f(\boldsymbol x)+\sum_{j=1}^n \lambda_j g_j(\boldsymbol x)+\sum_{i=1}^m \mu_i h_i(\boldsymbol x)<br>$$</p>
+<p>其中$\lambda_j$，$\mu_i$被称作是拉格朗日乘子，$\lambda_j \geq 0$。</p>
+<h3 id="Primal-Problem"><a href="#Primal-Problem" class="headerlink" title="Primal Problem"></a>Primal Problem</h3><p>现在我们来讨论原问题的等价性。假设给定某个$x$，如果$x$违反约束条件，即存在某个$x$使得$h_i(x)\neq 0$或者$g_j(x)&gt;0$，那么就有：<br>$$<br>\max\limits_{\boldsymbol\lambda,\boldsymbol\mu:\lambda_j\geq 0} L(\boldsymbol x,\boldsymbol\lambda,\boldsymbol\mu)=+\infty<br>$$<br>如果存在某个$x$使得$h_i(x)\neq 0$，那么可以令$\lambda_j \rightarrow +\infty$，如果存在$g_j(x)&gt;0$，那么可令$\mu_ih_i(x)\rightarrow +\infty$。</p>
+<p>如果考虑以下极小化问题：<br>$$<br>p^*=\min_x\max\limits_{\boldsymbol\lambda,\boldsymbol\mu:\lambda_j\geq 0} L(\boldsymbol x,\boldsymbol\lambda,\boldsymbol\mu)<br>$$<br>他与原始带约束最优化问题是等价的（因为不符合约束时会有$+\infty$，而我们考虑的是极小化问题），我们将其记为原问题 (Primal problem)。</p>
+<h3 id="Dual-Problem-1"><a href="#Dual-Problem-1" class="headerlink" title="Dual Problem"></a>Dual Problem</h3><p>如果先考虑最小化$x$，再考虑最大化$\boldsymbol\lambda$和$\boldsymbol\mu$，这时有：<br>$$<br>\max\limits_{\boldsymbol\lambda,\boldsymbol\mu:\lambda_j\geq 0}\min_x L(\boldsymbol x,\boldsymbol\lambda,\boldsymbol\mu)<br>$$<br>对偶问题 (Dual problem)<br>$$<br>d^*=\max\limits_{\boldsymbol\lambda,\boldsymbol\mu:\lambda_j\geq 0}\min_x L(\boldsymbol x,\boldsymbol\lambda,\boldsymbol\mu)<br>$$<br>原问题和对偶问题的关系<br>$$<br>d^*=\max\limits_{\boldsymbol\lambda,\boldsymbol\mu:\lambda_j\geq 0}\min_x L(\boldsymbol x,\boldsymbol\lambda,\boldsymbol\mu) \leq \min_x\max\limits_{\boldsymbol\lambda,\boldsymbol\mu:\lambda_j\geq 0} L(\boldsymbol x,\boldsymbol\lambda,\boldsymbol\mu) = p^*<br>$$</p>
+<h3 id="KKT-Condition"><a href="#KKT-Condition" class="headerlink" title="KKT Condition"></a>KKT Condition</h3><blockquote>
+<p>对于原问题和对偶问题，设$f(x)$和$g_i(x)$为凸函数，$h_i(x)$为仿射函数，并且不等式约束$c_i(x)$是严格可行的，则$x^*$，$\lambda^*$，$\mu^*$分别是原问题和对偶问题的解的充分必要条件是满足下面的Karush-Kuhn-Tucker (KKT) 条件：<br>$$<br>\begin{cases}<br>\nabla_x L(x^*,\lambda^*,\mu^*)=0 &amp;\<br>\lambda^<em>_j g_j(x^</em>)=0 &amp; j=1,\cdots n\<br>g_j(x^*)\leq 0 &amp; j=1,\cdots n\<br>\lambda_j^<em>\geq 0 &amp; j=1,\cdots n\<br>h_i(x^</em>) = 0 &amp; i = 1, \cdots m<br>\end{cases}<br>$$</p>
 </blockquote>
 <p>这告诉我们</p>
-<h2 id="dual-form-of-svm-optimization">Dual Form of SVM Optimization</h2>
-<p>支持向量机优化的对偶问题可以写为： <span class="math display">\[
-L(w,b,\alpha)=\frac{1}{2}\parallel w\parallel^2-\sum_{i=1}^n \alpha_i(y_i(w^\top x_i+b)-1)
-\]</span> 我们先令： <span class="math display">\[
-\begin{align}
-\frac{\partial L}{\partial w}=0&amp;\Rightarrow w=\sum_{i=1}^n\alpha_i y_i x_i\\
-\frac{\partial L}{\partial b}=0&amp;\Rightarrow \sum_{i=1}^n\alpha_i y_i =0
-\end{align}
-\]</span> 带回到<span class="math inline">\(L\)</span>得到： <span class="math display">\[
-\begin{align}
-L(w,b,\alpha)&amp;=\frac{1}{2}\sum_{i,j=1}^n\alpha_i\alpha_j y_i y_j x^\top_i x_j-\sum_{i,j=1}^n \alpha_i\alpha_jy_iy_jx^\top_ix_j-b\sum_{i=1}^n\alpha_iy_i+\sum_{i=1}^n\alpha_i\\
-&amp;=\sum_{i=1}^n \alpha_i - \frac{1}{2}\sum_{i,j=1}^n \alpha_i\alpha_j y_i y_j x^\top_i x_j
-\end{align}
-\]</span> 于是得到关于<span class="math inline">\(\alpha\)</span>的对偶优化问题： <span class="math display">\[
-\begin{align}
-\max_\alpha &amp;\sum_{i=1}^n \alpha_i - \frac{1}{2}\sum_{i,j=1}^n \alpha_i\alpha_j y_i y_j x^\top_i x_j\\
-\text{s.t. }&amp; \alpha_i\geq 0, i=1,\cdots,n\\
-&amp; \sum_{i=1}^n \alpha_i y_i = 0
-\end{align}
-\]</span></p>
-<p>前面有提到我们根据<span class="math inline">\(f(x)=w^\top x + b\)</span>的输出来判定样本类别，而刚才得到<span class="math inline">\(w=\sum_{i=1}^n\alpha_i y_i x_i\)</span>，于是： <span class="math display">\[
-\begin{align}
-f(x) &amp;= (\sum_{i=1}^n \alpha_iy_ix_i)^\top x+b\\
-&amp;= \sum_{i=1}^n \alpha_i y_i \langle x_i, x\rangle + b
-\end{align}
-\]</span> 最后的<span class="math inline">\(\sum_{i=1}^n \alpha_i y_i \langle x_i, x\rangle + b\)</span>值得特别注意，这意味着我们对于测试样本<span class="math inline">\(x\)</span>的预测，只需要计算它与训练集的内积即可，同时由于所有非支持向量对应的<span class="math inline">\(\alpha\)</span>都是<span class="math inline">\(0\)</span>，我们只需要求一小部分内积。同时这个内积计算也是后面核方法应用的前提。</p>
-<h1 id="kernel">Kernel</h1>
-<p>到目前为止，我们的讨论都是在数据是线性可分的前提下进行讨论的，那么对于线性不可分的情况呢？答案是使用核方法。</p>
-<p><img src="https://i.loli.net/2020/09/08/kSTVgelDjWqtu8v.png" /></p>
-<p>核方法的思想是，对于原始不可分的数据，我们假设原始数据通过一个映射<span class="math inline">\(\phi(\cdot)\)</span>就变得线性可分了。核方法相当于对数据找到了一种新的表示，如上图没法用一个超平面直接分割，但通过<span class="math inline">\(\phi(\cdot)\)</span>映射之后就变得可分了。原始的分类函数为： <span class="math display">\[
-f(x)= \sum_{i=1}^n \alpha_i y_i \langle x_i, x\rangle + b
-\]</span> 加上映射之后变为： <span class="math display">\[
-f(x)= \sum_{i=1}^n \alpha_i y_i \langle \phi(x_i), \phi(x)\rangle + b
-\]</span> 优化问题也变为： <span class="math display">\[
-\begin{align}
-\max_\alpha &amp;\sum_{i=1}^n \alpha_i - \frac{1}{2}\sum_{i,j=1}^n \alpha_i\alpha_j y_i y_j \langle\phi(x_i), \phi(x_j)\rangle\\
-\text{s.t. }&amp; \alpha_i\geq 0, i=1,\cdots,n\\
-&amp; \sum_{i=1}^n \alpha_i y_i = 0
-\end{align}
-\]</span> 我们把计算两个向量在映射后的空间中的内积的函数叫做核函数 <span class="math display">\[
-f(x)= \sum_{i=1}^n \alpha_i y_i k(x_i, x) + b
-\]</span> 优化问题改为： <span class="math display">\[
-\begin{align}
-\max_\alpha &amp;\sum_{i=1}^n \alpha_i - \frac{1}{2}\sum_{i,j=1}^n \alpha_i\alpha_j y_i y_j k(\phi(x_i), \phi(x_j))\\
-\text{s.t. }&amp; \alpha_i\geq 0, i=1,\cdots,n\\
-&amp; \sum_{i=1}^n \alpha_i y_i = 0
-\end{align}
-\]</span> 实际上，通过核函数，我们隐式地定义了一个映射<span class="math inline">\(\phi(\cdot)\)</span></p>
+<h2 id="Dual-Form-of-SVM-Optimization"><a href="#Dual-Form-of-SVM-Optimization" class="headerlink" title="Dual Form of SVM Optimization"></a>Dual Form of SVM Optimization</h2><p>支持向量机优化的对偶问题可以写为：<br>$$<br>L(w,b,\alpha)=\frac{1}{2}\parallel w\parallel^2-\sum_{i=1}^n \alpha_i(y_i(w^\top x_i+b)-1)<br>$$<br>我们先令：<br>$$<br>\begin{align}<br>\frac{\partial L}{\partial w}=0&amp;\Rightarrow w=\sum_{i=1}^n\alpha_i y_i x_i\<br>\frac{\partial L}{\partial b}=0&amp;\Rightarrow \sum_{i=1}^n\alpha_i y_i =0<br>\end{align}<br>$$<br>带回到$L$得到：<br>$$<br>\begin{align}<br>L(w,b,\alpha)&amp;=\frac{1}{2}\sum_{i,j=1}^n\alpha_i\alpha_j y_i y_j x^\top_i x_j-\sum_{i,j=1}^n \alpha_i\alpha_jy_iy_jx^\top_ix_j-b\sum_{i=1}^n\alpha_iy_i+\sum_{i=1}^n\alpha_i\<br>&amp;=\sum_{i=1}^n \alpha_i - \frac{1}{2}\sum_{i,j=1}^n \alpha_i\alpha_j y_i y_j x^\top_i x_j<br>\end{align}<br>$$<br>于是得到关于$\alpha$的对偶优化问题：<br>$$<br>\begin{align}<br>\max_\alpha &amp;\sum_{i=1}^n \alpha_i - \frac{1}{2}\sum_{i,j=1}^n \alpha_i\alpha_j y_i y_j x^\top_i x_j\<br>\text{s.t. }&amp; \alpha_i\geq 0, i=1,\cdots,n\<br>&amp; \sum_{i=1}^n \alpha_i y_i = 0<br>\end{align}<br>$$</p>
+<p>前面有提到我们根据$f(x)=w^\top x + b$的输出来判定样本类别，而刚才得到$w=\sum_{i=1}^n\alpha_i y_i x_i$，于是：<br>$$<br>\begin{align}<br>f(x) &amp;= (\sum_{i=1}^n \alpha_iy_ix_i)^\top x+b\<br>&amp;= \sum_{i=1}^n \alpha_i y_i \langle x_i, x\rangle + b<br>\end{align}<br>$$<br>最后的$\sum_{i=1}^n \alpha_i y_i \langle x_i, x\rangle + b$值得特别注意，这意味着我们对于测试样本$x$的预测，只需要计算它与训练集的内积即可，同时由于所有非支持向量对应的$\alpha$都是$0$，我们只需要求一小部分内积。同时这个内积计算也是后面核方法应用的前提。</p>
+<h1 id="Kernel"><a href="#Kernel" class="headerlink" title="Kernel"></a>Kernel</h1><p>到目前为止，我们的讨论都是在数据是线性可分的前提下进行讨论的，那么对于线性不可分的情况呢？答案是使用核方法。</p>
+<p><img src="https://i.loli.net/2020/09/08/kSTVgelDjWqtu8v.png"></p>
+<p>核方法的思想是，对于原始不可分的数据，我们假设原始数据通过一个映射$\phi(\cdot)$就变得线性可分了。核方法相当于对数据找到了一种新的表示，如上图没法用一个超平面直接分割，但通过$\phi(\cdot)$映射之后就变得可分了。原始的分类函数为：<br>$$<br>f(x)= \sum_{i=1}^n \alpha_i y_i \langle x_i, x\rangle + b<br>$$<br>加上映射之后变为：<br>$$<br>f(x)= \sum_{i=1}^n \alpha_i y_i \langle \phi(x_i), \phi(x)\rangle + b<br>$$<br>优化问题也变为：<br>$$<br>\begin{align}<br>\max_\alpha &amp;\sum_{i=1}^n \alpha_i - \frac{1}{2}\sum_{i,j=1}^n \alpha_i\alpha_j y_i y_j \langle\phi(x_i), \phi(x_j)\rangle\<br>\text{s.t. }&amp; \alpha_i\geq 0, i=1,\cdots,n\<br>&amp; \sum_{i=1}^n \alpha_i y_i = 0<br>\end{align}<br>$$<br>我们把计算两个向量在映射后的空间中的内积的函数叫做核函数<br>$$<br>f(x)= \sum_{i=1}^n \alpha_i y_i k(x_i, x) + b<br>$$<br>优化问题改为：<br>$$<br>\begin{align}<br>\max_\alpha &amp;\sum_{i=1}^n \alpha_i - \frac{1}{2}\sum_{i,j=1}^n \alpha_i\alpha_j y_i y_j k(\phi(x_i), \phi(x_j))\<br>\text{s.t. }&amp; \alpha_i\geq 0, i=1,\cdots,n\<br>&amp; \sum_{i=1}^n \alpha_i y_i = 0<br>\end{align}<br>$$<br>实际上，通过核函数，我们隐式地定义了一个映射$\phi(\cdot)$</p>
 <p>常用核函数</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>名称</th>
 <th>表达式</th>
 <th>参数</th>
 </tr>
 </thead>
-<tbody>
-<tr class="odd">
+<tbody><tr>
 <td>线性核</td>
 <td></td>
 <td></td>
 </tr>
-<tr class="even">
+<tr>
 <td>多项式核</td>
 <td></td>
 <td></td>
 </tr>
-<tr class="odd">
+<tr>
 <td>RBF核</td>
 <td></td>
 <td></td>
 </tr>
-<tr class="even">
+<tr>
 <td>拉普拉斯核</td>
 <td></td>
 <td></td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Sigmoid核</td>
 <td></td>
 <td></td>
 </tr>
-</tbody>
-</table>
-<h1 id="soft-margin">Soft Margin</h1>
-<p>数据线性不可分的情况，除了数据本身结构非线性的原因之外（核方法），还有可能是因为噪声或者离群点。为了处理这种情况，我们可以允许一部分点在一定程度上偏离超平面，具体来说就是原来的约束条件<span class="math inline">\(y_i(w^\top x_i+b)\geq 1, \space i=1,\cdots,n\)</span>变成了： <span class="math display">\[
-y_i(w^\top x_i+b)\geq 1-\xi_i, \space i=1,\cdots,n
-\]</span> 其中<span class="math inline">\(\xi_i\geq 0\)</span>称作是松弛变量，代表样本<span class="math inline">\(i\)</span>允许的偏离程度。当然松弛变量不可能无限大，所以我们需要将<span class="math inline">\(\xi_i\)</span>加入到优化目标函数中使其尽量小，于是有： <span class="math display">\[
-\begin{align}
-\min &amp; \space \frac{1}{2}\parallel w\parallel^2+C\sum_{i=1}^n \xi_i,\\ s.t. &amp; y_i(w^\top x_i+b)\geq 1-\xi_i, \space i=1,\cdots,n
-\end{align}
-\]</span> 其中<span class="math inline">\(C\)</span>为控制最优化<span class="math inline">\(\parallel w\parallel\)</span>和松弛变量这两项的权重。这里的优化函数还是对偶问题之前的形式，我们马上会讨论对偶问题。</p>
-<h1 id="numerical-optimization">Numerical Optimization</h1>
-<p>这里讨论SVM高效求解的Sequential Minimal Optimization (SMO)算法。</p>
+</tbody></table>
+<h1 id="Soft-Margin"><a href="#Soft-Margin" class="headerlink" title="Soft Margin"></a>Soft Margin</h1><p>数据线性不可分的情况，除了数据本身结构非线性的原因之外（核方法），还有可能是因为噪声或者离群点。为了处理这种情况，我们可以允许一部分点在一定程度上偏离超平面，具体来说就是原来的约束条件$y_i(w^\top x_i+b)\geq 1, \space i=1,\cdots,n$变成了：<br>$$<br>y_i(w^\top x_i+b)\geq 1-\xi_i, \space i=1,\cdots,n<br>$$<br>其中$\xi_i\geq 0$称作是松弛变量，代表样本$i$允许的偏离程度。当然松弛变量不可能无限大，所以我们需要将$\xi_i$加入到优化目标函数中使其尽量小，于是有：<br>$$<br>\begin{align}<br>\min &amp; \space \frac{1}{2}\parallel w\parallel^2+C\sum_{i=1}^n \xi_i,\ s.t. &amp; y_i(w^\top x_i+b)\geq 1-\xi_i, \space i=1,\cdots,n<br>\end{align}<br>$$<br>其中$C$为控制最优化$\parallel w\parallel$和松弛变量这两项的权重。这里的优化函数还是对偶问题之前的形式，我们马上会讨论对偶问题。</p>
+<h1 id="Numerical-Optimization"><a href="#Numerical-Optimization" class="headerlink" title="Numerical Optimization"></a>Numerical Optimization</h1><p>这里讨论SVM高效求解的Sequential Minimal Optimization (SMO)算法。</p>
 <p>坐标下降法是一种非梯度优化算法，</p>
-<p><img src="https://i.loli.net/2020/09/08/I6AonzFRHGVBU3t.png" /></p>
-<p><img src="https://i.loli.net/2020/09/08/Hmr79nMlK4C8GeJ.png" /></p>
-</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-08-25T16:28:26.000Z" title="2020-8-26 12:28:26 ├F10: AM┤">2020-08-26</time>发表</span><span class="level-item"><time dateTime="2021-02-28T05:38:18.079Z" title="2021-2-28 1:38:18 ├F10: PM┤">2021-02-28</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Technical-Notes/">Technical Notes</a><span> / </span><a class="link-muted" href="/categories/Technical-Notes/Machine-Learning/">Machine Learning</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2020/08/26/Machine-Learning-Ensemble-Algorithms-GBDT-and-XGBoost/">Machine Learning Ensemble Algorithms: GBDT and XGBoost</a></h1><div class="content"><h1 id="introduction">Introduction</h1>
-<p>本文主要介绍GBDT和XGBoost，在学习本文内容之前建议先学习<a target="_blank" rel="noopener" href="http://hanzawa.me/2020/09/02/Machine-Learning-Classification-Algorithms-Decision-Trees/">决策树相关内容</a>。</p>
+<p><img src="https://i.loli.net/2020/09/08/I6AonzFRHGVBU3t.png"></p>
+<p><img src="https://i.loli.net/2020/09/08/Hmr79nMlK4C8GeJ.png"></p>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-08-25T16:28:26.000Z" title="2020-8-26 12:28:26 ├F10: AM┤">2020-08-26</time>发表</span><span class="level-item"><time dateTime="2021-02-28T05:38:18.079Z" title="2021-2-28 1:38:18 ├F10: PM┤">2021-02-28</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Technical-Notes/">Technical Notes</a><span> / </span><a class="link-muted" href="/categories/Technical-Notes/Machine-Learning/">Machine Learning</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2020/08/26/Machine-Learning-Ensemble-Algorithms-GBDT-and-XGBoost/">Machine Learning Ensemble Algorithms: GBDT and XGBoost</a></h1><div class="content"><h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>本文主要介绍GBDT和XGBoost，在学习本文内容之前建议先学习<a target="_blank" rel="noopener" href="http://hanzawa.me/2020/09/02/Machine-Learning-Classification-Algorithms-Decision-Trees/">决策树相关内容</a>。</p>
 <p>下面是一些有用的参考链接：</p>
 <p><a target="_blank" rel="noopener" href="https://xgboost.readthedocs.io/en/latest/tutorials/model.html">XGBoost Documentation</a></p>
 <p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/pinard/p/6133937.html">AdaBoost blog</a></p>
@@ -506,486 +289,253 @@ y_i(w^\top x_i+b)\geq 1-\xi_i, \space i=1,\cdots,n
 <p><a target="_blank" rel="noopener" href="https://homes.cs.washington.edu/~tqchen/pdf/BoostedTree.pdf">陈天奇slide</a></p>
 <p><a target="_blank" rel="noopener" href="https://snaildove.github.io/2018/10/01/8.Booting-Methods_LiHang-Statistical-Learning-Methods/">blog</a></p>
 <p><a target="_blank" rel="noopener" href="https://snaildove.github.io/2018/10/02/get-started-XGBoost/">blog</a></p>
-<h1 id="preliminaries">Preliminaries</h1>
-<p>实际上，GBDT和梯度下降、XGBoost和牛顿法之间是存在密切关系的，这里我们先回顾一下梯度下降算法和牛顿法的基础知识。</p>
-<h2 id="taylor-formulation">Taylor Formulation</h2>
-<p>函数<span class="math inline">\(f(x)\)</span>在点<span class="math inline">\(x_0\)</span>处的泰勒展开为： <span class="math display">\[
-f(x)=\sum_{n=0}^\infty\frac{f^{(n)}(x_0)}{n!}(x-x_0)^n
-\]</span> 特别的，一阶展开为： <span class="math display">\[
-f(x)\approx f(x_0)+f^\prime(x_0)(x-x_0)
-\]</span> 二阶展开为： <span class="math display">\[
-f(x)\approx f(x_0)+f^\prime(x_0)(x-x_0) + f^{\prime\prime}(x_0)\frac{(x-x_0)^2}{2}
-\]</span> 迭代形式：假设<span class="math inline">\(x^t=x^{t-1}+\Delta x\)</span>，将<span class="math inline">\(f(x)\)</span>在<span class="math inline">\(x^{t-1}\)</span>处进行泰勒展开 <span class="math display">\[
-\begin{align}
-f(x^t) &amp;= f(x^{t-1}+\Delta x)\\
-&amp;\approx f(x^{t-1})+f^\prime(x^{t-1})\Delta x + f^{\prime\prime}(x^{t-1})\frac{\Delta x^2}{2}
-\end{align}
-\]</span></p>
-<h2 id="gradient-descend-method">Gradient Descend Method</h2>
-<p>设参数<span class="math inline">\(\theta\)</span>，那么参数对应的损失函数为<span class="math inline">\(L(\theta)\)</span>，</p>
-<p>设当前步数为<span class="math inline">\(t\)</span>，那么<span class="math inline">\(t-1\)</span>步时的参数为<span class="math inline">\(\theta^{t-1}\)</span>，将<span class="math inline">\(L(\theta^t)\)</span>在<span class="math inline">\(\theta^{t-1}\)</span>处展开得到：</p>
-<p><span class="math display">\[
-L(\theta^t) \approx L(\theta^{t-1})+ L^\prime(\theta^{t-1})\Delta\theta
-\]</span> 我们想求的<span class="math inline">\(\theta^t=\theta^{t-1}+\Delta \theta\)</span></p>
-<h2 id="newtons-method">Newton's Method</h2>
-<p>将<span class="math inline">\(L(\theta^t)\)</span>在<span class="math inline">\(\theta^{t-1}\)</span>处进行二阶泰勒展开 <span class="math display">\[
-\begin{align}
-L(\theta^t) &amp;= L(\theta^{t-1}+\Delta \theta)\\
-&amp;\approx L(\theta^{t-1})+L^\prime(\theta^{t-1})\Delta \theta + L^{\prime\prime}(\theta^{t-1})\frac{\Delta \theta^2}{2}
-\end{align}
-\]</span> 记一阶导数和二阶导数分别为<span class="math inline">\(g\)</span>和<span class="math inline">\(H\)</span>，那么 <span class="math display">\[
-L(\theta^t)=L(\theta^{t-1})+g\Delta \theta + H\frac{\Delta \theta^2}{2}
-\]</span> 要使得迭代后的结果尽量小，即<span class="math inline">\(g\Delta \theta + H\frac{\Delta \theta^2}{2}\)</span>尽量小，那么有<span class="math inline">\(\frac{\left(g\Delta \theta + H\frac{\Delta \theta^2}{2}\right)}{\partial\Delta\theta}=0\)</span></p>
-<p>求得<span class="math inline">\(\Delta \theta=H^{-1}g\)</span>，故<span class="math inline">\(\theta^{t}=\theta^{t-1}+\Delta \theta=\theta^{t-1}-\frac{g}{h}\)</span>。如果<span class="math inline">\(\theta\)</span>是一个向量，那么<span class="math inline">\(\theta^{t}=\theta^{t-1}-H^{-1}g\)</span>，这里<span class="math inline">\(H\)</span>为海森矩阵。</p>
-<h1 id="gradient-boosting-decision-tree-gbdt">Gradient Boosting Decision Tree (GBDT)</h1>
-<p>我们首先来看基于树的Boosting模型中，非常经典的梯度提升树 (Gradient Boosting Decision Tree)。</p>
-<h2 id="the-additive-model">The Additive Model</h2>
-<p>首先GBDT是一个加法模型，即最终模型由一系列树模型乘以对应权重相加得来： <span class="math display">\[
-F_T(x;w)=\sum_{t=0}^T\alpha_t h_t(x;w_t)=\sum_{t=0}^T f_t(x;w_t)
-\]</span> 我们的目标是使得<span class="math inline">\(F\)</span>的损失函数最小化： <span class="math display">\[
-F_T^*=\mathop{\arg\min}\limits_{F}\sum_{i=1}^N L(y_i, F_T(x_i;w))
-\]</span></p>
+<h1 id="Preliminaries"><a href="#Preliminaries" class="headerlink" title="Preliminaries"></a>Preliminaries</h1><p>实际上，GBDT和梯度下降、XGBoost和牛顿法之间是存在密切关系的，这里我们先回顾一下梯度下降算法和牛顿法的基础知识。</p>
+<h2 id="Taylor-Formulation"><a href="#Taylor-Formulation" class="headerlink" title="Taylor Formulation"></a>Taylor Formulation</h2><p>函数$f(x)$在点$x_0$处的泰勒展开为：<br>$$<br>f(x)=\sum_{n=0}^\infty\frac{f^{(n)}(x_0)}{n!}(x-x_0)^n<br>$$<br>特别的，一阶展开为：<br>$$<br>f(x)\approx f(x_0)+f^\prime(x_0)(x-x_0)<br>$$<br>二阶展开为：<br>$$<br>f(x)\approx f(x_0)+f^\prime(x_0)(x-x_0) + f^{\prime\prime}(x_0)\frac{(x-x_0)^2}{2}<br>$$<br>迭代形式：假设$x^t=x^{t-1}+\Delta x$，将$f(x)$在$x^{t-1}$处进行泰勒展开<br>$$<br>\begin{align}<br>f(x^t) &amp;= f(x^{t-1}+\Delta x)\<br>&amp;\approx f(x^{t-1})+f^\prime(x^{t-1})\Delta x + f^{\prime\prime}(x^{t-1})\frac{\Delta x^2}{2}<br>\end{align}<br>$$</p>
+<h2 id="Gradient-Descend-Method"><a href="#Gradient-Descend-Method" class="headerlink" title="Gradient Descend Method"></a>Gradient Descend Method</h2><p>设参数$\theta$，那么参数对应的损失函数为$L(\theta)$，</p>
+<p>设当前步数为$t$，那么$t-1$步时的参数为$\theta^{t-1}$，将$L(\theta^t)$在$\theta^{t-1}$处展开得到：</p>
+<p>$$<br>L(\theta^t) \approx L(\theta^{t-1})+ L^\prime(\theta^{t-1})\Delta\theta<br>$$<br>我们想求的$\theta^t=\theta^{t-1}+\Delta \theta$</p>
+<h2 id="Newton’s-Method"><a href="#Newton’s-Method" class="headerlink" title="Newton’s Method"></a>Newton’s Method</h2><p>将$L(\theta^t)$在$\theta^{t-1}$处进行二阶泰勒展开<br>$$<br>\begin{align}<br>L(\theta^t) &amp;= L(\theta^{t-1}+\Delta \theta)\<br>&amp;\approx L(\theta^{t-1})+L^\prime(\theta^{t-1})\Delta \theta + L^{\prime\prime}(\theta^{t-1})\frac{\Delta \theta^2}{2}<br>\end{align}<br>$$<br>记一阶导数和二阶导数分别为$g$和$H$，那么<br>$$<br>L(\theta^t)=L(\theta^{t-1})+g\Delta \theta + H\frac{\Delta \theta^2}{2}<br>$$<br>要使得迭代后的结果尽量小，即$g\Delta \theta + H\frac{\Delta \theta^2}{2}$尽量小，那么有$\frac{\left(g\Delta \theta + H\frac{\Delta \theta^2}{2}\right)}{\partial\Delta\theta}=0$</p>
+<p>求得$\Delta \theta=H^{-1}g$，故$\theta^{t}=\theta^{t-1}+\Delta \theta=\theta^{t-1}-\frac{g}{h}$。如果$\theta$是一个向量，那么$\theta^{t}=\theta^{t-1}-H^{-1}g$，这里$H$为海森矩阵。</p>
+<h1 id="Gradient-Boosting-Decision-Tree-GBDT"><a href="#Gradient-Boosting-Decision-Tree-GBDT" class="headerlink" title="Gradient Boosting Decision Tree (GBDT)"></a>Gradient Boosting Decision Tree (GBDT)</h1><p>我们首先来看基于树的Boosting模型中，非常经典的梯度提升树 (Gradient Boosting Decision Tree)。</p>
+<h2 id="The-Additive-Model"><a href="#The-Additive-Model" class="headerlink" title="The Additive Model"></a>The Additive Model</h2><p>首先GBDT是一个加法模型，即最终模型由一系列树模型乘以对应权重相加得来：<br>$$<br>F_T(x;w)=\sum_{t=0}^T\alpha_t h_t(x;w_t)=\sum_{t=0}^T f_t(x;w_t)<br>$$<br>我们的目标是使得$F$的损失函数最小化：<br>$$<br>F_T^*=\mathop{\arg\min}\limits_{F}\sum_{i=1}^N L(y_i, F_T(x_i;w))<br>$$</p>
 <p>直接优化这个损失函数复杂度是很高的，GBDT实际上运用了一种类似贪心的策略来优化这个函数，将优化过程分解成了迭代的步骤。</p>
-<p>回想梯度下降算法进行优化的步骤，我们有参数<span class="math inline">\(\theta\)</span>，损失函数<span class="math inline">\(L(\theta)\)</span>是<span class="math inline">\(\theta\)</span>的函数，我们希望找到最优的<span class="math inline">\(\theta^*\)</span>使得<span class="math inline">\(L(\theta^*)\)</span>最小，于是我们使用了迭代优化的步骤。假设迭代执行到第<span class="math inline">\(t\)</span>步，也就是说我们现在的参数<span class="math inline">\(\theta^{t-1}\)</span>为前面<span class="math inline">\(t-1\)</span>步增量之和：<span class="math inline">\(\theta^{t-1}=\sum_{j=1}^{t-1}\Delta \theta_j\)</span>，每一步的增量记为<span class="math inline">\(\Delta \theta_t\)</span>。当前的增量<span class="math inline">\(\Delta \theta_{t}\)</span>是怎么计算得到的呢？大家都知道是采用的损失函数在<span class="math inline">\(\theta^{t-1}\)</span>的负梯度乘以一个步长，即<span class="math inline">\(\Delta \theta_t=-\alpha_t \frac{\partial L(\theta)}{\partial \theta^{t-1}}\)</span>。</p>
-<p>梯度下降相当于是在参数空间<span class="math inline">\(\theta\)</span>找到最合适的参数<span class="math inline">\(\theta^*\)</span>使得损失函数<span class="math inline">\(L(\theta)\)</span>最小化，如果我们把模型<span class="math inline">\(F_T\)</span>看作是函数空间，我们的目的是在函数空间中找到最优的<span class="math inline">\(F_T^*\)</span>使得损失函数最小化，在这一个角度上GBDT和梯度下降就统一起来了。每一步的基模型<span class="math inline">\(f_t\)</span>就相当于梯度下降中的增量<span class="math inline">\(\Delta \theta\)</span>，所以我们就得到了GBDT每一的优化目标，即损失函数<span class="math inline">\(L\)</span>对于<span class="math inline">\(F_{t-1}\)</span>的负梯度。</p>
+<p>回想梯度下降算法进行优化的步骤，我们有参数$\theta$，损失函数$L(\theta)$是$\theta$的函数，我们希望找到最优的$\theta^*$使得$L(\theta^*)$最小，于是我们使用了迭代优化的步骤。假设迭代执行到第$t$步，也就是说我们现在的参数$\theta^{t-1}$为前面$t-1$步增量之和：$\theta^{t-1}=\sum_{j=1}^{t-1}\Delta \theta_j$，每一步的增量记为$\Delta \theta_t$。当前的增量$\Delta \theta_{t}$是怎么计算得到的呢？大家都知道是采用的损失函数在$\theta^{t-1}$的负梯度乘以一个步长，即$\Delta \theta_t=-\alpha_t \frac{\partial L(\theta)}{\partial \theta^{t-1}}$。</p>
+<p>梯度下降相当于是在参数空间$\theta$找到最合适的参数$\theta^*$使得损失函数$L(\theta)$最小化，如果我们把模型$F_T$看作是函数空间，我们的目的是在函数空间中找到最优的$F_T^*$使得损失函数最小化，在这一个角度上GBDT和梯度下降就统一起来了。每一步的基模型$f_t$就相当于梯度下降中的增量$\Delta \theta$，所以我们就得到了GBDT每一的优化目标，即损失函数$L$对于$F_{t-1}$的负梯度。</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th></th>
 <th>梯度下降</th>
 <th>GBDT</th>
 </tr>
 </thead>
-<tbody>
-<tr class="odd">
+<tbody><tr>
 <td>损失函数</td>
-<td><span class="math inline">\(L(\theta)\)</span></td>
-<td><span class="math inline">\(L(F_t)\)</span></td>
+<td>$L(\theta)$</td>
+<td>$L(F_t)$</td>
 </tr>
-<tr class="even">
+<tr>
 <td>参数</td>
-<td><span class="math inline">\(\theta^t\)</span></td>
-<td><span class="math inline">\(F_t\)</span></td>
+<td>$\theta^t$</td>
+<td>$F_t$</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>增量</td>
-<td><span class="math inline">\(\Delta \theta_t=-\alpha_t g_t\)</span></td>
-<td><span class="math inline">\(f_t=-\alpha_t g_t\)</span></td>
+<td>$\Delta \theta_t=-\alpha_t g_t$</td>
+<td>$f_t=-\alpha_t g_t$</td>
 </tr>
-<tr class="even">
+<tr>
 <td>步长</td>
-<td><span class="math inline">\(\alpha_t\)</span></td>
-<td><span class="math inline">\(\alpha_t\)</span></td>
+<td>$\alpha_t$</td>
+<td>$\alpha_t$</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>初始值</td>
-<td><span class="math inline">\(\theta_0\)</span></td>
-<td><span class="math inline">\(f_0\)</span></td>
+<td>$\theta_0$</td>
+<td>$f_0$</td>
 </tr>
-</tbody>
-</table>
-<h2 id="gradient-boosting-tree-for-regression">Gradient Boosting Tree for Regression</h2>
-<p>我们先来讨论GBDT解决回归问题的算法。前面我们已经讨论过，在每一步GBDT的优化目标是损失函数的负梯度，那么现在的问题就是如何求得每一步最优的基模型（GBDT的基模型选用的是CART）。GBDT的算法步骤如下：</p>
+</tbody></table>
+<h2 id="Gradient-Boosting-Tree-for-Regression"><a href="#Gradient-Boosting-Tree-for-Regression" class="headerlink" title="Gradient Boosting Tree for Regression"></a>Gradient Boosting Tree for Regression</h2><p>我们先来讨论GBDT解决回归问题的算法。前面我们已经讨论过，在每一步GBDT的优化目标是损失函数的负梯度，那么现在的问题就是如何求得每一步最优的基模型（GBDT的基模型选用的是CART）。GBDT的算法步骤如下：</p>
 <blockquote>
 <p><strong>Gradient Boosting Tree Algorithm</strong></p>
-<p>INPUT: 训练样本<span class="math inline">\(\{(x_1,y_1),\cdots,(x_m,y_m)\}\)</span>，迭代轮数<span class="math inline">\(T\)</span>，损失函数<span class="math inline">\(L\)</span></p>
-<p>OUTPUT: 强模型<span class="math inline">\(F_T\)</span></p>
-<ol type="1">
-<li>初始化弱学习器<span class="math inline">\(f_0\)</span>，直接使用一个基模型在训练集上进行训练</li>
-<li>在步骤<span class="math inline">\(t=1...T\)</span>，对于每个样本计算负梯度<span class="math inline">\(r_{ti}=\left[\frac{\partial L(y_i,F_{t-1}(x_i))}{\partial F_{t-1}}\right]\)</span></li>
-<li>在<span class="math inline">\((x_i,r_{ti})\)</span>上训练得到一个CART回归树，确定树的结构</li>
-<li>假设一共有<span class="math inline">\(J\)</span>个叶子节点，那么对每个叶子节点计算最佳输出值<span class="math inline">\(c_{tj}=\mathop{\arg\min}\limits_{c_{tj}}\sum_{x_i\in R_{tj}} L(y_i,F_{t-1}(x_i)+c_{tj})\)</span>（其中<span class="math inline">\(c_{tj}\)</span>代表第<span class="math inline">\(j\)</span>个叶子的输出，<span class="math inline">\(R_{tj}\)</span>代表第<span class="math inline">\(j\)</span>个叶子对应的样本集合），确定每个叶子节点的输出</li>
-<li>更新强学习器<span class="math inline">\(F_t=F_{t-1}+f_t\)</span>，回到步骤2直到达到迭代轮数</li>
-<li>最终得到强学习器的表达式：<span class="math inline">\(f(x)=f_0(x)+\sum\limits_{t=1}^T\sum\limits_{j=1}^J c_{tj}\mathrm I(x\in R_{tj})\)</span></li>
+<p>INPUT: 训练样本${(x_1,y_1),\cdots,(x_m,y_m)}$，迭代轮数$T$，损失函数$L$</p>
+<p>OUTPUT: 强模型$F_T$</p>
+<ol>
+<li>初始化弱学习器$f_0$，直接使用一个基模型在训练集上进行训练</li>
+<li>在步骤$t=1…T$，对于每个样本计算负梯度$r_{ti}=\left[\frac{\partial L(y_i,F_{t-1}(x_i))}{\partial F_{t-1}}\right]$</li>
+<li>在$(x_i,r_{ti})$上训练得到一个CART回归树，确定树的结构</li>
+<li>假设一共有$J$个叶子节点，那么对每个叶子节点计算最佳输出值$c_{tj}=\mathop{\arg\min}\limits_{c_{tj}}\sum_{x_i\in R_{tj}} L(y_i,F_{t-1}(x_i)+c_{tj})$（其中$c_{tj}$代表第$j$个叶子的输出，$R_{tj}$代表第$j$个叶子对应的样本集合），确定每个叶子节点的输出</li>
+<li>更新强学习器$F_t=F_{t-1}+f_t$，回到步骤2直到达到迭代轮数</li>
+<li>最终得到强学习器的表达式：$f(x)=f_0(x)+\sum\limits_{t=1}^T\sum\limits_{j=1}^J c_{tj}\mathrm I(x\in R_{tj})$</li>
 </ol>
 </blockquote>
-<p>于是我们就得到了最终模型<span class="math inline">\(F_T\)</span>。</p>
-<h2 id="gradient-boosting-tree-for-classification">Gradient Boosting Tree for Classification</h2>
-<p>在处理分类任务时，由于输出是离散的值</p>
+<p>于是我们就得到了最终模型$F_T$。</p>
+<h2 id="Gradient-Boosting-Tree-for-Classification"><a href="#Gradient-Boosting-Tree-for-Classification" class="headerlink" title="Gradient Boosting Tree for Classification"></a>Gradient Boosting Tree for Classification</h2><p>在处理分类任务时，由于输出是离散的值</p>
 <p>一种方法是使用指数损失函数，此时GBDT退化为AdaBoost；另一种方法是借鉴逻辑回归的方法，去建模真实值的概率</p>
-<h3 id="binary-classification">Binary Classification</h3>
-<h3 id="multi-class-classfication">Multi-class Classfication</h3>
-<h2 id="gbdt-sumarry">GBDT Sumarry</h2>
-<p>优点：</p>
-<ol type="1">
+<h3 id="Binary-Classification"><a href="#Binary-Classification" class="headerlink" title="Binary Classification"></a>Binary Classification</h3><h3 id="Multi-class-Classfication"><a href="#Multi-class-Classfication" class="headerlink" title="Multi-class Classfication"></a>Multi-class Classfication</h3><h2 id="GBDT-Sumarry"><a href="#GBDT-Sumarry" class="headerlink" title="GBDT Sumarry"></a>GBDT Sumarry</h2><p>优点：</p>
+<ol>
 <li>可以灵活处理</li>
 <li>相对SVM，调参较少</li>
 <li>使用某些损失函数对异常值的鲁棒性高</li>
 </ol>
 <p>缺点：</p>
-<ol type="1">
+<ol>
 <li>难以并行训练</li>
 </ol>
-<h1 id="xgboost">XGBoost</h1>
-<p>前面我们讲了梯度下降和牛顿法，刚才又讨论了GBDT和梯度下降的关系，那么XGBoost是否和牛顿法有什么关系呢？答案是肯定的。GBDT利用了损失函数在<span class="math inline">\(F_{t-1}\)</span>的一阶展开（即一阶导数信息），而XGBoost则利用了损失函数在<span class="math inline">\(F_{t-1}\)</span>的二阶展开，这也是XGBoost和GBDT最根本的区别。下面我们将详细讲解XGBoost算法。</p>
+<h1 id="XGBoost"><a href="#XGBoost" class="headerlink" title="XGBoost"></a>XGBoost</h1><p>前面我们讲了梯度下降和牛顿法，刚才又讨论了GBDT和梯度下降的关系，那么XGBoost是否和牛顿法有什么关系呢？答案是肯定的。GBDT利用了损失函数在$F_{t-1}$的一阶展开（即一阶导数信息），而XGBoost则利用了损失函数在$F_{t-1}$的二阶展开，这也是XGBoost和GBDT最根本的区别。下面我们将详细讲解XGBoost算法。</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th></th>
 <th>牛顿法</th>
 <th>XGBoost</th>
 </tr>
 </thead>
-<tbody>
-<tr class="odd">
+<tbody><tr>
 <td>损失函数</td>
-<td><span class="math inline">\(L(\theta)\)</span></td>
-<td><span class="math inline">\(L(F_t)\)</span></td>
+<td>$L(\theta)$</td>
+<td>$L(F_t)$</td>
 </tr>
-<tr class="even">
+<tr>
 <td>参数</td>
-<td><span class="math inline">\(\theta^t\)</span></td>
-<td><span class="math inline">\(F_t\)</span></td>
+<td>$\theta^t$</td>
+<td>$F_t$</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>增量</td>
-<td><span class="math inline">\(\Delta \theta_t=-\alpha_t H^{-1}_tg_t\)</span></td>
-<td><span class="math inline">\(f_t=-\alpha_t H^{-1}_tg_t\)</span></td>
+<td>$\Delta \theta_t=-\alpha_t H^{-1}_tg_t$</td>
+<td>$f_t=-\alpha_t H^{-1}_tg_t$</td>
 </tr>
-<tr class="even">
+<tr>
 <td>步长</td>
-<td><span class="math inline">\(\alpha_t\)</span></td>
-<td><span class="math inline">\(\alpha_t\)</span></td>
+<td>$\alpha_t$</td>
+<td>$\alpha_t$</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>初始值</td>
-<td><span class="math inline">\(\theta_0\)</span></td>
-<td><span class="math inline">\(f_0\)</span></td>
+<td>$\theta_0$</td>
+<td>$f_0$</td>
 </tr>
-</tbody>
-</table>
-<h2 id="regularization">Regularization</h2>
-<p>XGBoost相比GBDT的另一大改进是加入了正则化项，即控制每个树的复杂度。衡量树的复杂度的度量有很多，XGBoost采用的是每棵树叶子节点的个数<span class="math inline">\(T\)</span>和每个叶子节点输出<span class="math inline">\(w\)</span>的平方和： <span class="math display">\[
-\Omega(f)=\gamma T+\frac{1}{2}\lambda\parallel w\parallel^2
-\]</span></p>
+</tbody></table>
+<h2 id="Regularization"><a href="#Regularization" class="headerlink" title="Regularization"></a>Regularization</h2><p>XGBoost相比GBDT的另一大改进是加入了正则化项，即控制每个树的复杂度。衡量树的复杂度的度量有很多，XGBoost采用的是每棵树叶子节点的个数$T$和每个叶子节点输出$w$的平方和：<br>$$<br>\Omega(f)=\gamma T+\frac{1}{2}\lambda\parallel w\parallel^2<br>$$</p>
 <p>这一步主要是为了进一步降低每个弱学习器的方差。</p>
-<h2 id="objective-function">Objective Function</h2>
-<p>加上正则项之后总的损失函数变为： <span class="math display">\[
-L=\sum_{i=1}^N \ell(y_i, F_T(x_i))+\Omega(F_T)
-\]</span> 和GBDT类似，我们来推导第<span class="math inline">\(t\)</span>步的优化公式，对于第<span class="math inline">\(t\)</span>步，我们的损失函数为： <span class="math display">\[
-\begin{align}
-L_t&amp;=\sum_{i=1}^N \ell(y_i,F_t(x_i))+\Omega(F_t)\\
-&amp;=\sum_{i=1}^N \ell(y_i, F_{t-1}(x_i) + f_t(x_i))+\Omega(F_t)
-\end{align}
-\]</span> 将损失函数在<span class="math inline">\(F_{t-1}\)</span>处进行二阶泰勒展开，得到 <span class="math display">\[
-L_t \approx \left[\sum_{i=1}^N \ell(y_i, F_{t-1}) + g_i f_t(x_i) + \frac{1}{2}h_i f_t^2(x_i) \right] + \Omega(F_t)
-\]</span> 其中<span class="math inline">\(g_i=\frac{\partial \ell(y_i, F_{t-1})}{\partial F_{t-1}}\)</span>，<span class="math inline">\(h_i=\frac{\partial \ell(y_i, F_{t-1}) ^2}{\partial^2 F_{t-1}}\)</span>，分别代表损失函数对<span class="math inline">\(F_{t-1}\)</span>的一阶导和二阶导。</p>
-<p>由于我们要优化的是本轮的基模型<span class="math inline">\(f_t\)</span>，<span class="math inline">\(\ell(y_i, F_{t-1})\)</span>已经是固定的了，相当于常数，把常数项去掉，得到： <span class="math display">\[
-\begin{align}
-\tilde L_t &amp;= \left[\sum_{i=1}^N  g_i f_t(x_i) + \frac{1}{2}h_i f_t^2(x_i) \right] + \Omega(f_t)\\
-&amp;=\left[\sum_{i=1}^N  g_i f_t(x_i) + \frac{1}{2}h_i f_t^2(x_i) \right] + \gamma T + \frac{1}{2}\lambda \parallel w \parallel^2
-\end{align}
-\]</span> 我们都知道样本<span class="math inline">\(x_i\)</span>在树<span class="math inline">\(f_t\)</span>上的输出取决于<span class="math inline">\(x_i\)</span>在哪个叶子节点。假设树<span class="math inline">\(f_t\)</span>一共有<span class="math inline">\(J\)</span>个叶节点，记<span class="math inline">\(q(x_i)=j\)</span>代表样本<span class="math inline">\(x_i\)</span>经过决策树对应的叶节点是<span class="math inline">\(j\)</span>，<span class="math inline">\(I_j\)</span>代表叶子节点<span class="math inline">\(j\)</span>的所有样本下标集合，<span class="math inline">\(w_j\)</span>代表叶子节点<span class="math inline">\(j\)</span>的输出，我们可以将损失函数改写为： <span class="math display">\[
-\begin{align}
-\tilde L_t &amp;= \sum_{j=1}^J\left[\sum_{i\in I_j}g_i w_j+\frac{1}{2}(\sum_{i\in I_j}h_i +\lambda)w_j^2\right]+\gamma T\\
-&amp;= \sum_{j=1}^J\left[G_j w_j + \frac{1}{2}(H_j+\lambda)w_j^2 \right] + \gamma T
-\end{align}
-\]</span> 其中<span class="math inline">\(G_j=\sum_{i\in I_j}g_i\)</span>和<span class="math inline">\(H_j=\sum_{i\in I_j}h_i\)</span>为简记，分别代表损失函数在叶子节点<span class="math inline">\(j\)</span>对应的所有样本上的一阶导之和与二阶导之和。</p>
-<p>到现在，我们还剩两个问题需要解决，一个是确定树<span class="math inline">\(f_t\)</span>的最优结构，也就是怎么去分裂节点，另一个是确定每个叶子节点的最优输出。我们可以先确定下一个问题，找到另一个问题的最优答案，再来确定剩下的问题。</p>
-<p>这里先去寻找树<span class="math inline">\(f_t\)</span>每一个叶子节点对应的最优输出。和牛顿法的推导类似，为了使损失函数下降的最快，我们令<span class="math inline">\(G_j w_j + \frac{1}{2}(H_j+\lambda)w_j^2\)</span>的导数为<span class="math inline">\(0\)</span>，得到： <span class="math display">\[
-w_j^*=-\frac{G_j}{H_j + \lambda}
-\]</span> 加上正则项有： <span class="math display">\[
-\tilde L_t^*=-\frac{1}{2}\sum_{j=1}^J\frac{G_j^2}{H_j+\lambda}+\gamma T
-\]</span></p>
-<h2 id="splitting-strategy">Splitting Strategy</h2>
-<p>现在来确定树<span class="math inline">\(f_t\)</span>的最优结构。最优结构的确定实际上使用了一种类似贪心的策略，和决策树类似，我们从一个只有根节点的树出发（所有样本都在根节点这一叶子节点上），不断分裂节点来降低<span class="math inline">\(\tilde L_t^*\)</span>。在每一步的分裂中，我们会希望<span class="math inline">\(\frac{G_j^2}{H_j+\lambda}\)</span>越大越好，于是： <span class="math display">\[
-Gain = \frac{G_L^2}{H_L+\lambda} + \frac{G_R^2}{H_R+\lambda} - \frac{(G_L+G_R)^2}{H_L+H_R+\lambda} - \gamma
-\]</span></p>
-<p>我们希望挑选能使得<span class="math inline">\(Gain\)</span>最大的特征和特征分裂点，而选择的策略又有很多种，下面介绍三种。</p>
-<h3 id="exact-greedy-algorithm-for-split-finding">Exact Greedy Algorithm for Split Finding</h3>
-<p>最简单的方法是枚举所有特征，然后对于这个特征下的所有可能取值进行排序，然后遍历分裂点，找到使得<span class="math inline">\(gain\)</span>最高的那个。这样做的好处是找到的分裂点确定是最好的，不过坏处是时间复杂度过高。</p>
-<h3 id="approximate-algorithm-for-split-finding">Approximate Algorithm for Split Finding</h3>
-<p>一个比较容易想到的优化方案是不去遍历所有可能的分裂点，而是只考察其中的分位数，如下图展示了三分位数方法：</p>
-<p><img src="https://i.loli.net/2020/09/10/HoPR9XlpZSm1Gju.png" /></p>
+<h2 id="Objective-Function"><a href="#Objective-Function" class="headerlink" title="Objective Function"></a>Objective Function</h2><p>加上正则项之后总的损失函数变为：<br>$$<br>L=\sum_{i=1}^N \ell(y_i, F_T(x_i))+\Omega(F_T)<br>$$<br>和GBDT类似，我们来推导第$t$步的优化公式，对于第$t$步，我们的损失函数为：<br>$$<br>\begin{align}<br>L_t&amp;=\sum_{i=1}^N \ell(y_i,F_t(x_i))+\Omega(F_t)\<br>&amp;=\sum_{i=1}^N \ell(y_i, F_{t-1}(x_i) + f_t(x_i))+\Omega(F_t)<br>\end{align}<br>$$<br>将损失函数在$F_{t-1}$处进行二阶泰勒展开，得到<br>$$<br>L_t \approx \left[\sum_{i=1}^N \ell(y_i, F_{t-1}) + g_i f_t(x_i) + \frac{1}{2}h_i f_t^2(x_i) \right] + \Omega(F_t)<br>$$<br>其中$g_i=\frac{\partial \ell(y_i, F_{t-1})}{\partial F_{t-1}}$，$h_i=\frac{\partial \ell(y_i, F_{t-1}) ^2}{\partial^2 F_{t-1}}$，分别代表损失函数对$F_{t-1}$的一阶导和二阶导。</p>
+<p>由于我们要优化的是本轮的基模型$f_t$，$\ell(y_i, F_{t-1})$已经是固定的了，相当于常数，把常数项去掉，得到：<br>$$<br>\begin{align}<br>\tilde L_t &amp;= \left[\sum_{i=1}^N  g_i f_t(x_i) + \frac{1}{2}h_i f_t^2(x_i) \right] + \Omega(f_t)\<br>&amp;=\left[\sum_{i=1}^N  g_i f_t(x_i) + \frac{1}{2}h_i f_t^2(x_i) \right] + \gamma T + \frac{1}{2}\lambda \parallel w \parallel^2<br>\end{align}<br>$$<br>我们都知道样本$x_i$在树$f_t$上的输出取决于$x_i$在哪个叶子节点。假设树$f_t$一共有$J$个叶节点，记$q(x_i)=j$代表样本$x_i$经过决策树对应的叶节点是$j$，$I_j$代表叶子节点$j$的所有样本下标集合，$w_j$代表叶子节点$j$的输出，我们可以将损失函数改写为：<br>$$<br>\begin{align}<br>\tilde L_t &amp;= \sum_{j=1}^J\left[\sum_{i\in I_j}g_i w_j+\frac{1}{2}(\sum_{i\in I_j}h_i +\lambda)w_j^2\right]+\gamma T\<br>&amp;= \sum_{j=1}^J\left[G_j w_j + \frac{1}{2}(H_j+\lambda)w_j^2 \right] + \gamma T<br>\end{align}<br>$$<br>其中$G_j=\sum_{i\in I_j}g_i$和$H_j=\sum_{i\in I_j}h_i$为简记，分别代表损失函数在叶子节点$j$对应的所有样本上的一阶导之和与二阶导之和。</p>
+<p>到现在，我们还剩两个问题需要解决，一个是确定树$f_t$的最优结构，也就是怎么去分裂节点，另一个是确定每个叶子节点的最优输出。我们可以先确定下一个问题，找到另一个问题的最优答案，再来确定剩下的问题。</p>
+<p>这里先去寻找树$f_t$每一个叶子节点对应的最优输出。和牛顿法的推导类似，为了使损失函数下降的最快，我们令$G_j w_j + \frac{1}{2}(H_j+\lambda)w_j^2$的导数为$0$，得到：<br>$$<br>w_j^*=-\frac{G_j}{H_j + \lambda}<br>$$<br>加上正则项有：<br>$$<br>\tilde L_t^*=-\frac{1}{2}\sum_{j=1}^J\frac{G_j^2}{H_j+\lambda}+\gamma T<br>$$</p>
+<h2 id="Splitting-Strategy"><a href="#Splitting-Strategy" class="headerlink" title="Splitting Strategy"></a>Splitting Strategy</h2><p>现在来确定树$f_t$的最优结构。最优结构的确定实际上使用了一种类似贪心的策略，和决策树类似，我们从一个只有根节点的树出发（所有样本都在根节点这一叶子节点上），不断分裂节点来降低$\tilde L_t^*$。在每一步的分裂中，我们会希望$\frac{G_j^2}{H_j+\lambda}$越大越好，于是：<br>$$<br>Gain = \frac{G_L^2}{H_L+\lambda} + \frac{G_R^2}{H_R+\lambda} - \frac{(G_L+G_R)^2}{H_L+H_R+\lambda} - \gamma<br>$$</p>
+<p>我们希望挑选能使得$Gain$最大的特征和特征分裂点，而选择的策略又有很多种，下面介绍三种。</p>
+<h3 id="Exact-Greedy-Algorithm-for-Split-Finding"><a href="#Exact-Greedy-Algorithm-for-Split-Finding" class="headerlink" title="Exact Greedy Algorithm for Split Finding"></a>Exact Greedy Algorithm for Split Finding</h3><p>最简单的方法是枚举所有特征，然后对于这个特征下的所有可能取值进行排序，然后遍历分裂点，找到使得$gain$最高的那个。这样做的好处是找到的分裂点确定是最好的，不过坏处是时间复杂度过高。</p>
+<h3 id="Approximate-Algorithm-for-Split-Finding"><a href="#Approximate-Algorithm-for-Split-Finding" class="headerlink" title="Approximate Algorithm for Split Finding"></a>Approximate Algorithm for Split Finding</h3><p>一个比较容易想到的优化方案是不去遍历所有可能的分裂点，而是只考察其中的分位数，如下图展示了三分位数方法：</p>
+<p><img src="https://i.loli.net/2020/09/10/HoPR9XlpZSm1Gju.png"></p>
 <p>这样需要考察的点就大大减少。</p>
 <p>同时分位数的选择由有global和local之分，global是指在训练之前我们就可以提前对每个特征的分位数进行预处理，local是指每次分裂前计算分位数点。直观上来说global需要更多的分位点数，而local则需要更多的计算量。</p>
-<p>实际上，XGBoost还会使用二阶导信息<span class="math inline">\(h_i\)</span>对样本进行夹权，如下图所示：</p>
-<p><img src="https://i.loli.net/2020/09/15/nxloKNmTHwJRqI9.png" /></p>
-<h3 id="sparsity-aware-split-finding">Sparsity-aware Split Finding</h3>
-<p>稀疏感知分裂算法 (Sparsity-aware Split Finding)</p>
-<h2 id="other-features">Other Features</h2>
-<p>除了上面提到的之外，XGBoost还有很多工程优化。</p>
-<h3 id="block-structure-and-parallelism">Block Structure and Parallelism</h3>
-<p>XGBoost预先对特征进行了排序，</p>
+<p>实际上，XGBoost还会使用二阶导信息$h_i$对样本进行夹权，如下图所示：</p>
+<p><img src="https://i.loli.net/2020/09/15/nxloKNmTHwJRqI9.png"></p>
+<h3 id="Sparsity-aware-Split-Finding"><a href="#Sparsity-aware-Split-Finding" class="headerlink" title="Sparsity-aware Split Finding"></a>Sparsity-aware Split Finding</h3><p>稀疏感知分裂算法 (Sparsity-aware Split Finding) </p>
+<h2 id="Other-Features"><a href="#Other-Features" class="headerlink" title="Other Features"></a>Other Features</h2><p>除了上面提到的之外，XGBoost还有很多工程优化。</p>
+<h3 id="Block-Structure-and-Parallelism"><a href="#Block-Structure-and-Parallelism" class="headerlink" title="Block Structure and Parallelism"></a>Block Structure and Parallelism</h3><p>XGBoost预先对特征进行了排序，</p>
 <p>每个特征的增益的计算可以并行进行</p>
-<h3 id="column-sample">Column Sample</h3>
-<p>借鉴随机森林，即每次只用一部分特征进行特征选择，进一步降低过拟合</p>
-<h3 id="shrinkage">Shrinkage</h3>
-<p>在每次迭代会对叶子节点的权总乘以一个系数，让后面的树有更大的学习空间。</p>
-<h3 id="custom-loss-function">Custom Loss Function</h3>
-<h3 id="missing-values">Missing Values</h3>
-<h1 id="lightgbm">LightGBM</h1>
-<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/227782064">parameter tuning</a></p>
-</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-08-24T08:17:36.000Z" title="2020-8-24 4:17:36 ├F10: PM┤">2020-08-24</time>发表</span><span class="level-item"><time dateTime="2020-08-24T10:25:42.220Z" title="2020-8-24 6:25:42 ├F10: PM┤">2020-08-24</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Representation-Learning/">Representation Learning</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2020/08/24/Unsupervised-Representation-Learning-by-Predicting-Random-Distances/">Unsupervised Representation Learning by Predicting Random Distances</a></h1><div class="content"><h1 id="introduction">Introduction</h1>
-<p>针对高维表格数据的表示学习，作者提出了基于预测预计变换后的距离的无监督表示学习框架RDP，并进行了理论上的讨论。To be finished...</p>
-<p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1912.12186">论文地址</a> <a target="_blank" rel="noopener" href="https://github.com/billhhh/RDP">代码地址</a></p>
-<h1 id="proposed-method">Proposed Method</h1>
-<h2 id="random-distance-prediction-model">Random Distance Prediction Model</h2>
-<p>对于很多下游任务来说，高维数据对模型效率和性能都很大，所以学习低维的有意义（能够最大限度保存原始空间的信息）的表示十分重要。本文的大致思想是给定一个确定的随机映射将样本映射到一个新的空间，然后构造数据集，输入时任意一对样本，标签是两个样本在新的空间的距离，之后训练一个模型来学习这个距离。作者认为通过该任务的训练，模型能够学到有意义的低维表示。模型的框架如下图：</p>
-<p><img src="https://i.loli.net/2020/07/19/vRV32EgLiYkWaQN.png" style="zoom: 50%;" /></p>
-<p>其中<span class="math inline">\(\phi(\mathbf x;\Theta):\mathbb R^D\mapsto\mathbb R^M\)</span>为孪生神经网络（Siamese Neural Network），将数据映射到<span class="math inline">\(M\)</span>的新空间。损失函数为：</p>
-<p><span class="math display">\[
-\mathcal L_{rdp}(\mathbf x_i,\mathbf x_j)=l(\langle \phi(\mathbf x_i;\Theta),\phi(\mathbf x_j;\Theta)\rangle,\langle\eta(\mathbf x_i),\eta(\mathbf x_j)\rangle)
-\]</span></p>
-<p>其中<span class="math inline">\(\eta(\cdot)\)</span>为已知的映射，<span class="math inline">\(l(\cdot)\)</span>为衡量两个输入相似程度的度量。具体的来说，文中选取了简单的实现方案，即采用内积作为映射后的样本的距离度量：</p>
-<p><span class="math display">\[
-\mathcal L_{rdp}(\mathbf x_i,\mathbf x_j)=\left(\phi(\mathbf x_i;\Theta)\cdot\phi(\mathbf x_j;\Theta)-\eta(\mathbf x_i)\cdot\eta(\mathbf x_j)\right)^2
-\]</span></p>
-<p><span class="math inline">\(\eta(\cdot)\)</span>为现成的映射。至于为什么要这么做，可以先接着看下面原文给出的理论分析，然后我再说说我自己的理解。</p>
-<h2 id="incorporating-task-dependent-complementary-auxiliary-loss">Incorporating Task-Dependent Complementary Auxiliary Loss</h2>
-<p>对于特定的下游任务，作者提出可以整合额外的误差函数来提高模型行性能。比如说针对聚类任务可以使用重构误差：</p>
-<p><span class="math display">\[
-\mathcal L_{aux}^{clu}(\mathbf x)=(\mathbf x-\phi^\prime(\phi(\mathbf x;\Theta); \Theta^\prime))^2
-\]</span></p>
-<p>其中<span class="math inline">\(\phi(\cdot)\)</span>和<span class="math inline">\(\phi^\prime(\cdot):\mathbb R^M\mapsto\mathbb R^D\)</span>分别为编码器和解码器。</p>
-<p>对于异常检测任务，可以使用下式： <span class="math display">\[
-\mathcal L_{aux}^{ad}(\mathbf x)=(\phi(\mathbf x;\Theta)-\eta(\mathbf x))^2
-\]</span></p>
-<p>这一个Loss本来是出现在强化学习的论文中，用来检测一个状态<span class="math inline">\(\mathbf x\)</span>出现的频率，如果预测误差较小，说明这个样本之前见过或见过类似的，否则没怎么见过，可以认为是异常。由于本文的目的主要是降维加保留原始空间信息，可以认为使用线性变换的话此目的已经达到了。</p>
-<h2 id="theoretical-analysis">Theoretical Analysis</h2>
-<h3 id="using-linear-projection">Using Linear Projection</h3>
-<p>这里讨论使用线性映射的情况，设数据集<span class="math inline">\(\mathcal X\subset\mathbb R^{N\times D}\)</span>，映射矩阵<span class="math inline">\(\mathbf A\subset\mathbb R^{K\times D}\)</span>为一随机矩阵，映射之后的数据为<span class="math inline">\(\mathbf A\mathcal X^\top\)</span>。对于<span class="math inline">\(\epsilon\in(0,\frac{1}{2})\)</span>和<span class="math inline">\(K=\frac{20\log n}{\epsilon^2}\)</span>，存在<span class="math inline">\(f:\mathbb R^D\mapsto\mathbb R^K\)</span>使得对于所有的<span class="math inline">\(\mathbf x_i,\mathbf x_j\in\mathcal X\)</span>有：</p>
-<p><span class="math display">\[
-(1-\epsilon)\parallel\mathbf x_i-\mathbf x_j \parallel^2\leq \parallel f(\mathbf x_i)-f(\mathbf x_j)\parallel^2\leq (1+\epsilon)\parallel\mathbf x_i-\mathbf x_j\parallel^2
-\]</span></p>
-<p>如果<span class="math inline">\(\mathbf A\)</span>的每个元素独立采样自标准正态分布那么有：</p>
-<p><span class="math display">\[
-\text{Pr}\left((1-\epsilon)\parallel\mathbf x\parallel^2\leq\parallel\frac{1}{\sqrt{K}}\mathbf A\mathbf x\parallel^2\leq(1+\epsilon)\parallel\mathbf x\parallel^2\right)\geq 1-2e^{\frac{-(\epsilon^2-\epsilon^3)K}{4}}
-\]</span></p>
+<h3 id="Column-Sample"><a href="#Column-Sample" class="headerlink" title="Column Sample"></a>Column Sample</h3><p>借鉴随机森林，即每次只用一部分特征进行特征选择，进一步降低过拟合</p>
+<h3 id="Shrinkage"><a href="#Shrinkage" class="headerlink" title="Shrinkage"></a>Shrinkage</h3><p>在每次迭代会对叶子节点的权总乘以一个系数，让后面的树有更大的学习空间。</p>
+<h3 id="Custom-Loss-Function"><a href="#Custom-Loss-Function" class="headerlink" title="Custom Loss Function"></a>Custom Loss Function</h3><h3 id="Missing-Values"><a href="#Missing-Values" class="headerlink" title="Missing Values"></a>Missing Values</h3><h1 id="LightGBM"><a href="#LightGBM" class="headerlink" title="LightGBM"></a>LightGBM</h1><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/227782064">parameter tuning</a></p>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-08-24T08:17:36.000Z" title="2020-8-24 4:17:36 ├F10: PM┤">2020-08-24</time>发表</span><span class="level-item"><time dateTime="2020-08-24T10:25:42.220Z" title="2020-8-24 6:25:42 ├F10: PM┤">2020-08-24</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Representation-Learning/">Representation Learning</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2020/08/24/Unsupervised-Representation-Learning-by-Predicting-Random-Distances/">Unsupervised Representation Learning by Predicting Random Distances</a></h1><div class="content"><h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>针对高维表格数据的表示学习，作者提出了基于预测预计变换后的距离的无监督表示学习框架RDP，并进行了理论上的讨论。To be finished…</p>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1912.12186">论文地址</a>         <a target="_blank" rel="noopener" href="https://github.com/billhhh/RDP">代码地址</a></p>
+<h1 id="Proposed-Method"><a href="#Proposed-Method" class="headerlink" title="Proposed Method"></a>Proposed Method</h1><h2 id="Random-Distance-Prediction-Model"><a href="#Random-Distance-Prediction-Model" class="headerlink" title="Random Distance Prediction Model"></a>Random Distance Prediction Model</h2><p>对于很多下游任务来说，高维数据对模型效率和性能都很大，所以学习低维的有意义（能够最大限度保存原始空间的信息）的表示十分重要。本文的大致思想是给定一个确定的随机映射将样本映射到一个新的空间，然后构造数据集，输入时任意一对样本，标签是两个样本在新的空间的距离，之后训练一个模型来学习这个距离。作者认为通过该任务的训练，模型能够学到有意义的低维表示。模型的框架如下图：</p>
+<img src="https://i.loli.net/2020/07/19/vRV32EgLiYkWaQN.png" style="zoom: 50%;" />
+
+<p>其中$\phi(\mathbf x;\Theta):\mathbb R^D\mapsto\mathbb R^M$为孪生神经网络（Siamese Neural Network），将数据映射到$M$的新空间。损失函数为：</p>
+<p>$$<br>\mathcal L_{rdp}(\mathbf x_i,\mathbf x_j)=l(\langle \phi(\mathbf x_i;\Theta),\phi(\mathbf x_j;\Theta)\rangle,\langle\eta(\mathbf x_i),\eta(\mathbf x_j)\rangle)<br>$$</p>
+<p>其中$\eta(\cdot)$为已知的映射，$l(\cdot)$为衡量两个输入相似程度的度量。具体的来说，文中选取了简单的实现方案，即采用内积作为映射后的样本的距离度量：</p>
+<p>$$<br>\mathcal L_{rdp}(\mathbf x_i,\mathbf x_j)=\left(\phi(\mathbf x_i;\Theta)\cdot\phi(\mathbf x_j;\Theta)-\eta(\mathbf x_i)\cdot\eta(\mathbf x_j)\right)^2<br>$$</p>
+<p>$\eta(\cdot)$为现成的映射。至于为什么要这么做，可以先接着看下面原文给出的理论分析，然后我再说说我自己的理解。</p>
+<h2 id="Incorporating-Task-Dependent-Complementary-Auxiliary-Loss"><a href="#Incorporating-Task-Dependent-Complementary-Auxiliary-Loss" class="headerlink" title="Incorporating Task-Dependent Complementary Auxiliary Loss"></a>Incorporating Task-Dependent Complementary Auxiliary Loss</h2><p>对于特定的下游任务，作者提出可以整合额外的误差函数来提高模型行性能。比如说针对聚类任务可以使用重构误差：</p>
+<p>$$<br>\mathcal L_{aux}^{clu}(\mathbf x)=(\mathbf x-\phi^\prime(\phi(\mathbf x;\Theta); \Theta^\prime))^2<br>$$</p>
+<p>其中$\phi(\cdot)$和$\phi^\prime(\cdot):\mathbb R^M\mapsto\mathbb R^D$分别为编码器和解码器。</p>
+<p>对于异常检测任务，可以使用下式：<br>$$<br>\mathcal L_{aux}^{ad}(\mathbf x)=(\phi(\mathbf x;\Theta)-\eta(\mathbf x))^2<br>$$</p>
+<p>这一个Loss本来是出现在强化学习的论文中，用来检测一个状态$\mathbf x$出现的频率，如果预测误差较小，说明这个样本之前见过或见过类似的，否则没怎么见过，可以认为是异常。由于本文的目的主要是降维加保留原始空间信息，可以认为使用线性变换的话此目的已经达到了。</p>
+<h2 id="Theoretical-Analysis"><a href="#Theoretical-Analysis" class="headerlink" title="Theoretical Analysis"></a>Theoretical Analysis</h2><h3 id="Using-Linear-Projection"><a href="#Using-Linear-Projection" class="headerlink" title="Using Linear Projection"></a>Using Linear Projection</h3><p>这里讨论使用线性映射的情况，设数据集$\mathcal X\subset\mathbb R^{N\times D}$，映射矩阵$\mathbf A\subset\mathbb R^{K\times D}$为一随机矩阵，映射之后的数据为$\mathbf A\mathcal X^\top$。对于$\epsilon\in(0,\frac{1}{2})$和$K=\frac{20\log n}{\epsilon^2}$，存在$f:\mathbb R^D\mapsto\mathbb R^K$使得对于所有的$\mathbf x_i,\mathbf x_j\in\mathcal X$有：</p>
+<p>$$<br>(1-\epsilon)\parallel\mathbf x_i-\mathbf x_j \parallel^2\leq \parallel f(\mathbf x_i)-f(\mathbf x_j)\parallel^2\leq (1+\epsilon)\parallel\mathbf x_i-\mathbf x_j\parallel^2<br>$$</p>
+<p>如果$\mathbf A$的每个元素独立采样自标准正态分布那么有：</p>
+<p>$$<br>\text{Pr}\left((1-\epsilon)\parallel\mathbf x\parallel^2\leq\parallel\frac{1}{\sqrt{K}}\mathbf A\mathbf x\parallel^2\leq(1+\epsilon)\parallel\mathbf x\parallel^2\right)\geq 1-2e^{\frac{-(\epsilon^2-\epsilon^3)K}{4}}<br>$$</p>
 <p>在该随机映射下有：</p>
-<p><span class="math display">\[
-\text{Pr}(|\hat{\mathbf x}_i\cdot\hat{\mathbf x}_j-f(\hat{\mathbf x}_i)\cdot f(\hat{\mathbf x}_j)|\geq\epsilon)\leq 4e^{\frac{-(\epsilon^2-\epsilon^3)\cdot K}{4}}
-\]</span></p>
+<p>$$<br>\text{Pr}(|\hat{\mathbf x}_i\cdot\hat{\mathbf x}_j-f(\hat{\mathbf x}_i)\cdot f(\hat{\mathbf x}_j)|\geq\epsilon)\leq 4e^{\frac{-(\epsilon^2-\epsilon^3)\cdot K}{4}}<br>$$</p>
 <p>直观的解释就是说使用线性映射的情况下，只要使用的变换矩阵采样自标准正态分布，那么变换之后样本对之间的距离信息能够以一定的概率保留。</p>
-<h3 id="using-non-linear-projection">Using Non-Linear Projection</h3>
-<p>这里作者试图说明，在某些条件下，非线性随机映射的作用和核函数接近。对于一个确定的随机映射函数<span class="math inline">\(g:\mathbb R^D\mapsto\mathbb R^K\)</span>，在某些特定的条件下，函数<span class="math inline">\(g\)</span>和核函数存在下列关系：</p>
-<p><span class="math display">\[
-k(\mathbf x_i,\mathbf x_j)=\langle\psi(\mathbf x_i),\psi(\mathbf x_j)\rangle\approx g(\mathbf x_i)\cdot g(\mathbf x_j)
-\]</span></p>
-<p>这个条件是函数<span class="math inline">\(g\)</span>为一个乘以一个线性矩阵<span class="math inline">\(\mathbf A\)</span>然后在经过一个具备平移不变性的傅里叶基函数（如cosine）。由于核函数能够保留原始空间的信息，所以作者认为使用非线性函数也能保留原始空间的信息。</p>
+<h3 id="Using-Non-Linear-Projection"><a href="#Using-Non-Linear-Projection" class="headerlink" title="Using Non-Linear Projection"></a>Using Non-Linear Projection</h3><p>这里作者试图说明，在某些条件下，非线性随机映射的作用和核函数接近。对于一个确定的随机映射函数$g:\mathbb R^D\mapsto\mathbb R^K$，在某些特定的条件下，函数$g$和核函数存在下列关系：</p>
+<p>$$<br>k(\mathbf x_i,\mathbf x_j)=\langle\psi(\mathbf x_i),\psi(\mathbf x_j)\rangle\approx g(\mathbf x_i)\cdot g(\mathbf x_j)<br>$$</p>
+<p>这个条件是函数$g$为一个乘以一个线性矩阵$\mathbf A$然后在经过一个具备平移不变性的傅里叶基函数（如cosine）。由于核函数能够保留原始空间的信息，所以作者认为使用非线性函数也能保留原始空间的信息。</p>
 <blockquote>
 <p>PS: 感觉作者在理论部分的讨论还是有点模糊，因为把一个随机的映射作为（伪）监督信息来进行学习，神经网络学到的不也就是随机噪声信息吗？对于这个方法work的原因，我在这里不负责任的分析一下。</p>
 </blockquote>
-<h3 id="learning-class-structure-by-random-distance-prediction">Learning Class Structure by Random Distance Prediction</h3>
-<p>这一节主要解释为什么神经网络<span class="math inline">\(\phi(\cdot)\)</span>学到的要比随机映射<span class="math inline">\(\eta(\cdot)\)</span>要好。模型的优化目标可以写成如下的形式：</p>
-<p><span class="math display">\[
-\mathop{\arg\min}_{\Theta}\sum_{\mathbf x_i,\mathbf x_j\in\mathcal X}(\phi(\mathbf x_i;\Theta)\cdot\phi(\mathbf x_j;\Theta)-y_{ij})^2
-\]</span></p>
-<p>其中<span class="math inline">\(y_{ij}=\eta(\mathbf x_i)\cdot\eta(\mathbf x_j)\)</span>。设<span class="math inline">\(\mathbf Y_\eta\in\mathbb R^{N\times N}\)</span>为距离矩阵。这个目标函数是在最小化每一对样本在经过<span class="math inline">\(\phi(\cdot)\)</span>和<span class="math inline">\(\eta(\cdot)\)</span>映射后之间的距离的差距。通过公式(7)和公式(8)我们知道，在合适的条件下，随机映射<span class="math inline">\(\eta(\cdot)\)</span>能够保留原始空间的距离信息（即原始空间相近的样本在映射后也相近）。不过，上述公式的成立都依赖于对数据分布的一定假设，当真实的数据不满足条件时，结论就会有所偏差。</p>
-<h1 id="experiments">Experiments</h1>
-<h2 id="performance-evaluation-in-anomaly-detection">Performance Evaluation in Anomaly Detection</h2>
-<h3 id="experimental-settings">Experimental Settings</h3>
-<p><img src="https://i.loli.net/2020/07/20/3G7DNKjwfQkiIz4.png" /></p>
-<p>异常分数定义为<span class="math inline">\(\mathcal S(\mathbf x)=(\phi(\mathbf x;\Theta)-\eta(\mathbf x))^2\)</span>。</p>
-<h3 id="comparison-to-the-state-of-the-art-competing-methods">Comparison to the State-of-the-art Competing Methods</h3>
-<p><img src="https://i.loli.net/2020/07/20/8Ie2Q3mpdPHtrYF.png" /></p>
-<p><img src="https://i.loli.net/2020/07/20/OEcQSvZmfBz1ACt.png" /></p>
-<h3 id="ablation-study">Ablation Study</h3>
-<p><img src="https://i.loli.net/2020/07/20/7GtKlN8q5Mvygre.png" /></p>
-<h2 id="performance-evaluation-in-clustering">Performance Evaluation in Clustering</h2>
-<h3 id="experimental-settings-1">Experimental Settings</h3>
-<p><img src="https://i.loli.net/2020/07/20/9xW12MVkoXgFZ6J.png" /></p>
-<h3 id="comparison-to-the-state-of-the-art-competing-methods-1">Comparison to the State-of-the-art Competing Methods</h3>
-<p><img src="https://i.loli.net/2020/07/20/pUZ64aX1xWiLf2q.png" /></p>
-<figure>
-<img src="https://i.loli.net/2020/07/20/VrnXuJsymiMItUf.png" alt="" /><figcaption>image-20200720014002063</figcaption>
-</figure>
-</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-07-14T10:46:13.000Z" title="2020-7-14 6:46:13 ├F10: PM┤">2020-07-14</time>发表</span><span class="level-item"><time dateTime="2020-07-21T12:35:42.220Z" title="2020-7-21 8:35:42 ├F10: PM┤">2020-07-21</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2020/07/14/Effective-End-to-end-Unsupervised-Outlier-Detection-via-Linear-Priority-of-Discriminative-Network/">Effective End-to-end Unsupervised Outlier Detection via Linear Priority of Discriminative Network</a></h1><div class="content"><h1 id="introduction">Introduction</h1>
-<p>本文针对无监督异常检测提出了<span class="math inline">\(E^3\space{Outlier}\)</span>。作者使用自监督学习的方法，通过构建有监督任务在没有标签的情况下学习高层语义特征。PS：这篇文章的方法和NIPS18上的<em>Deep Anomaly Detection Using Geometric Transformations</em>（后面简称GEOM）颇为相似，但是不知为啥没有在实验中进行比较。后面我会分析一些两篇文章方法上的异同。</p>
-<h1 id="proposed-method">Proposed Method</h1>
-<h2 id="surrogate-supervision-based-effective-representation-learning-for-uod">Surrogate Supervision Based Effective Representation Learning for UOD</h2>
-<p>这里作者提到了使用重构的模型来进行异常检测的不足：重构模型采用像素级别的损失函数（如mean square error），而这太过于严格和细节，并不能学到高层语义特征。</p>
-<p>为此，作者提出了<em>surrogate supervision based discriminative network</em> (SSD)。具体操作和GEOM类似，首先预定义大小为<span class="math inline">\(K\)</span>的几何变换集合<span class="math inline">\(\mathcal O=\{O(\cdot|y)\}_{y=1}^K\)</span>。对每一个样本<span class="math inline">\(\mathbf x\)</span>，在经过<span class="math inline">\(K\)</span>个集合变换之后会得到<span class="math inline">\(K\)</span>个变换后的样本（第<span class="math inline">\(y\)</span>个变换产生的样本即记为<span class="math inline">\(\mathbf x^{(y)}=O(\mathbf x|y)\)</span>），每个样本对应的pseudo label即为变换的序号或者说种类。之后在新的数据集上（大小为原来的<span class="math inline">\(K\)</span>倍）训练<span class="math inline">\(K\)</span>分类网络。网络的输出为<span class="math inline">\(P(\mathbf x^{(y^\prime)}|\boldsymbol\theta)=[P^{(y)}(\mathbf x^{(y^\prime)}|\boldsymbol\theta)]_{y=1}^K\)</span>，每个维度代表输入样本对应的变换的概率。总的损失函数为： <span class="math display">\[
-\min_\theta\frac{1}{N}\sum_{i=1}^{N}\mathcal L_{SS}(\mathbf x_i|\theta)
-\]</span></p>
-<p>其中<span class="math inline">\(\mathcal L_{SS}(\mathbf x_i|\theta)\)</span>代表每个样本对应的Loss，这个Loss可以由分类器在<span class="math inline">\(K\)</span>个变换上的交叉熵损失来确定：</p>
-<p><span class="math display">\[
-\mathcal L_{SS}(\mathbf x_i|\boldsymbol\theta)=-\frac{1}{K}\sum_{y=1}^K\log(P^{(y)}(\mathbf x_i^{(y)}|\boldsymbol\theta))=-\frac{1}{K}\sum_{y=1}^K\log(P^{(y)}(O(\mathbf x_i|y)|\boldsymbol\theta))
-\]</span> <img src="https://i.loli.net/2020/07/14/ULAdYpzsoGfFwtD.png" /></p>
-<p>变换集合<span class="math inline">\(\mathcal O\)</span>由一系列基本变换的组合确定。作者将这些基本变换分为了：1) 旋转 2) 翻转 3) 平移，包括横向和纵向 4) Patch置换（参考图1(a)中的Patch Re-arranging）。最终的变换集合<span class="math inline">\(\mathcal O\)</span>由三个子集组成，分别是<span class="math inline">\(\mathcal O_{RA}\)</span>（代表Regular Affine，其中每个变换为旋转<span class="math inline">\(90°\)</span>的倍数、翻转、横向平移和纵向平移这四个基本变换的叠加），<span class="math inline">\(\mathcal O_{IA}\)</span>（代表Irregular Affine，其中每个变换为进行<span class="math inline">\(30°\)</span>的倍数且不为<span class="math inline">\(90°\)</span>的倍数角度的旋转、翻转这两个基本变换的叠加）和<span class="math inline">\(\mathcal O_{PR}\)</span>（只包含Patch Re-arranging）。</p>
+<h3 id="Learning-Class-Structure-by-Random-Distance-Prediction"><a href="#Learning-Class-Structure-by-Random-Distance-Prediction" class="headerlink" title="Learning Class Structure by Random Distance Prediction"></a>Learning Class Structure by Random Distance Prediction</h3><p>这一节主要解释为什么神经网络$\phi(\cdot)$学到的要比随机映射$\eta(\cdot)$要好。模型的优化目标可以写成如下的形式：</p>
+<p>$$<br>\mathop{\arg\min}<em>{\Theta}\sum</em>{\mathbf x_i,\mathbf x_j\in\mathcal X}(\phi(\mathbf x_i;\Theta)\cdot\phi(\mathbf x_j;\Theta)-y_{ij})^2<br>$$</p>
+<p>其中$y_{ij}=\eta(\mathbf x_i)\cdot\eta(\mathbf x_j)$。设$\mathbf Y_\eta\in\mathbb R^{N\times N}$为距离矩阵。这个目标函数是在最小化每一对样本在经过$\phi(\cdot)$和$\eta(\cdot)$映射后之间的距离的差距。通过公式(7)和公式(8)我们知道，在合适的条件下，随机映射$\eta(\cdot)$能够保留原始空间的距离信息（即原始空间相近的样本在映射后也相近）。不过，上述公式的成立都依赖于对数据分布的一定假设，当真实的数据不满足条件时，结论就会有所偏差。</p>
+<h1 id="Experiments"><a href="#Experiments" class="headerlink" title="Experiments"></a>Experiments</h1><h2 id="Performance-Evaluation-in-Anomaly-Detection"><a href="#Performance-Evaluation-in-Anomaly-Detection" class="headerlink" title="Performance Evaluation in Anomaly Detection"></a>Performance Evaluation in Anomaly Detection</h2><h3 id="Experimental-Settings"><a href="#Experimental-Settings" class="headerlink" title="Experimental Settings"></a>Experimental Settings</h3><p><img src="https://i.loli.net/2020/07/20/3G7DNKjwfQkiIz4.png"></p>
+<p>异常分数定义为$\mathcal S(\mathbf x)=(\phi(\mathbf x;\Theta)-\eta(\mathbf x))^2$。</p>
+<h3 id="Comparison-to-the-State-of-the-art-Competing-Methods"><a href="#Comparison-to-the-State-of-the-art-Competing-Methods" class="headerlink" title="Comparison to the State-of-the-art Competing Methods"></a>Comparison to the State-of-the-art Competing Methods</h3><p><img src="https://i.loli.net/2020/07/20/8Ie2Q3mpdPHtrYF.png"></p>
+<p><img src="https://i.loli.net/2020/07/20/OEcQSvZmfBz1ACt.png"></p>
+<h3 id="Ablation-Study"><a href="#Ablation-Study" class="headerlink" title="Ablation Study"></a>Ablation Study</h3><p><img src="https://i.loli.net/2020/07/20/7GtKlN8q5Mvygre.png"></p>
+<h2 id="Performance-Evaluation-in-Clustering"><a href="#Performance-Evaluation-in-Clustering" class="headerlink" title="Performance Evaluation in Clustering"></a>Performance Evaluation in Clustering</h2><h3 id="Experimental-Settings-1"><a href="#Experimental-Settings-1" class="headerlink" title="Experimental Settings"></a>Experimental Settings</h3><p><img src="https://i.loli.net/2020/07/20/9xW12MVkoXgFZ6J.png"></p>
+<h3 id="Comparison-to-the-State-of-the-art-Competing-Methods-1"><a href="#Comparison-to-the-State-of-the-art-Competing-Methods-1" class="headerlink" title="Comparison to the State-of-the-art Competing Methods"></a>Comparison to the State-of-the-art Competing Methods</h3><p><img src="https://i.loli.net/2020/07/20/pUZ64aX1xWiLf2q.png"></p>
+<p><img src="https://i.loli.net/2020/07/20/VrnXuJsymiMItUf.png" alt="image-20200720014002063"></p>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-07-14T10:46:13.000Z" title="2020-7-14 6:46:13 ├F10: PM┤">2020-07-14</time>发表</span><span class="level-item"><time dateTime="2020-07-21T12:35:42.220Z" title="2020-7-21 8:35:42 ├F10: PM┤">2020-07-21</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2020/07/14/Effective-End-to-end-Unsupervised-Outlier-Detection-via-Linear-Priority-of-Discriminative-Network/">Effective End-to-end Unsupervised Outlier Detection via Linear Priority of Discriminative Network</a></h1><div class="content"><h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>本文针对无监督异常检测提出了$E^3\space{Outlier}$。作者使用自监督学习的方法，通过构建有监督任务在没有标签的情况下学习高层语义特征。PS：这篇文章的方法和NIPS18上的<em>Deep Anomaly Detection Using Geometric Transformations</em>（后面简称GEOM）颇为相似，但是不知为啥没有在实验中进行比较。后面我会分析一些两篇文章方法上的异同。</p>
+<h1 id="Proposed-Method"><a href="#Proposed-Method" class="headerlink" title="Proposed Method"></a>Proposed Method</h1><h2 id="Surrogate-Supervision-Based-Effective-Representation-Learning-for-UOD"><a href="#Surrogate-Supervision-Based-Effective-Representation-Learning-for-UOD" class="headerlink" title="Surrogate Supervision Based Effective Representation Learning for UOD"></a>Surrogate Supervision Based Effective Representation Learning for UOD</h2><p>这里作者提到了使用重构的模型来进行异常检测的不足：重构模型采用像素级别的损失函数（如mean square error），而这太过于严格和细节，并不能学到高层语义特征。</p>
+<p>为此，作者提出了<em>surrogate supervision based discriminative network</em> (SSD)。具体操作和GEOM类似，首先预定义大小为$K$的几何变换集合$\mathcal O={O(\cdot|y)}<em>{y=1}^K$。对每一个样本$\mathbf x$，在经过$K$个集合变换之后会得到$K$个变换后的样本（第$y$个变换产生的样本即记为$\mathbf x^{(y)}=O(\mathbf x|y)$），每个样本对应的pseudo label即为变换的序号或者说种类。之后在新的数据集上（大小为原来的$K$倍）训练$K$分类网络。网络的输出为$P(\mathbf x^{(y^\prime)}|\boldsymbol\theta)=[P^{(y)}(\mathbf x^{(y^\prime)}|\boldsymbol\theta)]</em>{y=1}^K$，每个维度代表输入样本对应的变换的概率。总的损失函数为：<br>$$<br>\min_\theta\frac{1}{N}\sum_{i=1}^{N}\mathcal L_{SS}(\mathbf x_i|\theta)<br>$$</p>
+<p>其中$\mathcal L_{SS}(\mathbf x_i|\theta)$代表每个样本对应的Loss，这个Loss可以由分类器在$K$个变换上的交叉熵损失来确定：</p>
+<p>$$<br>\mathcal L_{SS}(\mathbf x_i|\boldsymbol\theta)=-\frac{1}{K}\sum_{y=1}^K\log(P^{(y)}(\mathbf x_i^{(y)}|\boldsymbol\theta))=-\frac{1}{K}\sum_{y=1}^K\log(P^{(y)}(O(\mathbf x_i|y)|\boldsymbol\theta))<br>$$<br><img src="https://i.loli.net/2020/07/14/ULAdYpzsoGfFwtD.png"></p>
+<p>变换集合$\mathcal O$由一系列基本变换的组合确定。作者将这些基本变换分为了：1) 旋转 2) 翻转 3) 平移，包括横向和纵向 4) Patch置换（参考图1(a)中的Patch Re-arranging）。最终的变换集合$\mathcal O$由三个子集组成，分别是$\mathcal O_{RA}$（代表Regular Affine，其中每个变换为旋转$90°$的倍数、翻转、横向平移和纵向平移这四个基本变换的叠加），$\mathcal O_{IA}$（代表Irregular Affine，其中每个变换为进行$30°$的倍数且不为$90°$的倍数角度的旋转、翻转这两个基本变换的叠加）和$\mathcal O_{PR}$（只包含Patch Re-arranging）。</p>
 <p>为了验证SSD学到的特征的有效性，作者将CAE提取的特征和SSD提取的特征分别用孤立森林进行异常检测，发现SSD效果更好（见图1(b)）。</p>
-<p>到这里为止本文和GEOM基本没有大的区别。值得注意的是在所采用的几何变换中，采用了非线性变换（进行<span class="math inline">\(30°\)</span>的倍数且不为<span class="math inline">\(90°\)</span>的倍数角度的旋转）。而在GEOM中，提到过使用非线性变换的话效果会比较差，至于具体的影响如何，可能需要实验来确定。</p>
-<h2 id="inlier-priority-the-foundation-of-end-to-end-uod">Inlier Priority: The Foundation of End-to-end UOD</h2>
-<p>在这里作者主要对在训练集包含少量异常的情况下做出的理论分析，作者将其称为<em>Inlier Priority</em>，原句如下：</p>
+<p>到这里为止本文和GEOM基本没有大的区别。值得注意的是在所采用的几何变换中，采用了非线性变换（进行$30°$的倍数且不为$90°$的倍数角度的旋转）。而在GEOM中，提到过使用非线性变换的话效果会比较差，至于具体的影响如何，可能需要实验来确定。</p>
+<h2 id="Inlier-Priority-The-Foundation-of-End-to-end-UOD"><a href="#Inlier-Priority-The-Foundation-of-End-to-end-UOD" class="headerlink" title="Inlier Priority: The Foundation of End-to-end UOD"></a>Inlier Priority: The Foundation of End-to-end UOD</h2><p>在这里作者主要对在训练集包含少量异常的情况下做出的理论分析，作者将其称为<em>Inlier Priority</em>，原句如下：</p>
 <blockquote>
 <p><em>Inlier Priority</em>: Despite that inliers/outliersare indiscriminately fed into SSD for training, SSD will prioritize the minimization of inliers’ loss.</p>
 </blockquote>
-<h3 id="priority-by-gradient-magnitude">Priority by Gradient Magnitude</h3>
-<p>对于第<span class="math inline">\(c\)</span>个类来说，设<code>softmax</code>层和倒数第二层之间的权重矩阵为<span class="math inline">\(\mathbf w_c=[w_{s,c}]^{(L+1)}_{s=1}\)</span>，损失函数记为<span class="math inline">\(\mathcal L\)</span>，梯度记为<span class="math inline">\(\nabla_{\mathbf w_c}\mathcal L=[\nabla_{w_{s,c}}\mathcal L]^{(L+1)}_{s=1}\)</span>。设训练集<span class="math inline">\(X^{(c)}\)</span>包含<span class="math inline">\(N_{in}\)</span>个正常样本，<span class="math inline">\(N_{out}\)</span>个异常样本。记正常样本和异常样本对应的梯度分别为<span class="math inline">\(\parallel\nabla^{(in)}_{\mathbf w_c}\mathcal L\parallel\)</span>和<span class="math inline">\(\parallel\nabla^{(out)}_{\mathbf w_c}\mathcal L\parallel\)</span>，在网络只有一个隐层且采用<code>Sigmoid</code>作为激活函数时，两者梯度的期望之比有如下关系：</p>
-<p><span class="math display">\[
-\frac{E(\parallel\nabla^{(in)}_{\mathbf w_c}\mathcal L\parallel^2)}{E(\parallel\nabla^{(out)}_{\mathbf w_c}\mathcal L\parallel^2)}\approx\frac{N^2_{in}}{N^2_{out}}
-\]</span></p>
-<p>在训练集中，正常样本和异常样本的数量是极不均衡的，<span class="math inline">\(N_{in}\gg N_{out}\)</span>，所以有<span class="math inline">\(E(\parallel\nabla^{(in)}_{\mathbf w_c}\mathcal L\parallel^2)\gg E(\parallel\nabla^{(out)}_{\mathbf w_c}\mathcal L\parallel^2)\)</span>。</p>
+<h3 id="Priority-by-Gradient-Magnitude"><a href="#Priority-by-Gradient-Magnitude" class="headerlink" title="Priority by Gradient Magnitude"></a>Priority by Gradient Magnitude</h3><p>对于第$c$个类来说，设<code>softmax</code>层和倒数第二层之间的权重矩阵为$\mathbf w_c=[w_{s,c}]^{(L+1)}<em>{s=1}$，损失函数记为$\mathcal L$，梯度记为$\nabla</em>{\mathbf w_c}\mathcal L=[\nabla_{w_{s,c}}\mathcal L]^{(L+1)}<em>{s=1}$。设训练集$X^{(c)}$包含$N</em>{in}$个正常样本，$N_{out}$个异常样本。记正常样本和异常样本对应的梯度分别为$\parallel\nabla^{(in)}_{\mathbf w_c}\mathcal L\parallel$和$\parallel\nabla^{(out)}_{\mathbf w_c}\mathcal L\parallel$，在网络只有一个隐层且采用<code>Sigmoid</code>作为激活函数时，两者梯度的期望之比有如下关系：</p>
+<p>$$<br>\frac{E(\parallel\nabla^{(in)}<em>{\mathbf w_c}\mathcal L\parallel^2)}{E(\parallel\nabla^{(out)}_{\mathbf w_c}\mathcal L\parallel^2)}\approx\frac{N^2_{in}}{N^2</em>{out}}<br>$$</p>
+<p>在训练集中，正常样本和异常样本的数量是极不均衡的，$N_{in}\gg N_{out}$，所以有$E(\parallel\nabla^{(in)}_{\mathbf w_c}\mathcal L\parallel^2)\gg E(\parallel\nabla^{(out)}_{\mathbf w_c}\mathcal L\parallel^2)$。</p>
 <p>在使用更复杂的网络时，作者通过实验展示了正常样本和异常样本对应的梯度大小的比较：</p>
-<p><img src="https://i.loli.net/2020/07/16/iPa7h9HWqrnZvgx.png" /></p>
-<h3 id="priority-by-network-updating-direction">Priority by Network Updating Direction</h3>
-<p>这里作者通过梯度更新的方向来进行了理论上的解释。对于一个Batch的数据<span class="math inline">\(X\)</span>，梯度为<span class="math inline">\(-\nabla_\theta\mathcal L(X)=-\frac{1}{N}\sum_i\nabla_\theta\mathcal L(\mathbf x_i)\)</span>，如果将该梯度在Batch中某一样本<span class="math inline">\(\mathbf x_i\)</span>对应的梯度的方向上进行分解<span class="math inline">\(-\nabla_\theta\mathcal L(\mathbf x_i):d_i=-\nabla_\theta\mathcal L(X)\cdot\frac{-\nabla_\theta\mathcal L(\mathbf x_i)}{\parallel -\nabla_\theta\mathcal L(\mathbf x_i)\parallel}\)</span>，这代表了总的Loss在多大程度上减小样本<span class="math inline">\(\mathbf x_i\)</span>对应的Loss，由于一个Batch即包含正常样本，也可能包含异常样本，所以作者将两者对应的梯度方向贡献进行了可视化：</p>
-<p><img src="https://i.loli.net/2020/07/16/U5fVk8YOEGPx3Q7.png" /></p>
+<p><img src="https://i.loli.net/2020/07/16/iPa7h9HWqrnZvgx.png"></p>
+<h3 id="Priority-by-Network-Updating-Direction"><a href="#Priority-by-Network-Updating-Direction" class="headerlink" title="Priority by Network Updating Direction"></a>Priority by Network Updating Direction</h3><p>这里作者通过梯度更新的方向来进行了理论上的解释。对于一个Batch的数据$X$，梯度为$-\nabla_\theta\mathcal L(X)=-\frac{1}{N}\sum_i\nabla_\theta\mathcal L(\mathbf x_i)$，如果将该梯度在Batch中某一样本$\mathbf x_i$对应的梯度的方向上进行分解$-\nabla_\theta\mathcal L(\mathbf x_i):d_i=-\nabla_\theta\mathcal L(X)\cdot\frac{-\nabla_\theta\mathcal L(\mathbf x_i)}{\parallel -\nabla_\theta\mathcal L(\mathbf x_i)\parallel}$，这代表了总的Loss在多大程度上减小样本$\mathbf x_i$对应的Loss，由于一个Batch即包含正常样本，也可能包含异常样本，所以作者将两者对应的梯度方向贡献进行了可视化：</p>
+<p><img src="https://i.loli.net/2020/07/16/U5fVk8YOEGPx3Q7.png"></p>
 <p>可以看到随着训练的进行，正常样本对应的贡献更高。</p>
 <p>PS: 我以为作者会对基于几何变换的异常检测为什么有效做一些理论上的解释，不过却没有。这里只是对在训练集包含少量异常的情况下做出的理论分析，而这个实际上直觉上就很显然了。</p>
-<h2 id="scoring-strategies-for-uod">Scoring Strategies for UOD</h2>
-<p>作者采用了三种方法来计算异常分数：</p>
-<h3 id="pseudo-label-based-score-pl">Pseudo Label based Score (PL)</h3>
-<p>对于一个测试样本<span class="math inline">\(\mathbf x\)</span>，对其进行<span class="math inline">\(K\)</span>个几何变换，通过分类器会得到<span class="math inline">\(K\)</span>个输出，对于第<span class="math inline">\(k\)</span>个输出，我们只取其第<span class="math inline">\(k\)</span>个分量，最后把他们加起来除以<span class="math inline">\(K\)</span>：</p>
-<p><span class="math display">\[
-S_{pl}(\mathbf x)=\frac{1}{K}\sum_{y=1}^K P^{(y)}(\mathbf x^{(y)}|\boldsymbol\theta)
-\]</span></p>
-<h3 id="maximum-probability-based-score-mp">Maximum Probability based Score (MP)</h3>
-<p>这里稍有不同，对于第<span class="math inline">\(k\)</span>个输出，我们取其值最大的分量，而不是第<span class="math inline">\(k\)</span>个分量：</p>
-<p><span class="math display">\[
-S_{mp}(\mathbf x)=\frac{1}{K}\sum_{y=1}^K\max_t P^{(t)}(\mathbf x^{(y)}|\boldsymbol\theta)
-\]</span></p>
-<h3 id="negative-entropy-based-score-ne">Negative Entropy based Score (NE)</h3>
-<p>作者认为，标签为One-Hot向量，分类器的输出分布越“尖峰”就越接近于正常样本，而越“平均”就越接近于异常样本，所以作者提出使用熵来描述分类器输出的“尖锐度”： <span class="math display">\[
-S_{ne}(\mathbf x)=-\frac{1}{K}\sum_{y=1}^K H(P(\mathbf x^{(y)}|\boldsymbol\theta))=\frac{1}{K}\sum_{y=1}^K\sum_{t=1}^K P^{(t)}(\mathbf x^{(y)}|\boldsymbol\theta)\log(P^{(t)}(\mathbf x^{(y)}|\boldsymbol\theta))
-\]</span> 这里作者对第一种方法得到的结果进行了可视化：</p>
-<p><img src="https://i.loli.net/2020/07/16/PgzqXIdJ67s3BtG.png" /></p>
+<h2 id="Scoring-Strategies-for-UOD"><a href="#Scoring-Strategies-for-UOD" class="headerlink" title="Scoring Strategies for UOD"></a>Scoring Strategies for UOD</h2><p>作者采用了三种方法来计算异常分数：</p>
+<h3 id="Pseudo-Label-based-Score-PL"><a href="#Pseudo-Label-based-Score-PL" class="headerlink" title="Pseudo Label based Score (PL)"></a>Pseudo Label based Score (PL)</h3><p>对于一个测试样本$\mathbf x$，对其进行$K$个几何变换，通过分类器会得到$K$个输出，对于第$k$个输出，我们只取其第$k$个分量，最后把他们加起来除以$K$：</p>
+<p>$$<br>S_{pl}(\mathbf x)=\frac{1}{K}\sum_{y=1}^K P^{(y)}(\mathbf x^{(y)}|\boldsymbol\theta)<br>$$</p>
+<h3 id="Maximum-Probability-based-Score-MP"><a href="#Maximum-Probability-based-Score-MP" class="headerlink" title="Maximum Probability based Score (MP)"></a>Maximum Probability based Score (MP)</h3><p>这里稍有不同，对于第$k$个输出，我们取其值最大的分量，而不是第$k$个分量：</p>
+<p>$$<br>S_{mp}(\mathbf x)=\frac{1}{K}\sum_{y=1}^K\max_t P^{(t)}(\mathbf x^{(y)}|\boldsymbol\theta)<br>$$</p>
+<h3 id="Negative-Entropy-based-Score-NE"><a href="#Negative-Entropy-based-Score-NE" class="headerlink" title="Negative Entropy based Score (NE)"></a>Negative Entropy based Score (NE)</h3><p>作者认为，标签为One-Hot向量，分类器的输出分布越“尖峰”就越接近于正常样本，而越“平均”就越接近于异常样本，所以作者提出使用熵来描述分类器输出的“尖锐度”：<br>$$<br>S_{ne}(\mathbf x)=-\frac{1}{K}\sum_{y=1}^K H(P(\mathbf x^{(y)}|\boldsymbol\theta))=\frac{1}{K}\sum_{y=1}^K\sum_{t=1}^K P^{(t)}(\mathbf x^{(y)}|\boldsymbol\theta)\log(P^{(t)}(\mathbf x^{(y)}|\boldsymbol\theta))<br>$$<br>这里作者对第一种方法得到的结果进行了可视化：</p>
+<p><img src="https://i.loli.net/2020/07/16/PgzqXIdJ67s3BtG.png"></p>
 <p>PS：对比NIPS18 的Dirichlet Normality Score</p>
-<ol type="1">
-<li>也用到了全部<span class="math inline">\(K\)</span>个维度的信息</li>
+<ol>
+<li>也用到了全部$K$个维度的信息</li>
 <li>相当于对分类器的输出做了迪利克雷分布的先验假设，然后通过训练集的输出估计分布参数。因为直觉上对于正常分布来说，分类器的输出分布形状上都类似一个尖峰，但对于不同的数据集来说具体形状还是会有所差异</li>
 </ol>
-<h1 id="experiments">Experiments</h1>
-<h2 id="experiment-setup">Experiment Setup</h2>
-<p>数据集用到了MNIST, Fashion-MNIST (F-MNIST) , CIFAR10, SVHN和CIFAR100。为了模拟无监督异常检测的环境，人为在训练集中加入异常样本，异常的比例<span class="math inline">\(\rho\)</span>从<span class="math inline">\(5\%\)</span>到<span class="math inline">\(25\%\)</span>以<span class="math inline">\(5\%\)</span>的步长递增。评测标准采用AUPR和AUROC。</p>
-<h2 id="uod-performance-comparison-and-discussion">UOD Performance Comparison and Discussion</h2>
-<p>下表展示了模型性能对比结果：</p>
-<p><img src="https://i.loli.net/2020/07/16/G3agKPuJBowFmIW.png" /></p>
+<h1 id="Experiments"><a href="#Experiments" class="headerlink" title="Experiments"></a>Experiments</h1><h2 id="Experiment-Setup"><a href="#Experiment-Setup" class="headerlink" title="Experiment Setup"></a>Experiment Setup</h2><p> 数据集用到了MNIST, Fashion-MNIST (F-MNIST) , CIFAR10, SVHN和CIFAR100。为了模拟无监督异常检测的环境，人为在训练集中加入异常样本，异常的比例$\rho$从$5%$到$25%$以$5%$的步长递增。评测标准采用AUPR和AUROC。</p>
+<h2 id="UOD-Performance-Comparison-and-Discussion"><a href="#UOD-Performance-Comparison-and-Discussion" class="headerlink" title="UOD Performance Comparison and Discussion"></a>UOD Performance Comparison and Discussion</h2><p>下表展示了模型性能对比结果：</p>
+<p><img src="https://i.loli.net/2020/07/16/G3agKPuJBowFmIW.png"></p>
 <p>下图展示了在不同的Outlier Ratio下的性能对比：</p>
-<p><img src="https://i.loli.net/2020/07/16/h6iYjBkrwQdFvMJ.png" /></p>
+<p><img src="https://i.loli.net/2020/07/16/h6iYjBkrwQdFvMJ.png"></p>
 <p>下图展示了在不同的变换集合，网络结构，异常分数的条件下的性能：</p>
-<p><img src="https://i.loli.net/2020/07/16/waWAi7zI3QpOcf6.png" /></p>
-</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-06-22T05:43:58.000Z" title="2020-6-22 1:43:58 ├F10: PM┤">2020-06-22</time>发表</span><span class="level-item"><time dateTime="2021-02-19T10:26:08.671Z" title="2021-2-19 6:26:08 ├F10: PM┤">2021-02-19</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Notes/">Notes</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2020/06/22/Probability-Distributions-Binary-and-Multinomial-Variables/">Probability Distributions - Binary and Multinomial Variables</a></h1><div class="content"><h1 id="overview">Overview</h1>
-<p>本文主要是介绍一些机器学习中常用的分布，内容主要来自PRML (Pattern Recognition and Machine Learning) 第二章<code>Probability Distributions</code>笔记的第一部分，主要包括<code>2.1. Binary Variables</code>和<code>2.2. Multinomial Variables</code>这两节。</p>
-<h1 id="probability-distributions-for-binary-variables">Probability Distributions for Binary Variables</h1>
-<h2 id="intro">Intro</h2>
-<p>这一节主要针对二值随机变量的建模，即<span class="math inline">\(x\in\{0,1\}\)</span>。这里可以想象为我们有一个硬币，<span class="math inline">\(x=1\)</span>代表正面朝上，而<span class="math inline">\(x=0\)</span>代表反面朝上，并且正面朝上的概率为<span class="math inline">\(\mu\)</span>，即： <span class="math display">\[
-p(x=1|\mu)=\mu
-\]</span> 其中<span class="math inline">\(0\leqslant \mu \leqslant 1\)</span>。<span class="math inline">\(x\)</span>的概率分布可以写为： <span class="math display">\[
-\text{Bern}(x|\mu)=\mu^x(1-\mu)^{1-x}
-\]</span> 也就是我们熟知的<strong>伯努利分布 (Bernoulli Distribution)</strong>。其均值和方差分别为： <span class="math display">\[
-\begin{align}
-\mathbb E[x]&amp;=\mu\\
-\text{var}[x] &amp;= \mu(1-\mu)
-\end{align}
-\]</span> 现在来考虑参数估计任务。假设我们正在进行一个投硬币的实验，每一次投币都服从伯努利分布且相互独立，我们将每次采集到的观测值组成数据集<span class="math inline">\(\mathcal D=\{x_1,\cdots,x_N\}\)</span>，则似然函数为： <span class="math display">\[
-p(\mathcal D|\mu)=\prod_{n=1}^N p(x_n|\mu)=\prod_{n=1}^N \mu^{x_n}(1-\mu)^{1-x_n}
-\]</span> 如果采用极大似然估计的话，我们可以最大化似然函数，这等价于最大化对数似然： <span class="math display">\[
-\ln p(\mathcal D|\mu)=\sum_{n=1}^{N}\ln p(x_n|\mu)=\sum_{n=1}^N\{x_n\ln\mu+(1-x_n)\ln(1-\mu)\}
-\]</span> 令其导数为0得到极值点： <span class="math display">\[
-\mu_{ML}=\frac{1}{N}\sum_{n=1}^N x_n
-\]</span> 这相当于样本均值，不过这样做会有严重的问题。假设我们的数据集为<span class="math inline">\(\mathcal D=\{1,1,1\}\)</span>，也就是说我们只收集到了三个样本，并且都是正例，我们会得到<span class="math inline">\(\mu_{ML}=1\)</span>，而这显然是严重过拟合的。稍后我们会说说如何应对这种情况（加入先验）。</p>
-<h2 id="binomial-distribution">Binomial Distribution</h2>
-<p>我们同样可以对多次伯努利实验进行概率建模。记<span class="math inline">\(m\)</span>为成功的次数，<span class="math inline">\(N\)</span>为数据集大小，可知这个概率应该与<span class="math inline">\(\mu^m(1-\mu)^{N-m}\)</span>成正比。乘以标准化系数后即我们熟知的<strong>二项分布 (Binomial Distribution)</strong>： <span class="math display">\[
-\text{Bin}(m|N,\mu)=\binom{N}{m}\mu^m(1-\mu)^{N-m}
-\]</span></p>
-<p>其中： <span class="math display">\[
-\binom{N}{m}=\frac{N!}{(N-m)!m!}
-\]</span> 其均值和方差分别为： <span class="math display">\[
-\begin{align}
-\mathbb E[m]&amp;=N\mu\\
-\text{var}[m]&amp;=N\mu(1-\mu)
-\end{align}
-\]</span></p>
-<h2 id="beta-distribution">Beta Distribution</h2>
-<p>现在我们来讨论如何解决刚才提到的最大似然估计过拟合问题。为了解决这个问题，我们使用贝叶斯的思路，对<span class="math inline">\(\mu\)</span>引入了先验分布<span class="math inline">\(p(\mu)\)</span>。而这个分布需要具有良好的解释性和数学性质。</p>
-<p>根据贝叶斯定理： <span class="math display">\[
-p(\mu|\mathcal D)=\frac{p(\mathcal D|\mu)p(\mu)}{p(\mathcal D)}
-\]</span> 而<span class="math inline">\(p(\mathcal D)=\int_0^1 p(\mathcal D|\mu)p(\mu)\mathrm d\mu\)</span>只受数据集影响，而数据集是固定的，所以为常数，因此<span class="math inline">\(p(\mu|\mathcal D)\propto p(\mathcal D|\mu)p(\mu)\)</span>。而似然函数为<span class="math inline">\(\mu^x(1-\mu)^{1-x}\)</span>的乘积，如果先验也采用<span class="math inline">\(\mu\)</span>和<span class="math inline">\(1-\mu\)</span>的幂的乘积的形式，那么后验分布也将和先验形式相同，这种性质在统计学中被称为<strong>先验共轭 (conjugacy)</strong>。</p>
-<p>这里我们直接给出这个先验分布，再来分析它的性质。这个分布叫做<strong>Beta分布 (Beta Distribution)</strong><span class="math inline">\(P(\mu|a,b)\sim \text{Beta}(a,b)\)</span>： <span class="math display">\[
-\begin{align}
-\text{Beta}(\mu|a,b) &amp;= \frac{\Gamma(a+b)}{\Gamma(a\Gamma(b)}\mu^{a-1}(1-\mu)^{b-1}\\ &amp;= \frac{1}{B(a,b)}\mu^{a-1}(1-\mu)^{b-1}
-\end{align}
-\]</span> <span class="math inline">\(B(\boldsymbol \alpha,\beta)\)</span>称为B函数，为一个标准化函数： <span class="math display">\[
-\begin{align}
-B(a,b) = \frac{\Gamma(a)\Gamma(b)}{\Gamma(a+b)}
-\end{align}
-\]</span> 其目的是为了使整个概率分布积分等于1而存在的。Gamma函数的定义为： <span class="math display">\[
-\Gamma(x)=\int_0^{\infty}s^{x-1}e^{-s}\mathrm d s
-\]</span> Gamma函数有一个性质：</p>
-<p><span class="math display">\[
-\Gamma(x+1)=x\Gamma(x)
-\]</span> 证明为： <span class="math display">\[
-\begin{align*}
-\Gamma(x+1) &amp;= \int_{0}^{\infty} {s^{x} e^{-s} ds} \\
-&amp;= \big[s^{x} (-e^{-s})\big] \big|_{0}^{\infty} - \int_{0}^{\infty} {(x s^{x-1}) (-e^{-s}) ds} \\
-&amp;= (0 - 0) + x \int_{0}^{\infty} {s^{x-1} e^{-s} ds} \\
-&amp;= x \Gamma(x)
-\end{align*}
-\]</span></p>
+<p><img src="https://i.loli.net/2020/07/16/waWAi7zI3QpOcf6.png"></p>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-06-22T05:43:58.000Z" title="2020-6-22 1:43:58 ├F10: PM┤">2020-06-22</time>发表</span><span class="level-item"><time dateTime="2021-02-19T10:26:08.671Z" title="2021-2-19 6:26:08 ├F10: PM┤">2021-02-19</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Notes/">Notes</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2020/06/22/Probability-Distributions-Binary-and-Multinomial-Variables/">Probability Distributions - Binary and Multinomial Variables</a></h1><div class="content"><h1 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h1><p>本文主要是介绍一些机器学习中常用的分布，内容主要来自PRML (Pattern Recognition and Machine Learning) 第二章<code>Probability Distributions</code>笔记的第一部分，主要包括<code>2.1. Binary Variables</code>和<code>2.2. Multinomial Variables</code>这两节。</p>
+<h1 id="Probability-Distributions-for-Binary-Variables"><a href="#Probability-Distributions-for-Binary-Variables" class="headerlink" title="Probability Distributions for Binary Variables"></a>Probability Distributions for Binary Variables</h1><h2 id="Intro"><a href="#Intro" class="headerlink" title="Intro"></a>Intro</h2><p>这一节主要针对二值随机变量的建模，即$x\in{0,1}$。这里可以想象为我们有一个硬币，$x=1$代表正面朝上，而$x=0$代表反面朝上，并且正面朝上的概率为$\mu$，即：<br>$$<br>p(x=1|\mu)=\mu<br>$$<br>其中$0\leqslant \mu \leqslant 1$。$x$的概率分布可以写为：<br>$$<br>\text{Bern}(x|\mu)=\mu^x(1-\mu)^{1-x}<br>$$<br>也就是我们熟知的**伯努利分布 (Bernoulli Distribution)**。其均值和方差分别为：<br>$$<br>\begin{align}<br>\mathbb E[x]&amp;=\mu\<br>\text{var}[x] &amp;= \mu(1-\mu)<br>\end{align}<br>$$<br>现在来考虑参数估计任务。假设我们正在进行一个投硬币的实验，每一次投币都服从伯努利分布且相互独立，我们将每次采集到的观测值组成数据集$\mathcal D={x_1,\cdots,x_N}$，则似然函数为：<br>$$<br>p(\mathcal D|\mu)=\prod_{n=1}^N p(x_n|\mu)=\prod_{n=1}^N \mu^{x_n}(1-\mu)^{1-x_n}<br>$$<br>如果采用极大似然估计的话，我们可以最大化似然函数，这等价于最大化对数似然：<br>$$<br>\ln p(\mathcal D|\mu)=\sum_{n=1}^{N}\ln p(x_n|\mu)=\sum_{n=1}^N{x_n\ln\mu+(1-x_n)\ln(1-\mu)}<br>$$<br>令其导数为0得到极值点：<br>$$<br>\mu_{ML}=\frac{1}{N}\sum_{n=1}^N x_n<br>$$<br>这相当于样本均值，不过这样做会有严重的问题。假设我们的数据集为$\mathcal D={1,1,1}$，也就是说我们只收集到了三个样本，并且都是正例，我们会得到$\mu_{ML}=1$，而这显然是严重过拟合的。稍后我们会说说如何应对这种情况（加入先验）。</p>
+<h2 id="Binomial-Distribution"><a href="#Binomial-Distribution" class="headerlink" title="Binomial Distribution"></a>Binomial Distribution</h2><p>我们同样可以对多次伯努利实验进行概率建模。记$m$为成功的次数，$N$为数据集大小，可知这个概率应该与$\mu^m(1-\mu)^{N-m}$成正比。乘以标准化系数后即我们熟知的**二项分布 (Binomial Distribution)**：<br>$$<br>\text{Bin}(m|N,\mu)=\binom{N}{m}\mu^m(1-\mu)^{N-m}<br>$$</p>
+<p>其中：<br>$$<br>\binom{N}{m}=\frac{N!}{(N-m)!m!}<br>$$<br>其均值和方差分别为：<br>$$<br>\begin{align}<br>\mathbb E[m]&amp;=N\mu\<br>\text{var}[m]&amp;=N\mu(1-\mu)<br>\end{align}<br>$$</p>
+<h2 id="Beta-Distribution"><a href="#Beta-Distribution" class="headerlink" title="Beta Distribution"></a>Beta Distribution</h2><p>现在我们来讨论如何解决刚才提到的最大似然估计过拟合问题。为了解决这个问题，我们使用贝叶斯的思路，对$\mu$引入了先验分布$p(\mu)$。而这个分布需要具有良好的解释性和数学性质。</p>
+<p>根据贝叶斯定理：<br>$$<br>p(\mu|\mathcal D)=\frac{p(\mathcal D|\mu)p(\mu)}{p(\mathcal D)}<br>$$<br>而$p(\mathcal D)=\int_0^1 p(\mathcal D|\mu)p(\mu)\mathrm d\mu$只受数据集影响，而数据集是固定的，所以为常数，因此$p(\mu|\mathcal D)\propto p(\mathcal D|\mu)p(\mu)$。而似然函数为$\mu^x(1-\mu)^{1-x}$的乘积，如果先验也采用$\mu$和$1-\mu$的幂的乘积的形式，那么后验分布也将和先验形式相同，这种性质在统计学中被称为**先验共轭 (conjugacy)**。</p>
+<p>这里我们直接给出这个先验分布，再来分析它的性质。这个分布叫做<strong>Beta分布 (Beta Distribution)</strong>$P(\mu|a,b)\sim \text{Beta}(a,b)$：<br>$$<br>\begin{align}<br>\text{Beta}(\mu|a,b) &amp;= \frac{\Gamma(a+b)}{\Gamma(a\Gamma(b)}\mu^{a-1}(1-\mu)^{b-1}\ &amp;= \frac{1}{B(a,b)}\mu^{a-1}(1-\mu)^{b-1}<br>\end{align}<br>$$<br>$B(\boldsymbol \alpha,\beta)$称为B函数，为一个标准化函数：<br>$$<br>\begin{align}<br>B(a,b) = \frac{\Gamma(a)\Gamma(b)}{\Gamma(a+b)}<br>\end{align}<br>$$<br>其目的是为了使整个概率分布积分等于1而存在的。Gamma函数的定义为：<br>$$<br>\Gamma(x)=\int_0^{\infty}s^{x-1}e^{-s}\mathrm d s<br>$$<br>Gamma函数有一个性质：</p>
+<p>$$<br>\Gamma(x+1)=x\Gamma(x)<br>$$<br>证明为：<br>$$<br>\begin{align*}<br>\Gamma(x+1) &amp;= \int_{0}^{\infty} {s^{x} e^{-s} ds} \<br>&amp;= \big[s^{x} (-e^{-s})\big] \big|<em>{0}^{\infty} - \int</em>{0}^{\infty} {(x s^{x-1}) (-e^{-s}) ds} \<br>&amp;= (0 - 0) + x \int_{0}^{\infty} {s^{x-1} e^{-s} ds} \<br>&amp;= x \Gamma(x)<br>\end{align*}<br>$$</p>
 <p>除此之外：</p>
-<p><span class="math display">\[
-\Gamma(1)=1\\
-\Gamma(\frac{1}{2})=\sqrt{\pi}
-\]</span></p>
-<p>可以验证： <span class="math display">\[
-\int_0^1\text{Beta}(\mu|a,b)\mathrm d\mu=1
-\]</span></p>
+<p>$$<br>\Gamma(1)=1\<br>\Gamma(\frac{1}{2})=\sqrt{\pi}<br>$$</p>
+<p>可以验证：<br>$$<br>\int_0^1\text{Beta}(\mu|a,b)\mathrm d\mu=1<br>$$</p>
 <p>Beta分布的均值和方差为：</p>
-<p><span class="math display">\[
-\mathbb E[\mu]=\frac{a}{a+b}\\
-\text{var}[\mu]=\frac{ab}{(a+b)^2(a+b+1)}
-\]</span></p>
-<p>因为后验分布与先验和似然函数的乘积成比例，那么： <span class="math display">\[
-p(\mu|m,l,a,b)\propto\mu^{m+a-1}(1-\mu)^{l+b-1}
-\]</span></p>
-<p>其中<span class="math inline">\(l=N-m\)</span>。乘上标准化因子，就得到： <span class="math display">\[
-p(\mu|m,l,a,b)=\frac{\Gamma(m+a+l+b)}{\Gamma(m+a)\Gamma(l+b)}\mu^{m+a-1}(1-\mu)^{l+b-1}
-\]</span> 得到的仍然是Beta分布，相当于把<span class="math inline">\(a\rightarrow{m+a}\)</span>，<span class="math inline">\(b\rightarrow{l+b}\)</span>。同时不难发现，参数<span class="math inline">\(a\)</span>和<span class="math inline">\(b\)</span>都有比较直观的意义。<span class="math inline">\(a\)</span>可以看作是历史记录中，成功的次数，<span class="math inline">\(b\)</span>可以看作是历史记录中失败的次数，比如<span class="math inline">\(a=2\)</span>，<span class="math inline">\(b=3\)</span>，根据经验成功的概率应该在<span class="math inline">\(\frac{2}{2+3}=0.4\)</span>左右，即我们的先验为成功的概率为<span class="math inline">\(0.4\)</span>（见下图左下角的子图）。如果在实验中，又进行了<span class="math inline">\(7\)</span>次实验，其中<span class="math inline">\(m=6\)</span>，<span class="math inline">\(l=1\)</span>，由于成功的次数变多了，<span class="math inline">\(a=2+6=8\)</span>，<span class="math inline">\(b=3+1=4\)</span>，直觉上来说我们对成功概率的估计应当相应提高，大概为<span class="math inline">\(\frac{8}{8+4}\approx 0.67\)</span>左右。这时的Beta分布如右下角的图的样子，也印证了我们的直觉。</p>
-<p><img src="https://i.loli.net/2020/06/25/3hcj18ELXl4iWy6.png" style="zoom:67%;" /></p>
+<p>$$<br>\mathbb E[\mu]=\frac{a}{a+b}\<br>\text{var}[\mu]=\frac{ab}{(a+b)^2(a+b+1)}<br>$$</p>
+<p>因为后验分布与先验和似然函数的乘积成比例，那么：<br>$$<br>p(\mu|m,l,a,b)\propto\mu^{m+a-1}(1-\mu)^{l+b-1}<br>$$</p>
+<p>其中$l=N-m$。乘上标准化因子，就得到：<br>$$<br>p(\mu|m,l,a,b)=\frac{\Gamma(m+a+l+b)}{\Gamma(m+a)\Gamma(l+b)}\mu^{m+a-1}(1-\mu)^{l+b-1}<br>$$<br>得到的仍然是Beta分布，相当于把$a\rightarrow{m+a}$，$b\rightarrow{l+b}$。同时不难发现，参数$a$和$b$都有比较直观的意义。$a$可以看作是历史记录中，成功的次数，$b$可以看作是历史记录中失败的次数，比如$a=2$，$b=3$，根据经验成功的概率应该在$\frac{2}{2+3}=0.4$左右，即我们的先验为成功的概率为$0.4$（见下图左下角的子图）。如果在实验中，又进行了$7$次实验，其中$m=6$，$l=1$，由于成功的次数变多了，$a=2+6=8$，$b=3+1=4$，直觉上来说我们对成功概率的估计应当相应提高，大概为$\frac{8}{8+4}\approx 0.67$左右。这时的Beta分布如右下角的图的样子，也印证了我们的直觉。</p>
+<img src="https://i.loli.net/2020/06/25/3hcj18ELXl4iWy6.png" style="zoom:67%;" />
+
 <p>以下为不同参数对应的Beta分布的互动演示：</p>
-<div>
-<iframe width="650px" height="450px" frameborder="0" style="dispaly:block；" src="http://qfxiao.me/html/beta_distribution_vis.html">
-</iframe>
-</div>
+<div><iframe width="650px" height="450px" frameborder="0" style="dispaly:block；" src="http://qfxiao.me/html/beta_distribution_vis.html"></iframe></div>
+
 <p>最后，Beta还有一个有趣的应用就是，如果我们不断接收到新的观测数据，那么旧的后验分布则可以作为新的先验分布将参数更新下去 。这相当于说，基于已有的观测数据，我们提出一个先验Beta分布，然后根据新得到的一批观测数据，用先验Beta分布计算一个似然函数，将似然函数和先验Beta分布乘起来，归一化后得到了新的后验分布，只要不断有新的观测数据接收到，就可以把后验分布作为新的先验，不断更新下去。这样做的优势是对于大数据集，我们不需要整个数据集，而是只需要一批一批的更新即可。</p>
-<h1 id="probability-distributions-for-multinomial-variables">Probability Distributions for Multinomial Variables</h1>
-<h2 id="intro-1">Intro</h2>
-<p>前面我们讨论了二值随机变量，现在我们将其扩展到多值变量。设一个<span class="math inline">\(K\)</span>维向量<span class="math inline">\(\mathbf x\)</span>，当<span class="math inline">\(x_k\)</span>为<span class="math inline">\(1\)</span>的时候其他元素都为<span class="math inline">\(0\)</span>，如<span class="math inline">\(K=6,x_3=1\)</span>时<span class="math inline">\(\mathbf x\)</span>表示为<span class="math inline">\(\mathbf x=(0,0,1,0,0,0)^\top\)</span>。如果<span class="math inline">\(p(x_k=1)=\mu_k\)</span>，那么<span class="math inline">\(\mathbf x\)</span>的概率分布为： <span class="math display">\[
-p(\mathbf x|\boldsymbol \mu)=\prod_{k=1}^{K}\mu_k^{x_k}
-\]</span> <span class="math inline">\(\mu_k\)</span>满足<span class="math inline">\(\sum_k \mu_k=1\)</span>和<span class="math inline">\(\mu_k\geqslant 0\)</span>，该分布被称作是<strong>Categorical Distribution</strong>。易知其均值为： <span class="math display">\[
-\begin{align}
-\mathbb E[\mathbf x|\boldsymbol \mu]=\sum_{\mathbf x}p(\mathbf x|\boldsymbol \mu)\mathbf x=\boldsymbol \mu
-\end{align}
-\]</span> 假设我们有大小为<span class="math inline">\(N\)</span>的数据集<span class="math inline">\(\mathcal D\)</span>，每个样本服从该分布且相互独立，那么似然函数： <span class="math display">\[
-p(\mathcal D|\boldsymbol \mu)=\prod_{n=1}^N\prod_{k=1}^K \mu_k^{x_{nk}}=\prod_{k=1}^K \mu_k^{\sum_n x_{nk}}=\prod_{k=1}^K\mu_k^{m_k}
-\]</span> 其中<span class="math inline">\(m_k=\sum_n x_{nk}\)</span>，即<span class="math inline">\(x_k=1\)</span>的数量。为了最大化对数似然同时保证<span class="math inline">\(\sum_k \mu_k=1\)</span>，我们可以用拉格朗日乘子法： <span class="math display">\[
-\sum_{k=1}^K m_k\ln \mu_k+\lambda\left(\sum_{k=1}^K\mu_k-1\right)
-\]</span> 我们得到<span class="math inline">\(\mu_k=-m_k/\lambda\)</span>。通过<span class="math inline">\(\sum_k \mu_k=1\)</span>得出<span class="math inline">\(\lambda=-N\)</span>，故最后我们有： <span class="math display">\[
-\mu_k^{ML}=\frac{m_k}{N}
-\]</span></p>
-<p>这相当于是<span class="math inline">\(x_k=1\)</span>的数量除以总数。</p>
-<h2 id="multinomial-distribution">Multinomial Distribution</h2>
-<p>类似的，我们可以对多次实验进行建模，假设进行<span class="math inline">\(N\)</span>次独立实验，概率分布可以写为：</p>
-<p><span class="math display">\[
-\text{Mult}(m_1,m_2,\cdots,m_K|\boldsymbol\mu,N)=\binom{N}{m_1m_2\cdots m_K}\prod_{k=1}^K\mu_k^{m_k}
-\]</span></p>
-<p>这也是我们熟知的<strong>多项分布 (Multinomial Distribution)</strong>，其中<span class="math inline">\(\binom{N}{m_1m_2\cdots m_K}\)</span>为正则化因子： <span class="math display">\[
-\binom{N}{m_1m_2\cdots m_K}=\frac{N!}{m_1!m_2!\cdots m_K!}
-\]</span> 注意<span class="math inline">\(\sum\limits_{k=1}^K m_k=N\)</span>。</p>
-<h2 id="dirichlet-distribution">Dirichlet Distribution</h2>
-<p>有了前面Beta的启发，我们同样可以对多项分布的参数<span class="math inline">\(\mu_k\)</span>建立共轭先验。首先根据似然函数，我们知道先验应当与<span class="math inline">\(\mu_k\)</span>的幂的乘积成比例：</p>
-<p><span class="math display">\[
-p(\boldsymbol \mu|\boldsymbol \alpha) \propto \prod_{k=1}^{K}\mu_k^{a_{k-1}}
-\]</span></p>
-<p>其中<span class="math inline">\(0\leqslant \mu_k\leqslant 1\)</span>且<span class="math inline">\(\sum_k\mu_k=1\)</span>。和Beta分布不同，由于要满足<span class="math inline">\(\sum\mu_k=1\)</span>，所以<span class="math inline">\(\{\mu_k\}\)</span>的取值会位于<span class="math inline">\(K-1\)</span>的单纯型上，如下图所示：</p>
-<p><img src="https://i.loli.net/2020/06/25/N8CSMvmlRz91Gqy.png" style="zoom:67%;" /></p>
-<p>加上标准化因子，我们就得到了所谓的先验分布，称之为<strong>迪利克雷分布 (Dirichlet Distribution)</strong>： <span class="math display">\[
-\text{Dir}(\boldsymbol \mu|\boldsymbol\alpha)=\frac{\Gamma(\alpha_0)}{\Gamma(\alpha_1)\cdots\Gamma(\alpha_K)}\prod_{k=1}^K\mu_k^{a_{k-1}}
-\]</span></p>
-<p>其中<span class="math inline">\(\Gamma(\cdot)\)</span>为Gamma函数，<span class="math inline">\(\alpha_0=\sum\limits_{k=1}^K\alpha_k\)</span>。下图为不同条件下的迪利克雷分布的可视化：</p>
-<p><img src="https://i.loli.net/2020/06/25/amGtuvPNoOM7kWZ.png" /></p>
-<p><span class="math inline">\(\boldsymbol \mu\)</span>的后验与先验和似然函数的乘积成正比：</p>
-<p><span class="math display">\[
-p(\boldsymbol\mu|\mathcal D,\boldsymbol\alpha)\propto p(\mathcal D|\boldsymbol\mu)p(\boldsymbol\mu|\boldsymbol\alpha)\propto\prod_{k=1}^K \mu_k^{\alpha_k+m_k-1}
-\]</span></p>
+<h1 id="Probability-Distributions-for-Multinomial-Variables"><a href="#Probability-Distributions-for-Multinomial-Variables" class="headerlink" title="Probability Distributions for Multinomial Variables"></a>Probability Distributions for Multinomial Variables</h1><h2 id="Intro-1"><a href="#Intro-1" class="headerlink" title="Intro"></a>Intro</h2><p>前面我们讨论了二值随机变量，现在我们将其扩展到多值变量。设一个$K$维向量$\mathbf x$，当$x_k$为$1$的时候其他元素都为$0$，如$K=6,x_3=1$时$\mathbf x$表示为$\mathbf x=(0,0,1,0,0,0)^\top$。如果$p(x_k=1)=\mu_k$，那么$\mathbf x$的概率分布为：<br>$$<br>p(\mathbf x|\boldsymbol \mu)=\prod_{k=1}^{K}\mu_k^{x_k}<br>$$<br>$\mu_k$满足$\sum_k \mu_k=1$和$\mu_k\geqslant 0$，该分布被称作是<strong>Categorical Distribution</strong>。易知其均值为：<br>$$<br>\begin{align}<br>\mathbb E[\mathbf x|\boldsymbol \mu]=\sum_{\mathbf x}p(\mathbf x|\boldsymbol \mu)\mathbf x=\boldsymbol \mu<br>\end{align}<br>$$<br>假设我们有大小为$N$的数据集$\mathcal D$，每个样本服从该分布且相互独立，那么似然函数：<br>$$<br>p(\mathcal D|\boldsymbol \mu)=\prod_{n=1}^N\prod_{k=1}^K \mu_k^{x_{nk}}=\prod_{k=1}^K \mu_k^{\sum_n x_{nk}}=\prod_{k=1}^K\mu_k^{m_k}<br>$$<br>其中$m_k=\sum_n x_{nk}$，即$x_k=1$的数量。为了最大化对数似然同时保证$\sum_k \mu_k=1$，我们可以用拉格朗日乘子法：<br>$$<br>\sum_{k=1}^K m_k\ln \mu_k+\lambda\left(\sum_{k=1}^K\mu_k-1\right)<br>$$<br>我们得到$\mu_k=-m_k/\lambda$。通过$\sum_k \mu_k=1$得出$\lambda=-N$，故最后我们有：<br>$$<br>\mu_k^{ML}=\frac{m_k}{N}<br>$$</p>
+<p>这相当于是$x_k=1$的数量除以总数。</p>
+<h2 id="Multinomial-Distribution"><a href="#Multinomial-Distribution" class="headerlink" title="Multinomial Distribution"></a>Multinomial Distribution</h2><p>类似的，我们可以对多次实验进行建模，假设进行$N$次独立实验，概率分布可以写为：</p>
+<p>$$<br>\text{Mult}(m_1,m_2,\cdots,m_K|\boldsymbol\mu,N)=\binom{N}{m_1m_2\cdots m_K}\prod_{k=1}^K\mu_k^{m_k}<br>$$</p>
+<p>这也是我们熟知的**多项分布 (Multinomial Distribution)**，其中$\binom{N}{m_1m_2\cdots m_K}$为正则化因子：<br>$$<br>\binom{N}{m_1m_2\cdots m_K}=\frac{N!}{m_1!m_2!\cdots m_K!}<br>$$<br>注意$\sum\limits_{k=1}^K m_k=N$。</p>
+<h2 id="Dirichlet-Distribution"><a href="#Dirichlet-Distribution" class="headerlink" title="Dirichlet Distribution"></a>Dirichlet Distribution</h2><p>有了前面Beta的启发，我们同样可以对多项分布的参数$\mu_k$建立共轭先验。首先根据似然函数，我们知道先验应当与$\mu_k$的幂的乘积成比例：</p>
+<p>$$<br>p(\boldsymbol \mu|\boldsymbol \alpha) \propto \prod_{k=1}^{K}\mu_k^{a_{k-1}}<br>$$</p>
+<p>其中$0\leqslant \mu_k\leqslant 1$且$\sum_k\mu_k=1$。和Beta分布不同，由于要满足$\sum\mu_k=1$，所以${\mu_k}$的取值会位于$K-1$的单纯型上，如下图所示：</p>
+<img src="https://i.loli.net/2020/06/25/N8CSMvmlRz91Gqy.png" style="zoom:67%;" />
+
+<p>加上标准化因子，我们就得到了所谓的先验分布，称之为**迪利克雷分布 (Dirichlet Distribution)**：<br>$$<br>\text{Dir}(\boldsymbol \mu|\boldsymbol\alpha)=\frac{\Gamma(\alpha_0)}{\Gamma(\alpha_1)\cdots\Gamma(\alpha_K)}\prod_{k=1}^K\mu_k^{a_{k-1}}<br>$$</p>
+<p>其中$\Gamma(\cdot)$为Gamma函数，$\alpha_0=\sum\limits_{k=1}^K\alpha_k$。下图为不同条件下的迪利克雷分布的可视化：</p>
+<p><img src="https://i.loli.net/2020/06/25/amGtuvPNoOM7kWZ.png"></p>
+<p>$\boldsymbol \mu$的后验与先验和似然函数的乘积成正比：</p>
+<p>$$<br>p(\boldsymbol\mu|\mathcal D,\boldsymbol\alpha)\propto p(\mathcal D|\boldsymbol\mu)p(\boldsymbol\mu|\boldsymbol\alpha)\propto\prod_{k=1}^K \mu_k^{\alpha_k+m_k-1}<br>$$</p>
 <p>不难验证：</p>
-<p><span class="math display">\[
-\begin{align}
-p(\boldsymbol\mu|\mathcal D,\boldsymbol\alpha) &amp;= \text{Dir}(\boldsymbol\mu|\boldsymbol\alpha+\mathbf m)\\
-&amp;=\frac{\Gamma(\alpha_0+N)}{\Gamma(\alpha_1+m_1)\cdots\Gamma(\alpha_K+m_K)}\prod_{k=1}^K\mu_k^{\alpha_k+m_k-1}
-\end{align}
-\]</span></p>
+<p>$$<br>\begin{align}<br>p(\boldsymbol\mu|\mathcal D,\boldsymbol\alpha) &amp;= \text{Dir}(\boldsymbol\mu|\boldsymbol\alpha+\mathbf m)\<br>&amp;=\frac{\Gamma(\alpha_0+N)}{\Gamma(\alpha_1+m_1)\cdots\Gamma(\alpha_K+m_K)}\prod_{k=1}^K\mu_k^{\alpha_k+m_k-1}<br>\end{align}<br>$$</p>
 <p>即后验同样为迪利克雷分布。</p>
 </div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-06-13T08:42:04.000Z" title="2020-6-13 4:42:04 ├F10: PM┤">2020-06-13</time>发表</span><span class="level-item"><time dateTime="2020-07-07T03:15:36.315Z" title="2020-7-7 11:15:36 ├F10: AM┤">2020-07-07</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Time-Series-Modeling/">Time Series Modeling</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2020/06/13/Time2Graph-Revisiting-Time-Series-Modeling-with-Dynamic-Shapelets/">Time2Graph: Revisiting Time Series Modeling with Dynamic Shapelets</a></h1><div class="content"><h1 id="introduction">Introduction</h1>
 <p>本文旨在提供一种可解释的高效的时间序列建模（表示学习）方法来更好地服务分类任务。Shapelet在时间序列分类任务上体现了良好的可解释性。不过传统的基于Shapelet的方法忽略了Shapelet在不同时间片段上的动态性，即整个时间维度上不同的时间片段可能适合用不同的Shapelet。作者基于此设计了动态的<em>time-aware shapelet</em>，并且定义了<em>shapelet evolution graph</em>来捕获Shapelet在时间维度上的动态变化。</p>
