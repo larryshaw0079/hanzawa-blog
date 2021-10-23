@@ -1,187 +1,90 @@
-<!doctype html>
-<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><title>Hanzawa の 部屋</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Hanzawa の 部屋"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Hanzawa の 部屋"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta property="og:type" content="website"><meta property="og:title" content="Hanzawa の 部屋"><meta property="og:url" content="https://larryshaw0079.github.io/hanzawa-blog"><meta property="og:site_name" content="Hanzawa の 部屋"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="https://larryshaw0079.github.io/img/og_image.png"><meta property="article:author" content="Hanzawa"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="/img/og_image.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://larryshaw0079.github.io/hanzawa-blog"},"headline":"Hanzawa の 部屋","image":["https://larryshaw0079.github.io/img/og_image.png"],"author":{"@type":"Person","name":"Hanzawa"},"publisher":{"@type":"Organization","name":"Hanzawa の 部屋","logo":{"@type":"ImageObject"}},"description":null}</script><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><!--!--><meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Hanzawa の 部屋" type="application/atom+xml">
-</head><body class="is-1-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/">Hanzawa の 部屋</a></div><div class="navbar-menu"><div class="navbar-end"></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-12"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2019-09-22T12:35:18.000Z" title="2019-9-22 8:35:18 ├F10: PM┤">2019-09-22</time>发表</span><span class="level-item"><time dateTime="2020-06-25T09:11:13.347Z" title="2020-6-25 5:11:13 ├F10: PM┤">2020-06-25</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2019/09/22/Unsupervised-Anomaly-Detection-via-Variational-Auto-Encoder-for-Seasonal-KPIs-in-Web-Applications/">Unsupervised Anomaly Detection via Variational Auto-Encoder for Seasonal KPIs in Web Applications</a></h1><div class="content"><h2 id="abstract">Abstract</h2>
-<p>本文提出了Donut，一个基于VAE的无监督时间序列异常检测系统。</p>
-<p><a target="_blank" rel="noopener" href="https://dl.acm.org/citation.cfm?id=3185996">原文</a></p>
-<p><img src="https://i.loli.net/2020/06/25/aoNWpGDLmJzwXOj.png" style="zoom:67%;" /></p>
-<h2 id="contribution">Contribution</h2>
-<ol type="1">
-<li>Donut中使用到了三个技巧，包括改进后的ELBO、缺失数据注入和MCMC插值；</li>
-<li>提出基于VAE的异常检测训练既需要正常样本也需要异常样本；</li>
-<li>对Donut提出了在z-空间中基于KDE的理论解释。</li>
-</ol>
-<h2 id="background">Background</h2>
-<h3 id="anomaly-detection">Anomaly Detection</h3>
-<p>对于任意时间<span class="math inline">\(t\)</span>，给定历史观察值<span class="math inline">\(x_{t-T+1},\cdots,x_t\)</span>，确定异常是否发生(记为<span class="math inline">\(y_t=1\)</span>)。通常来收异常检测算法给出的是发生异常的可能性，如<span class="math inline">\(p(y_t=1|x_{t-T+1},\cdots,x_t)\)</span>。</p>
-<h2 id="methodology">Methodology</h2>
-<h3 id="problem-statement">Problem Statement</h3>
-<p>本文的目的是<strong>基于深度生成网络开发具有理论解释性的无监督异常检测算法，并且在有标签的情况下能利用标签信息提升性能</strong>。本文基于VAE来构建模型。</p>
-<p><img src="https://i.loli.net/2020/06/25/PoKJmnIpEqNdtCe.png" style="zoom:67%;" /></p>
-<h3 id="network-structure">Network Structure</h3>
-<p>算法的总体框架如下图所示：</p>
-<p><img src="https://i.loli.net/2020/06/25/DFP1boZNzdVG9pH.png" style="zoom: 80%;" /></p>
-<p>一共包含了预处理、训练和检测三个部分。</p>
-<p>下图为模型的概率图模型：</p>
-<p><img src="https://i.loli.net/2020/06/25/HlDXkSeFOruVbac.png" style="zoom:67%;" /></p>
-<p>图中双实线的框为本文模型有别于传统VAE的地方，其余地方和VAE一样。先验概率<span class="math inline">\(p_\theta(z)\)</span>选为标准正态分布<span class="math inline">\(\mathcal{N}(0,I)\)</span>，后验概率<span class="math inline">\(x\)</span>和<span class="math inline">\(z\)</span>都是对角化高斯分布，即<span class="math inline">\(p_\theta(x|z)=\mathcal{N}(\mu_x,\sigma_x^2 I),q_\phi(z|x)=\mathcal{N}(\mu_z,\sigma_z^2 I)\)</span>。如Figure 4所示，推断网络和生成网络中分别都有隐含层<span class="math inline">\(f_\phi(x)\)</span>和<span class="math inline">\(f_\theta(z)\)</span>对网络的输入进行特征抽取。高斯分布的参数即从这些抽取出来的特征上得到。均值通过线性层得到：<span class="math inline">\(\mu_x=W^T_{\mu_x}f_\theta(z)+b_{\mu_x}, \mu_z=W^T_{\mu_z}f_\theta(x)+b_{\mu_z}\)</span>。标准差通过Soft Plus层加一个高斯噪声得到：<span class="math inline">\(\sigma_x=\text{SoftPlus}[W^T_{\sigma_x}f_\theta(z)+b_{\sigma_x}]+\varepsilon，\sigma_x=\text{SoftPlus}[W^T_{\sigma_z}f_\theta(x)+b_{\sigma_z}]+\varepsilon\)</span>。</p>
-<p>文中提到因为KPI的局部方差非常小，所以采用直接建模<span class="math inline">\(\sigma_x,\sigma_z\)</span>的方式而不是采用对数。除此之外，为了理论上的解释性，文中的神经网络只使用了全连接层。</p>
-<h3 id="training">Training</h3>
-<p>训练可以直接采用经典的SGVB来优化ELBO： <span class="math display">\[
-\begin{align}
-\log p_\theta(x)&amp;\geq\log p_\theta(x)-\text{KL}[q_\phi(z|x)\parallel p_\theta(z|x)]\\
-&amp;=\mathcal{L}\\
-&amp;=\mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x)+\log p_\theta(z|x)-\log q_\phi(z|x)]\\
-&amp;=\mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x,z)-\log q_\phi(z|x)]\\
-&amp;=\mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x|z)+\log p_\theta(z)-\log q_\phi(z|x)]
-\end{align}
-\]</span> 但是在实际的训练过程中，训练数据需要保证都是正常样本，但实际上训练样本有可能会包含异常或者是缺失值。一种做法是用缺失值填充的算法来填充这些异常值和缺失值，但作者认为使用缺失值填充算法并不能很好的还原数据的正常模式，从而保证算法的有效性。在文中作者采用了修改ELBO的方法，并将其称之为<strong>Modified ELBO (M-ELBO)</strong>，公式如下： <span class="math display">\[
-\tilde{\mathcal{L}}=\mathbb{E}_{q_\phi(z|x)}[\sum\limits_{w=1}^W{\alpha_w\log p_\theta(x_w|z)+\beta\log p_\theta(z)-\log q_\phi(z|x)}]
-\]</span> 其中<span class="math inline">\(\alpha_w\)</span>为指示标记，<span class="math inline">\(\alpha_w=1\)</span>代表不是异常也不是缺失。<span class="math inline">\(\beta\)</span>定义为<span class="math inline">\(\beta=\frac{\sum_{w=1}^W\alpha_w}{W}\)</span>。</p>
-<p>在<strong>M-ELBO</strong>中，异常或缺失值对应的<span class="math inline">\(\log p_\theta(x_w|z)\)</span>的贡献会被排除，同时<span class="math inline">\(\log p_\theta(z)\)</span>在乘以<span class="math inline">\(\beta\)</span>后会相应缩小。作者没有修改<span class="math inline">\(\log q_\phi(z|x)\)</span>这一项的原因有二：一是<span class="math inline">\(q_\phi(z|x)\)</span>仅仅是从<span class="math inline">\(x\)</span>到<span class="math inline">\(z\)</span>的映射，并不需要考虑“正常模式”；二是<span class="math inline">\(\mathbb{E}_{q_\phi(z|x)}[-\log q_\phi(z|x)]\)</span>就是<span class="math inline">\(q_\phi(z|x)\)</span>的熵，而这个在后面的理论分析中有特别的含义。</p>
-<p>除此之外还有一种解决方法就是把所有包含异常值和缺失值的窗口去除，这种方法的性能在实验中会进行讨论。</p>
-<p>在文中作者还使用了一种<strong>Missing Data Injection</strong>技术，即在每个Epoch随机的按照一个预设比例<span class="math inline">\(\lambda\)</span>将正常的数据设为缺失。作者认为这样有助于性能的提升。</p>
-<h3 id="detection">Detection</h3>
-<p>在检测阶段，对于一个输入样本，我们需要模型输出其异常的概率。因为我们建模了<span class="math inline">\(p_\theta(x|z)\)</span>，一种方法是采样计算<span class="math inline">\(p_\theta(x)=\mathbb{E}_{p_\theta(z)}[p_\theta(x|z)]\)</span>，但这种方法计算代价十分昂贵。其他的一些方案有计算<span class="math inline">\(\mathbb{E}_{q_\phi(z|x)}[p_\theta(x|z)]\)</span>或<span class="math inline">\(\mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x|z)]\)</span>，其中后者被称为"<strong>Reconstruction Probability</strong>"，作者便采用了这种方案。</p>
-<p>同时，作者认为输入的检测样本的缺失值会对结果造成较大偏差，于是使用了一种<strong>MCMC-based Missing Data Imputation</strong>的方法来对检测样本的缺失值进行填充。具体做法是将测试样本分为已观测和缺失两部分<span class="math inline">\(x=(x_o,x_m)\)</span>，然后使用训练好的VAE进行重构得到<span class="math inline">\((x^\prime_o,x^\prime_m)\)</span>，然后用<span class="math inline">\(x^\prime_m\)</span>替换<span class="math inline">\(x_m\)</span>，这样不断循环如下图所示：</p>
-<p><img src="https://i.loli.net/2020/06/25/wEenLKz4URfm2FN.png" style="zoom:67%;" /></p>
-<p>作者使用了<span class="math inline">\(L\)</span>个样本来计算<strong>Reconstruction Probability</strong>，虽然得到的输出是针对整个窗口每个点的，但作者只使用最后一个点。</p>
-<h2 id="experiments">Experiments</h2>
-<h3 id="datasets">Datasets</h3>
-<p>作者选择了三条KPI作为测试数据，分别记为<span class="math inline">\(\mathcal{A}\)</span>，<span class="math inline">\(\mathcal{B}\)</span>，<span class="math inline">\(\mathcal{C}\)</span>，其基本数据如下表所示：</p>
-<p><img src="https://i.loli.net/2020/06/25/A9qajrZtmhcvyHW.png" style="zoom:67%;" /></p>
-<h3 id="metrics">Metrics</h3>
-<p>因为异常检测类别的极不均衡性，传统的性能指标并不太合适（异常样本极少，且异常一般呈连续的片段）。作者认为在实际应用场景中运维人员需要尽量早的获知异常的发生，于是提出了新的评测机制。</p>
-<p><img src="https://i.loli.net/2020/06/25/6LNwizqrWVe5sRv.png" style="zoom:67%;" /></p>
-<p>如上图所示，第一行为真实的标签，第二行为预测的异常概率，第三行为预测的标签。第一行中异常片段被加粗表示，对于每一个异常片段的第一个位置<span class="math inline">\({y}_{t^\prime}\)</span>，如果预测的标签中存在<span class="math inline">\(\hat{y}_{t}\)</span>满足<span class="math inline">\(t^\prime&lt;t\)</span>且<span class="math inline">\(|t-t^\prime|\)</span>小于等于预设的阈值<span class="math inline">\(T\)</span>，那么<span class="math inline">\(y_{t^\prime}\)</span>对应的整段异常都被认为正确检测，否则整段异常都认为没有被正确检测。然后在此基础上计算F1-score，AUC等指标作为评测手段。</p>
-<h2 id="results">Results</h2>
-<h3 id="overall-performance">Overall Performance</h3>
-<p>下图展示了不同方法在不同数据集上的表现：</p>
-<p><img src="https://i.loli.net/2020/06/25/2j1Br45MUxTaYEX.png" style="zoom:67%;" /></p>
-<h3 id="effects-of-donut-techniques">Effects of Donut Techniques</h3>
-<p>为了探究Donut中所做的各种改进的实际作用，作者做了大量对比实验，结果如下图所示：</p>
-<p><img src="https://i.loli.net/2020/06/25/raHG6Phyxo1j82n.png" style="zoom:67%;" /></p>
-<ul>
-<li><strong>M-ELBO</strong> 从图中可以看出<strong>M-ELBO</strong>对性能提升最大。作者在文中提到一开始并没期望<strong>M-ELBO</strong>能带来性能的提升，只是希望它能够Work。这表明在VAE的训练中，只使用正常样本是不够的，也需要加入非正常的信息；</li>
-<li><strong>Missing Data Injection</strong> 该技巧的主要作用是增强<strong>M-ELBO</strong>的效果。从结果上来看作用并不是十分的显著，只是在一些情况下获得了少量的提升；</li>
-<li><strong>MCMC Imputation</strong> 作者认为虽然该技巧只在一部分情况下显著提升了性能，但总体来说值得使用。</li>
-</ul>
-<h3 id="impact-of-k">Impact of K</h3>
-<p>该部分作者探究了隐变量<span class="math inline">\(z\)</span>的维度<span class="math inline">\(K\)</span>对性能的影响，结果如下图：</p>
-<p><img src="https://i.loli.net/2020/06/25/OXpIRoe4wr7YzuQ.png" style="zoom:67%;" /></p>
-<p>从图上来看，对数据集<span class="math inline">\(\mathcal{A}\)</span>，<span class="math inline">\(\mathcal{B}\)</span>，<span class="math inline">\(\mathcal{C}\)</span>最佳的<span class="math inline">\(K\)</span>分别是<span class="math inline">\(5\)</span>，<span class="math inline">\(4\)</span>和<span class="math inline">\(3\)</span>，但是设定较大的<span class="math inline">\(K\)</span>并不会对性能有严重的损害。作者还发现对于较为平滑的KPI需要较大的<span class="math inline">\(K\)</span>。</p>
-<h2 id="analysis">Analysis</h2>
-<h3 id="kde-interpretation">KDE Interpretation</h3>
-<p>在这一节作者对<strong>Reconstruction Probability</strong>的意义进行了深入的探讨。首先作者对<span class="math inline">\(q_\phi(z|x)\)</span>进行了可视化，在图中作者将时间维度用颜色来表示。如Figure 11(a) 所示，<span class="math inline">\(z\)</span>几乎是按照<span class="math inline">\(x\)</span>对应的时间呈一个连续的流形分布，作者将这种现象称为<strong>Time Gradient</strong>。即使Donut没有显式的用到时间信息，不过因为实验用到的数据基本是平滑的，所以说相邻的<span class="math inline">\(x\)</span>会比较相似，因此经过映射后的<span class="math inline">\(z\)</span>也会比较相似。作者据此提出Donut的一个优势便是对于没有见过的后验分布<span class="math inline">\(q_\phi(z|x)\)</span>，只要其位于训练过的两个后验之间，也会产生合理的分布。</p>
-<p><img src="https://i.loli.net/2020/06/25/BHfP5DUZ48ALnma.png" style="zoom:67%;" /></p>
-<p>对于异常的样本<span class="math inline">\(x\)</span>，假设其对应的正常模式为<span class="math inline">\(\tilde{x}\)</span>，作者认为<span class="math inline">\(q_\phi(z|x)\)</span>会在某种程度上对正常的<span class="math inline">\(q_\phi(z|\tilde{x})\)</span>进行近似。因为模型是用正常样本进行训练的，隐变量<span class="math inline">\(z\)</span>的维度通常来说小于样本<span class="math inline">\(x\)</span>，这就导致<span class="math inline">\(z\)</span>只会保留一部分主要的信息。对于异常样本，其异常模式在编码时就被丢掉了。作者还指出如果<span class="math inline">\(x\)</span>包含的异常太多，那么模型将难以对<span class="math inline">\(x\)</span>进行还原。</p>
-<p><img src="https://i.loli.net/2020/06/25/HcX78lUoG4meJq5.png" style="zoom: 50%;" /></p>
-<p>基于上述讨论，作者对使用<span class="math inline">\(\mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x|z)]\)</span>作为<strong>Reconstruction Probability</strong>的意义进行了阐释。设输入样本为<span class="math inline">\(x\)</span>，如果其包含异常，假设其对应的正常样本为<span class="math inline">\(\tilde{x}\)</span>，那么<span class="math inline">\(q_\phi(z|x)\)</span>部分地和<span class="math inline">\(q_\phi(z|\tilde{x})\)</span>相似。如果<span class="math inline">\(x\)</span>和<span class="math inline">\(\tilde{x}\)</span>相似程度高，那么<span class="math inline">\(\log p_\theta(x|z)\)</span>就会很大（其中<span class="math inline">\(z\sim q_\phi(z|\tilde{x})\)</span>）。<span class="math inline">\(\log p_\theta(x|z)\)</span>类似于一个密度估计器，代表<span class="math inline">\(x\)</span>在多大程度上与<span class="math inline">\(\tilde{x}\)</span>接近，<span class="math inline">\(\mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x|z)]\)</span>相当于对每一个<span class="math inline">\(z\)</span>对应的<span class="math inline">\(\log p_\theta(x|z)\)</span>乘以一个权重<span class="math inline">\(q_\phi(z|x)\)</span>然后相加。于是作者提出了<strong>Reconstruction Probability</strong>的<strong>KDE Interpretation</strong>:在Donut模型中，<strong>Reconstruction Probability</strong> <span class="math inline">\(\mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x|z)]\)</span>可以看作是以<span class="math inline">\(q_\phi(z|x)\)</span>为权重，<span class="math inline">\(\log p_\theta(x|z)\)</span>为核的核密度估计 (Kernel Density Estimation)。</p>
-<p>三维可视化如下图所示：</p>
-<p><img src="https://i.loli.net/2020/06/25/GeWufVlUDo4QtO6.png" style="zoom:67%;" /></p>
-<p>作者还对直接计算<span class="math inline">\(p_\theta(x)=\mathbb{E}_{p_\theta(z)}[p_\theta(x|z)]\)</span>进行了质疑，因为这种方法直接求<span class="math inline">\(x\)</span>的先验，仅仅考虑了<span class="math inline">\(x\)</span>的总体模式，而忽略了<span class="math inline">\(x\)</span>的个体模式。</p>
-<h3 id="find-good-posteriors-for-abnormal-x">Find Good Posteriors for Abnormal <span class="math inline">\(x\)</span></h3>
-<p>通过上面的讨论我们知道了Donut通过找到<span class="math inline">\(x\)</span>的正常后验来估计<span class="math inline">\(x\)</span>在多大程度上与<span class="math inline">\(\tilde{x}\)</span>相似，在这一节作者讨论了文中使用的不同技巧对找到<span class="math inline">\(x\)</span>的后验的作用。对于<strong>Missing Data Injection</strong>作者认为该技巧增强了<strong>M-ELBO</strong>的效果。对于<strong>MCMC Imputation</strong>，作者认为该技巧主要是在检测阶段通过不断迭代提供了更好的后验，如下图所示：</p>
-<p><img src="https://i.loli.net/2020/06/25/8puDRylqZfQkcN6.png" style="zoom:67%;" /></p>
-<p>作者认为，虽然对于包含大量异常的样本，Donut不能很好的还原，但在运维场景中，只要对大段异常的开始阶段进行准确预测即可。</p>
-<h3 id="causes-of-time-gradient">Causes of Time Gradient</h3>
-<p>在这一节作者讨论了<strong>Time Gradient</strong>出现的原因。首先假设<span class="math inline">\(x\)</span>都是正常点，这时<span class="math inline">\(x\)</span>的ELBO为： <span class="math display">\[
-\begin{align}
-\mathcal{L}(x)&amp;=\mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x|z)+\log p_\theta(z)-\log q_\phi(z|x)]\\
-&amp;=\mathbb{E}[\log p_\theta(x|z)]+\mathbb{E}[\log p_\theta(z)]+\text{H}[z|x]
-\end{align}
-\]</span> 第一项表明在<span class="math inline">\(z\sim q_\phi(z|x)\)</span>下尽可能重构<span class="math inline">\(x\)</span>。第二项表明<span class="math inline">\(q_\phi(z|x)\)</span>尽量与<span class="math inline">\(z\)</span>的先验<span class="math inline">\(\mathcal{N}(0,I)\)</span>接近。第三项为<span class="math inline">\(q_\phi(z|x)\)</span>的熵，表明<span class="math inline">\(q_\phi(z|x)\)</span>应尽量分散。然而第二项又限制了这种分散的区域，如 Figure 11(c) 所示。同时考虑这三项的话，第一项使得<span class="math inline">\(z\)</span>不能自由地分散，对于不相似的<span class="math inline">\(x\)</span>其对应的<span class="math inline">\(z\)</span>也是不相似的，因为要最大化<span class="math inline">\(x\)</span>的重构概率。然而对于相似的<span class="math inline">\(x\)</span>来说，其对应的<span class="math inline">\(q_\phi(z|x)\)</span>会出现很多重复的部分。当达到平衡时，<strong>Time Gradient</strong>就出现了。</p>
-<p><img src="https://i.loli.net/2020/06/25/AaC9oNMShBRHFeY.png" style="zoom:67%;" /></p>
-<p>在训练过程中，当<span class="math inline">\(x\)</span>越不相似，<span class="math inline">\(q_\phi(z|x)\)</span>就会相距越远，如上图所示。然而在一开始，参数经过随机初始化，<span class="math inline">\(q_\phi(z|x)\)</span>都是随机散乱的，如 Figure 11(b) 所示。随着训练的进行，<span class="math inline">\(q_\phi(z|x)\)</span>将会不断优化。由于KPI数据往往是光滑的，那么在时间上相距越远的样本就会越不相似，对应的<span class="math inline">\(q_\phi(z|x)\)</span>也会相距更远。这也说明了，训练结束后，时间上相距越远的，<span class="math inline">\(q_\phi(z|x)\)</span>也会相距越远，反之亦然。同时这也表明学习率的设置对本模型的稳定性有至关重要的作用。</p>
-<h3 id="sub-optimal-equilibrium">Sub-Optimal Equilibrium</h3>
-<p>上面我们讨论了随着训练进行<span class="math inline">\(q_\phi(z|x)\)</span>的演变，作者提出在训练过程中可能会遇到模型收敛到次优的情况，如下图所示：</p>
-<p><img src="https://i.loli.net/2020/06/25/udigOl3sJGwSaPz.png" style="zoom:67%;" /></p>
-<p>第一行展示的是收敛到最优的情况，第二行展示的是收敛到次优的情况。从第二行的第一个图（Step 100）来看，紫色的点开始穿过绿色的点，随着训练的进行，紫色的点开始将绿色的点推开。到Step 5000的时候，绿色的点已经被分成了两半。下图展示了对应的训练误差和验证误差：</p>
-<p><img src="https://i.loli.net/2020/06/25/23zsxwurICV7aTj.png" style="zoom:67%;" /></p>
-<p>这样的现象会导致在两半绿色区域之间的测试样本会被识别为紫色，从而降低性能。作者提出在<span class="math inline">\(K\)</span>较大的时候这种现象不容易发生，但这时训练的收敛又会成为一个问题。</p>
-</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2019-09-22T12:33:18.000Z" title="2019-9-22 8:33:18 ├F10: PM┤">2019-09-22</time>发表</span><span class="level-item"><time dateTime="2020-06-25T08:59:23.758Z" title="2020-6-25 4:59:23 ├F10: PM┤">2020-06-25</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2019/09/22/Time-Series-Anomaly-Detection-Service-at-Microsoft/">Time-Series Anomaly Detection Service at Microsoft</a></h1><div class="content"><h2 id="abstract">Abstract</h2>
-<p>本文借鉴计算机视觉中的显著性检测，提出了一种基于Spectral Residual的时间序列异常检测算法。</p>
-<p><a target="_blank" rel="noopener" href="https://www.kdd.org/kdd2019/accepted-papers/view/time-series-anomaly-detection-service-at-microsoft">原文</a></p>
-<p>这篇文章还提出了几个时间序列异常检测落地的难点：</p>
-<ol type="1">
-<li><strong>Lack of Labels.</strong> 在实际生产环境中会产生大量的KPI，而很难对每个KPI进行人工标注。</li>
-<li><strong>Generalization.</strong> 不同KPI所表现出来的模式也不尽相同，如Figure 1所示。现有方法很难在所有模式的KPI上都表现良好。</li>
-<li><strong>Efficiency.</strong> 在实际场景中，会产生大量的时间序列数据，同时对异常检测算法的时间效率有要求。</li>
-</ol>
-<p><img src="https://i.loli.net/2020/06/25/o21lnTUtcGuwCq6.png" style="zoom:67%;" /></p>
-<h2 id="contribution">Contribution</h2>
-<ul>
-<li>将Visual Saliency Detection的方法引入了时间序列异常检测。</li>
-<li>结合Spectral Residual和CNN提高了异常检测的效果。</li>
-<li>算法具有良好的时间效率和通用性。</li>
-</ul>
-<h2 id="background">Background</h2>
-<h3 id="spectral-residual">Spectral Residual</h3>
-<p>SR(Spectral Residual)算法主要包含三个步骤：</p>
-<ol type="1">
-<li>通过傅里叶变换得到log amplitude spectrum；</li>
-<li>计算spectral residual；</li>
-<li>通过傅里叶逆变换回到时间域。</li>
-</ol>
-<p>更形式化的表述为如下：</p>
-<p>给定一个序列<span class="math inline">\(\mathbb{x}\)</span>，则有：</p>
-<p><span class="math display">\[A(f)=Amplitude(\mathscr{F}(\mathbb{x}))\]</span></p>
-<p><span class="math display">\[P(f)=Phrase(\mathscr{F}(\mathbb{x}))\]</span></p>
-<p><span class="math display">\[L(f)=\log(A(f))\]</span></p>
-<p><span class="math display">\[AL(F)=h_1(f)\cdot L(f)\]</span></p>
-<p><span class="math display">\[R(f)=L(f)-AL(f)\]</span></p>
-<p><span class="math display">\[S(\mathbb{x})=\parallel\mathscr{F}^{-1}(\exp(R(f)+iP(f)))\parallel\]</span></p>
-<p>其中<span class="math inline">\(\mathscr{F}\)</span>和<span class="math inline">\(\mathscr{F}^{-1}\)</span>分别表示傅里叶变换和傅里叶逆变换；<span class="math inline">\(\mathbb{x}\in \mathbb{R}^{n\times 1}\)</span>表示输入序列；<span class="math inline">\(A(f)\)</span>为幅度谱，<span class="math inline">\(P(f)\)</span>为相位谱，<span class="math inline">\(L(f)\)</span>为对数幅度谱，<span class="math inline">\(AL(F)\)</span>为均值滤波后的对数幅度谱；<span class="math inline">\(R(f)\)</span>为spectral residual；<span class="math inline">\(S(\mathbb{x})\)</span>称为saliency map。Figure 4为文中给出的Saliency Map示意图。</p>
-<p><img src="https://i.loli.net/2020/06/25/OrSlqhBWNdyfEG9.png" style="zoom:67%;" /></p>
-<h2 id="methodology">Methodology</h2>
-<h3 id="problem-definition">Problem Definition</h3>
-<blockquote>
-<p>给定一系列实数值<span class="math inline">\(\mathbb{x}=x_1,x_2,\cdots,x_n\)</span>，时间序列异常检测的任务是产生一个输出序列<span class="math inline">\(\mathbb{y}=y_1,y_2,\cdots,y_n\)</span>其中<span class="math inline">\(y_i\in\{0,1\}\)</span>表示<span class="math inline">\(x_i\)</span>是否为异常点。</p>
-</blockquote>
-<h3 id="sr">SR</h3>
-<p>对于给定序列<span class="math inline">\(\mathbb{x}\)</span>，计算Saliency Map <span class="math inline">\(S(\mathbb{x})\)</span>，输出序列<span class="math inline">\(O(\mathbb{x})\)</span>定义为：</p>
-<p><span class="math display">\[O(x_i)=\begin{cases}1,\quad \text{if}\frac{S(x_i)-\overline{S(x_i)}}{\overline{S(x_i)}}&gt;\tau\\\\0,\quad \text{otherwise}\end{cases}\]</span></p>
-<p>其中<span class="math inline">\(S(x_i)\)</span>为<span class="math inline">\(x_i\)</span>对应的Saliency Map的值，<span class="math inline">\(\overline{S(x_i)}\)</span>为<span class="math inline">\(x_i\)</span>附近Saliency Map局部均值。</p>
-<hr />
-<p>在实际操作中，FFT是在一个滑动窗口中进行的，文中提到SR方法在点位于窗口中央时效果更好，所以在进行测试的时候，按照如下方法对当前点<span class="math inline">\(x_n\)</span>(也就是当前序列最后一个点)之后的点进行预测：</p>
-<p><span class="math display">\[\overline{g}=\frac{1}{m}\sum_{i=1}^m g(x_n,x_{n-i})\]</span></p>
-<p><span class="math display">\[x_{n+1}=x_{n-m+1}+\overline{g}\cdot m\]</span></p>
-<p>其中<span class="math inline">\(g(x_i,x_j)\)</span>代表<span class="math inline">\(x_i\)</span>和<span class="math inline">\(x_j\)</span>两点构成的直线的梯度；<span class="math inline">\(\overline{g}\)</span>代表所处理的点的平均梯度；<span class="math inline">\(m\)</span>为所处理的点的数量。在本文中设置<span class="math inline">\(m=5\)</span>。文中发现第一个预测的值很重要，所以直接把<span class="math inline">\(x_{n+1}\)</span>赋值<span class="math inline">\(k\)</span>次添加到序列的末尾。</p>
-<h3 id="sr-cnn">SR-CNN</h3>
-<p><img src="https://i.loli.net/2020/06/25/9pEWXRD5JM4umHn.png" /></p>
-<p>本文提到，仅仅使用一个阈值来进行异常的判断太过简单，于是提出使用一个判别模型来进行异常的判断。由于训练数据没有标签，所以使用如下的公式人工加入异常：</p>
-<p><span class="math display">\[x=(\overline{x}+mean)(1+var)\cdot r+x\]</span></p>
-<p>其中<span class="math inline">\(\overline{x}\)</span>所处理的点的局部均值；<span class="math inline">\(mean\)</span>和<span class="math inline">\(var\)</span>为当前滑动窗口点的均值和方差；<span class="math inline">\(r\sim \mathcal{N}(0,1)\)</span>为服从标准正态分布的噪声。</p>
-<hr />
-<p>对于判别模型使用的是CNN，主要包含两个1维卷积层(kernel size等于窗口大小<span class="math inline">\(w\)</span>)和两个全连接层。两个卷积层的channel size分别为<span class="math inline">\(w\)</span>和<span class="math inline">\(2w\)</span>。</p>
-<h2 id="experiments">Experiments</h2>
-<h3 id="datasets">Datasets</h3>
-<p><img src="https://i.loli.net/2020/06/25/dquAjtRpNSY8rLo.png" style="zoom:67%;" /></p>
-<p>所用数据集包含清华AIOps竞赛数据、Yahoo和Microsoft的KPI数据。</p>
-<h3 id="evaluation-metrics">Evaluation Metrics</h3>
-<p>算法准确率方面用了precision，recall和<span class="math inline">\(F_1\)</span>-score。</p>
-<p><img src="https://i.loli.net/2020/06/25/EbcjA8X5fYa6Glz.png" style="zoom:67%;" /></p>
-<p>由于在实际场景中KPI的异常往往是以一段一段的形式出现，且并不要求某一个时间点出现异常算法就马上检测出来，只要检测出来的时间在一定的容忍范围内即可。本文使用了一些调整的手段，如Figure 6。对于某一段异常，设段首的异常位于时间点<span class="math inline">\(t_{truth}\)</span>，预测为异常的结果中时间在<span class="math inline">\(t_{truth}\)</span>之后且距<span class="math inline">\(t_{truth}\)</span>最近的时间点设为<span class="math inline">\(t_{predict}\)</span>，那么对于一个预先设定的容忍范围<span class="math inline">\(k\)</span>，只要<span class="math inline">\(t_{predict}-t_{truth}\leq k+1\)</span>那么在预测结果中整段异常就会重置为<span class="math inline">\(1\)</span>，否则全部重置为<span class="math inline">\(0\)</span>。</p>
-<h3 id="results">Results</h3>
-<p>实验部分使用了两种训练方式，一种是cold-start，即把所有数据都用来测试，另一种是把数据分为训练测试两部分，在训练集上训练，最后在测试集上进行测试。两种方法适用的baseline不同，最后结果如Table 2和Table 3所示：</p>
-<p><img src="https://i.loli.net/2020/06/25/3L9xe5jJGtnR6AQ.png" style="zoom: 50%;" /></p>
-<hr />
-<p>在SR的参数设置上，<span class="math inline">\(h_q(f)\)</span>中的<span class="math inline">\(q\)</span>为3，局部平均所用的点数目<span class="math inline">\(z\)</span>为21，阈值<span class="math inline">\(\tau\)</span>为3，估计点的数量<span class="math inline">\(k\)</span>为5，滑动窗口的大小<span class="math inline">\(w\)</span>在KPI、Yahoo、Microsoft三个数据集上分别为1440、64和30。SR-CNN的<span class="math inline">\(q\)</span>，<span class="math inline">\(z\)</span>，<span class="math inline">\(k\)</span>，<span class="math inline">\(w\)</span>设置与SR相同。</p>
-<h3 id="additional-experiments-with-dnn">Additional Experiments with DNN</h3>
-<p>文中还对有监督的情况进行了测试，具体做法是从时间序列提取特征，然后将Saliency Map也作为特征引入，构造一个有监督的Neural Network进行测试。</p>
-<p>提取的特征如Table 5所示：</p>
-<p><img src="https://i.loli.net/2020/06/25/4flipKbc1OtVGg9.png" style="zoom: 50%;" /></p>
-<hr />
-<p>神经网络的结构为两层全连接层，并添加了Dropout Ratio为0.5的Dropout Layer。两个Layer使用了<span class="math inline">\(L_1=L_2=0.0001\)</span>的正则化。同时为了处理样本不平衡的情况使用了过采样来使正负样本的比例为<span class="math inline">\(1:2\)</span>。结构如Figure 7所示：</p>
-<p><img src="https://i.loli.net/2020/06/25/bxeluFBHv2i7Y5m.png" style="zoom:67%;" /></p>
-<hr />
-<p>训练测试集的情况如Table 6所示，最终结果如Table 7所示，P-R曲线如Figure 8所示。可以看到使用了SR特征的DNN效果由于没有使用SR特征的DNN。</p>
-<p><img src="https://i.loli.net/2020/06/25/E6vapzhCiG9HTPu.png" style="zoom:67%;" /></p>
-<p><img src="https://i.loli.net/2020/06/25/tZAOg74flmE39oI.png" style="zoom:67%;" /></p>
-</div></article></div><nav class="pagination" role="navigation" aria-label="pagination"><div class="pagination-previous"><a href="/page/3/">上一页</a></div><div class="pagination-next is-invisible is-hidden-mobile"><a href="/page/5/">下一页</a></div><ul class="pagination-list is-hidden-mobile"><li><a class="pagination-link" href="/">1</a></li><li><a class="pagination-link" href="/page/2/">2</a></li><li><a class="pagination-link" href="/page/3/">3</a></li><li><a class="pagination-link is-current" href="/page/4/">4</a></li></ul></nav></div><!--!--><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/">Hanzawa の 部屋</a><p class="is-size-7"><span>&copy; 2021 Hanzawa</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("zh-CN");</script><script>var IcarusThemeSettings = {
-            article: {
-                highlight: {
-                    clipboard: true,
-                    fold: 'unfolded'
-                }
-            }
-        };</script><script src="/js/column.js"></script><!--!--><script src="/js/main.js" defer></script><!--!--></body></html>
+<%
+var subtitle = page.subtitle || page.title
+var banner_img = page.banner_img || theme.index.banner_img
+var banner_img_height = page.banner_img_height || theme.index.banner_img_height
+var banner_mask_alpha = page.banner_mask_alpha || theme.index.banner_mask_alpha
+var colorSchema = theme.dark_mode && theme.dark_mode.enable && theme.dark_mode.default ? theme.dark_mode.default : ''
+%>
+
+<!DOCTYPE html>
+<html lang="<%= config.language %>" <%= colorSchema ? `data-default-color-scheme="${colorSchema}"` : '' %>>
+
+<%- partial('_partial/head') %>
+
+<body>
+  <header style="height: <%- banner_img_height %>vh;">
+    <%- partial('_partial/nav') %>
+    <div class="banner" id="banner" <%- theme.banner && theme.banner.parallax && 'parallax=true' %>
+         style="background: url('<%- url_for(banner_img) %>') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, <%= parseFloat(banner_mask_alpha) %>)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="<%- subtitle %>">
+              <% if(!theme.fun_features.typing.enable) { %>
+                <%- subtitle %>
+              <% } %>
+            </span>
+
+            <% if(is_post() && page.meta !== false) { %>
+              <%- partial('_partial/post-meta') %>
+            <% } %>
+          </div>
+
+          <% if (theme.scroll_down_arrow.enable && theme.scroll_down_arrow.banner_height_limit <= banner_img_height && page.layout !== '404') { %>
+            <div class="scroll-down-bar">
+              <i class="iconfont icon-arrowdown"></i>
+            </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <% if(is_post() || page.layout === '404') { %>
+      <%- body %>
+    <% } else { %>
+      <div class="container nopadding-x-md">
+        <div class="py-5" id="board"
+          <%- banner_img_height >= 100 && theme.banner && theme.banner.parallax ? 'style=margin-top:0' : '' %>>
+          <% if(page.layout === 'about') { %>
+            <div class="about-avatar">
+              <img src="<%- url_for(theme.about.avatar) %>" srcset="/img/loading.gif"
+                   class="img-fluid" alt="avatar">
+            </div>
+          <% } %>
+          <div class="container">
+            <div class="row">
+              <div class="col-12 col-md-10 m-auto">
+                <%- body %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% } %>
+
+    <% if (theme.scroll_top_arrow.enable) { %>
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    <% } %>
+
+    <% if (theme.search.enable) { %>
+      <%- partial('_partial/search') %>
+    <% } %>
+
+    <% if (theme.custom_html) { %>
+      <div class="col-lg-7 mx-auto nopadding-x-md">
+        <div class="container custom mx-auto">
+          <%- theme.custom_html %>
+        </div>
+      </div>
+    <% } %>
+  </main>
+
+  <%- partial('_partial/footer', { params: { subtitle: subtitle } }) %>
+
+</body>
+</html>

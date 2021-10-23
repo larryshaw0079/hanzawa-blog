@@ -1,96 +1,90 @@
-<!doctype html>
-<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><title>Discovering Physical Concepts with Neural Networks - Hanzawa の 部屋</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Hanzawa の 部屋"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Hanzawa の 部屋"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="Introduction 如题目所示，本文的目的是利用神经网络来发掘物理概念。其思路是从实验数据学到表示，然后用学到的表示来回答物理问题，由此物理概念可以从学到的表示来提取出。作者进行了4个实验：  在阻尼振动实验中，模型学到了相关的物理参数； 在角动量守恒实验中，模型预测了质点的运动； 给定量子系统的观测数据，模型正确的识别出了量子状态的自由度； 给定从地球观测的太阳和火星的位置时间"><meta property="og:type" content="article"><meta property="og:title" content="Discovering Physical Concepts with Neural Networks"><meta property="og:url" content="https://larryshaw0079.github.io/hanzawa-blog/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/"><meta property="og:site_name" content="Hanzawa の 部屋"><meta property="og:description" content="Introduction 如题目所示，本文的目的是利用神经网络来发掘物理概念。其思路是从实验数据学到表示，然后用学到的表示来回答物理问题，由此物理概念可以从学到的表示来提取出。作者进行了4个实验：  在阻尼振动实验中，模型学到了相关的物理参数； 在角动量守恒实验中，模型预测了质点的运动； 给定量子系统的观测数据，模型正确的识别出了量子状态的自由度； 给定从地球观测的太阳和火星的位置时间"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="https://i.loli.net/2020/06/25/yh5Wj9AQmd6nsFC.png"><meta property="og:image" content="https://i.loli.net/2020/06/25/zCnYjVEZHdbqAD3.png"><meta property="og:image" content="https://i.loli.net/2020/06/25/uWd1lOUFxXgQJ7f.png"><meta property="og:image" content="https://i.loli.net/2020/06/25/yWGzxo4eFKmABul.png"><meta property="og:image" content="https://i.loli.net/2020/06/25/Q4PKa3pm2htekqd.png"><meta property="og:image" content="https://i.loli.net/2020/06/25/SKfJLxl1QmuzFt9.png"><meta property="og:image" content="https://i.loli.net/2020/06/25/qimk9ZYBe7UPs3z.png"><meta property="og:image" content="https://i.loli.net/2020/06/25/8lY1LBsQCZUwX2I.png"><meta property="og:image" content="https://i.loli.net/2020/06/25/ZTRKfzb63Jrvk5C.png"><meta property="og:image" content="https://i.loli.net/2020/06/25/vXl3Ae4RpzibrmY.png"><meta property="og:image" content="https://i.loli.net/2020/06/25/XnsYqcRS6izZGEm.png"><meta property="og:image" content="https://i.loli.net/2020/06/25/az3UmkchyFWevP7.png"><meta property="article:published_time" content="2020-03-01T14:55:02.000Z"><meta property="article:modified_time" content="2020-06-25T05:35:20.215Z"><meta property="article:author" content="Hanzawa"><meta property="article:tag" content="Deep Learning"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="https://i.loli.net/2020/06/25/yh5Wj9AQmd6nsFC.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://larryshaw0079.github.io/hanzawa-blog/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/"},"headline":"Discovering Physical Concepts with Neural Networks","image":["https://i.loli.net/2020/06/25/yh5Wj9AQmd6nsFC.png","https://i.loli.net/2020/06/25/zCnYjVEZHdbqAD3.png","https://i.loli.net/2020/06/25/uWd1lOUFxXgQJ7f.png","https://i.loli.net/2020/06/25/yWGzxo4eFKmABul.png","https://i.loli.net/2020/06/25/Q4PKa3pm2htekqd.png","https://i.loli.net/2020/06/25/SKfJLxl1QmuzFt9.png","https://i.loli.net/2020/06/25/qimk9ZYBe7UPs3z.png","https://i.loli.net/2020/06/25/8lY1LBsQCZUwX2I.png","https://i.loli.net/2020/06/25/ZTRKfzb63Jrvk5C.png","https://i.loli.net/2020/06/25/vXl3Ae4RpzibrmY.png","https://i.loli.net/2020/06/25/XnsYqcRS6izZGEm.png","https://i.loli.net/2020/06/25/az3UmkchyFWevP7.png"],"datePublished":"2020-03-01T14:55:02.000Z","dateModified":"2020-06-25T05:35:20.215Z","author":{"@type":"Person","name":"Hanzawa"},"publisher":{"@type":"Organization","name":"Hanzawa の 部屋","logo":{"@type":"ImageObject"}},"description":"Introduction\r 如题目所示，本文的目的是利用神经网络来发掘物理概念。其思路是从实验数据学到表示，然后用学到的表示来回答物理问题，由此物理概念可以从学到的表示来提取出。作者进行了4个实验：\r \r 在阻尼振动实验中，模型学到了相关的物理参数；\r 在角动量守恒实验中，模型预测了质点的运动；\r 给定量子系统的观测数据，模型正确的识别出了量子状态的自由度；\r 给定从地球观测的太阳和火星的位置时间"}</script><link rel="canonical" href="https://larryshaw0079.github.io/hanzawa-blog/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><!--!--><meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Hanzawa の 部屋" type="application/atom+xml">
-</head><body class="is-1-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/">Hanzawa の 部屋</a></div><div class="navbar-menu"><div class="navbar-end"></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-12"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-03-01T14:55:02.000Z" title="2020-3-1 10:55:02 ├F10: PM┤">2020-03-01</time>发表</span><span class="level-item"><time dateTime="2020-06-25T05:35:20.215Z" title="2020-6-25 1:35:20 ├F10: PM┤">2020-06-25</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Misc/">Misc</a></span></div></div><h1 class="title is-3 is-size-4-mobile">Discovering Physical Concepts with Neural Networks</h1><div class="content"><h1 id="introduction">Introduction</h1>
-<p>如题目所示，本文的目的是利用神经网络来发掘物理概念。其思路是从实验数据学到表示，然后用学到的表示来回答物理问题，由此物理概念可以从学到的表示来提取出。作者进行了4个实验：</p>
-<ol type="1">
-<li>在阻尼振动实验中，模型学到了相关的物理参数；</li>
-<li>在角动量守恒实验中，模型预测了质点的运动；</li>
-<li>给定量子系统的观测数据，模型正确的识别出了量子状态的自由度；</li>
-<li>给定从地球观测的太阳和火星的位置时间序列数据，模型发现了日心说模型。</li>
-</ol>
-<h1 id="preliminaries">Preliminaries</h1>
-<p>作者在附录中对神经网络的基础知识进行了介绍，这里不再赘述，只截取了一些相对前沿的内容。</p>
-<p><img src="https://i.loli.net/2020/06/25/yh5Wj9AQmd6nsFC.png" style="zoom:67%;" /></p>
-<h2 id="variational-autoencoders">Variational Autoencoders</h2>
-<p>本文用到的模型基础是VAE：</p>
-<p><img src="https://i.loli.net/2020/06/25/zCnYjVEZHdbqAD3.png" style="zoom:67%;" /></p>
-<h3 id="representation-learning">Representation Learning</h3>
-<p><em>Representation learning</em>的主要目标是将数据映射到一个隐向量 (encoder)，为了保证隐向量包含了所有相关信息， 那么应该能够从隐向量还原原数据 (decoder)。传统的Autoencoder是这个思想的最简单实现，而VAE则将AE和<em>Variational Inference</em>结合了起来，是一种经典的生成式模型。现在很多研究关注<em>Disentangled Representation Learning</em>，也就是说我们希望模型能够无监督地学习数据，从中学到有意义的表示。</p>
-<h3 id="boldsymbol-beta-vae"><span class="math inline">\(\boldsymbol \beta\)</span>-VAE</h3>
-<p><span class="math inline">\(\beta\)</span>-VAE是一种特殊的VAE，也是一个经典的<em>Disentangled Representation Learning</em>模型，它和VAE主要的区别是对KL散度一项加上了权重<span class="math inline">\(\beta\)</span>进行调节： <span class="math display">\[
-C_\beta(x)=-\left[\mathbb{E}_{z\sim p_\phi(z|x)}\log p_\theta(x|z)\right] + \beta D_\text{KL}\left[p_\phi(z|x)\parallel h(z)\right]
-\]</span> 如果假设<span class="math inline">\(p_\phi(z|x)=\mathcal{N}(\mu,\sigma)\)</span>，那么损失函数可以进行简化： <span class="math display">\[
-C_\beta(x)=\parallel \hat{x} - x \parallel^2_2-\frac{\beta}{2}\left(\sum\limits_i\log(\sigma_i^2)-\mu_i^2-\sigma_i^2\right)+C
-\]</span></p>
-<h1 id="network-structure">Network Structure</h1>
-<h2 id="network-structure-scinet">Network Structure: <em>SciNet</em></h2>
-<p>模仿物理学家建模物理问题的过程，作者提出了<em>SciNet</em>，如下图所示：</p>
-<p><img src="https://i.loli.net/2020/06/25/uWd1lOUFxXgQJ7f.png" style="zoom:67%;" /></p>
-<p>物理学家在建模物理问题的时候，往往是从一些实验数据出发，根据物理常识提取更加精练的表示，然后用学到的表示来回答物理问题。</p>
-<p>对于单纯的输入输出问题，<em>SciNet</em>可以看作是一个映射，<span class="math inline">\(F:\mathcal{O}\times\mathcal{Q}\rightarrow\mathcal{A}\)</span>。<span class="math inline">\(\mathcal{O}\)</span>是可能的实验数据集合，<span class="math inline">\(\mathcal{Q}\)</span>是可能的问题集合，<span class="math inline">\(\mathcal{A}\)</span>是可能的答案集合。可以将其分为两个步骤：编码过程<span class="math inline">\(E:\mathcal{O}\rightarrow\mathcal{R}\)</span>从实验数据学到表示，解码过程<span class="math inline">\(D:\mathcal{R}\times \mathcal{Q}\rightarrow \mathcal{A}\)</span>根据给定的问题从表示来回答问题。由此，<span class="math inline">\(F(o,q)=D(E(o),q)\)</span>。在实现方面，<em>SciNet</em>采用的是全连接网络。</p>
-<h2 id="training-and-testing-scinet">Training and Testing <em>SciNet</em></h2>
-<p>用来训练的数据形式为<span class="math inline">\((o,q,a_{cor}(o,q))\)</span>，观测<span class="math inline">\(o\)</span>和问题<span class="math inline">\(q\)</span>分别从观测集<span class="math inline">\(\mathcal{O}\)</span>和问题集<span class="math inline">\(\mathcal{Q}\)</span>选出，<span class="math inline">\(a_{cor}(o,q)\)</span>为对应的正确答案。在训练过程中，我们希望准确度尽量高，并且学到<em>minimal uncorrelated representations</em>。为此，作者采用<em>disentangling variational autoencoder</em>作为模型。</p>
-<h1 id="results">Results</h1>
-<p>在文中，作者进行了4个实验来验证模型的有效性。</p>
-<h2 id="damped-pendulum">Damped Pendulum</h2>
-<p>阻尼振动实验：</p>
-<ul>
-<li><p>任务：预测一维阻尼振动在不同时间的位置。</p></li>
-<li><p>物理模型：<span class="math inline">\(-kx-b\dot{x}=m\ddot{x}\)</span>，<span class="math inline">\(k\)</span>为弹性模量，<span class="math inline">\(b\)</span>为阻尼系数，通解为<span class="math inline">\(x(t)=A_0e^{-\frac{b}{2m}t}\cos(\omega t+\delta_0), \space \omega=\sqrt{\frac{k}{m}}\sqrt{1-\frac{b^2}{4mk}}\)</span></p></li>
-<li><p>观测数据：位置时间序列数据<span class="math inline">\(o=[x(t_i)]_{i\in\{1,\cdots,50\}}\in\mathbb{R}^{50}\)</span>，时间间隔相等，质量<span class="math inline">\(m=1\text{kg}\)</span>，振幅<span class="math inline">\(A_0=1\text{m}\)</span>，相位<span class="math inline">\(\delta_0=0\)</span>，弹性模量<span class="math inline">\(k\in[5,10]\text{kg}/\text{s}^2\)</span>，阻尼系数<span class="math inline">\(b\in[0.5,1]\text{kg}/\text{s}\)</span>。</p></li>
-<li><p>问题：预测<span class="math inline">\(q=t_\text{pred}\in\mathbb{R}\)</span></p></li>
-</ul>
-<p><img src="https://i.loli.net/2020/06/25/yWGzxo4eFKmABul.png" /></p>
-<p>隐变量大小设置为3，结果如下图所示：</p>
-<p><img src="https://i.loli.net/2020/06/25/Q4PKa3pm2htekqd.png" style="zoom:67%;" /></p>
-<p>(b)中的三幅图分别是学到的三个隐变量和我们感兴趣的参数<span class="math inline">\(k\)</span>和<span class="math inline">\(b\)</span>的关系图。第一幅图中变量<span class="math inline">\(1\)</span>与<span class="math inline">\(b\)</span>几乎完全线性相关，与<span class="math inline">\(k\)</span>基于线性无关，变量<span class="math inline">\(2\)</span>只和<span class="math inline">\(k\)</span>相关。变量<span class="math inline">\(3\)</span>几乎为一个常数，故不提供额外的信息。由此作者认为<em>SciNet</em>学到了我们关心的两个参数的知识。</p>
-<h2 id="conservation-of-angular-momentum">Conservation of Angular Momentum</h2>
-<p>角动量守恒实验：</p>
-<ul>
-<li>任务：预测一个由长度为<span class="math inline">\(r\)</span>的绳子捆绑着的旋转质点在位置<span class="math inline">\((0,r)\)</span>经一个自由质点撞击后的位置</li>
-<li>物理模型：给定撞击之前的角动量，自由质点撞击之后的速度，旋转质点在撞击之后在时间<span class="math inline">\(t_\text{pred}^\prime\)</span>的位置可以由角动量守恒定律给出：</li>
-</ul>
-<p><span class="math display">\[
-J=m_\text{rot}r^2\omega-rm_\text{free}(\mathbf{v}_\text{free})_x=m_\text{rot}r^2\omega^\prime-rm_\text{free}(\mathbf{v}^\prime_\text{free})_x=J^\prime
-\]</span></p>
-<ul>
-<li>观测数据：在撞击之前两个质点的位置数据<span class="math inline">\(o=[(t_i^\text{rot},q_\text{rot}(t_i^\text{rot})),(t_i^\text{free},q_\text{free}(t_i^\text{free}))]_{i\in\{1,\cdots,5\}}\)</span>，质量为固定值，半径<span class="math inline">\(r\)</span>也为固定值。数据添加高斯噪声。</li>
-<li>问题：预测撞击之后自由质点在时间<span class="math inline">\(t_\text{pred}^\prime\)</span>的位置</li>
-</ul>
-<p><img src="https://i.loli.net/2020/06/25/SKfJLxl1QmuzFt9.png" /></p>
-<p>实验室意图如下：</p>
-<p><img src="https://i.loli.net/2020/06/25/qimk9ZYBe7UPs3z.png" style="zoom:67%;" /></p>
-<p>实验结果表明<em>SciNet</em>能够正确预测质点撞击之后的位置，同时对噪音鲁棒。根据(b)，隐变量和角动量存在线性相关关系，作者认为<em>SciNet</em>学到了守恒的动量这一概念。</p>
-<h2 id="representation-of-qubits">Representation of Qubits</h2>
-<p>量子比特实验：</p>
-<ul>
-<li>任务：预测在<span class="math inline">\(n=1,2\)</span>的纯<span class="math inline">\(n\)</span>量子位状态<span class="math inline">\(\psi\in\mathbb{C}^{2^n}\)</span>下任何二进制投影测量<span class="math inline">\(\omega\in\mathbb{C}^{2^n}\)</span>的测量概率。</li>
-<li>物理模型：在执行测量<span class="math inline">\(\omega\in\mathbb{C}^{2^n}\)</span>的状态<span class="math inline">\(\psi\in\mathbb{C}^{2^n}\)</span>下测量0的概率<span class="math inline">\(p(\omega,\psi)\)</span>由<span class="math inline">\(p(\omega,\psi)=|\left&lt;\omega,\psi\right&gt;|^2\)</span>给定</li>
-<li>观测数据：状态<span class="math inline">\(\psi: o=[p(\alpha_i,\psi)]_{i\in\{i,\cdots,n_1\}}\)</span>的操作参数化：表示一组固定的随机二元射影测量值<span class="math inline">\(\mathcal{M}_1=\{\alpha_1,\cdots,\alpha_{n_1}\}\)</span>（一个量子位<span class="math inline">\(n_1 = 10\)</span>，两个量子位<span class="math inline">\(n_1 = 30\)</span>）</li>
-<li>问题：对于固定的一组随机二元射影测量<span class="math inline">\(\mathcal{M}_2=\{\beta_1,\cdots,\beta_{n_2}\}\)</span>，测量<span class="math inline">\(\omega:q=[p(\beta_i,\omega)]_{i\in\{1,\cdots,n_2\}}\)</span>的Operational参数化（一个量子位<span class="math inline">\(n_2 = 10\)</span>，两个量子位<span class="math inline">\(n_2 = 30\)</span>）</li>
-</ul>
-<p><img src="https://i.loli.net/2020/06/25/8lY1LBsQCZUwX2I.png" /></p>
-<p>实验结果如下：</p>
-<p><img src="https://i.loli.net/2020/06/25/ZTRKfzb63Jrvk5C.png" style="zoom:67%;" /></p>
-<p>通过实验发现，<em>SciNet</em>可以在不提供先验物理知识的条件下确定表述状态<span class="math inline">\(\psi\)</span>最小的参数数量。同时，<em>SciNet</em>还能分辨<em>tomographically complete</em>和<em>tomographically incomplete</em>。</p>
-<h2 id="heliocentric-model-of-the-solar-system">Heliocentric Model of the Solar System</h2>
-<p>日心说模型：</p>
-<ul>
-<li>问题：在给定初始条件下预测相对与地球的太阳和火星的角度<span class="math inline">\(\theta_M(t)\)</span>和<span class="math inline">\(\theta_S(t)\)</span></li>
-<li>物理模型：地球和火星围绕太阳以一定角速度做近似圆周运动</li>
-<li>观测数据：给定初始角度，随机选择周周期的哥白尼的观测数据</li>
-</ul>
-<p><img src="https://i.loli.net/2020/06/25/vXl3Ae4RpzibrmY.png" /></p>
-<p>模型的实现稍有变化，如下图所示：</p>
-<p><img src="https://i.loli.net/2020/06/25/XnsYqcRS6izZGEm.png" style="zoom:67%;" /></p>
-<p>这样，对于不同时间都对应一个隐变量<span class="math inline">\(r(t_i)\)</span>，而且隐变量是时间依赖的，对于一个隐变量<span class="math inline">\(r(t_i)\)</span>有一个解码器来输出答案。</p>
-<p><img src="https://i.loli.net/2020/06/25/az3UmkchyFWevP7.png" style="zoom:67%;" /></p>
-<p>实验结果表示，<em>SciNet</em>不仅正确预测了太阳和火星相对地球的角度，同时隐变量揭示了火星和地球相对太阳的角度。</p>
-</div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/Deep-Learning/">Deep Learning</a></div><!--!--></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2020/03/30/Deep-Weakly-supervised-Anomaly-Detection/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">Deep Weakly-supervised Anomaly Detection</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2020/02/27/Transfer-Anomaly-Detection-by-Inferring-Latent-Domain-Representations/"><span class="level-item">Transfer Anomaly Detection by Inferring Latent Domain Representations</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><!--!--></div><!--!--><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/">Hanzawa の 部屋</a><p class="is-size-7"><span>&copy; 2021 Hanzawa</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("zh-CN");</script><script>var IcarusThemeSettings = {
-            article: {
-                highlight: {
-                    clipboard: true,
-                    fold: 'unfolded'
-                }
-            }
-        };</script><script src="/js/column.js"></script><!--!--><script src="/js/main.js" defer></script><!--!--></body></html>
+<%
+var subtitle = page.subtitle || page.title
+var banner_img = page.banner_img || theme.index.banner_img
+var banner_img_height = page.banner_img_height || theme.index.banner_img_height
+var banner_mask_alpha = page.banner_mask_alpha || theme.index.banner_mask_alpha
+var colorSchema = theme.dark_mode && theme.dark_mode.enable && theme.dark_mode.default ? theme.dark_mode.default : ''
+%>
+
+<!DOCTYPE html>
+<html lang="<%= config.language %>" <%= colorSchema ? `data-default-color-scheme="${colorSchema}"` : '' %>>
+
+<%- partial('_partial/head') %>
+
+<body>
+  <header style="height: <%- banner_img_height %>vh;">
+    <%- partial('_partial/nav') %>
+    <div class="banner" id="banner" <%- theme.banner && theme.banner.parallax && 'parallax=true' %>
+         style="background: url('<%- url_for(banner_img) %>') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, <%= parseFloat(banner_mask_alpha) %>)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="<%- subtitle %>">
+              <% if(!theme.fun_features.typing.enable) { %>
+                <%- subtitle %>
+              <% } %>
+            </span>
+
+            <% if(is_post() && page.meta !== false) { %>
+              <%- partial('_partial/post-meta') %>
+            <% } %>
+          </div>
+
+          <% if (theme.scroll_down_arrow.enable && theme.scroll_down_arrow.banner_height_limit <= banner_img_height && page.layout !== '404') { %>
+            <div class="scroll-down-bar">
+              <i class="iconfont icon-arrowdown"></i>
+            </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <% if(is_post() || page.layout === '404') { %>
+      <%- body %>
+    <% } else { %>
+      <div class="container nopadding-x-md">
+        <div class="py-5" id="board"
+          <%- banner_img_height >= 100 && theme.banner && theme.banner.parallax ? 'style=margin-top:0' : '' %>>
+          <% if(page.layout === 'about') { %>
+            <div class="about-avatar">
+              <img src="<%- url_for(theme.about.avatar) %>" srcset="/img/loading.gif"
+                   class="img-fluid" alt="avatar">
+            </div>
+          <% } %>
+          <div class="container">
+            <div class="row">
+              <div class="col-12 col-md-10 m-auto">
+                <%- body %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% } %>
+
+    <% if (theme.scroll_top_arrow.enable) { %>
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    <% } %>
+
+    <% if (theme.search.enable) { %>
+      <%- partial('_partial/search') %>
+    <% } %>
+
+    <% if (theme.custom_html) { %>
+      <div class="col-lg-7 mx-auto nopadding-x-md">
+        <div class="container custom mx-auto">
+          <%- theme.custom_html %>
+        </div>
+      </div>
+    <% } %>
+  </main>
+
+  <%- partial('_partial/footer', { params: { subtitle: subtitle } }) %>
+
+</body>
+</html>

@@ -1,98 +1,90 @@
-<!doctype html>
-<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><title>Deep Weakly-supervised Anomaly Detection - Hanzawa の 部屋</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Hanzawa の 部屋"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Hanzawa の 部屋"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="Introduction 在文献中，因为标注成本的昂贵，无监督方法占据了异常检测的主要位置。然而，在现实生活中，我们可能会有少量标签，如何利用这部分标签信息就成为了一个问题，作者将其称之为anomaly-informed modeling。作者提出了两点挑战：  少量标签可能无法提供所有类型异常的信息； 大部分无标签数据为正常样本，但其中包含少部分异常（污染）。  作者提出了基于pai"><meta property="og:type" content="article"><meta property="og:title" content="Deep Weakly-supervised Anomaly Detection"><meta property="og:url" content="https://larryshaw0079.github.io/hanzawa-blog/2020/03/30/Deep-Weakly-supervised-Anomaly-Detection/"><meta property="og:site_name" content="Hanzawa の 部屋"><meta property="og:description" content="Introduction 在文献中，因为标注成本的昂贵，无监督方法占据了异常检测的主要位置。然而，在现实生活中，我们可能会有少量标签，如何利用这部分标签信息就成为了一个问题，作者将其称之为anomaly-informed modeling。作者提出了两点挑战：  少量标签可能无法提供所有类型异常的信息； 大部分无标签数据为正常样本，但其中包含少部分异常（污染）。  作者提出了基于pai"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="https://i.loli.net/2020/06/25/6ZF3w9v1Lux5t4Q.png"><meta property="og:image" content="https://i.loli.net/2020/06/25/oR6uTL3c7HMpwD4.png"><meta property="og:image" content="https://i.loli.net/2020/06/25/BfhVE9z8DWipAM6.png"><meta property="og:image" content="https://i.loli.net/2020/06/25/9GM8XTYiSLUn2Ar.png"><meta property="og:image" content="https://i.loli.net/2020/06/25/4RxrGZWLqHNnXco.png"><meta property="og:image" content="https://i.loli.net/2020/06/25/x4Hf3lU5JO71bvo.png"><meta property="og:image" content="https://i.loli.net/2020/06/25/TGYCJUs8LlmreNV.png"><meta property="og:image" content="https://i.loli.net/2020/06/25/oR7qlZWfepFT8jK.png"><meta property="article:published_time" content="2020-03-29T16:17:24.000Z"><meta property="article:modified_time" content="2020-06-25T05:33:35.419Z"><meta property="article:author" content="Hanzawa"><meta property="article:tag" content="Anomaly Detection"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="https://i.loli.net/2020/06/25/6ZF3w9v1Lux5t4Q.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://larryshaw0079.github.io/hanzawa-blog/2020/03/30/Deep-Weakly-supervised-Anomaly-Detection/"},"headline":"Deep Weakly-supervised Anomaly Detection","image":["https://i.loli.net/2020/06/25/6ZF3w9v1Lux5t4Q.png","https://i.loli.net/2020/06/25/oR6uTL3c7HMpwD4.png","https://i.loli.net/2020/06/25/BfhVE9z8DWipAM6.png","https://i.loli.net/2020/06/25/9GM8XTYiSLUn2Ar.png","https://i.loli.net/2020/06/25/4RxrGZWLqHNnXco.png","https://i.loli.net/2020/06/25/x4Hf3lU5JO71bvo.png","https://i.loli.net/2020/06/25/TGYCJUs8LlmreNV.png","https://i.loli.net/2020/06/25/oR7qlZWfepFT8jK.png"],"datePublished":"2020-03-29T16:17:24.000Z","dateModified":"2020-06-25T05:33:35.419Z","author":{"@type":"Person","name":"Hanzawa"},"publisher":{"@type":"Organization","name":"Hanzawa の 部屋","logo":{"@type":"ImageObject"}},"description":"Introduction\r 在文献中，因为标注成本的昂贵，无监督方法占据了异常检测的主要位置。然而，在现实生活中，我们可能会有少量标签，如何利用这部分标签信息就成为了一个问题，作者将其称之为anomaly-informed modeling。作者提出了两点挑战：\r \r 少量标签可能无法提供所有类型异常的信息；\r 大部分无标签数据为正常样本，但其中包含少部分异常（污染）。\r \r 作者提出了基于pai"}</script><link rel="canonical" href="https://larryshaw0079.github.io/hanzawa-blog/2020/03/30/Deep-Weakly-supervised-Anomaly-Detection/"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><!--!--><meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Hanzawa の 部屋" type="application/atom+xml">
-</head><body class="is-1-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/">Hanzawa の 部屋</a></div><div class="navbar-menu"><div class="navbar-end"></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-12"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-03-29T16:17:24.000Z" title="2020-3-30 12:17:24 ├F10: AM┤">2020-03-30</time>发表</span><span class="level-item"><time dateTime="2020-06-25T05:33:35.419Z" title="2020-6-25 1:33:35 ├F10: PM┤">2020-06-25</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Research/">Research</a><span> / </span><a class="link-muted" href="/categories/Research/Anomaly-Detection/">Anomaly Detection</a></span></div></div><h1 class="title is-3 is-size-4-mobile">Deep Weakly-supervised Anomaly Detection</h1><div class="content"><h1 id="introduction">Introduction</h1>
-<p>在文献中，因为标注成本的昂贵，无监督方法占据了异常检测的主要位置。然而，在现实生活中，我们可能会有少量标签，如何利用这部分标签信息就成为了一个问题，作者将其称之为<em>anomaly-informed modeling</em>。作者提出了两点挑战：</p>
-<ol type="1">
-<li>少量标签可能无法提供所有类型异常的信息；</li>
-<li>大部分无标签数据为正常样本，但其中包含少部分异常（污染）。</li>
-</ol>
-<p>作者提出了基于pairwise relation learning的方法来解决这些问题。文章的主要贡献如下：</p>
-<ol type="1">
-<li>提出了一种基于pairing-based data augmentation和ordinal regression来进行弱监督异常检测的框架</li>
-<li>基于该框架提出了PReNet，一种基于双流ordinal regression的网络</li>
-<li>从理论和实践角度分析了方法的有效性</li>
-<li>在40个真实数据集上进行了完善的实验</li>
-</ol>
-<h1 id="proposed-method">Proposed Method</h1>
-<h2 id="learning-anomaly-scores-by-predicting-pairwise-relation">Learning Anomaly Scores by Predicting Pairwise Relation</h2>
-<h3 id="problem-formulation">Problem Formulation</h3>
-<p>给定数据集<span class="math inline">\(\mathcal{X}=\{\mathbf{x}_1,\mathbf {x}_2,\cdots,\mathbf{x}_N,\mathbf{x}_{N+1},\cdots,\mathbf{x}_{N+K}\}\)</span>，包含两部分，一部分是五标签数据<span class="math inline">\(\mathcal{U}=\{\mathbf{x}_1,\mathbf {x}_2,\cdots,\mathbf{x}_N\}\)</span>，另一部分是有标签异常数据<span class="math inline">\(\mathcal{A}=\{\mathbf{x}_{N+1},\cdots,\mathbf{x}_{N+K}\}\)</span>，其中<span class="math inline">\(K\ll N\)</span>。我们的任务目标是学习一个打分函数<span class="math inline">\(\phi:\mathcal{X}\mapsto \mathbb{R}\)</span>，使得对任任意异常样本的打分高于任意正常样本。</p>
-<p>在这个Formulation里，作者将关系学习和异常打分统一了起来。首先，输入的数据集不再是原始样本，而是样本对。样本对包含三种：<em>anomaly-anomaly</em>，<em>anomaly-unlabeled</em>，<em>unlabeled-unlabeled</em>，记为<span class="math inline">\(C_{\{\mathbf{a},\mathbf{a}\}}\)</span>，<span class="math inline">\(C_{\{\mathbf{a},\mathbf{u}\}}\)</span>，<span class="math inline">\(C_{\{\mathbf{u},\mathbf{u}\}}\)</span>。每一个样本对包含一个标签<span class="math inline">\(y\)</span>，表示该pair对应的异常分数，整个输入数据集<span class="math inline">\(\mathcal{P}=\{\{\mathbf{x}_i,\mathbf{x}_j,y_{ij}\}|\mathbf{x}_i,\mathbf{x}_j\in\mathcal{X} \space\text{and}\space y_{ij}\in\mathbb{N}\}\)</span>。因为有<span class="math inline">\(y_{\{\mathbf a,\mathbf a\}}&gt;y_{\{\mathbf a,\mathbf u\}}&gt;y_{\{\mathbf u,\mathbf u\}}\)</span>，所以对关系的学习也是对异常打分的学习。</p>
-<h3 id="the-instantiated-model-prenet">The Instantiated Model: PReNET</h3>
-<p>下图为模型示意图，<strong>Data Augmentation</strong>模块负责产生pair数据，<strong>End-to-End Anomaly Score Learner <span class="math inline">\(\phi\)</span></strong> 模块负责关系学习（异常打分）。</p>
-<p><img src="https://i.loli.net/2020/06/25/6ZF3w9v1Lux5t4Q.png" style="zoom:67%;" /></p>
-<h4 id="data-argumentation-by-pairing">Data Argumentation by Pairing</h4>
-<p>数据的产生分为两步：</p>
-<ol type="1">
-<li>从<span class="math inline">\(\mathcal{A}\)</span>和<span class="math inline">\(\mathcal{U}\)</span>上随机采样，组成pair；</li>
-<li>对每个pair打上次序(ordinal class feature) 标签<span class="math inline">\(\mathbf{y}\)</span>。</li>
-</ol>
-<p>部分<span class="math inline">\(C_{\{\mathbf{a},\mathbf{u}\}}\)</span>和<span class="math inline">\(C_{\{\mathbf{u},\mathbf{u}\}}\)</span>可能包含异常污染，因为在<span class="math inline">\(\mathcal{U}\)</span>中可能会有未标记的异常样本。</p>
-<h4 id="end-to-end-anomaly-score-learner">End-to-End Anomaly Score Learner</h4>
-<p>令<span class="math inline">\(\mathcal{Z}\in\mathbb{R}^M\)</span>为中间表示空间，那么<strong>Score Learner</strong>可以拆解为特征学习<span class="math inline">\(\psi(\cdot;\Theta_r):\mathcal{X}\mapsto \mathcal{Z}\)</span>和打分函数<span class="math inline">\(\eta((\cdot,\cdot);\Theta_s):(\mathcal{Z},\mathcal{Z})\mapsto\mathbb{R}\)</span>两部分，两部分都由神经网络组成。</p>
-<h4 id="ordinal-regression">Ordinal Regression</h4>
-<p>损失函数定义为： <span class="math display">\[
-L\left(\phi((\mathbf x_i,\mathbf x_j);\Theta),y_{ij}\right)=|y_{ij}-\phi((\mathbf x_i,\mathbf x_j);\Theta)|
-\]</span> 采用绝对值而不是均方误差的原因是为了减少异常污染的影响。默认<span class="math inline">\(y_{\{\mathbf a,\mathbf a\}}=8\)</span>，<span class="math inline">\(y_{\{\mathbf a,\mathbf u\}}=4\)</span>，<span class="math inline">\(y_{\{\mathbf u,\mathbf u\}}=0\)</span>。最后的优化函数可以写为： <span class="math display">\[
-\mathop{\text{argmin}}\limits_{\Theta}\frac{1}{|\mathcal{B}|}\sum\limits_{\{\mathbf x_i,\mathbf x_j, y_{ij}\}\in\mathcal{B}}|y_{ij}-\phi((\mathbf x_i,\mathbf x_j);\Theta)|+\lambda R(\Theta)
-\]</span> <span class="math inline">\(\mathcal{B}\)</span>为一个batch，<span class="math inline">\(R(\Theta)\)</span>为正则项。</p>
-<h3 id="anomaly-detection-using-prenet">Anomaly Detection Using PReNet</h3>
-<h4 id="training-stage">Training Stage</h4>
-<p>训练流程如下图所示：</p>
-<p><img src="https://i.loli.net/2020/06/25/oR6uTL3c7HMpwD4.png" style="zoom: 80%;" /></p>
-<p>为了保证训练样本类别的平衡，<span class="math inline">\(\frac{|\mathcal{B}|}{2}\)</span>的样本采样自<span class="math inline">\(C_{\{\mathbf u,\mathbf u\}}\)</span>，采样自<span class="math inline">\(C_{\{\mathbf a,\mathbf u\}}\)</span>和<span class="math display">\[C_{\{\mathbf a,\mathbf a\}}\]</span>的样本都占<span class="math inline">\(\frac{|\mathcal{B}|}{4}\)</span>。</p>
-<h4 id="anomaly-scoring-stage">Anomaly Scoring Stage</h4>
-<p>在测试阶段，给定测试样本<span class="math inline">\(\mathbf{x}_k\)</span>，先分别从<span class="math inline">\(\mathcal{A}\)</span>和<span class="math inline">\(\mathcal{U}\)</span>采样，然后定义以下<em>anomaly score</em>： <span class="math display">\[
-s_{\mathbf{x}_k}=\frac{1}{2E}\left[\sum\limits_{i=1}^E\phi((\mathbf a_i,\mathbf x_k);\Theta^*)+\sum\limits_{j=1}^E\phi((\mathbf x_k,\mathbf u_j);\Theta^*)\right]
-\]</span> <span class="math inline">\(\mathbf a_i\)</span>和<span class="math inline">\(\mathbf u_j\)</span>为随机采样得到的异常样本和正常样本，采样大小<span class="math inline">\(E\)</span>默认为30。</p>
-<h1 id="experiments">Experiments</h1>
-<p>实验部分主要是回答以下四个问题：</p>
-<ol type="1">
-<li>在有限的标签异常情况下，PReNet能否有效地检测已知和未知的异常；</li>
-<li>在不同数量标签异常的情况下，PReNet的表现如何；</li>
-<li>PReNet对异常污染的鲁棒性如何；</li>
-<li>PReNet不同组件的重要性如何。</li>
-</ol>
-<h2 id="datasets">Datasets</h2>
-<p>实验一共用到了40个数据集，其中12个用来评测算法检测已知的异常的能力（如Table 2所示），28个用来评测算法检测未知的异常的能力（如Table 3所示）。</p>
-<h2 id="competing-methods-and-parameter-settings">Competing Methods and Parameter Settings</h2>
-<p>用到的baseline有以下几个：</p>
-<ul>
-<li>DevNet：同一作者在KDD2019提出的异常检测框架</li>
-<li>Deep support vector data description (DSVDD)：深度支持向量数据描述</li>
-<li>Prototypical network： few-shot classification中的一种模型</li>
-<li>iForest：孤立森林</li>
-</ul>
-<h2 id="performance-evaluation-metrics">Performance Evaluation Metrics</h2>
-<p>用到的Metrics为AUC-ROC和AUC-PR。</p>
-<h2 id="detection-of-known-anomalies">Detection of Known Anomalies</h2>
-<p>在本实验中，异常污染的比例（2%）和有标记异常样本的数量（60）是固定的，下表为实验结果：</p>
-<p><img src="https://i.loli.net/2020/06/25/BfhVE9z8DWipAM6.png" style="zoom: 80%;" /></p>
-<h2 id="detection-of-unknown-anomalies">Detection of Unknown Anomalies</h2>
-<p>在本实验中，异常污染的比例（2%）和有标记异常样本的数量（60）同样是固定的，下表为实验结果：</p>
-<p><img src="https://i.loli.net/2020/06/25/9GM8XTYiSLUn2Ar.png" style="zoom:80%;" /></p>
-<p><img src="https://i.loli.net/2020/06/25/4RxrGZWLqHNnXco.png" style="zoom:80%;" /></p>
-<h2 id="availability-of-known-anomalies">Availability of Known Anomalies</h2>
-<p>本实验主要是研究不同数量标注异常样本的条件下，算法的性能如何。异常污染的比例固定（2%），标注异常的数量从15到120变化。实验结果如下：</p>
-<p><img src="https://i.loli.net/2020/06/25/x4Hf3lU5JO71bvo.png" style="zoom:80%;" /></p>
-<h2 id="further-analysis-of-prenet">Further Analysis of PReNet</h2>
-<h3 id="tolerance-to-anomaly-contamination-in-unlabeled-data">Tolerance to Anomaly Contamination in Unlabeled Data</h3>
-<p>本实验主要研究不同异常污染比例下，算法的性能，即探究算法对异常污染的鲁棒性。标注异常样本的数量恒定（60），异常污染比例在<span class="math inline">\(\{0\%,2\%,5\%,10\%\}\)</span>中变化。实验结果如下所示：</p>
-<p><img src="https://i.loli.net/2020/06/25/TGYCJUs8LlmreNV.png" style="zoom:80%;" /></p>
-<h3 id="ablation-study">Ablation Study</h3>
-<p>这一节是消融实验，分别设置了四个变体：</p>
-<ul>
-<li><strong>BOR: </strong>损失函数替换成了二值回归<em>Binary Ordinal Regression</em>；</li>
-<li><strong>OSNet: </strong>将双流结构简化为单流；</li>
-<li><strong>LDM: </strong>将网络中的隐藏层去除；</li>
-<li><strong>A2H: </strong>加入了额外的隐藏层，并且加入了<span class="math inline">\(\ell_2\)</span>-norm防止过拟合。</li>
-</ul>
-<p><img src="https://i.loli.net/2020/06/25/oR7qlZWfepFT8jK.png" style="zoom:80%;" /></p>
-</div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/Anomaly-Detection/">Anomaly Detection</a></div><!--!--></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2020/05/06/Learning-Representations-of-Ultrahigh-dimensional-Data-for-Random-Distance-based-Outlier-Detection/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">Learning Representations of Ultrahigh-dimensional Data for Random Distance-based Outlier Detection</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2020/03/01/Discovering-Physical-Concepts-with-Neural-Networks/"><span class="level-item">Discovering Physical Concepts with Neural Networks</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><!--!--></div><!--!--><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/">Hanzawa の 部屋</a><p class="is-size-7"><span>&copy; 2021 Hanzawa</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("zh-CN");</script><script>var IcarusThemeSettings = {
-            article: {
-                highlight: {
-                    clipboard: true,
-                    fold: 'unfolded'
-                }
-            }
-        };</script><script src="/js/column.js"></script><!--!--><script src="/js/main.js" defer></script><!--!--></body></html>
+<%
+var subtitle = page.subtitle || page.title
+var banner_img = page.banner_img || theme.index.banner_img
+var banner_img_height = page.banner_img_height || theme.index.banner_img_height
+var banner_mask_alpha = page.banner_mask_alpha || theme.index.banner_mask_alpha
+var colorSchema = theme.dark_mode && theme.dark_mode.enable && theme.dark_mode.default ? theme.dark_mode.default : ''
+%>
+
+<!DOCTYPE html>
+<html lang="<%= config.language %>" <%= colorSchema ? `data-default-color-scheme="${colorSchema}"` : '' %>>
+
+<%- partial('_partial/head') %>
+
+<body>
+  <header style="height: <%- banner_img_height %>vh;">
+    <%- partial('_partial/nav') %>
+    <div class="banner" id="banner" <%- theme.banner && theme.banner.parallax && 'parallax=true' %>
+         style="background: url('<%- url_for(banner_img) %>') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, <%= parseFloat(banner_mask_alpha) %>)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="<%- subtitle %>">
+              <% if(!theme.fun_features.typing.enable) { %>
+                <%- subtitle %>
+              <% } %>
+            </span>
+
+            <% if(is_post() && page.meta !== false) { %>
+              <%- partial('_partial/post-meta') %>
+            <% } %>
+          </div>
+
+          <% if (theme.scroll_down_arrow.enable && theme.scroll_down_arrow.banner_height_limit <= banner_img_height && page.layout !== '404') { %>
+            <div class="scroll-down-bar">
+              <i class="iconfont icon-arrowdown"></i>
+            </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <% if(is_post() || page.layout === '404') { %>
+      <%- body %>
+    <% } else { %>
+      <div class="container nopadding-x-md">
+        <div class="py-5" id="board"
+          <%- banner_img_height >= 100 && theme.banner && theme.banner.parallax ? 'style=margin-top:0' : '' %>>
+          <% if(page.layout === 'about') { %>
+            <div class="about-avatar">
+              <img src="<%- url_for(theme.about.avatar) %>" srcset="/img/loading.gif"
+                   class="img-fluid" alt="avatar">
+            </div>
+          <% } %>
+          <div class="container">
+            <div class="row">
+              <div class="col-12 col-md-10 m-auto">
+                <%- body %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% } %>
+
+    <% if (theme.scroll_top_arrow.enable) { %>
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    <% } %>
+
+    <% if (theme.search.enable) { %>
+      <%- partial('_partial/search') %>
+    <% } %>
+
+    <% if (theme.custom_html) { %>
+      <div class="col-lg-7 mx-auto nopadding-x-md">
+        <div class="container custom mx-auto">
+          <%- theme.custom_html %>
+        </div>
+      </div>
+    <% } %>
+  </main>
+
+  <%- partial('_partial/footer', { params: { subtitle: subtitle } }) %>
+
+</body>
+</html>
