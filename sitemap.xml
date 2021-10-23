@@ -305,20 +305,6 @@
   </url>
   
   <url>
-    <loc>https://larryshaw0079.github.io/tags/GAN/</loc>
-    <lastmod>2021-10-23</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://larryshaw0079.github.io/tags/Novelty-Detection/</loc>
-    <lastmod>2021-10-23</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://larryshaw0079.github.io/tags/Geant4/</loc>
     <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
@@ -326,7 +312,21 @@
   </url>
   
   <url>
+    <loc>https://larryshaw0079.github.io/tags/GAN/</loc>
+    <lastmod>2021-10-23</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://larryshaw0079.github.io/tags/Representation-Learning/</loc>
+    <lastmod>2021-10-23</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://larryshaw0079.github.io/tags/Novelty-Detection/</loc>
     <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -410,6 +410,13 @@
   </url>
   
   <url>
+    <loc>https://larryshaw0079.github.io/tags/Spectral/</loc>
+    <lastmod>2021-10-23</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://larryshaw0079.github.io/tags/Contrastive-Learning/</loc>
     <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
@@ -425,13 +432,6 @@
   
   <url>
     <loc>https://larryshaw0079.github.io/tags/Flow-based-Model/</loc>
-    <lastmod>2021-10-23</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://larryshaw0079.github.io/tags/Spectral/</loc>
     <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -496,14 +496,14 @@
   </url>
   
   <url>
-    <loc>https://larryshaw0079.github.io/categories/Research/Time-Series-Imputation/</loc>
+    <loc>https://larryshaw0079.github.io/categories/Technical-Notes/</loc>
     <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://larryshaw0079.github.io/categories/Technical-Notes/</loc>
+    <loc>https://larryshaw0079.github.io/categories/Research/Time-Series-Imputation/</loc>
     <lastmod>2021-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
