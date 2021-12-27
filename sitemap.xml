@@ -9,6 +9,13 @@
   </url>
   
   <url>
+    <loc>https://larryshaw0079.github.io/2020/09/23/Unsupervised-Feature-Learning-via-Non-Parametric-Instance-Discrimination/</loc>
+    
+    <lastmod>2021-12-27</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://larryshaw0079.github.io/about/index.html</loc>
     
     <lastmod>2021-10-23</lastmod>
@@ -17,13 +24,6 @@
   
   <url>
     <loc>https://larryshaw0079.github.io/2020/08/26/Machine-Learning-Ensemble-Algorithms-GBDT-and-XGBoost/</loc>
-    
-    <lastmod>2021-02-28</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://larryshaw0079.github.io/2020/09/23/Unsupervised-Feature-Learning-via-Non-Parametric-Instance-Discrimination/</loc>
     
     <lastmod>2021-02-28</lastmod>
     
@@ -277,13 +277,6 @@
   </url>
   
   <url>
-    <loc>https://larryshaw0079.github.io/tags/Statistics/</loc>
-    <lastmod>2021-12-27</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://larryshaw0079.github.io/tags/Variational-Inference/</loc>
     <lastmod>2021-12-27</lastmod>
     <changefreq>daily</changefreq>
@@ -292,6 +285,13 @@
   
   <url>
     <loc>https://larryshaw0079.github.io/tags/VAE/</loc>
+    <lastmod>2021-12-27</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://larryshaw0079.github.io/tags/Statistics/</loc>
     <lastmod>2021-12-27</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -312,13 +312,6 @@
   </url>
   
   <url>
-    <loc>https://larryshaw0079.github.io/tags/Geant4/</loc>
-    <lastmod>2021-12-27</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://larryshaw0079.github.io/tags/GAN/</loc>
     <lastmod>2021-12-27</lastmod>
     <changefreq>daily</changefreq>
@@ -326,7 +319,21 @@
   </url>
   
   <url>
+    <loc>https://larryshaw0079.github.io/tags/Geant4/</loc>
+    <lastmod>2021-12-27</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://larryshaw0079.github.io/tags/Novelty-Detection/</loc>
+    <lastmod>2021-12-27</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://larryshaw0079.github.io/tags/Representation-Learning/</loc>
     <lastmod>2021-12-27</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -354,20 +361,6 @@
   </url>
   
   <url>
-    <loc>https://larryshaw0079.github.io/tags/Representation-Learning/</loc>
-    <lastmod>2021-12-27</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://larryshaw0079.github.io/tags/SVM/</loc>
-    <lastmod>2021-12-27</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://larryshaw0079.github.io/tags/GBDT/</loc>
     <lastmod>2021-12-27</lastmod>
     <changefreq>daily</changefreq>
@@ -376,6 +369,13 @@
   
   <url>
     <loc>https://larryshaw0079.github.io/tags/XGBoost/</loc>
+    <lastmod>2021-12-27</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://larryshaw0079.github.io/tags/SVM/</loc>
     <lastmod>2021-12-27</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -466,6 +466,13 @@
   </url>
   
   <url>
+    <loc>https://larryshaw0079.github.io/tags/Summary/</loc>
+    <lastmod>2021-12-27</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://larryshaw0079.github.io/tags/Docker/</loc>
     <lastmod>2021-12-27</lastmod>
     <changefreq>daily</changefreq>
@@ -503,14 +510,14 @@
   </url>
   
   <url>
-    <loc>https://larryshaw0079.github.io/categories/Technical-Notes/</loc>
+    <loc>https://larryshaw0079.github.io/categories/Research/Time-Series-Imputation/</loc>
     <lastmod>2021-12-27</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://larryshaw0079.github.io/categories/Research/Time-Series-Imputation/</loc>
+    <loc>https://larryshaw0079.github.io/categories/Technical-Notes/</loc>
     <lastmod>2021-12-27</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
