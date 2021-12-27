@@ -102,7 +102,7 @@
   </script>
   <script  src="/hanzawa-blog/js/utils.js" ></script>
   <script  src="/hanzawa-blog/js/color-schema.js" ></script>
-<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/hanzawa-blog/atom.xml" title="Hanzawa の 部屋" type="application/atom+xml">
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/hanzawa-blog/atom.xml" title="Hanzawa の 部屋" type="application/atom+xml">
 </head>
 
 
@@ -317,7 +317,7 @@
 <p><img src="https://i.loli.net/2020/06/24/6cMz1WGH4fgpBsS.png" srcset="/hanzawa-blog/img/loading.gif" lazyload /></p>
 <blockquote>
 <p><code>-it</code>的意思是什么？根据<code>docker run --help</code>：</p>
-<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs routeros">-i, --interactive                    Keep STDIN open even <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> attached<br>    --ip string                      IPv4<span class="hljs-built_in"> address </span>(e.g., 172.30.100.104)<br>    --ip6 string                    <span class="hljs-built_in"> IPv6 address </span>(e.g., 2001:db8::33)<br>    --ipc string                     IPC mode <span class="hljs-keyword">to</span> use<br>    --isolation string               Container isolation technology<br>    --kernel-memory bytes            Kernel memory limit<br>-t, --tty                            Allocate a pseudo-TTY<br>    --ulimit ulimit                  Ulimit options (default [])<br>Copy<br></code></pre></td></tr></table></figure>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">-i, <span class="hljs-comment">--interactive                    Keep STDIN open even if not attached</span><br>    <span class="hljs-comment">--ip string                      IPv4 address (e.g., 172.30.100.104)</span><br>    <span class="hljs-comment">--ip6 string                     IPv6 address (e.g., 2001:db8::33)</span><br>    <span class="hljs-comment">--ipc string                     IPC mode to use</span><br>    <span class="hljs-comment">--isolation string               Container isolation technology</span><br>    <span class="hljs-comment">--kernel-memory bytes            Kernel memory limit</span><br>-t, <span class="hljs-comment">--tty                            Allocate a pseudo-TTY</span><br>    <span class="hljs-comment">--ulimit ulimit                  Ulimit options (default [])</span><br><span class="hljs-keyword">Copy</span><br></code></pre></td></tr></table></figure>
 <p>其实<code>-it</code>是<code>-i</code>和<code>-t</code>的合并写法，意思是运行后进入这个容器并且启用shell，不然运行之后就会放到后台而不会进入容器中。而<code>--rm</code>则代表容器退出之后会被删除（镜像不会被删除），每次运行实际上会创建一个新的容器，如果不加<code>--rm</code>或退出之后不手动删除的话会看到一堆停止运行的容器。</p>
 </blockquote>
 <p>输入<code>cat /etc/issue</code>可以看到默认拉取的是最新的Ubuntu 20.04 LTS：</p>
@@ -384,7 +384,7 @@
 <p>因为这里我用的CUDA10.1，其他版本的CUDA安装指令可能不太一样，具体可以参考<a target="_blank" rel="noopener" href="https://pytorch.org/get-started/locally/">官网</a>。</p>
 <h2 id="configure-tensorflow">Configure Tensorflow</h2>
 <p>如果是安装Tensorflow，那么构建Tensorflow的Dockerfile可以像下面这么写：</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs dockerfile"><span class="hljs-keyword">FROM</span> xiaoqinfeng/base<br><br><span class="hljs-keyword">RUN</span><span class="bash"> pip install -U pip</span><br><span class="hljs-keyword">RUN</span><span class="bash"> pip install numpy scipy pandas matplotlib tqdm tensorflow-gpuCopy</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-keyword">FROM</span> xiaoqinfeng/base<br><br><span class="hljs-builtin-name">RUN</span> pip install -U pip<br><span class="hljs-builtin-name">RUN</span> pip install numpy scipy pandas matplotlib tqdm tensorflow-gpuCopy<br></code></pre></td></tr></table></figure>
 <p>这里会自动安装最新版本的Tensorflow2。Tensorflow不同版本对CUDA和cuDNN版本甚至Python版本的支持都不太一样，可以参考<a target="_blank" rel="noopener" href="https://www.tensorflow.org/install/source#linux">官网</a>的说明。</p>
 <h1 id="deep-learning-with-openpai">Deep Learning with OpenPAI</h1>
 <h2 id="what-is-openpai">What is OpenPAI</h2>
@@ -396,7 +396,7 @@
 <h2 id="submit-jobs-to-openpai">Submit Jobs to OpenPAI</h2>
 <h3 id="pack-code-data-files">Pack Code &amp; Data Files</h3>
 <p>假设你已经完成了代码的编写和测试，你的目录结构可能看起来是这样：</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs css">.<br>├── <span class="hljs-selector-tag">README</span><span class="hljs-selector-class">.md</span><br>├── <span class="hljs-selector-tag">data</span><br>│   └── <span class="hljs-selector-tag">dataset</span><span class="hljs-selector-class">.csv</span><br>├── <span class="hljs-selector-tag">main</span><span class="hljs-selector-class">.py</span><br>└── <span class="hljs-selector-tag">src</span><br>    ├── <span class="hljs-selector-tag">data</span><span class="hljs-selector-class">.py</span><br>    └── <span class="hljs-selector-tag">net</span><span class="hljs-selector-class">.pyCopy</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs stylus">.<br>├── README.md<br>├── data<br>│   └── dataset.csv<br>├── <span class="hljs-selector-tag">main</span>.py<br>└── <span class="hljs-attribute">src</span><br>    ├── data.py<br>    └── net.pyCopy<br></code></pre></td></tr></table></figure>
 <p>因为OpenPAI会创建一个虚拟容器来运行你的代码，所以你的数据和代码必须要以某种方式传送到OpenPAI上的虚拟容器中。我们先来打包，在代码目录下执行<code>tar -cvf files.tar ./</code>。之后，运行<code>python -m http.server &lt;port&gt;</code>。打开浏览器输入<code>&lt;server_ip&gt;:&lt;port&gt;</code>应该就能看到你的文件了：</p>
 <p><img src="https://i.loli.net/2020/06/24/Cbgiw3XKnGYsNHp.png" srcset="/hanzawa-blog/img/loading.gif" lazyload /></p>
 <p>由于这个http进程需要一直运行，所以建议使用<code>screen</code>放到后台执行。</p>
@@ -408,7 +408,7 @@
 <p>Job name大家可以自己设置。在Command一栏，是执行任务所需的全部命令，首先我们要做的就是将代码数据压缩包下载到容器中并解压：</p>
 <figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs elixir">wget &lt;server_ip&gt;<span class="hljs-symbol">:&lt;port&gt;/files</span>.tar<br><br>tar -xvf files.tarCopy<br></code></pre></td></tr></table></figure>
 <p>然后是运行代码，假设我这里的任务比较简单，只有一行main.py的调用：</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-tag">python</span> <span class="hljs-selector-tag">main</span><span class="hljs-selector-class">.pyCopy</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs css">python <span class="hljs-selector-tag">main</span><span class="hljs-selector-class">.pyCopy</span><br></code></pre></td></tr></table></figure>
 <p>如果任务的执行比较复杂，也只需把命令填到Command里即可，OpenPAI会自动执行。接下来是设置配置，可以选GPU的数量，内存大小等等：</p>
 <p><img src="https://i.loli.net/2020/06/24/T7ryOxjpJP4FWYR.png" srcset="/hanzawa-blog/img/loading.gif" lazyload style="zoom:67%;" /></p>
 <p>然后是镜像的选择：</p>
